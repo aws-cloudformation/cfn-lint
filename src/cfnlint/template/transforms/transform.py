@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from __future__ import annotations
 
+import logging
 from typing import Any, Mapping
 
 from cfnlint.conditions import Conditions
@@ -11,6 +12,8 @@ from cfnlint.graph import Graph
 from cfnlint.template.transforms._language_extensions import language_extension
 from cfnlint.template.transforms._protocols import Transformer
 from cfnlint.template.transforms._sam import sam
+
+LOGGER = logging.getLogger("cfnlint")
 
 
 class Transform:
@@ -48,4 +51,5 @@ class Transform:
 
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
+        LOGGER.info("Transformed template: %s", cfn.template)
         return matches

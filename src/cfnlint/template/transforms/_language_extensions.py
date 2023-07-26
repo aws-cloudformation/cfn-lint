@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import logging
 import random
 import string
 from copy import deepcopy
@@ -15,6 +16,8 @@ import regex as re
 from cfnlint.conditions._utils import get_hash
 from cfnlint.helpers import FUNCTION_FOR_EACH
 from cfnlint.template.transforms._types import TransformResult
+
+LOGGER = logging.getLogger("cfnlint")
 
 # initializing size of string
 _N = 7
@@ -76,6 +79,7 @@ def language_extension(cfn: Any) -> TransformResult:
         ], None
     except Exception as e:  # pylint: disable=broad-exception-caught
         # pylint: disable=import-outside-toplevel
+        from cfnlint.match import Match  # pylint: disable=cyclic-import
         from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
 
         message = "Error transforming template: {0}"
@@ -141,6 +145,17 @@ class _Transform:
                         )
                         if only_string:
                             return obj[k][0]
+                elif k == "Fn::FindInMap":
+                    try:
+                        mapping = _ForEachValueFnFindInMap(get_hash(v), v)
+                        map_value = mapping.value(cfn, params)
+                        if map_value is None:
+                            del obj[k]
+                            continue
+                        if isinstance(map_value, str):
+                            return map_value
+                    except Exception as e:  # pylint: disable=broad-exception-caught
+                        LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
                 elif k == "Ref":
                     if isinstance(v, str):
                         if v in params:
@@ -152,7 +167,11 @@ class _Transform:
                                 return params[r]
                         obj[k] = r
                 else:
-                    obj[k] = self._walk(v, params, cfn)
+                    sub_value = self._walk(v, params, cfn)
+                    if sub_value is None:
+                        del obj[k]
+                    else:
+                        obj[k] = self._walk(v, params, cfn)
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
                 obj[i] = self._walk(v, params, cfn)
@@ -195,12 +214,39 @@ class _ForEachValue:
         raise _TypeError(f"Unsupported value {obj!r}", obj)
 
     # pylint: disable=unused-argument
-    def value(self, cfn):
+    def value(self, cfn, params: Optional[Mapping[str, Any]] = None):
         return self._value
 
     @property
     def hash(self):
         return self._hash
+
+
+class _FnFindInMapDefaultValue(_ForEachValue):
+    def __init__(self, _hash: str, value: Any = None) -> None:
+        super().__init__(_hash, value)
+        if not isinstance(value, dict):
+            raise _TypeError(
+                "Fn::FindInMap parameter must be an object with key 'DefaultValue'",
+                value,
+            )
+        if len(value) != 1:
+            raise _ValueError(
+                "Fn::FindInMap parameter only supports 'DefaultValue'", value
+            )
+
+        for k, v in value.items():
+            if k != "DefaultValue":
+                raise _ValueError(
+                    "Fn::FindInMap parameter only supports 'DefaultValue'", value
+                )
+            self._value = _ForEachValue.create(v)
+
+    def value(self, cfn, params: Optional[Mapping[str, Any]] = None):
+        if params is None:
+            params = {}
+
+        return self._value.value(cfn, params)
 
 
 class _ForEachValueFnFindInMap(_ForEachValue):
@@ -209,18 +255,22 @@ class _ForEachValueFnFindInMap(_ForEachValue):
         if not isinstance(obj, list):
             raise _TypeError("Fn::FindInMap should be a list", obj)
 
-        if len(obj) != 3:
-            raise _ValueError("Fn::FindInMap requires a list of 3 values", obj)
+        if len(obj) not in [3, 4]:
+            raise _ValueError("Fn::FindInMap requires a list of 3 or 4 values", obj)
 
         self._map = [
             _ForEachValue.create(obj[0]),
             _ForEachValue.create(obj[1]),
             _ForEachValue.create(obj[2]),
         ]
+        if len(obj) == 4:
+            self._map.append(_FnFindInMapDefaultValue(get_hash(obj[3]), obj[3]))
 
         self._obj = obj
 
-    def value(self, cfn: Any) -> Any:
+    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None) -> Any:
+        if params is None:
+            params = {}
         t_map = deepcopy(self._map)
         mapping = None
 
@@ -272,10 +322,16 @@ class _ForEachValueFnFindInMap(_ForEachValue):
 
         if mapping:
             try:
-                return mapping.get(t_map[1].value(cfn)).get(t_map[2].value(cfn))
+                return mapping.get(t_map[1].value(cfn, params), {}).get(
+                    t_map[2].value(cfn, params)
+                )
             except _ResolveError as e:
+                if len(self._map) == 4:
+                    return self._map[3].value(cfn)
                 raise _ResolveError("Can't resolve Fn::FindInMap", self._obj) from e
 
+        if len(self._map) == 4:
+            return self._map[3].value(cfn)
         raise _ResolveError("Can't resolve Fn::FindInMap", self._obj)
 
 
@@ -289,12 +345,16 @@ class _ForEachValueRef(_ForEachValue):
         self._obj = obj
 
     # pylint: disable=too-many-return-statements
-    def value(self, cfn: Any) -> Any:
+    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None) -> Any:
+        if params is None:
+            params = {}
         v = self._ref.value(cfn)
 
         if not isinstance(v, str):
             raise _ResolveError("Can't resolve Fn::Ref", self._obj)
 
+        if v in params:
+            return params[v]
         region = cfn.regions[0]
         account_id = "123456789012"
         partition = "aws"
