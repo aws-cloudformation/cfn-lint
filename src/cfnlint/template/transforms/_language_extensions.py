@@ -214,7 +214,7 @@ class _ForEachValue:
         raise _TypeError(f"Unsupported value {obj!r}", obj)
 
     # pylint: disable=unused-argument
-    def value(self, cfn, params: Optional[Mapping[str, Any]] = None):
+    def value(self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool=False):
         return self._value
 
     @property
@@ -242,11 +242,11 @@ class _FnFindInMapDefaultValue(_ForEachValue):
                 )
             self._value = _ForEachValue.create(v)
 
-    def value(self, cfn, params: Optional[Mapping[str, Any]] = None):
+    def value(self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool=False):
         if params is None:
             params = {}
 
-        return self._value.value(cfn, params)
+        return self._value.value(cfn, params, only_params)
 
 
 class _ForEachValueFnFindInMap(_ForEachValue):
@@ -345,7 +345,7 @@ class _ForEachValueRef(_ForEachValue):
         self._obj = obj
 
     # pylint: disable=too-many-return-statements
-    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None) -> Any:
+    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None, only_params: bool=False) -> Any:
         if params is None:
             params = {}
         v = self._ref.value(cfn)
@@ -355,6 +355,10 @@ class _ForEachValueRef(_ForEachValue):
 
         if v in params:
             return params[v]
+        
+        if only_params:
+            raise _ResolveError("Can't resolve Fn::Ref", self._obj)
+
         region = cfn.regions[0]
         account_id = "123456789012"
         partition = "aws"
@@ -433,7 +437,7 @@ class _ForEachCollection:
         if self._collection:
             for item in self._collection:
                 try:
-                    yield item.value(cfn)
+                    yield item.value(cfn, True)
                 except _ResolveError:
                     v = "".join(random.choices(string.ascii_letters, k=_N))  # nosec
                     collection_cache[item.hash] = v
@@ -441,7 +445,7 @@ class _ForEachCollection:
             return
         if self._fn:
             try:
-                values = self._fn.value(cfn)
+                values = self._fn.value(cfn, True)
                 if values:
                     if isinstance(values, list):
                         for value in values:
