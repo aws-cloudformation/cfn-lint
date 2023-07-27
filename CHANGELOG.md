@@ -1,3 +1,8 @@
+### v0.79.4
+###### Fixes
+- Fix `AWS::LanguageExtensions` to not fully resolve `Fn::FindInMap` unless in `Fn::ForEach` collection (pull #[2822](https://github.com/aws-cloudformation/cfn-lint/pull/2822))
+- Update `convert_dict` to include `Mark` instead of tuple for default value (pull #[2821](https://github.com/aws-cloudformation/cfn-lint/pull/2821))
+
 ### v0.79.3
 ###### Fixes
 - Fix `Conditions` logic to not crash on a condition that isn't found (pull #[2814](https://github.com/aws-cloudformation/cfn-lint/pull/2814))
