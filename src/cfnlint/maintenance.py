@@ -112,10 +112,26 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
                             del spec["ValueTypes"][path_details[2]]
                         except:  # pylint: disable=bare-except
                             pass
-            # Debug as the parent element isn't supported in the region
-            LOGGER.debug(
-                "Parent element not found for patch (%s) in region %s", patch, region
-            )
+                if path_details[1] == "ResourceTypes":
+                    if (
+                        spec.get("ResourceTypes")
+                        .get(path_details[2], {})
+                        .get("Attributes", {})
+                        .get(path_details[4])
+                    ):
+                        continue
+                    LOGGER.debug(
+                        "Parent element not found for patch (%s) in region %s",
+                        patch,
+                        region,
+                    )
+                else:
+                    # Debug as the parent element isn't supported in the region
+                    LOGGER.debug(
+                        "Parent element not found for patch (%s) in region %s",
+                        patch,
+                        region,
+                    )
 
     # Patch provider schema data
     spec = patch_spec(spec, "all", "ProviderSchemasPatches")
@@ -354,6 +370,8 @@ def get_schema_value_types():
         results = {}
         warnings.filterwarnings("error")
         for propname, propdetails in properties.items():
+            if propname == "Tag":
+                continue
             subname, propdetails = resolve_refs(propdetails, schema)
             t = propdetails.get("type")
             if not t:
@@ -402,10 +420,7 @@ def get_schema_value_types():
                 if not results.get(".".join(names + [propname])):
                     if (
                         propdetails.get("pattern")
-                        or (
-                            propdetails.get("minLength")
-                            and propdetails.get("maxLength")
-                        )
+                        or propdetails.get("maxLength")
                         or propdetails.get("enum")
                     ):
                         results[".".join(names + [propname])] = {}
@@ -429,10 +444,10 @@ def get_schema_value_types():
                             propname,
                             p,
                         )
-                if propdetails.get("minLength") and propdetails.get("maxLength"):
+                if propdetails.get("maxLength"):
                     results[".".join(names + [propname])].update(
                         {
-                            "StringMin": propdetails.get("minLength"),
+                            "StringMin": propdetails.get("minLength", 0),
                             "StringMax": propdetails.get("maxLength"),
                         }
                     )
@@ -473,6 +488,8 @@ def get_schema_value_types():
             patch = []
             if v:
                 if n.count(".") == 2:
+                    if ".Tag." in n:
+                        continue
                     r_type = "PropertyTypes"
                 else:
                     r_type = "ResourceTypes"

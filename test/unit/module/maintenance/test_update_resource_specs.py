@@ -161,12 +161,20 @@ class TestUpdateResourceSpecs(BaseTestCase):
                             "Properties": {
                                 "AllowedPublishers": {},
                                 "CodeSigningPolicies": {},
-                                "Description": {},
+                                "Description": {
+                                    "Value": {
+                                        "ValueType": "AWS::Lambda::CodeSigningConfig.Description"
+                                    },
+                                },
                             },
                         }
                     },
                     "ValueTypes": {
                         "AWS::EC2::Instance.Types": ["m2.medium"],
+                        "AWS::Lambda::CodeSigningConfig.Description": {
+                            "StringMin": 0,
+                            "StringMax": 256,
+                        },
                         "AWS::Lambda::CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns": {
                             "AllowedPatternRegex": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
                             "StringMin": 12,
@@ -252,7 +260,11 @@ class TestUpdateResourceSpecs(BaseTestCase):
                     "Properties": {
                         "AllowedPublishers": {},
                         "CodeSigningPolicies": {},
-                        "Description": {},
+                        "Description": {
+                            "Value": {
+                                "ValueType": "AWS::Lambda::CodeSigningConfig.Description"
+                            },
+                        },
                     },
                 }
             },
@@ -261,6 +273,10 @@ class TestUpdateResourceSpecs(BaseTestCase):
                     "m2.medium",
                     "m2.large",
                 ],
+                "AWS::Lambda::CodeSigningConfig.Description": {
+                    "StringMin": 0,
+                    "StringMax": 256,
+                },
                 "AWS::Lambda::CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns": {
                     "AllowedPatternRegex": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
                     "StringMin": 12,
@@ -290,6 +306,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
                         "AWS::EC2::Instance.Types": [
                             "m2.medium",
                         ],
+                        "AWS::Lambda::CodeSigningConfig.Description": "CACHED",
                         "AWS::Lambda::CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns": "CACHED",
                         "AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment": "CACHED",
                     },
