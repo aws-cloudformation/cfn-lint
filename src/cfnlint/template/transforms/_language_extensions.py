@@ -54,14 +54,14 @@ def language_extension(cfn: Any) -> TransformResult:
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
-            sm_line = e.key.start_mark[0] + 1
-            sm_column = e.key.start_mark[1] + 1
+            sm_line = e.key.start_mark.line + 1
+            sm_column = e.key.start_mark.column + 1
         else:
             sm_line = 1
             sm_column = 1
         if hasattr(e.key, "end_mark"):
-            em_line = e.key.end_mark[0] + 1
-            em_column = e.key.end_mark[1] + 1
+            em_line = e.key.end_mark.line + 1
+            em_column = e.key.end_mark.column + 1
         else:
             em_line = 1
             em_column = 1

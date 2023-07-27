@@ -3,10 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, list_node, str_node
 
 
-def convert_dict(template, start_mark=(0, 0), end_mark=(0, 0)):
+def convert_dict(template, start_mark=Mark(0, 0), end_mark=Mark(0, 0)):
     """Convert dict to template"""
     if isinstance(template, dict):
         if not isinstance(template, dict_node):
