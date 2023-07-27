@@ -15,6 +15,7 @@ from json.decoder import (  # type: ignore
 from json.scanner import NUMBER_RE
 
 import cfnlint
+from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
 
 LOGGER = logging.getLogger(__name__)
@@ -115,17 +116,6 @@ def build_match_from_key(message, key):
         cfnlint.rules.ParseError(),
         message=message,
     )
-
-
-class Mark:
-    """Mark of line and column"""
-
-    line = 1
-    column = 1
-
-    def __init__(self, line, column):
-        self.line = line
-        self.column = column
 
 
 # pylint: disable=W0102
