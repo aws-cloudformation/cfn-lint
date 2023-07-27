@@ -141,14 +141,15 @@ class _Transform:
                             return obj[k]
                     if isinstance(v, list):
                         only_string, obj[k][0] = self._replace_string_params(
-                            v[0], params
+                            v[0],
+                            params,
                         )
                         if only_string:
                             return obj[k][0]
                 elif k == "Fn::FindInMap":
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
-                        map_value = mapping.value(cfn, params)
+                        map_value = mapping.value(cfn, params, True)
                         if map_value is None:
                             del obj[k]
                             continue
