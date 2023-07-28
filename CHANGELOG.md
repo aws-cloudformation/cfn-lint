@@ -1,3 +1,10 @@
+### v0.79.5
+###### CloudFormation Specifications
+- Update schema to spec conversions to include include a default string minimum value of 0 if not specified (pull #[2824](https://github.com/aws-cloudformation/cfn-lint/pull/2824))
+- Update CloudFormation specs to `132.0.0` (pull #[2824](https://github.com/aws-cloudformation/cfn-lint/pull/2824))
+###### Fixes
+- Fix `AWS::LanguageExtensions` to not empty out a hardcoded string `Fn::FindInmap` that cannot be resolved (pull #[2827](https://github.com/aws-cloudformation/cfn-lint/pull/2827))
+
 ### v0.79.4
 ###### Fixes
 - Fix `AWS::LanguageExtensions` to not fully resolve `Fn::FindInMap` unless in `Fn::ForEach` collection (pull #[2822](https://github.com/aws-cloudformation/cfn-lint/pull/2822))
