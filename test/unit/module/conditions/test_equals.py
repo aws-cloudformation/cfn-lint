@@ -6,8 +6,6 @@ from unittest import TestCase
 
 from cfnlint.conditions._utils import get_hash
 from cfnlint.conditions.equals import Equal
-from cfnlint.decode import decode_str
-from cfnlint.template import Template
 
 
 class TestEquals(TestCase):
