@@ -45,7 +45,10 @@ class Split(CloudFormationLintRule):
         matches = []
         if isinstance(value, str):
             if re.match(REGEX_DYN_REF_SSM, value):
-                message = f'Fn::Split does not support dynamic references at {"/".join(map(str, path[:]))}'
+                message = (
+                    "Fn::Split does not support dynamic "
+                    f'references at {"/".join(map(str, path[:]))}'
+                )
                 matches.append(RuleMatch(path[:], message))
 
         return matches
