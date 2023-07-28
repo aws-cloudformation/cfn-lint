@@ -157,15 +157,16 @@ class _Transform:
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
                         map_value = mapping.value(cfn, params, True)
-                        # if we get None this means its all strings but couldn't be resolved
-                        # we will pass this forward
+                        # if we get None this means its all strings
+                        # but couldn't be resolved we will pass this forward
                         if map_value is None:
                             continue
                         # if we can resolve it we will return it
                         if isinstance(map_value, tuple([list]) + _SCALAR_TYPES):
                             return map_value
                     except Exception as e:  # pylint: disable=broad-exception-caught
-                        # We couldn't resolve the FindInMap so we are going to leave it as it is
+                        # We couldn't resolve the FindInMap so we are going to
+                        # leave it as it is
                         LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
                 elif k == "Ref":
                     if isinstance(v, str):
