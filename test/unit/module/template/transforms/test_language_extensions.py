@@ -12,7 +12,6 @@ from cfnlint.template.transforms._language_extensions import (
     _ForEach,
     _ForEachValue,
     _ForEachValueFnFindInMap,
-    _ForEachValueRef,
     _ResolveError,
     _Transform,
     _TypeError,
