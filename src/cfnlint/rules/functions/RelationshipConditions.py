@@ -62,6 +62,8 @@ class RelationshipConditions(CloudFormationLintRule):
             elif isinstance(value_obj, str):
                 value = value_obj.split(".")[0]
             if value:
+                if not isinstance(value, str):
+                    continue
                 if value not in PSEUDOPARAMS:
                     scenarios = cfn.is_resource_available(getatt_obj, value)
                     for scenario in scenarios:
