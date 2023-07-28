@@ -28,7 +28,8 @@ class Match:
         self.columnnumberend = columnnumberend
         """Ending column number of the region this match spans"""
         self.filename = filename
-        """Name of the filename associated with this match, or None if there is no such file"""
+        """Name of the filename associated with this match, or
+          None if there is no such file"""
         self.rule = rule
         """The rule of this match"""
         self.message = message  # or rule.shortdesc
