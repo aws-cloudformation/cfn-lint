@@ -104,6 +104,7 @@ class _Transform:
         """Transform the template"""
         return [], self._walk(cfn.template, {}, cfn)
 
+    # pylint: disable=too-many-return-statements
     def _walk(self, item: Any, params: MutableMapping[str, Any], cfn: Any):
         obj = deepcopy(item)
         if isinstance(obj, dict):
@@ -134,6 +135,9 @@ class _Transform:
                                     f_k,
                                 )
                     del obj[k]
+                elif k == "Fn::ToJsonString":
+                    # extra special handing for this as {} could be a valid value
+                    return obj
                 elif k == "Fn::Sub":
                     if isinstance(v, str):
                         only_string, obj[k] = self._replace_string_params(v, params)
@@ -150,12 +154,15 @@ class _Transform:
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
                         map_value = mapping.value(cfn, params, True)
+                        # if we get None this means its all strings but couldn't be resolved
+                        # we will pass this forward
                         if map_value is None:
-                            del obj[k]
                             continue
-                        if isinstance(map_value, str):
+                        # if we can resolve it we will return it
+                        if isinstance(map_value, _SCALAR_TYPES):
                             return map_value
                     except Exception as e:  # pylint: disable=broad-exception-caught
+                        # We couldn't resolve the FindInMap so we are going to leave it as it is
                         LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
                 elif k == "Ref":
                     if isinstance(v, str):
@@ -169,7 +176,10 @@ class _Transform:
                         obj[k] = r
                 else:
                     sub_value = self._walk(v, params, cfn)
-                    if sub_value is None:
+                    # a sub object may be none or we have returned
+                    # an empty object.  We don't want to remove empty
+                    # strings "" or 0 (zeros)
+                    if sub_value is None or sub_value == {}:
                         del obj[k]
                     else:
                         obj[k] = self._walk(v, params, cfn)

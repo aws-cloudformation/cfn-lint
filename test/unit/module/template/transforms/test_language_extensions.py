@@ -396,6 +396,29 @@ class TestTransform(TestCase):
         self.assertIsNone(template)
         self.assertEqual(len(matches), 1)
 
+    def test_bad_mapping(self):
+        template_obj = deepcopy(self.template_obj)
+        nested_set(
+            template_obj,
+            [
+                "Resources",
+                "Fn::ForEach::Buckets",
+                2,
+                "S3Bucket${Identifier}",
+                "Properties",
+                "Tags",
+            ],
+            [{"Key": "Foo", "Value": {"Fn::FindInMap": ["Bucket", "Tags", "Key"]}}],
+        )
+        cfn = Template(filename="", template=template_obj, regions=["us-east-1"])
+
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        self.assertListEqual(
+            template["Resources"]["S3BucketA"]["Properties"]["Tags"],
+            [{"Key": "Foo", "Value": {"Fn::FindInMap": ["Bucket", "Tags", "Key"]}}],
+        )
+
 
 def nested_set(dic, keys, value):
     for key in keys[:-1]:
