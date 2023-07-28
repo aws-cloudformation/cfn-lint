@@ -31,5 +31,5 @@ class TestRulesGetAtt(BaseRuleTestCase):
     def test_file_negative_getatt(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/functions/getatt.yaml", 7
+            "test/fixtures/templates/bad/functions/getatt.yaml", 6
         )
