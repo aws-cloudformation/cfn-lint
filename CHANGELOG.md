@@ -1,3 +1,7 @@
+### v0.79.6
+###### CloudFormation Specifications
+- Fix `AWS::Glue::Job.Name` to use string min/max instead of number min/max (pull #[2831](https://github.com/aws-cloudformation/cfn-lint/pull/2831))
+
 ### v0.79.5
 ###### CloudFormation Specifications
 - Update schema to spec conversions to include include a default string minimum value of 0 if not specified (pull #[2824](https://github.com/aws-cloudformation/cfn-lint/pull/2824))
