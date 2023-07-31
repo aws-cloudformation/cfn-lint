@@ -74,7 +74,10 @@ class FunctionFilter:
                 k = list(instance.keys())[0]
                 if k in self.functions:
                     k_py = ToPy(k)
-                    yield (instance, {k_py.py: standard_schema})
+                    k_schema = {
+                        k_py.py: standard_schema,
+                    }
+                    yield (instance, k_schema)
                     return
 
         yield (instance, standard_schema)
