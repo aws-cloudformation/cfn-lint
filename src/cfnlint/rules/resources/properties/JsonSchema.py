@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
-from cfnlint.context import Context
+from cfnlint.context import Context, create_context_for_resource_properties
 from cfnlint.helpers import REGION_PRIMARY
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
@@ -45,6 +45,10 @@ class JsonSchema(BaseJsonSchema):
             "awsType": "E3008",
             "cfnSchema": "E3017",
             "cfnRegionSchema": "E3018",
+            "ref": "E1020",
+            "fn_join": "E1022",
+            "fn_select": "E1017",
+            "fn_split": "E1018",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
         self.regions = [REGION_PRIMARY]
@@ -79,10 +83,14 @@ class JsonSchema(BaseJsonSchema):
                                 # same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
+                        context = create_context_for_resource_properties(cfn, region)
                         cfn_validator = self.setup_validator(
                             validator=CfnTemplateValidator,
                             schema=schema.json_schema,
-                        ).evolve(context=Context(region), cfn=cfn)
+                        ).evolve(
+                            context=context,
+                            cfn=cfn,
+                        )
                         path = ["Resources", n, "Properties"]
                         matches.extend(
                             self.json_schema_validate(cfn_validator, p, path)
