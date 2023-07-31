@@ -2,6 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from typing import Any, Callable, Dict, Iterable, Iterator
+
+import cfnlint.functions as fns
+from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
