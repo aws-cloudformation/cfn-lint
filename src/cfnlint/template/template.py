@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
+from collections import deque
 from copy import deepcopy
 from typing import List
 
@@ -15,7 +16,6 @@ import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint.graph import Graph
 from cfnlint.match import Match
-from cfnlint.template.functions import Fns
 from cfnlint.template.getatts import GetAtts
 from cfnlint.template.transforms import Transform
 
@@ -56,7 +56,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
         self.graph = None
-        self.functions = Fns(self)
         try:
             self.graph = Graph(self)
         except KeyError as err:
