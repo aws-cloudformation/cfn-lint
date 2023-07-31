@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator
 
+from cfnlint.conditions import Conditions
 from cfnlint.context import Context
 from cfnlint.jsonschema import _validators, _validators_cfn
 from cfnlint.jsonschema._filter import (
@@ -29,7 +30,6 @@ from cfnlint.jsonschema.exceptions import (
     ValidationError,
 )
 from cfnlint.template import Template
-from cfnlint.template.transforms import Transform
 
 
 def create(
@@ -68,6 +68,10 @@ def create(
         function_filter: FunctionFilter = field(
             init=True, default_factory=lambda: function_filter_arg
         )
+        refs: Mapping = field(default={})
+        get_atts: Mapping = field(default={})
+        find_in_maps: Mapping = field(default={})
+        conditions: Conditions = field(default=Conditions({}))
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=Context)
 
@@ -208,8 +212,8 @@ def create(
             self,
             instance: Any,
             schema: Any,
-            path: str | None = None,
-            schema_path: str | None = None,
+            path: Deque | None = None,
+            schema_path: Deque | None = None,
         ) -> Iterator[ValidationError]:
             for error in self.evolve(
                 schema=schema,
