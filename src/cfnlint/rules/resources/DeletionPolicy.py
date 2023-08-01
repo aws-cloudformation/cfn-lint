@@ -19,7 +19,7 @@ class DeletionPolicy(CloudFormationLintRule):
         """Check resource names for DeletionPolicy"""
         matches = []
 
-        valid_values = ["Delete", "Retain", "Snapshot"]
+        valid_values = ["Delete", "Retain", "RetainExceptOnCreate", "Snapshot"]
 
         supported_functions = ["Fn::FindInMap", "Fn::If", "Ref"]
 
