@@ -61,10 +61,14 @@
   "create": {
    "permissions": [
     "elasticfilesystem:CreateFileSystem",
+    "elasticfilesystem:TagResource",
     "elasticfilesystem:DescribeFileSystems",
     "elasticfilesystem:PutBackupPolicy",
     "elasticfilesystem:PutFileSystemPolicy",
-    "elasticfilesystem:PutLifecycleConfiguration"
+    "elasticfilesystem:PutLifecycleConfiguration",
+    "kms:DescribeKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:CreateGrant"
    ]
   },
   "delete": {
@@ -103,7 +107,10 @@
     "elasticfilesystem:PutLifecycleConfiguration",
     "elasticfilesystem:TagResource",
     "elasticfilesystem:UntagResource",
-    "elasticfilesystem:UpdateFileSystem"
+    "elasticfilesystem:UpdateFileSystem",
+    "kms:DescribeKey",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:CreateGrant"
    ]
   }
  },
@@ -177,6 +184,13 @@
   "/properties/Arn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/FileSystemTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EFS::FileSystem",
  "writeOnlyProperties": [
   "/properties/BypassPolicyLockoutSafetyCheck"

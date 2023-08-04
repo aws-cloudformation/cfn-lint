@@ -5,28 +5,66 @@
   "/properties/AWSServiceName"
  ],
  "description": "Resource Type definition for AWS::IAM::ServiceLinkedRole",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus",
+    "iam:GetRole"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetRole"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:UpdateRole",
+    "iam:GetRole"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/RoleName"
  ],
  "properties": {
   "AWSServiceName": {
+   "description": "The service principal for the AWS service to which this role is attached.",
    "type": "string"
   },
   "CustomSuffix": {
+   "description": "A string that you provide, which is combined with the service-provided prefix to form the complete role name.",
    "type": "string"
   },
   "Description": {
+   "description": "The description of the role.",
    "type": "string"
   },
-  "Id": {
+  "RoleName": {
+   "description": "The name of the role.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/RoleName"
  ],
- "required": [
-  "AWSServiceName"
- ],
- "typeName": "AWS::IAM::ServiceLinkedRole"
+ "required": [],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IAM::ServiceLinkedRole",
+ "writeOnlyProperties": [
+  "/properties/CustomSuffix",
+  "/properties/AWSServiceName"
+ ]
 }

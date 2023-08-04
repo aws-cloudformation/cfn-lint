@@ -10,7 +10,8 @@
   "/properties/NetworkConfig",
   "/properties/RoleArn",
   "/properties/StoppingCondition",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/EndpointName"
  ],
  "definitions": {
   "BatchTransformInput": {
@@ -553,6 +554,7 @@
    "permissions": [
     "sagemaker:CreateModelQualityJobDefinition",
     "sagemaker:DescribeModelQualityJobDefinition",
+    "sagemaker:AddTags",
     "iam:PassRole"
    ]
   },
@@ -563,7 +565,8 @@
   },
   "list": {
    "permissions": [
-    "sagemaker:ListModelQualityJobDefinitions"
+    "sagemaker:ListModelQualityJobDefinitions",
+    "sagemaker:ListTags"
    ]
   },
   "read": {
@@ -640,5 +643,11 @@
   "JobResources",
   "RoleArn"
  ],
- "typeName": "AWS::SageMaker::ModelQualityJobDefinition"
+ "typeName": "AWS::SageMaker::ModelQualityJobDefinition",
+ "writeOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
 }
