@@ -1,0 +1,48 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FleetName",
+  "/properties/ApplicationArn"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::AppStream::ApplicationFleetAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:AssociateApplicationFleet"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DisassociateApplicationFleet"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:DescribeApplicationFleetAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FleetName",
+  "/properties/ApplicationArn"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "FleetName": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "FleetName",
+  "ApplicationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "typeName": "AWS::AppStream::ApplicationFleetAssociation"
+}
