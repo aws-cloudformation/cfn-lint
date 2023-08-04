@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Scope"
+ ],
+ "definitions": {
+  "EntityDescription": {
+   "description": "Description of the entity.",
+   "pattern": "^[a-zA-Z0-9=:#@/\\-,.][a-zA-Z0-9+=:#@/\\-,.\\s]+[a-zA-Z0-9+=:#@/\\-,.]{1,256}$",
+   "type": "string"
+  },
+  "EntityId": {
+   "description": "Id of the IPSet",
+   "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "EntityName": {
+   "description": "Name of the IPSet.",
+   "pattern": "^[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "IPAddress": {
+   "description": "IP address",
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IPAddressVersion": {
+   "description": "Type of addresses in the IPSet, use IPV4 for IPV4 IP addresses, IPV6 for IPV6 address.",
+   "enum": [
+    "IPV4",
+    "IPV6"
+   ],
+   "type": "string"
+  },
+  "ResourceArn": {
+   "description": "ARN of the WAF entity.",
+   "type": "string"
+  },
+  "Scope": {
+   "description": "Use CLOUDFRONT for CloudFront IPSet, use REGIONAL for Application Load Balancer and API Gateway.",
+   "enum": [
+    "CLOUDFRONT",
+    "REGIONAL"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Contains a list of IP addresses. This can be either IPV4 or IPV6. The list will be mutually",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wafv2:CreateIPSet",
+    "wafv2:GetIPSet",
+    "wafv2:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wafv2:DeleteIPSet",
+    "wafv2:GetIPSet"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "wafv2:listIPSets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wafv2:GetIPSet",
+    "wafv2:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "wafv2:UpdateIPSet",
+    "wafv2:GetIPSet",
+    "wafv2:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name",
+  "/properties/Id",
+  "/properties/Scope"
+ ],
+ "properties": {
+  "Addresses": {
+   "description": "List of IPAddresses.",
+   "items": {
+    "$ref": "#/definitions/IPAddress"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "Description": {
+   "$ref": "#/definitions/EntityDescription"
+  },
+  "IPAddressVersion": {
+   "$ref": "#/definitions/IPAddressVersion"
+  },
+  "Id": {
+   "$ref": "#/definitions/EntityId"
+  },
+  "Name": {
+   "$ref": "#/definitions/EntityName"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Addresses",
+  "IPAddressVersion",
+  "Scope"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
+ "typeName": "AWS::WAFv2::IPSet"
+}

@@ -8,6 +8,20 @@
   "/properties/CustomerOwnedIpv4Pool"
  ],
  "definitions": {
+  "FailedReason": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorCode": {
+     "description": "The failure code, if any, for a create or delete endpoint operation.",
+     "type": "string"
+    },
+    "Message": {
+     "description": "Additional error details describing the endpoint failure and recommended action.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "NetworkInterface": {
    "additionalProperties": false,
    "description": "The container for the network interface.",
@@ -87,6 +101,10 @@
    "pattern": "^ipv4pool-coip-([0-9a-f]{17})$",
    "type": "string"
   },
+  "FailedReason": {
+   "$ref": "#/definitions/FailedReason",
+   "description": "The failure reason, if any, for a create or delete endpoint operation."
+  },
   "Id": {
    "description": "The ID of the endpoint.",
    "maxLength": 500,
@@ -119,7 +137,9 @@
    "enum": [
     "Available",
     "Pending",
-    "Deleting"
+    "Deleting",
+    "Create_Failed",
+    "Delete_Failed"
    ],
    "type": "string"
   },

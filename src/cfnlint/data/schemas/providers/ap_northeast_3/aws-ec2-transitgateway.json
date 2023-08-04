@@ -1,14 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/DnsSupport",
-  "/properties/DefaultRouteTableAssociation",
-  "/properties/DefaultRouteTablePropagation",
-  "/properties/Tags",
-  "/properties/AutoAcceptSharedAttachments",
   "/properties/AmazonSideAsn",
-  "/properties/Description",
-  "/properties/VpnEcmpSupport",
   "/properties/MulticastSupport"
  ],
  "definitions": {
@@ -30,12 +23,50 @@
   }
  },
  "description": "Resource Type definition for AWS::EC2::TransitGateway",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGateway",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGateway",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGateways",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGateways",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyTransitGateway",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "ec2:ModifyTransitGatewayOptions"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
  "properties": {
   "AmazonSideAsn": {
+   "format": "int64",
    "type": "integer"
+  },
+  "AssociationDefaultRouteTableId": {
+   "type": "string"
   },
   "AutoAcceptSharedAttachments": {
    "type": "string"
@@ -58,6 +89,9 @@
   "MulticastSupport": {
    "type": "string"
   },
+  "PropagationDefaultRouteTableId": {
+   "type": "string"
+  },
   "Tags": {
    "items": {
     "$ref": "#/definitions/Tag"
@@ -65,12 +99,26 @@
    "type": "array",
    "uniqueItems": false
   },
+  "TransitGatewayArn": {
+   "type": "string"
+  },
+  "TransitGatewayCidrBlocks": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
   "VpnEcmpSupport": {
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/Id",
+  "/properties/TransitGatewayArn"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway",
+ "tagging": {
+  "taggable": true
+ },
  "typeName": "AWS::EC2::TransitGateway"
 }
