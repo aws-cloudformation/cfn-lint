@@ -10,7 +10,8 @@
   "/properties/NetworkConfig",
   "/properties/RoleArn",
   "/properties/StoppingCondition",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/EndpointName"
  ],
  "definitions": {
   "BatchTransformInput": {
@@ -527,7 +528,8 @@
    "permissions": [
     "sagemaker:CreateModelBiasJobDefinition",
     "sagemaker:DescribeModelBiasJobDefinition",
-    "iam:PassRole"
+    "iam:PassRole",
+    "sagemaker:AddTags"
    ]
   },
   "delete": {
@@ -537,7 +539,8 @@
   },
   "list": {
    "permissions": [
-    "sagemaker:ListModelBiasJobDefinitions"
+    "sagemaker:ListModelBiasJobDefinitions",
+    "sagemaker:ListTags"
    ]
   },
   "read": {
@@ -614,5 +617,11 @@
   "JobResources",
   "RoleArn"
  ],
- "typeName": "AWS::SageMaker::ModelBiasJobDefinition"
+ "typeName": "AWS::SageMaker::ModelBiasJobDefinition",
+ "writeOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
 }
