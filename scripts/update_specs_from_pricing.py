@@ -45,6 +45,7 @@ region_map = {
     "EU (Paris)": "eu-west-3",
     "Europe (Spain)": "eu-south-2",
     "EU (Stockholm)": "eu-north-1",
+    "Israel (Tel Aviv)": "il-central-1",
     "Middle East (Bahrain)": "me-south-1",
     "Middle East (UAE)": "me-central-1",
     "South America (Sao Paulo)": "sa-east-1",
