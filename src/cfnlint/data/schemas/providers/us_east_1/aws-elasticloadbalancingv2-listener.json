@@ -231,15 +231,43 @@
   "create": {
    "permissions": [
     "elasticloadbalancing:CreateListener",
-    "elasticloadbalancing:DescribeListeners"
+    "elasticloadbalancing:DescribeListeners",
+    "cognito-idp:DescribeUserPoolClient"
    ]
   },
   "delete": {
    "permissions": [
-    "elasticloadbalancing:DeleteListener"
+    "elasticloadbalancing:DeleteListener",
+    "elasticloadbalancing:DescribeListeners"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "oneOf": [
+     {
+      "required": [
+       "LoadBalancerArn"
+      ]
+     },
+     {
+      "required": [
+       "ListenerArns"
+      ]
+     }
+    ],
+    "properties": {
+     "ListenerArns": {
+      "items": {
+       "$ref": "resource-schema.json#/properties/ListenerArn"
+      },
+      "type": "array",
+      "uniqueItems": false
+     },
+     "LoadBalancerArn": {
+      "$ref": "resource-schema.json#/properties/LoadBalancerArn"
+     }
+    }
+   },
    "permissions": [
     "elasticloadbalancing:DescribeListeners"
    ]
@@ -251,7 +279,9 @@
   },
   "update": {
    "permissions": [
-    "elasticloadbalancing:ModifyListener"
+    "elasticloadbalancing:ModifyListener",
+    "elasticloadbalancing:DescribeListeners",
+    "cognito-idp:DescribeUserPoolClient"
    ]
   }
  },
