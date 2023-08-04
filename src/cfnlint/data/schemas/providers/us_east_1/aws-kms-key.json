@@ -32,7 +32,8 @@
     "kms:CreateKey",
     "kms:EnableKeyRotation",
     "kms:DisableKey",
-    "kms:TagResource"
+    "kms:TagResource",
+    "kms:PutKeyPolicy"
    ]
   },
   "delete": {
@@ -65,7 +66,8 @@
     "kms:PutKeyPolicy",
     "kms:TagResource",
     "kms:UntagResource",
-    "kms:UpdateKeyDescription"
+    "kms:UpdateKeyDescription",
+    "kms:ListResourceTags"
    ]
   }
  },
@@ -134,6 +136,15 @@
    "default": false,
    "description": "Specifies whether the AWS KMS key should be Multi-Region. You can't change the MultiRegion value after the AWS KMS key is created.",
    "type": "boolean"
+  },
+  "Origin": {
+   "default": "AWS_KMS",
+   "description": "The source of the key material for the KMS key. You cannot change the origin after you create the KMS key. The default is AWS_KMS, which means that AWS KMS creates the key material.",
+   "enum": [
+    "AWS_KMS",
+    "EXTERNAL"
+   ],
+   "type": "string"
   },
   "PendingWindowInDays": {
    "description": "Specifies the number of days in the waiting period before AWS KMS deletes an AWS KMS key that has been removed from a CloudFormation stack. Enter a value between 7 and 30 days. The default value is 30 days.",
