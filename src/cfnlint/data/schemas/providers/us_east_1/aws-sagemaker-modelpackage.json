@@ -131,9 +131,6 @@
    "pattern": ".*",
    "type": "string"
   },
-  "CreatedBy": {
-   "$ref": "#/definitions/UserContext"
-  },
   "CreationTime": {
    "description": "The time at which the model package was created.",
    "type": "string"
@@ -362,9 +359,6 @@
    ],
    "type": "object"
   },
-  "LastModifiedBy": {
-   "$ref": "#/definitions/UserContext"
-  },
   "LastModifiedTime": {
    "description": "The time at which the model package was last modified.",
    "type": "string"
@@ -539,12 +533,6 @@
     "NearestModelName": {
      "description": "The name of a pre-trained machine learning benchmarked by Amazon SageMaker Inference Recommender model that matches your model.",
      "type": "string"
-    },
-    "ProductId": {
-     "description": "The AWS Marketplace product ID of the model package.",
-     "maxLength": 256,
-     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-     "type": "string"
     }
    },
    "required": [
@@ -584,13 +572,6 @@
    "additionalProperties": false,
    "description": "Details about the current status of the model package.",
    "properties": {
-    "ImageScanStatuses": {
-     "insertionOrder": true,
-     "items": {
-      "$ref": "#/definitions/ModelPackageStatusItem"
-     },
-     "type": "array"
-    },
     "ValidationStatuses": {
      "insertionOrder": true,
      "items": {
@@ -599,9 +580,6 @@
      "type": "array"
     }
    },
-   "required": [
-    "ValidationStatuses"
-   ],
    "type": "object"
   },
   "ModelPackageStatusItem": {
@@ -909,25 +887,6 @@
    ],
    "type": "object"
   },
-  "UserContext": {
-   "additionalProperties": false,
-   "description": "Information about the user who created or modified an experiment, trial, trial component, lineage group, or project.",
-   "properties": {
-    "DomainId": {
-     "description": "The domain associated with the user.",
-     "type": "string"
-    },
-    "UserProfileArn": {
-     "description": "The Amazon Resource Name (ARN) of the user's profile.",
-     "type": "string"
-    },
-    "UserProfileName": {
-     "description": "The name of the user's profile.",
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
   "ValidationProfile": {
    "additionalProperties": false,
    "description": "Contains data, such as the inputs and targeted instance types that are used in the process of validating the model package.",
@@ -992,6 +951,8 @@
     "sagemaker:CreateTrainingJob",
     "sagemaker:CreateTransformJob",
     "sagemaker:DescribeTransformJob",
+    "sagemaker:DescribeModelPackage",
+    "sagemaker:ListTags",
     "iam:PassRole",
     "s3:GetObject"
    ]
@@ -1003,6 +964,13 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ModelPackageGroupName": {
+      "$ref": "resource-schema.json#/properties/ModelPackageGroupName"
+     }
+    }
+   },
    "permissions": [
     "sagemaker:ListModelPackages"
    ]
@@ -1027,9 +995,6 @@
   "/properties/ModelPackageArn"
  ],
  "properties": {
-  "AdditionalInferenceSpecificationDefinition": {
-   "$ref": "#/definitions/AdditionalInferenceSpecificationDefinition"
-  },
   "AdditionalInferenceSpecifications": {
    "$ref": "#/definitions/AdditionalInferenceSpecifications"
   },
@@ -1045,9 +1010,6 @@
   "ClientToken": {
    "$ref": "#/definitions/ClientToken"
   },
-  "CreatedBy": {
-   "$ref": "#/definitions/CreatedBy"
-  },
   "CreationTime": {
    "$ref": "#/definitions/CreationTime"
   },
@@ -1060,14 +1022,8 @@
   "DriftCheckBaselines": {
    "$ref": "#/definitions/DriftCheckBaselines"
   },
-  "Environment": {
-   "$ref": "#/definitions/Environment"
-  },
   "InferenceSpecification": {
    "$ref": "#/definitions/InferenceSpecification"
-  },
-  "LastModifiedBy": {
-   "$ref": "#/definitions/LastModifiedBy"
   },
   "LastModifiedTime": {
    "$ref": "#/definitions/LastModifiedTime"
@@ -1099,9 +1055,6 @@
   "ModelPackageStatusDetails": {
    "$ref": "#/definitions/ModelPackageStatusDetails"
   },
-  "ModelPackageStatusItem": {
-   "$ref": "#/definitions/ModelPackageStatusItem"
-  },
   "ModelPackageVersion": {
    "$ref": "#/definitions/ModelPackageVersion"
   },
@@ -1131,6 +1084,7 @@
   "/properties/CreationTime",
   "/properties/ModelPackageStatus"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
@@ -1138,5 +1092,9 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::SageMaker::ModelPackage"
+ "typeName": "AWS::SageMaker::ModelPackage",
+ "writeOnlyProperties": [
+  "/properties/ClientToken",
+  "/properties/AdditionalInferenceSpecificationsToAdd"
+ ]
 }
