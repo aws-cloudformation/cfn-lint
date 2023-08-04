@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LoRaWAN": {
+   "additionalProperties": false,
+   "properties": {
+    "RfRegion": {
+     "description": "FUOTA task LoRaWAN RF region",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StartTime": {
+     "description": "FUOTA task LoRaWAN start time",
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RfRegion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Create and manage FUOTA tasks.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotwireless:CreateFuotaTask",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource",
+    "iam:GetRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteFuotaTask"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListFuotaTasks",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetFuotaTask",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:UpdateFuotaTask",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource",
+    "iotwireless:AssociateMulticastGroupWithFuotaTask",
+    "iotwireless:DisassociateMulticastGroupFromFuotaTask",
+    "iotwireless:AssociateWirelessDeviceWithFuotaTask",
+    "iotwireless:DisassociateWirelessDeviceFromFuotaTask"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "FUOTA task arn. Returned after successful create.",
+   "type": "string"
+  },
+  "AssociateMulticastGroup": {
+   "description": "Multicast group to associate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "AssociateWirelessDevice": {
+   "description": "Wireless device to associate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Description": {
+   "description": "FUOTA task description",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DisassociateMulticastGroup": {
+   "description": "Multicast group to disassociate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisassociateWirelessDevice": {
+   "description": "Wireless device to disassociate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "FirmwareUpdateImage": {
+   "description": "FUOTA task firmware update image binary S3 link",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FirmwareUpdateRole": {
+   "description": "FUOTA task firmware IAM role for reading S3",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FuotaTaskStatus": {
+   "description": "FUOTA task status. Returned after successful read.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "FUOTA task id. Returned after successful create.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWAN",
+   "description": "FUOTA task LoRaWAN"
+  },
+  "Name": {
+   "description": "Name of FUOTA task",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the FUOTA task.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/FuotaTaskStatus",
+  "/properties/LoRaWAN/StartTime"
+ ],
+ "required": [
+  "LoRaWAN",
+  "FirmwareUpdateImage",
+  "FirmwareUpdateRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTWireless::FuotaTask"
+}

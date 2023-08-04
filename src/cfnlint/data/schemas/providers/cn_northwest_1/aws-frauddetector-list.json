@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Element": {
+   "description": "An element in a list.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^\\S+( +\\S+)*$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A resource schema for a List in Amazon Fraud Detector.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "frauddetector:CreateList",
+    "frauddetector:GetListElements",
+    "frauddetector:ListTagsForResource",
+    "frauddetector:UpdateList"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "frauddetector:DeleteList",
+    "frauddetector:GetListsMetadata"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "frauddetector:GetListElements",
+    "frauddetector:GetListsMetadata",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "frauddetector:GetListElements",
+    "frauddetector:GetListsMetadata",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "frauddetector:GetListElements",
+    "frauddetector:GetListsMetadata",
+    "frauddetector:ListTagsForResource",
+    "frauddetector:UntagResource",
+    "frauddetector:UpdateList",
+    "frauddetector:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The list ARN.",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "The time when the list was created.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the list.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Elements": {
+   "description": "The elements in this list.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Element"
+   },
+   "maxItems": 100000,
+   "minItems": 0,
+   "type": "array"
+  },
+  "LastUpdatedTime": {
+   "description": "The time when the list was last updated.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the list.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags associated with this list.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VariableType": {
+   "description": "The variable type of the list.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Z_]{1,64}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::FraudDetector::List"
+}

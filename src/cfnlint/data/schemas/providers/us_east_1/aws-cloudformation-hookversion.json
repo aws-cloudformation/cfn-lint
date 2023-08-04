@@ -31,6 +31,7 @@
  "handlers": {
   "create": {
    "permissions": [
+    "cloudformation:DescribeType",
     "cloudformation:DescribeTypeRegistration",
     "cloudformation:RegisterType",
     "iam:PassRole",
@@ -46,8 +47,19 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Arn"
+     },
+     "TypeName": {
+      "$ref": "resource-schema.json#/properties/TypeName"
+     }
+    }
+   },
    "permissions": [
-    "cloudformation:ListTypes"
+    "cloudformation:ListTypes",
+    "cloudformation:ListTypeVersions"
    ]
   },
   "read": {
