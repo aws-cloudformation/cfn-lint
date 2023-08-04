@@ -5,10 +5,15 @@
   "/properties/DisplayName",
   "/properties/Description",
   "/properties/SourceS3Location",
-  "/properties/SetupScriptDetails"
+  "/properties/SetupScriptDetails",
+  "/properties/PackagingType",
+  "/properties/PostSetupScriptDetails"
  ],
  "definitions": {
   "Arn": {
+   "type": "string"
+  },
+  "PackagingType": {
    "type": "string"
   },
   "S3Location": {
@@ -22,8 +27,7 @@
     }
    },
    "required": [
-    "S3Bucket",
-    "S3Key"
+    "S3Bucket"
    ],
    "type": "object"
   },
@@ -51,28 +55,55 @@
    "type": "object"
   },
   "Tag": {
-   "additionalProperties": false,
-   "properties": {
-    "TagKey": {
-     "type": "string"
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "type": "string"
+      },
+      "Value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Key",
+      "Value"
+     ],
+     "type": "object"
     },
-    "TagValue": {
-     "type": "string"
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagKey": {
+       "type": "string"
+      },
+      "TagValue": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "TagKey",
+      "TagValue"
+     ],
+     "type": "object"
     }
-   },
-   "required": [
-    "TagKey",
-    "TagValue"
-   ],
-   "type": "object"
+   ]
   }
  },
+ "deprecatedProperties": [
+  "/properties/Tags/TagKey",
+  "/properties/Tags/TagValue"
+ ],
  "description": "Resource Type definition for AWS::AppStream::AppBlock",
  "handlers": {
   "create": {
    "permissions": [
     "appstream:CreateAppBlock",
-    "s3:GetObject"
+    "appstream:TagResource",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "s3:GetBucketOwnershipControls"
    ]
   },
   "delete": {
@@ -105,6 +136,12 @@
   "Name": {
    "type": "string"
   },
+  "PackagingType": {
+   "$ref": "#/definitions/PackagingType"
+  },
+  "PostSetupScriptDetails": {
+   "$ref": "#/definitions/ScriptDetails"
+  },
   "SetupScriptDetails": {
    "$ref": "#/definitions/ScriptDetails"
   },
@@ -126,8 +163,7 @@
  ],
  "required": [
   "Name",
-  "SourceS3Location",
-  "SetupScriptDetails"
+  "SourceS3Location"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
  "typeName": "AWS::AppStream::AppBlock",

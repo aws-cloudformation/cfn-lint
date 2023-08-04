@@ -7,7 +7,10 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/KeyName",
-  "/properties/KeyType"
+  "/properties/KeyType",
+  "/properties/KeyFormat",
+  "/properties/PublicKeyMaterial",
+  "/properties/Tags"
  ],
  "definitions": {
   "Tag": {
@@ -70,6 +73,15 @@
    "description": "A short sequence of bytes used for public key verification",
    "type": "string"
   },
+  "KeyFormat": {
+   "default": "pem",
+   "description": "The format of the private key",
+   "enum": [
+    "pem",
+    "ppk"
+   ],
+   "type": "string"
+  },
   "KeyName": {
    "description": "The name of the SSH key pair",
    "type": "string"
@@ -80,7 +92,7 @@
   },
   "KeyType": {
    "default": "rsa",
-   "description": "The title of the TPS report is a mandatory element.",
+   "description": "The crypto-system used to generate a key pair.",
    "enum": [
     "rsa",
     "ed25519"
@@ -114,5 +126,8 @@
   "tagUpdatable": false,
   "taggable": true
  },
- "typeName": "AWS::EC2::KeyPair"
+ "typeName": "AWS::EC2::KeyPair",
+ "writeOnlyProperties": [
+  "/properties/KeyFormat"
+ ]
 }
