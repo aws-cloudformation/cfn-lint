@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Specifies an Amazon Redshift subnet group.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateClusterSubnetGroup",
+    "redshift:CreateTags",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DeleteClusterSubnetGroup",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:ModifyClusterSubnetGroup",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "redshift:CreateTags",
+    "redshift:DeleteTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "properties": {
+  "ClusterSubnetGroupName": {
+   "description": "This name must be unique for all subnet groups that are created by your AWS account. If costumer do not provide it, cloudformation will generate it. Must not be \"Default\". ",
+   "maxLength": 255,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the parameter group.",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "The list of VPC subnet IDs",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 20,
+   "type": "array"
+  },
+  "Tags": {
+   "description": "The list of tags for the cluster parameter group.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "required": [
+  "Description",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::ClusterSubnetGroup",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

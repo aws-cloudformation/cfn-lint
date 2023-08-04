@@ -5,7 +5,8 @@
   "/properties/DatastoreTypeVersion",
   "/properties/PreloadDataConfig",
   "/properties/SseConfiguration",
-  "/properties/SseConfiguration/KmsEncryptionConfig"
+  "/properties/KmsEncryptionConfig",
+  "/properties/IdentityProviderConfiguration"
  ],
  "definitions": {
   "CreatedAt": {
@@ -65,6 +66,39 @@
     "R4"
    ],
    "type": "string"
+  },
+  "IdentityProviderConfiguration": {
+   "additionalProperties": false,
+   "description": "The identity provider configuration for the datastore",
+   "properties": {
+    "AuthorizationStrategy": {
+     "description": "Type of Authorization Strategy. The two types of supported Authorization strategies are SMART_ON_FHIR_V1 and AWS_AUTH.",
+     "enum": [
+      "SMART_ON_FHIR_V1",
+      "AWS_AUTH"
+     ],
+     "type": "string"
+    },
+    "FineGrainedAuthorizationEnabled": {
+     "description": "Flag to indicate if fine-grained authorization will be enabled for the datastore",
+     "type": "boolean"
+    },
+    "IdpLambdaArn": {
+     "description": "The Amazon Resource Name (ARN) of the Lambda function that will be used to decode the access token created by the authorization server.",
+     "maxLength": 256,
+     "minLength": 49,
+     "pattern": "arn:aws[-a-z]*:lambda:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9\\-_\\.]+(:(\\$LATEST|[a-zA-Z0-9\\-_]+))?",
+     "type": "string"
+    },
+    "Metadata": {
+     "description": "The JSON metadata elements for identity provider configuration.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthorizationStrategy"
+   ],
+   "type": "object"
   },
   "KmsEncryptionConfig": {
    "additionalProperties": false,
@@ -162,7 +196,11 @@
     "ram:GetResourceShareInvitations",
     "ram:AcceptResourceShareInvitation",
     "glue:CreateDatabase",
-    "glue:DeleteDatabase"
+    "glue:DeleteDatabase",
+    "lambda:InvokeFunction",
+    "healthlake:TagResource",
+    "healthlake:UntagResource",
+    "healthlake:ListTagsForResource"
    ]
   },
   "delete": {
@@ -194,6 +232,7 @@
     "healthlake:TagResource",
     "healthlake:UntagResource",
     "healthlake:ListTagsForResource",
+    "healthlake:DescribeFHIRDatastore",
     "iam:PassRole",
     "iam:GetRole",
     "iam:CreateServiceLinkedRole"
@@ -224,6 +263,9 @@
   },
   "DatastoreTypeVersion": {
    "$ref": "#/definitions/DatastoreTypeVersion"
+  },
+  "IdentityProviderConfiguration": {
+   "$ref": "#/definitions/IdentityProviderConfiguration"
   },
   "PreloadDataConfig": {
    "$ref": "#/definitions/PreloadDataConfig"
