@@ -5,9 +5,18 @@
   "/properties/Engine",
   "/properties/Main",
   "/properties/ParameterTemplate",
-  "/properties/StorageCapacity"
+  "/properties/StorageCapacity",
+  "/properties/Accelerators"
  ],
  "definitions": {
+  "Accelerators": {
+   "enum": [
+    "GPU"
+   ],
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
   "TagMap": {
    "additionalProperties": false,
    "description": "A map of resource tags",
@@ -24,7 +33,8 @@
   "WorkflowEngine": {
    "enum": [
     "WDL",
-    "NEXTFLOW"
+    "NEXTFLOW",
+    "CWL"
    ],
    "maxLength": 64,
    "minLength": 1,
@@ -82,6 +92,7 @@
   "create": {
    "permissions": [
     "omics:CreateWorkflow",
+    "omics:GetWorkflow",
     "omics:TagResource",
     "s3:PutObject",
     "s3:GetObject",
@@ -97,7 +108,8 @@
   },
   "delete": {
    "permissions": [
-    "omics:DeleteWorkflow"
+    "omics:DeleteWorkflow",
+    "omics:GetWorkflow"
    ]
   },
   "list": {
@@ -113,7 +125,9 @@
   "update": {
    "permissions": [
     "omics:UpdateWorkflow",
+    "omics:GetWorkflow",
     "omics:TagResource",
+    "omics:ListTagsForResource",
     "omics:UntagResource"
    ]
   }
@@ -122,6 +136,9 @@
   "/properties/Id"
  ],
  "properties": {
+  "Accelerators": {
+   "$ref": "#/definitions/Accelerators"
+  },
   "Arn": {
    "maxLength": 128,
    "minLength": 1,
