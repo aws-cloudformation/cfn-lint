@@ -5,6 +5,20 @@
   "/properties/BaseImage"
  ],
  "definitions": {
+  "Alias": {
+   "description": "The alias of the image version.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "(?!^[.-])^([a-zA-Z0-9-_.]+)$",
+   "type": "string"
+  },
+  "Aliases": {
+   "description": "List of aliases for the image version.",
+   "items": {
+    "$ref": "#/definitions/Alias"
+   },
+   "type": "array"
+  },
   "BaseImage": {
    "description": "The registry path of the container image on which this image version is based.",
    "maxLength": 255,
@@ -19,11 +33,15 @@
    "pattern": ".+",
    "type": "string"
   },
+  "Horovod": {
+   "description": "Indicates Horovod compatibility.",
+   "type": "boolean"
+  },
   "ImageArn": {
    "description": "The Amazon Resource Name (ARN) of the parent image.",
    "maxLength": 256,
    "minLength": 1,
-   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image\\/[a-z0-9]([-.]?[a-z0-9])*$",
+   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ImageName": {
@@ -37,7 +55,55 @@
    "description": "The Amazon Resource Name (ARN) of the image version.",
    "maxLength": 256,
    "minLength": 1,
-   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image-version\\/[a-z0-9]([-.]?[a-z0-9])*\\/[0-9]+$",
+   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image-version\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*\\/[0-9]+$",
+   "type": "string"
+  },
+  "JobType": {
+   "description": "Indicates SageMaker job type compatibility.",
+   "enum": [
+    "TRAINING",
+    "INFERENCE",
+    "NOTEBOOK_KERNEL"
+   ],
+   "type": "string"
+  },
+  "MLFramework": {
+   "description": "The machine learning framework vended in the image version.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
+   "type": "string"
+  },
+  "Processor": {
+   "description": "Indicates CPU or GPU compatibility.",
+   "enum": [
+    "CPU",
+    "GPU"
+   ],
+   "type": "string"
+  },
+  "ProgrammingLang": {
+   "description": "The supported programming language and its version.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
+   "type": "string"
+  },
+  "ReleaseNotes": {
+   "description": "The maintainer description of the image version.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "VendorGuidance": {
+   "description": "The availability of the image version specified by the maintainer.",
+   "enum": [
+    "NOT_PROVIDED",
+    "STABLE",
+    "TO_BE_ARCHIVED",
+    "ARCHIVED"
+   ],
    "type": "string"
   },
   "Version": {
@@ -61,6 +127,16 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ImageName": {
+      "$ref": "resource-schema.json#/properties/ImageName"
+     }
+    },
+    "required": [
+     "ImageName"
+    ]
+   },
    "permissions": [
     "sagemaker:ListImageVersions"
    ]
@@ -69,17 +145,33 @@
    "permissions": [
     "sagemaker:DescribeImageVersion"
    ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateImageVersion",
+    "sagemaker:DescribeImageVersion",
+    "sagemaker:ListAliases"
+   ]
   }
  },
  "primaryIdentifier": [
   "/properties/ImageVersionArn"
  ],
  "properties": {
+  "Alias": {
+   "$ref": "#/definitions/Alias"
+  },
+  "Aliases": {
+   "$ref": "#/definitions/Aliases"
+  },
   "BaseImage": {
    "$ref": "#/definitions/BaseImage"
   },
   "ContainerImage": {
    "$ref": "#/definitions/ContainerImage"
+  },
+  "Horovod": {
+   "$ref": "#/definitions/Horovod"
   },
   "ImageArn": {
    "$ref": "#/definitions/ImageArn"
@@ -89,6 +181,24 @@
   },
   "ImageVersionArn": {
    "$ref": "#/definitions/ImageVersionArn"
+  },
+  "JobType": {
+   "$ref": "#/definitions/JobType"
+  },
+  "MLFramework": {
+   "$ref": "#/definitions/MLFramework"
+  },
+  "Processor": {
+   "$ref": "#/definitions/Processor"
+  },
+  "ProgrammingLang": {
+   "$ref": "#/definitions/ProgrammingLang"
+  },
+  "ReleaseNotes": {
+   "$ref": "#/definitions/ReleaseNotes"
+  },
+  "VendorGuidance": {
+   "$ref": "#/definitions/VendorGuidance"
   },
   "Version": {
    "$ref": "#/definitions/Version"
@@ -104,5 +214,10 @@
   "ImageName",
   "BaseImage"
  ],
- "typeName": "AWS::SageMaker::ImageVersion"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
+ "typeName": "AWS::SageMaker::ImageVersion",
+ "writeOnlyProperties": [
+  "/properties/Aliases",
+  "/properties/Alias"
+ ]
 }
