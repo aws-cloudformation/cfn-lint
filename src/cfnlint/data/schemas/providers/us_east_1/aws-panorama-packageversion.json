@@ -64,23 +64,42 @@
  "handlers": {
   "create": {
    "permissions": [
-    "panorama:RegisterPackageVersion"
+    "panorama:RegisterPackageVersion",
+    "panorama:DescribePackageVersion",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
    ]
   },
   "delete": {
    "permissions": [
-    "panorama:DeregisterPackageVersion"
+    "panorama:DeregisterPackageVersion",
+    "panorama:DescribePackageVersion",
+    "s3:DeleteObject",
+    "s3:DeleteObjectVersion",
+    "s3:DeleteObjectVersionTagging",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
    ]
   },
   "read": {
    "permissions": [
-    "panorama:DescribePackageVersion"
+    "panorama:DescribePackageVersion",
+    "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
    ]
   },
   "update": {
    "permissions": [
     "panorama:DescribePackageVersion",
-    "panorama:RegisterPackageVersion"
+    "panorama:RegisterPackageVersion",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
    ]
   }
  },
@@ -142,5 +161,8 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-panorama.git",
  "taggable": false,
- "typeName": "AWS::Panorama::PackageVersion"
+ "typeName": "AWS::Panorama::PackageVersion",
+ "writeOnlyProperties": [
+  "/properties/UpdatedLatestPatchVersion"
+ ]
 }

@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "MessageReviewHandler": {
+   "additionalProperties": false,
+   "description": "Configuration information for optional review of messages.",
+   "properties": {
+    "FallbackResult": {
+     "default": "ALLOW",
+     "description": "Specifies the fallback behavior if the handler does not return a valid response, encounters an error, or times out.",
+     "enum": [
+      "ALLOW",
+      "DENY"
+     ],
+     "type": "string"
+    },
+    "Uri": {
+     "description": "Identifier of the message review handler.",
+     "maxLength": 170,
+     "minLength": 0,
+     "pattern": "^$|^arn:aws:lambda:[a-z0-9-]+:[0-9]{12}:function:.+",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::IVSChat::Room.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ivschat:CreateRoom",
+    "ivschat:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ivschat:DeleteRoom",
+    "ivschat:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ivschat:ListRooms",
+    "ivschat:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ivschat:GetRoom",
+    "ivschat:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ivschat:UpdateRoom",
+    "ivschat:TagResource",
+    "ivschat:UnTagResource",
+    "ivschat:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Room ARN is automatically generated on creation and assigned as the unique identifier.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:aws:ivschat:[a-z0-9-]+:[0-9]+:room/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The system-generated ID of the room.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "LoggingConfigurationIdentifiers": {
+   "description": "Array of logging configuration identifiers attached to the room.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 1,
+    "pattern": "^arn:aws:ivschat:[a-z0-9-]+:[0-9]+:logging-configuration/[a-zA-Z0-9-]+$",
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MaximumMessageLength": {
+   "default": 500,
+   "description": "The maximum number of characters in a single message.",
+   "maximum": 500,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MaximumMessageRatePerSecond": {
+   "default": 10,
+   "description": "The maximum number of messages per second that can be sent to the room.",
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MessageReviewHandler": {
+   "$ref": "#/definitions/MessageReviewHandler"
+  },
+  "Name": {
+   "description": "The name of the room. The value does not need to be unique.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ivschat.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVSChat::Room"
+}
