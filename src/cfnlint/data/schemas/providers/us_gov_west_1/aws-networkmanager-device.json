@@ -1,0 +1,138 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DeviceArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "description": "The site location.",
+   "properties": {
+    "Address": {
+     "description": "The physical address.",
+     "type": "string"
+    },
+    "Latitude": {
+     "description": "The latitude.",
+     "type": "string"
+    },
+    "Longitude": {
+     "description": "The longitude.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a device resource.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::NetworkManager::Device type describes a device.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateDevice"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteDevice"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:GetDevices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetDevices"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateDevice",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/DeviceId"
+ ],
+ "properties": {
+  "Description": {
+   "description": "The description of the device.",
+   "type": "string"
+  },
+  "DeviceArn": {
+   "description": "The Amazon Resource Name (ARN) of the device.",
+   "type": "string"
+  },
+  "DeviceId": {
+   "description": "The ID of the device.",
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location",
+   "description": "The site location."
+  },
+  "Model": {
+   "description": "The device model",
+   "type": "string"
+  },
+  "SerialNumber": {
+   "description": "The device serial number.",
+   "type": "string"
+  },
+  "SiteId": {
+   "description": "The site ID.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the device.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "description": "The device type.",
+   "type": "string"
+  },
+  "Vendor": {
+   "description": "The device vendor.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeviceId",
+  "/properties/DeviceArn"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "typeName": "AWS::NetworkManager::Device"
+}
