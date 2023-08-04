@@ -1,7 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/ResourceGroupName"
+  "/properties/ResourceGroupName",
+  "/properties/GroupingType"
  ],
  "definitions": {
   "Alarm": {
@@ -472,7 +473,7 @@
      "description": "The type of Windows Events to log.",
      "maxLength": 260,
      "minLength": 1,
-     "pattern": "^[a-zA-Z0-9_ \\\\/-]$",
+     "pattern": "^[a-zA-Z0-9_ \\\\/-]+$",
      "type": "string"
     },
     "LogGroupName": {
@@ -502,68 +503,28 @@
  "handlers": {
   "create": {
    "permissions": [
-    "applicationinsights:CreateApplication",
-    "applicationinsights:DescribeApplication",
-    "applicationinsights:CreateComponent",
-    "applicationinsights:DescribeComponent",
-    "applicationinsights:CreateLogPattern",
-    "applicationinsights:DescribeLogPattern",
-    "applicationinsights:DescribeComponentConfigurationRecommendation",
-    "applicationinsights:UpdateComponentConfiguration",
-    "applicationinsights:ListComponents"
+    "*"
    ],
    "timeoutInMinutes": 600
   },
   "delete": {
    "permissions": [
-    "applicationinsights:DeleteApplication",
-    "applicationinsights:DescribeApplication"
+    "*"
    ]
   },
   "list": {
    "permissions": [
-    "applicationinsights:ListApplications",
-    "applicationinsights:DescribeApplication",
-    "applicationinsights:ListTagsForResource",
-    "applicationinsights:DescribeComponent",
-    "applicationinsights:ListComponents",
-    "applicationinsights:DescribeLogPattern",
-    "applicationinsights:ListLogPatterns",
-    "applicationinsights:ListLogPatternSets"
+    "*"
    ]
   },
   "read": {
    "permissions": [
-    "applicationinsights:DescribeApplication",
-    "applicationinsights:ListTagsForResource",
-    "applicationinsights:DescribeComponent",
-    "applicationinsights:ListComponents",
-    "applicationinsights:DescribeLogPattern",
-    "applicationinsights:ListLogPatterns",
-    "applicationinsights:ListLogPatternSets"
+    "*"
    ]
   },
   "update": {
    "permissions": [
-    "applicationinsights:CreateApplication",
-    "applicationinsights:DescribeApplication",
-    "applicationinsights:UpdateApplication",
-    "applicationinsights:TagResource",
-    "applicationinsights:UntagResource",
-    "applicationinsights:ListTagsForResource",
-    "applicationinsights:CreateComponent",
-    "applicationinsights:DescribeComponent",
-    "applicationinsights:DeleteComponent",
-    "applicationinsights:ListComponents",
-    "applicationinsights:CreateLogPattern",
-    "applicationinsights:DeleteLogPattern",
-    "applicationinsights:DescribeLogPattern",
-    "applicationinsights:ListLogPatterns",
-    "applicationinsights:ListLogPatternSets",
-    "applicationinsights:UpdateLogPattern",
-    "applicationinsights:DescribeComponentConfiguration",
-    "applicationinsights:DescribeComponentConfigurationRecommendation",
-    "applicationinsights:UpdateComponentConfiguration"
+    "*"
    ],
    "timeoutInMinutes": 600
   }
@@ -654,5 +615,12 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationinsights.git",
  "taggable": true,
- "typeName": "AWS::ApplicationInsights::Application"
+ "typeName": "AWS::ApplicationInsights::Application",
+ "writeOnlyProperties": [
+  "/properties/ComponentMonitoringSettings",
+  "/properties/LogPatternSets",
+  "/properties/CustomComponents",
+  "/properties/GroupingType",
+  "/properties/OpsItemSNSTopicArn"
+ ]
 }
