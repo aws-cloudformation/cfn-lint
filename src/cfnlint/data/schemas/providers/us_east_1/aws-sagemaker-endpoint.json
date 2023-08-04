@@ -74,10 +74,32 @@
     },
     "BlueGreenUpdatePolicy": {
      "$ref": "#/definitions/BlueGreenUpdatePolicy"
+    },
+    "RollingUpdatePolicy": {
+     "$ref": "#/definitions/RollingUpdatePolicy"
+    }
+   },
+   "type": "object"
+  },
+  "RollingUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumBatchSize": {
+     "$ref": "#/definitions/CapacitySize"
+    },
+    "MaximumExecutionTimeoutInSeconds": {
+     "type": "integer"
+    },
+    "RollbackMaximumBatchSize": {
+     "$ref": "#/definitions/CapacitySize"
+    },
+    "WaitIntervalInSeconds": {
+     "type": "integer"
     }
    },
    "required": [
-    "BlueGreenUpdatePolicy"
+    "MaximumBatchSize",
+    "WaitIntervalInSeconds"
    ],
    "type": "object"
   },

@@ -5,6 +5,21 @@
   "/properties/VolumeType"
  ],
  "definitions": {
+  "AutocommitPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
   "ClientConfigurations": {
    "additionalProperties": false,
    "properties": {
@@ -58,6 +73,9 @@
     },
     "SizeInMegabytes": {
      "type": "string"
+    },
+    "SnaplockConfiguration": {
+     "$ref": "#/definitions/SnaplockConfiguration"
     },
     "SnapshotPolicy": {
      "type": "string"
@@ -145,6 +163,68 @@
    "required": [
     "CopyStrategy",
     "SnapshotARN"
+   ],
+   "type": "object"
+  },
+  "RetentionPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SnaplockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuditLogVolume": {
+     "type": "string"
+    },
+    "AutocommitPeriod": {
+     "$ref": "#/definitions/AutocommitPeriod"
+    },
+    "PrivilegedDelete": {
+     "type": "string"
+    },
+    "RetentionPeriod": {
+     "$ref": "#/definitions/SnaplockRetentionPeriod"
+    },
+    "SnaplockType": {
+     "type": "string"
+    },
+    "VolumeAppendModeEnabled": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SnaplockType"
+   ],
+   "type": "object"
+  },
+  "SnaplockRetentionPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultRetention": {
+     "$ref": "#/definitions/RetentionPeriod"
+    },
+    "MaximumRetention": {
+     "$ref": "#/definitions/RetentionPeriod"
+    },
+    "MinimumRetention": {
+     "$ref": "#/definitions/RetentionPeriod"
+    }
+   },
+   "required": [
+    "DefaultRetention",
+    "MaximumRetention",
+    "MinimumRetention"
    ],
    "type": "object"
   },
