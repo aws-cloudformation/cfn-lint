@@ -1,6 +1,12 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "SftpConnectorTrustedHostKey": {
+   "description": "The public host key for the external server to which you are connecting.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "description": "Creates a key-value pair for a specific resource.",
@@ -70,7 +76,7 @@
    "type": "string"
   },
   "Arn": {
-   "description": "Specifies the unique Amazon Resource Name (ARN) for the workflow.",
+   "description": "Specifies the unique Amazon Resource Name (ARN) for the connector.",
    "maxLength": 1600,
    "minLength": 20,
    "pattern": "arn:.*",
@@ -80,6 +86,12 @@
    "additionalProperties": false,
    "description": "Configuration for an AS2 connector.",
    "properties": {
+    "BasicAuthSecretId": {
+     "description": "ARN or name of the secret in AWS Secrets Manager which contains the credentials for Basic authentication. If empty, Basic authentication is disabled for the AS2 connector",
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    },
     "Compression": {
      "description": "Compression setting for this AS2 connector configuration.",
      "enum": [
@@ -167,8 +179,31 @@
    "pattern": "arn:.*role/.*",
    "type": "string"
   },
+  "SftpConfig": {
+   "additionalProperties": false,
+   "description": "Configuration for an SFTP connector.",
+   "properties": {
+    "TrustedHostKeys": {
+     "description": "List of public host keys, for the external server to which you are connecting.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SftpConnectorTrustedHostKey"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "UserSecretId": {
+     "description": "ARN or name of the secret in AWS Secrets Manager which contains the SFTP user's private keys or passwords.",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Tags": {
-   "description": "Key-value pairs that can be used to group and search for workflows. Tags are metadata attached to workflows for any purpose.",
+   "description": "Key-value pairs that can be used to group and search for connectors. Tags are metadata attached to connectors for any purpose.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -189,7 +224,6 @@
  ],
  "required": [
   "AccessRole",
-  "As2Config",
   "Url"
  ],
  "tagging": {
