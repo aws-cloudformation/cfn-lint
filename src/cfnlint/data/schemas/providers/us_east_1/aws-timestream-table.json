@@ -5,6 +5,56 @@
   "/properties/TableName"
  ],
  "definitions": {
+  "PartitionKey": {
+   "additionalProperties": false,
+   "description": "An attribute used in partitioning data in a table. There are two types of partition keys: dimension keys and measure keys. A dimension key partitions data on a dimension name, while a measure key partitions data on the measure name.",
+   "properties": {
+    "EnforcementInRecord": {
+     "$ref": "#/definitions/PartitionKeyEnforcementLevel"
+    },
+    "Name": {
+     "$ref": "#/definitions/SchemaName"
+    },
+    "Type": {
+     "$ref": "#/definitions/PartitionKeyType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "PartitionKeyEnforcementLevel": {
+   "description": "The level of enforcement for the specification of a dimension key in ingested records. Options are REQUIRED (dimension key must be specified) and OPTIONAL (dimension key does not have to be specified).",
+   "enum": [
+    "REQUIRED",
+    "OPTIONAL"
+   ],
+   "type": "string"
+  },
+  "PartitionKeyList": {
+   "description": "A list of partition keys defining the attributes used to partition the table data. The order of the list determines the partition hierarchy. The name and type of each partition key as well as the partition key order cannot be changed after the table is created. However, the enforcement level of each partition key can be changed.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PartitionKey"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "PartitionKeyType": {
+   "description": "The type of the partition key. Options are DIMENSION (dimension key) and MEASURE (measure key).",
+   "enum": [
+    "DIMENSION",
+    "MEASURE"
+   ],
+   "type": "string"
+  },
+  "SchemaName": {
+   "description": "The name of the attribute used for a dimension key.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "description": "You can use the Resource Tags property to apply tags to resources, which can help you identify and categorize those resources.",
@@ -28,13 +78,21 @@
   "create": {
    "permissions": [
     "timestream:CreateTable",
-    "timestream:DescribeEndpoints"
+    "timestream:DescribeEndpoints",
+    "timestream:TagResource",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "kms:GenerateDataKey*",
+    "kms:DescribeKey",
+    "kms:Encrypt"
    ]
   },
   "delete": {
    "permissions": [
     "timestream:DeleteTable",
-    "timestream:DescribeEndpoints"
+    "timestream:DescribeEndpoints",
+    "timestream:DescribeTable"
    ]
   },
   "list": {
@@ -55,7 +113,13 @@
     "timestream:UpdateTable",
     "timestream:DescribeEndpoints",
     "timestream:TagResource",
-    "timestream:UntagResource"
+    "timestream:UntagResource",
+    "s3:PutObject",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "kms:GenerateDataKey*",
+    "kms:DescribeKey",
+    "kms:Encrypt"
    ]
   }
  },
@@ -135,6 +199,16 @@
     "MemoryStoreRetentionPeriodInHours": {
      "description": "The duration for which data must be stored in the memory store.",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Schema": {
+   "additionalProperties": false,
+   "description": "A Schema specifies the expected data model of the table.",
+   "properties": {
+    "CompositePartitionKey": {
+     "$ref": "#/definitions/PartitionKeyList"
     }
    },
    "type": "object"

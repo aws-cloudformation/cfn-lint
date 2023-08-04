@@ -4,6 +4,22 @@
   "/properties/MonitorName"
  ],
  "definitions": {
+  "HealthEventsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "PerformanceScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
   "InternetMeasurementsLogDelivery": {
    "additionalProperties": false,
    "properties": {
@@ -84,7 +100,8 @@
     "logs:GetLogDelivery",
     "s3:GetBucketPolicy",
     "s3:PutBucketPolicy",
-    "s3:ListBucket"
+    "s3:ListBucket",
+    "iam:PassRole"
    ]
   },
   "delete": {
@@ -123,7 +140,8 @@
     "logs:ListLogDeliveries",
     "s3:GetBucketPolicy",
     "s3:PutBucketPolicy",
-    "s3:ListBucket"
+    "s3:ListBucket",
+    "iam:PassRole"
    ]
   }
  },
@@ -133,6 +151,9 @@
  "properties": {
   "CreatedAt": {
    "$ref": "#/definitions/iso8601UTC"
+  },
+  "HealthEventsConfig": {
+   "$ref": "#/definitions/HealthEventsConfig"
   },
   "InternetMeasurementsLogDelivery": {
    "$ref": "#/definitions/InternetMeasurementsLogDelivery"
