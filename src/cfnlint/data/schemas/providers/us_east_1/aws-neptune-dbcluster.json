@@ -90,7 +90,8 @@
     "rds:ListTagsForResource",
     "rds:ModifyDBCluster",
     "rds:RestoreDBClusterFromSnapshot",
-    "rds:RestoreDBClusterToPointInTime"
+    "rds:RestoreDBClusterToPointInTime",
+    "kms:*"
    ],
    "timeoutInMinutes": 2160
   },
@@ -101,21 +102,24 @@
     "rds:DescribeDBClusters",
     "rds:DescribeGlobalClusters",
     "rds:ListTagsForResource",
-    "rds:RemoveFromGlobalCluster"
+    "rds:RemoveFromGlobalCluster",
+    "kms:*"
    ],
    "timeoutInMinutes": 2160
   },
   "list": {
    "permissions": [
     "rds:DescribeDBClusters",
-    "rds:ListTagsForResource"
+    "rds:ListTagsForResource",
+    "kms:*"
    ],
    "timeoutInMinutes": 2160
   },
   "read": {
    "permissions": [
     "rds:DescribeDBClusters",
-    "rds:ListTagsForResource"
+    "rds:ListTagsForResource",
+    "kms:*"
    ],
    "timeoutInMinutes": 2160
   },
@@ -134,7 +138,8 @@
     "rds:ModifyDBInstance",
     "rds:RemoveFromGlobalCluster",
     "rds:RemoveRoleFromDBCluster",
-    "rds:RemoveTagsFromResource"
+    "rds:RemoveTagsFromResource",
+    "kms:*"
    ],
    "timeoutInMinutes": 2160
   }
@@ -190,6 +195,10 @@
    "description": "The name of the DB parameter group to apply to all instances of the DB cluster. Used only in case of a major EngineVersion upgrade request.",
    "type": "string"
   },
+  "DBPort": {
+   "description": "The port number on which the DB instances in the DB cluster accept connections. \n\nIf not specified, the default port used is `8182`. \n\nNote: `Port` property will soon be deprecated from this resource. Please update existing templates to rename it with new property `DBPort` having same functionalities.",
+   "type": "integer"
+  },
   "DBSubnetGroupName": {
    "description": "Specifies information on the subnet group associated with the DB cluster, including the name, description, and subnets in the subnet group.",
    "type": "string"
@@ -208,7 +217,7 @@
    "uniqueItems": true
   },
   "Endpoint": {
-   "description": "The connection endpoint for the DB cluster. For example: mystack-mydbcluster-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com",
+   "description": "The connection endpoint for the DB cluster. For example: `mystack-mydbcluster-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`",
    "type": "string"
   },
   "EngineVersion": {
@@ -224,7 +233,7 @@
    "type": "string"
   },
   "Port": {
-   "description": "Specifies the port that the database engine is listening on.",
+   "description": "The port number on which the DB cluster accepts connections. For example: `8182`.",
    "type": "string"
   },
   "PreferredBackupWindow": {
@@ -236,7 +245,7 @@
    "type": "string"
   },
   "ReadEndpoint": {
-   "description": "The reader endpoint for the DB cluster. For example: mystack-mydbcluster-ro-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com",
+   "description": "The reader endpoint for the DB cluster. For example: `mystack-mydbcluster-ro-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com`",
    "type": "string"
   },
   "RestoreToTime": {
@@ -297,9 +306,9 @@
  },
  "readOnlyProperties": [
   "/properties/Endpoint",
-  "/properties/ReadEndpoint",
   "/properties/ClusterResourceId",
-  "/properties/Port"
+  "/properties/Port",
+  "/properties/ReadEndpoint"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
  "tagging": {
