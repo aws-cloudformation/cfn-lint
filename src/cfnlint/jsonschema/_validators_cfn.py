@@ -5,26 +5,19 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import deque
-from typing import Any, Callable, Dict, Iterator, Sequence
+from typing import Any, Deque, Dict, Iterator, Sequence
+
+import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
-from cfnlint.context.value import ValueType
-from cfnlint.helpers import (
-    FUNCTIONS,
-    FUNCTIONS_LIST,
-    FUNCTIONS_OBJECT,
-    FUNCTIONS_SINGLE,
-    PSEUDOPARAMS,
-    PSEUDOPARAMS_MULTIPLE,
-    PSEUDOPARAMS_SINGLE,
-    ToPy,
-)
+from cfnlint.context.context import Parameter
+from cfnlint.helpers import FUNCTIONS, FUNCTIONS_SINGLE, REGIONS, ToPy
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V
 from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.template.functions.exceptions import Unpredictable
 
-_singular_types = ["string", "boolean", "number", "integer"]
+_singular_types = ["boolean", "integer", "number", "string"]
+_all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
 
 def additionalProperties(
@@ -40,234 +33,285 @@ def additionalProperties(
             yield err
 
 
-def _fn(
-    validator: Validator, schema: Any, instance: Any, fn: str
-) -> Iterator[ValidationError]:
-    if not validator.cfn:
-        return
-    try:
-        for value in validator.cfn.functions.get_value(
-            instance, validator.context.region
-        ):
-            evolved = validator.evolve(
-                schema=schema,
-                context=validator.context.evolve(
-                    value=value,
-                    path=deque([fn]),
-                ),
-            )
-            for err in evolved.iter_errors(instance=value.value):
-                err.message = err.message.replace(f"{err.instance!r}", f"{instance!r}")
-                if value.value_type == ValueType.FUNCTION:
-                    err.path_override = value.path
-                err.path.extendleft(list(instance.keys()))
-                yield err
-    except Unpredictable:
-        evolved = validator.evolve(
-            function_filter=validator.function_filter.evolve(functions=[]),
-            schema=schema,
-            context=validator.context.evolve(
-                path=deque([fn]),
-            ),
-        )
-        for err in evolved.iter_errors(instance=instance):
-            err.path.extendleft(list(instance.keys()))
-            yield err
-
-
-def _fn_obj(functions: Sequence[str]) -> Iterator[ValidationError]:
-    return {
-        "minProperties": 1,
-        "maxProperties": 1,
-        "properties": dict.fromkeys(functions, True),
-    }
-
-
-class Fn:
-    def __init__(self) -> None:
-        self.types = []
-        self.supported_functions = []
-
-    def schema_function(self, functions: Sequence[str]) -> Iterator[ValidationError]:
-        return {}
-
-    def is_valid(
-        self, validator: Validator, instance: Any, schema: Any, fn: ToPy | None = None
-    ) -> Iterator[ValidationError]:
-        try:
-            fn_name = None
-            if fn is not None:
-                fn_name = fn.py
-            err = next(validator.descend(instance, schema, fn_name, None))
-            if fn is not None:
-                err.validator = fn.py
-            yield err
-        except StopIteration:
-            pass
-
-
-class Scalar(Fn):
+class Scalar:
     def __init__(self) -> None:
         self.types = ["string"]
         self.supported_functions = []
 
-    def schema_function(
-        self, functions: Sequence[str] | None = None
-    ) -> Iterator[ValidationError]:
-        functions = functions or []
-        return {"type": self.types}
+    def schema_function(self) -> Iterator[ValidationError]:
+        return {
+            "type": self.types,
+        }
 
     def is_valid(
-        self, validator: Validator, instance: Any, schema: Any
+        self,
+        validator: Validator,
+        instance: Any,
     ) -> Iterator[ValidationError]:
+        ff = validator.function_filter.evolve(functions=self.supported_functions)
+        v = validator.evolve(function_filter=ff)
         try:
-            err = next(validator.descend(instance, self.schema_function(), None, None))
+            err = next(v.descend(instance, self.schema_function(), None, None))
             yield err
         except StopIteration:
             pass
 
 
-class FnScalar(Fn):
+class Fn(Scalar):
     def __init__(self, name: str) -> None:
-        self.types = []
-        self.fn = ToPy(name)
-        self.supported_functions = []
-
-    def schema_function(self, functions: Sequence[str]) -> Iterator[ValidationError]:
-        return {
-            "minProperties": 1,
-            "maxProperties": 1,
-            "properties": dict.fromkeys(functions, True),
-        }
-
-    def is_valid(
-        self, validator: Validator, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
-        if not validator.is_type(instance, "object"):
-            return
-
-        value = instance.get(self.fn.py)
-        for err in super().is_valid(validator, value, {"type": self.types}, self.fn):
-            yield err
-            return
-
-        if validator.is_type(value, "object"):
-            for err in super().is_valid(
-                validator,
-                value,
-                self.schema_function(self.supported_functions),
-                self.fn,
-            ):
-                yield err
-                return
-
-
-class FnArray(Fn):
-    def __init__(self, name: str, min_length: int, max_length: int) -> None:
         super().__init__()
-        self.types = ["array"]
         self.fn = ToPy(name)
-        self._min_length = min_length
-        self._max_length = max_length
-        self.items: Sequence[Fn] = []
+        self.supported_types = _singular_types
 
-    def schema_function(self) -> Iterator[ValidationError]:
-        return {
-            "minItems": self._min_length,
-            "maxItems": self._max_length,
-            "type": "array",
-        }
+    def value(self, instance: Dict[str, Any]) -> Any:
+        return instance.get(self.fn.name)
 
-    def item_function(self, functions: Sequence[str]) -> Iterator[ValidationError]:
-        return {
-            "minProperties": 1,
-            "maxProperties": 1,
-            "properties": dict.fromkeys(functions, True),
-        }
+    def descend(
+        self,
+        validator: Validator,
+        instance: Any,
+        schema: Any,
+        path: Deque | None = None,
+    ) -> Iterator[ValidationError]:
+        for err in validator.descend(instance, schema, path):
+            err.path.appendleft(self.fn.name)
+            if err.validator not in cfn_validators:
+                err.validator = self.fn.py
+            yield err
 
     def is_valid(
-        self, validator: Validator, instance: Any, schema: Any
+        self,
+        validator: Validator,
+        instance: Any,
     ) -> Iterator[ValidationError]:
+        tS = ensure_list(validator.schema.get("type"))
+        if tS:
+            for t in tS:
+                if t in self.supported_types:
+                    break
+            else:
+                reprs = ", ".join(repr(type) for type in self.supported_types)
+                yield ValidationError(f"{instance!r} is not of type {reprs}")
         if not validator.is_type(instance, "object"):
             return
 
         value = instance.get(self.fn.name)
-        for err in super().is_valid(validator, value, self.schema_function()):
+        try:
+            err = next(super().is_valid(validator, value))
+            err.validator = self.fn.py
             yield err
+        except StopIteration:
+            pass
+
+
+class FnArray:
+    def __init__(self, name: str, min_length: int = 0, max_length: int = 0) -> None:
+        self.fn = ToPy(name)
+        self._min_length = min_length
+        self._max_length = max_length
+        self.items: Sequence[Scalar] = []
+        self.supported_types = ["array"]
+
+    def value(self, instance: Dict[str, Any]) -> Any:
+        return instance.get(self.fn.name)
+
+    def schema_function(self) -> Iterator[ValidationError]:
+        schema = {
+            "type": "array",
+        }
+        if not self._min_length:
+            schema["minItems"] = self._min_length
+
+        if not self._max_length:
+            schema["maxItems"] = self._max_length
+        return schema
+
+    def descend(
+        self,
+        validator: Validator,
+        instance: Any,
+        schema: Any,
+        path: Deque | None = None,
+    ) -> Iterator[ValidationError]:
+        for err in validator.descend(instance, schema, path):
+            err.path.appendleft(self.fn.name)
+            if err.validator not in cfn_validators:
+                err.validator = self.fn.py
+            yield err
+
+    def is_valid(
+        self,
+        validator: Validator,
+        instance: Any,
+    ) -> Iterator[ValidationError]:
+        tS = ensure_list(validator.schema.get("type"))
+        if tS:
+            for t in tS:
+                if t in self.supported_types:
+                    break
+            else:
+                reprs = ", ".join(repr(type) for type in self.supported_types)
+                yield ValidationError(f"{instance!r} is not of type {reprs}")
+
+        if not validator.is_type(instance, "object"):
             return
 
-        if validator.is_type(value, "array"):
-            for i, item in enumerate(self.items):
-                yield from item.is_valid(validator, value[i], schema)
+        value = instance.get(self.fn.name)
+
+        try:
+            err = next(self.descend(validator, value, self.schema_function(), None))
+            yield err
+        except StopIteration:
+            pass
+
+        for i in range(0, self._max_length):
+            try:
+                err = next(self.items[i].is_valid(validator, value[i]))
+                err.validator = self.fn.py
+                yield err
+            except (IndexError, StopIteration):
+                pass
 
 
-class Ref(FnScalar):
+class Ref(Fn):
     def __init__(self) -> None:
         super().__init__("Ref")
-        self.types.append("string")
+        self.supported_types = ["array"] + _singular_types
 
     def ref(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
         if validator.context.transforms.has_language_extensions_transform():
-            self.types.append("object")
             self.supported_functions.append("Ref")
 
-        for err in self.is_valid(validator, instance, schema):
+        for err in self.is_valid(validator, instance):
             yield err
             return
 
-        if validator.is_type(instance, "string"):
-            valid_refs = (
-                PSEUDOPARAMS
-                + list(validator.context.parameters.keys())
-                + list(validator.context.resources.keys())
+        value = self.value(instance)
+        if validator.is_type(value, "string"):
+            for err in self.descend(
+                validator, value, {"enum": validator.context.refs}, None
+            ):
+                yield err
+                return
+
+        # if the ref is to pseudo-parameter or parameter we can validate the values
+        if value in validator.context.other_refs:
+            for err in self.descend(
+                validator, value, validator.context.parameters[value], None
+            ):
+                yield err
+                return
+        elif value in validator.context.parameters:
+            default = validator.context.parameters[value].default
+            if default:
+                ctx = validator.context.evolve(
+                    value_path=deque(["Parameters", value, "Default"])
+                )
+                v = validator.evolve(context=ctx)
+                yield from v.descend(default, s, self.fn.name, None)
+
+            allowed_values = validator.context.parameters[value].allowed_values
+            if allowed_values:
+                for i, allowed_value in enumerate(allowed_values):
+                    ctx = validator.context.evolve(
+                        value_path=deque(["Parameters", value, "AllowedValues", i])
+                    )
+                    v = validator.evolve(context=ctx)
+                    yield from v.descend(allowed_value, s, self.fn.name, None)
+
+
+class FnGetAtt(Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::GetAtt")
+        self.types = ["array", "string"]
+        self.schema_array = {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+                {"type": "string"},
+                {"type": "string"},
+            ],
+        }
+        self.validator_resource = Scalar()
+        self.validator_attribute = Scalar()
+        self.supported_types = _all_types
+
+    def get_att(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        if validator.context.transforms.has_language_extensions_transform():
+            self.supported_functions.append("Ref")
+
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+        value = self.value(instance)
+        paths = [0, 1]
+        if validator.is_type(value, "string"):
+            paths = [None, None]
+            value = value.split(".", 1)
+
+        for err in self.descend(
+            validator,
+            value[0],
+            {"enum": list(validator.context.resources.keys())},
+            paths[0],
+        ):
+            yield err
+            return
+
+        if all(
+            not (bool(re.match(each, value[1])))
+            for each in validator.context.resources[value[0]].get_atts
+        ):
+            yield ValidationError(
+                f"{value[1]!r} is not one of {validator.context.resources[value[0]].get_atts!r}",
+                validator=self.fn.py,
+                path=deque([self.fn.name, 1]),
             )
-            yield from self.descend(validator, instance, {"enum": valid_refs})
 
 
-# pylint: disable=unused-argument
-def fn_getatt(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::GetAtt")
-
-
-class FnBase64(FnScalar):
+class FnBase64(Fn):
     def __init__(self) -> None:
         super().__init__("Fn::Base64")
-        self.types.extend(["string", "object"])
+        self.supported_functions = FUNCTIONS_SINGLE
+        self.supported_types = ["string"]
 
     def base64(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
-        self.supported_functions = FUNCTIONS_SINGLE
-
-        yield from self.validator(validator, s, instance, schema)
+        yield from self.is_valid(validator, instance)
 
 
-class FnGetAZs(FnScalar):
+class FnGetAZs(Fn):
     def __init__(self) -> None:
         super().__init__("Fn::GetAZs")
-        self.types.extend(["string", "object"])
-        self.supported_functions.append("Ref")
+        self.supported_functions = ["Ref"]
+        self.supported_types = ["array"]
 
     def get_azs(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
-        yield from self.validator(validator, s, instance, schema)
+        yield from self.is_valid(validator, instance)
 
-        if validator.is_type(instance, "string"):
-            valid_refs = ["AWS::Region"] + list(validator.context.parameters.keys())
-            yield from validator.descend(
-                self.value(instance), {"enum": valid_refs}, None, None
-            )
+        value = self.value(instance)
+        if validator.is_type(value, "string"):
+            # value can be empty which is equivalent {"Ref": "AWS::NoValue"}
+            if value != "":
+                yield from self.descend(validator, value, {"enum": REGIONS}, None)
+            return
+
+        valid_refs = ["AWS::Region"].extend(list(validator.context.parameters.keys()))
+        yield from self.descend(validator, value, {"enum": valid_refs}, None)
 
 
-class FnImportalue(FnScalar):
+class FnImportalue(Fn):
     def __init__(self) -> None:
         super().__init__("Fn::ImportValue")
-        self.types.extend(["string", "object"])
         self.supported_functions.extend(
             [
                 "Fn::Base64",
@@ -284,7 +328,7 @@ class FnImportalue(FnScalar):
     def import_value(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
-        yield from self.validator(validator, s, instance, schema)
+        yield from self.is_valid(validator, instance)
 
 
 class FnJoin(FnArray):
@@ -292,249 +336,330 @@ class FnJoin(FnArray):
         super().__init__("Fn::Join", 2, 2)
         self.items.append(Scalar())
         values = Scalar()
-        values.types.append("array")
-        self.items.append(values)
-
-        self.supported_functions.extend(
+        values.types = ["array"]
+        values.supported_functions.extend(
             [
-                "Fn::Base64",
                 "Fn::FindInMap",
                 "Fn::If",
-                "Fn::Join",
-                "Fn::Select",
                 "Fn::Split",
-                "Fn::Sub",
                 "Ref",
             ]
         )
+        self.supported_types = ["string"]
+        self.items.append(values)
 
     def join(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
-        for err in self.is_valid(validator, instance, schema):
+        for err in self.is_valid(validator, instance):
             yield err
             return
 
         # we have to validate the second element manually
         values = instance.get(self.fn.name)[1]
 
-        if validator.is_type(values, "object"):
-            for err in validator.descend(
-                values,
-                schema={
-                    "minProperties": 1,
-                    "maxProperties": 1,
-                    "properties": dict.fromkeys(FUNCTIONS_LIST, True),
-                },
-            ):
-                yield err
-                return
-
         if validator.is_type(values, "array"):
             for value in values:
-                for err in validator.descend(
-                    values,
-                    schema={
-                        "minProperties": 1,
-                        "maxProperties": 1,
-                        "properties": dict.fromkeys(FUNCTIONS_LIST, True),
-                    },
-                ):
+                scalar = Scalar()
+                scalar.supported_functions = [
+                    "Fn::Base64",
+                    "Fn::FindInMap",
+                    "Fn::GetAtt",
+                    "Fn::If",
+                    "Fn::ImportValue",
+                    "Fn::Join",
+                    "Fn::Select",
+                    "Fn::Sub",
+                    "Fn::Transform",
+                    "Ref",
+                ]
+
+                for err in scalar.is_valid(validator, value):
                     yield err
                     return
 
 
-# pylint: disable=unused-argument
-def fn_join(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    fn_name = "Fn::Join"
-    if not validator.is_type(instance, "object"):
-        return
+class FnSplit(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Split", 2, 2)
+        self.items.append(Scalar())
+        s = Scalar()
+        s.supported_functions.extend(
+            [
+                "Fn::Base64",
+                "Fn::FindInMap",
+                "Fn::GetAtt",
+                "Fn::GetAZs",
+                "Fn::If",
+                "Fn::ImportValue",
+                "Fn::Join",
+                "Fn::Select",
+                "Fn::Sub",
+                "Ref",
+            ]
+        )
+        self.items.append(s)
 
-    join = instance.get(fn_name)
-
-    join_schema = {
-        "type": "array",
-        "minItems": 2,
-        "maxItems": 2,
-        "items": [
-            {"type": "string"},
-            {"type": ["array", "object"]},
-        ],
-    }
-
-    for err in validator.descend(join, join_schema, fn_name, None):
-        err.validator = "fn_join"
-        yield err
-        return
-
-    if validator.is_type(join[1], "array"):
-        for i, value in enumerate(join[1]):
-            for err in validator.descend(
-                value, {"type": ["string", "object"]}, fn_name, None
-            ):
-                err.validator = "fn_join"
-                err.path.append(1)
-                err.path.append(i)
-                yield err
-                return
-
-            if validator.is_type(value, "object"):
-                for err in validator.descend(
-                    value, _fn_obj(FUNCTIONS_SINGLE), fn_name, None
-                ):
-                    err.validator = "fn_join"
-                    err.path.append(1)
-                    err.path.append(i)
-                    yield err
-                return
-
-        return
-
-    for err in validator.descend(join[1], _fn_obj(FUNCTIONS_LIST), fn_name, None):
-        err.validator = "fn_join"
-        err.path.append(1)
-        yield err
-
-
-# pylint: disable=unused-argument
-def fn_split(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    fn_name = "Fn::Split"
-    if not validator.is_type(instance, "object"):
-        return
-
-    split = instance.get(fn_name)
-
-    split_schema = {
-        "type": "array",
-        "minItems": 2,
-        "maxItems": 2,
-        "items": [
-            {"type": "string"},
-            {"type": ["string", "object"]},
-        ],
-    }
-
-    for err in validator.descend(split, split_schema, fn_name, None):
-        err.validator = "fn_split"
-        yield err
-        return
-
-    for err in validator.descend(split[1], _fn_obj(FUNCTIONS_SINGLE), fn_name, None):
-        err.validator = "fn_split"
-        err.path.append(1)
-        yield err
-
-
-# pylint: disable=unused-argument
-def fn_findinmap(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::FindInMap")
-
-
-# pylint: disable=unused-argument
-def fn_select(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    fn_name = "Fn::Select"
-    if not validator.is_type(instance, "object"):
-        return
-
-    select_schema = {
-        "type": "array",
-        "minItems": 2,
-        "maxItems": 2,
-        "items": [
-            {"type": ["integer", "object"]},
-            {"type": ["array", "object"]},
-        ],
-    }
-    select = instance.get(fn_name)
-
-    for err in validator.descend(select, select_schema, fn_name, None):
-        err.validator = "fn_select"
-        yield err
-        return
-
-    if validator.is_type(select[0], "object"):
-        for err in validator.descend(
-            select[0], _fn_obj(["Ref", "Fn::FindInMap"]), fn_name, None
-        ):
-            err.validator = "fn_select"
-            err.path.append(0)
+    def split(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
             yield err
-        return
+            return
 
-    if validator.is_type(select[1], "array"):
-        for i, value in enumerate(select[1]):
-            for err in validator.descend(
-                value, {"type": ["string", "object"]}, fn_name, None
-            ):
-                err.validator = "fn_select"
-                err.path.append(1)
-                err.path.append(i)
-                yield err
-                return
 
-            if validator.is_type(value, "object"):
-                for err in validator.descend(value, _fn_obj(FUNCTIONS), fn_name, None):
-                    err.validator = "fn_select"
-                    err.path.append(1)
-                    err.path.append(i)
+class FnFindInMap(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::FindInMap", 3, 3)
+        s = Scalar()
+        s.supported_functions.extend(
+            [
+                "Fn::FindInMap",
+                "Ref",
+            ]
+        )
+        self.supported_types = ["array"] + _singular_types
+        self.items.extend([s, s, s])
+
+    def find_in_map(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+
+class FnSelect(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Select", 2, 2)
+        index = Scalar()
+        index.supported_functions.extend(["Ref", "Fn::FindInMap"])
+        self.supported_types = ["array", "object"] + _singular_types
+        self.items.append(index)
+        values = Scalar()
+        values.types = ["array"]
+        values.supported_functions.extend(
+            [
+                "Fn::FindInMap",
+                "Fn::GetAtt",
+                "Fn::GetAZs",
+                "Fn::If",
+                "Fn::Split",
+                "Fn::Cidr",
+                "Ref",
+            ]
+        )
+        self.items.append(values)
+
+    def select(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+        # we have to validate the second element manually
+        values = instance.get(self.fn.name)[1]
+
+        if validator.is_type(values, "array"):
+            scalar = Scalar()
+            scalar.supported_functions = [
+                "Fn::FindInMap",
+                "Fn::GetAtt",
+                "Fn::If",
+                "Ref",
+            ]
+            for value in values:
+                for err in scalar.is_valid(validator, value):
                     yield err
+                    return
+
+
+class FnIf(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::If", 3, 3)
+        s = Scalar()
+        s.supported_functions = FUNCTIONS
+        self.items.extend([s])
+        self.supported_types = _all_types
+
+    def if_(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+        value = self.value(instance)
+        for i in [1, 2]:
+            yield from self.descend(validator, value[i], s, i)
+
+
+class FnSub(Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::Sub")
+        self.types = ["array", "string"]
+        self.schema_array = {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": [
+                {"type": "string"},
+                {"type": "object"},
+            ],
+        }
+
+        self.validator_var = Scalar()
+        self.validator_var.supported_functions = [
+            "Fn::Base64",
+            "Fn::FindInMap",
+            "Fn::GetAZs",
+            "Fn::GetAtt",
+            "Fn::If",
+            "Fn::ImportValue",
+            "Fn::Join",
+            "Fn::Select",
+            "Fn::Sub",
+            "Ref",
+            "Fn::ToJsonString",
+        ]
+
+    def _validate_string(
+        self, validator: Validator, instance: Any
+    ) -> Iterator[ValidationError]:
+        params = re.findall(r"\${([^}]+)}", instance)
+        for param in params:
+            param = param.strip()
+            if param in validator.context.refs:
+                continue
+            yield ValidationError(
+                message=f"Parameter {param!r} is not defined",
+                validator=self.fn.py,
+                path=deque([self.fn.name]),
+            )
+
+    def sub(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+        value = self.value(instance)
+        if validator.is_type(value, "array"):
+            # we have to manually validate for this function
+            for err in self.descend(
+                validator,
+                value,
+                self.schema_array,
+            ):
+                yield err
                 return
 
-        return
-    if validator.is_type(select, "object"):
-        for err in validator.descend(select[1], _fn_obj(FUNCTIONS_LIST), None, None):
-            err.validator = "fn_select"
-            err.path.append(1)
+            keys = []
+
+            errs = 0
+            for k, v in value[1].items():
+                keys.append(k)
+                for err in self.validator_var.is_valid(
+                    validator,
+                    v,
+                ):
+                    err.path.extendleft([k, 1, self.fn.name])
+                    yield err
+                    errs += 1
+            if errs > 0:
+                return
+
+            validator = validator.evolve(
+                context=validator.context.evolve(
+                    other_refs=dict.fromkeys(keys, Parameter({"Type": "String"}))
+                )
+            )
+            value = value[0]
+
+        yield from self._validate_string(validator, value)
 
 
-def fn_if(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    _instance = instance.get("Fn::If")
-    if validator.is_type(_instance, "array") and len(_instance) == 3:
-        for i in [1, 2]:
-            for err in validator.descend(
-                _instance[i],
-                s,
-            ):
-                err.path.extendleft([i, "Fn::If"])
-                yield err
+class FnCidr(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Cidr", 2, 3)
+        s = Scalar()
+        s.supported_functions = [
+            "Fn::FindInMap",
+            "Fn::Select",
+            "Ref",
+            "Fn::GetAtt",
+            "Fn::Sub",
+            "Fn::ImportValue",
+        ]
+        self.items.extend([s, s, s])
+
+    def cidr(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        yield from self.is_valid(validator, instance)
 
 
-# pylint: disable=unused-argument
-def fn_sub(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::Sub")
+class FnLength(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Length")
+        values = Scalar()
+        values.supported_functions.extend(
+            ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If"]
+        )
+        self.items.append(values)
+
+    def length(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
+
+        # we have to validate the second element manually
+        values = instance.get(self.fn.name)
+        if validator.is_type(values, "array"):
+            scalar = Scalar()
+            scalar.supported_functions = [
+                "Fn::If",
+                "Fn::Base64",
+                "Fn::FindInMap",
+                "Fn::Join",
+                "Fn::Select",
+                "Fn::Sub",
+                "Fn::ToJsonString",
+                "Ref",
+            ]
+            for value in values:
+                for err in scalar.is_valid(validator, value):
+                    yield err
+                    return
 
 
-# pylint: disable=unused-argument
-def fn_cidr(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::Cidr")
+class FnToJsonString(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::ToJsonString")
+        values = Scalar()
+        values.supported_functions.extend(FUNCTIONS)
+        self.items.append(values)
 
+    def to_json_string(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        for err in self.is_valid(validator, instance):
+            yield err
+            return
 
-# pylint: disable=unused-argument
-def fn_length(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::Length")
-
-
-# pylint: disable=unused-argument
-def fn_tojsonstring(
-    validator: Validator, s: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, "Fn::ToJsonString")
+        # we have to validate the second element manually
+        values = instance.get(self.fn.name)
+        if validator.is_type(values, "array"):
+            scalar = Scalar()
+            scalar.supported_functions = FUNCTIONS
+            for value in values:
+                for err in scalar.is_valid(validator, value):
+                    yield err
+                    return
 
 
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:
@@ -601,16 +726,16 @@ cfn_validators: Dict[str, V] = {
     "type": cfn_type,
     "ref": Ref().ref,
     "fn_base64": FnBase64().base64,
-    "fn_cidr": fn_cidr,
-    "fn_if": fn_if,
-    "fn_findinmap": fn_findinmap,
-    "fn_getatt": fn_getatt,
+    "fn_cidr": FnCidr().cidr,
+    "fn_if": FnIf().if_,
+    "fn_findinmap": FnFindInMap().find_in_map,
+    "fn_getatt": FnGetAtt().get_att,
     "fn_getazs": FnGetAZs().get_azs,
     "fn_importvalue": FnImportalue().import_value,
     "fn_join": FnJoin().join,
-    "fn_length": fn_length,
-    "fn_select": fn_select,
-    "fn_split": fn_split,
-    "fn_sub": fn_sub,
-    "fn_tojsonstring": fn_tojsonstring,
+    "fn_length": FnLength().length,
+    "fn_select": FnSelect().select,
+    "fn_split": FnSplit().split,
+    "fn_sub": FnSub().sub,
+    "fn_tojsonstring": FnToJsonString().to_json_string,
 }
