@@ -18,11 +18,8 @@ class AllowedValue(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
     tags = ["parameters", "resources", "property", "allowed value"]
 
-    def __init__(self):
-        super().__init__()
-
     def enum(self, validator, enums, instance, schema):
         for err in enum(validator, enums, instance, schema):
             err.rule = self
-            err.path_override = validator.context.value.path
+            err.path_override = validator.context.value_path
             yield err

@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import enum
+from collections import UserDict
 from typing import Any, Dict, Optional
+
+import regex as re
 
 from cfnlint.schema._pointer import resolve_pointer
 
@@ -41,10 +44,41 @@ _all_property_types = [
     "AWS::StepFunctions::Activity",
 ]
 
+_unnamed_string_types = ("AWS::CloudFormation::Stack",)
+
+_unnamed_unknown_types = (
+    "Custom::",
+    "AWS::Serverless::",
+    "AWS::CloudFormation::CustomResource",
+)
+
+
+class _AttributeDict(UserDict):
+    def __init__(self, __dict: None = None) -> None:
+        super().__init__(__dict)
+        self.data: Dict[str, GetAtt] = {}
+
+    def __getitem__(self, key: str) -> "GetAtt":
+        possible_items = {}
+        for k, v in self.data.items():
+            if re.fullmatch(k, key):
+                possible_items[k] = v
+        if not possible_items:
+            raise KeyError(key)
+        longest_match = sorted(possible_items.keys(), key=len)[-1]
+        return possible_items[longest_match]
+
+    def __repr__(self) -> str:
+        keys = []
+        for k in self.data.keys():
+            keys.append(k.replace("\\", ""))
+        return f"{keys!r}"
+
 
 class GetAttType(enum.Enum):
     ReadOnly = 1
     All = 2
+    Unnamed = 3
 
 
 class GetAtt:
@@ -75,13 +109,33 @@ class GetAtts:
     _schema: Dict[str, Any] = {}
 
     def __init__(self, schema: Dict[str, Any]) -> None:
-        self._attrs = {}
+        self._attrs = _AttributeDict()
         self._schema = schema
         type_name = schema.get("typeName", "")
         if type_name in _all_property_types:
             for name, value in schema.get("properties", {}).items():
                 self._process_schema(name, value, GetAttType.All)
             return
+        for unnamed_type in _unnamed_string_types:
+            if type_name.startswith(unnamed_type):
+                self._attrs["Outputs\\..*"] = GetAtt(
+                    schema={"type": "string"}, getatt_type=GetAttType.Unnamed
+                )
+        for unnamed_type in _unnamed_unknown_types:
+            if type_name.startswith(unnamed_type):
+                self._attrs[".*"] = GetAtt(
+                    schema={
+                        "type": [
+                            "string",
+                            "number",
+                            "boolean",
+                            "object",
+                            "array",
+                            "integer",
+                        ]
+                    },
+                    getatt_type=GetAttType.Unnamed,
+                )
         for ro_attr in schema.get("readOnlyProperties", []):
             try:
                 name = ".".join(ro_attr.split("/")[2:])
