@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.context import Context, Value, ValueType
+from cfnlint.context import Context
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.AllowedPattern import AllowedPattern
 from cfnlint.template.template import Template
@@ -52,12 +52,8 @@ class TestAllowedPattern(BaseRuleTestCase):
             context=Context(
                 "us-east-1",
                 {},
-                deque(["Parameters", "MyParameter", "Default"]),
-                Value(
-                    "1",
-                    ValueType.STANDARD,
-                    deque(["Parameters", "MyParameter", "Default"]),
-                ),
+                deque(["Ref", "MyParameter"]),
+                value_path=deque(["Parameters", "MyParameter", "Default"]),
             ),
         )
 
