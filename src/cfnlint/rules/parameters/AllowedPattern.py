@@ -22,5 +22,5 @@ class AllowedPattern(CloudFormationLintRule):
     def pattern(self, validator, patrn, instance, schema):
         for err in pattern(validator, patrn, instance, schema):
             err.rule = self
-            err.path_override = validator.context.value.path
+            err.path_override = validator.context.value_path
             yield err

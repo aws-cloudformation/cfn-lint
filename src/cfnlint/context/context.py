@@ -8,7 +8,8 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Dict, Sequence
 
-from cfnlint.helpers import REGION_PRIMARY
+from cfnlint.helpers import PSEUDOPARAMS, REGION_PRIMARY
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template import Template as CfnTemplate
 
 
@@ -47,13 +48,28 @@ class Context:
     # cfn-lint Template class
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
     resources: Dict[str, "Resource"] = field(init=True, default_factory=dict)
-    transforms: "Transforms" = field(init=True, default_factory=list)
+    other_refs: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
+
+    transforms: "Transforms" = field(init=True, default=None)
+
+    def __post_init__(self) -> None:
+        if self.transforms is None:
+            self.transforms = _init_transforms([])
+        if self.path is None:
+            self.path = deque([])
 
     def evolve(self, **kwargs) -> "Context":
         """
         Create a new context merging together attributes
         """
         cls = self.__class__
+
+        if "path" in kwargs and kwargs["path"] is not None:
+            path = self.path.copy()
+            path.append(kwargs["path"])
+            kwargs["path"] = path
+        else:
+            kwargs["path"] = self.path.copy()
         for f in fields(Context):
             if f.init:
                 kwargs.setdefault(f.name, getattr(self, f.name))
@@ -61,6 +77,15 @@ class Context:
         instance = cls(**kwargs)
 
         return instance
+
+    @property
+    def refs(self):
+        return (
+            PSEUDOPARAMS
+            + list(self.parameters.keys())
+            + list(self.resources.keys())
+            + list(self.other_refs.keys())
+        )
 
 
 @dataclass
@@ -95,12 +120,17 @@ class Resource:
 
     type: str = field(init=False)
     resource: InitVar[Any]
+    region: str = field(init=True)
 
     def __post_init__(self, resource) -> None:
         t = resource.get("Type")
         if not isinstance(t, str):
             raise ValueError("Type must be a string")
         self.type = t
+
+    @property
+    def get_atts(self) -> Dict[str, Any]:
+        return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, self.region)
 
 
 @dataclass
@@ -132,12 +162,12 @@ def _init_parameters(parameters: Any) -> None:
     return results
 
 
-def _init_resources(resources: Any) -> None:
+def _init_resources(resources: Any, region: str) -> None:
     results = {}
     if isinstance(resources, dict):
         for k, v in resources.items():
             try:
-                results[k] = Parameter(v)
+                results[k] = Resource(v, region)
             except ValueError as e:
                 pass
     return results
@@ -149,16 +179,22 @@ def _init_transforms(transforms: Any) -> None:
     return Transforms([])
 
 
-def create_context_for_resource_properties(cfn: CfnTemplate, region: str) -> Context:
+def create_context_for_resource_properties(
+    cfn: CfnTemplate, region: str, resource_name: str
+) -> Context:
     """
     Create a context for a resource properties
     """
     parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    resources = _init_resources(cfn.template.get("Resources", {}))
+    resources = _init_resources(cfn.template.get("Resources", {}), region)
     transforms = _init_transforms(cfn.template.get("Transform", []))
 
     return Context(
-        parameters=parameters, resources=resources, transforms=transforms, region=region
+        parameters=parameters,
+        resources=resources,
+        transforms=transforms,
+        region=region,
+        path=deque(["Resources", resource_name, "Properties"]),
     )
 
 
@@ -167,7 +203,7 @@ def create_context_for_outputs(cfn: CfnTemplate, region: str) -> Context:
     Create a context for a resource properties
     """
     parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    resources = _init_resources(cfn.template.get("Resources", {}))
+    resources = _init_resources(cfn.template.get("Resources", {}), region)
     transforms = _init_transforms(cfn.template.get("Transform", []))
 
     return Context(
