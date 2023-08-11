@@ -7,7 +7,6 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Value, ValueType
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
 from cfnlint.rules.resources.properties.AllowedValue import AllowedValue
@@ -32,11 +31,6 @@ def test_allowed_value(rule, validator):
     evolved = validator.evolve(
         context=validator.context.evolve(
             path=deque(["Fn::Sub"]),
-            value=Value(
-                value="bar",
-                value_type=ValueType.STANDARD,
-                path=deque([]),
-            ),
         )
     )
     errs = list(rule.enum(evolved, ["bar"], "bar", {}))
@@ -45,11 +39,7 @@ def test_allowed_value(rule, validator):
     evolved = validator.evolve(
         context=validator.context.evolve(
             path=deque(["Ref"]),
-            value=Value(
-                value="bar",
-                value_type=ValueType.FUNCTION,
-                path=deque(["Parameters", "MyParameter", "Default"]),
-            ),
+            value_path=deque(["Parameters", "MyParameter", "Default"]),
         )
     )
     errs = list(rule.enum(evolved, ["foo"], "bar", {}))

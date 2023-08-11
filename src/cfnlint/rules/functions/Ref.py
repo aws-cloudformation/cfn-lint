@@ -3,11 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Callable, Dict, Iterable, Iterator
-
-import cfnlint.functions as fns
-from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import CloudFormationLintRule
 
 
 class Ref(CloudFormationLintRule):
@@ -20,19 +16,3 @@ class Ref(CloudFormationLintRule):
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html"
     tags = ["functions", "ref"]
-
-    def match(self, cfn):
-        matches = []
-
-        ref_objs = cfn.search_deep_keys("Ref")
-        for ref_obj in ref_objs:
-            value = ref_obj[-1]
-            if not isinstance(value, (str)):
-                message = "Ref can only be a string for {0}"
-                matches.append(
-                    RuleMatch(
-                        ref_obj[:-1], message.format("/".join(map(str, ref_obj[:-1])))
-                    )
-                )
-
-        return matches

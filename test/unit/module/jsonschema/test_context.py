@@ -17,13 +17,15 @@ class TestCfnContext(unittest.TestCase):
 
         # Test evolve
         evolved = context.evolve(
-            region="us-west-2", conditions={"Foo": True}, path=deque([1])
+            region="us-west-2",
+            conditions={"Foo": True},
+            path=1,
         )
         self.assertEqual(evolved.region, "us-west-2")
         self.assertEqual(evolved.conditions, {"Foo": True})
         self.assertEqual(evolved.path, deque([1]))
 
-        evolved_again = evolved.evolve(path=deque([2]))
+        evolved_again = evolved.evolve(path=2)
         self.assertEqual(evolved_again.region, "us-west-2")
         self.assertEqual(evolved_again.conditions, {"Foo": True})
         self.assertEqual(evolved_again.path, deque([1, 2]))

@@ -214,7 +214,7 @@ def create(
             for error in self.evolve(
                 schema=schema,
                 context=self.context.evolve(
-                    path=deque([path]),
+                    path=path,
                 ),
             ).iter_errors(instance):
                 if path is not None:
