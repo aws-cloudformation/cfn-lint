@@ -931,6 +931,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     new_value = get_value(value, scenario)
                     if new_value is not None:
                         result[key] = new_value
+        if isinstance(obj, (str, int, float, bool)):
+            return obj
 
         return result
 
@@ -996,7 +998,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     result_obj = self.get_value_from_scenario(o, scenario)
                     if result_obj:
                         result_list.append(result_obj)
-
                 results.append({"Scenario": scenario, "Object": result_list})
         if isinstance(obj, dict):
             if not scenarios:
