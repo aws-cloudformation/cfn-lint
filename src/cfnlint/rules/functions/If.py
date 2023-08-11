@@ -13,26 +13,3 @@ class If(CloudFormationLintRule):
     description = "Check Fn::If to make sure its valid.  Condition has to be a string."
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if"
     tags = ["functions", "if"]
-
-    def match(self, cfn):
-        matches = []
-
-        # Build the list of functions
-        iftrees = cfn.search_deep_keys("Fn::If")
-
-        # Get the conditions used in the functions
-        for iftree in iftrees:
-            ifs = iftree[-1]
-            if isinstance(ifs, list):
-                if_condition = ifs[0]
-                if len(ifs) != 3:
-                    message = "Fn::If must be a list of 3 elements."
-                    matches.append(RuleMatch(iftree[:-1], message))
-                if not isinstance(if_condition, str):
-                    message = "Fn::If first element must be a condition and a string."
-                    matches.append(RuleMatch(iftree[:-1] + [0], message))
-            else:
-                message = "Fn::If must be a list of 3 elements."
-                matches.append(RuleMatch(iftree[:-1], message))
-
-        return matches
