@@ -100,16 +100,17 @@ class IdentityPolicy(BaseJsonSchema):
 
         if validator.is_type(policy, "string"):
             try:
-                validator = StandardValidator
+                validator_cls = StandardValidator
                 policy = json.loads(policy)
             except json.JSONDecodeError:
                 return
         elif validator.is_type(policy, "object"):
-            validator = CfnTemplateValidator
+            validator_cls = CfnTemplateValidator
 
         iam_validator = self.setup_validator(
-            validator=validator,
+            validator=validator_cls,
             schema=self.identity_schema,
+            context=validator.context,
         ).evolve(resolver=self.resolver)
 
         for err in iam_validator.iter_errors(policy):
