@@ -118,6 +118,7 @@ FUNCTIONS = [
     "Fn::Cidr",
     "Fn::Length",
     "Fn::ToJsonString",
+    "Fn::ForEach::[a-zA-Z0-9]+",
 ]
 
 FUNCTIONS_LIST = frozenset(
