@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from collections import deque
 from copy import deepcopy
 from typing import List
 

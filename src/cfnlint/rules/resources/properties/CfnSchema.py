@@ -36,7 +36,7 @@ class CfnSchema(BaseJsonSchema):
         for schema_path in schema_paths:
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
-                    yield from rule.validate(instance)
+                    yield from rule.validate(validator, instance)
 
 
 class BaseCfnSchema(BaseJsonSchema):
@@ -51,11 +51,13 @@ class BaseCfnSchema(BaseJsonSchema):
                 filename=(f"{schema_split[1]}.json"),
             )
 
-    def validate(self, instance):
+    def validate(self, validator, instance):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
         cfn_validator = self.setup_validator(
-            validator=StandardValidator, schema=self.cfn_schema
+            validator=StandardValidator,
+            schema=self.cfn_schema,
+            context=validator.context.evolve(),
         )
         err = best_match(list(cfn_validator.iter_errors(instance)))
         if err is not None:

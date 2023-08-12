@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import CloudFormationLintRule
 
 
 class If(CloudFormationLintRule):
