@@ -27,7 +27,7 @@ from cfnlint.helpers import (
     url_has_newer_version,
 )
 from cfnlint.schema.exceptions import ResourceNotFoundError
-from cfnlint.schema.getatts import GetAtt
+from cfnlint.schema.getatts import AttributeDict
 from cfnlint.schema.patch import SchemaPatch
 from cfnlint.schema.schema import Schema
 
@@ -435,7 +435,7 @@ class ProviderSchemaManager:
             schema.patch(patches=patches)
 
     @lru_cache(maxsize=None)
-    def get_type_getatts(self, resource_type: str, region: str) -> Dict[str, GetAtt]:
+    def get_type_getatts(self, resource_type: str, region: str) -> AttributeDict:
         """Get the GetAtts for a type in a region
 
         Args:
@@ -445,6 +445,8 @@ class ProviderSchemaManager:
             Dict(str, Dict): Returns a Dict where the keys are the attributes and the
                 value is the CloudFormation schema description of the attribute
         """
+        if resource_type.startswith("Custom::"):
+            resource_type = "AWS::CloudFormation::CustomResource"
         self.get_resource_schema(region=region, resource_type=resource_type)
         return self._schemas[region][resource_type].get_atts
 
