@@ -79,7 +79,7 @@ class TestLint(TestCase):
         matches = self.helper_lint_string_from_file(
             filename=filename, regions=["us-east-1", "us-west-2", "eu-west-1"]
         )
-        self.assertEqual(["E1012"], [match.rule.id for match in matches])
+        self.assertEqual(["E1020"], [match.rule.id for match in matches])
 
     def test_sam_template(self):
         filename = "test/fixtures/templates/good/transform/list_transform_many.yaml"

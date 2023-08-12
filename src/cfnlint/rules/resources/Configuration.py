@@ -4,8 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 
 import cfnlint.helpers
-from cfnlint.data.schemas.other import resource
-from cfnlint.jsonschema import StandardValidator, ValidationError
+from cfnlint.context.context import create_context_for_resources
+from cfnlint.data.schemas.other import resources
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules import RuleMatch
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
@@ -24,13 +25,12 @@ class Configuration(BaseJsonSchema):
 
     def __init__(self):
         super().__init__()
-        schema = cfnlint.helpers.load_resource(resource, "configuration.json")
+        self.schema = cfnlint.helpers.load_resource(resources, "configuration.json")
         self.regions = []
         self.cfn = None
         self.validators = {
             "awsType": self.awsType,
         }
-        self.validator = self.setup_validator(StandardValidator, schema)
 
     def initialize(self, cfn):
         super().initialize(cfn)
@@ -63,13 +63,12 @@ class Configuration(BaseJsonSchema):
                 )
 
     # pylint: disable=unused-argument
-    def _check_resource(self, resource_name, resource_values):
+    def _check_resource(self, validator, resources):
         """Check Resource"""
         matches = []
-
-        for e in self.validator.iter_errors(instance=resource_values):
+        for e in validator.iter_errors(instance=resources):
             kwargs = {}
-            e_path = ["Resources", resource_name] + list(e.path)
+            e_path = ["Resources"] + list(e.path)
             if len(e.path) > 0:
                 e_path_override = getattr(e, "path_override", None)
                 if e_path_override:
@@ -98,13 +97,11 @@ class Configuration(BaseJsonSchema):
         matches = []
 
         resources = cfn.template.get("Resources", {})
-        if not isinstance(resources, dict):
-            message = "Resource not properly configured"
-            matches.append(RuleMatch(["Resources"], message))
-        else:
-            for resource_name, resource_values in cfn.template.get(
-                "Resources", {}
-            ).items():
-                matches.extend(self._check_resource(resource_name, resource_values))
+        validator = self.setup_validator(
+            CfnTemplateValidator,
+            self.schema,
+            context=create_context_for_resources(cfn, cfn.regions[0]),
+        )
+        matches.extend(self._check_resource(validator, resources))
 
         return matches

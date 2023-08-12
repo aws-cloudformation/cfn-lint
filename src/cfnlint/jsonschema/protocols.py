@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, ClassVar, Deque, Dict, Iterator, Type
+from typing import Any, ClassVar, Dict, Iterator, Type
 
 # for python 3.7 support can be removed when we
 # drop support
@@ -105,8 +105,8 @@ class Validator(Protocol):
         self,
         instance: Any,
         schema: Any,
-        path: Deque | None = None,
-        schema_path: Deque | None = None,
+        path: str | int | None = None,
+        schema_path: str | None = None,
     ) -> Iterator[ValidationError]:
         """
         Descend into the schema validating the schema for True/False.
@@ -184,7 +184,12 @@ class Validator(Protocol):
         Draft7Validator(schema=..., format_checker=None)
         """
 
-    def extend(self, validators: Dict[str, V] | None) -> Type[Validator]:
+    def extend(
+        self,
+        validators: Dict[str, V] | None,
+        function_filter: FunctionFilter | None = None,
+        context: Context | None = None,
+    ) -> Type[Validator]:
         """
         Extends the validator with a new set of validators to replace VALIDATORS.
 
