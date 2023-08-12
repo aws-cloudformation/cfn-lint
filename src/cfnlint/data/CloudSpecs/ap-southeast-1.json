@@ -972,7 +972,9 @@
   "AWS::Config::ConfigRule.SourceDetail": "CACHED",
   "AWS::Config::ConfigurationAggregator.AccountAggregationSource": "CACHED",
   "AWS::Config::ConfigurationAggregator.OrganizationAggregationSource": "CACHED",
+  "AWS::Config::ConfigurationRecorder.ExclusionByResourceTypes": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingGroup": "CACHED",
+  "AWS::Config::ConfigurationRecorder.RecordingStrategy": "CACHED",
   "AWS::Config::ConformancePack.ConformancePackInputParameter": "CACHED",
   "AWS::Config::ConformancePack.TemplateSSMDocumentDetails": "CACHED",
   "AWS::Config::DeliveryChannel.ConfigSnapshotDeliveryProperties": "CACHED",
@@ -1145,6 +1147,7 @@
   "AWS::DataBrew::Ruleset.Rule": "CACHED",
   "AWS::DataBrew::Ruleset.SubstitutionValue": "CACHED",
   "AWS::DataBrew::Ruleset.Threshold": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureBlobSasConfiguration": "CACHED",
   "AWS::DataSync::LocationEFS.Ec2Config": "CACHED",
   "AWS::DataSync::LocationFSxONTAP.NFS": "CACHED",
   "AWS::DataSync::LocationFSxONTAP.NfsMountOptions": "CACHED",
@@ -1318,6 +1321,8 @@
   "AWS::EC2::NetworkInsightsPath.FilterPortRange": "CACHED",
   "AWS::EC2::NetworkInsightsPath.PathFilter": "CACHED",
   "AWS::EC2::NetworkInterface.InstanceIpv6Address": "CACHED",
+  "AWS::EC2::NetworkInterface.Ipv4PrefixSpecification": "CACHED",
+  "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::PrefixList.Entry": "CACHED",
   "AWS::EC2::SecurityGroup.Egress": "CACHED",
@@ -1955,6 +1960,7 @@
   "AWS::InspectorV2::Filter.StringFilter": "CACHED",
   "AWS::InternetMonitor::Monitor.HealthEventsConfig": "CACHED",
   "AWS::InternetMonitor::Monitor.InternetMeasurementsLogDelivery": "CACHED",
+  "AWS::InternetMonitor::Monitor.LocalHealthEventsConfig": "CACHED",
   "AWS::InternetMonitor::Monitor.S3Config": "CACHED",
   "AWS::IoT::AccountAuditConfiguration.AuditCheckConfiguration": "CACHED",
   "AWS::IoT::AccountAuditConfiguration.AuditCheckConfigurations": "CACHED",
@@ -2204,6 +2210,7 @@
   "AWS::Kendra::DataSource.ServiceNowServiceCatalogConfiguration": "CACHED",
   "AWS::Kendra::DataSource.SharePointConfiguration": "CACHED",
   "AWS::Kendra::DataSource.SqlConfiguration": "CACHED",
+  "AWS::Kendra::DataSource.TemplateConfiguration": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerAuthenticationConfiguration": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerBasicAuthentication": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerConfiguration": "CACHED",
@@ -2834,6 +2841,11 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Authorization": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration": "CACHED",
+  "AWS::MediaTailor::Channel.DashPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.HlsPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel": "CACHED",
+  "AWS::MediaTailor::Channel.RequestOutputItem": "CACHED",
+  "AWS::MediaTailor::Channel.SlateSource": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AdMarkerPassthrough": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Bumper": "CACHED",
@@ -2842,6 +2854,86 @@
   "AWS::MediaTailor::PlaybackConfiguration.HlsConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.LivePreRollConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.ManifestProcessingRules": "CACHED",
+  "AWS::MediaTailor::SourceLocation.AccessConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-accessconfiguration.html",
+   "Properties": {
+    "AccessType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-accessconfiguration.html#cfn-mediatailor-sourcelocation-accessconfiguration-accesstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SecretsManagerAccessTokenConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-accessconfiguration.html#cfn-mediatailor-sourcelocation-accessconfiguration-secretsmanageraccesstokenconfiguration",
+     "Required": false,
+     "Type": "SecretsManagerAccessTokenConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::SourceLocation.DefaultSegmentDeliveryConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-defaultsegmentdeliveryconfiguration.html",
+   "Properties": {
+    "BaseUrl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-defaultsegmentdeliveryconfiguration.html#cfn-mediatailor-sourcelocation-defaultsegmentdeliveryconfiguration-baseurl",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::SourceLocation.HttpConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-httpconfiguration.html",
+   "Properties": {
+    "BaseUrl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-httpconfiguration.html#cfn-mediatailor-sourcelocation-httpconfiguration-baseurl",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::SourceLocation.SecretsManagerAccessTokenConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration.html",
+   "Properties": {
+    "HeaderName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration.html#cfn-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration-headername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SecretArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration.html#cfn-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration-secretarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SecretStringKey": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration.html#cfn-mediatailor-sourcelocation-secretsmanageraccesstokenconfiguration-secretstringkey",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::SourceLocation.SegmentDeliveryConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-segmentdeliveryconfiguration.html",
+   "Properties": {
+    "BaseUrl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-segmentdeliveryconfiguration.html#cfn-mediatailor-sourcelocation-segmentdeliveryconfiguration-baseurl",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-sourcelocation-segmentdeliveryconfiguration.html#cfn-mediatailor-sourcelocation-segmentdeliveryconfiguration-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration": "CACHED",
   "AWS::MemoryDB::Cluster.Endpoint": "CACHED",
   "AWS::MemoryDB::User.AuthenticationMode": "CACHED",
   "AWS::Neptune::DBCluster.DBClusterRole": "CACHED",
@@ -5447,7 +5539,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "134.0.0",
+ "ResourceSpecificationVersion": "135.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5709,6 +5801,7 @@
   "AWS::DataBrew::Ruleset": "CACHED",
   "AWS::DataBrew::Schedule": "CACHED",
   "AWS::DataSync::Agent": "CACHED",
+  "AWS::DataSync::LocationAzureBlob": "CACHED",
   "AWS::DataSync::LocationEFS": "CACHED",
   "AWS::DataSync::LocationFSxLustre": "CACHED",
   "AWS::DataSync::LocationFSxONTAP": "CACHED",
@@ -6134,7 +6227,60 @@
   "AWS::MediaPackage::OriginEndpoint": "CACHED",
   "AWS::MediaPackage::PackagingConfiguration": "CACHED",
   "AWS::MediaPackage::PackagingGroup": "CACHED",
+  "AWS::MediaTailor::Channel": "CACHED",
+  "AWS::MediaTailor::ChannelPolicy": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html",
+   "Properties": {
+    "AccessConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-accessconfiguration",
+     "Required": false,
+     "Type": "AccessConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "DefaultSegmentDeliveryConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-defaultsegmentdeliveryconfiguration",
+     "Required": false,
+     "Type": "DefaultSegmentDeliveryConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "HttpConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-httpconfiguration",
+     "Required": true,
+     "Type": "HttpConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "SegmentDeliveryConfigurations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-segmentdeliveryconfigurations",
+     "DuplicatesAllowed": true,
+     "ItemType": "SegmentDeliveryConfiguration",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SourceLocationName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-sourcelocationname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-sourcelocation.html#cfn-mediatailor-sourcelocation-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::MediaTailor::VodSource": "CACHED",
   "AWS::MemoryDB::ACL": "CACHED",
   "AWS::MemoryDB::Cluster": "CACHED",
   "AWS::MemoryDB::ParameterGroup": "CACHED",
@@ -7559,6 +7705,13 @@
   "AWS::DataSync::Agent.SecurityGroupArns": "CACHED",
   "AWS::DataSync::Agent.SubnetArns": "CACHED",
   "AWS::DataSync::Agent.VpcEndpointId": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AgentArns": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureAccessTier": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureBlobAuthenticationType": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureBlobContainerUrl": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureBlobSasConfiguration.AzureBlobSasToken": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.AzureBlobType": "CACHED",
+  "AWS::DataSync::LocationAzureBlob.Subdirectory": "CACHED",
   "AWS::DataSync::LocationEFS.AccessPointArn": "CACHED",
   "AWS::DataSync::LocationEFS.Ec2Config.SecurityGroupArns": "CACHED",
   "AWS::DataSync::LocationEFS.Ec2Config.SubnetArn": "CACHED",
@@ -8292,6 +8445,7 @@
   "AWS::InspectorV2::Filter.Name": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Comparison": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Value": "CACHED",
+  "AWS::InternetMonitor::Monitor.LocalHealthEventsConfig.Status": "CACHED",
   "AWS::InternetMonitor::Monitor.MaxCityNetworksToMonitor": "CACHED",
   "AWS::InternetMonitor::Monitor.MonitorName": "CACHED",
   "AWS::InternetMonitor::Monitor.Resources": "CACHED",
@@ -9191,9 +9345,13 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection.StreamOrder": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Id": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration.LogGroupName": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel.LogTypes": "CACHED",
+  "AWS::MediaTailor::Channel.PlaybackMode": "CACHED",
+  "AWS::MediaTailor::Channel.Tier": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression.Mode": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration.OriginManifestType": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Name": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MemoryDB::ACL.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ClusterName": "CACHED",
@@ -12472,6 +12630,7 @@
   "AWS::WAFv2::WebACL.RegexMatchStatement.RegexString": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.RequestInspection.PayloadType": "CACHED",
+  "AWS::WAFv2::WebACL.RequestInspectionACFP.PayloadType": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.FailureStrings": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.SuccessStrings": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionHeader.FailureValues": "CACHED",
@@ -13338,6 +13497,7 @@
     "p3.16xlarge",
     "p3.2xlarge",
     "p3.8xlarge",
+    "p4d.24xlarge",
     "r3.2xlarge",
     "r3.4xlarge",
     "r3.8xlarge",

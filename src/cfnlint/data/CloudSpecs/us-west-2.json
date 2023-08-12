@@ -1036,7 +1036,9 @@
   "AWS::Config::ConfigRule.SourceDetail": "CACHED",
   "AWS::Config::ConfigurationAggregator.AccountAggregationSource": "CACHED",
   "AWS::Config::ConfigurationAggregator.OrganizationAggregationSource": "CACHED",
+  "AWS::Config::ConfigurationRecorder.ExclusionByResourceTypes": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingGroup": "CACHED",
+  "AWS::Config::ConfigurationRecorder.RecordingStrategy": "CACHED",
   "AWS::Config::ConformancePack.ConformancePackInputParameter": "CACHED",
   "AWS::Config::ConformancePack.TemplateSSMDocumentDetails": "CACHED",
   "AWS::Config::DeliveryChannel.ConfigSnapshotDeliveryProperties": "CACHED",
@@ -1473,6 +1475,8 @@
   "AWS::EC2::NetworkInsightsPath.FilterPortRange": "CACHED",
   "AWS::EC2::NetworkInsightsPath.PathFilter": "CACHED",
   "AWS::EC2::NetworkInterface.InstanceIpv6Address": "CACHED",
+  "AWS::EC2::NetworkInterface.Ipv4PrefixSpecification": "CACHED",
+  "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::PrefixList.Entry": "CACHED",
   "AWS::EC2::SecurityGroup.Egress": "CACHED",
@@ -2087,6 +2091,7 @@
   "AWS::IAM::User.LoginProfile": "CACHED",
   "AWS::IAM::User.Policy": "CACHED",
   "AWS::IVS::RecordingConfiguration.DestinationConfiguration": "CACHED",
+  "AWS::IVS::RecordingConfiguration.RenditionConfiguration": "CACHED",
   "AWS::IVS::RecordingConfiguration.S3DestinationConfiguration": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.CloudWatchLogsDestinationConfiguration": "CACHED",
@@ -2135,6 +2140,7 @@
   "AWS::InspectorV2::Filter.StringFilter": "CACHED",
   "AWS::InternetMonitor::Monitor.HealthEventsConfig": "CACHED",
   "AWS::InternetMonitor::Monitor.InternetMeasurementsLogDelivery": "CACHED",
+  "AWS::InternetMonitor::Monitor.LocalHealthEventsConfig": "CACHED",
   "AWS::InternetMonitor::Monitor.S3Config": "CACHED",
   "AWS::IoT1Click::Project.DeviceTemplate": "CACHED",
   "AWS::IoT1Click::Project.PlacementTemplate": "CACHED",
@@ -2439,6 +2445,7 @@
   "AWS::Kendra::DataSource.ServiceNowServiceCatalogConfiguration": "CACHED",
   "AWS::Kendra::DataSource.SharePointConfiguration": "CACHED",
   "AWS::Kendra::DataSource.SqlConfiguration": "CACHED",
+  "AWS::Kendra::DataSource.TemplateConfiguration": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerAuthenticationConfiguration": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerBasicAuthentication": "CACHED",
   "AWS::Kendra::DataSource.WebCrawlerConfiguration": "CACHED",
@@ -3072,105 +3079,12 @@
   "AWS::MediaStore::Container.CorsRule": "CACHED",
   "AWS::MediaStore::Container.MetricPolicy": "CACHED",
   "AWS::MediaStore::Container.MetricPolicyRule": "CACHED",
-  "AWS::MediaTailor::Channel.DashPlaylistSettings": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-dashplaylistsettings.html",
-   "Properties": {
-    "ManifestWindowSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-dashplaylistsettings.html#cfn-mediatailor-channel-dashplaylistsettings-manifestwindowseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MinBufferTimeSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-dashplaylistsettings.html#cfn-mediatailor-channel-dashplaylistsettings-minbuffertimeseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MinUpdatePeriodSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-dashplaylistsettings.html#cfn-mediatailor-channel-dashplaylistsettings-minupdateperiodseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SuggestedPresentationDelaySeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-dashplaylistsettings.html#cfn-mediatailor-channel-dashplaylistsettings-suggestedpresentationdelayseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::MediaTailor::Channel.HlsPlaylistSettings": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-hlsplaylistsettings.html",
-   "Properties": {
-    "ManifestWindowSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-hlsplaylistsettings.html#cfn-mediatailor-channel-hlsplaylistsettings-manifestwindowseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::MediaTailor::Channel.LogConfigurationForChannel": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-logconfigurationforchannel.html",
-   "Properties": {
-    "LogTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-logconfigurationforchannel.html#cfn-mediatailor-channel-logconfigurationforchannel-logtypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::MediaTailor::Channel.RequestOutputItem": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-requestoutputitem.html",
-   "Properties": {
-    "DashPlaylistSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-requestoutputitem.html#cfn-mediatailor-channel-requestoutputitem-dashplaylistsettings",
-     "Required": false,
-     "Type": "DashPlaylistSettings",
-     "UpdateType": "Mutable"
-    },
-    "HlsPlaylistSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-requestoutputitem.html#cfn-mediatailor-channel-requestoutputitem-hlsplaylistsettings",
-     "Required": false,
-     "Type": "HlsPlaylistSettings",
-     "UpdateType": "Mutable"
-    },
-    "ManifestName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-requestoutputitem.html#cfn-mediatailor-channel-requestoutputitem-manifestname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "SourceGroup": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-requestoutputitem.html#cfn-mediatailor-channel-requestoutputitem-sourcegroup",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::MediaTailor::Channel.SlateSource": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-slatesource.html",
-   "Properties": {
-    "SourceLocationName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-slatesource.html#cfn-mediatailor-channel-slatesource-sourcelocationname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "VodSourceName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-channel-slatesource.html#cfn-mediatailor-channel-slatesource-vodsourcename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::MediaTailor::Channel.DashPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.HlsPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel": "CACHED",
+  "AWS::MediaTailor::Channel.RequestOutputItem": "CACHED",
+  "AWS::MediaTailor::Channel.SlateSource": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AdMarkerPassthrough": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Bumper": "CACHED",
@@ -3258,6 +3172,7 @@
     }
    }
   },
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration": "CACHED",
   "AWS::MemoryDB::Cluster.Endpoint": "CACHED",
   "AWS::MemoryDB::User.AuthenticationMode": "CACHED",
   "AWS::Neptune::DBCluster.DBClusterRole": "CACHED",
@@ -6043,7 +5958,7 @@
   },
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "134.0.0",
+ "ResourceSpecificationVersion": "135.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -6195,97 +6110,7 @@
   "AWS::CloudFormation::ResourceVersion": "CACHED",
   "AWS::CloudFormation::Stack": "CACHED",
   "AWS::CloudFormation::StackSet": "CACHED",
-  "AWS::CloudFormation::TypeActivation": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html",
-   "Properties": {
-    "AutoUpdate": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-autoupdate",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExecutionRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-executionrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LoggingConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-loggingconfig",
-     "Required": false,
-     "Type": "LoggingConfig",
-     "UpdateType": "Immutable"
-    },
-    "MajorVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-majorversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.MajorVersion"
-     }
-    },
-    "PublicTypeArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-publictypearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.PublicTypeArn"
-     }
-    },
-    "PublisherId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-publisherid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.PublisherId"
-     }
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.Type"
-     }
-    },
-    "TypeName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-typename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.TypeName"
-     }
-    },
-    "TypeNameAlias": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-typenamealias",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.TypeNameAlias"
-     }
-    },
-    "VersionBump": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-typeactivation.html#cfn-cloudformation-typeactivation-versionbump",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudFormation::TypeActivation.VersionBump"
-     }
-    }
-   }
-  },
+  "AWS::CloudFormation::TypeActivation": "CACHED",
   "AWS::CloudFormation::WaitCondition": "CACHED",
   "AWS::CloudFormation::WaitConditionHandle": "CACHED",
   "AWS::CloudFront::CachePolicy": "CACHED",
@@ -6369,6 +6194,7 @@
   "AWS::Connect::Rule": "CACHED",
   "AWS::Connect::SecurityKey": "CACHED",
   "AWS::Connect::TaskTemplate": "CACHED",
+  "AWS::Connect::TrafficDistributionGroup": "CACHED",
   "AWS::Connect::User": "CACHED",
   "AWS::Connect::UserHierarchyGroup": "CACHED",
   "AWS::ConnectCampaigns::Campaign": "CACHED",
@@ -6814,40 +6640,7 @@
   "AWS::EC2::NetworkInsightsAnalysis": "CACHED",
   "AWS::EC2::NetworkInsightsPath": "CACHED",
   "AWS::EC2::NetworkInterface": "CACHED",
-  "AWS::EC2::NetworkInterfaceAttachment": {
-   "Attributes": {
-    "AttachmentId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html",
-   "Properties": {
-    "DeleteOnTermination": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deleteontermination",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeviceIndex": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deviceindex",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "InstanceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-instanceid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "NetworkInterfaceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-networkinterfaceid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
   "AWS::EC2::PlacementGroup": "CACHED",
@@ -7277,79 +7070,9 @@
   "AWS::MediaPackage::PackagingConfiguration": "CACHED",
   "AWS::MediaPackage::PackagingGroup": "CACHED",
   "AWS::MediaStore::Container": "CACHED",
-  "AWS::MediaTailor::Channel": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html",
-   "Properties": {
-    "ChannelName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-channelname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "FillerSlate": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-fillerslate",
-     "Required": false,
-     "Type": "SlateSource",
-     "UpdateType": "Mutable"
-    },
-    "LogConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-logconfiguration",
-     "Required": false,
-     "Type": "LogConfigurationForChannel",
-     "UpdateType": "Mutable"
-    },
-    "Outputs": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-outputs",
-     "DuplicatesAllowed": true,
-     "ItemType": "RequestOutputItem",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "PlaybackMode": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-playbackmode",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Tier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channel.html#cfn-mediatailor-channel-tier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
-  "AWS::MediaTailor::ChannelPolicy": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channelpolicy.html",
-   "Properties": {
-    "ChannelName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channelpolicy.html#cfn-mediatailor-channelpolicy-channelname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Policy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediatailor-channelpolicy.html#cfn-mediatailor-channelpolicy-policy",
-     "PrimitiveType": "Json",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::MediaTailor::Channel": "CACHED",
+  "AWS::MediaTailor::ChannelPolicy": "CACHED",
+  "AWS::MediaTailor::LiveSource": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration": "CACHED",
   "AWS::MediaTailor::SourceLocation": {
    "Attributes": {
@@ -7401,6 +7124,7 @@
     }
    }
   },
+  "AWS::MediaTailor::VodSource": "CACHED",
   "AWS::MemoryDB::ACL": "CACHED",
   "AWS::MemoryDB::Cluster": "CACHED",
   "AWS::MemoryDB::ParameterGroup": "CACHED",
@@ -8710,6 +8434,9 @@
   "AWS::Connect::TaskTemplate.InstanceArn": "CACHED",
   "AWS::Connect::TaskTemplate.Name": "CACHED",
   "AWS::Connect::TaskTemplate.Status": "CACHED",
+  "AWS::Connect::TrafficDistributionGroup.Description": "CACHED",
+  "AWS::Connect::TrafficDistributionGroup.InstanceArn": "CACHED",
+  "AWS::Connect::TrafficDistributionGroup.Name": "CACHED",
   "AWS::Connect::User.HierarchyGroupArn": "CACHED",
   "AWS::Connect::User.InstanceArn": "CACHED",
   "AWS::Connect::User.Password": "CACHED",
@@ -9467,8 +9194,12 @@
   "AWS::IVS::Channel.Type": "CACHED",
   "AWS::IVS::PlaybackKeyPair.Name": "CACHED",
   "AWS::IVS::RecordingConfiguration.Name": "CACHED",
+  "AWS::IVS::RecordingConfiguration.RenditionConfiguration.RenditionSelection": "CACHED",
+  "AWS::IVS::RecordingConfiguration.RenditionConfiguration.Renditions": "CACHED",
   "AWS::IVS::RecordingConfiguration.S3DestinationConfiguration.BucketName": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.RecordingMode": "CACHED",
+  "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.Resolution": "CACHED",
+  "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.Storage": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.TargetIntervalSeconds": "CACHED",
   "AWS::IVS::StreamKey.ChannelArn": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.CloudWatchLogsDestinationConfiguration.LogGroupName": "CACHED",
@@ -9508,6 +9239,7 @@
   "AWS::InspectorV2::Filter.Name": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Comparison": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Value": "CACHED",
+  "AWS::InternetMonitor::Monitor.LocalHealthEventsConfig.Status": "CACHED",
   "AWS::InternetMonitor::Monitor.MaxCityNetworksToMonitor": "CACHED",
   "AWS::InternetMonitor::Monitor.MonitorName": "CACHED",
   "AWS::InternetMonitor::Monitor.Resources": "CACHED",
@@ -10549,9 +10281,14 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection.StreamOrder": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Id": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration.LogGroupName": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel.LogTypes": "CACHED",
+  "AWS::MediaTailor::Channel.PlaybackMode": "CACHED",
+  "AWS::MediaTailor::Channel.Tier": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression.Mode": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration.OriginManifestType": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Name": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MemoryDB::ACL.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ClusterName": "CACHED",
@@ -13725,6 +13462,7 @@
   "AWS::WAFv2::WebACL.RegexMatchStatement.RegexString": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.RequestInspection.PayloadType": "CACHED",
+  "AWS::WAFv2::WebACL.RequestInspectionACFP.PayloadType": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.FailureStrings": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.SuccessStrings": "CACHED",
   "AWS::WAFv2::WebACL.ResponseInspectionHeader.FailureValues": "CACHED",
@@ -14064,6 +13802,10 @@
     "inf1.2xlarge",
     "inf1.6xlarge",
     "inf1.xlarge",
+    "inf2.24xlarge",
+    "inf2.48xlarge",
+    "inf2.8xlarge",
+    "inf2.xlarge",
     "is4gen.2xlarge",
     "is4gen.4xlarge",
     "is4gen.8xlarge",
