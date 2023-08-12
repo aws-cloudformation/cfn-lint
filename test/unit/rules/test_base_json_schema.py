@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from unittest import TestCase
 
+from cfnlint.context import Context
 from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
@@ -51,7 +52,9 @@ class TestBaseJsonSchema(TestCase):
             "enum": ["foo"],
         }
         validator = self.rule.setup_validator(
-            validator=StandardValidator, schema=schema
+            validator=StandardValidator,
+            schema=schema,
+            context=Context(),
         )
 
         self.assertEqual(self.rule.json_schema_validate(validator, "bar", []), [])
@@ -63,7 +66,9 @@ class TestBaseJsonSchema(TestCase):
         }
         self.rule.child_rules["E3004"] = PatternRule()
         validator = self.rule.setup_validator(
-            validator=StandardValidator, schema=schema
+            validator=StandardValidator,
+            schema=schema,
+            context=Context(),
         )
 
         self.assertEqual(
@@ -81,7 +86,9 @@ class TestBaseJsonSchema(TestCase):
         }
         self.rule.child_rules["E3003"] = EnumRule()
         validator = self.rule.setup_validator(
-            validator=StandardValidator, schema=schema
+            validator=StandardValidator,
+            schema=schema,
+            context=Context(),
         )
 
         self.assertEqual(
