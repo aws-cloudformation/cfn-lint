@@ -53,7 +53,7 @@ _unnamed_unknown_types = (
 )
 
 
-class _AttributeDict(UserDict):
+class AttributeDict(UserDict):
     def __init__(self, __dict: None = None) -> None:
         super().__init__(__dict)
         self.data: Dict[str, GetAtt] = {}
@@ -105,11 +105,11 @@ class GetAtt:
 class GetAtts:
     """Class for helping with GetAtt logic"""
 
-    _attrs: Dict[str, GetAtt] = {}
+    _attrs: AttributeDict = AttributeDict()
     _schema: Dict[str, Any] = {}
 
     def __init__(self, schema: Dict[str, Any]) -> None:
-        self._attrs = _AttributeDict()
+        self._attrs = AttributeDict()
         self._schema = schema
         type_name = schema.get("typeName", "")
         if type_name in _all_property_types:
@@ -172,5 +172,5 @@ class GetAtts:
             self._attrs[name] = GetAtt(schema, getatt_type)
 
     @property
-    def attrs(self) -> Dict[str, GetAtt]:
+    def attrs(self) -> AttributeDict:
         return self._attrs
