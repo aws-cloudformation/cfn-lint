@@ -10,7 +10,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 class Configuration(CloudFormationLintRule):
     """Check if Outputs are configured correctly"""
 
-    id = "E6001"
+    id = "E6001B"
     shortdesc = "Outputs have appropriate properties"
     description = "Making sure the outputs are properly configured"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
