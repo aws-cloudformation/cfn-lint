@@ -6,10 +6,9 @@ SPDX-License-Identifier: MIT-0
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py
 from __future__ import annotations
 
-from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from typing import Any, Deque, Dict, Iterator
+from typing import Any, Dict, Iterator
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import _validators, _validators_cfn
@@ -29,15 +28,16 @@ from cfnlint.jsonschema.exceptions import (
     ValidationError,
 )
 from cfnlint.template import Template
-from cfnlint.template.transforms import Transform
 
 
 def create(
     validators: Mapping[str, V] | None = None,
     function_filter: FunctionFilter | None = None,
+    context: Context | None = None,
 ):
     validators_arg = validators or {}
-    function_filter_arg = function_filter or FunctionFilter([])
+    function_filter_arg = function_filter or FunctionFilter()
+    context_arg = context or Context()
 
     @dataclass
     class Validator:
@@ -69,7 +69,7 @@ def create(
             init=True, default_factory=lambda: function_filter_arg
         )
         cfn: Template | None = field(default=None)
-        context: Context = field(default_factory=Context)
+        context: Context = field(default_factory=lambda: context_arg)
 
         def __post_init__(self):
             if self.function_filter is None:
@@ -208,7 +208,7 @@ def create(
             self,
             instance: Any,
             schema: Any,
-            path: str | None = None,
+            path: str | int | None = None,
             schema_path: str | None = None,
         ) -> Iterator[ValidationError]:
             for error in self.evolve(
@@ -246,6 +246,7 @@ def create(
             self,
             validators: Dict[str, V] | None = None,
             function_filter: FunctionFilter | None = None,
+            context: Context | None = None,
         ) -> "Validator":
             """
             Extends the current validator.
@@ -261,9 +262,13 @@ def create(
             if function_filter is None:
                 function_filter = self.function_filter
 
+            if context is None:
+                context = self.context
+
             return create(  # type: ignore
                 validators=all_validators,
                 function_filter=function_filter,
+                context=context,
             )
 
     return Validator
