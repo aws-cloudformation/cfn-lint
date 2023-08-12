@@ -11,6 +11,7 @@ from typing import List
 
 import jsonpatch
 
+from cfnlint.context import create_context_for_resource_properties
 from cfnlint.decode import decode_str
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.template import Template
@@ -96,10 +97,10 @@ class TestValidatorCfnConditions(unittest.TestCase):
             .get("Properties", {})
         )
 
-        validator = CfnTemplateValidator(schema=schema, cfn=cfn)
+        context = create_context_for_resource_properties(cfn, "us-east-1", "MyResource")
+        validator = CfnTemplateValidator(schema=schema, cfn=cfn, context=context)
         errs = list(validator.iter_errors(props))
 
-        print(errs)
         self.assertEqual(len(errs), len(expected_errs))
         for i, err in enumerate(errs):
             self.assertEqual(expected_errs[i].message, err.message)
@@ -383,9 +384,12 @@ class TestValidatorCfnConditions(unittest.TestCase):
             ),
             expected_errs=[
                 ValidationError(
-                    message="{'Ref': 'AWS::Region'} does not match '^foo$'",
+                    message=(
+                        "{'Ref': 'AWS::Region'} does not match '^foo$' "
+                        "when 'Ref' is resolved"
+                    ),
                     path=deque(["Name", "Ref"]),
-                    validator="pattern",
+                    validator="ref",
                     validator_value="^foo$",
                 ),
             ],
@@ -424,27 +428,35 @@ class TestValidatorCfnConditions(unittest.TestCase):
             ),
             expected_errs=[
                 ValidationError(
-                    message="{'Ref': 'Name'} does not match '^bar$'",
+                    message=(
+                        "{'Ref': 'Name'} does not match '^bar$' when 'Ref' is resolved"
+                    ),
                     path=deque(["Name", "Ref"]),
-                    validator="pattern",
+                    validator="ref",
                     validator_value="^bar$",
                 ),
                 ValidationError(
-                    message="{'Ref': 'Name'} is not one of ['bar']",
+                    message=(
+                        "{'Ref': 'Name'} is not one of ['bar'] when 'Ref' is resolved"
+                    ),
                     path=deque(["Name", "Ref"]),
-                    validator="enum",
+                    validator="ref",
                     validator_value=["bar"],
                 ),
                 ValidationError(
-                    message="{'Ref': 'Name'} does not match '^bar$'",
+                    message=(
+                        "{'Ref': 'Name'} does not match '^bar$' when 'Ref' is resolved"
+                    ),
                     path=deque(["Name", "Ref"]),
-                    validator="pattern",
+                    validator="ref",
                     validator_value="^bar$",
                 ),
                 ValidationError(
-                    message="{'Ref': 'Name'} is not one of ['bar']",
+                    message=(
+                        "{'Ref': 'Name'} is not one of ['bar'] when 'Ref' is resolved"
+                    ),
                     path=deque(["Name", "Ref"]),
-                    validator="enum",
+                    validator="ref",
                     validator_value=["bar"],
                 ),
             ],

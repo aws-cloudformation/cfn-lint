@@ -11,7 +11,6 @@ from typing import Any, Callable, List, Mapping
 from cfnlint.conditions import Conditions
 from cfnlint.graph import Graph
 from cfnlint.match import Match
-from cfnlint.template.transforms._language_extensions import language_extension
 from cfnlint.template.transforms._sam import sam
 from cfnlint.template.transforms._types import TransformResult
 
@@ -22,7 +21,6 @@ class Transform:
     def __init__(self) -> None:
         self.transforms: Mapping[str, Callable[[Any], TransformResult]] = {
             "AWS::Serverless-2016-10-31": sam,
-            "AWS::LanguageExtensions": language_extension,
         }
 
     def transform(self, cfn: Any) -> List[Match]:
