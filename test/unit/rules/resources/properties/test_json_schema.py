@@ -39,6 +39,16 @@ class RuleWithOutFunction(CloudFormationLintRule):
     tags = []
 
 
+class RuleRefFunction(CloudFormationLintRule):
+    """Test Rule"""
+
+    id = "E3YYY"
+    shortdesc = "Test Rule"
+    description = "Test Rule"
+    source_url = ""
+    tags = []
+
+
 class TestJsonSchema(BaseRuleTestCase):
     """Test Json Size"""
 
@@ -101,10 +111,12 @@ class TestJsonSchema(BaseRuleTestCase):
         self.rule.child_rules = {
             "E3XXX": RuleWithFunction(),
             "E3YYY": RuleWithOutFunction(),
+            "E3ZZZ": RuleRefFunction(),
         }
         self.rule.rule_set = {
             "required": "E3XXX",
             "type": "E3YYY",
+            "ref": "E3ZZZ",
         }
 
         self.cfn = Template("", self.template, ["us-east-1"])
@@ -220,8 +232,8 @@ class TestJsonSchema(BaseRuleTestCase):
 
         expected = [
             self.build_result(
-                "E3YYY",
-                "{'Ref': 'AWS::Region'} is not of type 'array'",
+                "E3ZZZ",
+                "{'Ref': 'AWS::Region'} is not of type 'array' when 'Ref' is resolved",
                 ["Resources", "Table", "Properties", "E", "Ref"],
             ),
         ]

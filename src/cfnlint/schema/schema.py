@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 
 import jsonpatch
 
-from cfnlint.schema.getatts import GetAtt, GetAtts
+from cfnlint.schema.getatts import AttributeDict, GetAtts
 
 # Can't use a dataclass because its hard to parse in json
 # with optional fields without addtional help
@@ -59,7 +59,7 @@ class Schema:
         jsonpatch.JsonPatch(patches).apply(self._json_schema, in_place=True)
 
     @property
-    def get_atts(self) -> Dict[str, GetAtt]:
+    def get_atts(self) -> AttributeDict:
         """Get the valid GetAtts for this schema. Schemas are defined in property
             readOnlyProperties and we need to build definitions of those properties
 

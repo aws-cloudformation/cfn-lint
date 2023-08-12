@@ -4,6 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 from unittest import TestCase
 
+from cfnlint.context import Context
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.iam.IdentityPolicy import (  # pylint: disable=E0401
     IdentityPolicy,
@@ -72,7 +74,7 @@ class TestIdentityPolicies(TestCase):
 
     def test_object_statements(self):
         """Test Positive"""
-        validator = CfnTemplateValidator()
+        validator = CfnTemplateValidator(context=Context(functions=FUNCTIONS))
 
         policy = {
             "Version": "2012-10-17",
@@ -86,9 +88,7 @@ class TestIdentityPolicies(TestCase):
                     ],
                     "Resource": [
                         {
-                            "Fn::Sub": [
-                                "arn:${AWS::Partition}:iam::123456789012/role/object-role"
-                            ]
+                            "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012/role/object-role"
                         },
                         {
                             "NotValid": [
