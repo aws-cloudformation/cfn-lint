@@ -25,20 +25,19 @@ def additionalProperties(validator, aP, instance, schema):
     if not validator.is_type(instance, "object"):
         return
 
-    extras = set(find_additional_properties(instance, schema))
-
+    extras = set(find_additional_properties(validator, instance, schema))
+    print("Extras", extras)
     if validator.is_type(aP, "object"):
         for extra in extras:
             yield from validator.descend(instance[extra], aP, path=extra)
     elif not aP and extras:
         if "patternProperties" in schema:
-            verb = "does" if len(extras) == 1 else "do"
-            joined = ", ".join(repr(each) for each in sorted(extras))
             patterns = ", ".join(
                 repr(each) for each in sorted(schema["patternProperties"])
             )
-            error = f"{joined} {verb} not match any of the regexes: {patterns}"
-            yield ValidationError(error)
+            for extra in extras:
+                error = f"{extra} does not match any of the regexes: {patterns}"
+                yield ValidationError(error, path=[extra])
         else:
             for extra in extras:
                 for key in schema.get("properties", {}).keys():
@@ -171,7 +170,7 @@ def format(validator, format, instance, schema):
 def if_(validator, if_schema, instance, schema):
     evolved = validator.extend(
         validators={"type": type},
-        function_filter=validator.function_filter.evolve(functions=[]),
+        context=validator.context.evolve(functions=[]),
     )(schema=if_schema)
     if evolved.is_valid(instance):
         if "then" in schema:
