@@ -1,0 +1,39 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "export": {
+   "properties": {
+    "Name": {
+     "awsType": "outputExport"
+    }
+   },
+   "type": "object"
+  },
+  "output": {
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Export": {
+     "$ref": "#/definitions/export"
+    },
+    "Value": {
+     "awsType": "outputValue"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "maxProperties": 200,
+ "patternProperties": {
+  "^[a-zA-Z0-9]{1,255}$": {
+   "$ref": "#/definitions/output"
+  }
+ },
+ "properties": {},
+ "type": "object"
+}
