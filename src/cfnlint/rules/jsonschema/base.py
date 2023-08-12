@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 from typing import Any, Dict, Optional, Type
 
+from cfnlint.context import Context
 from cfnlint.jsonschema import Validator
 from cfnlint.jsonschema._typing import V
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
@@ -64,7 +65,9 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
-    def setup_validator(self, validator: Type[Validator], schema: Any) -> Validator:
+    def setup_validator(
+        self, validator: Type[Validator], schema: Any, context: Context
+    ) -> Validator:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
             rule = self.child_rules.get(rule_id)
@@ -72,4 +75,6 @@ class BaseJsonSchema(CloudFormationLintRule):
                 if hasattr(rule, name) and callable(getattr(rule, name)):
                     validators[name] = getattr(rule, name)
 
-        return validator({}).extend(validators=validators)(schema=schema)
+        return validator({}).extend(validators=validators, context=context)(
+            schema=schema
+        )

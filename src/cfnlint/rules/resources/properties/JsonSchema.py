@@ -3,9 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from collections import deque
 
-from cfnlint.context import Context, create_context_for_resource_properties
+from cfnlint.context import create_context_for_resource_properties
 from cfnlint.helpers import REGION_PRIMARY
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
@@ -49,7 +48,7 @@ class JsonSchema(BaseJsonSchema):
             "ref": "E1020",
             "fn_base64": "E1021",
             "fn_cidr": "E1012",
-            "fn_findinmap": "E1013",
+            "fn_findinmap": "E1011",
             "fn_foreach": "E1032",
             "fn_getatt": "E1010",
             "fn_getaz": "E1015",
@@ -95,12 +94,13 @@ class JsonSchema(BaseJsonSchema):
                                 # same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
-                        context = create_context_for_resource_properties(cfn, region, n)
                         cfn_validator = self.setup_validator(
                             validator=CfnTemplateValidator,
                             schema=schema.json_schema,
+                            context=create_context_for_resource_properties(
+                                cfn=cfn, region=region, resource_name=n
+                            ),
                         ).evolve(
-                            context=context,
                             cfn=cfn,
                         )
                         path = ["Resources", n, "Properties"]
