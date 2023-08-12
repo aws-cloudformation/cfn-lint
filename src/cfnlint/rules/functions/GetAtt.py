@@ -3,16 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import logging
-import re
-from typing import Dict, Union
-
-from cfnlint.jsonschema import StandardValidator, ValidationError
-from cfnlint.jsonschema.exceptions import best_match
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
-from cfnlint.template import Template
-
-LOGGER = logging.getLogger("cfnlint")
+from cfnlint.rules import CloudFormationLintRule
 
 
 class GetAtt(CloudFormationLintRule):
