@@ -8,7 +8,12 @@ from dataclasses import dataclass, field, fields
 # https://github.com/python-jsonschema/jsonschema
 from typing import Any, Sequence, Tuple
 
-from cfnlint.helpers import FUNCTIONS, ToPy
+import regex as re
+
+from cfnlint.helpers import ToPy
+from cfnlint.jsonschema._utils import ensure_list
+
+_all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
 
 @dataclass
@@ -27,7 +32,6 @@ class FunctionFilter:
             The initial mapping of types to their checking functions.
     """
 
-    functions: Sequence[str] = field(default_factory=list)
     group_functions: Sequence[str] = field(
         init=False,
         default_factory=lambda: [
@@ -47,6 +51,8 @@ class FunctionFilter:
         """
         if validator.cfn is None:
             return schema, None
+        if not any(fn in ["Ref", "Fn::If"] for fn in validator.context.functions):
+            return schema, None
         standard_schema = {}
         group_schema = {}
         for key, value in schema.items():
@@ -54,6 +60,24 @@ class FunctionFilter:
                 group_schema[key] = value
             else:
                 standard_schema[key] = value
+
+        # some times CloudFormation dumps to standard nested "json".
+        # it will do by using {"type": "object"} with no properties
+        # Adding these items to the schema
+        # will allow us to continue to check the nested elements
+        if "awsType" not in standard_schema:
+            if (
+                "object" in ensure_list(standard_schema.get("type", []))
+                and "properties" not in standard_schema
+            ):
+                standard_schema["patternProperties"] = {
+                    ".*": {"type": _all_types},
+                }
+            if (
+                "array" in standard_schema.get("type", [])
+                and "items" not in standard_schema
+            ):
+                standard_schema["items"] = {"type": _all_types}
 
         return standard_schema, group_schema
 
@@ -71,14 +95,33 @@ class FunctionFilter:
 
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
-                k = list(instance.keys())[0]
-                if k in self.functions:
-                    k_py = ToPy(k)
+                for k, v in instance.items():
+                    if k in validator.context.functions:
+                        k_py = ToPy(k)
+                        k_schema = {
+                            k_py.py: standard_schema,
+                        }
+                        yield (instance, k_schema)
+                        return
+                    if k.startswith("Fn::ForEach::"):
+                        k_py = ToPy("Fn::ForEach")
+                        k_schema = {
+                            k_py.py: standard_schema,
+                        }
+                        yield ({k: v}, k_schema)
+                        return
+                else:
+                    yield (instance, standard_schema)
+                return
+            for k, v in instance.items():
+                # Fn::ForEach can be supported at the same level as more Fn::ForEach
+                # and other keys
+                if k.startswith("Fn::ForEach::"):
+                    k_py = ToPy("Fn::ForEach")
                     k_schema = {
                         k_py.py: standard_schema,
                     }
-                    yield (instance, k_schema)
-                    return
+                    yield ({k: v}, k_schema)
 
         yield (instance, standard_schema)
 
@@ -94,5 +137,5 @@ class FunctionFilter:
         return cls(**kwargs)
 
 
-cfn_function_filter = FunctionFilter(list(FUNCTIONS))  # type: ignore
-standard_function_filter = FunctionFilter(list([]))  # type: ignore
+cfn_function_filter = FunctionFilter()  # type: ignore
+standard_function_filter = FunctionFilter()  # type: ignore

@@ -42,7 +42,9 @@ class CfnRegionSchema(BaseJsonSchema):
         for schema_path in schema_paths:
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
-                    yield from rule.validate(instance, validator.context.region)
+                    yield from rule.validate(
+                        validator, instance, validator.context.region
+                    )
 
 
 class BaseCfnRegionSchema(BaseJsonSchema):
@@ -84,12 +86,13 @@ class BaseCfnRegionSchema(BaseJsonSchema):
             )
             self.cfn_validator = None
 
-    def validate(self, instance, region):
+    def validate(self, validator, instance, region):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
         self.cfn_validator = self.setup_validator(
             validator=CfnTemplateValidator,
             schema=self.cfn_schema.get(region, {}),
+            context=validator.context.evolve(),
         )
         err = best_match(list(self.cfn_validator.iter_errors(instance)))
         if err is not None:

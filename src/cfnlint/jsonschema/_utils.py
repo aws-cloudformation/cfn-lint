@@ -30,7 +30,7 @@ class Unset:
         return "<unset>"
 
 
-def find_additional_properties(instance, schema):
+def find_additional_properties(validator, instance, schema):
     """
     Return the set of additional properties for the given ``instance``.
 
@@ -46,6 +46,13 @@ def find_additional_properties(instance, schema):
         if property not in properties:
             if patterns and re.search(patterns, property):
                 continue
+            # additional properties would
+            if validator.context.transforms.has_language_extensions_transform:
+                matches = re.findall("\$\{([a-zA-Z0-9]+)\}", property)
+                if matches and all(
+                    match in validator.context.refs for match in matches
+                ):
+                    continue
             yield property
 
 
