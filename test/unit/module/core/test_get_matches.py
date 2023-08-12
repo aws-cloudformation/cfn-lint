@@ -23,5 +23,5 @@ class TestGetMatches(BaseTestCase):
         (args, filenames, _) = cfnlint.core.get_args_filenames(filenames)
         matches = cfnlint.core.get_matches(filenames, args)
         self.assertEqual(
-            ["E1012", "W4002", "W4002"], [match.rule.id for match in matches]
+            ["E1020", "W4002", "W4002"], [match.rule.id for match in matches]
         )

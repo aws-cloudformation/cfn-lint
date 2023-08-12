@@ -35,7 +35,7 @@ class AvailabilityZone(CloudFormationLintRule):
                 return
 
         yield ValidationError(
-            f"Avoid hardcoding availability zones '{zone}'",
+            f"Avoid hardcoding availability zones {zone!r}",
             rule=self,
         )
 
