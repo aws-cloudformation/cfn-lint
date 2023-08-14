@@ -22,7 +22,7 @@ LOGGER = logging.getLogger("cfnlint")
 # initializing size of string
 _N = 7
 
-_SCALAR_TYPES = (str, int, float)
+_SCALAR_TYPES = (str, int, float, bool)
 
 
 class _ResolveError(Exception):
@@ -161,7 +161,7 @@ class _Transform:
                         if map_value is None:
                             continue
                         # if we can resolve it we will return it
-                        if isinstance(map_value, _SCALAR_TYPES):
+                        if isinstance(map_value, tuple([list]) + _SCALAR_TYPES):
                             return map_value
                     except Exception as e:  # pylint: disable=broad-exception-caught
                         # We couldn't resolve the FindInMap so we are going to leave it as it is
@@ -295,7 +295,6 @@ class _ForEachValueFnFindInMap(_ForEachValue):
             params = {}
         t_map = deepcopy(self._map)
         mapping = None
-
         try:
             mapping = cfn.template.get("Mappings", {}).get(
                 t_map[0].value(cfn, params, only_params)
