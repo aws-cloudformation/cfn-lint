@@ -150,6 +150,8 @@ class _Transform:
                         )
                         if only_string:
                             return obj[k][0]
+                        if len(v) == 2:
+                            obj[k][1] = self._walk(v[1], params, cfn)
                 elif k == "Fn::FindInMap":
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
