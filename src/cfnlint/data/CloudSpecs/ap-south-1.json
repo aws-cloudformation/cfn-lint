@@ -2680,6 +2680,12 @@
   "AWS::MediaStore::Container.CorsRule": "CACHED",
   "AWS::MediaStore::Container.MetricPolicy": "CACHED",
   "AWS::MediaStore::Container.MetricPolicyRule": "CACHED",
+  "AWS::MediaTailor::Channel.DashPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.HlsPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel": "CACHED",
+  "AWS::MediaTailor::Channel.RequestOutputItem": "CACHED",
+  "AWS::MediaTailor::Channel.SlateSource": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AdMarkerPassthrough": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Bumper": "CACHED",
@@ -2688,6 +2694,12 @@
   "AWS::MediaTailor::PlaybackConfiguration.HlsConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.LivePreRollConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.ManifestProcessingRules": "CACHED",
+  "AWS::MediaTailor::SourceLocation.AccessConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.DefaultSegmentDeliveryConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.HttpConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.SecretsManagerAccessTokenConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.SegmentDeliveryConfiguration": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration": "CACHED",
   "AWS::MemoryDB::Cluster.Endpoint": "CACHED",
   "AWS::MemoryDB::User.AuthenticationMode": "CACHED",
   "AWS::Neptune::DBCluster.DBClusterRole": "CACHED",
@@ -5262,7 +5274,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "135.0.0",
+ "ResourceSpecificationVersion": "136.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5798,7 +5810,52 @@
   "AWS::EventSchemas::Schema": "CACHED",
   "AWS::Events::ApiDestination": "CACHED",
   "AWS::Events::Archive": "CACHED",
-  "AWS::Events::Connection": "CACHED",
+  "AWS::Events::Connection": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "SecretArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-connection.html",
+   "Properties": {
+    "AuthParameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-connection.html#cfn-events-connection-authparameters",
+     "Required": true,
+     "Type": "AuthParameters",
+     "UpdateType": "Mutable"
+    },
+    "AuthorizationType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-connection.html#cfn-events-connection-authorizationtype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Events::Connection.AuthorizationType"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-connection.html#cfn-events-connection-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Events::Connection.Description"
+     }
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-connection.html#cfn-events-connection-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Events::Connection.Name"
+     }
+    }
+   }
+  },
   "AWS::Events::Endpoint": "CACHED",
   "AWS::Events::EventBus": "CACHED",
   "AWS::Events::EventBusPolicy": "CACHED",
@@ -6042,7 +6099,12 @@
   "AWS::MediaPackage::PackagingConfiguration": "CACHED",
   "AWS::MediaPackage::PackagingGroup": "CACHED",
   "AWS::MediaStore::Container": "CACHED",
+  "AWS::MediaTailor::Channel": "CACHED",
+  "AWS::MediaTailor::ChannelPolicy": "CACHED",
+  "AWS::MediaTailor::LiveSource": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation": "CACHED",
+  "AWS::MediaTailor::VodSource": "CACHED",
   "AWS::MemoryDB::ACL": "CACHED",
   "AWS::MemoryDB::Cluster": "CACHED",
   "AWS::MemoryDB::ParameterGroup": "CACHED",
@@ -6217,6 +6279,7 @@
   "AWS::Route53Resolver::FirewallDomainList": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroup": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroupAssociation": "CACHED",
+  "AWS::Route53Resolver::OutpostResolver": "CACHED",
   "AWS::Route53Resolver::ResolverConfig": "CACHED",
   "AWS::Route53Resolver::ResolverDNSSECConfig": "CACHED",
   "AWS::Route53Resolver::ResolverEndpoint": "CACHED",
@@ -6885,11 +6948,13 @@
   "AWS::CloudFormation::ResourceVersion.LoggingConfig.LogGroupName": "CACHED",
   "AWS::CloudFormation::ResourceVersion.LoggingConfig.LogRoleArn": "CACHED",
   "AWS::CloudFormation::ResourceVersion.TypeName": "CACHED",
+  "AWS::CloudFormation::Stack.TemplateURL": "CACHED",
   "AWS::CloudFormation::StackSet.AdministrationRoleARN": "CACHED",
   "AWS::CloudFormation::StackSet.CallAs": "CACHED",
   "AWS::CloudFormation::StackSet.Capabilities": "CACHED",
   "AWS::CloudFormation::StackSet.DeploymentTargets.AccountFilterType": "CACHED",
   "AWS::CloudFormation::StackSet.DeploymentTargets.Accounts": "CACHED",
+  "AWS::CloudFormation::StackSet.DeploymentTargets.AccountsUrl": "CACHED",
   "AWS::CloudFormation::StackSet.DeploymentTargets.OrganizationalUnitIds": "CACHED",
   "AWS::CloudFormation::StackSet.Description": "CACHED",
   "AWS::CloudFormation::StackSet.ExecutionRoleName": "CACHED",
@@ -7680,6 +7745,14 @@
     "c6g.large",
     "c6g.medium",
     "c6g.xlarge",
+    "c6gn.12xlarge",
+    "c6gn.16xlarge",
+    "c6gn.2xlarge",
+    "c6gn.4xlarge",
+    "c6gn.8xlarge",
+    "c6gn.large",
+    "c6gn.medium",
+    "c6gn.xlarge",
     "c6i.12xlarge",
     "c6i.16xlarge",
     "c6i.24xlarge",
@@ -8749,9 +8822,15 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection.StreamOrder": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Id": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration.LogGroupName": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel.LogTypes": "CACHED",
+  "AWS::MediaTailor::Channel.PlaybackMode": "CACHED",
+  "AWS::MediaTailor::Channel.Tier": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression.Mode": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration.OriginManifestType": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.Name": "CACHED",
+  "AWS::MediaTailor::SourceLocation.AccessConfiguration.AccessType": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MemoryDB::ACL.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ClusterName": "CACHED",
@@ -10887,6 +10966,10 @@
   "AWS::Route53Resolver::FirewallRuleGroupAssociation.MutationProtection": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroupAssociation.Name": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroupAssociation.VpcId": "CACHED",
+  "AWS::Route53Resolver::OutpostResolver.InstanceCount": "CACHED",
+  "AWS::Route53Resolver::OutpostResolver.Name": "CACHED",
+  "AWS::Route53Resolver::OutpostResolver.OutpostArn": "CACHED",
+  "AWS::Route53Resolver::OutpostResolver.PreferredInstanceType": "CACHED",
   "AWS::Route53Resolver::ResolverConfig.AutodefinedReverseFlag": "CACHED",
   "AWS::Route53Resolver::ResolverConfig.ResourceId": "CACHED",
   "AWS::Route53Resolver::ResolverDNSSECConfig.ResourceId": "CACHED",
