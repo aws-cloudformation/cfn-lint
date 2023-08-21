@@ -157,25 +157,6 @@ HTTPS has certificate HTTP has no certificate"
         scenarios = cfn.get_object_without_nested_conditions(resource_properties, path)
         for scenario in scenarios:
             properties = scenario.get("Object")
-            if self.get_loadbalancer_type(properties) == "network":
-                if properties.get("SecurityGroups"):
-                    if scenario.get("Scenario"):
-                        scenario_text = " and ".join(
-                            [
-                                f'when condition "{k}" is {v}'
-                                for (k, v) in scenario.get("Scenario").items()
-                            ]
-                        )
-                        message = f'Security groups are not supported for load balancers with type "network" {scenario_text}'
-                        matches.append(RuleMatch(path, message))
-                    else:
-                        path = path + ["SecurityGroups"]
-                        matches.append(
-                            RuleMatch(
-                                path,
-                                'Security groups are not supported for load balancers with type "network"',
-                            )
-                        )
 
             matches.extend(
                 self.check_alb_subnets(properties, path, scenario.get("Scenario"))

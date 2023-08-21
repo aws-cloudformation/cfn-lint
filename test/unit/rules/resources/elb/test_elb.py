@@ -25,7 +25,7 @@ class TestPropertyElb(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/elb/properties.yaml", 8
+            "test/fixtures/templates/bad/resources/elb/properties.yaml", 6
         )
 
     def test_alb_subnets(self):
