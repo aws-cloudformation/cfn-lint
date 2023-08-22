@@ -1,3 +1,10 @@
+### v0.79.8
+###### CloudFormation Specifications
+- Update CloudFormation specs to `136.0.0` (pull #[2848](https://github.com/aws-cloudformation/cfn-lint/pull/2848))
+###### Fixes
+- Added `ItemReader` key to StateMachine `Map` state (pull #[2850](https://github.com/aws-cloudformation/cfn-lint/pull/2850))
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2503) to allow network load balancers to use security groups (pull #[2850](https://github.com/aws-cloudformation/cfn-lint/pull/2850))
+
 ### v0.79.7
 ###### CloudFormation Specifications
 - Add region `il-central-1` (pull #[2836](https://github.com/aws-cloudformation/cfn-lint/pull/2836))
