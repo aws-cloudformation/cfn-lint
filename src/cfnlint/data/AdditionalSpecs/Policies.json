@@ -1171,7 +1171,7 @@
     "batch:User"
    ]
   },
-  "AWS Billing ": {
+  "AWS Billing": {
    "Actions": [
     "GetBillingData",
     "GetBillingDetails",
@@ -1298,7 +1298,7 @@
    ]
   },
   "AWS Certificate Manager": {
-   "ARNFormat": "arn:aws:acm:${Region}:${AccountId}:${ArnType}/${ResourceId}",
+   "ARNFormat": "arn:aws:acm:${Region}:${Account}:${ArnType}/${ResourceId}",
    "ARNRegex": "^arn:aws:acm:.+:[0-9]+:.+",
    "Actions": [
     "AddTagsToCertificate",
@@ -1320,6 +1320,11 @@
    "HasResource": true,
    "StringPrefix": "acm",
    "conditionKeys": [
+    "acm:CertificateAuthority",
+    "acm:CertificateTransparencyLogging",
+    "acm:DomainNames",
+    "acm:KeyAlgorithm",
+    "acm:ValidationMethod",
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
@@ -7629,6 +7634,44 @@
    "HasResource": false,
    "StringPrefix": "pricing"
   },
+  "AWS Private CA Connector for Active Directory": {
+   "ARNFormat": "arn:aws:pca-connector-ad:${Region}:${Account}:${ResourceType}",
+   "ARNRegex": "^arn:aws:pca-connector-ad:.+:.+:.+",
+   "Actions": [
+    "CreateConnector",
+    "CreateDirectoryRegistration",
+    "CreateServicePrincipalName",
+    "CreateTemplate",
+    "CreateTemplateGroupAccessControlEntry",
+    "DeleteConnector",
+    "DeleteDirectoryRegistration",
+    "DeleteServicePrincipalName",
+    "DeleteTemplate",
+    "DeleteTemplateGroupAccessControlEntry",
+    "GetConnector",
+    "GetDirectoryRegistration",
+    "GetServicePrincipalName",
+    "GetTemplate",
+    "GetTemplateGroupAccessControlEntry",
+    "ListConnectors",
+    "ListDirectoryRegistrations",
+    "ListServicePrincipalNames",
+    "ListTagsForResource",
+    "ListTemplateGroupAccessControlEntries",
+    "ListTemplates",
+    "TagResource",
+    "UntagResource",
+    "UpdateTemplate",
+    "UpdateTemplateGroupAccessControlEntry"
+   ],
+   "HasResource": true,
+   "StringPrefix": "pca-connector-ad",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "AWS Private Certificate Authority": {
    "ARNFormat": "arn:aws:acm-pca:${Region}:${Account}:${ARNType}/${ResourceId}",
    "ARNRegex": "^arn:aws:acm-pca:.+:[0-9]+:.+",
@@ -10525,14 +10568,12 @@
     "CreateAgentDraftSnapshot",
     "CreateModelCustomizationJob",
     "DeleteCustomModel",
-    "DeletePrompt",
     "GetAgent",
     "GetAgentActionGroup",
     "GetAgentAlias",
     "GetAgentVersion",
     "GetCustomModel",
     "GetModelCustomizationJob",
-    "GetPrompt",
     "InvokeAgent",
     "InvokeModel",
     "InvokeModelWithResponseStream",
@@ -10543,15 +10584,13 @@
     "ListCustomModels",
     "ListFoundationModels",
     "ListModelCustomizationJobs",
-    "ListPrompts",
     "ListTagsForResource",
     "StopModelCustomizationJob",
     "TagResource",
     "UntagResource",
     "UpdateAgent",
     "UpdateAgentActionGroup",
-    "UpdateAgentAlias",
-    "UpdatePrompt"
+    "UpdateAgentAlias"
    ],
    "HasResource": true,
    "StringPrefix": "bedrock",
@@ -16895,6 +16934,7 @@
     "CreateBatchInferenceJob",
     "CreateBatchSegmentJob",
     "CreateCampaign",
+    "CreateDataInsightsJob",
     "CreateDataset",
     "CreateDatasetExportJob",
     "CreateDatasetGroup",
@@ -16919,6 +16959,7 @@
     "DescribeBatchInferenceJob",
     "DescribeBatchSegmentJob",
     "DescribeCampaign",
+    "DescribeDataInsightsJob",
     "DescribeDataset",
     "DescribeDatasetExportJob",
     "DescribeDatasetGroup",
@@ -16932,12 +16973,14 @@
     "DescribeSchema",
     "DescribeSolution",
     "DescribeSolutionVersion",
+    "GetDataInsights",
     "GetPersonalizedRanking",
     "GetRecommendations",
     "GetSolutionMetrics",
     "ListBatchInferenceJobs",
     "ListBatchSegmentJobs",
     "ListCampaigns",
+    "ListDataInsightsJobs",
     "ListDatasetExportJobs",
     "ListDatasetGroups",
     "ListDatasetImportJobs",
@@ -19160,6 +19203,7 @@
     "ListPipelines",
     "ListProcessingJobs",
     "ListProjects",
+    "ListResourceCatalogs",
     "ListSharedModelEvents",
     "ListSharedModelVersions",
     "ListSharedModels",

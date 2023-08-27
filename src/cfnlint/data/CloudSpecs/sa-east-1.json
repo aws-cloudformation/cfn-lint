@@ -2573,6 +2573,7 @@
   "AWS::QuickSight::Analysis.ArcAxisDisplayRange": "CACHED",
   "AWS::QuickSight::Analysis.ArcConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.ArcOptions": "CACHED",
+  "AWS::QuickSight::Analysis.AttributeAggregationFunction": "CACHED",
   "AWS::QuickSight::Analysis.AxisDataOptions": "CACHED",
   "AWS::QuickSight::Analysis.AxisDisplayMinMaxRange": "CACHED",
   "AWS::QuickSight::Analysis.AxisDisplayOptions": "CACHED",
@@ -2612,6 +2613,7 @@
   "AWS::QuickSight::Analysis.ClusterMarker": "CACHED",
   "AWS::QuickSight::Analysis.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.ColorScale": "CACHED",
+  "AWS::QuickSight::Analysis.ColorsConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.ColumnConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.ColumnHierarchy": "CACHED",
   "AWS::QuickSight::Analysis.ColumnIdentifier": "CACHED",
@@ -2639,6 +2641,7 @@
   "AWS::QuickSight::Analysis.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Analysis.CustomColor": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Analysis.CustomFilterConfiguration": "CACHED",
@@ -3016,7 +3019,32 @@
   "AWS::QuickSight::Analysis.WordCloudVisual": "CACHED",
   "AWS::QuickSight::Dashboard.AdHocFilteringOption": "CACHED",
   "AWS::QuickSight::Dashboard.AggregationFunction": "CACHED",
-  "AWS::QuickSight::Dashboard.AggregationSortConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.AggregationSortConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-aggregationsortconfiguration.html",
+   "Properties": {
+    "AggregationFunction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-aggregationsortconfiguration.html#cfn-quicksight-dashboard-aggregationsortconfiguration-aggregationfunction",
+     "Required": true,
+     "Type": "AggregationFunction",
+     "UpdateType": "Mutable"
+    },
+    "Column": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-aggregationsortconfiguration.html#cfn-quicksight-dashboard-aggregationsortconfiguration-column",
+     "Required": true,
+     "Type": "ColumnIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "SortDirection": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-aggregationsortconfiguration.html#cfn-quicksight-dashboard-aggregationsortconfiguration-sortdirection",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.AggregationSortConfiguration.SortDirection"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.AnalysisDefaults": "CACHED",
   "AWS::QuickSight::Dashboard.AnchorDateConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ArcAxisConfiguration": "CACHED",
@@ -3062,6 +3090,7 @@
   "AWS::QuickSight::Dashboard.ClusterMarker": "CACHED",
   "AWS::QuickSight::Dashboard.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ColorScale": "CACHED",
+  "AWS::QuickSight::Dashboard.ColorsConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ColumnConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ColumnHierarchy": "CACHED",
   "AWS::QuickSight::Dashboard.ColumnIdentifier": "CACHED",
@@ -3089,6 +3118,7 @@
   "AWS::QuickSight::Dashboard.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Dashboard.CustomColor": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Dashboard.CustomFilterConfiguration": "CACHED",
@@ -3106,7 +3136,88 @@
   "AWS::QuickSight::Dashboard.DataBarsOptions": "CACHED",
   "AWS::QuickSight::Dashboard.DataColor": "CACHED",
   "AWS::QuickSight::Dashboard.DataFieldSeriesItem": "CACHED",
-  "AWS::QuickSight::Dashboard.DataLabelOptions": "CACHED",
+  "AWS::QuickSight::Dashboard.DataLabelOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html",
+   "Properties": {
+    "CategoryLabelVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-categorylabelvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.CategoryLabelVisibility"
+     }
+    },
+    "DataLabelTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-datalabeltypes",
+     "DuplicatesAllowed": true,
+     "ItemType": "DataLabelType",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "LabelColor": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-labelcolor",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.LabelColor"
+     }
+    },
+    "LabelContent": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-labelcontent",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.LabelContent"
+     }
+    },
+    "LabelFontConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-labelfontconfiguration",
+     "Required": false,
+     "Type": "FontConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "MeasureLabelVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-measurelabelvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.MeasureLabelVisibility"
+     }
+    },
+    "Overlap": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-overlap",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.Overlap"
+     }
+    },
+    "Position": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-position",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.Position"
+     }
+    },
+    "Visibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-datalabeloptions.html#cfn-quicksight-dashboard-datalabeloptions-visibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DataLabelOptions.Visibility"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.DataLabelType": "CACHED",
   "AWS::QuickSight::Dashboard.DataPathColor": "CACHED",
   "AWS::QuickSight::Dashboard.DataPathLabelType": "CACHED",
@@ -3138,7 +3249,41 @@
   "AWS::QuickSight::Dashboard.DefaultNewSheetConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.DefaultPaginatedLayoutConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.DefaultSectionBasedLayoutConfiguration": "CACHED",
-  "AWS::QuickSight::Dashboard.DestinationParameterValueConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.DestinationParameterValueConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-destinationparametervalueconfiguration.html",
+   "Properties": {
+    "CustomValuesConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-destinationparametervalueconfiguration.html#cfn-quicksight-dashboard-destinationparametervalueconfiguration-customvaluesconfiguration",
+     "Required": false,
+     "Type": "CustomValuesConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "SelectAllValueOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-destinationparametervalueconfiguration.html#cfn-quicksight-dashboard-destinationparametervalueconfiguration-selectallvalueoptions",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DestinationParameterValueConfiguration.SelectAllValueOptions"
+     }
+    },
+    "SourceField": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-destinationparametervalueconfiguration.html#cfn-quicksight-dashboard-destinationparametervalueconfiguration-sourcefield",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DestinationParameterValueConfiguration.SourceField"
+     }
+    },
+    "SourceParameterName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-destinationparametervalueconfiguration.html#cfn-quicksight-dashboard-destinationparametervalueconfiguration-sourceparametername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.DimensionField": "CACHED",
   "AWS::QuickSight::Dashboard.DonutCenterOptions": "CACHED",
   "AWS::QuickSight::Dashboard.DonutOptions": "CACHED",
@@ -3173,7 +3318,31 @@
   "AWS::QuickSight::Dashboard.FilterGroup": "CACHED",
   "AWS::QuickSight::Dashboard.FilterListConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.FilterListControl": "CACHED",
-  "AWS::QuickSight::Dashboard.FilterOperationSelectedFieldsConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.FilterOperationSelectedFieldsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-filteroperationselectedfieldsconfiguration.html",
+   "Properties": {
+    "SelectedFieldOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-filteroperationselectedfieldsconfiguration.html#cfn-quicksight-dashboard-filteroperationselectedfieldsconfiguration-selectedfieldoptions",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.FilterOperationSelectedFieldsConfiguration.SelectedFieldOptions"
+     }
+    },
+    "SelectedFields": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-filteroperationselectedfieldsconfiguration.html#cfn-quicksight-dashboard-filteroperationselectedfieldsconfiguration-selectedfields",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.FilterOperationSelectedFieldsConfiguration.SelectedFields"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.FilterOperationTargetVisualsConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.FilterRelativeDateTimeControl": "CACHED",
   "AWS::QuickSight::Dashboard.FilterScopeConfiguration": "CACHED",
@@ -3210,15 +3379,31 @@
   "AWS::QuickSight::Dashboard.GaugeChartPrimaryValueConditionalFormatting": "CACHED",
   "AWS::QuickSight::Dashboard.GaugeChartVisual": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialCoordinateBounds": "CACHED",
-  "AWS::QuickSight::Dashboard.GeospatialHeatmapColorScale": "CACHED",
-  "AWS::QuickSight::Dashboard.GeospatialHeatmapConfiguration": "CACHED",
-  "AWS::QuickSight::Dashboard.GeospatialHeatmapDataColor": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapAggregatedFieldWells": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapFieldWells": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapStyleOptions": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapVisual": "CACHED",
-  "AWS::QuickSight::Dashboard.GeospatialPointStyleOptions": "CACHED",
+  "AWS::QuickSight::Dashboard.GeospatialPointStyleOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-geospatialpointstyleoptions.html",
+   "Properties": {
+    "ClusterMarkerConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-geospatialpointstyleoptions.html#cfn-quicksight-dashboard-geospatialpointstyleoptions-clustermarkerconfiguration",
+     "Required": false,
+     "Type": "ClusterMarkerConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "SelectedPointStyle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-geospatialpointstyleoptions.html#cfn-quicksight-dashboard-geospatialpointstyleoptions-selectedpointstyle",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.GeospatialPointStyleOptions.SelectedPointStyle"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.GeospatialWindowOptions": "CACHED",
   "AWS::QuickSight::Dashboard.GlobalTableBorderOptions": "CACHED",
   "AWS::QuickSight::Dashboard.GradientColor": "CACHED",
@@ -3321,19 +3506,132 @@
   "AWS::QuickSight::Dashboard.PieChartVisual": "CACHED",
   "AWS::QuickSight::Dashboard.PivotFieldSortOptions": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableAggregatedFieldWells": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableCellConditionalFormatting": "CACHED",
+  "AWS::QuickSight::Dashboard.PivotTableCellConditionalFormatting": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablecellconditionalformatting.html",
+   "Properties": {
+    "FieldId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablecellconditionalformatting.html#cfn-quicksight-dashboard-pivottablecellconditionalformatting-fieldid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.PivotTableCellConditionalFormatting.FieldId"
+     }
+    },
+    "Scope": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablecellconditionalformatting.html#cfn-quicksight-dashboard-pivottablecellconditionalformatting-scope",
+     "Required": false,
+     "Type": "PivotTableConditionalFormattingScope",
+     "UpdateType": "Mutable"
+    },
+    "TextFormat": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablecellconditionalformatting.html#cfn-quicksight-dashboard-pivottablecellconditionalformatting-textformat",
+     "Required": false,
+     "Type": "TextConditionalFormat",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.PivotTableConditionalFormatting": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableConditionalFormattingOption": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableConditionalFormattingScope": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableDataPathOption": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableFieldCollapseStateOption": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableFieldCollapseStateTarget": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldOption": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableFieldOptions": "CACHED",
+  "AWS::QuickSight::Dashboard.PivotTableFieldOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablefieldoptions.html",
+   "Properties": {
+    "DataPathOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablefieldoptions.html#cfn-quicksight-dashboard-pivottablefieldoptions-datapathoptions",
+     "DuplicatesAllowed": true,
+     "ItemType": "PivotTableDataPathOption",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SelectedFieldOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottablefieldoptions.html#cfn-quicksight-dashboard-pivottablefieldoptions-selectedfieldoptions",
+     "DuplicatesAllowed": true,
+     "ItemType": "PivotTableFieldOption",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.PivotTableFieldSubtotalOptions": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldWells": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableOptions": "CACHED",
+  "AWS::QuickSight::Dashboard.PivotTableOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html",
+   "Properties": {
+    "CellStyle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-cellstyle",
+     "Required": false,
+     "Type": "TableCellStyle",
+     "UpdateType": "Mutable"
+    },
+    "ColumnHeaderStyle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-columnheaderstyle",
+     "Required": false,
+     "Type": "TableCellStyle",
+     "UpdateType": "Mutable"
+    },
+    "ColumnNamesVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-columnnamesvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.PivotTableOptions.ColumnNamesVisibility"
+     }
+    },
+    "MetricPlacement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-metricplacement",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.PivotTableOptions.MetricPlacement"
+     }
+    },
+    "RowAlternateColorOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-rowalternatecoloroptions",
+     "Required": false,
+     "Type": "RowAlternateColorOptions",
+     "UpdateType": "Mutable"
+    },
+    "RowFieldNamesStyle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-rowfieldnamesstyle",
+     "Required": false,
+     "Type": "TableCellStyle",
+     "UpdateType": "Mutable"
+    },
+    "RowHeaderStyle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-rowheaderstyle",
+     "Required": false,
+     "Type": "TableCellStyle",
+     "UpdateType": "Mutable"
+    },
+    "SingleMetricVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-singlemetricvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.PivotTableOptions.SingleMetricVisibility"
+     }
+    },
+    "ToggleButtonsVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-pivottableoptions.html#cfn-quicksight-dashboard-pivottableoptions-togglebuttonsvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.PivotTableOptions.ToggleButtonsVisibility"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.PivotTablePaginatedReportOptions": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableSortBy": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableSortConfiguration": "CACHED",
@@ -3344,7 +3642,110 @@
   "AWS::QuickSight::Dashboard.ProgressBarOptions": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartAggregatedFieldWells": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartAreaStyleSettings": "CACHED",
-  "AWS::QuickSight::Dashboard.RadarChartConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.RadarChartConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html",
+   "Properties": {
+    "AlternateBandColorsVisibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-alternatebandcolorsvisibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandColorsVisibility"
+     }
+    },
+    "AlternateBandEvenColor": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-alternatebandevencolor",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandEvenColor"
+     }
+    },
+    "AlternateBandOddColor": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-alternatebandoddcolor",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandOddColor"
+     }
+    },
+    "BaseSeriesSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-baseseriessettings",
+     "Required": false,
+     "Type": "RadarChartSeriesSettings",
+     "UpdateType": "Mutable"
+    },
+    "CategoryAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-categoryaxis",
+     "Required": false,
+     "Type": "AxisDisplayOptions",
+     "UpdateType": "Mutable"
+    },
+    "CategoryLabelOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-categorylabeloptions",
+     "Required": false,
+     "Type": "ChartAxisLabelOptions",
+     "UpdateType": "Mutable"
+    },
+    "ColorAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-coloraxis",
+     "Required": false,
+     "Type": "AxisDisplayOptions",
+     "UpdateType": "Mutable"
+    },
+    "ColorLabelOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-colorlabeloptions",
+     "Required": false,
+     "Type": "ChartAxisLabelOptions",
+     "UpdateType": "Mutable"
+    },
+    "FieldWells": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-fieldwells",
+     "Required": false,
+     "Type": "RadarChartFieldWells",
+     "UpdateType": "Mutable"
+    },
+    "Legend": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-legend",
+     "Required": false,
+     "Type": "LegendOptions",
+     "UpdateType": "Mutable"
+    },
+    "Shape": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-shape",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.RadarChartConfiguration.Shape"
+     }
+    },
+    "SortConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-sortconfiguration",
+     "Required": false,
+     "Type": "RadarChartSortConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "StartAngle": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-startangle",
+     "PrimitiveType": "Double",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.RadarChartConfiguration.StartAngle"
+     }
+    },
+    "VisualPalette": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-radarchartconfiguration.html#cfn-quicksight-dashboard-radarchartconfiguration-visualpalette",
+     "Required": false,
+     "Type": "VisualPalette",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.RadarChartFieldWells": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartSeriesSettings": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartSortConfiguration": "CACHED",
@@ -3353,7 +3754,29 @@
   "AWS::QuickSight::Dashboard.ReferenceLine": "CACHED",
   "AWS::QuickSight::Dashboard.ReferenceLineCustomLabelConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ReferenceLineDataConfiguration": "CACHED",
-  "AWS::QuickSight::Dashboard.ReferenceLineDynamicDataConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.ReferenceLineDynamicDataConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-referencelinedynamicdataconfiguration.html",
+   "Properties": {
+    "Calculation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-referencelinedynamicdataconfiguration.html#cfn-quicksight-dashboard-referencelinedynamicdataconfiguration-calculation",
+     "Required": true,
+     "Type": "NumericalAggregationFunction",
+     "UpdateType": "Mutable"
+    },
+    "Column": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-referencelinedynamicdataconfiguration.html#cfn-quicksight-dashboard-referencelinedynamicdataconfiguration-column",
+     "Required": true,
+     "Type": "ColumnIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "MeasureAggregationFunction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-referencelinedynamicdataconfiguration.html#cfn-quicksight-dashboard-referencelinedynamicdataconfiguration-measureaggregationfunction",
+     "Required": true,
+     "Type": "AggregationFunction",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.ReferenceLineLabelConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ReferenceLineStaticDataConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ReferenceLineStyleConfiguration": "CACHED",
@@ -3369,10 +3792,74 @@
   "AWS::QuickSight::Dashboard.SankeyDiagramFieldWells": "CACHED",
   "AWS::QuickSight::Dashboard.SankeyDiagramSortConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.SankeyDiagramVisual": "CACHED",
-  "AWS::QuickSight::Dashboard.ScatterPlotCategoricallyAggregatedFieldWells": "CACHED",
+  "AWS::QuickSight::Dashboard.ScatterPlotCategoricallyAggregatedFieldWells": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells.html",
+   "Properties": {
+    "Category": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells-category",
+     "DuplicatesAllowed": true,
+     "ItemType": "DimensionField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Size": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells-size",
+     "DuplicatesAllowed": true,
+     "ItemType": "MeasureField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "XAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells-xaxis",
+     "DuplicatesAllowed": true,
+     "ItemType": "MeasureField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "YAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotcategoricallyaggregatedfieldwells-yaxis",
+     "DuplicatesAllowed": true,
+     "ItemType": "MeasureField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.ScatterPlotConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ScatterPlotFieldWells": "CACHED",
-  "AWS::QuickSight::Dashboard.ScatterPlotUnaggregatedFieldWells": "CACHED",
+  "AWS::QuickSight::Dashboard.ScatterPlotUnaggregatedFieldWells": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotunaggregatedfieldwells.html",
+   "Properties": {
+    "Size": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotunaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotunaggregatedfieldwells-size",
+     "DuplicatesAllowed": true,
+     "ItemType": "MeasureField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "XAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotunaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotunaggregatedfieldwells-xaxis",
+     "DuplicatesAllowed": true,
+     "ItemType": "DimensionField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "YAxis": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-scatterplotunaggregatedfieldwells.html#cfn-quicksight-dashboard-scatterplotunaggregatedfieldwells-yaxis",
+     "DuplicatesAllowed": true,
+     "ItemType": "DimensionField",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.ScatterPlotVisual": "CACHED",
   "AWS::QuickSight::Dashboard.ScrollBarOptions": "CACHED",
   "AWS::QuickSight::Dashboard.SecondaryValueOptions": "CACHED",
@@ -3564,6 +4051,7 @@
   "AWS::QuickSight::Template.ArcAxisDisplayRange": "CACHED",
   "AWS::QuickSight::Template.ArcConfiguration": "CACHED",
   "AWS::QuickSight::Template.ArcOptions": "CACHED",
+  "AWS::QuickSight::Template.AttributeAggregationFunction": "CACHED",
   "AWS::QuickSight::Template.AxisDataOptions": "CACHED",
   "AWS::QuickSight::Template.AxisDisplayMinMaxRange": "CACHED",
   "AWS::QuickSight::Template.AxisDisplayOptions": "CACHED",
@@ -3603,6 +4091,7 @@
   "AWS::QuickSight::Template.ClusterMarker": "CACHED",
   "AWS::QuickSight::Template.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Template.ColorScale": "CACHED",
+  "AWS::QuickSight::Template.ColorsConfiguration": "CACHED",
   "AWS::QuickSight::Template.ColumnConfiguration": "CACHED",
   "AWS::QuickSight::Template.ColumnGroupColumnSchema": "CACHED",
   "AWS::QuickSight::Template.ColumnGroupSchema": "CACHED",
@@ -3633,6 +4122,7 @@
   "AWS::QuickSight::Template.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Template.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Template.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Template.CustomColor": "CACHED",
   "AWS::QuickSight::Template.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Template.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Template.CustomFilterConfiguration": "CACHED",
@@ -4882,7 +5372,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "136.0.0",
+ "ResourceSpecificationVersion": "137.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5273,6 +5763,7 @@
   "AWS::EC2::IPAMResourceDiscoveryAssociation": "CACHED",
   "AWS::EC2::IPAMScope": "CACHED",
   "AWS::EC2::Instance": "CACHED",
+  "AWS::EC2::InstanceConnectEndpoint": "CACHED",
   "AWS::EC2::InternetGateway": "CACHED",
   "AWS::EC2::KeyPair": "CACHED",
   "AWS::EC2::LaunchTemplate": "CACHED",
@@ -5647,7 +6138,52 @@
   "AWS::MWAA::Environment": "CACHED",
   "AWS::Macie::AllowList": "CACHED",
   "AWS::Macie::CustomDataIdentifier": "CACHED",
-  "AWS::Macie::FindingsFilter": "CACHED",
+  "AWS::Macie::FindingsFilter": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html",
+   "Properties": {
+    "Action": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-action",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Macie::FindingsFilter.Action"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "FindingCriteria": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-findingcriteria",
+     "Required": true,
+     "Type": "FindingCriteria",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Position": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-position",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Macie::Session": "CACHED",
   "AWS::MediaConnect::Bridge": "CACHED",
   "AWS::MediaConnect::BridgeOutput": "CACHED",
@@ -6350,7 +6886,76 @@
   "AWS::RefactorSpaces::Environment": "CACHED",
   "AWS::RefactorSpaces::Route": "CACHED",
   "AWS::RefactorSpaces::Service": "CACHED",
-  "AWS::ResilienceHub::App": "CACHED",
+  "AWS::ResilienceHub::App": {
+   "Attributes": {
+    "AppArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html",
+   "Properties": {
+    "AppAssessmentSchedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-appassessmentschedule",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ResilienceHub::App.AppAssessmentSchedule"
+     }
+    },
+    "AppTemplateBody": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-apptemplatebody",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ResilienceHub::App.AppTemplateBody"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ResilienceHub::App.Description"
+     }
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::ResilienceHub::App.Name"
+     }
+    },
+    "ResiliencyPolicyArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-resiliencypolicyarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ResilienceHub::App.ResiliencyPolicyArn"
+     }
+    },
+    "ResourceMappings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-resourcemappings",
+     "DuplicatesAllowed": true,
+     "ItemType": "ResourceMapping",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-tags",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ResilienceHub::ResiliencyPolicy": "CACHED",
   "AWS::ResourceExplorer2::DefaultViewAssociation": "CACHED",
   "AWS::ResourceExplorer2::Index": "CACHED",
@@ -8566,6 +9171,7 @@
   "AWS::QuickSight::Analysis.AnchorDateConfiguration.ParameterName": "CACHED",
   "AWS::QuickSight::Analysis.ArcConfiguration.ArcThickness": "CACHED",
   "AWS::QuickSight::Analysis.ArcOptions.ArcThickness": "CACHED",
+  "AWS::QuickSight::Analysis.AttributeAggregationFunction.SimpleAttributeAggregation": "CACHED",
   "AWS::QuickSight::Analysis.AwsAccountId": "CACHED",
   "AWS::QuickSight::Analysis.AxisDisplayOptions.AxisLineVisibility": "CACHED",
   "AWS::QuickSight::Analysis.AxisDisplayOptions.GridLineVisibility": "CACHED",
@@ -8617,6 +9223,9 @@
   "AWS::QuickSight::Analysis.CurrencyDisplayFormatConfiguration.Symbol": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionURLOperation.URLTarget": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionURLOperation.URLTemplate": "CACHED",
+  "AWS::QuickSight::Analysis.CustomColor.Color": "CACHED",
+  "AWS::QuickSight::Analysis.CustomColor.FieldValue": "CACHED",
+  "AWS::QuickSight::Analysis.CustomColor.SpecialValue": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentConfiguration.ContentType": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentConfiguration.ContentUrl": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentConfiguration.ImageScaling": "CACHED",
@@ -9082,6 +9691,9 @@
   "AWS::QuickSight::Dashboard.CurrencyDisplayFormatConfiguration.Symbol": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionURLOperation.URLTarget": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionURLOperation.URLTemplate": "CACHED",
+  "AWS::QuickSight::Dashboard.CustomColor.Color": "CACHED",
+  "AWS::QuickSight::Dashboard.CustomColor.FieldValue": "CACHED",
+  "AWS::QuickSight::Dashboard.CustomColor.SpecialValue": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentConfiguration.ContentType": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentConfiguration.ContentUrl": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentConfiguration.ImageScaling": "CACHED",
@@ -9114,7 +9726,6 @@
   "AWS::QuickSight::Dashboard.DataLabelOptions.MeasureLabelVisibility": "CACHED",
   "AWS::QuickSight::Dashboard.DataLabelOptions.Overlap": "CACHED",
   "AWS::QuickSight::Dashboard.DataLabelOptions.Position": "CACHED",
-  "AWS::QuickSight::Dashboard.DataLabelOptions.TotalsVisibility": "CACHED",
   "AWS::QuickSight::Dashboard.DataLabelOptions.Visibility": "CACHED",
   "AWS::QuickSight::Dashboard.DataPathColor.Color": "CACHED",
   "AWS::QuickSight::Dashboard.DataPathColor.TimeGranularity": "CACHED",
@@ -9235,7 +9846,6 @@
   "AWS::QuickSight::Dashboard.GeospatialCoordinateBounds.North": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialCoordinateBounds.South": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialCoordinateBounds.West": "CACHED",
-  "AWS::QuickSight::Dashboard.GeospatialHeatmapDataColor.Color": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapStyleOptions.BaseMapStyle": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialMapVisual.VisualId": "CACHED",
   "AWS::QuickSight::Dashboard.GeospatialPointStyleOptions.SelectedPointStyle": "CACHED",
@@ -9345,12 +9955,10 @@
   "AWS::QuickSight::Dashboard.PivotFieldSortOptions.FieldId": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableCellConditionalFormatting.FieldId": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableConditionalFormattingScope.Role": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableFieldCollapseStateOption.State": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldOption.CustomLabel": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldOption.FieldId": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldOption.Visibility": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableFieldSubtotalOptions.FieldId": "CACHED",
-  "AWS::QuickSight::Dashboard.PivotTableOptions.CollapsedRowDimensionsVisibility": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableOptions.ColumnNamesVisibility": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableOptions.MetricPlacement": "CACHED",
   "AWS::QuickSight::Dashboard.PivotTableOptions.SingleMetricVisibility": "CACHED",
@@ -9367,7 +9975,6 @@
   "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandColorsVisibility": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandEvenColor": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartConfiguration.AlternateBandOddColor": "CACHED",
-  "AWS::QuickSight::Dashboard.RadarChartConfiguration.AxesRangeScale": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartConfiguration.Shape": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartConfiguration.StartAngle": "CACHED",
   "AWS::QuickSight::Dashboard.RadarChartVisual.VisualId": "CACHED",
@@ -9609,6 +10216,7 @@
   "AWS::QuickSight::Template.AnchorDateConfiguration.ParameterName": "CACHED",
   "AWS::QuickSight::Template.ArcConfiguration.ArcThickness": "CACHED",
   "AWS::QuickSight::Template.ArcOptions.ArcThickness": "CACHED",
+  "AWS::QuickSight::Template.AttributeAggregationFunction.SimpleAttributeAggregation": "CACHED",
   "AWS::QuickSight::Template.AwsAccountId": "CACHED",
   "AWS::QuickSight::Template.AxisDisplayOptions.AxisLineVisibility": "CACHED",
   "AWS::QuickSight::Template.AxisDisplayOptions.GridLineVisibility": "CACHED",
@@ -9660,6 +10268,9 @@
   "AWS::QuickSight::Template.CurrencyDisplayFormatConfiguration.Symbol": "CACHED",
   "AWS::QuickSight::Template.CustomActionURLOperation.URLTarget": "CACHED",
   "AWS::QuickSight::Template.CustomActionURLOperation.URLTemplate": "CACHED",
+  "AWS::QuickSight::Template.CustomColor.Color": "CACHED",
+  "AWS::QuickSight::Template.CustomColor.FieldValue": "CACHED",
+  "AWS::QuickSight::Template.CustomColor.SpecialValue": "CACHED",
   "AWS::QuickSight::Template.CustomContentConfiguration.ContentType": "CACHED",
   "AWS::QuickSight::Template.CustomContentConfiguration.ContentUrl": "CACHED",
   "AWS::QuickSight::Template.CustomContentConfiguration.ImageScaling": "CACHED",
