@@ -1,3 +1,9 @@
+### v0.79.9
+###### CloudFormation Specifications
+- Update CloudFormation specs to `138.0.0` (pull #[2857](https://github.com/aws-cloudformation/cfn-lint/pull/2857))
+###### Fixes
+- Fix `AWS::LanguageExtensions` to have regex escape for string replacement (pull #[2862](https://github.com/aws-cloudformation/cfn-lint/pull/2862))
+
 ### v0.79.8
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `136.0.0` (pull #[2848](https://github.com/aws-cloudformation/cfn-lint/pull/2848))
