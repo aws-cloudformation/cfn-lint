@@ -2207,6 +2207,38 @@
   "AWS::OpsWorks::Stack.Source": "CACHED",
   "AWS::OpsWorks::Stack.StackConfigurationManager": "CACHED",
   "AWS::OpsWorksCM::Server.EngineAttribute": "CACHED",
+  "AWS::PCAConnectorAD::Connector.VpcInformation": "CACHED",
+  "AWS::PCAConnectorAD::Template.ApplicationPolicies": "CACHED",
+  "AWS::PCAConnectorAD::Template.ApplicationPolicy": "CACHED",
+  "AWS::PCAConnectorAD::Template.CertificateValidity": "CACHED",
+  "AWS::PCAConnectorAD::Template.EnrollmentFlagsV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.EnrollmentFlagsV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.EnrollmentFlagsV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.ExtensionsV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.ExtensionsV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.ExtensionsV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.GeneralFlagsV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.GeneralFlagsV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.GeneralFlagsV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.KeyUsage": "CACHED",
+  "AWS::PCAConnectorAD::Template.KeyUsageFlags": "CACHED",
+  "AWS::PCAConnectorAD::Template.KeyUsageProperty": "CACHED",
+  "AWS::PCAConnectorAD::Template.KeyUsagePropertyFlags": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyAttributesV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyAttributesV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyAttributesV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyFlagsV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyFlagsV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.PrivateKeyFlagsV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.SubjectNameFlagsV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.SubjectNameFlagsV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.SubjectNameFlagsV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.TemplateDefinition": "CACHED",
+  "AWS::PCAConnectorAD::Template.TemplateV2": "CACHED",
+  "AWS::PCAConnectorAD::Template.TemplateV3": "CACHED",
+  "AWS::PCAConnectorAD::Template.TemplateV4": "CACHED",
+  "AWS::PCAConnectorAD::Template.ValidityPeriod": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.AccessRights": "CACHED",
   "AWS::Pipes::Pipe.AwsVpcConfiguration": "CACHED",
   "AWS::Pipes::Pipe.BatchArrayProperties": "CACHED",
   "AWS::Pipes::Pipe.BatchContainerOverrides": "CACHED",
@@ -2295,6 +2327,8 @@
   "AWS::RefactorSpaces::Service.LambdaEndpointInput": "CACHED",
   "AWS::RefactorSpaces::Service.UrlEndpointInput": "CACHED",
   "AWS::Rekognition::StreamProcessor.List": "CACHED",
+  "AWS::ResilienceHub::App.EventSubscription": "CACHED",
+  "AWS::ResilienceHub::App.PermissionModel": "CACHED",
   "AWS::ResilienceHub::App.PhysicalResourceId": "CACHED",
   "AWS::ResilienceHub::App.ResourceMapping": "CACHED",
   "AWS::ResilienceHub::ResiliencyPolicy.FailurePolicy": "CACHED",
@@ -2305,6 +2339,7 @@
   "AWS::ResourceGroups::Group.Query": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery": "CACHED",
   "AWS::ResourceGroups::Group.TagFilter": "CACHED",
+  "AWS::RolesAnywhere::TrustAnchor.NotificationSetting": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.SourceData": "CACHED",
   "AWS::Route53::CidrCollection.Location": "CACHED",
@@ -3116,7 +3151,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "137.0.0",
+ "ResourceSpecificationVersion": "138.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3332,7 +3367,99 @@
   "AWS::DataSync::LocationObjectStorage": "CACHED",
   "AWS::DataSync::LocationS3": "CACHED",
   "AWS::DataSync::LocationSMB": "CACHED",
-  "AWS::DataSync::Task": "CACHED",
+  "AWS::DataSync::Task": {
+   "Attributes": {
+    "DestinationNetworkInterfaceArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "SourceNetworkInterfaceArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    },
+    "TaskArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html",
+   "Properties": {
+    "CloudWatchLogGroupArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-cloudwatchloggrouparn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.CloudWatchLogGroupArn"
+     }
+    },
+    "DestinationLocationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-destinationlocationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.DestinationLocationArn"
+     }
+    },
+    "Excludes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-excludes",
+     "DuplicatesAllowed": true,
+     "ItemType": "FilterRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Includes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-includes",
+     "DuplicatesAllowed": true,
+     "ItemType": "FilterRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.Name"
+     }
+    },
+    "Options": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-options",
+     "Required": false,
+     "Type": "Options",
+     "UpdateType": "Mutable"
+    },
+    "Schedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-schedule",
+     "Required": false,
+     "Type": "TaskSchedule",
+     "UpdateType": "Mutable"
+    },
+    "SourceLocationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-sourcelocationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.SourceLocationArn"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Detective::Graph": "CACHED",
   "AWS::Detective::MemberInvitation": "CACHED",
   "AWS::Detective::OrganizationAdmin": "CACHED",
@@ -3431,6 +3558,7 @@
   "AWS::EC2::IPAMResourceDiscoveryAssociation": "CACHED",
   "AWS::EC2::IPAMScope": "CACHED",
   "AWS::EC2::Instance": "CACHED",
+  "AWS::EC2::InstanceConnectEndpoint": "CACHED",
   "AWS::EC2::InternetGateway": "CACHED",
   "AWS::EC2::KeyPair": "CACHED",
   "AWS::EC2::LaunchTemplate": "CACHED",
@@ -3790,52 +3918,7 @@
   "AWS::MSK::VpcConnection": "CACHED",
   "AWS::Macie::AllowList": "CACHED",
   "AWS::Macie::CustomDataIdentifier": "CACHED",
-  "AWS::Macie::FindingsFilter": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html",
-   "Properties": {
-    "Action": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-action",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Macie::FindingsFilter.Action"
-     }
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "FindingCriteria": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-findingcriteria",
-     "Required": true,
-     "Type": "FindingCriteria",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Position": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-macie-findingsfilter.html#cfn-macie-findingsfilter-position",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Macie::FindingsFilter": "CACHED",
   "AWS::Macie::Session": "CACHED",
   "AWS::MediaConnect::Bridge": "CACHED",
   "AWS::MediaConnect::BridgeOutput": "CACHED",
@@ -3940,6 +4023,11 @@
   "AWS::Organizations::OrganizationalUnit": "CACHED",
   "AWS::Organizations::Policy": "CACHED",
   "AWS::Organizations::ResourcePolicy": "CACHED",
+  "AWS::PCAConnectorAD::Connector": "CACHED",
+  "AWS::PCAConnectorAD::DirectoryRegistration": "CACHED",
+  "AWS::PCAConnectorAD::ServicePrincipalName": "CACHED",
+  "AWS::PCAConnectorAD::Template": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
   "AWS::RAM::Permission": "CACHED",
   "AWS::RAM::ResourceShare": "CACHED",
@@ -3972,76 +4060,7 @@
   "AWS::RefactorSpaces::Route": "CACHED",
   "AWS::RefactorSpaces::Service": "CACHED",
   "AWS::Rekognition::Collection": "CACHED",
-  "AWS::ResilienceHub::App": {
-   "Attributes": {
-    "AppArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html",
-   "Properties": {
-    "AppAssessmentSchedule": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-appassessmentschedule",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::ResilienceHub::App.AppAssessmentSchedule"
-     }
-    },
-    "AppTemplateBody": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-apptemplatebody",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::ResilienceHub::App.AppTemplateBody"
-     }
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::ResilienceHub::App.Description"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::ResilienceHub::App.Name"
-     }
-    },
-    "ResiliencyPolicyArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-resiliencypolicyarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::ResilienceHub::App.ResiliencyPolicyArn"
-     }
-    },
-    "ResourceMappings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-resourcemappings",
-     "DuplicatesAllowed": true,
-     "ItemType": "ResourceMapping",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resiliencehub-app.html#cfn-resiliencehub-app-tags",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ResilienceHub::App": "CACHED",
   "AWS::ResilienceHub::ResiliencyPolicy": "CACHED",
   "AWS::ResourceExplorer2::DefaultViewAssociation": "CACHED",
   "AWS::ResourceExplorer2::Index": "CACHED",
@@ -6105,6 +6124,19 @@
   "AWS::Organizations::Policy.Name": "CACHED",
   "AWS::Organizations::Policy.TargetIds": "CACHED",
   "AWS::Organizations::Policy.Type": "CACHED",
+  "AWS::PCAConnectorAD::Connector.CertificateAuthorityArn": "CACHED",
+  "AWS::PCAConnectorAD::Connector.DirectoryId": "CACHED",
+  "AWS::PCAConnectorAD::Connector.VpcInformation.SecurityGroupIds": "CACHED",
+  "AWS::PCAConnectorAD::DirectoryRegistration.DirectoryId": "CACHED",
+  "AWS::PCAConnectorAD::ServicePrincipalName.ConnectorArn": "CACHED",
+  "AWS::PCAConnectorAD::ServicePrincipalName.DirectoryRegistrationArn": "CACHED",
+  "AWS::PCAConnectorAD::Template.ConnectorArn": "CACHED",
+  "AWS::PCAConnectorAD::Template.Name": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.AccessRights.AutoEnroll": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.AccessRights.Enroll": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.GroupDisplayName": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.GroupSecurityIdentifier": "CACHED",
+  "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry.TemplateArn": "CACHED",
   "AWS::Pipes::Pipe.AwsVpcConfiguration.AssignPublicIp": "CACHED",
   "AWS::Pipes::Pipe.AwsVpcConfiguration.SecurityGroups": "CACHED",
   "AWS::Pipes::Pipe.AwsVpcConfiguration.Subnets": "CACHED",
@@ -6442,7 +6474,13 @@
   "AWS::ResilienceHub::App.AppAssessmentSchedule": "CACHED",
   "AWS::ResilienceHub::App.AppTemplateBody": "CACHED",
   "AWS::ResilienceHub::App.Description": "CACHED",
+  "AWS::ResilienceHub::App.EventSubscription.EventType": "CACHED",
+  "AWS::ResilienceHub::App.EventSubscription.Name": "CACHED",
+  "AWS::ResilienceHub::App.EventSubscription.SnsTopicArn": "CACHED",
   "AWS::ResilienceHub::App.Name": "CACHED",
+  "AWS::ResilienceHub::App.PermissionModel.CrossAccountRoleArns": "CACHED",
+  "AWS::ResilienceHub::App.PermissionModel.InvokerRoleName": "CACHED",
+  "AWS::ResilienceHub::App.PermissionModel.Type": "CACHED",
   "AWS::ResilienceHub::App.PhysicalResourceId.AwsAccountId": "CACHED",
   "AWS::ResilienceHub::App.PhysicalResourceId.AwsRegion": "CACHED",
   "AWS::ResilienceHub::App.PhysicalResourceId.Identifier": "CACHED",
@@ -6462,6 +6500,9 @@
   "AWS::RolesAnywhere::CRL.TrustAnchorArn": "CACHED",
   "AWS::RolesAnywhere::Profile.DurationSeconds": "CACHED",
   "AWS::RolesAnywhere::Profile.RoleArns": "CACHED",
+  "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Channel": "CACHED",
+  "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Event": "CACHED",
+  "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Threshold": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source.SourceType": "CACHED",
   "AWS::Route53::CidrCollection.Location.LocationName": "CACHED",
   "AWS::Route53::CidrCollection.Name": "CACHED",
