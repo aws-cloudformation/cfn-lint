@@ -197,7 +197,7 @@ class _Transform:
         if not re.search(pattern, s):
             return (True, s)
         for k, v in params.items():
-            s = re.sub(rf"\${{{k}}}", v, s)
+            s = re.sub(rf"\$\{{{k}\}}", v, s)
 
         return (not (bool(re.search(pattern, s))), s)
 
