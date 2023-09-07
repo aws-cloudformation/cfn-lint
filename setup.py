@@ -52,7 +52,7 @@ that could potentially be improved'),
         'jschema_to_python~=1.2.3',
         'sarif-om~=1.0.4',
         'sympy>=1.0.0',
-        'regex',
+        'regex>=2021.7.1',
     ],
     python_requires='>=3.7, <=4.0, !=4.0',
     entry_points={
