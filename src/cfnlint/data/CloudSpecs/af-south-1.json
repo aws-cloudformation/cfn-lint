@@ -297,6 +297,8 @@
   "AWS::AppFlow::Flow.S3OutputFormatConfig": "CACHED",
   "AWS::AppFlow::Flow.S3SourceProperties": "CACHED",
   "AWS::AppFlow::Flow.SAPODataDestinationProperties": "CACHED",
+  "AWS::AppFlow::Flow.SAPODataPaginationConfig": "CACHED",
+  "AWS::AppFlow::Flow.SAPODataParallelismConfig": "CACHED",
   "AWS::AppFlow::Flow.SAPODataSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.SalesforceDestinationProperties": "CACHED",
   "AWS::AppFlow::Flow.SalesforceSourceProperties": "CACHED",
@@ -2015,13 +2017,82 @@
   "AWS::GroundStation::MissionProfile.DataflowEdge": "CACHED",
   "AWS::GroundStation::MissionProfile.StreamsKmsKey": "CACHED",
   "AWS::GuardDuty::Detector.CFNDataSourceConfigurations": "CACHED",
-  "AWS::GuardDuty::Detector.CFNKubernetesAuditLogsConfiguration": "CACHED",
-  "AWS::GuardDuty::Detector.CFNKubernetesConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.CFNKubernetesAuditLogsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnkubernetesauditlogsconfiguration.html",
+   "Properties": {
+    "Enable": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnkubernetesauditlogsconfiguration.html#cfn-guardduty-detector-cfnkubernetesauditlogsconfiguration-enable",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::GuardDuty::Detector.CFNKubernetesConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnkubernetesconfiguration.html",
+   "Properties": {
+    "AuditLogs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnkubernetesconfiguration.html#cfn-guardduty-detector-cfnkubernetesconfiguration-auditlogs",
+     "Required": false,
+     "Type": "CFNKubernetesAuditLogsConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": "CACHED",
-  "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html",
+   "Properties": {
+    "Enable": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html#cfn-guardduty-detector-cfns3logsconfiguration-enable",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": "CACHED",
-  "AWS::GuardDuty::Detector.FeatureAdditionalConfiguration": "CACHED",
-  "AWS::GuardDuty::Detector.FeatureConfigurations": "CACHED",
+  "AWS::GuardDuty::Detector.FeatureAdditionalConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureadditionalconfiguration.html",
+   "Properties": {
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureadditionalconfiguration.html#cfn-guardduty-detector-featureadditionalconfiguration-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Status": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureadditionalconfiguration.html#cfn-guardduty-detector-featureadditionalconfiguration-status",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::GuardDuty::Detector.FeatureConfigurations": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureconfigurations.html",
+   "Properties": {
+    "AdditionalConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureconfigurations.html#cfn-guardduty-detector-featureconfigurations-additionalconfiguration",
+     "ItemType": "FeatureAdditionalConfiguration",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureconfigurations.html#cfn-guardduty-detector-featureconfigurations-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Status": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-featureconfigurations.html#cfn-guardduty-detector-featureconfigurations-status",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::GuardDuty::Filter.Condition": "CACHED",
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
   "AWS::IAM::Group.Policy": "CACHED",
@@ -3430,7 +3501,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "138.0.0",
+ "ResourceSpecificationVersion": "139.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3879,6 +3950,8 @@
   "AWS::Connect::Rule": "CACHED",
   "AWS::Connect::SecurityKey": "CACHED",
   "AWS::Connect::TaskTemplate": "CACHED",
+  "AWS::Connect::View": "CACHED",
+  "AWS::Connect::ViewVersion": "CACHED",
   "AWS::ControlTower::EnabledControl": "CACHED",
   "AWS::CustomerProfiles::CalculatedAttributeDefinition": "CACHED",
   "AWS::CustomerProfiles::Domain": "CACHED",
@@ -3992,44 +4065,7 @@
   "AWS::EC2::DHCPOptions": "CACHED",
   "AWS::EC2::EC2Fleet": "CACHED",
   "AWS::EC2::EIP": "CACHED",
-  "AWS::EC2::EIPAssociation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html",
-   "Properties": {
-    "AllocationId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-allocationid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::EC2::EIP.AllocationId"
-     }
-    },
-    "EIP": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-eip",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "InstanceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-instanceid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "NetworkInterfaceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-networkinterfaceid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "PrivateIpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-PrivateIpAddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::EIPAssociation": "CACHED",
   "AWS::EC2::EgressOnlyInternetGateway": "CACHED",
   "AWS::EC2::EnclaveCertificateIamRoleAssociation": "CACHED",
   "AWS::EC2::FlowLog": "CACHED",
@@ -4104,6 +4140,7 @@
   "AWS::EC2::IPAMResourceDiscoveryAssociation": "CACHED",
   "AWS::EC2::IPAMScope": "CACHED",
   "AWS::EC2::Instance": "CACHED",
+  "AWS::EC2::InstanceConnectEndpoint": "CACHED",
   "AWS::EC2::InternetGateway": "CACHED",
   "AWS::EC2::KeyPair": "CACHED",
   "AWS::EC2::LaunchTemplate": "CACHED",
@@ -4607,7 +4644,46 @@
   "AWS::GroundStation::Config": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup": "CACHED",
   "AWS::GroundStation::MissionProfile": "CACHED",
-  "AWS::GuardDuty::Detector": "CACHED",
+  "AWS::GuardDuty::Detector": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html",
+   "Properties": {
+    "DataSources": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-datasources",
+     "Required": false,
+     "Type": "CFNDataSourceConfigurations",
+     "UpdateType": "Mutable"
+    },
+    "Enable": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-enable",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Features": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-features",
+     "ItemType": "FeatureConfigurations",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "FindingPublishingFrequency": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-findingpublishingfrequency",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::GuardDuty::Detector.FindingPublishingFrequency"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::GuardDuty::Filter": "CACHED",
   "AWS::GuardDuty::IPSet": "CACHED",
   "AWS::GuardDuty::Master": "CACHED",
@@ -4909,7 +4985,82 @@
   "AWS::SSM::MaintenanceWindow": "CACHED",
   "AWS::SSM::MaintenanceWindowTarget": "CACHED",
   "AWS::SSM::MaintenanceWindowTask": "CACHED",
-  "AWS::SSM::Parameter": "CACHED",
+  "AWS::SSM::Parameter": {
+   "Attributes": {
+    "Type": {
+     "PrimitiveType": "String"
+    },
+    "Value": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html",
+   "Properties": {
+    "AllowedPattern": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DataType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SSM::Parameter.DataType"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Policies": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tier": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SSM::Parameter.Tier"
+     }
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SSM::Parameter.Type"
+     }
+    },
+    "Value": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::SSM::PatchBaseline": "CACHED",
   "AWS::SSO::Assignment": "CACHED",
   "AWS::SSO::InstanceAccessControlAttributeConfiguration": "CACHED",
@@ -5271,6 +5422,8 @@
   "AWS::AppFlow::Flow.S3SourceProperties.BucketPrefix": "CACHED",
   "AWS::AppFlow::Flow.SAPODataDestinationProperties.ObjectPath": "CACHED",
   "AWS::AppFlow::Flow.SAPODataDestinationProperties.WriteOperationType": "CACHED",
+  "AWS::AppFlow::Flow.SAPODataPaginationConfig.maxPageSize": "CACHED",
+  "AWS::AppFlow::Flow.SAPODataParallelismConfig.maxParallelism": "CACHED",
   "AWS::AppFlow::Flow.SAPODataSourceProperties.ObjectPath": "CACHED",
   "AWS::AppFlow::Flow.SalesforceDestinationProperties.DataTransferApi": "CACHED",
   "AWS::AppFlow::Flow.SalesforceDestinationProperties.Object": "CACHED",
@@ -5702,6 +5855,13 @@
   "AWS::Connect::TaskTemplate.InstanceArn": "CACHED",
   "AWS::Connect::TaskTemplate.Name": "CACHED",
   "AWS::Connect::TaskTemplate.Status": "CACHED",
+  "AWS::Connect::View.Actions": "CACHED",
+  "AWS::Connect::View.Description": "CACHED",
+  "AWS::Connect::View.InstanceArn": "CACHED",
+  "AWS::Connect::View.Name": "CACHED",
+  "AWS::Connect::ViewVersion.VersionDescription": "CACHED",
+  "AWS::Connect::ViewVersion.ViewArn": "CACHED",
+  "AWS::Connect::ViewVersion.ViewContentSha256": "CACHED",
   "AWS::ControlTower::EnabledControl.ControlIdentifier": "CACHED",
   "AWS::ControlTower::EnabledControl.TargetIdentifier": "CACHED",
   "AWS::CustomerProfiles::CalculatedAttributeDefinition.AttributeDetails.Expression": "CACHED",
@@ -7207,6 +7367,9 @@
   "AWS::SSM::Document.VersionName": "CACHED",
   "AWS::SSM::MaintenanceWindow.Cutoff": "CACHED",
   "AWS::SSM::MaintenanceWindow.Duration": "CACHED",
+  "AWS::SSM::Parameter.DataType": "CACHED",
+  "AWS::SSM::Parameter.Tier": "CACHED",
+  "AWS::SSM::Parameter.Type": "CACHED",
   "AWS::SSO::Assignment.InstanceArn": "CACHED",
   "AWS::SSO::Assignment.PermissionSetArn": "CACHED",
   "AWS::SSO::Assignment.PrincipalId": "CACHED",
