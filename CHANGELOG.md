@@ -1,3 +1,9 @@
+### v0.79.10
+###### CloudFormation Specifications
+- Update CloudFormation specs to `139.0.0` (pull #[2865](https://github.com/aws-cloudformation/cfn-lint/pull/2865))
+###### Fixes
+- Force regex to be at least 2022 for typing parameter (pull #[2867](https://github.com/aws-cloudformation/cfn-lint/pull/2867))
+
 ### v0.79.9
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `138.0.0` (pull #[2857](https://github.com/aws-cloudformation/cfn-lint/pull/2857))
