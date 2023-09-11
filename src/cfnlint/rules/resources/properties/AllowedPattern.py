@@ -81,18 +81,16 @@ class AllowedPattern(CloudFormationLintRule):
 
         return matches
 
-    def check(self, cfn, properties, value_specs, property_specs, path):
+    def check(self, cfn, properties, property_specs, path):
         """Check itself"""
         matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
-                if prop in value_specs:
-                    value = value_specs.get(prop).get("Value", {})
+                if prop in property_specs:
+                    value = property_specs.get(prop).get("Value", {})
                     if value:
                         value_type = value.get("ValueType", "")
-                        property_type = (
-                            property_specs.get("Properties").get(prop).get("Type")
-                        )
+                        property_type = property_specs.get(prop).get("Type")
                         value_specs = (
                             RESOURCE_SPECS.get(cfn.regions[0])
                             .get("ValueTypes")
@@ -128,10 +126,7 @@ class AllowedPattern(CloudFormationLintRule):
             .get(property_type, {})
             .get("Properties", {})
         )
-        property_specs = (
-            RESOURCE_SPECS.get(cfn.regions[0]).get("PropertyTypes").get(property_type)
-        )
-        matches.extend(self.check(cfn, properties, specs, property_specs, path))
+        matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
 
@@ -145,9 +140,6 @@ class AllowedPattern(CloudFormationLintRule):
             .get(resource_type, {})
             .get("Properties", {})
         )
-        resource_specs = (
-            RESOURCE_SPECS.get(cfn.regions[0]).get("ResourceTypes").get(resource_type)
-        )
-        matches.extend(self.check(cfn, properties, specs, resource_specs, path))
+        matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
