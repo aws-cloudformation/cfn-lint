@@ -1,6 +1,7 @@
 ### v0.79.11
 ###### Fixes
-- Fix an issue with [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) so all regex checks are run (pull #[2873](https://github.com/aws-cloudformation/cfn-lint/pull/2873))
+- Update [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) so all regex checks are run (pull #[2873](https://github.com/aws-cloudformation/cfn-lint/pull/2873))
+- Update [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2520) to better skip properties we don't care about (pull #[2875](https://github.com/aws-cloudformation/cfn-lint/pull/2875))
 
 ### v0.79.10
 ###### CloudFormation Specifications
