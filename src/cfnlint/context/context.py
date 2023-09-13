@@ -134,7 +134,7 @@ class Context:
             raise ValueError(f"Unsupported value {v!r}")
 
 
-def _get_pseudo_value(parameter, region) -> str:
+def _get_pseudo_value(parameter: str, region: str) -> str | List[str] | None:
     if parameter == "AWS::AccountId":
         return "123456789012"
     if parameter == "AWS::NotificationARNs":
