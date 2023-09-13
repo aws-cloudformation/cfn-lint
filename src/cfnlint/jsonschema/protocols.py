@@ -15,8 +15,10 @@ from typing_extensions import Protocol
 
 from cfnlint.context import Context
 from cfnlint.jsonschema._filter import FunctionFilter
-from cfnlint.jsonschema._typing import V
+from cfnlint.jsonschema._resolver import RefResolver
+from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema.exceptions import ValidationError
+from cfnlint.jsonschema.value import Value
 from cfnlint.template import Template
 
 
@@ -40,6 +42,10 @@ class Validator(Protocol):
 
     #: The schema that will be used to validate instances
     schema: Mapping | bool
+    resolver: RefResolver
+
+    #: Resolve a function to validate the resolved value
+    fn_resolvers: V | None
 
     cfn: Template | None
     context: Context
@@ -106,8 +112,8 @@ class Validator(Protocol):
         instance: Any,
         schema: Any,
         path: str | int | None = None,
-        schema_path: str | None = None,
-    ) -> Iterator[ValidationError]:
+        schema_path: str | int | None = None,
+    ) -> ValidationResult:
         """
         Descend into the schema validating the schema for True/False.
         It will validate the schema against the instance and append the
@@ -123,7 +129,7 @@ class Validator(Protocol):
         ...     print(error.message)
         """
 
-    def iter_errors(self, instance: Any) -> Iterator[ValidationError]:
+    def iter_errors(self, instance: Any) -> ValidationResult:
         r"""
         Lazily yield each of the validation errors in the given instance.
 
@@ -159,6 +165,12 @@ class Validator(Protocol):
         Traceback (most recent call last):
             ...
         ValidationError: [2, 3, 4] is too long
+        """
+
+    def resolve(self, instance: Any) -> Iterator[Any]:
+        """
+        Resolve the given instance, yielding each of its values.
+
         """
 
     def evolve(self, **kwargs) -> Validator:
