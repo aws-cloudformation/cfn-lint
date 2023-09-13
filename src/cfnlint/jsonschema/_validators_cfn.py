@@ -13,7 +13,7 @@ import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
 from cfnlint.helpers import FUNCTIONS, FUNCTIONS_SINGLE, REGIONS, ToPy
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.jsonschema._typing import V
+from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
 
 _singular_types = ["boolean", "integer", "number", "string"]
@@ -22,12 +22,14 @@ _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
 def additionalProperties(
     validator: Validator, aP: Any, instance: Any, schema: Any
-) -> Iterator[ValidationError]:
+) -> ValidationResult:
     for err in validators_standard.additionalProperties(
         validator, aP, instance, schema
     ):
         if len(err.path) > 0:
-            if any(re.fullmatch(fn, err.path[0]) for fn in validator.context.functions):
+            if any(
+                re.fullmatch(fn, str(err.path[0])) for fn in validator.context.functions
+            ):
                 continue
             yield err
         else:
@@ -54,7 +56,7 @@ def _resolve_type(validator, schema):
 
 def _validate_fn_output_types(
     validator, s, instance, supported_types
-) -> Iterator[ValidationError]:
+) -> ValidationResult:
     tS = _resolve_type(validator, s)
     if tS:
         for t in tS:
@@ -81,7 +83,7 @@ class Scalar:
         s: Any,
         instance: Any,
         schema: Any,
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         context = validator.context.evolve(functions=self.supported_functions)
         v = validator.evolve(context=context)
         try:
@@ -105,7 +107,7 @@ class Fn(Scalar):
         instance: Any,
         schema: Any,
         path: str | int | None = None,
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         validator = validator.evolve(
             context=validator.context.evolve(path=self.fn.name)
         )
@@ -120,7 +122,7 @@ class Fn(Scalar):
         s: Any,
         instance: Any,
         schema: Any,
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         # validate this function will return the correct type
         yield from _validate_fn_output_types(
             validator, s, instance, self.supported_types
@@ -167,7 +169,7 @@ class FnArray:
         instance: Any,
         schema: Any,
         path: str | int | None = None,
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in validator.descend(instance, schema, path):
             if err.validator not in cfn_validators:
                 err.validator = self.fn.py
@@ -179,7 +181,7 @@ class FnArray:
         s: Any,
         instance: Any,
         schema: Any,
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         yield from _validate_fn_output_types(
             validator, s, instance, self.supported_types
         )
@@ -209,9 +211,15 @@ class Ref(Fn):
         self.supported_types = ["array", "object"] + _singular_types
         self.types = ["string"]
 
+    def ref_resolver(self, validator: Validator, instance: Any) -> Iterator[Any]:
+        if validator.is_type(instance, "string"):
+            # if the ref is to pseudo-parameter or parameter we can validate the values
+            for possible_value in validator.context.ref_values[instance]:
+                yield possible_value
+
     def ref(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         if validator.context.transforms.has_language_extensions_transform():
             self.supported_functions = ["Ref"]
             self.types.append("object")
@@ -229,16 +237,9 @@ class Ref(Fn):
             yield err
             return
 
-        if validator.is_type(value, "string"):
-            # if the ref is to pseudo-parameter or parameter we can validate the values
-            for possible_value in validator.context.ref_value(value):
-                for err in validator.descend(possible_value, s, key):
-                    err.validator = self.fn.py
-                    err.message = (
-                        err.message.replace(f"{possible_value!r}", f"{instance!r}")
-                        + " when 'Ref' is resolved"
-                    )
-                    yield err
+        print("Start", instance)
+        for value in validator.resolve(instance):
+            print("Value", value)
 
 
 class FnGetAtt(Fn):
@@ -260,7 +261,7 @@ class FnGetAtt(Fn):
 
     def get_att(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         if validator.context.transforms.has_language_extensions_transform():
             self.supported_functions.append("Ref")
 
@@ -312,7 +313,7 @@ class FnBase64(Fn):
 
     def base64(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         yield from self.iter_errors(validator, s, instance, schema)
 
 
@@ -330,7 +331,7 @@ class FnGetAZs(Fn):
 
     def get_azs(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         yield from self.iter_errors(validator, s, instance, schema)
 
 
@@ -351,7 +352,7 @@ class FnImportValue(Fn):
 
     def import_value(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         validator = validator.evolve(
             context=validator.context.evolve(
                 resources={},
@@ -379,7 +380,7 @@ class FnJoin(FnArray):
 
     def join(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
@@ -431,7 +432,7 @@ class FnSplit(FnArray):
 
     def split(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
@@ -470,7 +471,7 @@ class FnFindInMap(FnArray):
 
     def find_in_map(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         if validator.context.transforms.has_language_extensions_transform():
             self._max_length = 4
             self.items.append(_FindInMapDefault())
@@ -504,7 +505,7 @@ class FnSelect(FnArray):
 
     def select(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
@@ -536,7 +537,7 @@ class FnIf(FnArray):
 
     def if_(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
@@ -578,9 +579,7 @@ class FnSub(Fn):
             "Fn::ToJsonString",
         ]
 
-    def _validate_string(
-        self, validator: Validator, instance: Any
-    ) -> Iterator[ValidationError]:
+    def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
         params = re.findall(r"\${([^}]+)}", instance)
         for param in params:
             if param.startswith("!"):
@@ -612,7 +611,7 @@ class FnSub(Fn):
 
     def sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
@@ -649,7 +648,8 @@ class FnSub(Fn):
 
             validator = validator.evolve(
                 context=validator.context.evolve(
-                    sub_parameters=dict.fromkeys(keys, Parameter({"Type": "String"}))
+                    other_refs=dict.fromkeys(keys, Parameter({"Type": "String"})),
+                    sub_parameters=dict.fromkeys(keys, Parameter({"Type": "String"})),
                 )
             )
             value = value[0]
@@ -673,7 +673,7 @@ class FnCidr(FnArray):
 
     def cidr(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         yield from self.iter_errors(validator, s, instance, schema)
 
 
@@ -689,7 +689,7 @@ class FnLength(FnArray):
 
     def length(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         if not validator.context.transforms.has_language_extensions_transform():
             yield ValidationError(
                 (
@@ -730,7 +730,7 @@ class FnToJsonString(Fn):
 
     def to_json_string(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         if not validator.context.transforms.has_language_extensions_transform():
             yield ValidationError(
                 (
@@ -785,7 +785,7 @@ class FnForEach(FnArray):
 
     def for_each(
         self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> Iterator[ValidationError]:
+    ) -> ValidationResult:
         key = list(instance.keys())[0]
         self.fn = ToPy(key)
         if not validator.context.transforms.has_language_extensions_transform():
@@ -895,4 +895,11 @@ cfn_validators: Dict[str, V] = {
     "fn_split": FnSplit().split,
     "fn_sub": FnSub().sub,
     "fn_tojsonstring": FnToJsonString().to_json_string,
+}
+
+# not all functions need to be resolved.  These functions
+# allow us to pull up values from nested functions
+# allowing us to test the possible values against the schema
+fn_resolvers: Dict[str, V] = {
+    "Ref": Ref().ref_resolver,
 }
