@@ -20,13 +20,14 @@ from cfnlint.jsonschema._filter import (
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
 from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._types import TypeChecker, cfn_type_checker
-from cfnlint.jsonschema._typing import V
+from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import custom_msg, id_of
 from cfnlint.jsonschema.exceptions import (
     UndefinedTypeCheck,
     UnknownType,
     ValidationError,
 )
+from cfnlint.jsonschema.value import Value
 from cfnlint.template import Template
 
 
@@ -71,9 +72,13 @@ def create(
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=lambda: context_arg)
 
+        fn_resolvers: Mapping[str, V] = field(default_factory=dict)
+
         def __post_init__(self):
             if self.function_filter is None:
                 self.function_filter = cfn_function_filter
+            if not self.fn_resolvers:
+                self.fn_resolvers = _validators_cfn.fn_resolvers
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
                     self.schema,
@@ -123,7 +128,17 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def iter_errors(self, instance: Any) -> Iterator[ValidationError]:
+        def resolve(self, instance: Any) -> Iterator[Any]:
+            if self.is_type(instance, "object"):
+                if len(instance) == 1:
+                    for k, v in instance.items():
+                        if k in self.fn_resolvers:
+                            for value in self.resolve(v):
+                                yield from self.fn_resolvers[k](self, value)
+
+            yield instance
+
+        def iter_errors(self, instance: Any) -> ValidationResult:
             r"""
             Lazily yield each of the validation errors in the given instance.
 
@@ -165,13 +180,12 @@ def create(
                         if validator is None:
                             continue
 
-                        errors = validator(self, v, _instance, _schema) or ()
-                        for error in errors:
-                            msg = custom_msg(k, _schema) or error.message
+                        for err in validator(self, v, _instance, _schema) or ():
+                            msg = custom_msg(k, _schema) or err.message
                             if msg is not None:
-                                error.message = msg
+                                err.message = msg
                             # set details if not already set by the called fn
-                            error._set(
+                            err._set(
                                 validator=k,
                                 validator_value=v,
                                 instance=_instance,
@@ -179,8 +193,8 @@ def create(
                                 type_checker=self._type_checker,
                             )
                             if k not in {"if", "$ref"}:
-                                error.schema_path.appendleft(k)
-                            yield error
+                                err.schema_path.appendleft(k)
+                            yield err
             finally:
                 if scope:
                     self.resolver.pop_scope()
@@ -210,7 +224,7 @@ def create(
             schema: Any,
             path: str | int | None = None,
             schema_path: str | None = None,
-        ) -> Iterator[ValidationError]:
+        ) -> ValidationResult:
             for error in self.evolve(
                 schema=schema,
                 context=self.context.evolve(
