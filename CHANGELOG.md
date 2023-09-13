@@ -1,3 +1,7 @@
+### v0.79.11
+###### Fixes
+- Fix an issue with [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) so all regex checks are run (pull #[2873](https://github.com/aws-cloudformation/cfn-lint/pull/2873))
+
 ### v0.79.10
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `139.0.0` (pull #[2865](https://github.com/aws-cloudformation/cfn-lint/pull/2865))
