@@ -32,49 +32,48 @@ class Exclusive(CloudFormationLintRule):
     def check(self, properties, exclusions, path, cfn):
         """Check itself"""
         matches = []
-
-        property_sets = cfn.get_object_without_conditions(properties)
-        for property_set in property_sets:
-            obj = property_set["Object"].clean()
-            for prop in obj:
-                if prop in exclusions:
-                    for excl_property in exclusions[prop]:
-                        if excl_property in obj:
-                            if property_set["Scenario"] is None:
-                                message = (
-                                    "Property {0} should NOT exist with {1} for {2}"
-                                )
-                                matches.append(
-                                    RuleMatch(
-                                        path + [prop],
-                                        message.format(
-                                            excl_property,
-                                            prop,
-                                            "/".join(map(str, path)),
-                                        ),
-                                    )
-                                )
-                            else:
-                                scenario_text = " and ".join(
-                                    [
-                                        f'when condition "{k}" is {v}'
-                                        for (k, v) in property_set["Scenario"].items()
-                                    ]
-                                )
-                                message = (
-                                    "Property {0} should NOT exist with {1} {2} for {3}"
-                                )
-                                matches.append(
-                                    RuleMatch(
-                                        path + [prop],
-                                        message.format(
-                                            excl_property,
-                                            prop,
-                                            scenario_text,
-                                            "/".join(map(str, path)),
-                                        ),
-                                    )
-                                )
+        for p_value, p_path in properties.items_safe(path[:]):
+            for k, v in exclusions.items():
+                property_sets = cfn.get_object_without_conditions(p_value, [k] + v)
+                for property_set in property_sets:
+                    obj = property_set["Object"].clean()
+                    for prop in obj:
+                        if prop in exclusions:
+                            for excl_property in exclusions[prop]:
+                                if excl_property in obj:
+                                    if property_set["Scenario"] is None:
+                                        message = "Property {0} should NOT exist with {1} for {2}"
+                                        matches.append(
+                                            RuleMatch(
+                                                p_path + [prop],
+                                                message.format(
+                                                    excl_property,
+                                                    prop,
+                                                    "/".join(map(str, p_path)),
+                                                ),
+                                            )
+                                        )
+                                    else:
+                                        scenario_text = " and ".join(
+                                            [
+                                                f'when condition "{k}" is {v}'
+                                                for (k, v) in property_set[
+                                                    "Scenario"
+                                                ].items()
+                                            ]
+                                        )
+                                        message = "Property {0} should NOT exist with {1} {2} for {3}"
+                                        matches.append(
+                                            RuleMatch(
+                                                p_path + [prop],
+                                                message.format(
+                                                    excl_property,
+                                                    prop,
+                                                    scenario_text,
+                                                    "/".join(map(str, p_path)),
+                                                ),
+                                            )
+                                        )
 
         return matches
 
