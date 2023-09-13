@@ -7,10 +7,13 @@ SPDX-License-Identifier: MIT-0
 
 from copy import deepcopy
 from difflib import SequenceMatcher
+from typing import Any, Dict
 
 import regex as re
 
 from cfnlint.helpers import REGEX_DYN_REF
+from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.jsonschema._typing import ValidationResult
 from cfnlint.jsonschema._utils import (
     ensure_list,
     equal,
@@ -21,12 +24,13 @@ from cfnlint.jsonschema._utils import (
 from cfnlint.jsonschema.exceptions import FormatError, ValidationError
 
 
-def additionalProperties(validator, aP, instance, schema):
+def additionalProperties(
+    validator: Validator, aP: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
 
     extras = set(find_additional_properties(validator, instance, schema))
-    print("Extras", extras)
     if validator.is_type(aP, "object"):
         for extra in extras:
             yield from validator.descend(instance[extra], aP, path=extra)
@@ -60,12 +64,16 @@ def additionalProperties(validator, aP, instance, schema):
                     )
 
 
-def allOf(validator, allOf, instance, schema):
+def allOf(
+    validator: Validator, allOf: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     for index, subschema in enumerate(allOf):
         yield from validator.descend(instance, subschema, schema_path=index)
 
 
-def anyOf(validator, anyOf, instance, schema):
+def anyOf(
+    validator: Validator, anyOf: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     all_errors = []
     for index, subschema in enumerate(anyOf):
         errs = list(validator.descend(instance, subschema, schema_path=index))
@@ -79,12 +87,16 @@ def anyOf(validator, anyOf, instance, schema):
         )
 
 
-def const(validator, const, instance, schema):
+def const(
+    validator: Validator, const: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not equal(instance, const):
         yield ValidationError(f"{const!r} was expected")
 
 
-def contains(validator, contains, instance, schema):
+def contains(
+    validator: Validator, contains: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "array"):
         return
 
@@ -96,7 +108,9 @@ def contains(validator, contains, instance, schema):
         )
 
 
-def dependencies(validator, dependencies, instance, schema):
+def dependencies(
+    validator: Validator, dependencies: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
 
@@ -117,7 +131,9 @@ def dependencies(validator, dependencies, instance, schema):
             )
 
 
-def enum(validator, enums, instance, schema):
+def enum(
+    validator: Validator, enums: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if instance in (0, 1):
         unbooled = unbool(instance)
         if all(not (equal(unbooled, unbool(each))) for each in enums):
@@ -127,7 +143,9 @@ def enum(validator, enums, instance, schema):
             yield ValidationError(f"{instance!r} is not one of {enums!r}")
 
 
-def exclusiveMaximum(validator, m, instance, schema):
+def exclusiveMaximum(
+    validator: Validator, m: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):
         try:
@@ -143,7 +161,9 @@ def exclusiveMaximum(validator, m, instance, schema):
         )
 
 
-def exclusiveMinimum(validator, m, instance, schema):
+def exclusiveMinimum(
+    validator: Validator, m: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):
         try:
@@ -159,15 +179,19 @@ def exclusiveMinimum(validator, m, instance, schema):
         )
 
 
-def format(validator, format, instance, schema):
-    if validator._format_checker is not None:
+def format(
+    validator: Validator, format: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
+    if validator._format_checker is not None:  # type: ignore
         try:
-            validator._format_checker.check(instance, format)
+            validator._format_checker.check(instance, format)  # type: ignore
         except FormatError as error:
             yield ValidationError(error.message, cause=error.cause)
 
 
-def if_(validator, if_schema, instance, schema):
+def if_(
+    validator: Validator, if_schema: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     evolved = validator.extend(
         validators={"type": type},
         context=validator.context.evolve(functions=[]),
@@ -181,7 +205,9 @@ def if_(validator, if_schema, instance, schema):
         yield from evolved.descend(instance, else_, schema_path="else")
 
 
-def items(validator, items, instance, schema):
+def items(
+    validator: Validator, items: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "array"):
         return
 
@@ -198,24 +224,32 @@ def items(validator, items, instance, schema):
             yield from validator.descend(item, items, path=index)
 
 
-def maxItems(validator, mI, instance, schema):  # pylint: disable=arguments-renamed
+def maxItems(
+    validator: Validator, mI: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:  # pylint: disable=arguments-renamed
     if validator.is_type(instance, "array") and len(instance) > mI:
         yield ValidationError(f"{instance!r} is too long")
 
 
-def maxLength(validator, mL, instance, schema):  # pylint: disable=arguments-renamed
+def maxLength(
+    validator: Validator, mL: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:  # pylint: disable=arguments-renamed
     if validator.is_type(instance, "string") and len(instance) > mL:
         yield ValidationError(f"{instance!r} is longer than {mL}")
 
 
-def maxProperties(validator, mP, instance, schema):
+def maxProperties(
+    validator: Validator, mP: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
     if validator.is_type(instance, "object") and len(instance) > mP:
         yield ValidationError(f"{instance!r} has too many properties")
 
 
-def maximum(validator, m, instance, schema):
+def maximum(
+    validator: Validator, m: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):
         try:
@@ -230,22 +264,30 @@ def maximum(validator, m, instance, schema):
         yield ValidationError(message)
 
 
-def minItems(validator, mI, instance, schema):
+def minItems(
+    validator: Validator, mI: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if validator.is_type(instance, "array") and len(instance) < mI:
         yield ValidationError(f"{instance!r} is too short")
 
 
-def minLength(validator, mL, instance, schema):  # pylint: disable=arguments-renamed
+def minLength(
+    validator: Validator, mL: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:  # pylint: disable=arguments-renamed
     if validator.is_type(instance, "string") and len(instance) < mL:
         yield ValidationError(f"{instance!r} is shorter than {mL}")
 
 
-def minProperties(validator, mP, instance, schema):
+def minProperties(
+    validator: Validator, mP: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if validator.is_type(instance, "object") and len(instance) < mP:
         yield ValidationError(f"{instance!r} does not have enough properties")
 
 
-def minimum(validator, m, instance, schema):
+def minimum(
+    validator: Validator, m: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):
         try:
@@ -260,7 +302,9 @@ def minimum(validator, m, instance, schema):
         yield ValidationError(message)
 
 
-def multipleOf(validator, dB, instance, schema):
+def multipleOf(
+    validator: Validator, dB: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):
         try:
@@ -283,13 +327,17 @@ def multipleOf(validator, dB, instance, schema):
         yield ValidationError(f"{instance!r} is not a multiple of {dB}")
 
 
-def not_(validator, not_schema, instance, schema):
+def not_(
+    validator: Validator, not_schema: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if validator.evolve(schema=not_schema).is_valid(instance):
         message = f"{instance!r} should not be valid under {not_schema!r}"
         yield ValidationError(message)
 
 
-def oneOf(validator, oneOf, instance, schema):
+def oneOf(
+    validator: Validator, oneOf: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     subschemas = enumerate(oneOf)
     all_errors = []
     for index, subschema in subschemas:
@@ -315,7 +363,9 @@ def oneOf(validator, oneOf, instance, schema):
         yield ValidationError(f"{instance!r} is valid under each of {reprs}")
 
 
-def pattern(validator, patrn, instance, schema):
+def pattern(
+    validator: Validator, patrn: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if validator.is_type(instance, "string"):
         # skip any dynamic reference strings
         if REGEX_DYN_REF.findall(instance):
@@ -324,7 +374,9 @@ def pattern(validator, patrn, instance, schema):
             yield ValidationError(f"{instance!r} does not match {patrn!r}")
 
 
-def patternProperties(validator, patternProperties, instance, schema):
+def patternProperties(
+    validator: Validator, patternProperties: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
 
@@ -339,7 +391,9 @@ def patternProperties(validator, patternProperties, instance, schema):
                 )
 
 
-def properties(validator, properties, instance, schema):
+def properties(
+    validator: Validator, properties: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
 
@@ -355,7 +409,9 @@ def properties(validator, properties, instance, schema):
             )
 
 
-def propertyNames(validator, propertyNames, instance, schema):
+def propertyNames(
+    validator: Validator, propertyNames: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
 
@@ -363,7 +419,9 @@ def propertyNames(validator, propertyNames, instance, schema):
         yield from validator.descend(instance=property, schema=propertyNames)
 
 
-def ref(validator, ref, instance, schema):
+def ref(
+    validator: Validator, ref: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     resolve = getattr(validator.resolver, "resolve", None)
     if resolve is None:
         with validator.resolver.resolving(ref) as resolved:
@@ -378,7 +436,9 @@ def ref(validator, ref, instance, schema):
             validator.resolver.pop_scope()
 
 
-def required(validator, required, instance, schema):
+def required(
+    validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
     for property in required:
@@ -386,12 +446,16 @@ def required(validator, required, instance, schema):
             yield ValidationError(f"{property!r} is a required property")
 
 
-def uniqueItems(validator, uI, instance, schema):
+def uniqueItems(
+    validator: Validator, uI: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     if uI and validator.is_type(instance, "array") and not uniq(instance):
         yield ValidationError(f"{instance!r} has non-unique elements")
 
 
-def type(validator, tS, instance, schema):
+def type(
+    validator: Validator, tS: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
     tS = ensure_list(tS)
     if not any(validator.is_type(instance, type) for type in tS):
         reprs = ", ".join(repr(type) for type in tS)
