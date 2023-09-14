@@ -21,13 +21,13 @@ _RaisesType = typing.Union[
     typing.Tuple[typing.Type[Exception], ...],
 ]
 
-_RE_DATE_FULLYEAR = "\d{4}"
+_RE_DATE_FULLYEAR = "\\d{4}"
 _RE_DATE_MONTH = "(0[1-9]|1[0-2])"
-_RE_DATE_MDAY = "\d{2}"
-_RE_TIME_HOUR = "([01]\d|2[0123])"
-_RE_TIME_MINUTE = "[0-5]\d"
-_RE_TIME_SECOND = "[0-5]\d"
-_RE_TIME_SECRFAC = "(\.\d+)?"
+_RE_DATE_MDAY = "\\d{2}"
+_RE_TIME_HOUR = "([01]\\d|2[0123])"
+_RE_TIME_MINUTE = "[0-5]\\d"
+_RE_TIME_SECOND = "[0-5]\\d"
+_RE_TIME_SECRFAC = "(\\.\\d+)?"
 _RE_TIME_NUMOFFSET = f"[+-]{_RE_TIME_HOUR}:{_RE_TIME_MINUTE}"
 _RE_TIME_OFFSET = f"(Z|[+-]{_RE_TIME_NUMOFFSET})"
 _RE_PARTIAL_TIME = (
