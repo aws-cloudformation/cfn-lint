@@ -7,7 +7,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterable, List, Sequence
+from typing import Any, Deque, Dict, Iterable, List, Mapping, Sequence
 
 from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
@@ -59,7 +59,6 @@ class Context:
     # how the conditions affected the path we are on
     # The key is the condition name and the value is if the condition
     # was true or false
-    conditions: Dict[str, bool] = field(init=True, default_factory=dict)
 
     # path keeps track of the path as we move down the template
     # Example: Resources, MyResource, Properties, Name, ...
@@ -72,7 +71,14 @@ class Context:
     # cfn-lint Template class
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
     resources: Dict[str, "Resource"] = field(init=True, default_factory=dict)
-    ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
+    conditions: Dict[str, "Condition"] = field(init=True, default_factory=dict)
+
+    # other Refs from Fn::Sub or Fn::ForEach
+    ref_values: Dict[str, List[Any]] = field(init=True, default_factory=dict)
+
+    # Resolved value
+    resolved_value: bool = field(init=True, default=False)
+    resolved_conditions: Mapping[str, bool] = field(init=True, default_factory=dict)
 
     transforms: Transforms = field(init=True, default=Transforms([]))
 
@@ -82,9 +88,9 @@ class Context:
         if self.path is None:
             self.path = deque([])
         for pseudo_parameter in PSEUDOPARAMS:
-            self.ref_values[pseudo_parameter] = _get_pseudo_value(
-                pseudo_parameter, self.region
-            )
+            self.ref_values[pseudo_parameter] = [
+                _get_pseudo_value(pseudo_parameter, self.region)
+            ]
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -176,6 +182,22 @@ class _Ref(ABC):
     @abstractmethod
     def ref(self) -> Iterable[Any]:
         pass
+
+
+@dataclass
+class Condition:
+    instance: Any = field(init=True)
+
+
+def _init_conditions(conditions: Any) -> Dict[str, Condition]:
+    results = {}
+    if isinstance(conditions, dict):
+        for k, v in conditions.items():
+            try:
+                results[k] = Condition(v)
+            except ValueError:
+                pass
+    return results
 
 
 @dataclass
@@ -272,6 +294,7 @@ def create_context_for_resources(cfn: CfnTemplate, region: str) -> Context:
     parameters = _init_parameters(cfn.template.get("Parameters", {}))
     resources = _init_resources(cfn.template.get("Resources", {}), region)
     transforms = _init_transforms(cfn.template.get("Transform", []))
+    conditions = _init_conditions(cfn.template.get("Conditions", {}))
 
     functions = []
     if transforms.has_language_extensions_transform():
@@ -280,6 +303,7 @@ def create_context_for_resources(cfn: CfnTemplate, region: str) -> Context:
     return Context(
         parameters=parameters,
         resources=resources,
+        conditions=conditions,
         transforms=transforms,
         region=region,
         path=deque(["Resources"]),
@@ -296,10 +320,12 @@ def create_context_for_resource_properties(
     parameters = _init_parameters(cfn.template.get("Parameters", {}))
     resources = _init_resources(cfn.template.get("Resources", {}), region)
     transforms = _init_transforms(cfn.template.get("Transform", []))
+    conditions = _init_conditions(cfn.template.get("Conditions", {}))
 
     return Context(
         parameters=parameters,
         resources=resources,
+        conditions=conditions,
         transforms=transforms,
         region=region,
         path=deque(["Resources", resource_name, "Properties"]),
@@ -314,12 +340,33 @@ def create_context_for_outputs(cfn: CfnTemplate, region: str) -> Context:
     parameters = _init_parameters(cfn.template.get("Parameters", {}))
     resources = _init_resources(cfn.template.get("Resources", {}), region)
     transforms = _init_transforms(cfn.template.get("Transform", []))
+    conditions = _init_conditions(cfn.template.get("Conditions", {}))
 
     return Context(
         parameters=parameters,
         resources=resources,
+        conditions=conditions,
         transforms=transforms,
         region=region,
         path=deque(["Outputs"]),
+        functions=["Fn::ForEach"],
+    )
+
+
+def create_context_for_conditions(cfn: CfnTemplate, region: str) -> Context:
+    """
+    Create a context for a conditions
+    """
+    parameters = _init_parameters(cfn.template.get("Parameters", {}))
+    transforms = _init_transforms(cfn.template.get("Transform", []))
+    conditions = _init_conditions(cfn.template.get("Conditions", {}))
+
+    return Context(
+        parameters=parameters,
+        resources={},
+        conditions=conditions,
+        transforms=transforms,
+        region=region,
+        path=deque(["Conditions"]),
         functions=["Fn::ForEach"],
     )
