@@ -1,119 +1,119 @@
 {
-    "definitions": {
-        "ResourceConfiguration": {
-            "type": "object",
-            "properties": {
-                "Condition": {
-                    "type": "string"
-                },
-                "CreationPolicy": {
-                    "type": "object"
-                },
-                "DeletionPolicy": {
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "Delete",
-                                "Retain",
-                                "Snapshot"
-                            ],
-                            "type": "string"
-                        },
-                        {
-                            "type": "object"
-                        }
-                    ]
-                },
-                "DependsOn": {
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": [
-                        "string",
-                        "array"
-                    ]
-                },
-                "Metadata": {
-                    "type": "object"
-                },
-                "Properties": {
-                    "awsType": "resourceProperties"
-                },
-                "Type": {
-                    "type": "string"
-                },
-                "UpdatePolicy": {
-                    "type": "object"
-                },
-                "UpdateReplacePolicy": {
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "Delete",
-                                "Retain",
-                                "Snapshot"
-                            ],
-                            "type": "string"
-                        },
-                        {
-                            "type": "object"
-                        }
-                    ]
-                },
-                "Version": {
-                    "type": "string"
-                }
-            },
-            "additionalProperties": false,
-            "awsType": true,
-            "else": {
-                "not": {
-                    "required": [
-                        "Version"
-                    ]
-                },
-                "properties": {
-                    "CreationPolicy": {
-                        "type": "object"
-                    },
-                    "UpdatePolicy": {
-                        "type": "object"
-                    }
-                }
-            },
-            "if": {
-                "properties": {
-                    "Type": {
-                        "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
-                    }
-                }
-            },
-            "required": [
-                "Type"
-            ],
-            "then": {
-                "not": {
-                    "required": [
-                        "CreationPolicy",
-                        "UpdatePolicy"
-                    ]
-                },
-                "properties": {
-                    "Version": {
-                        "type": "string"
-                    }
-                }
-            }
-        }
+ "additionalProperties": false,
+ "definitions": {
+  "ResourceConfiguration": {
+   "additionalProperties": false,
+   "awsType": true,
+   "else": {
+    "not": {
+     "required": [
+      "Version"
+     ]
     },
-    "type": "object",
-    "additionalProperties": false,
-    "patternProperties": {
-        "^[a-zA-Z0-9]{1,255}$": {
-            "$ref": "#/definitions/ResourceConfiguration"
-        },
-        "^[\\$\\{\\}a-zA-Z0-9]{1,255}$": {
-            "$ref": "#/definitions/ResourceConfiguration"
-        }
+    "properties": {
+     "CreationPolicy": {
+      "type": "object"
+     },
+     "UpdatePolicy": {
+      "type": "object"
+     }
     }
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
+     }
+    }
+   },
+   "properties": {
+    "Condition": {
+     "type": "string"
+    },
+    "CreationPolicy": {
+     "type": "object"
+    },
+    "DeletionPolicy": {
+     "oneOf": [
+      {
+       "enum": [
+        "Delete",
+        "Retain",
+        "Snapshot"
+       ],
+       "type": "string"
+      },
+      {
+       "type": "object"
+      }
+     ]
+    },
+    "DependsOn": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Metadata": {
+     "type": "object"
+    },
+    "Properties": {
+     "awsType": "resourceProperties"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "UpdatePolicy": {
+     "type": "object"
+    },
+    "UpdateReplacePolicy": {
+     "oneOf": [
+      {
+       "enum": [
+        "Delete",
+        "Retain",
+        "Snapshot"
+       ],
+       "type": "string"
+      },
+      {
+       "type": "object"
+      }
+     ]
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "then": {
+    "not": {
+     "required": [
+      "CreationPolicy",
+      "UpdatePolicy"
+     ]
+    },
+    "properties": {
+     "Version": {
+      "type": "string"
+     }
+    }
+   },
+   "type": "object"
+  }
+ },
+ "patternProperties": {
+  "^[\\$\\{\\}a-zA-Z0-9]{1,255}$": {
+   "$ref": "#/definitions/ResourceConfiguration"
+  },
+  "^[a-zA-Z0-9]{1,255}$": {
+   "$ref": "#/definitions/ResourceConfiguration"
+  }
+ },
+ "type": "object"
 }
