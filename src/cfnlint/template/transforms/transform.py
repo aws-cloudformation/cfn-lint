@@ -49,7 +49,7 @@ class Transform:
                 return matches
             cfn.template = template
 
+        LOGGER.info("Transformed template: %s", cfn.template)
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
-        LOGGER.info("Transformed template: %s", cfn.template)
         return matches

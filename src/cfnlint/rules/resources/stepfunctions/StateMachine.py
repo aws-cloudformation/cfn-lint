@@ -61,6 +61,7 @@ class StateMachine(CloudFormationLintRule):
                 "Iterator",
                 "ItemsPath",
                 "ItemProcessor",
+                "ItemReader",
                 "ItemSelector",
                 "ResultPath",
                 "ResultSelector",
