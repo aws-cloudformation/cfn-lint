@@ -5,7 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 import json
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 
 
 class EqualsIsUseful(CloudFormationLintRule):
@@ -23,29 +24,11 @@ class EqualsIsUseful(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-equals"
     tags = ["functions", "equals"]
 
-    function = "Fn::Equals"
+    def equals_is_useful(self, validator, s, instance, schema):
+        if not validator.is_type(instance, "array"):
+            return
 
-    def _check_equal_values(self, values, path):
-        matches = []
-
-        if json.dumps(values[0]) == json.dumps(values[1]):
-            message = self.function + " element will alway return true"
-            matches.append(RuleMatch(path, message))
-        elif isinstance(values[0], str) and isinstance(values[1], str):
-            message = self.function + " element will alway return false"
-            matches.append(RuleMatch(path, message))
-        return matches
-
-    def match(self, cfn):
-        matches = []
-        # Build the list of functions
-        trees = cfn.search_deep_keys(self.function)
-
-        for tree in trees:
-            # Test when in Conditions
-            if tree[0] == "Conditions":
-                value = tree[-1]
-                if isinstance(value, list) and len(value) == 2:
-                    matches.extend(self._check_equal_values(value, tree[:-1]))
-
-        return matches
+        if json.dumps(instance[0]) == json.dumps(instance[1]):
+            yield ValidationError(f"{instance!r} will always return {True!r}")
+        elif isinstance(instance[0], str) and isinstance(instance[1], str):
+            yield ValidationError(f"{instance!r} will always return {False!r}")
