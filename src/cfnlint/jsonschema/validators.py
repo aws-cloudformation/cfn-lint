@@ -11,7 +11,7 @@ from dataclasses import dataclass, field, fields
 from typing import Any, Dict, Iterator
 
 from cfnlint.context import Context
-from cfnlint.jsonschema import _validators, _validators_cfn
+from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
 from cfnlint.jsonschema._filter import (
     FunctionFilter,
     cfn_function_filter,
@@ -35,10 +35,12 @@ def create(
     validators: Mapping[str, V] | None = None,
     function_filter: FunctionFilter | None = None,
     context: Context | None = None,
+    fn_resolvers: Mapping[str, Any] | None = None,
 ):
     validators_arg = validators or {}
     function_filter_arg = function_filter or FunctionFilter()
     context_arg = context or Context()
+    fn_resolvers_arg = fn_resolvers or {}
 
     @dataclass
     class Validator:
@@ -72,13 +74,13 @@ def create(
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=lambda: context_arg)
 
-        fn_resolvers: Mapping[str, V] = field(default_factory=dict)
+        fn_resolvers: Mapping[str, V] = field(
+            init=False, default_factory=lambda: fn_resolvers_arg
+        )
 
         def __post_init__(self):
             if self.function_filter is None:
                 self.function_filter = cfn_function_filter
-            if not self.fn_resolvers:
-                self.fn_resolvers = _validators_cfn.fn_resolvers
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
                     self.schema,
@@ -135,6 +137,7 @@ def create(
                         if k in self.fn_resolvers:
                             for value in self.resolve(v):
                                 yield from self.fn_resolvers[k](self, value)
+                            return
 
             yield instance
 
@@ -261,6 +264,7 @@ def create(
             validators: Dict[str, V] | None = None,
             function_filter: FunctionFilter | None = None,
             context: Context | None = None,
+            fn_resolvers: Mapping[str, V] | None = None,
         ) -> "Validator":
             """
             Extends the current validator.
@@ -279,10 +283,15 @@ def create(
             if context is None:
                 context = self.context
 
+            all_fn_resolvers = dict(self.fn_resolvers)
+            if fn_resolvers is not None:
+                all_fn_resolvers.update(fn_resolvers)
+
             return create(  # type: ignore
                 validators=all_validators,
                 function_filter=function_filter,
                 context=context,
+                fn_resolvers=all_fn_resolvers,
             )
 
     return Validator
@@ -328,6 +337,7 @@ CfnTemplateValidator = create(
         **_validators_cfn.cfn_validators,
     },
     function_filter=cfn_function_filter,
+    fn_resolvers=_resolvers_cfn.fn_resolvers,
 )
 
 StandardValidator = create(

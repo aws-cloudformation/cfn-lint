@@ -101,7 +101,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
         validator = CfnTemplateValidator(schema=schema, cfn=cfn, context=context)
         errs = list(validator.iter_errors(props))
 
-        self.assertEqual(len(errs), len(expected_errs))
+        self.assertEqual(len(errs), len(expected_errs), f"Received: {errs!r}")
         for i, err in enumerate(errs):
             self.assertEqual(expected_errs[i].message, err.message)
             self.assertEqual(expected_errs[i].path, err.path)

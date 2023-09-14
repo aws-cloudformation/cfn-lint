@@ -669,10 +669,10 @@ _sub_tests: List[Tuple] = [
         {"type": "string"},
         [
             (
-                "'foo' is not one of ['AWS::NoValue', 'AWS::AccountId', "
+                "'foo' is not one of ['MyResource', 'AWS::NoValue', 'AWS::AccountId', "
                 "'AWS::Partition', 'AWS::Region', 'AWS::StackId', "
                 "'AWS::StackName', 'AWS::URLSuffix', "
-                "'AWS::NotificationARNs', 'MyResource']"
+                "'AWS::NotificationARNs']"
             ),
         ],
         [],
