@@ -24,6 +24,9 @@ class AvailabilityZone(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def availabilityzone(self, validator, aZ, zone, schema):
+        if validator.context.resolved_value:
+            return
+
         if not validator.is_type(zone, "string"):
             return
 
@@ -41,6 +44,9 @@ class AvailabilityZone(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def availabilityzones(self, validator, aZ, zones, schema):
+        if validator.context.resolved_value:
+            return
+
         if not validator.is_type(zones, "array"):
             return
 
