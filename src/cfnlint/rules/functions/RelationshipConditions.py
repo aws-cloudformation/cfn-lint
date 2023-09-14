@@ -24,6 +24,8 @@ class RelationshipConditions(CloudFormationLintRule):
 
         matches = []
 
+        if cfn.has_language_extensions_transform():
+            return matches
         # Start with Ref checks
         ref_objs = cfn.search_deep_keys(searchText="Ref", includeGlobals=False)
         for ref_obj in ref_objs:
