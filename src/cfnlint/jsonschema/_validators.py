@@ -40,7 +40,7 @@ def additionalProperties(
                 repr(each) for each in sorted(schema["patternProperties"])
             )
             for extra in extras:
-                error = f"{extra} does not match any of the regexes: {patterns}"
+                error = f"{extra!r} does not match any of the regexes: {patterns}"
                 yield ValidationError(error, path=[extra])
         else:
             for extra in extras:
