@@ -15,51 +15,18 @@ class Configuration(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html"
     tags = ["conditions"]
 
-    condition_keys = [
-        "Condition",
-        "Fn::And",
-        "Fn::Equals",
-        "Fn::Not",
-        "Fn::Or",
-    ]
-
-    def match(self, cfn):
-        matches = []
-
-        if "Conditions" not in cfn.template:
-            return matches
-        conditions = cfn.template.get("Conditions", None)
-        if isinstance(conditions, dict):
-            for condname, condobj in conditions.items():
-                if not isinstance(condobj, dict):
-                    message = "Condition {0} has invalid property"
-                    matches.append(
-                        RuleMatch(["Conditions", condname], message.format(condname))
-                    )
-                else:
-                    if len(condobj) != 1:
-                        message = "Condition {0} has too many intrinsic conditions"
-                        matches.append(
-                            RuleMatch(
-                                ["Conditions", condname], message.format(condname)
-                            )
-                        )
-                    else:
-                        for k, _ in condobj.items():
-                            if k not in self.condition_keys:
-                                message = "Condition {0} has invalid property {1}"
-                                matches.append(
-                                    RuleMatch(
-                                        ["Conditions", condname] + [k],
-                                        message.format(condname, k),
-                                    )
-                                )
-        else:
-            matches.append(
-                RuleMatch(
-                    ["Conditions"],
-                    "Condition must be an object",
-                )
+    def condition(self, validator, tS, instance, schema):
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                functions=[
+                    "Fn::And",
+                    "Fn::Equals",
+                    "Fn::Or",
+                    "Fn::Not",
+                    "Condition",
+                ],
             )
+        )
 
-        return matches
+        for err in validator.descend(instance, {"type": "boolean"}):
+            yield err

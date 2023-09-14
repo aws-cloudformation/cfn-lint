@@ -101,6 +101,15 @@ class Fn(Scalar):
     def value(self, instance: Dict[str, Any]) -> Any:
         return instance.get(self.fn.name)
 
+    def iter_errors_resolve(
+        self, validator: Validator, value: Any, instance: Any, key: str, schema
+    ) -> Iterator[ValidationError]:
+        for err in validator.descend(value, schema, key):
+            err.validator = self.fn.py
+            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+            err.message = f"{err.message} when {self.fn.name!r} is resolved"
+            yield err
+
     def descend(
         self,
         validator: Validator,
@@ -152,6 +161,15 @@ class FnArray:
     def value(self, instance: Dict[str, Any]) -> Any:
         return instance.get(self.fn.name)
 
+    def iter_errors_resolve(
+        self, validator: Validator, value: Any, instance: Any, key: str, schema
+    ) -> Iterator[ValidationError]:
+        for err in validator.descend(value, schema, key):
+            err.validator = self.fn.py
+            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+            err.message = f"{err.message} when {self.fn.name!r} is resolved"
+            yield err
+
     def schema(self) -> Dict[str, str | int]:
         schema: Dict[str, str | int] = {
             "type": "array",
@@ -198,7 +216,7 @@ class FnArray:
         for i in range(0, self._max_length):
             try:
                 for err in self.items[i].iter_errors(validator, s, value[i], schema):
-                    err.path.appendleft(key)
+                    err.path.extendleft([i, key])
                     err.validator = self.fn.py
                     yield err
             except (IndexError, StopIteration):
@@ -211,17 +229,19 @@ class Ref(Fn):
         self.supported_types = ["array", "object"] + _singular_types
         self.types = ["string"]
 
-    def ref_resolver(self, validator: Validator, instance: Any) -> Iterator[Any]:
-        if validator.is_type(instance, "string"):
-            # if the ref is to pseudo-parameter or parameter we can validate the values
-            for possible_value in validator.context.ref_values[instance]:
-                yield possible_value
-
     def ref(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         if validator.context.transforms.has_language_extensions_transform():
-            self.supported_functions = ["Ref"]
+            self.supported_functions = [
+                "Ref",
+                "Fn::Base64",
+                "Fn::FindInMap",
+                "Fn::If",
+                "Fn::Join",
+                "Fn::Sub",
+                "Fn::ToJsonString",
+            ]
             self.types.append("object")
 
         for err in self.iter_errors(validator, s, instance, schema):
@@ -237,9 +257,13 @@ class Ref(Fn):
             yield err
             return
 
-        print("Start", instance)
+        validator = validator.evolve(
+            context=validator.context.evolve(resolved_value=True)
+        )
         for value in validator.resolve(instance):
-            print("Value", value)
+            if value is None:
+                continue
+            yield from self.iter_errors_resolve(validator, value, instance, key, s)
 
 
 class FnGetAtt(Fn):
@@ -332,7 +356,23 @@ class FnGetAZs(Fn):
     def get_azs(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+        errs = False
+        for err in self.iter_errors(validator, s, instance, schema):
+            yield err
+            errs = True
+
+        if errs:
+            return
+
+        validator = validator.evolve(
+            context=validator.context.evolve(resolved_value=True)
+        )
+        for value in validator.resolve(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
 
 
 class FnImportValue(Fn):
@@ -648,8 +688,7 @@ class FnSub(Fn):
 
             validator = validator.evolve(
                 context=validator.context.evolve(
-                    other_refs=dict.fromkeys(keys, Parameter({"Type": "String"})),
-                    sub_parameters=dict.fromkeys(keys, Parameter({"Type": "String"})),
+                    ref_values=dict.fromkeys(keys, Parameter({"Type": "String"})),
                 )
             )
             value = value[0]
@@ -813,9 +852,127 @@ class FnForEach(FnArray):
                     }
                 )
             )
+
             for err in validator.descend(output, s, self.fn.name):
                 yield err
                 return
+
+
+#####
+# Condition functions
+#####
+
+
+class FnEquals(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Equals", 2, 2)
+        s = Scalar()
+        s.supported_functions = [
+            "Ref",
+            "Fn::FindInMap",
+            "Fn::Sub",
+            "Fn::Join",
+            "Fn::Select",
+            "Fn::Split",
+            "Fn::Length",
+            "Fn::ToJsonString",
+        ]
+        self.items.extend([s] * 2)
+        self.supported_types = ["boolean"]
+
+    def equals(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        yield from self.iter_errors(validator, s, instance, schema)
+
+
+class FnOr(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Or", 2, 10)
+        s = Scalar()
+        s.supported_functions = [
+            "Condition",
+            "Fn::Equals",
+            "Fn::Not",
+            "Fn::And",
+            "Fn::Or",
+        ]
+        s.types = ["boolean"]
+        self.items.extend([s] * 10)
+        self.supported_types = ["boolean"]
+
+    def or_(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        yield from self.iter_errors(validator, s, instance, schema)
+
+
+class FnAnd(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::And", 2, 10)
+        s = Scalar()
+        s.supported_functions = [
+            "Condition",
+            "Fn::Equals",
+            "Fn::Not",
+            "Fn::And",
+            "Fn::Or",
+        ]
+        s.types = ["boolean"]
+        self.items.extend([s] * 10)
+        self.supported_types = ["boolean"]
+
+    def and_(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        yield from self.iter_errors(validator, s, instance, schema)
+
+
+class FnNot(FnArray):
+    def __init__(self) -> None:
+        super().__init__("Fn::Not", 1, 1)
+        s = Scalar()
+        s.supported_functions = [
+            "Condition",
+            "Fn::Equals",
+            "Fn::Not",
+            "Fn::And",
+            "Fn::Or",
+        ]
+        s.types = ["boolean"]
+        self.items.extend([s])
+        self.supported_types = ["boolean"]
+
+    def not_(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        yield from self.iter_errors(validator, s, instance, schema)
+
+
+class Condition(Fn):
+    def __init__(self) -> None:
+        super().__init__("Condition")
+        self.supported_types = ["boolean"]
+        self.types = ["string"]
+
+    def condition(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        for err in self.iter_errors(validator, s, instance, schema):
+            yield err
+            return
+
+        value = instance.get(self.fn.name)
+        for err in self.descend(
+            validator, value, {"enum": validator.context.conditions}, self.fn.name
+        ):
+            yield err
+            return
+
+
+#####
+# Type checks
+#####
 
 
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:
@@ -895,11 +1052,9 @@ cfn_validators: Dict[str, V] = {
     "fn_split": FnSplit().split,
     "fn_sub": FnSub().sub,
     "fn_tojsonstring": FnToJsonString().to_json_string,
-}
-
-# not all functions need to be resolved.  These functions
-# allow us to pull up values from nested functions
-# allowing us to test the possible values against the schema
-fn_resolvers: Dict[str, V] = {
-    "Ref": Ref().ref_resolver,
+    "fn_equals": FnEquals().equals,
+    "fn_or": FnOr().or_,
+    "fn_and": FnAnd().and_,
+    "fn_not": FnNot().not_,
+    "condition": Condition().condition,
 }
