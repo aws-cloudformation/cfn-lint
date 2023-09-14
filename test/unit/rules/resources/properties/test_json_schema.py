@@ -188,7 +188,7 @@ class TestJsonSchema(BaseRuleTestCase):
             self.build_result(
                 "E3YYY",
                 "'string' is not of type 'array'",
-                ["Resources", "Table", "Properties", "E"],
+                ["Resources", "Table", "Properties", "E", "Ref"],
             ),
         ]
 
