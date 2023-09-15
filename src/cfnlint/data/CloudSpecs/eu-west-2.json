@@ -2554,6 +2554,29 @@
   "AWS::MSK::Cluster.VpcConnectivitySasl": "CACHED",
   "AWS::MSK::Cluster.VpcConnectivityScram": "CACHED",
   "AWS::MSK::Cluster.VpcConnectivityTls": "CACHED",
+  "AWS::MSK::Configuration.LatestRevision": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-configuration-latestrevision.html",
+   "Properties": {
+    "CreationTime": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-configuration-latestrevision.html#cfn-msk-configuration-latestrevision-creationtime",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-configuration-latestrevision.html#cfn-msk-configuration-latestrevision-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Revision": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-configuration-latestrevision.html#cfn-msk-configuration-latestrevision-revision",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::MSK::ServerlessCluster.ClientAuthentication": "CACHED",
   "AWS::MSK::ServerlessCluster.Iam": "CACHED",
   "AWS::MSK::ServerlessCluster.Sasl": "CACHED",
@@ -2795,6 +2818,16 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Authorization": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration": "CACHED",
+  "AWS::MediaPackageV2::Channel.IngestEndpoint": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Encryption": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionContractConfiguration": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionMethod": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.HlsManifestConfiguration": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.LowLatencyHlsManifestConfiguration": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Scte": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ScteHls": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Segment": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider": "CACHED",
   "AWS::MediaStore::Container.CorsRule": "CACHED",
   "AWS::MediaStore::Container.MetricPolicy": "CACHED",
   "AWS::MediaStore::Container.MetricPolicyRule": "CACHED",
@@ -8214,6 +8247,8 @@
   "AWS::WorkSpaces::ConnectionAlias.ConnectionAliasAssociation": "CACHED",
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings.IpRule": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CookieSpecification": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CookieSynchronizationConfiguration": "CACHED",
   "AWS::XRay::Group.InsightsConfiguration": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Alexa::ASK::Skill.AuthenticationConfiguration": "CACHED",
@@ -8221,7 +8256,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "139.0.0",
+ "ResourceSpecificationVersion": "140.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -9164,7 +9199,57 @@
   "AWS::MSK::BatchScramSecret": "CACHED",
   "AWS::MSK::Cluster": "CACHED",
   "AWS::MSK::ClusterPolicy": "CACHED",
-  "AWS::MSK::Configuration": "CACHED",
+  "AWS::MSK::Configuration": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "LatestRevision.CreationTime": {
+     "PrimitiveType": "String"
+    },
+    "LatestRevision.Description": {
+     "PrimitiveType": "String"
+    },
+    "LatestRevision.Revision": {
+     "PrimitiveType": "Integer"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html#cfn-msk-configuration-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "KafkaVersionsList": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html#cfn-msk-configuration-kafkaversionslist",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "LatestRevision": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html#cfn-msk-configuration-latestrevision",
+     "Required": false,
+     "Type": "LatestRevision",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html#cfn-msk-configuration-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ServerProperties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-configuration.html#cfn-msk-configuration-serverproperties",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::MSK::ServerlessCluster": "CACHED",
   "AWS::MSK::VpcConnection": "CACHED",
   "AWS::MWAA::Environment": "CACHED",
@@ -9194,6 +9279,11 @@
   "AWS::MediaPackage::OriginEndpoint": "CACHED",
   "AWS::MediaPackage::PackagingConfiguration": "CACHED",
   "AWS::MediaPackage::PackagingGroup": "CACHED",
+  "AWS::MediaPackageV2::Channel": "CACHED",
+  "AWS::MediaPackageV2::ChannelGroup": "CACHED",
+  "AWS::MediaPackageV2::ChannelPolicy": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpointPolicy": "CACHED",
   "AWS::MediaStore::Container": "CACHED",
   "AWS::MemoryDB::ACL": "CACHED",
   "AWS::MemoryDB::Cluster": "CACHED",
@@ -9758,82 +9848,7 @@
   "AWS::SSM::MaintenanceWindow": "CACHED",
   "AWS::SSM::MaintenanceWindowTarget": "CACHED",
   "AWS::SSM::MaintenanceWindowTask": "CACHED",
-  "AWS::SSM::Parameter": {
-   "Attributes": {
-    "Type": {
-     "PrimitiveType": "String"
-    },
-    "Value": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html",
-   "Properties": {
-    "AllowedPattern": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DataType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SSM::Parameter.DataType"
-     }
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Policies": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-policies",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tags",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-tier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SSM::Parameter.Tier"
-     }
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SSM::Parameter.Type"
-     }
-    },
-    "Value": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-value",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::SSM::Parameter": "CACHED",
   "AWS::SSM::PatchBaseline": "CACHED",
   "AWS::SSM::ResourceDataSync": "CACHED",
   "AWS::SSM::ResourcePolicy": "CACHED",
@@ -10903,6 +10918,7 @@
   "AWS::CustomerProfiles::ObjectType.ObjectTypeKey.FieldNames": "CACHED",
   "AWS::CustomerProfiles::ObjectType.ObjectTypeKey.StandardIdentifiers": "CACHED",
   "AWS::CustomerProfiles::ObjectType.ObjectTypeName": "CACHED",
+  "AWS::CustomerProfiles::ObjectType.SourceLastUpdatedTimestampFormat": "CACHED",
   "AWS::CustomerProfiles::ObjectType.TemplateId": "CACHED",
   "AWS::DMS::ReplicationConfig.ReplicationType": "CACHED",
   "AWS::DataBrew::Dataset.CsvOptions.Delimiter": "CACHED",
@@ -12452,6 +12468,40 @@
   "AWS::MediaPackage::PackagingConfiguration.StreamSelection.StreamOrder": "CACHED",
   "AWS::MediaPackage::PackagingGroup.Id": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration.LogGroupName": "CACHED",
+  "AWS::MediaPackageV2::Channel.ChannelGroupName": "CACHED",
+  "AWS::MediaPackageV2::Channel.ChannelName": "CACHED",
+  "AWS::MediaPackageV2::Channel.Description": "CACHED",
+  "AWS::MediaPackageV2::ChannelGroup.ChannelGroupName": "CACHED",
+  "AWS::MediaPackageV2::ChannelGroup.Description": "CACHED",
+  "AWS::MediaPackageV2::ChannelPolicy.ChannelGroupName": "CACHED",
+  "AWS::MediaPackageV2::ChannelPolicy.ChannelName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ChannelGroupName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ChannelName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ContainerType": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Description": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Encryption.ConstantInitializationVector": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Encryption.KeyRotationIntervalSeconds": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionContractConfiguration.PresetSpeke20Audio": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionContractConfiguration.PresetSpeke20Video": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionMethod.CmafEncryptionMethod": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.EncryptionMethod.TsEncryptionMethod": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.HlsManifestConfiguration.ChildManifestName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.HlsManifestConfiguration.ManifestName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.LowLatencyHlsManifestConfiguration.ChildManifestName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.LowLatencyHlsManifestConfiguration.ManifestName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.OriginEndpointName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Scte.ScteFilter": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ScteHls.AdMarkerHls": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Segment.SegmentDurationSeconds": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.Segment.SegmentName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider.DrmSystems": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider.ResourceId": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider.RoleArn": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider.Url": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.StartoverWindowSeconds": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpointPolicy.ChannelGroupName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpointPolicy.ChannelName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpointPolicy.OriginEndpointName": "CACHED",
   "AWS::MemoryDB::ACL.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ClusterName": "CACHED",
@@ -14827,9 +14877,6 @@
   "AWS::SSM::Document.VersionName": "CACHED",
   "AWS::SSM::MaintenanceWindow.Cutoff": "CACHED",
   "AWS::SSM::MaintenanceWindow.Duration": "CACHED",
-  "AWS::SSM::Parameter.DataType": "CACHED",
-  "AWS::SSM::Parameter.Tier": "CACHED",
-  "AWS::SSM::Parameter.Type": "CACHED",
   "AWS::SSM::ResourceDataSync.AwsOrganizationsSource.OrganizationSourceType": "CACHED",
   "AWS::SSM::ResourceDataSync.BucketName": "CACHED",
   "AWS::SSM::ResourceDataSync.BucketPrefix": "CACHED",
@@ -15717,7 +15764,11 @@
   "AWS::WorkSpacesWeb::Portal.UserAccessLoggingSettingsArn": "CACHED",
   "AWS::WorkSpacesWeb::Portal.UserSettingsArn": "CACHED",
   "AWS::WorkSpacesWeb::UserAccessLoggingSettings.KinesisStreamArn": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CookieSpecification.Domain": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CookieSpecification.Name": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CookieSpecification.Path": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CopyAllowed": "CACHED",
+  "AWS::WorkSpacesWeb::UserSettings.CustomerManagedKey": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.DisconnectTimeoutInMinutes": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.DownloadAllowed": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.PasteAllowed": "CACHED",
