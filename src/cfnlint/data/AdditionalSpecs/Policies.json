@@ -3339,6 +3339,7 @@
     "CreateSourceNetwork",
     "CreateSourceServerForDrs",
     "DeleteJob",
+    "DeleteLaunchAction",
     "DeleteLaunchConfigurationTemplate",
     "DeleteRecoveryInstance",
     "DeleteReplicationConfigurationTemplate",
@@ -3373,6 +3374,7 @@
     "InitializeService",
     "IssueAgentCertificateForDrs",
     "ListExtensibleSourceServers",
+    "ListLaunchActions",
     "ListStagingAccounts",
     "ListTagsForResource",
     "NotifyAgentAuthenticationForDrs",
@@ -3382,6 +3384,7 @@
     "NotifyConsistencyAttainedForDrs",
     "NotifyReplicationServerAuthenticationForDrs",
     "NotifyVolumeEventForDrs",
+    "PutLaunchAction",
     "RetryDataReplication",
     "ReverseReplication",
     "SendAgentLogsForDrs",
@@ -3671,7 +3674,10 @@
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
+    "aws:TagKeys",
+    "mediaconvert:HttpInputsAllowed",
+    "mediaconvert:HttpsInputsAllowed",
+    "mediaconvert:S3InputsAllowed"
    ]
   },
   "AWS Elemental MediaLive": {
@@ -4502,13 +4508,14 @@
    ]
   },
   "AWS Health APIs and Notifications": {
-   "ARNFormat": "arn:aws:health::${Namespace}:${RelativeId}",
+   "ARNFormat": "arn:aws:health:${Region}::${RelativeId}",
    "ARNRegex": "^arn:aws:health:[^:]*:[^:]*:.+",
    "Actions": [
     "DescribeAffectedAccountsForOrganization",
     "DescribeAffectedEntities",
     "DescribeAffectedEntitiesForOrganization",
     "DescribeEntityAggregates",
+    "DescribeEntityAggregatesForOrganization",
     "DescribeEventAggregates",
     "DescribeEventDetails",
     "DescribeEventDetailsForOrganization",
@@ -12010,6 +12017,8 @@
     "CreateUseCase",
     "CreateUser",
     "CreateUserHierarchyGroup",
+    "CreateView",
+    "CreateViewVersion",
     "CreateVocabulary",
     "DeactivateEvaluationForm",
     "DeleteContactEvaluation",
@@ -12030,6 +12039,8 @@
     "DeleteUseCase",
     "DeleteUser",
     "DeleteUserHierarchyGroup",
+    "DeleteView",
+    "DeleteViewVersion",
     "DeleteVocabulary",
     "DescribeAgentStatus",
     "DescribeContact",
@@ -12053,6 +12064,7 @@
     "DescribeUser",
     "DescribeUserHierarchyGroup",
     "DescribeUserHierarchyStructure",
+    "DescribeView",
     "DescribeVocabulary",
     "DisassociateApprovedOrigin",
     "DisassociateBot",
@@ -12113,6 +12125,8 @@
     "ListUseCases",
     "ListUserHierarchyGroups",
     "ListUsers",
+    "ListViewVersions",
+    "ListViews",
     "MonitorContact",
     "PutUserStatus",
     "ReleasePhoneNumber",
@@ -12183,7 +12197,9 @@
     "UpdateUserIdentityInfo",
     "UpdateUserPhoneConfig",
     "UpdateUserRoutingProfile",
-    "UpdateUserSecurityProfiles"
+    "UpdateUserSecurityProfiles",
+    "UpdateViewContent",
+    "UpdateViewMetadata"
    ],
    "HasResource": true,
    "StringPrefix": "connect",
@@ -16604,6 +16620,7 @@
    "HasResource": false,
    "StringPrefix": "ec2messages",
    "conditionKeys": [
+    "ec2:SourceInstanceARN",
     "ssm:SourceInstanceARN"
    ]
   },
@@ -19447,6 +19464,7 @@
    "HasResource": false,
    "StringPrefix": "ssmmessages",
    "conditionKeys": [
+    "ec2:SourceInstanceARN",
     "ssm:SourceInstanceARN"
    ]
   },
