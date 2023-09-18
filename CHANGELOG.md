@@ -1,3 +1,7 @@
+### v0.80.2
+###### Fixes
+- Revert change #[2878](https://github.com/aws-cloudformation/cfn-lint/pull/2878) (pull #[2882](https://github.com/aws-cloudformation/cfn-lint/pull/2882))
+
 ### v0.80.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `140.0.0` (pull #[2870](https://github.com/aws-cloudformation/cfn-lint/pull/2870))
