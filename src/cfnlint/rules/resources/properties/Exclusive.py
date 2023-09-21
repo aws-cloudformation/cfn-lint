@@ -38,7 +38,7 @@ class Exclusive(CloudFormationLintRule):
                 for property_set in property_sets:
                     obj = property_set["Object"].clean()
                     for prop in obj:
-                        if prop in exclusions:
+                        if prop == k:
                             for excl_property in exclusions[prop]:
                                 if excl_property in obj:
                                     if property_set["Scenario"] is None:
