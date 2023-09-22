@@ -1,3 +1,10 @@
+### v0.80.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `141.0.0` (pull #[2879](https://github.com/aws-cloudformation/cfn-lint/pull/2879))
+###### Fixes
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) to include `CausePath` and `ErrorPath` key types to `Fail` state (pull #[2884](https://github.com/aws-cloudformation/cfn-lint/pull/2884))
+- Update rule [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2520) to better match exclusive properties (pull #[2886](https://github.com/aws-cloudformation/cfn-lint/pull/2886))
+
 ### v0.80.2
 ###### Fixes
 - Revert change #[2878](https://github.com/aws-cloudformation/cfn-lint/pull/2878) (pull #[2882](https://github.com/aws-cloudformation/cfn-lint/pull/2882))
