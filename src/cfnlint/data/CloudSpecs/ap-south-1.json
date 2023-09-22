@@ -293,7 +293,35 @@
   "AWS::AppFlow::ConnectorProfile.SAPODataConnectorProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.SalesforceConnectorProfileCredentials": "CACHED",
   "AWS::AppFlow::ConnectorProfile.SalesforceConnectorProfileProperties": "CACHED",
-  "AWS::AppFlow::ConnectorProfile.ServiceNowConnectorProfileCredentials": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.ServiceNowConnectorProfileCredentials": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-servicenowconnectorprofilecredentials.html",
+   "Properties": {
+    "OAuth2Credentials": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-servicenowconnectorprofilecredentials.html#cfn-appflow-connectorprofile-servicenowconnectorprofilecredentials-oauth2credentials",
+     "Required": false,
+     "Type": "OAuth2Credentials",
+     "UpdateType": "Mutable"
+    },
+    "Password": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-servicenowconnectorprofilecredentials.html#cfn-appflow-connectorprofile-servicenowconnectorprofilecredentials-password",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AppFlow::ConnectorProfile.ServiceNowConnectorProfileCredentials.Password"
+     }
+    },
+    "Username": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-servicenowconnectorprofilecredentials.html#cfn-appflow-connectorprofile-servicenowconnectorprofilecredentials-username",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AppFlow::ConnectorProfile.ServiceNowConnectorProfileCredentials.Username"
+     }
+    }
+   }
+  },
   "AWS::AppFlow::ConnectorProfile.ServiceNowConnectorProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.SingularConnectorProfileCredentials": "CACHED",
   "AWS::AppFlow::ConnectorProfile.SlackConnectorProfileCredentials": "CACHED",
@@ -1424,6 +1452,8 @@
   "AWS::EFS::FileSystem.BackupPolicy": "CACHED",
   "AWS::EFS::FileSystem.ElasticFileSystemTag": "CACHED",
   "AWS::EFS::FileSystem.LifecyclePolicy": "CACHED",
+  "AWS::EFS::FileSystem.ReplicationConfiguration": "CACHED",
+  "AWS::EFS::FileSystem.ReplicationDestination": "CACHED",
   "AWS::EKS::Cluster.ClusterLogging": "CACHED",
   "AWS::EKS::Cluster.ControlPlanePlacement": "CACHED",
   "AWS::EKS::Cluster.EncryptionConfig": "CACHED",
@@ -2393,9 +2423,11 @@
   "AWS::Lightsail::Bucket.AccessRules": "CACHED",
   "AWS::Lightsail::Container.Container": "CACHED",
   "AWS::Lightsail::Container.ContainerServiceDeployment": "CACHED",
+  "AWS::Lightsail::Container.EcrImagePullerRole": "CACHED",
   "AWS::Lightsail::Container.EnvironmentVariable": "CACHED",
   "AWS::Lightsail::Container.HealthCheckConfig": "CACHED",
   "AWS::Lightsail::Container.PortInfo": "CACHED",
+  "AWS::Lightsail::Container.PrivateRegistryAccess": "CACHED",
   "AWS::Lightsail::Container.PublicDomainName": "CACHED",
   "AWS::Lightsail::Container.PublicEndpoint": "CACHED",
   "AWS::Lightsail::Database.RelationalDatabaseParameter": "CACHED",
@@ -6218,38 +6250,7 @@
   "AWS::SSO::InstanceAccessControlAttributeConfiguration.AccessControlAttributeValue": "CACHED",
   "AWS::SSO::PermissionSet.CustomerManagedPolicyReference": "CACHED",
   "AWS::SSO::PermissionSet.PermissionsBoundary": "CACHED",
-  "AWS::SageMaker::App.ResourceSpec": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-app-resourcespec.html",
-   "Properties": {
-    "InstanceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-app-resourcespec.html#cfn-sagemaker-app-resourcespec-instancetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.ResourceSpec.InstanceType"
-     }
-    },
-    "SageMakerImageArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-app-resourcespec.html#cfn-sagemaker-app-resourcespec-sagemakerimagearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.ResourceSpec.SageMakerImageArn"
-     }
-    },
-    "SageMakerImageVersionArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-app-resourcespec.html#cfn-sagemaker-app-resourcespec-sagemakerimageversionarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.ResourceSpec.SageMakerImageVersionArn"
-     }
-    }
-   }
-  },
+  "AWS::SageMaker::App.ResourceSpec": "CACHED",
   "AWS::SageMaker::AppImageConfig.FileSystemConfig": "CACHED",
   "AWS::SageMaker::AppImageConfig.KernelGatewayImageConfig": "CACHED",
   "AWS::SageMaker::AppImageConfig.KernelSpec": "CACHED",
@@ -6273,43 +6274,7 @@
   "AWS::SageMaker::DataQualityJobDefinition.StoppingCondition": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition.VpcConfig": "CACHED",
   "AWS::SageMaker::Domain.CustomImage": "CACHED",
-  "AWS::SageMaker::Domain.DefaultSpaceSettings": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html",
-   "Properties": {
-    "ExecutionRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-executionrole",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.ExecutionRole"
-     }
-    },
-    "JupyterServerAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-jupyterserverappsettings",
-     "Required": false,
-     "Type": "JupyterServerAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "KernelGatewayAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-kernelgatewayappsettings",
-     "Required": false,
-     "Type": "KernelGatewayAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "SecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-securitygroups",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.SecurityGroups"
-     }
-    }
-   }
-  },
+  "AWS::SageMaker::Domain.DefaultSpaceSettings": "CACHED",
   "AWS::SageMaker::Domain.DomainSettings": "CACHED",
   "AWS::SageMaker::Domain.JupyterServerAppSettings": "CACHED",
   "AWS::SageMaker::Domain.KernelGatewayAppSettings": "CACHED",
@@ -6318,61 +6283,7 @@
   "AWS::SageMaker::Domain.RStudioServerProDomainSettings": "CACHED",
   "AWS::SageMaker::Domain.ResourceSpec": "CACHED",
   "AWS::SageMaker::Domain.SharingSettings": "CACHED",
-  "AWS::SageMaker::Domain.UserSettings": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html",
-   "Properties": {
-    "ExecutionRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-executionrole",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::Domain.UserSettings.ExecutionRole"
-     }
-    },
-    "JupyterServerAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-jupyterserverappsettings",
-     "Required": false,
-     "Type": "JupyterServerAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "KernelGatewayAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-kernelgatewayappsettings",
-     "Required": false,
-     "Type": "KernelGatewayAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "RSessionAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-rsessionappsettings",
-     "Required": false,
-     "Type": "RSessionAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "RStudioServerProAppSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-rstudioserverproappsettings",
-     "Required": false,
-     "Type": "RStudioServerProAppSettings",
-     "UpdateType": "Mutable"
-    },
-    "SecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-securitygroups",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::Domain.UserSettings.SecurityGroups"
-     }
-    },
-    "SharingSettings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-usersettings.html#cfn-sagemaker-domain-usersettings-sharingsettings",
-     "Required": false,
-     "Type": "SharingSettings",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::SageMaker::Domain.UserSettings": "CACHED",
   "AWS::SageMaker::Endpoint.Alarm": "CACHED",
   "AWS::SageMaker::Endpoint.AutoRollbackConfig": "CACHED",
   "AWS::SageMaker::Endpoint.BlueGreenUpdatePolicy": "CACHED",
@@ -6841,7 +6752,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "140.0.0",
+ "ResourceSpecificationVersion": "141.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7125,6 +7036,7 @@
   "AWS::Connect::QuickConnect": "CACHED",
   "AWS::Connect::RoutingProfile": "CACHED",
   "AWS::Connect::SecurityKey": "CACHED",
+  "AWS::Connect::SecurityProfile": "CACHED",
   "AWS::Connect::TaskTemplate": "CACHED",
   "AWS::Connect::User": "CACHED",
   "AWS::Connect::UserHierarchyGroup": "CACHED",
@@ -7912,66 +7824,7 @@
   "AWS::SSO::Assignment": "CACHED",
   "AWS::SSO::InstanceAccessControlAttributeConfiguration": "CACHED",
   "AWS::SSO::PermissionSet": "CACHED",
-  "AWS::SageMaker::App": {
-   "Attributes": {
-    "AppArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html",
-   "Properties": {
-    "AppName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-appname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.AppName"
-     }
-    },
-    "AppType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-apptype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.AppType"
-     }
-    },
-    "DomainId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-domainid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.DomainId"
-     }
-    },
-    "ResourceSpec": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-resourcespec",
-     "Required": false,
-     "Type": "ResourceSpec",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "UserProfileName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-app.html#cfn-sagemaker-app-userprofilename",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::App.UserProfileName"
-     }
-    }
-   }
-  },
+  "AWS::SageMaker::App": "CACHED",
   "AWS::SageMaker::AppImageConfig": "CACHED",
   "AWS::SageMaker::CodeRepository": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition": "CACHED",
