@@ -72,7 +72,7 @@ class StateMachine(CloudFormationLintRule):
             "Choice": ["Choices", "Default"],
             "Wait": ["Seconds", "Timestamp", "SecondsPath", "TimestampPath"],
             "Succeed": [],
-            "Fail": ["Cause", "Error"],
+            "Fail": ["Cause", "CausePath", "Error", "ErrorPath"],
             "Parallel": [
                 "Branches",
                 "ResultPath",
