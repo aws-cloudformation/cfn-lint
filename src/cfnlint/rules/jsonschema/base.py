@@ -53,7 +53,9 @@ class BaseJsonSchema(CloudFormationLintRule):
                 # so we continue
                 if rs_rule is None:
                     continue
+                
                 e_rule = rs_rule
+
             matches.append(
                 RuleMatch(
                     e_path,
