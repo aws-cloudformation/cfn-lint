@@ -25,6 +25,11 @@
  },
  {
   "op": "add",
+  "path": "/definitions/Egress/oneOfDescription",
+  "value": "Specify only one ['CidrIp', 'CidrIpv6', 'DestinationSecurityGroupId', 'DestinationPrefixListId']"
+ },
+ {
+  "op": "add",
   "path": "/definitions/Egress/oneOf",
   "value": [
    {
@@ -90,12 +95,18 @@
       "Fn::Sub",
       "Fn::Cidr",
       "Fn::Length",
-      "Fn::ToJsonString"
+      "Fn::ToJsonString",
+      "Fn::ForEach::[a-zA-Z0-9]+"
      ]
     },
     "type": "object"
    }
   ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/Ingress/oneOfDescription",
+  "value": "Specify only one ['CidrIp', 'CidrIpv6', 'SourcePrefixListId', 'SourceSecurityGroupId', 'SourceSecurityGroupName']"
  },
  {
   "op": "add",
@@ -180,7 +191,8 @@
       "Fn::Sub",
       "Fn::Cidr",
       "Fn::Length",
-      "Fn::ToJsonString"
+      "Fn::ToJsonString",
+      "Fn::ForEach::[a-zA-Z0-9]+"
      ]
     },
     "type": "object"

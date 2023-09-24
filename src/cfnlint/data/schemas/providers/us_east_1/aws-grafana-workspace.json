@@ -261,11 +261,13 @@
     "FAILED",
     "UPDATING",
     "UPGRADING",
+    "VERSION_UPDATING",
     "DELETION_FAILED",
     "CREATION_FAILED",
     "UPDATE_FAILED",
     "UPGRADE_FAILED",
-    "LICENSE_REMOVAL_FAILED"
+    "LICENSE_REMOVAL_FAILED",
+    "VERSION_UPDATE_FAILED"
    ],
    "type": "string"
   }
@@ -275,6 +277,9 @@
   "create": {
    "permissions": [
     "grafana:CreateWorkspace",
+    "grafana:DescribeWorkspace",
+    "grafana:DescribeWorkspaceAuthentication",
+    "grafana:DescribeWorkspaceConfiguration",
     "grafana:UpdateWorkspaceAuthentication",
     "sso:DescribeRegisteredRegions",
     "sso:CreateManagedApplicationInstance",
@@ -293,6 +298,9 @@
   "delete": {
    "permissions": [
     "grafana:DeleteWorkspace",
+    "grafana:DescribeWorkspace",
+    "grafana:DescribeWorkspaceAuthentication",
+    "grafana:DescribeWorkspaceConfiguration",
     "sso:DeleteManagedApplicationInstance",
     "sso:DescribeRegisteredRegions"
    ]
@@ -300,19 +308,25 @@
   "list": {
    "permissions": [
     "grafana:ListWorkspaces",
-    "grafana:DescribeWorkspaceAuthentication"
+    "grafana:DescribeWorkspaceAuthentication",
+    "grafana:DescribeWorkspaceConfiguration"
    ]
   },
   "read": {
    "permissions": [
     "grafana:DescribeWorkspace",
-    "grafana:DescribeWorkspaceAuthentication"
+    "grafana:DescribeWorkspaceAuthentication",
+    "grafana:DescribeWorkspaceConfiguration"
    ]
   },
   "update": {
    "permissions": [
+    "grafana:DescribeWorkspace",
+    "grafana:DescribeWorkspaceAuthentication",
+    "grafana:DescribeWorkspaceConfiguration",
     "grafana:UpdateWorkspace",
     "grafana:UpdateWorkspaceAuthentication",
+    "grafana:UpdateWorkspaceConfiguration",
     "sso:DescribeRegisteredRegions",
     "sso:CreateManagedApplicationInstance",
     "ec2:GetManagedPrefixListEntries",
@@ -374,7 +388,7 @@
    "type": "string"
   },
   "GrafanaVersion": {
-   "description": "The version of Grafana to support in your workspace. For region ap-northeast-2, only version 8.4 is supported.",
+   "description": "The version of Grafana to support in your workspace.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"

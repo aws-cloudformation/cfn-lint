@@ -31,6 +31,13 @@ def make_only_one(props: Sequence[str]) -> Dict[str, Any]:
     return dependencies
 
 
+def make_only_one_required_with_description(props: Sequence[str]) -> [Dict[str, Any]]:
+    return {
+        "oneOfDescription": f"Specify only one {props!r}",
+        "oneOf": make_only_one_required(props),
+    }
+
+
 def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
     results = []
     for item in props:
@@ -57,9 +64,9 @@ def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
 
 
 common_patches = {
-    "BlockDeviceMapping": {
-        "oneOf": make_only_one_required(["VirtualName", "Ebs", "NoDevice"]),
-    }
+    "BlockDeviceMapping": make_only_one_required_with_description(
+        ["VirtualName", "Ebs", "NoDevice"]
+    ),
 }
 
 patches.extend(
@@ -109,11 +116,9 @@ patches.extend(
                     path="/properties/HealthCheckType",
                 ),
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["LaunchTemplateID", "LaunchTemplateName"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["LaunchTemplateID", "LaunchTemplateName"]
+                    ),
                     path="/definitions/LaunchTemplateSpecification",
                 ),
                 Patch(
@@ -214,15 +219,13 @@ patches.extend(
             patches=[
                 Patch(
                     path="/definitions/ViewerCertificate",
-                    values={
-                        "oneOf": make_only_one_required(
-                            [
-                                "AcmCertificateArn",
-                                "CloudFrontDefaultCertificate",
-                                "IamCertificateId",
-                            ]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        [
+                            "AcmCertificateArn",
+                            "CloudFrontDefaultCertificate",
+                            "IamCertificateId",
+                        ]
+                    ),
                 ),
                 Patch(
                     path="/definitions/Origin",
@@ -624,11 +627,9 @@ patches.extend(
             resource_type="AWS::CodePipeline::Pipeline",
             patches=[
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["ArtifactStore", "ArtifactStores"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["ArtifactStore", "ArtifactStores"]
+                    ),
                     path="/",
                 ),
             ],
@@ -709,11 +710,9 @@ patches.extend(
                     path="/definitions/BlockDeviceMapping",
                 ),
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["SecurityGroups", "SecurityGroupIds", "NetworkInterfaces"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["SecurityGroups", "SecurityGroupIds", "NetworkInterfaces"]
+                    ),
                     path="/definitions/LaunchTemplateData",
                 ),
             ],
@@ -749,30 +748,26 @@ patches.extend(
                 ),
                 Patch(
                     path="/definitions/Egress",
-                    values={
-                        "oneOf": make_only_one_required(
-                            [
-                                "CidrIp",
-                                "CidrIpv6",
-                                "DestinationSecurityGroupId",
-                                "DestinationPrefixListId",
-                            ]
-                        ),
-                    },
+                    values=make_only_one_required_with_description(
+                        [
+                            "CidrIp",
+                            "CidrIpv6",
+                            "DestinationSecurityGroupId",
+                            "DestinationPrefixListId",
+                        ]
+                    ),
                 ),
                 Patch(
                     path="/definitions/Ingress",
-                    values={
-                        "oneOf": make_only_one_required(
-                            [
-                                "CidrIp",
-                                "CidrIpv6",
-                                "SourcePrefixListId",
-                                "SourceSecurityGroupId",
-                                "SourceSecurityGroupName",
-                            ]
-                        ),
-                    },
+                    values=make_only_one_required_with_description(
+                        [
+                            "CidrIp",
+                            "CidrIpv6",
+                            "SourcePrefixListId",
+                            "SourceSecurityGroupId",
+                            "SourceSecurityGroupName",
+                        ]
+                    ),
                 ),
             ],
         ),
@@ -781,17 +776,15 @@ patches.extend(
             patches=[
                 Patch(
                     path="/",
-                    values={
-                        "oneOf": make_only_one_required(
-                            [
-                                "CidrIp",
-                                "CidrIpv6",
-                                "SourcePrefixListId",
-                                "SourceSecurityGroupId",
-                                "SourceSecurityGroupName",
-                            ]
-                        ),
-                    },
+                    values=make_only_one_required_with_description(
+                        [
+                            "CidrIp",
+                            "CidrIpv6",
+                            "SourcePrefixListId",
+                            "SourceSecurityGroupId",
+                            "SourceSecurityGroupName",
+                        ]
+                    ),
                 ),
             ],
         ),
@@ -804,11 +797,9 @@ patches.extend(
                 ),
                 Patch(
                     path="/",
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["LaunchSpecifications", "LaunchTemplateConfigs"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["LaunchSpecifications", "LaunchTemplateConfigs"]
+                    ),
                 ),
             ],
         ),
@@ -852,9 +843,9 @@ patches.extend(
             resource_type="AWS::ElasticLoadBalancingV2::LoadBalancer",
             patches=[
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(["SubnetMappings", "Subnets"])
-                    },
+                    values=make_only_one_required_with_description(
+                        ["SubnetMappings", "Subnets"]
+                    ),
                     path="/",
                 ),
             ],
@@ -1363,11 +1354,9 @@ patches.extend(
             resource_type="AWS::Route53::RecordSet",
             patches=[
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["HostedZoneId", "HostedZoneName"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["HostedZoneId", "HostedZoneName"]
+                    ),
                     path="/",
                 ),
             ],
@@ -1376,11 +1365,9 @@ patches.extend(
             resource_type="AWS::Route53::RecordSetGroup",
             patches=[
                 Patch(
-                    values={
-                        "oneOf": make_only_one_required(
-                            ["HostedZoneId", "HostedZoneName"]
-                        )
-                    },
+                    values=make_only_one_required_with_description(
+                        ["HostedZoneId", "HostedZoneName"]
+                    ),
                     path="/",
                 ),
             ],
