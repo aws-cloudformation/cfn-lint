@@ -34,4 +34,3 @@ class Equals(CloudFormationLintRule):
             yield from self.child_rules["W8003"].equals_is_useful(
                 validator, s, instance.get("Fn::Equals", []), schema
             )
-        return

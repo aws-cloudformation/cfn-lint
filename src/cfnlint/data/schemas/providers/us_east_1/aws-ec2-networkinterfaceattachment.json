@@ -1,33 +1,90 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/NetworkInterfaceId"
+  ]
+ ],
  "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeviceIndex",
+  "/properties/InstanceId",
+  "/properties/NetworkInterfaceId"
+ ],
  "description": "Resource Type definition for AWS::EC2::NetworkInterfaceAttachment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:ModifyNetworkInterfaceAttribute"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DetachNetworkInterface",
+    "ec2:DescribeNetworkInterfaces"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeNetworkInterfaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeNetworkInterfaces"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyNetworkInterfaceAttribute",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:AttachNetworkInterface",
+    "ec2:DetachNetworkInterface"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/AttachmentId"
  ],
  "properties": {
+  "AttachmentId": {
+   "description": "The ID of the network interface attachment.",
+   "type": "string"
+  },
   "DeleteOnTermination": {
+   "default": true,
+   "description": "Whether to delete the network interface when the instance terminates. By default, this value is set to true.",
    "type": "boolean"
   },
   "DeviceIndex": {
-   "type": "string"
-  },
-  "Id": {
+   "description": "The network interface's position in the attachment order. For example, the first attached network interface has a DeviceIndex of 0.",
    "type": "string"
   },
   "InstanceId": {
+   "description": "The ID of the instance to which you will attach the ENI.",
    "type": "string"
   },
   "NetworkInterfaceId": {
+   "description": "The ID of the ENI that you want to attach.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/AttachmentId"
  ],
+ "replacementStrategy": "delete_then_create",
  "required": [
-  "NetworkInterfaceId",
+  "DeviceIndex",
   "InstanceId",
-  "DeviceIndex"
+  "NetworkInterfaceId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::EC2::NetworkInterfaceAttachment"
 }

@@ -1,31 +1,76 @@
 {
  "additionalProperties": false,
- "description": "Resource Type definition for AWS::EC2::EIPAssociation",
+ "createOnlyProperties": [
+  "/properties/AllocationId",
+  "/properties/NetworkInterfaceId",
+  "/properties/InstanceId",
+  "/properties/PrivateIpAddress",
+  "/properties/EIP"
+ ],
+ "deprecatedProperties": [
+  "/properties/EIP"
+ ],
+ "description": "Resource schema for EC2 EIP association.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeAddresses",
+    "ec2:AssociateAddress"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateAddress",
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
  "properties": {
   "AllocationId": {
+   "description": "The allocation ID. This is required for EC2-VPC.",
    "type": "string"
   },
   "EIP": {
+   "description": "The Elastic IP address to associate with the instance.",
    "type": "string"
   },
   "Id": {
+   "description": "Composite ID of non-empty properties, to determine the identification.",
    "type": "string"
   },
   "InstanceId": {
+   "description": "The ID of the instance.",
    "type": "string"
   },
   "NetworkInterfaceId": {
+   "description": "The ID of the network interface.",
    "type": "string"
   },
   "PrivateIpAddress": {
+   "description": "The primary or secondary private IP address to associate with the Elastic IP address.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
   "/properties/Id"
  ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2/tree/master/aws-ec2-eipassociation",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::EC2::EIPAssociation"
 }

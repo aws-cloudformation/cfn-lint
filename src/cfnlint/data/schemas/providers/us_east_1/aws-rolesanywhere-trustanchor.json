@@ -1,6 +1,43 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "NotificationChannel": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "NotificationEvent": {
+   "enum": [
+    "CA_CERTIFICATE_EXPIRY",
+    "END_ENTITY_CERTIFICATE_EXPIRY"
+   ],
+   "type": "string"
+  },
+  "NotificationSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Channel": {
+     "$ref": "#/definitions/NotificationChannel"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Event": {
+     "$ref": "#/definitions/NotificationEvent"
+    },
+    "Threshold": {
+     "maximum": 360,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Enabled",
+    "Event"
+   ],
+   "type": "object"
+  },
   "Source": {
    "additionalProperties": false,
    "properties": {
@@ -107,7 +144,10 @@
     "rolesanywhere:UntagResource",
     "rolesanywhere:EnableTrustAnchor",
     "rolesanywhere:DisableTrustAnchor",
-    "rolesanywhere:UpdateTrustAnchor"
+    "rolesanywhere:UpdateTrustAnchor",
+    "rolesanywhere:GetTrustAnchor",
+    "rolesanywhere:PutNotificationSettings",
+    "rolesanywhere:ResetNotificationSettings"
    ]
   }
  },
@@ -120,6 +160,14 @@
   },
   "Name": {
    "type": "string"
+  },
+  "NotificationSettings": {
+   "items": {
+    "$ref": "#/definitions/NotificationSetting"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
   },
   "Source": {
    "$ref": "#/definitions/Source"

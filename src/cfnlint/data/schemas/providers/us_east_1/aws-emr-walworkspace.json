@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WALWorkspaceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::EMR::WALWorkspace Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "emrwal:CreateWorkspace",
+    "emrwal:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "emrwal:DeleteWorkspace"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "emrwal:ListWorkspaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "emrwal:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "emrwal:TagResource",
+    "emrwal:UntagResource",
+    "emrwal:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WALWorkspaceName"
+ ],
+ "properties": {
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WALWorkspaceName": {
+   "description": "The name of the emrwal container",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-emrwal",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EMR::WALWorkspace"
+}
