@@ -899,11 +899,53 @@
    ],
    "type": "object"
   },
+  "SAPODataMaxPageSize": {
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SAPODataMaxParallelism": {
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SAPODataPaginationConfig": {
+   "additionalProperties": false,
+   "description": "SAP Source connector page size",
+   "properties": {
+    "maxPageSize": {
+     "$ref": "#/definitions/SAPODataMaxPageSize"
+    }
+   },
+   "required": [
+    "maxPageSize"
+   ],
+   "type": "object"
+  },
+  "SAPODataParallelismConfig": {
+   "additionalProperties": false,
+   "description": "SAP Source connector parallelism factor",
+   "properties": {
+    "maxParallelism": {
+     "$ref": "#/definitions/SAPODataMaxParallelism"
+    }
+   },
+   "required": [
+    "maxParallelism"
+   ],
+   "type": "object"
+  },
   "SAPODataSourceProperties": {
    "additionalProperties": false,
    "properties": {
     "ObjectPath": {
      "$ref": "#/definitions/Object"
+    },
+    "paginationConfig": {
+     "$ref": "#/definitions/SAPODataPaginationConfig"
+    },
+    "parallelismConfig": {
+     "$ref": "#/definitions/SAPODataParallelismConfig"
     }
    },
    "required": [
@@ -1309,7 +1351,6 @@
      "type": "array"
     },
     "TaskProperties": {
-     "additionalProperties": false,
      "description": "A Map used to store task related info",
      "items": {
       "$ref": "#/definitions/TaskPropertiesObject"
@@ -1622,6 +1663,7 @@
     "appflow:TagResource",
     "appflow:UntagResource",
     "appflow:ListTagsForResource",
+    "appflow:UseConnectorProfile",
     "iam:PassRole",
     "s3:ListAllMyBuckets",
     "s3:GetBucketLocation",
@@ -1666,7 +1708,8 @@
    "description": "Flow activation status for Scheduled- and Event-triggered flows",
    "enum": [
     "Active",
-    "Suspended"
+    "Suspended",
+    "Draft"
    ],
    "type": "string"
   },
@@ -1715,5 +1758,11 @@
   "TriggerConfig"
  ],
  "sourceUrl": "https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::AppFlow::Flow"
 }

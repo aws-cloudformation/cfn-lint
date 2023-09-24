@@ -1,0 +1,162 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. . You can specify a value that is maximum of 256 Unicode characters",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::View",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateView",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteView",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListViews"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeView"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateViewMetadata",
+    "connect:UpdateViewContent",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ViewArn"
+ ],
+ "properties": {
+  "Actions": {
+   "description": "The actions of the view in an array.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "pattern": "^([\\p{L}\\p{N}_.:\\/=+\\-@]+[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*)$",
+    "type": "string"
+   },
+   "maxItems": 1000,
+   "type": "array"
+  },
+  "Description": {
+   "description": "The description of the view.",
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^([\\p{L}\\p{N}_.:\\/=+\\-@,]+[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@,]*)$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "description": "The Amazon Resource Name (ARN) of the instance.",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the view.",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{N}_.:\\/=+\\-@]+[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*)$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Template": {
+   "description": "The template of the view as JSON.",
+   "type": "object"
+  },
+  "ViewArn": {
+   "description": "The Amazon Resource Name (ARN) of the view.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/view/[-:$a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "ViewContentSha256": {
+   "description": "The view content hash.",
+   "pattern": "^[a-zA-Z0-9]{64}$",
+   "type": "string"
+  },
+  "ViewId": {
+   "description": "The view id of the view.",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\_\\-:\\/$]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ViewArn",
+  "/properties/ViewId",
+  "/properties/ViewContentSha256"
+ ],
+ "required": [
+  "InstanceArn",
+  "Template",
+  "Actions",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::View"
+}

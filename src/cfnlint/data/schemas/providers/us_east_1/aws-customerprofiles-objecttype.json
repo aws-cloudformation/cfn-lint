@@ -91,7 +91,10 @@
        "UNIQUE",
        "SECONDARY",
        "LOOKUP_ONLY",
-       "NEW_ONLY"
+       "NEW_ONLY",
+       "ASSET",
+       "CASE",
+       "ORDER"
       ],
       "type": "string"
      },
@@ -127,7 +130,8 @@
   "create": {
    "permissions": [
     "profile:GetProfileObjectType",
-    "profile:PutProfileObjectType"
+    "profile:PutProfileObjectType",
+    "profile:TagResource"
    ]
   },
   "delete": {
@@ -136,6 +140,16 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
    "permissions": [
     "profile:ListProfileObjectTypes"
    ]
@@ -219,6 +233,12 @@
    "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
    "type": "string"
   },
+  "SourceLastUpdatedTimestampFormat": {
+   "description": "The format of your sourceLastUpdatedTimestamp that was previously set up.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
   "Tags": {
    "description": "The tags (keys and values) associated with the integration.",
    "items": {
@@ -244,5 +264,12 @@
   "DomainName"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::CustomerProfiles::ObjectType"
 }
