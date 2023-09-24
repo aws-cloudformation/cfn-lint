@@ -6,54 +6,158 @@
   "/properties/Path"
  ],
  "description": "Resource Type definition for AWS::IAM::ManagedPolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreatePolicy",
+    "iam:AttachGroupPolicy",
+    "iam:AttachUserPolicy",
+    "iam:AttachRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DetachRolePolicy",
+    "iam:GetPolicy",
+    "iam:ListPolicyVersions",
+    "iam:DetachGroupPolicy",
+    "iam:DetachUserPolicy",
+    "iam:DeletePolicyVersion",
+    "iam:DeletePolicy",
+    "iam:ListEntitiesForPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetPolicy",
+    "iam:ListEntitiesForPolicy",
+    "iam:GetPolicyVersion"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:DetachRolePolicy",
+    "iam:GetPolicy",
+    "iam:ListPolicyVersions",
+    "iam:DetachGroupPolicy",
+    "iam:DetachUserPolicy",
+    "iam:CreatePolicyVersion",
+    "iam:DeletePolicyVersion",
+    "iam:AttachGroupPolicy",
+    "iam:AttachUserPolicy",
+    "iam:AttachRolePolicy"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/PolicyArn"
  ],
  "properties": {
+  "AttachmentCount": {
+   "description": "The number of entities (users, groups, and roles) that the policy is attached to.",
+   "type": "integer"
+  },
+  "CreateDate": {
+   "description": "The date and time, in ISO 8601 date-time format, when the policy was created.",
+   "type": "string"
+  },
+  "DefaultVersionId": {
+   "description": "The identifier for the version of the policy that is set as the default version.",
+   "type": "string"
+  },
   "Description": {
+   "description": "A friendly description of the policy.",
    "type": "string"
   },
   "Groups": {
+   "description": "The name (friendly name, not ARN) of the group to attach the policy to.",
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array",
    "uniqueItems": true
   },
-  "Id": {
-   "type": "string"
+  "IsAttachable": {
+   "description": "Specifies whether the policy can be attached to an IAM user, group, or role.",
+   "type": "boolean"
   },
   "ManagedPolicyName": {
+   "description": "The friendly name of the policy.",
    "type": "string"
   },
   "Path": {
+   "description": "The path for the policy.",
    "pattern": "^/(.+/)*$",
    "type": "string"
   },
+  "PermissionsBoundaryUsageCount": {
+   "description": "The number of entities (users and roles) for which the policy is used to set the permissions boundary.",
+   "type": "integer"
+  },
+  "PolicyArn": {
+   "description": "Amazon Resource Name (ARN) of the managed policy",
+   "type": "string"
+  },
   "PolicyDocument": {
+   "description": "The JSON policy document that you want to use as the content for the new policy.",
    "maxLength": 6144,
-   "type": "object"
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyId": {
+   "description": "The stable and unique string identifying the policy.",
+   "type": "string"
   },
   "Roles": {
+   "description": "The name (friendly name, not ARN) of the role to attach the policy to.",
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
+  },
+  "UpdateDate": {
+   "description": "The date and time, in ISO 8601 date-time format, when the policy was last updated.",
+   "type": "string"
   },
   "Users": {
+   "description": "The name (friendly name, not ARN) of the IAM user to attach the policy to.",
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/PolicyArn",
+  "/properties/AttachmentCount",
+  "/properties/CreateDate",
+  "/properties/DefaultVersionId",
+  "/properties/IsAttachable",
+  "/properties/PermissionsBoundaryUsageCount",
+  "/properties/PolicyId",
+  "/properties/UpdateDate"
  ],
  "required": [
   "PolicyDocument"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::IAM::ManagedPolicy"
 }
