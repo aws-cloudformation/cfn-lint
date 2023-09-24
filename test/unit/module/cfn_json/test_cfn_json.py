@@ -96,7 +96,7 @@ class TestCfnJson(BaseTestCase):
                 assert (
                     len(matches) == failures
                 ), "Expected {} failures, got {} on {}".format(
-                    failures, len(matches), values.get("filename")
+                    failures, matches, values.get("filename")
                 )
 
     def test_fail_run(self):

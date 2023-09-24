@@ -80,6 +80,25 @@
     }
    },
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The tag's key.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag's value.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
   }
  },
  "description": "Macie FindingsFilter resource schema.",
@@ -87,7 +106,8 @@
   "create": {
    "permissions": [
     "macie2:GetFindingsFilter",
-    "macie2:CreateFindingsFilter"
+    "macie2:CreateFindingsFilter",
+    "macie2:TagResource"
    ]
   },
   "delete": {
@@ -108,7 +128,9 @@
   "update": {
    "permissions": [
     "macie2:GetFindingsFilter",
-    "macie2:UpdateFindingsFilter"
+    "macie2:UpdateFindingsFilter",
+    "macie2:TagResource",
+    "macie2:UntagResource"
    ]
   }
  },
@@ -143,6 +165,14 @@
   "Position": {
    "description": "Findings filter position.",
    "type": "integer"
+  },
+  "Tags": {
+   "description": "A collection of tags associated with a resource",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -154,5 +184,12 @@
   "FindingCriteria"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Macie::FindingsFilter"
 }
