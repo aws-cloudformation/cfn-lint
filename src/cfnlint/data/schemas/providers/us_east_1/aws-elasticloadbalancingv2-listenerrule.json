@@ -158,6 +158,7 @@
      "$ref": "#/definitions/TargetGroupStickinessConfig"
     },
     "TargetGroups": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/TargetGroupTuple"
      },
@@ -171,6 +172,7 @@
    "additionalProperties": false,
    "properties": {
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -187,6 +189,7 @@
      "type": "string"
     },
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -200,6 +203,7 @@
    "additionalProperties": false,
    "properties": {
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -213,6 +217,7 @@
    "additionalProperties": false,
    "properties": {
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -226,6 +231,7 @@
    "additionalProperties": false,
    "properties": {
     "Values": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/QueryStringKeyValue"
      },
@@ -299,6 +305,7 @@
      "$ref": "#/definitions/SourceIpConfig"
     },
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -312,6 +319,7 @@
    "additionalProperties": false,
    "properties": {
     "Values": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -351,15 +359,44 @@
   "create": {
    "permissions": [
     "elasticloadbalancing:CreateRule",
-    "elasticloadbalancing:DescribeRules"
+    "elasticloadbalancing:DescribeRules",
+    "cognito-idp:DescribeUserPoolClient"
    ]
   },
   "delete": {
    "permissions": [
-    "elasticloadbalancing:DeleteRule"
+    "elasticloadbalancing:DeleteRule",
+    "elasticloadbalancing:DescribeRules"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "oneOf": [
+     {
+      "required": [
+       "ListenerArn"
+      ]
+     },
+     {
+      "required": [
+       "RuleArns"
+      ]
+     }
+    ],
+    "properties": {
+     "ListenerArn": {
+      "$ref": "resource-schema.json#/properties/ListenerArn"
+     },
+     "RuleArns": {
+      "insertionOrder": false,
+      "items": {
+       "$ref": "resource-schema.json#/properties/RuleArn"
+      },
+      "type": "array",
+      "uniqueItems": false
+     }
+    }
+   },
    "permissions": [
     "elasticloadbalancing:DescribeRules"
    ]
@@ -382,6 +419,7 @@
  ],
  "properties": {
   "Actions": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Action"
    },
@@ -389,6 +427,7 @@
    "uniqueItems": true
   },
   "Conditions": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/RuleCondition"
    },
@@ -419,6 +458,7 @@
   "Priority",
   "Conditions"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
  "taggable": false,
  "typeName": "AWS::ElasticLoadBalancingV2::ListenerRule",
  "writeOnlyProperties": [

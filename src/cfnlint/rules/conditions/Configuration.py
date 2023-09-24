@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema._validators_cfn import cfn_type
 
 
 class Configuration(CloudFormationLintRule):
@@ -15,7 +17,10 @@ class Configuration(CloudFormationLintRule):
     tags = ["conditions"]
 
     def condition(self, validator, tS, instance, schema):
-        validator = validator.evolve(
+        new_validator = validator.extend(
+            validators={
+                "type": cfn_type,
+            },
             context=validator.context.evolve(
                 functions=[
                     "Fn::And",
@@ -24,8 +29,8 @@ class Configuration(CloudFormationLintRule):
                     "Fn::Not",
                     "Condition",
                 ],
-            )
-        )
+            ),
+        )(schema={"type": "boolean"})
 
-        for err in validator.descend(instance, {"type": "boolean"}):
+        for err in new_validator.iter_errors(instance):
             yield err

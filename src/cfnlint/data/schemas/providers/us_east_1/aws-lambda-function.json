@@ -268,7 +268,7 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Lambda::Function",
+ "description": "Resource Type definition for AWS::Lambda::Function in region",
  "handlers": {
   "create": {
    "permissions": [
@@ -281,11 +281,17 @@
     "ec2:DescribeSecurityGroups",
     "ec2:DescribeSubnets",
     "ec2:DescribeVpcs",
+    "elasticfilesystem:DescribeMountTargets",
+    "kms:CreateGrant",
     "kms:Decrypt",
+    "kms:Encrypt",
+    "kms:GenerateDataKey",
     "lambda:GetCodeSigningConfig",
     "lambda:GetFunctionCodeSigningConfig",
+    "lambda:GetLayerVersion",
     "lambda:GetRuntimeManagementConfig",
-    "lambda:PutRuntimeManagementConfig"
+    "lambda:PutRuntimeManagementConfig",
+    "lambda:TagResource"
    ]
   },
   "delete": {
@@ -321,13 +327,15 @@
     "ec2:DescribeSecurityGroups",
     "ec2:DescribeSubnets",
     "ec2:DescribeVpcs",
+    "kms:CreateGrant",
     "kms:Decrypt",
+    "kms:GenerateDataKey",
+    "lambda:GetRuntimeManagementConfig",
+    "lambda:PutRuntimeManagementConfig",
     "lambda:PutFunctionCodeSigningConfig",
     "lambda:DeleteFunctionCodeSigningConfig",
     "lambda:GetCodeSigningConfig",
-    "lambda:GetFunctionCodeSigningConfig",
-    "lambda:GetRuntimeManagementConfig",
-    "lambda:PutRuntimeManagementConfig"
+    "lambda:GetFunctionCodeSigningConfig"
    ]
   }
  },
@@ -515,17 +523,26 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Arn",
   "/properties/SnapStartResponse",
   "/properties/SnapStartResponse/ApplyOn",
-  "/properties/SnapStartResponse/OptimizationStatus"
+  "/properties/SnapStartResponse/OptimizationStatus",
+  "/properties/Arn"
  ],
  "required": [
   "Code",
   "Role"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Lambda::Function",
  "writeOnlyProperties": [
+  "/properties/SnapStart",
+  "/properties/SnapStart/ApplyOn",
   "/properties/Code",
   "/properties/Code/ImageUri",
   "/properties/Code/S3Bucket",
