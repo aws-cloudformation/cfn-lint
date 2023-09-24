@@ -4,14 +4,36 @@
   "/properties/Name"
  ],
  "definitions": {
+  "ExclusionByResourceTypes": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ResourceTypes"
+   ],
+   "type": "object"
+  },
   "RecordingGroup": {
    "additionalProperties": false,
    "properties": {
     "AllSupported": {
      "type": "boolean"
     },
+    "ExclusionByResourceTypes": {
+     "$ref": "#/definitions/ExclusionByResourceTypes"
+    },
     "IncludeGlobalResourceTypes": {
      "type": "boolean"
+    },
+    "RecordingStrategy": {
+     "$ref": "#/definitions/RecordingStrategy"
     },
     "ResourceTypes": {
      "items": {
@@ -21,6 +43,18 @@
      "uniqueItems": true
     }
    },
+   "type": "object"
+  },
+  "RecordingStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "UseOnly": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "UseOnly"
+   ],
    "type": "object"
   }
  },

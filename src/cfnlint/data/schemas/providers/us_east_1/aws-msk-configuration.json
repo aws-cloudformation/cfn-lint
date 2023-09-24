@@ -6,10 +6,26 @@
  ],
  "definitions": {
   "KafkaVersionsList": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array"
+  },
+  "LatestRevision": {
+   "additionalProperties": false,
+   "properties": {
+    "CreationTime": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::MSK::Configuration",
@@ -56,6 +72,9 @@
   "KafkaVersionsList": {
    "$ref": "#/definitions/KafkaVersionsList"
   },
+  "LatestRevision": {
+   "$ref": "#/definitions/LatestRevision"
+  },
   "Name": {
    "type": "string"
   },
@@ -64,7 +83,10 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Arn"
+  "/properties/Arn",
+  "/properties/LatestRevision/CreationTime",
+  "/properties/LatestRevision/Revision",
+  "/properties/LatestRevision/Description"
  ],
  "required": [
   "ServerProperties",

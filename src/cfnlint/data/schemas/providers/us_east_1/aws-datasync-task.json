@@ -204,6 +204,140 @@
    ],
    "type": "object"
   },
+  "TaskReportConfig": {
+   "additionalProperties": false,
+   "description": "Specifies how you want to configure a task report, which provides detailed information about for your Datasync transfer.",
+   "properties": {
+    "Destination": {
+     "additionalProperties": false,
+     "description": "Specifies where DataSync uploads your task report.",
+     "properties": {
+      "S3": {
+       "additionalProperties": false,
+       "description": "Specifies the Amazon S3 bucket where DataSync uploads your task report.",
+       "properties": {
+        "BucketAccessRoleArn": {
+         "description": "Specifies the Amazon Resource Name (ARN) of the IAM policy that allows Datasync to upload a task report to your S3 bucket.",
+         "maxLength": 2048,
+         "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+         "type": "string"
+        },
+        "S3BucketArn": {
+         "description": "Specifies the ARN of the S3 bucket where Datasync uploads your report.",
+         "maxLength": 156,
+         "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+         "type": "string"
+        },
+        "Subdirectory": {
+         "description": "Specifies a bucket prefix for your report.",
+         "maxLength": 4096,
+         "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "ObjectVersionIds": {
+     "description": "Specifies whether your task report includes the new version of each object transferred into an S3 bucket, this only applies if you enable versioning on your bucket.",
+     "enum": [
+      "INCLUDE",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "OutputType": {
+     "description": "Specifies the type of task report that you want.",
+     "enum": [
+      "SUMMARY_ONLY",
+      "STANDARD"
+     ],
+     "type": "string"
+    },
+    "Overrides": {
+     "additionalProperties": false,
+     "description": "Customizes the reporting level for aspects of your task report. For example, your report might generally only include errors, but you could specify that you want a list of successes and errors just for the files that Datasync attempted to delete in your destination location.",
+     "properties": {
+      "Deleted": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to delete in your destination location. This only applies if you configure your task to delete data in the destination that isn't in the source.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Skipped": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to skip during your transfer.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Transferred": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to transfer.",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Verified": {
+       "additionalProperties": false,
+       "description": "Specifies the level of reporting for the files, objects, and directories that Datasync attempted to verify at the end of your transfer. This only applies if you configure your task to verify data during and after the transfer (which Datasync does by default)",
+       "properties": {
+        "ReportLevel": {
+         "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "ReportLevel": {
+     "description": "Specifies whether you want your task report to include only what went wrong with your transfer or a list of what succeeded and didn't.",
+     "enum": [
+      "ERRORS_ONLY",
+      "SUCCESSES_AND_ERRORS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputType"
+   ],
+   "type": "object"
+  },
   "TaskSchedule": {
    "additionalProperties": false,
    "description": "Specifies the schedule you want your task to use for repeated executions.",
@@ -241,7 +375,9 @@
     "elasticfilesystem:DescribeFileSystems",
     "elasticfilesystem:DescribeMountTargets",
     "logs:DescribeLogGroups",
-    "iam:GetRole"
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:AssumeRole"
    ]
   },
   "delete": {
@@ -275,7 +411,8 @@
     "datasync:ListTagsForResource",
     "datasync:TagResource",
     "datasync:UntagResource",
-    "logs:DescribeLogGroups"
+    "logs:DescribeLogGroups",
+    "iam:PassRole"
    ]
   }
  },
@@ -364,6 +501,9 @@
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]*:[0-9]{12}:task/task-[0-9a-f]{17}$",
    "type": "string"
+  },
+  "TaskReportConfig": {
+   "$ref": "#/definitions/TaskReportConfig"
   }
  },
  "readOnlyProperties": [

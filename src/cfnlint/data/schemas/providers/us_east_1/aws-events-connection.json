@@ -169,6 +169,7 @@
   "create": {
    "permissions": [
     "events:CreateConnection",
+    "events:DescribeConnection",
     "secretsmanager:CreateSecret",
     "secretsmanager:GetSecretValue",
     "secretsmanager:PutSecretValue",
@@ -177,7 +178,8 @@
   },
   "delete": {
    "permissions": [
-    "events:DeleteConnection"
+    "events:DeleteConnection",
+    "events:DescribeConnection"
    ]
   },
   "list": {
@@ -240,10 +242,9 @@
   "/properties/Arn",
   "/properties/SecretArn"
  ],
- "required": [
-  "AuthorizationType",
-  "AuthParameters"
- ],
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::Events::Connection",
  "writeOnlyProperties": [
   "/properties/AuthParameters"
