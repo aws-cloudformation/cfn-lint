@@ -121,6 +121,28 @@
    },
    "type": "object"
   },
+  "PrivateRegistryAccess": {
+   "additionalProperties": false,
+   "description": "An object to describe the configuration for the container service to access private container image repositories, such as Amazon Elastic Container Registry (Amazon ECR) private repositories.",
+   "properties": {
+    "EcrImagePullerRole": {
+     "additionalProperties": false,
+     "description": "An object to describe a request to activate or deactivate the role that you can use to grant an Amazon Lightsail container service access to Amazon Elastic Container Registry (Amazon ECR) private repositories.",
+     "properties": {
+      "IsActive": {
+       "description": "A Boolean value that indicates whether to activate the role.",
+       "type": "boolean"
+      },
+      "PrincipalArn": {
+       "description": "The Amazon Resource Name (ARN) of the role, if it is activated.",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "PublicDomainName": {
    "additionalProperties": false,
    "description": "The public domain name to use with the container service, such as example.com and www.example.com.",
@@ -240,6 +262,14 @@
    "description": "The power specification for the container service.",
    "type": "string"
   },
+  "PrincipalArn": {
+   "description": "The principal ARN of the container service.",
+   "type": "string"
+  },
+  "PrivateRegistryAccess": {
+   "$ref": "#/definitions/PrivateRegistryAccess",
+   "description": "A Boolean value to indicate whether the container service has access to private container image repositories, such as Amazon Elastic Container Registry (Amazon ECR) private repositories."
+  },
   "PublicDomainNames": {
    "description": "The public domain names to use with the container service, such as example.com and www.example.com.",
    "insertionOrder": false,
@@ -278,7 +308,9 @@
  },
  "readOnlyProperties": [
   "/properties/ContainerArn",
-  "/properties/Url"
+  "/properties/Url",
+  "/properties/PrincipalArn",
+  "/properties/PrivateRegistryAccess/EcrImagePullerRole/PrincipalArn"
  ],
  "required": [
   "ServiceName",
