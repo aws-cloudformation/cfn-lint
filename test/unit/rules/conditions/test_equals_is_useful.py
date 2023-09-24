@@ -2,29 +2,28 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.conditions.EqualsIsUseful import (
-    EqualsIsUseful,  # pylint: disable=E0401
+from cfnlint.rules.conditions.EqualsIsUseful import EqualsIsUseful
+from cfnlint.jsonschema import CfnTemplateValidator
+
+
+@pytest.mark.parametrize(
+    "name,instance,num_of_errors",
+    [
+        ("Equal string and integer", [1, "1"], 1),
+        ("Equal string and boolean", [True, "true"], 1),
+        ("Equal string and number", [1.0, "1.0"], 1),
+        ("Not equal string and integer", [1, "1.1"], 0),
+        ("Not equal string and boolean", [True, "True"], 0),
+        ("No error on bad type", {"true": True}, 0),
+        ("No error on bad length", ["a", "a", "a"], 0),
+    ],
 )
-
-
-class TestEqualsIsUseful(BaseRuleTestCase):
-    """Test template mapping configurations"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestEqualsIsUseful, self).setUp()
-        self.collection.register(EqualsIsUseful())
-
-    success_templates = []
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/conditions/equals_not_useful.yaml", 3
-        )
+def test_names(name, instance, num_of_errors):
+    rule = EqualsIsUseful()
+    validator = CfnTemplateValidator({})
+    assert (
+        len(list(rule.equals_is_useful(validator, {}, instance, {}))) == num_of_errors,
+        f"Expected {num_of_errors} errors for {name}",
+    )

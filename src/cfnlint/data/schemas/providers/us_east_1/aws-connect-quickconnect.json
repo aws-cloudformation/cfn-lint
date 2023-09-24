@@ -137,6 +137,21 @@
     "connect:UntagResource"
    ]
   },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListQuickConnects"
+   ]
+  },
   "read": {
    "permissions": [
     "connect:DescribeQuickConnect"
@@ -181,6 +196,15 @@
    "$ref": "#/definitions/QuickConnectConfig",
    "description": "Configuration settings for the quick connect."
   },
+  "QuickConnectType": {
+   "description": "The type of quick connect. In the Amazon Connect console, when you create a quick connect, you are prompted to assign one of the following types: Agent (USER), External (PHONE_NUMBER), or Queue (QUEUE).",
+   "enum": [
+    "PHONE_NUMBER",
+    "QUEUE",
+    "USER"
+   ],
+   "type": "string"
+  },
   "Tags": {
    "description": "One or more tags.",
    "insertionOrder": false,
@@ -193,7 +217,8 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/QuickConnectArn"
+  "/properties/QuickConnectArn",
+  "/properties/QuickConnectType"
  ],
  "required": [
   "Name",
