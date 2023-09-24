@@ -180,6 +180,9 @@
     "rds:CreateDBInstance",
     "rds:CreateDBInstanceReadReplica",
     "rds:DescribeDBInstances",
+    "rds:DescribeDBClusters",
+    "rds:DescribeDBClusterSnapshots",
+    "rds:DescribeDBInstanceAutomatedBackups",
     "rds:DescribeDBSnapshots",
     "rds:DescribeEvents",
     "rds:ModifyDBInstance",
@@ -377,8 +380,27 @@
    "description": "The Active Directory directory ID to create the DB instance in. Currently, only MySQL, Microsoft SQL Server, Oracle, and PostgreSQL DB instances can be created in an Active Directory Domain.",
    "type": "string"
   },
+  "DomainAuthSecretArn": {
+   "description": "The ARN for the Secrets Manager secret with the credentials for the user joining the domain.",
+   "type": "string"
+  },
+  "DomainDnsIps": {
+   "description": "The IPv4 DNS IP addresses of your primary and secondary Active Directory domain controllers.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DomainFqdn": {
+   "description": "The fully qualified domain name (FQDN) of an Active Directory domain.",
+   "type": "string"
+  },
   "DomainIAMRoleName": {
    "description": "Specify the name of the IAM role to be used when making API calls to the Directory Service.",
+   "type": "string"
+  },
+  "DomainOu": {
+   "description": "The Active Directory organizational unit for your DB instance to join.",
    "type": "string"
   },
   "EnableCloudwatchLogsExports": {
