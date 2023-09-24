@@ -157,6 +157,7 @@ class FnArray:
         self._max_length = max_length
         self.items: List[Scalar] = []
         self.supported_types = ["array"]
+        self.supported_functions = []
 
     def value(self, instance: Dict[str, Any]) -> Any:
         return instance.get(self.fn.name)
@@ -209,7 +210,14 @@ class FnArray:
 
         value = instance.get(self.fn.name)
         key = list(instance.keys())[0]
-        yield from self.descend(validator, value, self.schema(), key)
+
+        # with arrays we expect the value to be an array
+        value_validator = validator.evolve(
+            context=validator.context.evolve(functions=[])
+        )
+        for err in self.descend(value_validator, value, self.schema(), key):
+            err.validator = self.fn.py
+            yield err
 
         if not validator.is_type(value, "array"):
             return
@@ -425,8 +433,12 @@ class FnJoin(FnArray):
             yield err
             return
 
+        value = instance.get(self.fn.name)
+        if not validator.is_type(value, "array"):
+            return
+
         # we have to validate the second element manually
-        values = instance.get(self.fn.name)[1]
+        values = value[1]
 
         if validator.is_type(values, "array"):
             for value in values:
@@ -570,9 +582,8 @@ class FnSelect(FnArray):
 class FnIf(FnArray):
     def __init__(self) -> None:
         super().__init__("Fn::If", 3, 3)
-        s = Scalar()
-        s.supported_functions = FUNCTIONS
-        self.items.extend([s])
+        condition = Scalar()
+        self.items.extend([condition])
         self.supported_types = _all_types
 
     def if_(
@@ -720,6 +731,7 @@ class FnLength(FnArray):
     def __init__(self) -> None:
         super().__init__("Fn::Length")
         self.supported_types = ["integer"]
+        self.supported_functions = ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If", "Fn::GetAZs"]
         values = Scalar()
         values.supported_functions.extend(
             ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If"]
@@ -1036,7 +1048,6 @@ def cfn_type(
 
 cfn_validators: Dict[str, V] = {
     "additionalProperties": additionalProperties,
-    "type": cfn_type,
     "ref": Ref().ref,
     "fn_base64": FnBase64().base64,
     "fn_cidr": FnCidr().cidr,

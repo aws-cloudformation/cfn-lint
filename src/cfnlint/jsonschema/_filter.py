@@ -103,7 +103,7 @@ class FunctionFilter:
                         }
                         yield (instance, k_schema)
                         return
-                    if k.startswith("Fn::ForEach::"):
+                    if validator.is_type(k, "string") and k.startswith("Fn::ForEach::"):
                         k_py = ToPy("Fn::ForEach")
                         k_schema = {
                             k_py.py: standard_schema,
@@ -135,7 +135,3 @@ class FunctionFilter:
                 kwargs.setdefault(f.name, getattr(self, f.name))
 
         return cls(**kwargs)
-
-
-cfn_function_filter = FunctionFilter()  # type: ignore
-standard_function_filter = FunctionFilter()  # type: ignore

@@ -1,0 +1,216 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/ClusterIdentifier",
+  "/properties/ResourceOwner",
+  "/properties/SubnetGroupName"
+ ],
+ "definitions": {
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "description": "Describes a network interface.",
+   "properties": {
+    "AvailabilityZone": {
+     "description": "The Availability Zone.",
+     "type": "string"
+    },
+    "NetworkInterfaceId": {
+     "description": "The network interface identifier.",
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "description": "The IPv4 address of the network interface within the subnet.",
+     "type": "string"
+    },
+    "SubnetId": {
+     "description": "The subnet identifier.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroup": {
+   "additionalProperties": false,
+   "description": "Describes the members of a VPC security group.",
+   "properties": {
+    "Status": {
+     "description": "The status of the VPC security group.",
+     "type": "string"
+    },
+    "VpcSecurityGroupId": {
+     "description": "The identifier of the VPC security group.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for a Redshift-managed VPC endpoint.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateEndpointAccess",
+    "ec2:CreateClientVpnEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DeleteEndpointAccess",
+    "ec2:DeleteClientVpnEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeEndpointAccess",
+    "ec2:DescribeClientVpnEndpoints",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeEndpointAccess",
+    "ec2:DescribeClientVpnEndpoints",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:ModifyEndpointAccess",
+    "ec2:ModifyClientVpnEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointName"
+ ],
+ "properties": {
+  "Address": {
+   "description": "The DNS address of the endpoint.",
+   "type": "string"
+  },
+  "ClusterIdentifier": {
+   "description": "A unique identifier for the cluster. You use this identifier to refer to the cluster for any subsequent cluster operations such as deleting or modifying. All alphabetical characters must be lower case, no hypens at the end, no two consecutive hyphens. Cluster name should be unique for all clusters within an AWS account",
+   "type": "string"
+  },
+  "EndpointCreateTime": {
+   "description": "The time (UTC) that the endpoint was created.",
+   "type": "string"
+  },
+  "EndpointName": {
+   "description": "The name of the endpoint.",
+   "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,30}$",
+   "type": "string"
+  },
+  "EndpointStatus": {
+   "description": "The status of the endpoint.",
+   "type": "string"
+  },
+  "Port": {
+   "description": "The port number on which the cluster accepts incoming connections.",
+   "type": "integer"
+  },
+  "ResourceOwner": {
+   "description": "The AWS account ID of the owner of the cluster.",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "SubnetGroupName": {
+   "description": "The subnet group name where Amazon Redshift chooses to deploy the endpoint.",
+   "pattern": "^(?=^[a-zA-Z0-9-]+$).{1,255}$",
+   "type": "string"
+  },
+  "VpcEndpoint": {
+   "additionalProperties": false,
+   "description": "The connection endpoint for connecting to an Amazon Redshift cluster through the proxy.",
+   "properties": {
+    "NetworkInterfaces": {
+     "description": "One or more network interfaces of the endpoint. Also known as an interface endpoint.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NetworkInterface"
+     },
+     "type": "array"
+    },
+    "VpcEndpointId": {
+     "description": "The connection endpoint ID for connecting an Amazon Redshift cluster through the proxy.",
+     "type": "string"
+    },
+    "VpcId": {
+     "description": "The VPC identifier that the endpoint is associated.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroupIds": {
+   "description": "A list of vpc security group ids to apply to the created endpoint access.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "VpcSecurityGroups": {
+   "description": "A list of Virtual Private Cloud (VPC) security groups to be associated with the endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcSecurityGroup"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Address",
+  "/properties/EndpointStatus",
+  "/properties/EndpointCreateTime",
+  "/properties/Port",
+  "/properties/VpcSecurityGroups",
+  "/properties/VpcSecurityGroups/*/VpcSecurityGroupId",
+  "/properties/VpcSecurityGroups/*/Status",
+  "/properties/VpcEndpoint",
+  "/properties/VpcEndpoint/VpcEndpointId",
+  "/properties/VpcEndpoint/VpcId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/NetworkInterfaceId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/PrivateIpAddress",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/SubnetId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/AvailabilityZone"
+ ],
+ "required": [
+  "ClusterIdentifier",
+  "SubnetGroupName",
+  "EndpointName",
+  "VpcSecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::EndpointAccess"
+}
