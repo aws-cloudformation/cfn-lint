@@ -7,10 +7,16 @@
   "HealthEventsConfig": {
    "additionalProperties": false,
    "properties": {
+    "AvailabilityLocalHealthEventsConfig": {
+     "$ref": "#/definitions/LocalHealthEventsConfig"
+    },
     "AvailabilityScoreThreshold": {
      "maximum": 100.0,
      "minimum": 0.0,
      "type": "number"
+    },
+    "PerformanceLocalHealthEventsConfig": {
+     "$ref": "#/definitions/LocalHealthEventsConfig"
     },
     "PerformanceScoreThreshold": {
      "maximum": 100.0,
@@ -25,6 +31,29 @@
    "properties": {
     "S3Config": {
      "$ref": "#/definitions/S3Config"
+    }
+   },
+   "type": "object"
+  },
+  "LocalHealthEventsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthScoreThreshold": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "MinTrafficImpact": {
+     "maximum": 100.0,
+     "minimum": 0.0,
+     "type": "number"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
     }
    },
    "type": "object"

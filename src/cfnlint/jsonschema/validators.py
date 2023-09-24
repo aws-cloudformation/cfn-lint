@@ -14,8 +14,6 @@ from cfnlint.context import Context
 from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
 from cfnlint.jsonschema._filter import (
     FunctionFilter,
-    cfn_function_filter,
-    standard_function_filter,
 )
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
 from cfnlint.jsonschema._resolver import RefResolver
@@ -79,8 +77,6 @@ def create(
         )
 
         def __post_init__(self):
-            if self.function_filter is None:
-                self.function_filter = cfn_function_filter
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
                     self.schema,
@@ -336,11 +332,11 @@ CfnTemplateValidator = create(
         **_standard_validators,
         **_validators_cfn.cfn_validators,
     },
-    function_filter=cfn_function_filter,
+    function_filter=FunctionFilter(),
     fn_resolvers=_resolvers_cfn.fn_resolvers,
 )
 
 StandardValidator = create(
     validators=_standard_validators,
-    function_filter=standard_function_filter,
+    function_filter=FunctionFilter(),
 )

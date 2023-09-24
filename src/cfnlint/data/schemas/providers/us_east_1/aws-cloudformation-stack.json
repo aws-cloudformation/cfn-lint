@@ -1,5 +1,7 @@
 {
+ "additionalIdentifiers": [],
  "additionalProperties": false,
+ "createOnlyProperties": [],
  "definitions": {
   "Tag": {
    "additionalProperties": false,
@@ -18,22 +20,57 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::CloudFormation::Stack",
+ "description": "The AWS::CloudFormation::Stack resource nests a stack as a resource in a top-level template.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:CreateStack",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:DeleteStack"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudformation:ListStacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:GetStackPolicy",
+    "cloudformation:GetTemplate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:UpdateStack",
+    "cloudformation:UpdateTerminationProtection",
+    "cloudformation:SetStackPolicy",
+    "iam:PassRole"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/StackId"
  ],
  "properties": {
-  "Id": {
-   "type": "string"
-  },
   "NotificationARNs": {
    "items": {
     "type": "string"
    },
+   "maxItems": 5,
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "Parameters": {
+   "additionalProperties": false,
    "patternProperties": {
     "[a-zA-Z0-9]+": {
      "type": [
@@ -48,17 +85,25 @@
    },
    "type": "object"
   },
+  "StackId": {
+   "type": "string"
+  },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
    "type": "array",
    "uniqueItems": false
   },
   "TemplateURL": {
+   "maxLength": 1024,
+   "minLength": 1,
    "type": "string"
   },
   "TimeoutInMinutes": {
+   "minimum": 1,
    "type": "integer"
   }
  },
@@ -68,5 +113,15 @@
  "required": [
   "TemplateURL"
  ],
- "typeName": "AWS::CloudFormation::Stack"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFormation::Stack",
+ "writeOnlyProperties": [
+  "/properties/TemplateURL"
+ ]
 }

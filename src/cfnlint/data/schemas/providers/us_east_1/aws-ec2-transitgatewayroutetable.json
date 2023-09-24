@@ -9,9 +9,11 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "description": "The key of the associated tag key-value pair",
      "type": "string"
     },
     "Value": {
+     "description": "The value of the associated tag key-value pair",
      "type": "string"
     }
    },
@@ -23,14 +25,40 @@
   }
  },
  "description": "Resource Type definition for AWS::EC2::TransitGatewayRouteTable",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGatewayRouteTable",
+    "ec2:CreateTags",
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGatewayRouteTable",
+    "ec2:DescribeTransitGatewayRouteTables",
+    "ec2:GetTransitGatewayRouteTableAssociations",
+    "ec2:DisassociateTransitGatewayRouteTable"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/TransitGatewayRouteTableId"
  ],
  "properties": {
-  "Id": {
-   "type": "string"
-  },
   "Tags": {
+   "description": "Tags are composed of a Key/Value pair. You can use tags to categorize and track each parameter group. The tag value null is permitted.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -38,14 +66,26 @@
    "uniqueItems": false
   },
   "TransitGatewayId": {
+   "description": "The ID of the transit gateway.",
+   "type": "string"
+  },
+  "TransitGatewayRouteTableId": {
+   "description": "Transit Gateway Route Table primary identifier",
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/TransitGatewayRouteTableId"
  ],
  "required": [
   "TransitGatewayId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::TransitGatewayRouteTable"
 }

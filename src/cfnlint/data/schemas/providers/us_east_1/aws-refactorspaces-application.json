@@ -65,17 +65,65 @@
  "handlers": {
   "create": {
    "permissions": [
+    "refactor-spaces:GetApplication",
     "refactor-spaces:CreateApplication",
-    "refactor-spaces:TagResource"
+    "refactor-spaces:TagResource",
+    "ec2:CreateTags",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeInternetGateways",
+    "ec2:ModifyVpcEndpointServicePermissions",
+    "apigateway:DELETE",
+    "apigateway:GET",
+    "apigateway:PATCH",
+    "apigateway:POST",
+    "apigateway:PUT",
+    "apigateway:UpdateRestApiPolicy",
+    "apigateway:Update*",
+    "apigateway:Delete*",
+    "apigateway:Get*",
+    "apigateway:Put*",
+    "elasticloadbalancing:CreateLoadBalancer",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeTags",
+    "elasticloadbalancing:AddTags",
+    "iam:CreateServiceLinkedRole"
    ]
   },
   "delete": {
    "permissions": [
+    "refactor-spaces:GetApplication",
     "refactor-spaces:DeleteApplication",
-    "refactor-spaces:UntagResource"
+    "refactor-spaces:UntagResource",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:DeleteRoute",
+    "ec2:DeleteSecurityGroup",
+    "ec2:DeleteTransitGateway",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DeleteTags",
+    "ec2:RevokeSecurityGroupIngress",
+    "elasticloadbalancing:DeleteLoadBalancer",
+    "apigateway:Update*",
+    "apigateway:Delete*",
+    "apigateway:Get*",
+    "apigateway:Put*"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "EnvironmentIdentifier": {
+      "$ref": "resource-schema.json#/properties/EnvironmentIdentifier"
+     }
+    },
+    "required": [
+     "EnvironmentIdentifier"
+    ]
+   },
    "permissions": [
     "refactor-spaces:ListApplications",
     "refactor-spaces:ListTagsForResource"
@@ -190,6 +238,7 @@
   "Name",
   "ProxyType"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-refactor-spaces",
  "taggable": true,
  "typeName": "AWS::RefactorSpaces::Application",
  "writeOnlyProperties": [
