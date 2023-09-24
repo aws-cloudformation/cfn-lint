@@ -17,6 +17,9 @@
   "AggregationFunction": {
    "additionalProperties": false,
    "properties": {
+    "AttributeAggregationFunction": {
+     "$ref": "#/definitions/AttributeAggregationFunction"
+    },
     "CategoricalAggregationFunction": {
      "$ref": "#/definitions/CategoricalAggregationFunction"
     },
@@ -146,6 +149,18 @@
     "LARGE"
    ],
    "type": "string"
+  },
+  "AttributeAggregationFunction": {
+   "additionalProperties": false,
+   "properties": {
+    "SimpleAttributeAggregation": {
+     "$ref": "#/definitions/SimpleAttributeAggregationFunction"
+    },
+    "ValueForMultipleValues": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "AxisBinding": {
    "enum": [
@@ -1015,9 +1030,26 @@
    ],
    "type": "object"
   },
+  "ColorsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomColors": {
+     "items": {
+      "$ref": "#/definitions/CustomColor"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "ColumnConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "ColorsConfiguration": {
+     "$ref": "#/definitions/ColorsConfiguration"
+    },
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
@@ -1625,6 +1657,27 @@
    "required": [
     "URLTarget",
     "URLTemplate"
+   ],
+   "type": "object"
+  },
+  "CustomColor": {
+   "additionalProperties": false,
+   "properties": {
+    "Color": {
+     "pattern": "^#[A-F0-9]{6}$",
+     "type": "string"
+    },
+    "FieldValue": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    },
+    "SpecialValue": {
+     "$ref": "#/definitions/SpecialValue"
+    }
+   },
+   "required": [
+    "Color"
    ],
    "type": "object"
   },
@@ -8737,6 +8790,12 @@
    },
    "type": "object"
   },
+  "SimpleAttributeAggregationFunction": {
+   "enum": [
+    "UNIQUE_VALUE"
+   ],
+   "type": "string"
+  },
   "SimpleClusterMarker": {
    "additionalProperties": false,
    "properties": {
@@ -8819,6 +8878,14 @@
     }
    },
    "type": "object"
+  },
+  "SpecialValue": {
+   "enum": [
+    "EMPTY",
+    "NULL",
+    "OTHER"
+   ],
+   "type": "string"
   },
   "StringDefaultValues": {
    "additionalProperties": false,

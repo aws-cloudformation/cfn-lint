@@ -78,6 +78,11 @@
   "Arn": {
    "type": "string"
   },
+  "BypassPolicyLockoutSafetyCheck": {
+   "default": false,
+   "description": "Skips (\"bypasses\") the key policy lockout safety check. The default value is false.",
+   "type": "boolean"
+  },
   "Description": {
    "description": "A description of the AWS KMS key. Use a description that helps you to distinguish this AWS KMS key from others in the account, such as its intended use.",
    "maxLength": 8192,
@@ -96,6 +101,7 @@
    "type": "string"
   },
   "KeyPolicy": {
+   "default": "{\n    \"Version\": \"2012-10-17\",\n    \"Id\": \"key-default\",\n    \"Statement\": [\n        {\n            \"Sid\": \"Enable IAM User Permissions\",\n            \"Effect\": \"Allow\",\n            \"Principal\": {\n                \"AWS\": \"arn:<partition>:iam::<account-id>:root\"\n            },\n            \"Action\": \"kms:*\",\n            \"Resource\": \"*\"\n        }\n    ]\n}",
    "description": "The key policy that authorizes use of the AWS KMS key. The key policy must observe the following rules.",
    "type": [
     "object",
@@ -166,9 +172,6 @@
   "/properties/Arn",
   "/properties/KeyId"
  ],
- "required": [
-  "KeyPolicy"
- ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kms",
  "tagging": {
   "cloudFormationSystemTags": false,
@@ -178,6 +181,7 @@
  },
  "typeName": "AWS::KMS::Key",
  "writeOnlyProperties": [
-  "/properties/PendingWindowInDays"
+  "/properties/PendingWindowInDays",
+  "/properties/BypassPolicyLockoutSafetyCheck"
  ]
 }

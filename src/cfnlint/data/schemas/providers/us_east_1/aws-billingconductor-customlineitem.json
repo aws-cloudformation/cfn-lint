@@ -25,6 +25,9 @@
     "Flat": {
      "$ref": "#/definitions/CustomLineItemFlatChargeDetails"
     },
+    "LineItemFilters": {
+     "$ref": "#/definitions/LineItemFilters"
+    },
     "Percentage": {
      "$ref": "#/definitions/CustomLineItemPercentageChargeDetails"
     },
@@ -81,6 +84,51 @@
   "InclusiveStartBillingPeriod": {
    "pattern": "\\d{4}-(0?[1-9]|1[012])",
    "type": "string"
+  },
+  "LineItemFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "enum": [
+      "LINE_ITEM_TYPE"
+     ],
+     "type": "string"
+    },
+    "MatchOption": {
+     "enum": [
+      "NOT_EQUAL"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LineItemFilterValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Attribute",
+    "MatchOption",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "LineItemFilterValue": {
+   "enum": [
+    "SAVINGS_PLAN_NEGATION"
+   ],
+   "type": "string"
+  },
+  "LineItemFilters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LineItemFilter"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "Tag": {
    "additionalProperties": false,
