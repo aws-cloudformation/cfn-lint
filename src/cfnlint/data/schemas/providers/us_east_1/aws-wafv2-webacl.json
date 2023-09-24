@@ -5,10 +5,40 @@
   "/properties/Scope"
  ],
  "definitions": {
+  "AWSManagedRulesACFPRuleSet": {
+   "additionalProperties": false,
+   "description": "Configures how to use the Account creation fraud prevention managed rule group in the web ACL",
+   "properties": {
+    "CreationPath": {
+     "type": "string"
+    },
+    "EnableRegexInPath": {
+     "type": "boolean"
+    },
+    "RegistrationPagePath": {
+     "type": "string"
+    },
+    "RequestInspection": {
+     "$ref": "#/definitions/RequestInspectionACFP"
+    },
+    "ResponseInspection": {
+     "$ref": "#/definitions/ResponseInspection"
+    }
+   },
+   "required": [
+    "CreationPath",
+    "RegistrationPagePath",
+    "RequestInspection"
+   ],
+   "type": "object"
+  },
   "AWSManagedRulesATPRuleSet": {
    "additionalProperties": false,
    "description": "Configures how to use the Account Takeover Prevention managed rule group in the web ACL",
    "properties": {
+    "EnableRegexInPath": {
+     "type": "boolean"
+    },
     "LoginPath": {
      "type": "string"
     },
@@ -40,6 +70,9 @@
     "InspectionLevel"
    ],
    "type": "object"
+  },
+  "AddressField": {
+   "$ref": "#/definitions/FieldIdentifier"
   },
   "AllowAction": {
    "additionalProperties": false,
@@ -713,6 +746,9 @@
    "additionalProperties": false,
    "description": "ManagedRuleGroupConfig.",
    "properties": {
+    "AWSManagedRulesACFPRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesACFPRuleSet"
+    },
     "AWSManagedRulesATPRuleSet": {
      "$ref": "#/definitions/AWSManagedRulesATPRuleSet"
     },
@@ -847,6 +883,9 @@
    ],
    "type": "string"
   },
+  "PhoneNumberField": {
+   "$ref": "#/definitions/FieldIdentifier"
+  },
   "PositionalConstraint": {
    "description": "Position of the evaluation in the FieldToMatch of request.",
    "enum": [
@@ -878,7 +917,6 @@
       "$ref": "#/definitions/RateBasedStatementCustomKey"
      },
      "maxItems": 5,
-     "minItems": 1,
      "type": "array"
     },
     "ForwardedIPConfig": {
@@ -1160,6 +1198,44 @@
     "PayloadType",
     "UsernameField",
     "PasswordField"
+   ],
+   "type": "object"
+  },
+  "RequestInspectionACFP": {
+   "additionalProperties": false,
+   "description": "Configures the inspection of sign-up requests",
+   "properties": {
+    "AddressFields": {
+     "items": {
+      "$ref": "#/definitions/AddressField"
+     },
+     "type": "array"
+    },
+    "EmailField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PasswordField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PayloadType": {
+     "enum": [
+      "JSON",
+      "FORM_ENCODED"
+     ],
+     "type": "string"
+    },
+    "PhoneNumberFields": {
+     "items": {
+      "$ref": "#/definitions/PhoneNumberField"
+     },
+     "type": "array"
+    },
+    "UsernameField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "PayloadType"
    ],
    "type": "object"
   },

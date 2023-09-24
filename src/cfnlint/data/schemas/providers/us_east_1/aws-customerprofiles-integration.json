@@ -566,16 +566,38 @@
    "permissions": [
     "profile:GetIntegration",
     "profile:PutIntegration",
-    "appflow:CreateFlow"
+    "appflow:CreateFlow",
+    "app-integrations:CreateEventIntegrationAssociation",
+    "app-integrations:GetEventIntegration",
+    "events:ListTargetsByRule",
+    "events:PutRule",
+    "events:PutTargets",
+    "events:PutEvents",
+    "profile:TagResource"
    ]
   },
   "delete": {
    "permissions": [
     "profile:DeleteIntegration",
-    "appflow:DeleteFlow"
+    "appflow:DeleteFlow",
+    "app-integrations:ListEventIntegrationAssociations",
+    "app-integrations:DeleteEventIntegrationAssociation",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule",
+    "events:DeleteRule"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
    "permissions": [
     "profile:ListIntegrations"
    ]
@@ -589,6 +611,17 @@
    "permissions": [
     "profile:PutIntegration",
     "profile:GetIntegration",
+    "appflow:CreateFlow",
+    "app-integrations:GetEventIntegration",
+    "app-integrations:CreateEventIntegrationAssociation",
+    "app-integrations:ListEventIntegrationAssociations",
+    "app-integrations:DeleteEventIntegrationAssociation",
+    "events:ListTargetsByRule",
+    "events:RemoveTargets",
+    "events:DeleteRule",
+    "events:PutRule",
+    "events:PutTargets",
+    "events:PutEvents",
     "profile:UntagResource",
     "profile:TagResource"
    ]
@@ -655,6 +688,13 @@
   "DomainName"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::CustomerProfiles::Integration",
  "writeOnlyProperties": [
   "/properties/FlowDefinition"

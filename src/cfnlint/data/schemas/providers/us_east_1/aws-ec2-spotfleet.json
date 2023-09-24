@@ -110,12 +110,14 @@
        "Fn::Sub",
        "Fn::Cidr",
        "Fn::Length",
-       "Fn::ToJsonString"
+       "Fn::ToJsonString",
+       "Fn::ForEach::[a-zA-Z0-9]+"
       ]
      },
      "type": "object"
     }
    ],
+   "oneOfDescription": "Specify only one ['VirtualName', 'Ebs', 'NoDevice']",
    "properties": {
     "DeviceName": {
      "type": "string"
@@ -976,8 +978,11 @@
  "handlers": {
   "create": {
    "permissions": [
+    "iam:PassRole",
+    "ec2:CreateTags",
     "ec2:RequestSpotFleet",
-    "ec2:DescribeSpotFleetRequests"
+    "ec2:DescribeSpotFleetRequests",
+    "ec2:RunInstances"
    ]
   },
   "delete": {
@@ -1041,12 +1046,14 @@
      "Fn::Sub",
      "Fn::Cidr",
      "Fn::Length",
-     "Fn::ToJsonString"
+     "Fn::ToJsonString",
+     "Fn::ForEach::[a-zA-Z0-9]+"
     ]
    },
    "type": "object"
   }
  ],
+ "oneOfDescription": "Specify only one ['LaunchSpecifications', 'LaunchTemplateConfigs']",
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -1064,5 +1071,9 @@
  "required": [
   "SpotFleetRequestConfigData"
  ],
- "typeName": "AWS::EC2::SpotFleet"
+ "typeName": "AWS::EC2::SpotFleet",
+ "writeOnlyProperties": [
+  "/properties/SpotFleetRequestConfigData/TagSpecifications",
+  "/properties/SpotFleetRequestConfigData/LaunchSpecifications/*/NetworkInterfaces/*/Groups"
+ ]
 }
