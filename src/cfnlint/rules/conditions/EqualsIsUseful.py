@@ -28,7 +28,28 @@ class EqualsIsUseful(CloudFormationLintRule):
         if not validator.is_type(instance, "array"):
             return
 
+        if len(instance) != 2:
+            return
+
+        # testing on 2023/09/24
+        # True (boolean) != "True"
+        # True (boolean) == "true"
+        # 1 == "1"
         if json.dumps(instance[0]) == json.dumps(instance[1]):
-            yield ValidationError(f"{instance!r} will always return {True!r}")
-        elif isinstance(instance[0], str) and isinstance(instance[1], str):
-            yield ValidationError(f"{instance!r} will always return {False!r}")
+            yield ValidationError(
+                f"{instance!r} will always return {True!r} or {False!r}"
+            )
+            return
+        try:
+            first = instance[0]
+            second = instance[1]
+            if validator.is_type(first, "boolean"):
+                first = "true" if first else "false"
+            if validator.is_type(second, "boolean"):
+                first = "true" if first else "false"
+            if str(first) == str(second):
+                yield ValidationError(
+                    f"{instance!r} will always return {True!r} or {False!r}"
+                )
+        except:
+            pass

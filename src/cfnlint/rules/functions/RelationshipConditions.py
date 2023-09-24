@@ -32,6 +32,8 @@ class RelationshipConditions(CloudFormationLintRule):
         for ref_obj in ref_objs:
             value = ref_obj[-1]
             if value not in PSEUDOPARAMS:
+                if not isinstance(value, str):
+                    continue
                 scenarios = cfn.is_resource_available(ref_obj, value)
                 for scenario in scenarios:
                     # pylint: disable=consider-using-f-string

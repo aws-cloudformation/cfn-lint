@@ -338,6 +338,7 @@ def not_(
 def oneOf(
     validator: Validator, oneOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    description = schema.get("oneOfDescription")
     subschemas = enumerate(oneOf)
     all_errors = []
     for index, subschema in subschemas:
@@ -348,7 +349,7 @@ def oneOf(
         all_errors.extend(errs)
     else:
         yield ValidationError(
-            f"{instance!r} is not valid under any of the given schemas",
+            description or f"{instance!r} is not valid under any of the given schemas",
             context=all_errors,
         )
 
@@ -360,7 +361,9 @@ def oneOf(
     if more_valid:
         more_valid.append(first_valid)
         reprs = ", ".join(repr(schema) for schema in more_valid)
-        yield ValidationError(f"{instance!r} is valid under each of {reprs}")
+        yield ValidationError(
+            description or f"{instance!r} is valid under each of {reprs}"
+        )
 
 
 def pattern(
@@ -382,6 +385,8 @@ def patternProperties(
 
     for pattern, subschema in patternProperties.items():
         for k, v in instance.items():
+            if not validator.is_type(k, "string"):
+                continue
             if re.search(pattern, k):
                 yield from validator.descend(
                     v,
