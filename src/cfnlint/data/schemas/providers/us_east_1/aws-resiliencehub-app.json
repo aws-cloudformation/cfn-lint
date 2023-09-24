@@ -4,6 +4,71 @@
   "/properties/Name"
  ],
  "definitions": {
+  "EventSubscription": {
+   "additionalProperties": false,
+   "description": "Indicates an event you would like to subscribe and get notification for.",
+   "properties": {
+    "EventType": {
+     "description": "The type of event you would like to subscribe and get notification for.",
+     "enum": [
+      "ScheduledAssessmentFailure",
+      "DriftDetected"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "description": "Unique name to identify an event subscription.",
+     "maxLength": 256,
+     "type": "string"
+    },
+    "SnsTopicArn": {
+     "description": "Amazon Resource Name (ARN) of the Amazon Simple Notification Service topic.",
+     "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "EventType"
+   ],
+   "type": "object"
+  },
+  "IamRoleArn": {
+   "pattern": "arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::[0-9]{12}:role\\/(([\\u0021-\\u007E]+\\u002F){1,511})?[A-Za-z0-9+=,.@_/-]{1,64}$",
+   "type": "string"
+  },
+  "PermissionModel": {
+   "additionalProperties": false,
+   "description": "Defines the roles and credentials that AWS Resilience Hub would use while creating the application, importing its resources, and running an assessment.",
+   "properties": {
+    "CrossAccountRoleArns": {
+     "description": "Defines a list of role Amazon Resource Names (ARNs) to be used in other accounts. These ARNs are used for querying purposes while importing resources and assessing your application.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/IamRoleArn"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "InvokerRoleName": {
+     "description": "Existing AWS IAM role name in the primary AWS account that will be assumed by AWS Resilience Hub Service Principle to obtain a read-only access to your application resources while running an assessment.",
+     "pattern": "((\\u002F[\\u0021-\\u007E]+\\u002F){1,511})?[A-Za-z0-9+=,.@_/-]{1,64}",
+     "type": "string"
+    },
+    "Type": {
+     "description": "Defines how AWS Resilience Hub scans your resources. It can scan for the resources by using a pre-existing role in your AWS account, or by using the credentials of the current IAM user.",
+     "enum": [
+      "LegacyIAMUser",
+      "RoleBased"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
   "PhysicalResourceId": {
    "additionalProperties": false,
    "properties": {
@@ -92,12 +157,13 @@
     "eks:DescribeCluster",
     "elasticfilesystem:DescribeFileSystems",
     "elasticloadbalancing:DescribeLoadBalancers",
-    "lambda:GetFunction",
+    "lambda:GetFunction*",
     "rds:Describe*",
     "dynamodb:Describe*",
     "sqs:GetQueueAttributes",
     "sns:GetTopicAttributes",
     "route53:List*",
+    "iam:PassRole",
     "resiliencehub:*"
    ]
   },
@@ -135,12 +201,13 @@
     "eks:DescribeCluster",
     "elasticfilesystem:DescribeFileSystems",
     "elasticloadbalancing:DescribeLoadBalancers",
-    "lambda:GetFunction",
+    "lambda:GetFunction*",
     "rds:Describe*",
     "dynamodb:Describe*",
     "sqs:GetQueueAttributes",
     "sns:GetTopicAttributes",
     "route53:List*",
+    "iam:PassRole",
     "resiliencehub:*"
    ]
   }
@@ -164,7 +231,7 @@
   },
   "AppTemplateBody": {
    "description": "A string containing full ResilienceHub app template body.",
-   "maxLength": 5000,
+   "maxLength": 409600,
    "minLength": 0,
    "pattern": "^[\\w\\s:,-\\.'\\/{}\\[\\]:\"]+$",
    "type": "string"
@@ -175,10 +242,31 @@
    "minLength": 0,
    "type": "string"
   },
+  "DriftStatus": {
+   "description": "Indicates if compliance drifts (deviations) were detected while running an assessment for your application.",
+   "enum": [
+    "NotChecked",
+    "NotDetected",
+    "Detected"
+   ],
+   "type": "string"
+  },
+  "EventSubscriptions": {
+   "description": "The list of events you would like to subscribe and get notification for.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventSubscription"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
   "Name": {
    "description": "Name of the app.",
    "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
    "type": "string"
+  },
+  "PermissionModel": {
+   "$ref": "#/definitions/PermissionModel"
   },
   "ResiliencyPolicyArn": {
    "description": "Amazon Resource Name (ARN) of the Resiliency Policy.",
@@ -199,7 +287,8 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/AppArn"
+  "/properties/AppArn",
+  "/properties/DriftStatus"
  ],
  "required": [
   "Name",
