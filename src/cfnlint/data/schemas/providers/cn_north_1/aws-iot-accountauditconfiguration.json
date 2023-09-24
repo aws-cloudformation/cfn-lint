@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "definitions": {
+  "AuditCheckConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for a specific audit check.",
+   "properties": {
+    "Enabled": {
+     "description": "True if the check is enabled.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AuditCheckConfigurations": {
+   "additionalProperties": false,
+   "description": "Specifies which audit checks are enabled and disabled for this account.",
+   "properties": {
+    "AuthenticatedCognitoRoleOverlyPermissiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "CaCertificateExpiringCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "CaCertificateKeyQualityCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "ConflictingClientIdsCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "DeviceCertificateExpiringCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "DeviceCertificateKeyQualityCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "DeviceCertificateSharedCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "IntermediateCaRevokedForActiveDeviceCertificatesCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "IoTPolicyPotentialMisConfigurationCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "IotPolicyOverlyPermissiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "IotRoleAliasAllowsAccessToUnusedServicesCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "IotRoleAliasOverlyPermissiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "LoggingDisabledCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "RevokedCaCertificateStillActiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "RevokedDeviceCertificateStillActiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    },
+    "UnauthenticatedCognitoRoleOverlyPermissiveCheck": {
+     "$ref": "#/definitions/AuditCheckConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AuditNotificationTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "description": "True if notifications to the target are enabled.",
+     "type": "boolean"
+    },
+    "RoleArn": {
+     "description": "The ARN of the role that grants permission to send notifications to the target.",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "TargetArn": {
+     "description": "The ARN of the target (SNS topic) to which audit notifications are sent.",
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AuditNotificationTargetConfigurations": {
+   "additionalProperties": false,
+   "description": "Information about the targets to which audit notifications are sent.",
+   "properties": {
+    "Sns": {
+     "$ref": "#/definitions/AuditNotificationTarget"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Configures the Device Defender audit settings for this account. Settings include how audit notifications are sent and which audit checks are enabled or disabled.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:UpdateAccountAuditConfiguration",
+    "iot:DescribeAccountAuditConfiguration",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeAccountAuditConfiguration",
+    "iot:DeleteAccountAuditConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:DescribeAccountAuditConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeAccountAuditConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateAccountAuditConfiguration",
+    "iot:DescribeAccountAuditConfiguration",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "Your 12-digit account ID (used as the primary identifier for the CloudFormation resource).",
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "AuditCheckConfigurations": {
+   "$ref": "#/definitions/AuditCheckConfigurations"
+  },
+  "AuditNotificationTargetConfigurations": {
+   "$ref": "#/definitions/AuditNotificationTargetConfigurations"
+  },
+  "RoleArn": {
+   "description": "The ARN of the role that grants permission to AWS IoT to access information about your devices, policies, certificates and other items as required when performing an audit.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  }
+ },
+ "required": [
+  "AccountId",
+  "AuditCheckConfigurations",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::IoT::AccountAuditConfiguration"
+}

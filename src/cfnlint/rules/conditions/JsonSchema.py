@@ -54,12 +54,12 @@ class JsonSchema(BaseJsonSchema):
             cfn=cfn,
         )
 
-        if cfn_validator.context.transforms.has_language_extensions_transform:
+        if cfn_validator.context.transforms.has_language_extensions_transform():
             schema = self.schema.copy()
             schema["patternProperties"]["^[a-zA-Z0-9\$\{\}]{1,255}$"] = {
                 "awsType": "condition"
             }
-            cfn_validator.evolve(schema=self.schema)
+            cfn_validator.evolve(schema=schema)
 
         matches.extend(
             self.json_schema_validate(cfn_validator, conditions, ["Conditions"])

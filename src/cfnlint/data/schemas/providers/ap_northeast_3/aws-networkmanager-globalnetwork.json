@@ -1,0 +1,105 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a global network resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::NetworkManager::GlobalNetwork type specifies a global network of the user's account",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks",
+    "networkmanager:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "networkmanager:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the global network.",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The date and time that the global network was created.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the global network.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the global network.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the global network.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "typeName": "AWS::NetworkManager::GlobalNetwork"
+}

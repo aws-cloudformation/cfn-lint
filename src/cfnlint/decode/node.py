@@ -101,6 +101,8 @@ def create_dict_node_class(cls):
 
         def get(self, key, default=None):
             """Override the default get"""
+            if not isinstance(key, str):
+                raise ValueError(f"Key {key!r} must be a string")
             if isinstance(default, dict):
                 default = dict_node(default, self.start_mark, self.end_mark)
             return super().get(key, default)
