@@ -65,6 +65,34 @@
    ],
    "type": "string"
   },
+  "AllowedAnalyses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedAnalysis"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
+  "AllowedAnalysis": {
+   "maxLength": 200,
+   "minLength": 0,
+   "pattern": "(ANY_QUERY|arn:[\\w]{3}:cleanrooms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:membership/[\\d\\w-]+/analysistemplate/[\\d\\w-]+)",
+   "type": "string"
+  },
+  "AllowedAnalysisProvider": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "\\d+",
+   "type": "string"
+  },
+  "AllowedAnalysisProviders": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AllowedAnalysisProvider"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
   "AnalysisMethod": {
    "enum": [
     "DIRECT_QUERY"
@@ -154,6 +182,21 @@
    "pattern": "^[a-z0-9_](([a-z0-9_ ]+-)*([a-z0-9_ ]+))?$",
    "type": "string"
   },
+  "AnalysisRuleCustom": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedAnalyses": {
+     "$ref": "#/definitions/AllowedAnalyses"
+    },
+    "AllowedAnalysisProviders": {
+     "$ref": "#/definitions/AllowedAnalysisProviders"
+    }
+   },
+   "required": [
+    "AllowedAnalyses"
+   ],
+   "type": "object"
+  },
   "AnalysisRuleList": {
    "additionalProperties": false,
    "properties": {
@@ -227,13 +270,27 @@
      ],
      "title": "Aggregation",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Custom": {
+       "$ref": "#/definitions/AnalysisRuleCustom"
+      }
+     },
+     "required": [
+      "Custom"
+     ],
+     "title": "Custom",
+     "type": "object"
     }
    ]
   },
   "ConfiguredTableAnalysisRuleType": {
    "enum": [
     "AGGREGATION",
-    "LIST"
+    "LIST",
+    "CUSTOM"
    ],
    "type": "string"
   },

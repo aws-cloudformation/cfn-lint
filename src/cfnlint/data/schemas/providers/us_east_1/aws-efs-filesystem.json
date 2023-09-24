@@ -1,12 +1,15 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/KmsKeyId",
+  "/properties/AvailabilityZoneName",
   "/properties/Encrypted",
-  "/properties/PerformanceMode",
-  "/properties/AvailabilityZoneName"
+  "/properties/KmsKeyId",
+  "/properties/PerformanceMode"
  ],
  "definitions": {
+  "Arn": {
+   "type": "string"
+  },
   "BackupPolicy": {
    "additionalProperties": false,
    "properties": {
@@ -54,6 +57,39 @@
     }
    },
    "type": "object"
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/ReplicationDestination"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ReplicationDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZoneName": {
+     "type": "string"
+    },
+    "FileSystemId": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::EFS::FileSystem",
@@ -61,7 +97,9 @@
   "create": {
    "permissions": [
     "elasticfilesystem:CreateFileSystem",
+    "elasticfilesystem:DescribeReplicationConfigurations",
     "elasticfilesystem:TagResource",
+    "elasticfilesystem:CreateReplicationConfiguration",
     "elasticfilesystem:DescribeFileSystems",
     "elasticfilesystem:PutBackupPolicy",
     "elasticfilesystem:PutFileSystemPolicy",
@@ -74,7 +112,9 @@
   "delete": {
    "permissions": [
     "elasticfilesystem:DescribeFileSystems",
-    "elasticfilesystem:DeleteFileSystem"
+    "elasticfilesystem:DeleteFileSystem",
+    "elasticfilesystem:DeleteReplicationConfiguration",
+    "elasticfilesystem:DescribeReplicationConfigurations"
    ]
   },
   "list": {
@@ -82,7 +122,8 @@
     "elasticfilesystem:DescribeBackupPolicy",
     "elasticfilesystem:DescribeFileSystemPolicy",
     "elasticfilesystem:DescribeFileSystems",
-    "elasticfilesystem:DescribeLifecycleConfiguration"
+    "elasticfilesystem:DescribeLifecycleConfiguration",
+    "elasticfilesystem:DescribeReplicationConfigurations"
    ]
   },
   "read": {
@@ -90,17 +131,21 @@
     "elasticfilesystem:DescribeBackupPolicy",
     "elasticfilesystem:DescribeFileSystemPolicy",
     "elasticfilesystem:DescribeFileSystems",
-    "elasticfilesystem:DescribeLifecycleConfiguration"
+    "elasticfilesystem:DescribeLifecycleConfiguration",
+    "elasticfilesystem:DescribeReplicationConfigurations"
    ]
   },
   "update": {
    "permissions": [
+    "elasticfilesystem:CreateReplicationConfiguration",
     "elasticfilesystem:DeleteFileSystemPolicy",
     "elasticfilesystem:DescribeBackupPolicy",
     "elasticfilesystem:DescribeFileSystemPolicy",
     "elasticfilesystem:DescribeFileSystems",
     "elasticfilesystem:DescribeLifecycleConfiguration",
+    "elasticfilesystem:DescribeReplicationConfigurations",
     "elasticfilesystem:DeleteTags",
+    "elasticfilesystem:DeleteReplicationConfiguration",
     "elasticfilesystem:ListTagsForResource",
     "elasticfilesystem:PutBackupPolicy",
     "elasticfilesystem:PutFileSystemPolicy",
@@ -119,7 +164,7 @@
  ],
  "properties": {
   "Arn": {
-   "type": "string"
+   "$ref": "#/definitions/Arn"
   },
   "AvailabilityZoneName": {
    "type": "string"
@@ -167,6 +212,9 @@
   "ProvisionedThroughputInMibps": {
    "type": "number"
   },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  },
   "ThroughputMode": {
    "enum": [
     "bursting",
@@ -180,8 +228,8 @@
   "/properties/KmsKeyId": "\"arn:aws[-a-z]*:kms:[a-z0-9-]+:[0-9]{12}:key/[a-zA-Z0-9-]+\""
  },
  "readOnlyProperties": [
-  "/properties/FileSystemId",
-  "/properties/Arn"
+  "/properties/Arn",
+  "/properties/FileSystemId"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
@@ -193,6 +241,8 @@
  },
  "typeName": "AWS::EFS::FileSystem",
  "writeOnlyProperties": [
-  "/properties/BypassPolicyLockoutSafetyCheck"
+  "/properties/BypassPolicyLockoutSafetyCheck",
+  "/properties/ReplicationConfiguration/Destinations/0/AvailabilityZoneName",
+  "/properties/ReplicationConfiguration/Destinations/0/KmsKeyId"
  ]
 }

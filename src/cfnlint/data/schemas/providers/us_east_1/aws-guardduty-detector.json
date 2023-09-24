@@ -16,6 +16,59 @@
    },
    "type": "object"
   },
+  "CFNFeatureAdditionalConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Status": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CFNFeatureConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalConfiguration": {
+     "items": {
+      "$ref": "#/definitions/CFNFeatureAdditionalConfiguration"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "enum": [
+      "FLOW_LOGS",
+      "CLOUD_TRAIL",
+      "DNS_LOGS",
+      "S3_DATA_EVENTS",
+      "EKS_AUDIT_LOGS",
+      "EBS_MALWARE_PROTECTION",
+      "RDS_LOGIN_EVENTS",
+      "LAMBDA_NETWORK_LOGS",
+      "EKS_RUNTIME_MONITORING"
+     ],
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Status"
+   ],
+   "type": "object"
+  },
   "CFNKubernetesAuditLogsConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -23,6 +76,9 @@
      "type": "boolean"
     }
    },
+   "required": [
+    "Enable"
+   ],
    "type": "object"
   },
   "CFNKubernetesConfiguration": {
@@ -32,6 +88,9 @@
      "$ref": "#/definitions/CFNKubernetesAuditLogsConfiguration"
     }
    },
+   "required": [
+    "AuditLogs"
+   ],
    "type": "object"
   },
   "CFNMalwareProtectionConfiguration": {
@@ -50,6 +109,9 @@
      "type": "boolean"
     }
    },
+   "required": [
+    "Enable"
+   ],
    "type": "object"
   },
   "CFNScanEc2InstanceWithFindingsConfiguration": {
@@ -61,55 +123,64 @@
    },
    "type": "object"
   },
-  "FeatureAdditionalConfiguration": {
-   "additionalProperties": false,
-   "properties": {
-    "Name": {
-     "type": "string"
-    },
-    "Status": {
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "FeatureConfigurations": {
-   "additionalProperties": false,
-   "properties": {
-    "AdditionalConfiguration": {
-     "items": {
-      "$ref": "#/definitions/FeatureAdditionalConfiguration"
-     },
-     "type": "array",
-     "uniqueItems": false
-    },
-    "Name": {
-     "type": "string"
-    },
-    "Status": {
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "Tag": {
+  "TagItem": {
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 0,
      "type": "string"
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::GuardDuty::Detector",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateDetector",
+    "guardduty:GetDetector",
+    "guardduty:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:ListDetectors",
+    "guardduty:DeleteDetector"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "guardduty:ListDetectors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetDetector"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:UpdateDetector",
+    "guardduty:GetDetector",
+    "guardduty:ListDetectors",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -122,10 +193,9 @@
   },
   "Features": {
    "items": {
-    "$ref": "#/definitions/FeatureConfigurations"
+    "$ref": "#/definitions/CFNFeatureConfiguration"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "FindingPublishingFrequency": {
    "enum": [
@@ -140,10 +210,9 @@
   },
   "Tags": {
    "items": {
-    "$ref": "#/definitions/Tag"
+    "$ref": "#/definitions/TagItem"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -152,5 +221,11 @@
  "required": [
   "Enable"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::GuardDuty::Detector"
 }

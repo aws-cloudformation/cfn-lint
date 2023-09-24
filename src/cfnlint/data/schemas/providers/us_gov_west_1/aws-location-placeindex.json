@@ -1,0 +1,116 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexName",
+  "/properties/DataSource",
+  "/properties/DataSourceConfiguration",
+  "/properties/Description",
+  "/properties/PricingPlan"
+ ],
+ "definitions": {
+  "DataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntendedUse": {
+     "$ref": "#/definitions/IntendedUse"
+    }
+   },
+   "type": "object"
+  },
+  "IntendedUse": {
+   "enum": [
+    "SingleUse",
+    "Storage"
+   ],
+   "type": "string"
+  },
+  "PricingPlan": {
+   "enum": [
+    "RequestBasedUsage"
+   ],
+   "type": "string"
+  },
+  "iso8601UTC": {
+   "description": "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::Location::PlaceIndex Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:CreatePlaceIndex",
+    "geo:DescribePlaceIndex"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DeletePlaceIndex",
+    "geo:DescribePlaceIndex"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListPlaceIndexes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:DescribePlaceIndex"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IndexName"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "DataSource": {
+   "type": "string"
+  },
+  "DataSourceConfiguration": {
+   "$ref": "#/definitions/DataSourceConfiguration"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IndexArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "IndexName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  },
+  "PricingPlan": {
+   "$ref": "#/definitions/PricingPlan"
+  },
+  "UpdateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreateTime",
+  "/properties/IndexArn",
+  "/properties/Arn",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "IndexName",
+  "DataSource"
+ ],
+ "typeName": "AWS::Location::PlaceIndex"
+}
