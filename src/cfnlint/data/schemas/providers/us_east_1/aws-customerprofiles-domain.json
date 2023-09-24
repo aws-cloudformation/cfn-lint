@@ -30,7 +30,8 @@
  "handlers": {
   "create": {
    "permissions": [
-    "profile:CreateDomain"
+    "profile:CreateDomain",
+    "profile:TagResource"
    ]
   },
   "delete": {
@@ -39,6 +40,16 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
    "permissions": [
     "profile:ListDomains"
    ]
@@ -50,6 +61,7 @@
   },
   "update": {
    "permissions": [
+    "profile:GetDomain",
     "profile:UpdateDomain",
     "profile:UntagResource",
     "profile:TagResource"
@@ -111,5 +123,12 @@
   "DomainName"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::CustomerProfiles::Domain"
 }
