@@ -4,6 +4,35 @@
   "/properties/CollaborationIdentifier"
  ],
  "definitions": {
+  "MembershipProtectedQueryOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/ProtectedQueryS3OutputConfiguration"
+    }
+   },
+   "required": [
+    "S3"
+   ],
+   "type": "object"
+  },
+  "MembershipProtectedQueryResultConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputConfiguration": {
+     "$ref": "#/definitions/MembershipProtectedQueryOutputConfiguration"
+    },
+    "RoleArn": {
+     "maxLength": 512,
+     "minLength": 32,
+     "type": "string"
+    }
+   },
+   "required": [
+    "OutputConfiguration"
+   ],
+   "type": "object"
+  },
   "MembershipQueryLogStatus": {
    "enum": [
     "ENABLED",
@@ -16,6 +45,34 @@
     "ACTIVE",
     "REMOVED",
     "COLLABORATION_DELETED"
+   ],
+   "type": "string"
+  },
+  "ProtectedQueryS3OutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "type": "string"
+    },
+    "ResultFormat": {
+     "$ref": "#/definitions/ResultFormat"
+    }
+   },
+   "required": [
+    "ResultFormat",
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "ResultFormat": {
+   "enum": [
+    "CSV",
+    "PARQUET"
    ],
    "type": "string"
   },
@@ -57,7 +114,8 @@
     "cleanrooms:GetMembership",
     "cleanrooms:ListTagsForResource",
     "cleanrooms:TagResource",
-    "cleanrooms:ListMemberships"
+    "cleanrooms:ListMemberships",
+    "iam:PassRole"
    ]
   },
   "delete": {
@@ -102,7 +160,8 @@
     "logs:CreateLogGroup",
     "cleanrooms:ListTagsForResource",
     "cleanrooms:TagResource",
-    "cleanrooms:UntagResource"
+    "cleanrooms:UntagResource",
+    "iam:PassRole"
    ]
   }
  },
@@ -129,6 +188,9 @@
    "minLength": 36,
    "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
    "type": "string"
+  },
+  "DefaultResultConfiguration": {
+   "$ref": "#/definitions/MembershipProtectedQueryResultConfiguration"
   },
   "MembershipIdentifier": {
    "maxLength": 36,
