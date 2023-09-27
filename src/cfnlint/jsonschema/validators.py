@@ -12,9 +12,7 @@ from typing import Any, Dict, Iterator
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
-from cfnlint.jsonschema._filter import (
-    FunctionFilter,
-)
+from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
 from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._types import TypeChecker, cfn_type_checker

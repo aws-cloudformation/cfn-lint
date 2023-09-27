@@ -49,6 +49,16 @@ class RuleRefFunction(CloudFormationLintRule):
     tags = []
 
 
+class RuleFnIfFunction(CloudFormationLintRule):
+    """Test Rule"""
+
+    id = "E3AAAA"
+    shortdesc = "Test Rule for Fn::IF function"
+    description = "Test Rule"
+    source_url = ""
+    tags = []
+
+
 class TestJsonSchema(BaseRuleTestCase):
     """Test Json Size"""
 
@@ -112,11 +122,13 @@ class TestJsonSchema(BaseRuleTestCase):
             "E3XXX": RuleWithFunction(),
             "E3YYY": RuleWithOutFunction(),
             "E3ZZZ": RuleRefFunction(),
+            "E3AAAA": RuleFnIfFunction(),
         }
         self.rule.rule_set = {
             "required": "E3XXX",
             "type": "E3YYY",
             "ref": "E3ZZZ",
+            "fn_if": "E3AAAA",
         }
 
         self.cfn = Template("", self.template, ["us-east-1"])
@@ -188,7 +200,7 @@ class TestJsonSchema(BaseRuleTestCase):
             self.build_result(
                 "E3YYY",
                 "'string' is not of type 'array'",
-                ["Resources", "Table", "Properties", "E", "Ref"],
+                ["Resources", "Table", "Properties", "E"],
             ),
         ]
 
@@ -205,7 +217,7 @@ class TestJsonSchema(BaseRuleTestCase):
 
         expected = [
             self.build_result(
-                "E3YYY",
+                "E3AAAA",
                 "'string' is not of type 'array'",
                 ["Resources", "Table", "Properties", "E", "Fn::If", 1],
             ),
