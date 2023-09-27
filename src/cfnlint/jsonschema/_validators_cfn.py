@@ -110,6 +110,12 @@ class Fn(Scalar):
             err.message = f"{err.message} when {self.fn.name!r} is resolved"
             yield err
 
+    def _resolve_errors(self, errs: ValidationResult) -> ValidationResult:
+        for err in errs:
+            if err.validator not in cfn_validators:
+                err.validator = self.fn.py
+            yield err
+
     def descend(
         self,
         validator: Validator,
@@ -120,10 +126,7 @@ class Fn(Scalar):
         validator = validator.evolve(
             context=validator.context.evolve(path=self.fn.name)
         )
-        for err in validator.descend(instance, schema, path):
-            if err.validator not in cfn_validators:
-                err.validator = self.fn.py
-            yield err
+        yield from self._resolve_errors(validator.descend(instance, schema, path))
 
     def iter_errors(
         self,
@@ -145,9 +148,9 @@ class Fn(Scalar):
 
         key = list(instance.keys())[0]
         value = instance.get(self.fn.name)
-        for err in validator.descend(value, self.schema(validator, instance), key):
-            err.validator = self.fn.py
-            yield err
+        yield from self._resolve_errors(
+            validator.descend(value, self.schema(validator, instance), key)
+        )
 
 
 class FnArray:
@@ -157,7 +160,7 @@ class FnArray:
         self._max_length = max_length
         self.items: List[Scalar] = []
         self.supported_types = ["array"]
-        self.supported_functions = []
+        self.supported_functions: List[str] = []
 
     def value(self, instance: Dict[str, Any]) -> Any:
         return instance.get(self.fn.name)
@@ -182,6 +185,12 @@ class FnArray:
             schema["maxItems"] = self._max_length
         return schema
 
+    def _resolve_errors(self, errs: ValidationResult) -> ValidationResult:
+        for err in errs:
+            if err.validator not in cfn_validators:
+                err.validator = self.fn.py
+            yield err
+
     def descend(
         self,
         validator: Validator,
@@ -189,10 +198,7 @@ class FnArray:
         schema: Any,
         path: str | int | None = None,
     ) -> ValidationResult:
-        for err in validator.descend(instance, schema, path):
-            if err.validator not in cfn_validators:
-                err.validator = self.fn.py
-            yield err
+        yield from self._resolve_errors(validator.descend(instance, schema, path))
 
     def iter_errors(
         self,
@@ -201,10 +207,13 @@ class FnArray:
         instance: Any,
         schema: Any,
     ) -> ValidationResult:
+        # validate that the function supports the
+        # types required by the schema
         yield from _validate_fn_output_types(
             validator, s, instance, self.supported_types
         )
 
+        # safety check to make sure this is an object
         if not validator.is_type(instance, "object"):
             return
 
@@ -215,17 +224,17 @@ class FnArray:
         value_validator = validator.evolve(
             context=validator.context.evolve(functions=[])
         )
-        for err in self.descend(value_validator, value, self.schema(), key):
-            err.validator = self.fn.py
-            yield err
+        yield from self.descend(value_validator, value, self.schema(), key)
 
         if not validator.is_type(value, "array"):
             return
         for i in range(0, self._max_length):
             try:
-                for err in self.items[i].iter_errors(validator, s, value[i], schema):
-                    err.path.extendleft([i, key])
+                for err in self._resolve_errors(
+                    self.items[i].iter_errors(validator, s, value[i], schema)
+                ):
                     err.validator = self.fn.py
+                    err.path.extendleft([i, key])
                     yield err
             except (IndexError, StopIteration):
                 pass
@@ -288,7 +297,9 @@ class FnGetAtt(Fn):
             ],
         }
         self.validator_resource = Scalar()
+        self.validator_resource.supported_functions = []
         self.validator_attribute = Scalar()
+        self.validator_attribute.supported_functions = ["Ref"]
         self.supported_types = _all_types
 
     def get_att(
@@ -318,13 +329,24 @@ class FnGetAtt(Fn):
             yield err
             return
 
+        for err in self._resolve_errors(
+            self.validator_resource.iter_errors(validator, s, value[0], schema)
+        ):
+            yield err
+            return
+        for err in self._resolve_errors(
+            self.validator_attribute.iter_errors(validator, s, value[1], schema)
+        ):
+            yield err
+            return
+
         if not (
             validator.is_type(value[0], "string")
             and validator.is_type(value[1], "string")
         ):
             return
         if all(
-            not (bool(re.match(each, value[1])))
+            not (bool(re.fullmatch(each, value[1])))
             for each in validator.context.resources[value[0]].get_atts
         ):
             yield ValidationError(
@@ -731,7 +753,13 @@ class FnLength(FnArray):
     def __init__(self) -> None:
         super().__init__("Fn::Length")
         self.supported_types = ["integer"]
-        self.supported_functions = ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If", "Fn::GetAZs"]
+        self.supported_functions = [
+            "Ref",
+            "Fn::FindInMap",
+            "Fn::Split",
+            "Fn::If",
+            "Fn::GetAZs",
+        ]
         values = Scalar()
         values.supported_functions.extend(
             ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If"]
