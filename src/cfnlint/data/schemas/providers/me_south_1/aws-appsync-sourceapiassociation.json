@@ -1,0 +1,167 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SourceApiIdentifier",
+   "/properties/MergedApiIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceApiIdentifier",
+  "/properties/MergedApiIdentifier"
+ ],
+ "definitions": {
+  "SourceApiAssociationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MergeType": {
+     "description": "Configuration of the merged behavior for the association. For example when it could be auto or has to be manual.",
+     "enum": [
+      "AUTO_MERGE",
+      "MANUAL_MERGE"
+     ],
+     "type": "string"
+    }
+   }
+  }
+ },
+ "description": "Resource Type definition for AWS::AppSync::SourceApiAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appsync:AssociateSourceGraphqlApi",
+    "appsync:AssociateMergedGraphqlApi"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appsync:GetSourceApiAssociation",
+    "appsync:DisassociateSourceGraphqlApi",
+    "appsync:DisassociateMergedGraphqlApi"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MergedApiIdentifier": {
+      "$ref": "resource-schema.json#/properties/MergedApiIdentifier"
+     },
+     "SourceApiIdentifier": {
+      "$ref": "resource-schema.json#/properties/SourceApiIdentifier"
+     }
+    },
+    "required": [
+     "SourceApiIdentifier",
+     "MergedApiIdentifier"
+    ]
+   },
+   "permissions": [
+    "appsync:ListSourceApiAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appsync:GetSourceApiAssociation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appsync:GetSourceApiAssociation",
+    "appsync:UpdateSourceApiAssociation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationArn"
+ ],
+ "properties": {
+  "AssociationArn": {
+   "description": "ARN of the SourceApiAssociation.",
+   "type": "string"
+  },
+  "AssociationId": {
+   "description": "Id of the SourceApiAssociation.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of the SourceApiAssociation.",
+   "type": "string"
+  },
+  "LastSuccessfulMergeDate": {
+   "description": "Date of last schema successful merge.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "MergedApiArn": {
+   "description": "ARN of the Merged API in the association.",
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "MergedApiId": {
+   "description": "GraphQLApiId of the Merged API in the association.",
+   "type": "string"
+  },
+  "MergedApiIdentifier": {
+   "description": "Identifier of the Merged GraphQLApi to associate. It could be either GraphQLApi ApiId or ARN",
+   "type": "string"
+  },
+  "SourceApiArn": {
+   "description": "ARN of the source API in the association.",
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SourceApiAssociationConfig": {
+   "$ref": "#/definitions/SourceApiAssociationConfig",
+   "description": "Customized configuration for SourceApiAssociation."
+  },
+  "SourceApiAssociationStatus": {
+   "description": "Current status of SourceApiAssociation.",
+   "enum": [
+    "MERGE_SCHEDULED",
+    "MERGE_FAILED",
+    "MERGE_SUCCESS",
+    "MERGE_IN_PROGRESS",
+    "AUTO_MERGE_SCHEDULE_FAILED",
+    "DELETION_SCHEDULED",
+    "DELETION_IN_PROGRESS",
+    "DELETION_FAILED"
+   ],
+   "type": "string"
+  },
+  "SourceApiAssociationStatusDetail": {
+   "description": "Current SourceApiAssociation status details.",
+   "type": "string"
+  },
+  "SourceApiId": {
+   "description": "GraphQLApiId of the source API in the association.",
+   "type": "string"
+  },
+  "SourceApiIdentifier": {
+   "description": "Identifier of the Source GraphQLApi to associate. It could be either GraphQLApi ApiId or ARN",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId",
+  "/properties/AssociationArn",
+  "/properties/SourceApiId",
+  "/properties/SourceApiArn",
+  "/properties/MergedApiId",
+  "/properties/MergedApiArn",
+  "/properties/SourceApiAssociationStatus",
+  "/properties/SourceApiAssociationStatusDetail",
+  "/properties/LastSuccessfulMergeDate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appsync",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::SourceApiAssociation",
+ "writeOnlyProperties": [
+  "/properties/SourceApiIdentifier",
+  "/properties/MergedApiIdentifier"
+ ]
+}
