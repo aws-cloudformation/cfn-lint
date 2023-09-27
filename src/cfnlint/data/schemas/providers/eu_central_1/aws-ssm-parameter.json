@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "description": "Resource Type definition for AWS::SSM::Parameter",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:PutParameter",
+    "ssm:AddTagsToResource",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeleteParameter"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:DescribeParameters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:GetParameters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:PutParameter",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 5
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AllowedPattern": {
+   "description": "The regular expression used to validate the parameter value.",
+   "type": "string"
+  },
+  "DataType": {
+   "description": "The corresponding DataType of the parameter.",
+   "enum": [
+    "text",
+    "aws:ec2:image"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "description": "The information about the parameter.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the parameter.",
+   "type": "string"
+  },
+  "Policies": {
+   "description": "The policies attached to the parameter.",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tier": {
+   "description": "The corresponding tier of the parameter.",
+   "enum": [
+    "Standard",
+    "Advanced",
+    "Intelligent-Tiering"
+   ],
+   "type": "string"
+  },
+  "Type": {
+   "description": "The type of the parameter.",
+   "enum": [
+    "String",
+    "StringList",
+    "SecureString"
+   ],
+   "type": "string"
+  },
+  "Value": {
+   "description": "The value associated with the parameter.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Value",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::Parameter",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Description",
+  "/properties/Tier",
+  "/properties/AllowedPattern",
+  "/properties/Policies"
+ ]
+}
