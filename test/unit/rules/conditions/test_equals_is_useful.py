@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 import pytest
 
-from cfnlint.rules.conditions.EqualsIsUseful import EqualsIsUseful
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.conditions.EqualsIsUseful import EqualsIsUseful
 
 
 @pytest.mark.parametrize(
