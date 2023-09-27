@@ -6,17 +6,22 @@
  "definitions": {
   "BodyS3Location": {
    "additionalProperties": false,
+   "description": "The ``BodyS3Location`` property specifies an S3 location from which to import an OpenAPI definition. Supported only for HTTP APIs.",
    "properties": {
     "Bucket": {
+     "description": "The S3 bucket that contains the OpenAPI definition to import. Required if you specify a ``BodyS3Location`` for an API.",
      "type": "string"
     },
     "Etag": {
+     "description": "The Etag of the S3 object.",
      "type": "string"
     },
     "Key": {
+     "description": "The key of the S3 object. Required if you specify a ``BodyS3Location`` for an API.",
      "type": "string"
     },
     "Version": {
+     "description": "The version of the S3 object.",
      "type": "string"
     }
    },
@@ -24,11 +29,14 @@
   },
   "Cors": {
    "additionalProperties": false,
+   "description": "The ``Cors`` property specifies a CORS configuration for an API. Supported only for HTTP APIs. See [Configuring CORS](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html) for more information.",
    "properties": {
     "AllowCredentials": {
+     "description": "Specifies whether credentials are included in the CORS request. Supported only for HTTP APIs.",
      "type": "boolean"
     },
     "AllowHeaders": {
+     "description": "Represents a collection of allowed headers. Supported only for HTTP APIs.",
      "items": {
       "type": "string"
      },
@@ -36,6 +44,7 @@
      "uniqueItems": false
     },
     "AllowMethods": {
+     "description": "Represents a collection of allowed HTTP methods. Supported only for HTTP APIs.",
      "items": {
       "type": "string"
      },
@@ -43,6 +52,7 @@
      "uniqueItems": false
     },
     "AllowOrigins": {
+     "description": "Represents a collection of allowed origins. Supported only for HTTP APIs.",
      "items": {
       "type": "string"
      },
@@ -50,6 +60,7 @@
      "uniqueItems": false
     },
     "ExposeHeaders": {
+     "description": "Represents a collection of exposed headers. Supported only for HTTP APIs.",
      "items": {
       "type": "string"
      },
@@ -57,13 +68,14 @@
      "uniqueItems": false
     },
     "MaxAge": {
+     "description": "The number of seconds that the browser should cache preflight request results. Supported only for HTTP APIs.",
      "type": "integer"
     }
    },
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::ApiGatewayV2::Api",
+ "description": "The ``AWS::ApiGatewayV2::Api`` resource creates an API. WebSocket APIs and HTTP APIs are supported. For more information about WebSocket APIs, see [About WebSocket APIs in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-overview.html) in the *API Gateway Developer Guide*. For more information about HTTP APIs, see [HTTP APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html) in the *API Gateway Developer Guide.*",
  "handlers": {
   "create": {
    "permissions": [
@@ -112,50 +124,64 @@
    "type": "string"
   },
   "ApiKeySelectionExpression": {
+   "description": "An API key selection expression. Supported only for WebSocket APIs. See [API Key Selection Expressions](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions).",
    "type": "string"
   },
   "BasePath": {
+   "description": "Specifies how to interpret the base path of the API during import. Valid values are ``ignore``, ``prepend``, and ``split``. The default value is ``ignore``. To learn more, see [Set the OpenAPI basePath Property](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-import-api-basePath.html). Supported only for HTTP APIs.",
    "type": "string"
   },
   "Body": {
+   "description": "The OpenAPI definition. Supported only for HTTP APIs. To import an HTTP API, you must specify a ``Body`` or ``BodyS3Location``. If you specify a ``Body`` or ``BodyS3Location``, don't specify CloudFormation resources such as ``AWS::ApiGatewayV2::Authorizer`` or ``AWS::ApiGatewayV2::Route``. API Gateway doesn't support the combination of OpenAPI and CloudFormation resources.",
    "type": "object"
   },
   "BodyS3Location": {
-   "$ref": "#/definitions/BodyS3Location"
+   "$ref": "#/definitions/BodyS3Location",
+   "description": "The S3 location of an OpenAPI definition. Supported only for HTTP APIs. To import an HTTP API, you must specify a ``Body`` or ``BodyS3Location``. If you specify a ``Body`` or ``BodyS3Location``, don't specify CloudFormation resources such as ``AWS::ApiGatewayV2::Authorizer`` or ``AWS::ApiGatewayV2::Route``. API Gateway doesn't support the combination of OpenAPI and CloudFormation resources."
   },
   "CorsConfiguration": {
-   "$ref": "#/definitions/Cors"
+   "$ref": "#/definitions/Cors",
+   "description": "A CORS configuration. Supported only for HTTP APIs. See [Configuring CORS](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html) for more information."
   },
   "CredentialsArn": {
+   "description": "This property is part of quick create. It specifies the credentials required for the integration, if any. For a Lambda integration, three options are available. To specify an IAM Role for API Gateway to assume, use the role's Amazon Resource Name (ARN). To require that the caller's identity be passed through from the request, specify ``arn:aws:iam::*:user/*``. To use resource-based permissions on supported AWS services, specify ``null``. Currently, this property is not used for HTTP integrations. Supported only for HTTP APIs.",
    "type": "string"
   },
   "Description": {
+   "description": "The description of the API.",
    "type": "string"
   },
   "DisableExecuteApiEndpoint": {
+   "description": "Specifies whether clients can invoke your API by using the default ``execute-api`` endpoint. By default, clients can invoke your API with the default https://{api_id}.execute-api.{region}.amazonaws.com endpoint. To require that clients use a custom domain name to invoke your API, disable the default endpoint.",
    "type": "boolean"
   },
   "DisableSchemaValidation": {
+   "description": "Avoid validating models when creating a deployment. Supported only for WebSocket APIs.",
    "type": "boolean"
   },
   "FailOnWarnings": {
+   "description": "Specifies whether to rollback the API creation when a warning is encountered. By default, API creation continues if a warning is encountered.",
    "type": "boolean"
   },
   "Name": {
+   "description": "The name of the API. Required unless you specify an OpenAPI definition for ``Body`` or ``S3BodyLocation``.",
    "type": "string"
   },
   "ProtocolType": {
+   "description": "The API protocol. Valid values are ``WEBSOCKET`` or ``HTTP``. Required unless you specify an OpenAPI definition for ``Body`` or ``S3BodyLocation``.",
    "type": "string"
   },
   "RouteKey": {
+   "description": "This property is part of quick create. If you don't specify a ``routeKey``, a default route of ``$default`` is created. The ``$default`` route acts as a catch-all for any request made to your API, for a particular stage. The ``$default`` route key can't be modified. You can add routes after creating the API, and you can update the route keys of additional routes. Supported only for HTTP APIs.",
    "type": "string"
   },
   "RouteSelectionExpression": {
+   "description": "The route selection expression for the API. For HTTP APIs, the ``routeSelectionExpression`` must be ``${request.method} ${request.path}``. If not provided, this will be the default for HTTP APIs. This property is required for WebSocket APIs.",
    "type": "string"
   },
   "Tags": {
    "additionalProperties": false,
-   "description": "This resource type use map for Tags, suggest to use List of Tag",
+   "description": "The collection of tags. Each tag element is associated with a given resource.",
    "patternProperties": {
     ".*": {
      "type": "string"
@@ -164,9 +190,11 @@
    "type": "object"
   },
   "Target": {
+   "description": "This property is part of quick create. Quick create produces an API with an integration, a default catch-all route, and a default stage which is configured to automatically deploy changes. For HTTP integrations, specify a fully qualified URL. For Lambda integrations, specify a function ARN. The type of the integration will be HTTP_PROXY or AWS_PROXY, respectively. Supported only for HTTP APIs.",
    "type": "string"
   },
   "Version": {
+   "description": "A version identifier for the API.",
    "type": "string"
   }
  },

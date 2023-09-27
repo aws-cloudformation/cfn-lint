@@ -23,5 +23,6 @@ class Value(CloudFormationLintRule):
         )
 
         for err in validator.descend(instance, {"type": "string"}):
-            err.rule = self
+            if not err.validator.startswith("fn"):
+                err.rule = self
             yield err
