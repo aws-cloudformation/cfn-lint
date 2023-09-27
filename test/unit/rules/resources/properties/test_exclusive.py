@@ -16,6 +16,9 @@ class TestPropertyExclusive(BaseRuleTestCase):
         """Setup"""
         super(TestPropertyExclusive, self).setUp()
         self.collection.register(Exclusive())
+        self.success_templates = [
+            "test/fixtures/templates/good/resources/properties/exclusive.yaml"
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

@@ -40,7 +40,7 @@ class Exclusive(CloudFormationLintRule):
                     for prop in obj:
                         if prop == k:
                             for excl_property in exclusions[prop]:
-                                if excl_property in obj:
+                                if obj.get(excl_property):
                                     if property_set["Scenario"] is None:
                                         message = "Property {0} should NOT exist with {1} for {2}"
                                         matches.append(
