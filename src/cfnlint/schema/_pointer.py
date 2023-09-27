@@ -81,4 +81,13 @@ class SchemaPointer:
                     return resolve_pointer(self.obj, f"{ref}/{part}")
                 except KeyError as ke:
                     raise ke
+            if obj.get("oneOf"):
+                for oneOf in obj.get("oneOf"):
+                    print(oneOf, part)
+                    try:
+                        return self.walk(oneOf, part)
+                    except KeyError:
+                        pass
+                else:
+                    raise KeyError(f"No oneOf matches for {part}")
             raise e
