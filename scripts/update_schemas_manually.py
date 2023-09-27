@@ -31,7 +31,9 @@ def make_only_one(props: Sequence[str]) -> Dict[str, Any]:
     return dependencies
 
 
-def make_only_one_required_with_description(props: Sequence[str]) -> [Dict[str, Any]]:
+def make_only_one_required_with_description(
+    props: Sequence[str],
+) -> Dict[str, Any]:
     return {
         "oneOfDescription": f"Specify only one {props!r}",
         "oneOf": make_only_one_required(props),
