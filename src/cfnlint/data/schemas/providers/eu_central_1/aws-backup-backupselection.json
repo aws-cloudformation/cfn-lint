@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BackupSelection",
+  "/properties/BackupPlanId"
+ ],
+ "definitions": {
+  "BackupSelectionResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "additionalProperties": false,
+     "properties": {
+      "StringEquals": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/ConditionParameter"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "StringLike": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/ConditionParameter"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "StringNotEquals": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/ConditionParameter"
+       },
+       "type": "array",
+       "uniqueItems": false
+      },
+      "StringNotLike": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/ConditionParameter"
+       },
+       "type": "array",
+       "uniqueItems": false
+      }
+     },
+     "type": "object"
+    },
+    "IamRoleArn": {
+     "awsType": "IamRoleArn",
+     "type": "string"
+    },
+    "ListOfTags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConditionResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NotResources": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Resources": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SelectionName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SelectionName",
+    "IamRoleArn"
+   ],
+   "type": "object"
+  },
+  "ConditionParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionKey": {
+     "type": "string"
+    },
+    "ConditionValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConditionResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionKey": {
+     "type": "string"
+    },
+    "ConditionType": {
+     "type": "string"
+    },
+    "ConditionValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConditionValue",
+    "ConditionKey",
+    "ConditionType"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Backup::BackupSelection",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "backup:CreateBackupSelection",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "backup:GetBackupSelection",
+    "backup:DeleteBackupSelection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "backup:ListBackupSelections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "backup:GetBackupSelection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "BackupPlanId": {
+   "type": "string"
+  },
+  "BackupSelection": {
+   "$ref": "#/definitions/BackupSelectionResourceType"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SelectionId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SelectionId",
+  "/properties/Id"
+ ],
+ "required": [
+  "BackupSelection",
+  "BackupPlanId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Backup::BackupSelection"
+}
