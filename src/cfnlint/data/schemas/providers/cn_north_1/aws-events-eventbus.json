@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::Events::EventBus",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:CreateEventBus",
+    "events:DescribeEventBus",
+    "events:PutPermission",
+    "events:ListTagsForResource",
+    "events:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:DeleteEventBus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListEventBuses",
+    "events:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:TagResource",
+    "events:UntagResource",
+    "events:PutPermission",
+    "events:DescribeEventBus"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) for the event bus.",
+   "type": "string"
+  },
+  "EventSourceName": {
+   "description": "If you are creating a partner event bus, this specifies the partner event source that the new event bus will be matched with.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the event bus.",
+   "type": "string"
+  },
+  "Policy": {
+   "description": "A JSON string that describes the permission policy statement for the event bus.",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "description": "Any tags assigned to the event bus.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Events::EventBus",
+ "writeOnlyProperties": [
+  "/properties/EventSourceName"
+ ]
+}
