@@ -6,3 +6,46 @@ Resources:
       CidrIp: !Ref AWS::NoValue
       IpProtocol: "-1"
       GroupId: sg-abc1234567
+  Alarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${AWS::StackName}-ALB-5XX-Percentage"
+      ActionsEnabled: true
+      OKActions: []
+      AlarmActions: []
+      InsufficientDataActions: []
+      Dimensions: []
+      EvaluationPeriods: 15
+      DatapointsToAlarm: 3
+      Threshold: 5
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      Metrics:
+        - Id: e1
+          Label: ALB 5XX Percentage
+          ReturnData: true
+          Expression: (m2/(m1+m2+m3+0.001))*100
+        - Id: m1
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: RequestCount
+            Period: 60
+            Stat: Sum
+        - Id: m2
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_ELB_5XX_Count
+            Period: 60
+            Stat: Sum
+        - Id: m3
+          ReturnData: false
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_ELB_4XX_Count
+            Period: 60
+            Stat: Sum
