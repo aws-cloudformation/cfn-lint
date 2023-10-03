@@ -1,3 +1,9 @@
+### v0.80.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `142.0.0` (pull #[2889](https://github.com/aws-cloudformation/cfn-lint/pull/2889))
+###### Fixes
+- Update rule [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2520) to allow for empty lists (pull #[2891](https://github.com/aws-cloudformation/cfn-lint/pull/2891))
+
 ### v0.80.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `141.0.0` (pull #[2879](https://github.com/aws-cloudformation/cfn-lint/pull/2879))
