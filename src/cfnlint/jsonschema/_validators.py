@@ -31,6 +31,7 @@ def additionalProperties(
         return
 
     extras = set(find_additional_properties(validator, instance, schema))
+    print(extras)
     if validator.is_type(aP, "object"):
         for extra in extras:
             yield from validator.descend(instance[extra], aP, path=extra)
