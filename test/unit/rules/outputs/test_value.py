@@ -3,25 +3,27 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
 
 
-class TestOutputValue(BaseRuleTestCase):
-    """Test template parameter configurations"""
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        ("foo", 0),
+        (1.0, 0),
+        (1, 0),
+        (True, 0),
+        (["foo"], 1),
+        ({"foo": "bar"}, 1),
+    ],
+)
+def test_output_value(input, expected):
+    rule = Value()
+    validator = CfnTemplateValidator()
 
-    def setUp(self):
-        """Setup"""
-        super(TestOutputValue, self).setUp()
-        self.collection.register(Value())
+    results = list(rule.outputvalue(validator, {}, input, {}))
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/outputs/configuration.yaml", 2
-        )
+    assert len(results) == expected, f"Expected {expected} results, got {results}"
