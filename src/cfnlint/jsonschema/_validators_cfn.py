@@ -23,9 +23,11 @@ _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 def additionalProperties(
     validator: Validator, aP: Any, instance: Any, schema: Any
 ) -> ValidationResult:
+    print(aP, instance)
     for err in validators_standard.additionalProperties(
         validator, aP, instance, schema
     ):
+        print(err)
         if len(err.path) > 0:
             if any(
                 re.fullmatch(fn, str(err.path[0])) for fn in validator.context.functions
@@ -222,7 +224,7 @@ class FnArray:
 
         # with arrays we expect the value to be an array
         value_validator = validator.evolve(
-            context=validator.context.evolve(functions=[])
+            context=validator.context.evolve(functions=self.supported_functions)
         )
         yield from self.descend(value_validator, value, self.schema(), key)
 
@@ -306,7 +308,7 @@ class FnGetAtt(Fn):
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         if validator.context.transforms.has_language_extensions_transform():
-            self.supported_functions.append("Ref")
+            self.validator_resource.supported_functions.append("Ref")
 
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
@@ -354,6 +356,27 @@ class FnGetAtt(Fn):
                     f"{value[1]!r} is not one of "
                     f"{validator.context.resources[value[0]].get_atts!r}"
                 ),
+                validator=self.fn.py,
+                path=deque([self.fn.name, 1]),
+            )
+            return
+
+        # validate the GetAtt type
+        tS = ensure_list(s.get("type"))
+        if any(type in tS for type in _singular_types):
+            types = _singular_types
+        else:
+            types = ["array"]
+
+        if not any(
+            type in types
+            for type in ensure_list(
+                validator.context.resources[value[0]].get_atts[value[1]].type
+            )
+        ):
+            reprs = ", ".join(repr(type) for type in tS)
+            yield ValidationError(
+                f"{instance!r} is not of type {reprs}",
                 validator=self.fn.py,
                 path=deque([self.fn.name, 1]),
             )
@@ -522,7 +545,7 @@ class _FindInMapDefault(Scalar):
             "types": ["object"],
             "properties": {
                 "DefaultValue": {
-                    "type": ["string", "array", "integer", "boolean"],
+                    "type": _singular_types,
                 }
             },
             "additionalProperties": False,
@@ -651,6 +674,7 @@ class FnSub(Fn):
             "Ref",
             "Fn::ToJsonString",
         ]
+        self.sub_parameter_types = ["string", "integer", "number", "boolean"]
 
     def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
         params = re.findall(r"\${([^}]+)}", instance)
@@ -663,7 +687,19 @@ class FnSub(Fn):
                 [name, attr] = param.split(".", 1)
                 if name in validator.context.resources:
                     if attr in validator.context.resources[name].get_atts:
-                        continue
+                        tS = ensure_list(
+                            validator.context.resources[name].get_atts[attr].type
+                        )
+                        if not any(type in tS for type in self.sub_parameter_types):
+                            reprs = ", ".join(
+                                repr(type) for type in self.sub_parameter_types
+                            )
+                            yield ValidationError(
+                                message=f"{param!r} is not of type {reprs}",
+                                validator=self.fn.py,
+                                path=deque([self.fn.name]),
+                            )
+                            continue
                     valid_params = [
                         f"{name}.{attr}"
                         for attr in list(
@@ -672,15 +708,15 @@ class FnSub(Fn):
                     ]
                 else:
                     valid_params = list(validator.context.resources.keys())
-            elif param in validator.context.refs:
-                continue
             else:
                 valid_params = validator.context.refs
-            yield ValidationError(
-                message=f"{param!r} is not one of {valid_params!r}",
-                validator=self.fn.py,
-                path=deque([self.fn.name]),
-            )
+
+            if param not in valid_params:
+                yield ValidationError(
+                    message=f"{param!r} is not one of {valid_params!r}",
+                    validator=self.fn.py,
+                    path=deque([self.fn.name]),
+                )
 
     def sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
@@ -709,9 +745,9 @@ class FnSub(Fn):
                 keys.append(k)
                 for err in self.validator_var.iter_errors(
                     validator,
-                    s,
+                    True,
                     v,
-                    schema,
+                    {"type": "string"},
                 ):
                     err.path.appendleft([k, 1, self.fn.name])
                     yield err
@@ -1013,8 +1049,6 @@ class Condition(Fn):
 #####
 # Type checks
 #####
-
-
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:
     if tS in ["object", "array"]:
         return validator.is_type(instance, tS)
