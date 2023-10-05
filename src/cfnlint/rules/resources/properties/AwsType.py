@@ -20,6 +20,7 @@ class AwsType(CloudFormationLintRule):
         self.child_rules = {
             "W3010": None,
             "E3510": None,
+            "E3511": None,
         }
 
         self.types = {
