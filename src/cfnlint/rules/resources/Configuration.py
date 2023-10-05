@@ -31,6 +31,27 @@ class Configuration(BaseJsonSchema):
         self.validators = {
             "awsType": self.awsType,
         }
+        self.rule_set = {
+            "fn_base64": "E1021",
+            "fn_cidr": "E1012",
+            "fn_findinmap": "E1011",
+            "fn_foreach": "E1032",
+            "fn_getatt": "E1010",
+            "fn_getaz": "E1015",
+            "fn_if": "E1028",
+            "fn_importvalue": "E1015",
+            "fn_join": "E1022",
+            "fn_length": "E1030",
+            "fn_select": "E1017",
+            "fn_split": "E1018",
+            "fn_sub": "E1019",
+            "fn_tojsonstring": "E1031",
+        }
+        self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self.child_rules["E3009"] = None
+        self.types = {
+            "CfnInit": "E3009",
+        }
 
     def initialize(self, cfn):
         super().initialize(cfn)
@@ -39,6 +60,18 @@ class Configuration(BaseJsonSchema):
 
     # pylint: disable=unused-argument
     def awsType(self, validator, iT, instance, schema):
+        if validator.is_type(iT, "string") and iT.startswith("CfnInit"):
+            rule = self.child_rules.get(self.types.get("CfnInit", ""))
+            if not rule:
+                return
+
+            if hasattr(rule, iT.lower()) and callable(getattr(rule, iT.lower())):
+                validate = getattr(rule, iT.lower())
+                for err in validate(validator, iT, instance, schema):
+                    yield err
+
+            return
+
         resource_type = instance.get("Type")
         if not validator.is_type(resource_type, "string"):
             return
@@ -62,37 +95,6 @@ class Configuration(BaseJsonSchema):
                     f"Resource type `{resource_type}` does not exist in '{region}'"
                 )
 
-    # pylint: disable=unused-argument
-    def _check_resource(self, validator, resources):
-        """Check Resource"""
-        matches = []
-        for e in validator.iter_errors(instance=resources):
-            kwargs = {}
-            e_path = ["Resources"] + list(e.path)
-            if len(e.path) > 0:
-                e_path_override = getattr(e, "path_override", None)
-                if e_path_override:
-                    e_path = list(e.path_override)
-                else:
-                    key = e.path[-1]
-                    if hasattr(key, "start_mark"):
-                        kwargs["location"] = (
-                            key.start_mark.line,
-                            key.start_mark.column,
-                            key.end_mark.line,
-                            key.end_mark.column,
-                        )
-
-            matches.append(
-                RuleMatch(
-                    e_path,
-                    e.message,
-                    **kwargs,
-                )
-            )
-
-        return matches
-
     def match(self, cfn):
         matches = []
 
@@ -102,6 +104,7 @@ class Configuration(BaseJsonSchema):
             self.schema,
             context=create_context_for_resources(cfn, cfn.regions[0]),
         )
-        matches.extend(self._check_resource(validator, resources))
+
+        matches.extend(self.json_schema_validate(validator, resources, ["Resources"]))
 
         return matches

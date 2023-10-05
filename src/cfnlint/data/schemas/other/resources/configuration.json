@@ -1,6 +1,46 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "CloudFormationInitConfig": {
+   "properties": {
+    "config": {
+     "properties": {
+      "commands": {
+       "awsType": "CfnInitCommand"
+      },
+      "files": {
+       "awsType": "CfnInitFiles"
+      },
+      "groups": {
+       "awsType": "CfnInitGroups"
+      },
+      "packages": {
+       "awsType": "CfnInitPackages"
+      },
+      "services": {
+       "awsType": "CfnInitServices"
+      },
+      "sources": {
+       "awsType": "CfnInitSources"
+      },
+      "users": {
+       "awsType": "CfnInitUsers"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Metadata": {
+   "additionalProperties": true,
+   "properties": {
+    "AWS::CloudFormation::Init": {
+     "$ref": "#/definitions/CloudFormationInitConfig"
+    }
+   },
+   "type": "object"
+  },
   "ResourceConfiguration": {
    "additionalProperties": false,
    "awsType": true,
@@ -58,7 +98,7 @@
      ]
     },
     "Metadata": {
-     "type": "object"
+     "$ref": "#/definitions/Metadata"
     },
     "Properties": {
      "awsType": "resourceProperties"
