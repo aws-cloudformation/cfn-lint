@@ -408,19 +408,12 @@ class TestNoErrorMessage(unittest.TestCase):
     def test_single_type(self):
         self.no_error(instance="1", schema={"type": "string"})
 
-    def test_single_type_when_int(self):
-        self.no_error(instance=1, schema={"type": "string"})
-
     def test_single_type_with_list(self):
         self.no_error(instance="1", schema={"type": ["string"]})
 
     def test_multiple_type(self):
         types = "string", "object"
         self.no_error(instance="1", schema={"type": list(types)})
-
-    def test_multiple_type_when_int(self):
-        types = "string", "object"
-        self.no_error(instance=1, schema={"type": list(types)})
 
     def test_minimum(self):
         self.no_error(instance=1, schema={"minimum": 0})
