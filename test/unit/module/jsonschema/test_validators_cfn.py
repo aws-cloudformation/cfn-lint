@@ -9,8 +9,9 @@ from typing import List, Tuple
 import pytest
 
 from cfnlint.context import Context
-from cfnlint.context.context import Resource, Transforms
+from cfnlint.context.context import Parameter, Resource, Transforms
 from cfnlint.helpers import FUNCTIONS, REGIONS
+from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -36,7 +37,8 @@ _T = namedtuple("_T", ["name", "instance", "schema", "errors", "cfn_response"])
 
 class Base(unittest.TestCase):
     def message_errors(self, name, instance, errors, schema, **kwargs):
-        cls = kwargs.pop("cls", CfnTemplateValidator(schema=schema))
+        cfn_validator = CfnTemplateValidator({}).extend(validators={"type": cfn_type})
+        cls = kwargs.pop("cls", cfn_validator(schema=schema))
         validator = cls.evolve(**kwargs)
         i_errors = list(validator.iter_errors(instance))
         self.assertEqual(
@@ -186,6 +188,13 @@ def message_transform_errors(name, instance, schema, errors, **kwargs):
                         },
                         "us-east-1",
                     ),
+                },
+                parameters={
+                    "MyParameter": Parameter(
+                        {
+                            "Type": "string",
+                        }
+                    )
                 },
                 transforms=Transforms(["AWS::LanguageExtensions"]),
             ),
@@ -853,7 +862,7 @@ def test_functions(name, instance, schema, errors, cfn_response):
         ),
         (
             "Valid GetAtt with a Ref",
-            {"Fn::GetAtt": [{"Ref": "MyResource"}, {"Ref": "MyResource"}]},
+            {"Fn::GetAtt": [{"Ref": "MyParameter"}, {"Ref": "MyResource"}]},
             {"type": "string"},
             [],
             [],
