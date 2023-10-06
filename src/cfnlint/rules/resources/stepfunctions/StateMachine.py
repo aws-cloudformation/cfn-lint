@@ -68,6 +68,8 @@ class StateMachine(CloudFormationLintRule):
                 "Retry",
                 "Catch",
                 "Parameters",
+                "ToleratedFailurePercentage",
+                "ItemBatcher",
             ],
             "Choice": ["Choices", "Default"],
             "Wait": ["Seconds", "Timestamp", "SecondsPath", "TimestampPath"],
