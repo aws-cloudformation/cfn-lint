@@ -1,3 +1,12 @@
+### v0.81.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `143.0.0` (pull #[2893](https://github.com/aws-cloudformation/cfn-lint/pull/2893))
+###### Fixes
+- Update language transformation to pass through empty objects (pull #[2899](https://github.com/aws-cloudformation/cfn-lint/pull/2899))
+- Update rule [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017) to allow `Fn::Select` to allow `Fn::Select` (pull #[2900](https://github.com/aws-cloudformation/cfn-lint/pull/2900))
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) to support `ToleratedFailurePercentage` and `ItemBatcher` to `Map` (pull #[2901](https://github.com/aws-cloudformation/cfn-lint/pull/2901))
+
+
 ### v0.80.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `142.0.0` (pull #[2889](https://github.com/aws-cloudformation/cfn-lint/pull/2889))
