@@ -20,6 +20,7 @@ class Select(CloudFormationLintRule):
         "Fn::If",
         "Fn::Split",
         "Fn::Cidr",
+        "Fn::Select",  # issue: 2895
         "Ref",
     ]
 
