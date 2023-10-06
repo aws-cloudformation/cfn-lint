@@ -181,10 +181,11 @@ class _Transform:
                     # a sub object may be none or we have returned
                     # an empty object.  We don't want to remove empty
                     # strings "" or 0 (zeros)
-                    if sub_value is None or sub_value == {}:
+                    # Remove `or sub_value == {}` for issue #2896
+                    if sub_value is None:
                         del obj[k]
                     else:
-                        obj[k] = self._walk(v, params, cfn)
+                        obj[k] = sub_value
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
                 obj[i] = self._walk(v, params, cfn)
