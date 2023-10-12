@@ -55,7 +55,7 @@ class SnapStart(CloudFormationLintRule):
                 continue
 
             found = False
-            # SnapStart is enabled, no validate if version is attached
+            # SnapStart is enabled, validate if version is attached
             for version in lambda_versions:
                 if any(edge == path[1] for edge in cfn.graph.graph.neighbors(version)):
                     found = True

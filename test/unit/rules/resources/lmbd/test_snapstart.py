@@ -8,7 +8,7 @@ from cfnlint.rules.resources.lmbd.SnapStart import SnapStart
 
 
 class TestSnapStart(BaseRuleTestCase):
-    """Test Lambda Trigger Events CloudWatchLogs Property Configuration"""
+    """Test Lambda SnapStarts"""
 
     def setUp(self):
         """Setup"""
