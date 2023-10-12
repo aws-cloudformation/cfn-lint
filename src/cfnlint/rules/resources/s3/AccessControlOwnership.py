@@ -21,7 +21,11 @@ class AccessControlOwnership(CloudFormationLintRule):
     def __init__(self):
         super().__init__()
         self.resource_property_types.append("AWS::S3::Bucket")
-        self.valid_access_controls = ["Private", "BucketOwnerFullControl", "BucketOwnerRead"]
+        self.valid_access_controls = [
+            "Private",
+            "BucketOwnerFullControl",
+            "BucketOwnerRead",
+        ]
 
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
@@ -46,7 +50,7 @@ class AccessControlOwnership(CloudFormationLintRule):
 
             matches.append(
                 RuleMatch(
-                    path + ["AccessControls"],
+                    path + ["AccessControl"],
                     "Bucket cannot have ACLs set with ObjectOwnership's BucketOwnerEnforced setting",
                 )
             )

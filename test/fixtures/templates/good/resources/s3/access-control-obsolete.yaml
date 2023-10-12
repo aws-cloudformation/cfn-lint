@@ -1,0 +1,26 @@
+
+Resources:
+  Bucket1:
+    Type: AWS::S3::Bucket
+    Properties: {}
+  Bucket2:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: test
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket2
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: Allow
+            Resource: !Sub "${Bucket2.Arn}/*"
+            Principal: '*'
+            Condition:
+              StringLike:
+                'aws:Referer':
+                  - 'http://www.example.com/*'
+                  - 'http://example.net/*'
