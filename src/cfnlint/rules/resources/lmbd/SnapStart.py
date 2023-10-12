@@ -40,7 +40,11 @@ class SnapStart(CloudFormationLintRule):
             runtime = props.get("Runtime")
             # future proofing this rule.  This will apply to newer java runtimes
             # so we are validating its java and not java8.al2
-            if runtime and (not runtime.startswith("java")) and runtime != "java8.al2":
+            if (
+                runtime
+                and (not runtime.startswith("java"))
+                and runtime not in ["java8.al2", "java8"]
+            ):
                 continue
 
             snap_start = props.get("SnapStart")
