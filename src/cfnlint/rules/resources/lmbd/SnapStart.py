@@ -7,7 +7,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class SnapStart(CloudFormationLintRule):
-    """Check if the settings of multiple subscriptions are included for one LogGroup"""
+    """Check if the SnapStart is properly configure"""
 
     id = "W2530"
     shortdesc = "Validate that SnapStart is properly configured"
@@ -15,13 +15,12 @@ class SnapStart(CloudFormationLintRule):
         "To properly leverage SnapStart, you must configure both the lambda function "
         "and attach a Lambda version resource"
     )
-    source_url = "https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#user-content-cloudwatchlogs"
+    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html"
     tags = ["resources", "lambda"]
 
     def __init__(self):
         super().__init__()
         self.resource_property_types.append("AWS::Lambda::Function")
-        self.snapstart_runtimes = ["java11", "java17"]
 
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
@@ -38,7 +37,10 @@ class SnapStart(CloudFormationLintRule):
         ):
             props = scenario.get("Object")
 
-            if props.get("Runtime") not in self.snapstart_runtimes:
+            runtime = props.get("Runtime")
+            # future proofing this rule.  This will apply to newer java runtimes
+            # so we are validating its java and not java8.al2
+            if runtime and (not runtime.startswith("java")) and runtime != "java8.al2":
                 continue
 
             snap_start = props.get("SnapStart")

@@ -7,12 +7,12 @@ from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.resources.lmbd.SnapStart import SnapStart
 
 
-class TestEventsLogGroupName(BaseRuleTestCase):
+class TestSnapStart(BaseRuleTestCase):
     """Test Lambda Trigger Events CloudWatchLogs Property Configuration"""
 
     def setUp(self):
         """Setup"""
-        super(TestEventsLogGroupName, self).setUp()
+        super(TestSnapStart, self).setUp()
         self.collection.register(SnapStart())
         self.success_templates = [
             "test/fixtures/templates/good/resources/lambda/snapstart.yaml"
