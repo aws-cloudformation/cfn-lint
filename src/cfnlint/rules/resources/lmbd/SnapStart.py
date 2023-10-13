@@ -32,31 +32,33 @@ class SnapStart(CloudFormationLintRule):
 
         lambda_versions = cfn.get_resources(["AWS::Lambda::Version"])
 
-        for scenario in cfn.get_object_without_conditions(
-            properties, ["SnapStart"]
-        ):
+        for scenario in cfn.get_object_without_conditions(properties, ["SnapStart"]):
             props = scenario.get("Object")
 
             snap_start = props.get("SnapStart")
             if not snap_start:
                 continue
 
-            if snap_start.get("ApplyOn") != "PublishedVersions":
-                continue
+            # Get safe removes any conditions nested
+            # since we aren't checking runtimes we just need to know if
+            # there is a scenario in which PublishedVersions is present
+            for apply_on in snap_start.get_safe("ApplyOn"):
+                if apply_on[0] != "PublishedVersions":
+                    continue
 
-            # SnapStart is enabled, validate if version is attached
-            matches = [
-                v
-                for v in lambda_versions
-                if any(edge == path[1] for edge in cfn.graph.graph.neighbors(v))
-            ]
+                # SnapStart is enabled, validate if version is attached
+                matches = [
+                    v
+                    for v in lambda_versions
+                    if any(edge == path[1] for edge in cfn.graph.graph.neighbors(v))
+                ]
 
-            if len(matches) < 1:
-                matches.append(
-                    RuleMatch(
-                        path + ["SnapStart", "ApplyOn"],
-                        "SnapStart is enabled but Lambda version is not attached",
+                if len(matches) < 1:
+                    matches.append(
+                        RuleMatch(
+                            path + ["SnapStart", apply_on[1]],
+                            "SnapStart is enabled but Lambda version is not attached",
+                        )
                     )
-                )
 
         return matches

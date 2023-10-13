@@ -26,9 +26,7 @@ class SnapStartEnabled(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        for scenario in cfn.get_object_without_conditions(
-            properties, ["SnapStart", "Runtime"]
-        ):
+        for scenario in cfn.get_object_without_nested_conditions(properties, path):
             props = scenario.get("Object")
 
             runtime = props.get("Runtime")

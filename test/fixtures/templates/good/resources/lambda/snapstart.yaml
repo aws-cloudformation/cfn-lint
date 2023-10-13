@@ -1,3 +1,6 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -21,7 +24,8 @@ Resources:
         S3Key: function.zip
       Runtime: java17
       SnapStart:
-        ApplyOn: PublishedVersions
+        ApplyOn: !If [IsUsEast1, PublishedVersions, None]
+
       TracingConfig:
         Mode: Active
 
