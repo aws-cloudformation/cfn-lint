@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.rules.resources.lmbd.SnapStartEnabled import SnapStartEnabled
+from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
 
 
 class TestSnapStartEnabled(BaseRuleTestCase):
@@ -14,6 +15,7 @@ class TestSnapStartEnabled(BaseRuleTestCase):
         """Setup"""
         super(TestSnapStartEnabled, self).setUp()
         self.collection.register(SnapStartEnabled())
+        self.collection.register(SnapStartSupported())
         self.success_templates = [
             "test/fixtures/templates/good/resources/lambda/snapstart-enabled.yaml"
         ]

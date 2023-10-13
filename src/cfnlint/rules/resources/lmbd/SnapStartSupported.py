@@ -20,6 +20,7 @@ class SnapStartSupported(CloudFormationLintRule):
     def __init__(self):
         super().__init__()
         self.resource_property_types.append("AWS::Lambda::Function")
+        self.child_rules = {"I2530": None}
 
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
@@ -28,14 +29,16 @@ class SnapStartSupported(CloudFormationLintRule):
         for scenario in cfn.get_object_without_nested_conditions(properties, path):
             props = scenario.get("Object")
 
+            runtime = props.get("Runtime")
             snap_start = props.get("SnapStart")
             if not snap_start:
+                if self.child_rules["I2530"]:
+                    matches.extend(self.child_rules["I2530"].validate(runtime, path))
                 continue
 
             if snap_start.get("ApplyOn") != "PublishedVersions":
                 continue
 
-            runtime = props.get("Runtime")
             if (
                 runtime
                 and (not runtime.startswith("java"))
