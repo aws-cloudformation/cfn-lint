@@ -1,0 +1,26 @@
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+  FunctionJava17:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: python3.10
+      SnapStart:
+        ApplyOn: PublishedVersions
+      TracingConfig:
+        Mode: Active

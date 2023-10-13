@@ -6,14 +6,13 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
-class SnapStart(CloudFormationLintRule):
-    """Check if Lambda SnapStart is properly configured"""
+class SnapStartSupported(CloudFormationLintRule):
+    """Check if Lambda function using SnapStart has the correct runtimes"""
 
-    id = "W2530"
-    shortdesc = "Validate that SnapStart is properly configured"
+    id = "E2530"
+    shortdesc = "SnapStart supports the configured runtime"
     description = (
-        "To properly leverage SnapStart, you must configure both the lambda function "
-        "and attach a Lambda version resource"
+        "To properly leverage SnapStart, you must have a runtime of Java11 or greater"
     )
     source_url = "https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html"
     tags = ["resources", "lambda"]
@@ -26,14 +25,8 @@ class SnapStart(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        # if there is no graph we can't validate
-        if not cfn.graph:
-            return matches
-
-        lambda_versions = cfn.get_resources(["AWS::Lambda::Version"])
-
         for scenario in cfn.get_object_without_conditions(
-            properties, ["SnapStart"]
+            properties, ["SnapStart", "Runtime"]
         ):
             props = scenario.get("Object")
 
@@ -44,18 +37,16 @@ class SnapStart(CloudFormationLintRule):
             if snap_start.get("ApplyOn") != "PublishedVersions":
                 continue
 
-            # SnapStart is enabled, validate if version is attached
-            matches = [
-                v
-                for v in lambda_versions
-                if any(edge == path[1] for edge in cfn.graph.graph.neighbors(v))
-            ]
-
-            if len(matches) < 1:
+            runtime = props.get("Runtime")
+            if (
+                runtime
+                and (not runtime.startswith("java"))
+                and runtime not in ["java8.al2", "java8"]
+            ):
                 matches.append(
                     RuleMatch(
                         path + ["SnapStart", "ApplyOn"],
-                        "SnapStart is enabled but Lambda version is not attached",
+                        f"{runtime} is not supported for SnapStart enabled functions",
                     )
                 )
 
