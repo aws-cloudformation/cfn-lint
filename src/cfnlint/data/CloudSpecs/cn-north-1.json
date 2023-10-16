@@ -438,23 +438,6 @@
     }
    }
   },
-  "AWS::AutoScaling::AutoScalingGroup.InstanceMaintenancePolicy": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-instancemaintenancepolicy.html",
-   "Properties": {
-    "MaxHealthyPercentage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-instancemaintenancepolicy.html#cfn-autoscaling-autoscalinggroup-instancemaintenancepolicy-maxhealthypercentage",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MinHealthyPercentage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-instancemaintenancepolicy.html#cfn-autoscaling-autoscalinggroup-instancemaintenancepolicy-minhealthypercentage",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
   "AWS::AutoScaling::AutoScalingGroup.InstanceRequirements": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-instancerequirements.html",
    "Properties": {
@@ -1615,7 +1598,47 @@
   "AWS::EKS::Cluster.LoggingTypeConfig": "CACHED",
   "AWS::EKS::Cluster.OutpostConfig": "CACHED",
   "AWS::EKS::Cluster.Provider": "CACHED",
-  "AWS::EKS::Cluster.ResourcesVpcConfig": "CACHED",
+  "AWS::EKS::Cluster.ResourcesVpcConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html",
+   "Properties": {
+    "EndpointPrivateAccess": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-endpointprivateaccess",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EndpointPublicAccess": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-endpointpublicaccess",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "PublicAccessCidrs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-publicaccesscidrs",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EKS::FargateProfile.Label": "CACHED",
   "AWS::EKS::FargateProfile.Selector": "CACHED",
   "AWS::EKS::IdentityProviderConfig.OidcIdentityProviderConfig": "CACHED",
@@ -1675,8 +1698,56 @@
   "AWS::EMR::InstanceGroupConfig.ScalingTrigger": "CACHED",
   "AWS::EMR::InstanceGroupConfig.SimpleScalingPolicyConfiguration": "CACHED",
   "AWS::EMR::InstanceGroupConfig.VolumeSpecification": "CACHED",
-  "AWS::EMR::Step.HadoopJarStepConfig": "CACHED",
-  "AWS::EMR::Step.KeyValue": "CACHED",
+  "AWS::EMR::Step.HadoopJarStepConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-hadoopjarstepconfig.html",
+   "Properties": {
+    "Args": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-hadoopjarstepconfig.html#cfn-emr-step-hadoopjarstepconfig-args",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "Jar": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-hadoopjarstepconfig.html#cfn-emr-step-hadoopjarstepconfig-jar",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "MainClass": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-hadoopjarstepconfig.html#cfn-emr-step-hadoopjarstepconfig-mainclass",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "StepProperties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-hadoopjarstepconfig.html#cfn-emr-step-hadoopjarstepconfig-stepproperties",
+     "DuplicatesAllowed": false,
+     "ItemType": "KeyValue",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
+  "AWS::EMR::Step.KeyValue": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-keyvalue.html",
+   "Properties": {
+    "Key": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-keyvalue.html#cfn-emr-step-keyvalue-key",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Value": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-emr-step-keyvalue.html#cfn-emr-step-keyvalue-value",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EMRServerless::Application.AutoStartConfiguration": "CACHED",
   "AWS::EMRServerless::Application.AutoStopConfiguration": "CACHED",
   "AWS::EMRServerless::Application.ImageConfigurationInput": "CACHED",
@@ -1742,23 +1813,7 @@
   "AWS::ElasticLoadBalancingV2::ListenerRule.SourceIpConfig": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerRule.TargetGroupStickinessConfig": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerRule.TargetGroupTuple": "CACHED",
-  "AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattribute.html",
-   "Properties": {
-    "Key": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattribute.html#cfn-elasticloadbalancingv2-loadbalancer-loadbalancerattribute-key",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Value": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattribute.html#cfn-elasticloadbalancingv2-loadbalancer-loadbalancerattribute-value",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute": "CACHED",
   "AWS::ElasticLoadBalancingV2::LoadBalancer.SubnetMapping": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup.Matcher": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup.TargetDescription": "CACHED",
@@ -1794,110 +1849,20 @@
   "AWS::Events::Rule.CapacityProviderStrategyItem": "CACHED",
   "AWS::Events::Rule.DeadLetterConfig": "CACHED",
   "AWS::Events::Rule.EcsParameters": "CACHED",
-  "AWS::Events::Rule.HttpParameters": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-httpparameters.html",
-   "Properties": {
-    "HeaderParameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-httpparameters.html#cfn-events-rule-httpparameters-headerparameters",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "PathParameterValues": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-httpparameters.html#cfn-events-rule-httpparameters-pathparametervalues",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "QueryStringParameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-httpparameters.html#cfn-events-rule-httpparameters-querystringparameters",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::Events::Rule.InputTransformer": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-inputtransformer.html",
-   "Properties": {
-    "InputPathsMap": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-inputtransformer.html#cfn-events-rule-inputtransformer-inputpathsmap",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "InputTemplate": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-inputtransformer.html#cfn-events-rule-inputtransformer-inputtemplate",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Events::Rule.HttpParameters": "CACHED",
+  "AWS::Events::Rule.InputTransformer": "CACHED",
   "AWS::Events::Rule.KinesisParameters": "CACHED",
   "AWS::Events::Rule.NetworkConfiguration": "CACHED",
   "AWS::Events::Rule.PlacementConstraint": "CACHED",
   "AWS::Events::Rule.PlacementStrategy": "CACHED",
-  "AWS::Events::Rule.RedshiftDataParameters": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html",
-   "Properties": {
-    "Database": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-database",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "DbUser": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-dbuser",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SecretManagerArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-secretmanagerarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Sql": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-sql",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Sqls": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-sqls",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "StatementName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-statementname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "WithEvent": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-events-rule-redshiftdataparameters.html#cfn-events-rule-redshiftdataparameters-withevent",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Events::Rule.RedshiftDataParameters": "CACHED",
   "AWS::Events::Rule.RetryPolicy": "CACHED",
   "AWS::Events::Rule.RunCommandParameters": "CACHED",
   "AWS::Events::Rule.RunCommandTarget": "CACHED",
   "AWS::Events::Rule.SageMakerPipelineParameter": "CACHED",
   "AWS::Events::Rule.SageMakerPipelineParameters": "CACHED",
   "AWS::Events::Rule.SqsParameters": "CACHED",
+  "AWS::Events::Rule.Tag": "CACHED",
   "AWS::Events::Rule.Target": "CACHED",
   "AWS::FMS::Policy.IEMap": "CACHED",
   "AWS::FMS::Policy.NetworkFirewallPolicy": "CACHED",
@@ -2439,23 +2404,7 @@
   "AWS::IoT::TopicRule.AssetPropertyValue": "CACHED",
   "AWS::IoT::TopicRule.AssetPropertyVariant": "CACHED",
   "AWS::IoT::TopicRule.CloudwatchAlarmAction": "CACHED",
-  "AWS::IoT::TopicRule.CloudwatchLogsAction": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-cloudwatchlogsaction.html",
-   "Properties": {
-    "LogGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-cloudwatchlogsaction.html#cfn-iot-topicrule-cloudwatchlogsaction-loggroupname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-cloudwatchlogsaction.html#cfn-iot-topicrule-cloudwatchlogsaction-rolearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::IoT::TopicRule.CloudwatchLogsAction": "CACHED",
   "AWS::IoT::TopicRule.CloudwatchMetricAction": "CACHED",
   "AWS::IoT::TopicRule.DynamoDBAction": "CACHED",
   "AWS::IoT::TopicRule.DynamoDBv2Action": "CACHED",
@@ -2792,10 +2741,64 @@
   "AWS::Lambda::Function.SnapStart": "CACHED",
   "AWS::Lambda::Function.SnapStartResponse": "CACHED",
   "AWS::Lambda::Function.TracingConfig": "CACHED",
-  "AWS::Lambda::Function.VpcConfig": "CACHED",
+  "AWS::Lambda::Function.VpcConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-vpcconfig.html",
+   "Properties": {
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-vpcconfig.html#cfn-lambda-function-vpcconfig-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+      "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
+     }
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-vpcconfig.html#cfn-lambda-function-vpcconfig-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lambda::LayerVersion.Content": "CACHED",
   "AWS::Lambda::Url.Cors": "CACHED",
-  "AWS::Lambda::Version.ProvisionedConcurrencyConfiguration": "CACHED",
+  "AWS::Lambda::Version.ProvisionedConcurrencyConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-version-provisionedconcurrencyconfiguration.html",
+   "Properties": {
+    "ProvisionedConcurrentExecutions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-version-provisionedconcurrencyconfiguration.html#cfn-lambda-version-provisionedconcurrencyconfiguration-provisionedconcurrentexecutions",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
+  "AWS::Lambda::Version.RuntimePolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-version-runtimepolicy.html",
+   "Properties": {
+    "RuntimeVersionArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-version-runtimepolicy.html#cfn-lambda-version-runtimepolicy-runtimeversionarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::Version.RuntimePolicy.RuntimeVersionArn"
+     }
+    },
+    "UpdateRuntimeOn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-version-runtimepolicy.html#cfn-lambda-version-runtimepolicy-updateruntimeon",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Logs::MetricFilter.Dimension": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation": "CACHED",
   "AWS::MSK::Cluster.BrokerLogs": "CACHED",
@@ -3180,29 +3183,7 @@
   "AWS::S3::Bucket.Transition": "CACHED",
   "AWS::S3::Bucket.VersioningConfiguration": "CACHED",
   "AWS::S3::Bucket.WebsiteConfiguration": "CACHED",
-  "AWS::S3ObjectLambda::AccessPoint.Alias": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3objectlambda-accesspoint-alias.html",
-   "Properties": {
-    "Status": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3objectlambda-accesspoint-alias.html#cfn-s3objectlambda-accesspoint-alias-status",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::S3ObjectLambda::AccessPoint.Alias.Status"
-     }
-    },
-    "Value": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3objectlambda-accesspoint-alias.html#cfn-s3objectlambda-accesspoint-alias-value",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::S3ObjectLambda::AccessPoint.Alias.Value"
-     }
-    }
-   }
-  },
+  "AWS::S3ObjectLambda::AccessPoint.Alias": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.AwsLambda": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ContentTransformation": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ObjectLambdaConfiguration": "CACHED",
@@ -3787,7 +3768,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "143.0.0",
+ "ResourceSpecificationVersion": "144.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -4009,12 +3990,6 @@
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Immutable"
-    },
-    "InstanceMaintenancePolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-autoscalinggroup.html#cfn-autoscaling-autoscalinggroup-instancemaintenancepolicy",
-     "Required": false,
-     "Type": "InstanceMaintenancePolicy",
-     "UpdateType": "Mutable"
     },
     "LaunchConfigurationName": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-autoscalinggroup.html#cfn-autoscaling-autoscalinggroup-launchconfigurationname",
@@ -5181,7 +5156,40 @@
   "AWS::EMR::InstanceFleetConfig": "CACHED",
   "AWS::EMR::InstanceGroupConfig": "CACHED",
   "AWS::EMR::SecurityConfiguration": "CACHED",
-  "AWS::EMR::Step": "CACHED",
+  "AWS::EMR::Step": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-step.html",
+   "Properties": {
+    "ActionOnFailure": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-step.html#cfn-emr-step-actiononfailure",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "HadoopJarStep": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-step.html#cfn-emr-step-hadoopjarstep",
+     "Required": true,
+     "Type": "HadoopJarStepConfig",
+     "UpdateType": "Immutable"
+    },
+    "JobFlowId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-step.html#cfn-emr-step-jobflowid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-step.html#cfn-emr-step-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EMR::Studio": "CACHED",
   "AWS::EMRServerless::Application": "CACHED",
   "AWS::ElastiCache::CacheCluster": "CACHED",
@@ -5244,104 +5252,7 @@
     }
    }
   },
-  "AWS::ElasticLoadBalancingV2::LoadBalancer": {
-   "Attributes": {
-    "CanonicalHostedZoneID": {
-     "PrimitiveType": "String"
-    },
-    "DNSName": {
-     "PrimitiveType": "String"
-    },
-    "LoadBalancerArn": {
-     "PrimitiveType": "String"
-    },
-    "LoadBalancerFullName": {
-     "PrimitiveType": "String"
-    },
-    "LoadBalancerName": {
-     "PrimitiveType": "String"
-    },
-    "SecurityGroups": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html",
-   "Properties": {
-    "IpAddressType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-ipaddresstype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LoadBalancerAttributes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-loadbalancerattributes",
-     "DuplicatesAllowed": false,
-     "ItemType": "LoadBalancerAttribute",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Scheme": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-scheme",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-securitygroups",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
-      "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
-     }
-    },
-    "SubnetMappings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnetmappings",
-     "DuplicatesAllowed": false,
-     "ItemType": "SubnetMapping",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Subnets": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnets",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ListValueType": "SubnetIds",
-      "ValueType": "SubnetId"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::ElasticLoadBalancingV2::LoadBalancer": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup": "CACHED",
   "AWS::Elasticsearch::Domain": "CACHED",
   "AWS::EventSchemas::Discoverer": "CACHED",
@@ -5351,80 +5262,47 @@
   "AWS::Events::ApiDestination": "CACHED",
   "AWS::Events::Archive": "CACHED",
   "AWS::Events::Connection": "CACHED",
-  "AWS::Events::EventBus": "CACHED",
-  "AWS::Events::EventBusPolicy": "CACHED",
-  "AWS::Events::Rule": {
+  "AWS::Events::EventBus": {
    "Attributes": {
     "Arn": {
      "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
     }
    },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html",
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html",
    "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-description",
+    "EventSourceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html#cfn-events-eventbus-eventsourcename",
      "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Events::Rule.Description"
-     }
-    },
-    "EventBusName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-eventbusname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::Events::Rule.EventBusName"
-     }
-    },
-    "EventPattern": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-eventpattern",
-     "PrimitiveType": "Json",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-name",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html#cfn-events-eventbus-name",
      "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Events::Rule.Name"
-     }
+     "Required": true,
+     "UpdateType": "Immutable"
     },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-rolearn",
-     "PrimitiveType": "String",
+    "Policy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html#cfn-events-eventbus-policy",
+     "PrimitiveType": "Json",
      "Required": false,
      "UpdateType": "Mutable"
     },
-    "ScheduleExpression": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-scheduleexpression",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "State": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-state",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Default::Default.EnabledState"
-     }
-    },
-    "Targets": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html#cfn-events-rule-targets",
-     "DuplicatesAllowed": false,
-     "ItemType": "Target",
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-eventbus.html#cfn-events-eventbus-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
      "Required": false,
      "Type": "List",
      "UpdateType": "Mutable"
     }
    }
   },
+  "AWS::Events::EventBusPolicy": "CACHED",
+  "AWS::Events::Rule": "CACHED",
   "AWS::FMS::Policy": "CACHED",
   "AWS::FSx::DataRepositoryAssociation": "CACHED",
   "AWS::FSx::FileSystem": "CACHED",
@@ -5582,6 +5460,8 @@
   "AWS::IoT::RoleAlias": "CACHED",
   "AWS::IoT::ScheduledAudit": "CACHED",
   "AWS::IoT::SecurityProfile": "CACHED",
+  "AWS::IoT::SoftwarePackage": "CACHED",
+  "AWS::IoT::SoftwarePackageVersion": "CACHED",
   "AWS::IoT::Thing": "CACHED",
   "AWS::IoT::ThingGroup": "CACHED",
   "AWS::IoT::ThingPrincipalAttachment": "CACHED",
@@ -5689,7 +5569,55 @@
   "AWS::Lambda::LayerVersionPermission": "CACHED",
   "AWS::Lambda::Permission": "CACHED",
   "AWS::Lambda::Url": "CACHED",
-  "AWS::Lambda::Version": "CACHED",
+  "AWS::Lambda::Version": {
+   "Attributes": {
+    "FunctionArn": {
+     "PrimitiveType": "String"
+    },
+    "Version": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html",
+   "Properties": {
+    "CodeSha256": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-codesha256",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::Version.Description"
+     }
+    },
+    "FunctionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-functionname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::Version.FunctionName"
+     }
+    },
+    "ProvisionedConcurrencyConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-provisionedconcurrencyconfig",
+     "Required": false,
+     "Type": "ProvisionedConcurrencyConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "RuntimePolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-runtimepolicy",
+     "Required": false,
+     "Type": "RuntimePolicy",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Logs::Destination": "CACHED",
   "AWS::Logs::LogGroup": "CACHED",
   "AWS::Logs::LogStream": "CACHED",
@@ -6096,58 +6024,7 @@
   "AWS::S3::AccessPoint": "CACHED",
   "AWS::S3::Bucket": "CACHED",
   "AWS::S3::BucketPolicy": "CACHED",
-  "AWS::S3ObjectLambda::AccessPoint": {
-   "Attributes": {
-    "Alias": {
-     "Type": "Alias"
-    },
-    "Alias.Status": {
-     "PrimitiveType": "String"
-    },
-    "Alias.Value": {
-     "PrimitiveType": "String"
-    },
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "CreationDate": {
-     "PrimitiveType": "String"
-    },
-    "PublicAccessBlockConfiguration": {
-     "Type": "PublicAccessBlockConfiguration"
-    },
-    "PublicAccessBlockConfiguration.BlockPublicAcls": {
-     "PrimitiveType": "Boolean"
-    },
-    "PublicAccessBlockConfiguration.BlockPublicPolicy": {
-     "PrimitiveType": "Boolean"
-    },
-    "PublicAccessBlockConfiguration.IgnorePublicAcls": {
-     "PrimitiveType": "Boolean"
-    },
-    "PublicAccessBlockConfiguration.RestrictPublicBuckets": {
-     "PrimitiveType": "Boolean"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3objectlambda-accesspoint.html",
-   "Properties": {
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3objectlambda-accesspoint.html#cfn-s3objectlambda-accesspoint-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::S3ObjectLambda::AccessPoint.Name"
-     }
-    },
-    "ObjectLambdaConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3objectlambda-accesspoint.html#cfn-s3objectlambda-accesspoint-objectlambdaconfiguration",
-     "Required": true,
-     "Type": "ObjectLambdaConfiguration",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::S3ObjectLambda::AccessPoint": "CACHED",
   "AWS::S3ObjectLambda::AccessPointPolicy": "CACHED",
   "AWS::SNS::Subscription": "CACHED",
   "AWS::SNS::Topic": "CACHED",
@@ -7203,6 +7080,11 @@
   "AWS::IoT::SecurityProfile.SecurityProfileName": "CACHED",
   "AWS::IoT::SecurityProfile.StatisticalThreshold.Statistic": "CACHED",
   "AWS::IoT::SecurityProfile.TargetArns": "CACHED",
+  "AWS::IoT::SoftwarePackage.Description": "CACHED",
+  "AWS::IoT::SoftwarePackage.PackageName": "CACHED",
+  "AWS::IoT::SoftwarePackageVersion.Description": "CACHED",
+  "AWS::IoT::SoftwarePackageVersion.PackageName": "CACHED",
+  "AWS::IoT::SoftwarePackageVersion.VersionName": "CACHED",
   "AWS::IoT::Thing.ThingName": "CACHED",
   "AWS::IoT::ThingGroup.ParentGroupName": "CACHED",
   "AWS::IoT::ThingGroup.QueryString": "CACHED",
@@ -7568,6 +7450,13 @@
   "AWS::Lambda::Url.InvokeMode": "CACHED",
   "AWS::Lambda::Url.Qualifier": "CACHED",
   "AWS::Lambda::Url.TargetFunctionArn": "CACHED",
+  "AWS::Lambda::Version.Description": "CACHED",
+  "AWS::Lambda::Version.FunctionName": "CACHED",
+  "AWS::Lambda::Version.RuntimePolicy.RuntimeVersionArn": {
+   "AllowedPatternRegex": "^arn:(aws[a-zA-Z-]*):lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}::runtime:.+$",
+   "StringMax": 2048,
+   "StringMin": 26
+  },
   "AWS::Logs::Destination.DestinationName": "CACHED",
   "AWS::Logs::LogGroup.KmsKeyId": "CACHED",
   "AWS::Logs::LogGroup.LogGroupName": "CACHED",
