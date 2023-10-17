@@ -1,3 +1,6 @@
+Parameters:
+  Runtime:
+    Type: String
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -20,6 +23,21 @@ Resources:
         S3Bucket: my-bucket
         S3Key: function.zip
       Runtime: java17
+      SnapStart:
+        ApplyOn: PublishedVersions
+      TracingConfig:
+        Mode: Active
+
+  FunctionParameter:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: !Ref Runtime
       SnapStart:
         ApplyOn: PublishedVersions
       TracingConfig:
