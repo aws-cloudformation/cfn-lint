@@ -39,6 +39,10 @@ class SnapStartSupported(CloudFormationLintRule):
             if snap_start.get("ApplyOn") != "PublishedVersions":
                 continue
 
+            # Validate runtime is a string before using startswith
+            if not isinstance(runtime, str):
+                continue
+
             if (
                 runtime
                 and (not runtime.startswith("java"))
