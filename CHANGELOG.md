@@ -1,3 +1,7 @@
+### v0.82.1
+###### Fixes
+- Update [E2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2530) and [I2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2530) to make sure `Runtime` is a string before using `startswith` (pull #[2912](https://github.com/aws-cloudformation/cfn-lint/pull/2912))
+
 ### v0.82.0
 ###### Features
 - Add rule [W2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2530) to warn when `SnapStart` isn't configured correctly (pull #[2905](https://github.com/aws-cloudformation/cfn-lint/pull/2905))
