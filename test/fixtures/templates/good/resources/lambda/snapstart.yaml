@@ -1,0 +1,97 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+
+Resources:
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+  FunctionJava17:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: java17
+      SnapStart:
+        ApplyOn: !If [IsUsEast1, PublishedVersions, None]
+
+      TracingConfig:
+        Mode: Active
+
+  VersionJava17:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref FunctionJava17
+      Description: v1
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 20
+
+  FunctionJava11:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: java17
+      SnapStart:
+        ApplyOn: PublishedVersions
+      TracingConfig:
+        Mode: Active
+
+  VersionJava11:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref FunctionJava11
+      Description: v1
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 20
+
+  FunctionPython:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: python3.10
+      TracingConfig:
+        Mode: Active
+
+  FunctionJava17NoSnapStart:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: java17
+      SnapStart:
+        ApplyOn: None
+      TracingConfig:
+        Mode: Active
+
+  VersionJava17NoSnapStart:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref FunctionJava17NoSnapStart
+      Description: v1
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 20
