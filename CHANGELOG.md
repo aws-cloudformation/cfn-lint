@@ -1,3 +1,7 @@
+### v0.82.2
+###### Fixes
+- Update [I2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2530) validates its using Java runtimes greater than 8 (pull #[2916](https://github.com/aws-cloudformation/cfn-lint/pull/2916))
+
 ### v0.82.1
 ###### Fixes
 - Update [E2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2530) and [I2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2530) to make sure `Runtime` is a string before using `startswith` (pull #[2912](https://github.com/aws-cloudformation/cfn-lint/pull/2912))
