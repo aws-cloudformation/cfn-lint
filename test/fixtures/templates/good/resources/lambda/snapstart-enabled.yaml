@@ -39,3 +39,16 @@ Resources:
         ApplyOn: None
       TracingConfig:
         Mode: Active
+
+  FunctionJava8:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      ReservedConcurrentExecutions: 20
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: java8
+      TracingConfig:
+        Mode: Active

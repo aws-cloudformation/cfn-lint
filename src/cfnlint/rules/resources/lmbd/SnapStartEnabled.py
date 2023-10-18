@@ -26,7 +26,7 @@ class SnapStartEnabled(CloudFormationLintRule):
         if not isinstance(runtime, str):
             return []
 
-        if not (runtime.startswith("java")) and runtime not in ["java8.al2", "java8"]:
+        if not (runtime.startswith("java")) or runtime in ["java8.al2", "java8"]:
             return []
 
         return [
