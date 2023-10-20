@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.context import create_context_for_outputs
 from cfnlint.data.schemas.other import outputs as schema_outputs
 from cfnlint.helpers import REGION_PRIMARY, load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
@@ -60,7 +59,7 @@ class JsonSchema(BaseJsonSchema):
         cfn_validator = self.setup_validator(
             validator=CfnTemplateValidator,
             schema=self.schema,
-            context=create_context_for_outputs(cfn, cfn.regions[0]),
+            context=cfn.context.create_context_for_outputs(cfn.regions[0]),
         ).evolve(
             cfn=cfn,
         )
