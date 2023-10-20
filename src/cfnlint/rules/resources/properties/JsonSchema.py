@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
-from cfnlint.context import create_context_for_resource_properties
 from cfnlint.helpers import REGION_PRIMARY
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
@@ -97,8 +96,8 @@ class JsonSchema(BaseJsonSchema):
                         cfn_validator = self.setup_validator(
                             validator=CfnTemplateValidator,
                             schema=schema.json_schema,
-                            context=create_context_for_resource_properties(
-                                cfn=cfn, region=region, resource_name=n
+                            context=cfn.context.create_context_for_resource_properties(
+                                region=region, resource_name=n
                             ),
                         ).evolve(
                             cfn=cfn,
