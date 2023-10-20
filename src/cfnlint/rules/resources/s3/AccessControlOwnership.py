@@ -13,7 +13,8 @@ class AccessControlOwnership(CloudFormationLintRule):
     shortdesc = "Validate AccessControl are set with OwnershipControls"
     description = (
         "When using AccessControl other than private you must also "
-        "configure OwnershipControls"
+        "configure OwnershipControls. The default is bucket owner "
+        "enforced which disables ACLs."
     )
     source_url = "https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html"
     tags = ["resources", "s3"]
@@ -51,7 +52,7 @@ class AccessControlOwnership(CloudFormationLintRule):
             matches.append(
                 RuleMatch(
                     path + ["AccessControl"],
-                    "Bucket cannot have ACLs set with ObjectOwnership's BucketOwnerEnforced setting",
+                    "A bucket with AccessControl set should also have OwnershipControl configured",
                 )
             )
 

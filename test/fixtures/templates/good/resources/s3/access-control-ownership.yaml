@@ -4,6 +4,9 @@ Mappings:
       MyBucket:
       - ObjectOwnership: BucketOwnerPreferred
 
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+
 Resources:
   Bucket1:
     Type: AWS::S3::Bucket
@@ -35,4 +38,25 @@ Resources:
     Properties:
       # Access Control BucketOwnerRead will work without OwnershipControls
       AccessControl: BucketOwnerRead
-      
+  Bucket6:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Access Control BucketOwnerRead and BucketOwnerFullControl will work without OwnershipControls
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, BucketOwnerFullControl]
+  Bucket7:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, PublicRead]
+      OwnershipControls:
+        Fn::If:
+        - IsUsEast1
+        - Rules: []
+        - Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+  Bucket8:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, PublicRead]
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: !If [IsUsEast1, !Ref AWS::NoValue, BucketOwnerEnforced]

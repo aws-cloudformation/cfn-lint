@@ -25,5 +25,5 @@ class TestAccessControlOwnership(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/s3/access-control-ownership.yaml", 2
+            "test/fixtures/templates/bad/resources/s3/access-control-ownership.yaml", 4
         )
