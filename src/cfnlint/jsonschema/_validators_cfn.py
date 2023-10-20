@@ -11,7 +11,13 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
-from cfnlint.helpers import FUNCTIONS, FUNCTIONS_SINGLE, REGIONS, ToPy
+from cfnlint.helpers import (
+    FUNCTIONS,
+    FUNCTIONS_SINGLE,
+    REGEX_SUB_PARAMETERS,
+    REGIONS,
+    ToPy,
+)
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
@@ -23,11 +29,9 @@ _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 def additionalProperties(
     validator: Validator, aP: Any, instance: Any, schema: Any
 ) -> ValidationResult:
-    print(aP, instance)
     for err in validators_standard.additionalProperties(
         validator, aP, instance, schema
     ):
-        print(err)
         if len(err.path) > 0:
             if any(
                 re.fullmatch(fn, str(err.path[0])) for fn in validator.context.functions
@@ -677,7 +681,7 @@ class FnSub(Fn):
         self.sub_parameter_types = ["string", "integer", "number", "boolean"]
 
     def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
-        params = re.findall(r"\${([^}]+)}", instance)
+        params = re.findall(REGEX_SUB_PARAMETERS, instance)
         for param in params:
             if param.startswith("!"):
                 continue
@@ -898,6 +902,21 @@ class FnForEach(FnArray):
         output.types = ["object"]
         self.items.append(output)
 
+    def _expand_iterator(self, iterator: Any, validator: Validator) -> Iterator[Any]:
+        if validator.is_type(iterator, "string"):
+            yield iterator
+            return
+        
+        if validator.is_type(iterator, "object"):
+            yield from validator.context.fn_value(iterator)
+            
+    def _expand_collection(self, collection: Any, validator: Validator) -> Iterator[Any]:
+        if validator.is_type(collection, "array"):
+            for item in collection:
+                yield from self._expand_iterator(item, validator)
+        if validator.is_type(collection, "object"):
+            pass
+
     def for_each(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -915,13 +934,17 @@ class FnForEach(FnArray):
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
+
+        # reset this value because of nested ForEach
+        # because of the dynamic keys
+        self.fn = ToPy(key)
         # update the context about parameters and descend
         values = instance.get(self.fn.name)
         identifier = values[0]
         collection = values[1]
         output = values[2]
-        for iterator in collection:
-            validator = validator.evolve(
+        for iterator in self._expand_collection(collection, validator):
+            validator_iterator = validator.evolve(
                 context=validator.context.evolve(
                     ref_values={
                         identifier: iterator,
@@ -929,7 +952,7 @@ class FnForEach(FnArray):
                 )
             )
 
-            for err in validator.descend(output, s, self.fn.name):
+            for err in validator_iterator.descend(output, s, self.fn.name):
                 yield err
                 return
 
