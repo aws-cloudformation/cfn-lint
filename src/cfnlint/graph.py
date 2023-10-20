@@ -264,6 +264,8 @@ class Graph:
 
     def _is_resource(self, cfn, identifier):
         """Check if the identifier is that of a Resource"""
+        if not isinstance(identifier, str):
+            return {}
         return cfn.template.get("Resources", {}).get(identifier, {})
 
     def _find_parameter(self, string):

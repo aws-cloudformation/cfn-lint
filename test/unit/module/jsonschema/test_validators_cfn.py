@@ -165,7 +165,6 @@ def message_errors(name, instance, schema, errors, **kwargs):
                         {
                             "Type": "AWS::S3::Bucket",
                         },
-                        "us-east-1",
                     ),
                 },
             ),
@@ -186,15 +185,21 @@ def message_transform_errors(name, instance, schema, errors, **kwargs):
                         {
                             "Type": "AWS::S3::Bucket",
                         },
-                        "us-east-1",
                     ),
                 },
                 parameters={
                     "MyParameter": Parameter(
                         {
                             "Type": "string",
+                            "Default": "bar",
                         }
-                    )
+                    ),
+                    "MyResourceParameter": Parameter(
+                        {
+                            "Type": "string",
+                            "Default": "MyResource",
+                        }
+                    ),
                 },
                 transforms=Transforms(["AWS::LanguageExtensions"]),
             ),
@@ -862,7 +867,7 @@ def test_functions(name, instance, schema, errors, cfn_response):
         ),
         (
             "Valid GetAtt with a Ref",
-            {"Fn::GetAtt": [{"Ref": "MyParameter"}, {"Ref": "MyResource"}]},
+            {"Fn::GetAtt": [{"Ref": "MyResourceParameter"}, {"Ref": "MyResource"}]},
             {"type": "string"},
             [],
             [],
@@ -1020,6 +1025,20 @@ def test_functions(name, instance, schema, errors, cfn_response):
             [],
             [],
         ),
+        # foo-bar can be resolved but the enum will faill
+        (
+            "Invalid Fn::ForEach with valid property but a failure with in that value",
+            {"Fn::ForEach::Test": ["id", ["bar"], {"foo-${id}": "bar"}]},
+            {
+                "type": "object",
+                "properties": {"foo-bar": {"type": "string", "enum": ["foo"]}},
+                "additionalProperties": False,
+            },
+            ["'bar' is not one of ['foo']"],
+            [],
+        ),
+        # in this foo-bar can be resolved so this should fail as additional
+        # properties are not allowed
         (
             "Invalid Fn::ForEach with invalid output from schema",
             {"Fn::ForEach::Test": ["id", ["bar"], {"foo-${id}": "bar"}]},
@@ -1028,7 +1047,61 @@ def test_functions(name, instance, schema, errors, cfn_response):
                 "properties": {"bar-foo": {"type": "string", "enum": ["bar"]}},
                 "additionalProperties": False,
             },
-            [""],
+            ["Additional properties are not allowed ('foo-bar' was unexpected)"],
+            [],
+        ),
+        (
+            "Valid Fn::ForEach with a valid Ref value",
+            {
+                "Fn::ForEach::Test": [
+                    "id",
+                    [{"Ref": "MyParameter"}],
+                    {"foo-${id}": "bar"},
+                ]
+            },
+            {
+                "type": "object",
+                "properties": {"foo-bar": {"type": "string", "enum": ["bar"]}},
+                "additionalProperties": False,
+            },
+            [],
+            [],
+        ),
+        # foo-bar can be resolved but the enum will faill
+        (
+            "Invalid Fn::ForEach with valid property but a failure with in that value",
+            {
+                "Fn::ForEach::Test": [
+                    "id",
+                    [{"Ref": "MyParameter"}],
+                    {"foo-${id}": "bar"},
+                ]
+            },
+            {
+                "type": "object",
+                "properties": {"foo-bar": {"type": "string", "enum": ["foo"]}},
+                "additionalProperties": False,
+            },
+            ["'bar' is not one of ['foo']"],
+            [],
+        ),
+        # in this foo-bar can be resolved so this should fail as additional
+        # properties are not allowed
+        (
+            "Invalid Fn::ForEach with invalid output from schema",
+            {
+                "Fn::ForEach::Test": [
+                    "id",
+                    [{"Ref": "MyParameter"}],
+                    {"foo-${id}": "bar"},
+                ]
+            },
+            {
+                "type": "object",
+                "properties": {"bar-foo": {"type": "string", "enum": ["bar"]}},
+                "additionalProperties": False,
+            },
+            ["Additional properties are not allowed ('foo-bar' was unexpected)"],
             [],
         ),
     ],
