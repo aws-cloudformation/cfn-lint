@@ -6,11 +6,12 @@ from dataclasses import dataclass, field, fields
 
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
-from typing import Any, Sequence, Tuple
+from typing import Any, Dict, Iterator, Sequence, Tuple
 
 import regex as re
 
-from cfnlint.helpers import ToPy
+from cfnlint.decode.node import dict_node
+from cfnlint.helpers import REGEX_SUB_PARAMETERS, ToPy
 from cfnlint.jsonschema._utils import ensure_list
 
 _all_types = ["array", "boolean", "integer", "number", "object", "string"]
@@ -45,7 +46,7 @@ class FunctionFilter:
         ],
     )
 
-    def _filter_schemas(self, schema, validator) -> Tuple[Any, Any]:
+    def _filter_schemas(self, schema, validator: Any) -> Tuple[Any, Any]:
         """
         Filter the schemas to only include the ones that are required
         """
@@ -81,6 +82,21 @@ class FunctionFilter:
 
         return standard_schema, group_schema
 
+    def _cleanse_object(
+        self, validator: Any, instance: Dict[str, Any]
+    ) -> Iterator[Tuple[str, Any]]:
+        if validator.context.transforms.has_language_extensions_transform():
+            for k, v in instance.items():
+                for p in re.findall(REGEX_SUB_PARAMETERS, k):
+                    if p in validator.context.ref_values:
+                        k = re.sub(
+                            REGEX_SUB_PARAMETERS, validator.context.ref_values[p], k
+                        )
+                else:
+                    yield (k, v)
+        else:
+            yield from instance.items()
+
     def filter(self, validator: Any, instance: Any, schema: Any):
         # dependencies, required, minProperties, maxProperties
         # need to have filtered properties to validate
@@ -94,6 +110,12 @@ class FunctionFilter:
                 yield (scenario.get("Object"), group_schema)
 
         if validator.is_type(instance, "object"):
+            if hasattr(instance, "start_mark"):
+                start_mark = instance.start_mark
+                end_mark = instance.end_mark
+                instance = dict_node(dict(self._cleanse_object(validator, instance)), start_mark=start_mark, end_mark=end_mark)
+            else:
+                instance = dict(self._cleanse_object(validator, instance))
             if len(instance) == 1:
                 for k, v in instance.items():
                     if k in validator.context.functions:
