@@ -16,6 +16,7 @@ from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.getatts import GetAtts
 from cfnlint.template.transforms import Transform
+from cfnlint.context import ContextManager
 
 LOGGER = logging.getLogger(__name__)
 
@@ -65,6 +66,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             )
         except Exception as err:  # pylint: disable=broad-except
             LOGGER.info("Encountered unknown error while building graph: %s", err)
+
+        self.context = ContextManager(self)
 
     def __deepcopy__(self, memo):
         cls = self.__class__

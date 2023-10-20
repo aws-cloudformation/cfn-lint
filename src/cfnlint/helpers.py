@@ -17,6 +17,7 @@ import os
 import sys
 from io import BytesIO
 from urllib.request import Request, urlopen, urlretrieve
+from typing import Any
 
 import regex as re
 
@@ -101,6 +102,7 @@ REGEX_DYN_REF_SSM = re.compile(r"^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$
 REGEX_DYN_REF_SSM_SECURE = re.compile(
     r"^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$"
 )
+REGEX_SUB_PARAMETERS = re.compile(r"\${([^!].*?)}")
 
 FUNCTIONS = [
     "Fn::Base64",
@@ -526,3 +528,18 @@ class ToPy:
         self.py_class = name.replace("::", "")
         # provider zips has filenames with -
         self.provider = name.replace("::", "-").lower()
+
+
+class _ObjectEncoder(json.JSONEncoder):
+    def default(self, o):
+        if hasattr(o, "_value"):
+            # pylint: disable=protected-access
+            return o._value
+        return o
+
+
+def get_hash(instance: Any) -> str:
+    """Return a hash of an object"""
+    return hashlib.sha1(
+        json.dumps(instance, sort_keys=True, cls=_ObjectEncoder).encode("utf-8")
+    ).hexdigest()
