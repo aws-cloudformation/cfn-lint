@@ -8,6 +8,7 @@ import logging
 from typing import Any, Callable, List, Mapping
 
 from cfnlint.conditions import Conditions
+from cfnlint.context import ContextManager
 from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.transforms._sam import sam
@@ -51,4 +52,6 @@ class Transform:
         LOGGER.info("Transformed template: %s", cfn.template)
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
+        cfn.context = ContextManager(cfn)
+        LOGGER.info("Transformed template: %s", cfn.template)
         return matches
