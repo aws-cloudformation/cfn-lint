@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import cfnlint.helpers
-from cfnlint.context.context import create_context_for_resources
 from cfnlint.data.schemas.other import resources
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules import RuleMatch
@@ -101,7 +100,7 @@ class Configuration(BaseJsonSchema):
         validator = self.setup_validator(
             CfnTemplateValidator,
             self.schema,
-            context=create_context_for_resources(cfn, cfn.regions[0]),
+            context=cfn.context.create_context_for_resources(cfn.regions[0]),
         )
 
         matches.extend(self.json_schema_validate(validator, resources, ["Resources"]))
