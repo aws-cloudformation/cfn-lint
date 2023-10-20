@@ -7,12 +7,11 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterable, List, Mapping, Sequence
-
-from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY
+from typing import Any, Deque, Dict, Iterable, List, Mapping, Sequence, Iterator
+from cfnlint.helpers import get_hash
+from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY, FUNCTION_FOR_EACH
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
-from cfnlint.template import Template as CfnTemplate
-
+import regex as re
 
 @dataclass
 class Transforms:
@@ -75,6 +74,9 @@ class Context:
 
     # other Refs from Fn::Sub or Fn::ForEach
     ref_values: Dict[str, List[Any]] = field(init=True, default_factory=dict)
+    
+    # For Each functions.
+    fn_foreach: Dict[str, "ForEach"] = field(init=True, default_factory=dict)
 
     # Resolved value
     resolved_value: bool = field(init=True, default=False)
@@ -124,7 +126,7 @@ class Context:
             + list(self.ref_values.keys())
         )
 
-    def fn_value(self, instance: Dict[str, Any]) -> Any:
+    def fn_value(self, instance: Dict[str, Any]) -> Iterator[Any]:
         """
         Return the value of a ref
         """
@@ -134,9 +136,13 @@ class Context:
             )
         for k, v in instance.items():
             if k == "Ref":
-                return self.ref_value(v)
+                if v in self.ref_values:
+                    yield self.ref_values[v]
+                if v in self.parameters:
+                    yield from self.parameters[v].ref(self)
+                return
             if k == "Fn::FindInMap":
-                return self.fn_find_in_map(v)
+                yield from self.fn_find_in_map(v)
             raise ValueError(f"Unsupported value {v!r}")
 
 
@@ -189,17 +195,6 @@ class Condition:
     instance: Any = field(init=True)
 
 
-def _init_conditions(conditions: Any) -> Dict[str, Condition]:
-    results = {}
-    if isinstance(conditions, dict):
-        for k, v in conditions.items():
-            try:
-                results[k] = Condition(v)
-            except ValueError:
-                pass
-    return results
-
-
 @dataclass
 class Parameter(_Ref):
     """
@@ -239,7 +234,6 @@ class Resource(_Ref):
 
     type: str = field(init=False)
     resource: InitVar[Any]
-    region: str = field(init=True)
 
     def __post_init__(self, resource) -> None:
         t = resource.get("Type")
@@ -248,125 +242,171 @@ class Resource(_Ref):
         self.type = t
 
     @property
-    def get_atts(self) -> AttributeDict:
-        return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, self.region)
+    def get_atts(self, region:str="us-east-1") -> AttributeDict:
+        return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
 
     def ref(self, context: Context) -> Iterable[Any]:
         return
         yield
 
 
-def _init_parameters(parameters: Any) -> Dict[str, Parameter]:
-    results = {}
-    if isinstance(parameters, dict):
-        for k, v in parameters.items():
-            try:
-                results[k] = Parameter(v)
-            except ValueError:
-                pass
-    return results
+@dataclass
+class _ForEachCollection:
+    pass
 
 
-def _init_resources(resources: Any, region: str) -> Dict[str, Resource]:
-    results = {}
-    if isinstance(resources, dict):
-        for k, v in resources.items():
+_ForEachCollections: Dict[str, _ForEachCollection] = {}
+
+@dataclass
+class ForEach(_Ref):
+    """
+    This class holds a resources and its type
+    """
+
+    foreach: InitVar[Any]
+    identifier: str = field(init=False)
+    collection: Dict | List[str | Dict] = field(init=False)
+    output: Dict[str, Any] = field(init=False)
+
+    def __post_init__(self, foreach) -> None:
+        identifier = foreach[0]
+        h = get_hash(foreach[1])
+        collection = _ForEachCollection(foreach[1])
+
+
+@dataclass
+class ContextManager:
+    cfn: InitVar[Any]
+    parameters: Dict[str, Parameter] = field(init=False)
+    resources: Dict[str, Resource] = field(init=False)
+    transforms: Transforms = field(init=False)
+    conditions: Dict[str, Condition] = field(init=False)
+    collections: Dict[str, _ForEachCollection] = field(init=False)
+
+    def __post_init__(self, cfn: Any) -> None:
+        self.parameters = {}
+        self.resources = {}
+        self.conditions = {}
+        try:
+            self._init_parameters(cfn.template.get("Parameters", {}))
+        except (ValueError, AttributeError):
+            pass
+        try:
+            self._init_resources(cfn.template.get("Resources", {}))
+        except (ValueError, AttributeError):
+            pass
+        self._init_transforms(cfn.template.get("Transform", []))
+        try:
+            self._init_conditions(cfn.template.get("Conditions", {}))
+        except (ValueError, AttributeError):
+            pass
+
+    def _expand_foreach(self, instance: Dict[str, Dict], values: Dict[str, str] | None=None) -> Iterable[str, Dict]:
+        if values is None:
+            values = {}
+        for k, v in instance.items():
+            for id, iteration in values:
+                k = re.sub(rf"\${{\s?{id}\s?}}", iteration, k)
             try:
                 if k.startswith("Fn::ForEach::"):
-                    results[k] = Resource(v[2], region)
+                    if len(v) != 3:
+                        continue
+                    id = v[0]
+                    collection = v[1]
+                    output = v[2]
+                    if not isinstance(id, str):
+                        continue
+                    if not isinstance(output, dict):
+                        continue
+                    for iterator in collection:
+                        yield from self._expand_foreach(output, {id: iterator})
                 else:
-                    results[k] = Resource(v, region)
+                    yield (k, v)
             except ValueError:
                 pass
-    return results
 
+    def _init_parameters(self, parameters: Any):
+        for k, v in self._expand_foreach(parameters):
+            self.parameters[k] = Parameter(v)
 
-def _init_transforms(transforms: Any) -> "Transforms":
-    if isinstance(transforms, (str, list)):
-        return Transforms(transforms)
-    return Transforms([])
+    def _init_resources(self, resources: Any) -> Dict[str, Resource]:
+        for k, v in self._expand_foreach(resources):
+            self.resources[k] = Resource(v)
 
+    def _init_transforms(self, transforms: Any):
+        if isinstance(transforms, (str, list)):
+            self.transforms = Transforms(transforms)
+            return
+        self.transforms = Transforms([])
+    
+    def _init_conditions(self, conditions: Any) -> Dict[str, Condition]:
+        for k, v in self._expand_foreach(conditions):
+            self.conditions[k] = Condition(v)
 
-def create_context_for_resources(cfn: CfnTemplate, region: str) -> Context:
-    """
-    Create a context for a resources
-    """
-    parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    resources = _init_resources(cfn.template.get("Resources", {}), region)
-    transforms = _init_transforms(cfn.template.get("Transform", []))
-    conditions = _init_conditions(cfn.template.get("Conditions", {}))
+    collection: Dict | List[str | Dict] = field(init=False)
+    output: Dict[str, Any] = field(init=False)
 
-    functions = []
-    if transforms.has_language_extensions_transform():
-        functions = ["Fn::ForEach::[a-zA-Z0-9]+"]
+    def create_context_for_resources(self, region: str) -> Context:
+        """
+        Create a context for a resources
+        """
+        functions = []
+        if self.transforms.has_language_extensions_transform():
+            functions = ["Fn::ForEach::[a-zA-Z0-9]+"]
 
-    return Context(
-        parameters=parameters,
-        resources=resources,
-        conditions=conditions,
-        transforms=transforms,
-        region=region,
-        path=deque(["Resources"]),
-        functions=functions,
-    )
+        return Context(
+            parameters=self.parameters,
+            resources=self.resources,
+            conditions=self.conditions,
+            transforms=self.transforms,
+            region=region,
+            path=deque(["Resources"]),
+            functions=functions,
+        )
+    
+    def create_context_for_resource_properties(
+        self, region: str, resource_name: str
+    ) -> Context:
+        """
+        Create a context for a resource properties
+        """
+       
+        return Context(
+            parameters=self.parameters,
+            resources=self.resources,
+            conditions=self.conditions,
+            transforms=self.transforms,
+            region=region,
+            path=deque(["Resources", resource_name, "Properties"]),
+            functions=list(FUNCTIONS),
+        )
+    
+    def create_context_for_outputs(self, region: str) -> Context:
+        """
+        Create a context for a resource properties
+        """
+    
+        return Context(
+            parameters=self.parameters,
+            resources=self.resources,
+            conditions=self.conditions,
+            transforms=self.transforms,
+            region=region,
+            path=deque(["Outputs"]),
+            functions=["Fn::ForEach"],
+        )
+    
+    def create_context_for_conditions(self, region: str) -> Context:
+        """
+        Create a context for a conditions
+        """
 
-
-def create_context_for_resource_properties(
-    cfn: CfnTemplate, region: str, resource_name: str
-) -> Context:
-    """
-    Create a context for a resource properties
-    """
-    parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    resources = _init_resources(cfn.template.get("Resources", {}), region)
-    transforms = _init_transforms(cfn.template.get("Transform", []))
-    conditions = _init_conditions(cfn.template.get("Conditions", {}))
-
-    return Context(
-        parameters=parameters,
-        resources=resources,
-        conditions=conditions,
-        transforms=transforms,
-        region=region,
-        path=deque(["Resources", resource_name, "Properties"]),
-        functions=list(FUNCTIONS),
-    )
-
-
-def create_context_for_outputs(cfn: CfnTemplate, region: str) -> Context:
-    """
-    Create a context for a resource properties
-    """
-    parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    resources = _init_resources(cfn.template.get("Resources", {}), region)
-    transforms = _init_transforms(cfn.template.get("Transform", []))
-    conditions = _init_conditions(cfn.template.get("Conditions", {}))
-
-    return Context(
-        parameters=parameters,
-        resources=resources,
-        conditions=conditions,
-        transforms=transforms,
-        region=region,
-        path=deque(["Outputs"]),
-        functions=["Fn::ForEach"],
-    )
-
-
-def create_context_for_conditions(cfn: CfnTemplate, region: str) -> Context:
-    """
-    Create a context for a conditions
-    """
-    parameters = _init_parameters(cfn.template.get("Parameters", {}))
-    transforms = _init_transforms(cfn.template.get("Transform", []))
-    conditions = _init_conditions(cfn.template.get("Conditions", {}))
-
-    return Context(
-        parameters=parameters,
-        resources={},
-        conditions=conditions,
-        transforms=transforms,
-        region=region,
-        path=deque(["Conditions"]),
-        functions=["Fn::ForEach"],
-    )
+        return Context(
+            parameters=self.parameters,
+            resources={},
+            conditions=self.conditions,
+            transforms=self.transforms,
+            region=region,
+            path=deque(["Conditions"]),
+            functions=["Fn::ForEach"],
+        )
