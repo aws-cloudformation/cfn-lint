@@ -1,3 +1,10 @@
+### v0.83.0
+###### Features
+- Add rule [E3045](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3045) to validate `AccessControl`s are specified when using `AccessControl` (pull #[2905](https://github.com/aws-cloudformation/cfn-lint/pull/2905))
+- Add rule [W3045](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3045) to alert on usage of legacy capability `AccessControl` (pull #[2905](https://github.com/aws-cloudformation/cfn-lint/pull/2905))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `145.0.0` (pull #[2909](https://github.com/aws-cloudformation/cfn-lint/pull/2909))
+
 ### v0.82.2
 ###### Fixes
 - Update [I2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2530) validates its using Java runtimes greater than 8 (pull #[2916](https://github.com/aws-cloudformation/cfn-lint/pull/2916))
