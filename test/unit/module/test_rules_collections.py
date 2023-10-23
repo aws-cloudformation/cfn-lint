@@ -69,7 +69,7 @@ class TestRulesCollection(BaseTestCase):
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         self.assertEqual(
-            4, len(matches), "Expected {} failures, got {}".format(4, len(matches))
+            6, len(matches), "Expected {} failures, got {}".format(6, len(matches))
         )
 
     def test_success_filtering_of_rules_default(self):

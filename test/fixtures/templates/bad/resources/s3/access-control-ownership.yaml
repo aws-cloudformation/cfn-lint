@@ -1,0 +1,33 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+
+Resources:
+  Bucket1:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AwsExecRead
+      # Bucket cannot have ACLs set with ObjectOwnership's BucketOwnerEnforced setting
+  Bucket2:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AwsExecRead
+      OwnershipControls:
+        # Bucket cannot have ACLs set with ObjectOwnership's BucketOwnerEnforced setting
+        Rules: []
+  Bucket3:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, AwsExecRead, PublicRead]
+      OwnershipControls:
+        # Bucket cannot have ACLs set with ObjectOwnership's BucketOwnerEnforced setting
+        Rules: []
+  Bucket4:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, PublicRead]
+      OwnershipControls:
+        Fn::If:
+        - IsUsEast1
+        - Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+        - Rules: []

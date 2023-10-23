@@ -1,0 +1,62 @@
+Mappings:
+  OwnershipControls:
+    Rules:
+      MyBucket:
+      - ObjectOwnership: BucketOwnerPreferred
+
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+
+Resources:
+  Bucket1:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AwsExecRead
+      # Configured ObjectOwnership
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+  Bucket2:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: AwsExecRead
+      # Using a function so we ignore
+      OwnershipControls:
+        Rules: !FindInMap [OwnershipControls, Rules, MyBucket]
+  Bucket3:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Access Control Private will work without OwnershipControls
+      AccessControl: Private
+  Bucket4:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Access Control BucketOwnerFullControl will work without OwnershipControls
+      AccessControl: BucketOwnerFullControl
+  Bucket5:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Access Control BucketOwnerRead will work without OwnershipControls
+      AccessControl: BucketOwnerRead
+  Bucket6:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Access Control BucketOwnerRead and BucketOwnerFullControl will work without OwnershipControls
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, BucketOwnerFullControl]
+  Bucket7:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, PublicRead]
+      OwnershipControls:
+        Fn::If:
+        - IsUsEast1
+        - Rules: []
+        - Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+  Bucket8:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: !If [IsUsEast1, BucketOwnerRead, PublicRead]
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: !If [IsUsEast1, !Ref AWS::NoValue, BucketOwnerEnforced]
