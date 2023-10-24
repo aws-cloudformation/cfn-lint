@@ -21,6 +21,10 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#rules-1"
     tags = ["resources", "property", "list"]
 
+    def __init__(self):
+        super().__init__()
+        self.exceptions = ["Command"]
+
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
@@ -71,11 +75,15 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
         """Check for duplicates"""
         matches = []
 
+        if path[-1] in self.exceptions:
+            return matches
         if isinstance(values, list):
             matches.extend(self._check_duplicates(values, path))
         elif isinstance(values, dict):
             props = cfn.get_object_without_conditions(values)
             for prop in props:
+                if prop in self.exceptions:
+                    continue
                 matches.extend(
                     self._check_duplicates(
                         prop.get("Object"), path, prop.get("Scenario")
