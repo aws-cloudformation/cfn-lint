@@ -21,7 +21,13 @@ class UpdateReplacePolicy(CloudFormationLintRule):
 
         valid_values = ["Delete", "Retain", "Snapshot"]
 
-        supported_functions = ["Fn::FindInMap", "Fn::If", "Ref"]
+        supported_functions = [
+            "Fn::Sub",
+            "Fn::Select",
+            "Fn::FindInMap",
+            "Fn::If",
+            "Ref",
+        ]
 
         supported_functions_joined = ", ".join(supported_functions)
 
