@@ -4,7 +4,7 @@ Metadata:
   cfn-lint:
     config:
       include_checks:
-      - I
+        - I
 Parameters:
   PrimaryRegion:
     Type: String
@@ -13,7 +13,7 @@ Parameters:
   PrivateSubnetTwo:
     Type: String
 Conditions:
-  isPrimaryRegion: !Equals [!Ref PrimaryRegion, 'us-east-1']
+  isPrimaryRegion: !Equals [!Ref PrimaryRegion, "us-east-1"]
 Resources:
   MyASG:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -32,11 +32,11 @@ Resources:
       MinSize: "1"
       VPCZoneIdentifier:
         Fn::If:
-        - isPrimaryRegion
-        - - !Ref PrivateSubnetOne
-          - !Ref PrivateSubnetTwo
-        - - !Ref PrivateSubnetOne
-          - !Ref PrivateSubnetTwo
+          - isPrimaryRegion
+          - - !Ref PrivateSubnetOne
+            - !Ref PrivateSubnetTwo
+          - - !Ref PrivateSubnetOne
+            - !Ref PrivateSubnetTwo
   MyASG3:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -44,5 +44,17 @@ Resources:
       MaxSize: "1"
       MinSize: "1"
       VPCZoneIdentifier:
-        - !If ['isPrimaryRegion', !Ref PrivateSubnetTwo, !Ref PrivateSubnetOne]
+        - !If ["isPrimaryRegion", !Ref PrivateSubnetTwo, !Ref PrivateSubnetOne]
         - "subnet-123456"
+  MyECSTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Command:
+            - do_something
+            - --foo
+            - "1"
+            - --bar
+            - "1"
+          Image: my-image
+          Name: my-task
