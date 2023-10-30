@@ -1,3 +1,10 @@
+### v0.83.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `146.0.0` (pull #[2921](https://github.com/aws-cloudformation/cfn-lint/pull/2921))
+###### Fixes
+- Update [E3036](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3036) and [E3035](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3035) to allow more FNs (pull #[2928](https://github.com/aws-cloudformation/cfn-lint/pull/2928))
+- Update [I3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3037) to have exceptions `Command` (pull #[2927](https://github.com/aws-cloudformation/cfn-lint/pull/2927))
+
 ### v0.83.0
 ###### Features
 - Add rule [E3045](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3045) to validate `AccessControl`s are specified when using `AccessControl` (pull #[2906](https://github.com/aws-cloudformation/cfn-lint/pull/2906))
