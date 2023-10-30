@@ -180,6 +180,7 @@
   "AWS::Amplify::App.BasicAuthConfig": "CACHED",
   "AWS::Amplify::App.CustomRule": "CACHED",
   "AWS::Amplify::App.EnvironmentVariable": "CACHED",
+  "AWS::Amplify::Branch.Backend": "CACHED",
   "AWS::Amplify::Branch.BasicAuthConfig": "CACHED",
   "AWS::Amplify::Branch.EnvironmentVariable": "CACHED",
   "AWS::Amplify::Domain.SubDomainSetting": "CACHED",
@@ -510,9 +511,37 @@
   "AWS::AppSync::GraphQLApi.OpenIDConnectConfig": "CACHED",
   "AWS::AppSync::GraphQLApi.UserPoolConfig": "CACHED",
   "AWS::AppSync::Resolver.AppSyncRuntime": "CACHED",
-  "AWS::AppSync::Resolver.CachingConfig": "CACHED",
+  "AWS::AppSync::Resolver.CachingConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-cachingconfig.html",
+   "Properties": {
+    "CachingKeys": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-cachingconfig.html#cfn-appsync-resolver-cachingconfig-cachingkeys",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Ttl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-cachingconfig.html#cfn-appsync-resolver-cachingconfig-ttl",
+     "PrimitiveType": "Double",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::AppSync::Resolver.LambdaConflictHandlerConfig": "CACHED",
-  "AWS::AppSync::Resolver.PipelineConfig": "CACHED",
+  "AWS::AppSync::Resolver.PipelineConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-pipelineconfig.html",
+   "Properties": {
+    "Functions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-pipelineconfig.html#cfn-appsync-resolver-pipelineconfig-functions",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::AppSync::Resolver.SyncConfig": "CACHED",
   "AWS::AppSync::SourceApiAssociation.SourceApiAssociationConfig": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget.ScalableTargetAction": "CACHED",
@@ -1259,6 +1288,7 @@
   "AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification": "CACHED",
   "AWS::EC2::VerifiedAccessEndpoint.LoadBalancerOptions": "CACHED",
   "AWS::EC2::VerifiedAccessEndpoint.NetworkInterfaceOptions": "CACHED",
+  "AWS::EC2::VerifiedAccessEndpoint.SseSpecification": "CACHED",
   "AWS::EC2::VerifiedAccessGroup.SseSpecification": "CACHED",
   "AWS::EC2::VerifiedAccessInstance.CloudWatchLogs": "CACHED",
   "AWS::EC2::VerifiedAccessInstance.KinesisDataFirehose": "CACHED",
@@ -2554,26 +2584,7 @@
   "AWS::GuardDuty::Detector.TagItem": "CACHED",
   "AWS::GuardDuty::Filter.Condition": "CACHED",
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
-  "AWS::IAM::Group.Policy": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html",
-   "Properties": {
-    "PolicyDocument": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html#cfn-iam-policies-policydocument",
-     "PrimitiveType": "Json",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "PolicyName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html#cfn-iam-policies-policyname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IAM::Policy.PolicyName"
-     }
-    }
-   }
-  },
+  "AWS::IAM::Group.Policy": "CACHED",
   "AWS::IAM::Role.Policy": "CACHED",
   "AWS::IAM::User.LoginProfile": "CACHED",
   "AWS::IAM::User.Policy": "CACHED",
@@ -3949,7 +3960,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "145.0.0",
+ "ResourceSpecificationVersion": "146.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -4165,46 +4176,179 @@
   "AWS::Cognito::IdentityPoolRoleAttachment": "CACHED",
   "AWS::Cognito::LogDeliveryConfiguration": "CACHED",
   "AWS::Cognito::UserPool": "CACHED",
-  "AWS::Cognito::UserPoolClient": "CACHED",
-  "AWS::Cognito::UserPoolDomain": "CACHED",
-  "AWS::Cognito::UserPoolGroup": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html",
+  "AWS::Cognito::UserPoolClient": {
+   "Attributes": {
+    "ClientSecret": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html",
    "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html#cfn-cognito-userpoolgroup-description",
+    "AccessTokenValidity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-accesstokenvalidity",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Cognito::UserPoolClient.AccessTokenValidity"
+     }
+    },
+    "AllowedOAuthFlows": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthflows",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "AllowedOAuthFlowsUserPoolClient": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthflowsuserpoolclient",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AllowedOAuthScopes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthscopes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "AnalyticsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-analyticsconfiguration",
+     "Required": false,
+     "Type": "AnalyticsConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "AuthSessionValidity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-authsessionvalidity",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Cognito::UserPoolClient.AuthSessionValidity"
+     }
+    },
+    "CallbackURLs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-callbackurls",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ClientName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-clientname",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable",
      "Value": {
-      "ValueType": "AWS::Cognito::UserPoolGroup.Description"
+      "ValueType": "AWS::Cognito::UserPoolClient.ClientName"
      }
     },
-    "GroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html#cfn-cognito-userpoolgroup-groupname",
+    "DefaultRedirectURI": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-defaultredirecturi",
      "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Precedence": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html#cfn-cognito-userpoolgroup-precedence",
-     "PrimitiveType": "Double",
      "Required": false,
      "UpdateType": "Mutable"
     },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html#cfn-cognito-userpoolgroup-rolearn",
+    "EnablePropagateAdditionalUserContextData": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-enablepropagateadditionalusercontextdata",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EnableTokenRevocation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-enabletokenrevocation",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ExplicitAuthFlows": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-explicitauthflows",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Cognito::UserPoolClient.ExplicitAuthFlows"
+     }
+    },
+    "GenerateSecret": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-generatesecret",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "IdTokenValidity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-idtokenvalidity",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Cognito::UserPoolClient.IdTokenValidity"
+     }
+    },
+    "LogoutURLs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-logouturls",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PreventUserExistenceErrors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-preventuserexistenceerrors",
      "PrimitiveType": "String",
      "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ReadAttributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-readattributes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "RefreshTokenValidity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-refreshtokenvalidity",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Cognito::UserPoolClient.RefreshTokenValidity"
+     }
+    },
+    "SupportedIdentityProviders": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-supportedidentityproviders",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TokenValidityUnits": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-tokenvalidityunits",
+     "Required": false,
+     "Type": "TokenValidityUnits",
      "UpdateType": "Mutable"
     },
     "UserPoolId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolgroup.html#cfn-cognito-userpoolgroup-userpoolid",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-userpoolid",
      "PrimitiveType": "String",
      "Required": true,
      "UpdateType": "Immutable"
+    },
+    "WriteAttributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-writeattributes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
     }
    }
   },
+  "AWS::Cognito::UserPoolDomain": "CACHED",
+  "AWS::Cognito::UserPoolGroup": "CACHED",
   "AWS::Cognito::UserPoolIdentityProvider": "CACHED",
   "AWS::Cognito::UserPoolResourceServer": "CACHED",
   "AWS::Cognito::UserPoolRiskConfigurationAttachment": "CACHED",
@@ -4378,28 +4522,7 @@
   "AWS::EC2::SpotFleet": "CACHED",
   "AWS::EC2::Subnet": "CACHED",
   "AWS::EC2::SubnetCidrBlock": "CACHED",
-  "AWS::EC2::SubnetNetworkAclAssociation": {
-   "Attributes": {
-    "AssociationId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetnetworkaclassociation.html",
-   "Properties": {
-    "NetworkAclId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetnetworkaclassociation.html#cfn-ec2-subnetnetworkaclassociation-networkaclid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "SubnetId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetnetworkaclassociation.html#cfn-ec2-subnetnetworkaclassociation-subnetid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::SubnetNetworkAclAssociation": "CACHED",
   "AWS::EC2::SubnetRouteTableAssociation": "CACHED",
   "AWS::EC2::TrafficMirrorFilter": "CACHED",
   "AWS::EC2::TrafficMirrorFilterRule": "CACHED",
@@ -4431,116 +4554,7 @@
   "AWS::EC2::VPNConnectionRoute": "CACHED",
   "AWS::EC2::VPNGateway": "CACHED",
   "AWS::EC2::VPNGatewayRoutePropagation": "CACHED",
-  "AWS::EC2::VerifiedAccessEndpoint": {
-   "Attributes": {
-    "CreationTime": {
-     "PrimitiveType": "String"
-    },
-    "DeviceValidationDomain": {
-     "PrimitiveType": "String"
-    },
-    "EndpointDomain": {
-     "PrimitiveType": "String"
-    },
-    "LastUpdatedTime": {
-     "PrimitiveType": "String"
-    },
-    "Status": {
-     "PrimitiveType": "String"
-    },
-    "VerifiedAccessEndpointId": {
-     "PrimitiveType": "String"
-    },
-    "VerifiedAccessInstanceId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html",
-   "Properties": {
-    "ApplicationDomain": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-applicationdomain",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "AttachmentType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-attachmenttype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainCertificateArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-domaincertificatearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "EndpointDomainPrefix": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-endpointdomainprefix",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "EndpointType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-endpointtype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "LoadBalancerOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-loadbalanceroptions",
-     "Required": false,
-     "Type": "LoadBalancerOptions",
-     "UpdateType": "Mutable"
-    },
-    "NetworkInterfaceOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-networkinterfaceoptions",
-     "Required": false,
-     "Type": "NetworkInterfaceOptions",
-     "UpdateType": "Mutable"
-    },
-    "PolicyDocument": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-policydocument",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PolicyEnabled": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-policyenabled",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SecurityGroupIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-securitygroupids",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VerifiedAccessGroupId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-verifiedaccessendpoint.html#cfn-ec2-verifiedaccessendpoint-verifiedaccessgroupid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::VerifiedAccessEndpoint": "CACHED",
   "AWS::EC2::VerifiedAccessGroup": "CACHED",
   "AWS::EC2::VerifiedAccessInstance": "CACHED",
   "AWS::EC2::VerifiedAccessTrustProvider": "CACHED",
@@ -4813,51 +4827,7 @@
   "AWS::GuardDuty::Member": "CACHED",
   "AWS::GuardDuty::ThreatIntelSet": "CACHED",
   "AWS::IAM::AccessKey": "CACHED",
-  "AWS::IAM::Group": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html",
-   "Properties": {
-    "GroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-groupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ManagedPolicyArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-managepolicyarns",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ListValueType": "AWS::IAM::ManagedPolicy.Arns",
-      "ValueType": "AWS::IAM::ManagedPolicy.Arn"
-     }
-    },
-    "Path": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-path",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IAM::Path.Path"
-     }
-    },
-    "Policies": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-policies",
-     "DuplicatesAllowed": false,
-     "ItemType": "Policy",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::IAM::Group": "CACHED",
   "AWS::IAM::GroupPolicy": "CACHED",
   "AWS::IAM::InstanceProfile": "CACHED",
   "AWS::IAM::ManagedPolicy": "CACHED",
@@ -4898,31 +4868,7 @@
   "AWS::IoT::JobTemplate": "CACHED",
   "AWS::IoT::Logging": "CACHED",
   "AWS::IoT::MitigationAction": "CACHED",
-  "AWS::IoT::Policy": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-policy.html",
-   "Properties": {
-    "PolicyDocument": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-policy.html#cfn-iot-policy-policydocument",
-     "PrimitiveType": "Json",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "PolicyName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-policy.html#cfn-iot-policy-policyname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::IoT::Policy": "CACHED",
   "AWS::IoT::PolicyPrincipalAttachment": "CACHED",
   "AWS::IoT::ProvisioningTemplate": "CACHED",
   "AWS::IoT::ResourceSpecificLogging": "CACHED",
@@ -5026,7 +4972,88 @@
   "AWS::NetworkFirewall::LoggingConfiguration": "CACHED",
   "AWS::NetworkFirewall::RuleGroup": "CACHED",
   "AWS::NetworkManager::ConnectAttachment": "CACHED",
-  "AWS::NetworkManager::ConnectPeer": "CACHED",
+  "AWS::NetworkManager::ConnectPeer": {
+   "Attributes": {
+    "Configuration": {
+     "Type": "ConnectPeerConfiguration"
+    },
+    "Configuration.BgpConfigurations": {
+     "ItemType": "ConnectPeerBgpConfiguration",
+     "Type": "List"
+    },
+    "Configuration.CoreNetworkAddress": {
+     "PrimitiveType": "String"
+    },
+    "Configuration.InsideCidrBlocks": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "Configuration.PeerAddress": {
+     "PrimitiveType": "String"
+    },
+    "Configuration.Protocol": {
+     "PrimitiveType": "String"
+    },
+    "ConnectPeerId": {
+     "PrimitiveType": "String"
+    },
+    "CoreNetworkId": {
+     "PrimitiveType": "String"
+    },
+    "CreatedAt": {
+     "PrimitiveType": "String"
+    },
+    "EdgeLocation": {
+     "PrimitiveType": "String"
+    },
+    "State": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html",
+   "Properties": {
+    "BgpOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-bgpoptions",
+     "Required": false,
+     "Type": "BgpOptions",
+     "UpdateType": "Immutable"
+    },
+    "ConnectAttachmentId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-connectattachmentid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "CoreNetworkAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-corenetworkaddress",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "InsideCidrBlocks": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-insidecidrblocks",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "PeerAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-peeraddress",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::NetworkManager::CoreNetwork": "CACHED",
   "AWS::NetworkManager::CustomerGatewayAssociation": "CACHED",
   "AWS::NetworkManager::Device": "CACHED",
@@ -5307,6 +5334,7 @@
   "AWS::Amplify::App.Platform": "CACHED",
   "AWS::Amplify::App.Repository": "CACHED",
   "AWS::Amplify::Branch.AppId": "CACHED",
+  "AWS::Amplify::Branch.Backend.StackArn": "CACHED",
   "AWS::Amplify::Branch.BasicAuthConfig.Password": "CACHED",
   "AWS::Amplify::Branch.BasicAuthConfig.Username": "CACHED",
   "AWS::Amplify::Branch.BranchName": "CACHED",
@@ -5344,6 +5372,8 @@
   "AWS::ApiGateway::Method.IntegrationResponse.ContentHandling": "CACHED",
   "AWS::ApiGateway::RestApi.ApiKeySourceType": "CACHED",
   "AWS::ApiGateway::UsagePlanKey.KeyType": "CACHED",
+  "AWS::AppConfig::Application.Tags.Key": "CACHED",
+  "AWS::AppConfig::Application.Tags.Value": "CACHED",
   "AWS::AppFlow::Connector.ConnectorLabel": "CACHED",
   "AWS::AppFlow::Connector.ConnectorProvisioningType": "CACHED",
   "AWS::AppFlow::Connector.Description": "CACHED",
@@ -5612,10 +5642,7 @@
   "AWS::AuditManager::Assessment.Role.RoleArn": "CACHED",
   "AWS::AuditManager::Assessment.Role.RoleType": "CACHED",
   "AWS::AuditManager::Assessment.Status": "CACHED",
-  "AWS::AutoScaling::AutoScalingGroup.DesiredCapacity": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.HealthCheckType": "CACHED",
-  "AWS::AutoScaling::AutoScalingGroup.MaxSize": "CACHED",
-  "AWS::AutoScaling::AutoScalingGroup.MinSize": "CACHED",
   "AWS::AutoScaling::LaunchConfiguration.LaunchConfigurationName": "CACHED",
   "AWS::AutoScaling::LaunchConfiguration.UserData": "CACHED",
   "AWS::AutoScaling::LifecycleHook.DefaultResult": "CACHED",
@@ -5855,10 +5882,19 @@
   "AWS::CodeStarNotifications::NotificationRule.Status": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule.TargetAddress": "CACHED",
   "AWS::Cognito::UserPool.AliasAttributes": "CACHED",
+  "AWS::Cognito::UserPool.EmailVerificationMessage": "CACHED",
+  "AWS::Cognito::UserPool.EmailVerificationSubject": "CACHED",
   "AWS::Cognito::UserPool.MfaConfiguration": "CACHED",
   "AWS::Cognito::UserPool.SchemaAttribute.AttributeDataType": "CACHED",
+  "AWS::Cognito::UserPool.SmsAuthenticationMessage": "CACHED",
+  "AWS::Cognito::UserPool.SmsVerificationMessage": "CACHED",
+  "AWS::Cognito::UserPool.UserPoolName": "CACHED",
   "AWS::Cognito::UserPool.UsernameAttributes": "CACHED",
+  "AWS::Cognito::UserPoolClient.AccessTokenValidity": "CACHED",
+  "AWS::Cognito::UserPoolClient.AuthSessionValidity": "CACHED",
+  "AWS::Cognito::UserPoolClient.ClientName": "CACHED",
   "AWS::Cognito::UserPoolClient.ExplicitAuthFlows": "CACHED",
+  "AWS::Cognito::UserPoolClient.IdTokenValidity": "CACHED",
   "AWS::Cognito::UserPoolClient.RefreshTokenValidity": "CACHED",
   "AWS::Cognito::UserPoolGroup.Description": "CACHED",
   "AWS::Cognito::UserPoolUser.DesiredDeliveryMediums": "CACHED",
@@ -6260,6 +6296,7 @@
   "AWS::Events::Rule.Description": "CACHED",
   "AWS::Events::Rule.EventBusName": "CACHED",
   "AWS::Events::Rule.Name": "CACHED",
+  "AWS::Events::Rule.State": "CACHED",
   "AWS::FIS::ExperimentTemplate.CloudWatchLogsConfiguration.LogGroupArn": "CACHED",
   "AWS::FIS::ExperimentTemplate.Description": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition.Source": "CACHED",
@@ -8993,7 +9030,9 @@
     "i3en.large",
     "i3en.metal",
     "i3en.xlarge",
+    "i4i.12xlarge",
     "i4i.16xlarge",
+    "i4i.24xlarge",
     "i4i.2xlarge",
     "i4i.32xlarge",
     "i4i.4xlarge",
