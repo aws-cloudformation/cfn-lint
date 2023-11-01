@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
-from typing import Any, Callable, Dict, Iterator, Optional, Union
+from typing import Any, Callable, Dict, Iterator, Optional
 
 from cfnlint.jsonschema.exceptions import ValidationError
 

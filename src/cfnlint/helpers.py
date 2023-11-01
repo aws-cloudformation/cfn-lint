@@ -16,8 +16,8 @@ import logging
 import os
 import sys
 from io import BytesIO
-from urllib.request import Request, urlopen, urlretrieve
 from typing import Any
+from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
 
