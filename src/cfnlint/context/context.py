@@ -80,7 +80,7 @@ class Context:
     resolved_value: bool = field(init=True, default=False)
     resolved_conditions: Mapping[str, bool] = field(init=True, default_factory=dict)
 
-    transforms: Transforms = field(init=True, default=Transforms([]))
+    transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
     def __post_init__(self) -> None:
         if self.path is None:
