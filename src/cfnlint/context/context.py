@@ -7,7 +7,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterable, Iterator, List, Mapping, Sequence
+from typing import Any, Deque, Dict, Iterable, List, Mapping, Sequence
 
 from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
@@ -121,30 +121,6 @@ class Context:
             + list(self.resources.keys())
             + list(self.ref_values.keys())
         )
-
-    def fn_value(self, instance: Dict[str, Any]) -> Iterator[Any]:
-        """
-        Return the value of a ref
-        """
-        if len(instance) != 1:
-            raise ValueError(
-                "Fn::Value can only have one key, got: %s" % list(instance.keys())
-            )
-        for k, v in instance.items():
-            if k == "Ref":
-                if v in self.ref_values:
-                    yield self.ref_values[v]
-                if v in self.parameters:
-                    yield from self.parameters[v].ref(self)
-                return
-            if k == "Fn::FindInMap":
-                if not (isinstance(v, list) and len(v) == 3):
-                    return
-                try:
-                    yield from self.mappings[v[0]].find_in_map(v[1], v[2])
-                except KeyError:
-                    pass
-            raise ValueError(f"Unsupported value {v!r}")
 
 
 def _get_pseudo_value(parameter: str, region: str) -> str | List[str] | None:
