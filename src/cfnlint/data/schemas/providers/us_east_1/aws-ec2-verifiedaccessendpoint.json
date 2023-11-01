@@ -66,6 +66,21 @@
    "description": "The ID of a security group for the endpoint.",
    "type": "string"
   },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "description": "The configuration options for customer provided KMS encryption.",
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "description": "Whether to encrypt the policy with the provided key or disable encryption",
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "description": "KMS Key Arn used to encrypt the group policy",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "SubnetId": {
    "description": "The IDs of the subnet.",
    "type": "string"
@@ -124,7 +139,12 @@
     "ec2:GetVerifiedAccessEndpointPolicy",
     "ec2:ModifyVerifiedAccessEndpoint",
     "ec2:ModifyVerifiedAccessEndpointPolicy",
-    "sso:DeleteManagedApplicationInstance"
+    "sso:DeleteManagedApplicationInstance",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ],
    "timeoutInMinutes": 60
   },
@@ -156,7 +176,12 @@
     "sso:CreateManagedApplicationInstance",
     "sso:GetManagedApplicationInstance",
     "sso:GetPeregrineStatus",
-    "sso:GetSharedSsoConfiguration"
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ],
    "timeoutInMinutes": 60
   },
@@ -188,7 +213,12 @@
     "sso:DeleteManagedApplicationInstance",
     "sso:GetManagedApplicationInstance",
     "sso:GetPeregrineStatus",
-    "sso:GetSharedSsoConfiguration"
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "read": {
@@ -219,7 +249,12 @@
     "sso:DeleteManagedApplicationInstance",
     "sso:GetManagedApplicationInstance",
     "sso:GetPeregrineStatus",
-    "sso:GetSharedSsoConfiguration"
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -250,7 +285,12 @@
     "ec2:CreateVerifiedAccessEndpoint",
     "ec2:DeleteVerifiedAccessEndpoint",
     "iam:CreateServiceLinkedRole",
-    "iam:ListRoles"
+    "iam:ListRoles",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ],
    "timeoutInMinutes": 60
   }
@@ -323,6 +363,10 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification",
+   "description": "The configuration options for customer provided KMS encryption."
   },
   "Status": {
    "description": "The endpoint status.",

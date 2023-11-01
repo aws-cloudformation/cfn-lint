@@ -17,14 +17,30 @@
     "servicecatalog:DisassociateAttributeGroup"
    ]
   },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationArn": {
+      "$ref": "resource-schema.json#/properties/ApplicationArn"
+     }
+    },
+    "required": [
+     "ApplicationArn"
+    ]
+   },
+   "permissions": [
+    "servicecatalog:ListAttributeGroupsForApplication"
+   ]
+  },
   "read": {
    "permissions": [
-    "servicecatalog:ListAssociatedAttributeGroups"
+    "servicecatalog:ListAttributeGroupsForApplication"
    ]
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ApplicationArn",
+  "/properties/AttributeGroupArn"
  ],
  "properties": {
   "Application": {
@@ -48,21 +64,22 @@
   "AttributeGroupArn": {
    "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/attribute-groups/[a-z0-9]+",
    "type": "string"
-  },
-  "Id": {
-   "type": "string"
   }
  },
  "readOnlyProperties": [
   "/properties/ApplicationArn",
-  "/properties/AttributeGroupArn",
-  "/properties/Id"
+  "/properties/AttributeGroupArn"
  ],
  "required": [
   "Application",
   "AttributeGroup"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
- "taggable": false,
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation"
 }
