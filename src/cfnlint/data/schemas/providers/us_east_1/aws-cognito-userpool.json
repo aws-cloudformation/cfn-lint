@@ -8,8 +8,7 @@
      "items": {
       "$ref": "#/definitions/RecoveryOption"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": "array"
     }
    },
    "type": "object"
@@ -264,8 +263,7 @@
      "items": {
       "type": "string"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": "array"
     }
    },
    "required": [
@@ -317,8 +315,50 @@
   }
  },
  "description": "Resource Type definition for AWS::Cognito::UserPool",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:CreateUserPool",
+    "iam:PassRole",
+    "cognito-idp:SetUserPoolMfaConfig",
+    "cognito-idp:DescribeUserPool",
+    "kms:CreateGrant",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:DeleteUserPool"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "list": {
+   "permissions": [
+    "cognito-idp:ListUserPools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:DescribeUserPool"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-idp:UpdateUserPool",
+    "cognito-idp:ListTagsForResource",
+    "cognito-idp:UntagResource",
+    "cognito-idp:TagResource",
+    "cognito-idp:SetUserPoolMfaConfig",
+    "cognito-idp:AddCustomAttributes",
+    "cognito-idp:DescribeUserPool",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 2
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/UserPoolId"
  ],
  "properties": {
   "AccountRecoverySetting": {
@@ -336,8 +376,7 @@
     ],
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "Arn": {
    "type": "string"
@@ -346,8 +385,7 @@
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "DeletionProtection": {
    "type": "string"
@@ -359,20 +397,20 @@
    "$ref": "#/definitions/EmailConfiguration"
   },
   "EmailVerificationMessage": {
+   "maxLength": 20000,
+   "minLength": 6,
    "type": "string"
   },
   "EmailVerificationSubject": {
+   "maxLength": 140,
+   "minLength": 1,
    "type": "string"
   },
   "EnabledMfas": {
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
-  },
-  "Id": {
-   "type": "string"
+   "type": "array"
   },
   "LambdaConfig": {
    "$ref": "#/definitions/LambdaConfig"
@@ -398,16 +436,19 @@
    "items": {
     "$ref": "#/definitions/SchemaAttribute"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "SmsAuthenticationMessage": {
+   "maxLength": 140,
+   "minLength": 6,
    "type": "string"
   },
   "SmsConfiguration": {
    "$ref": "#/definitions/SmsConfiguration"
   },
   "SmsVerificationMessage": {
+   "maxLength": 140,
+   "minLength": 6,
    "type": "string"
   },
   "UserAttributeUpdateSettings": {
@@ -416,10 +457,21 @@
   "UserPoolAddOns": {
    "$ref": "#/definitions/UserPoolAddOns"
   },
+  "UserPoolId": {
+   "type": "string"
+  },
   "UserPoolName": {
+   "maxLength": 128,
+   "minLength": 1,
    "type": "string"
   },
   "UserPoolTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
    "type": "object"
   },
   "UsernameAttributes": {
@@ -430,8 +482,7 @@
     ],
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "UsernameConfiguration": {
    "$ref": "#/definitions/UsernameConfiguration"
@@ -440,11 +491,25 @@
    "$ref": "#/definitions/VerificationMessageTemplate"
   }
  },
+ "propertyTransform": {
+  "/properties/Schema/*/Name": "'custom:' & '' & Name"
+ },
  "readOnlyProperties": [
-  "/properties/Id",
-  "/properties/Arn",
   "/properties/ProviderName",
-  "/properties/ProviderURL"
+  "/properties/UserPoolId",
+  "/properties/ProviderURL",
+  "/properties/Arn"
  ],
- "typeName": "AWS::Cognito::UserPool"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/UserPoolTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cognito::UserPool",
+ "writeOnlyProperties": [
+  "/properties/EnabledMfas"
+ ]
 }
