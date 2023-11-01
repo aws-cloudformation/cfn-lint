@@ -5,10 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
-from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.jsonschema._validators_cfn import FnEquals
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import CloudFormationLintRule
 
 
 class Equals(CloudFormationLintRule):
