@@ -25,6 +25,5 @@ def test_names(name, instance, num_of_errors):
     rule = EqualsIsUseful()
     validator = CfnTemplateValidator({})
     assert (
-        len(list(rule.equals_is_useful(validator, {}, instance, {}))) == num_of_errors,
-        f"Expected {num_of_errors} errors for {name}",
-    )
+        len(list(rule.equals_is_useful(validator, {}, instance, {}))) == num_of_errors
+    ), f"Expected {num_of_errors} errors for {name}"
