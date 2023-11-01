@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from typing import Any, Dict, Iterator
+from typing import Any, Callable, Dict, Iterator
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
@@ -23,7 +23,6 @@ from cfnlint.jsonschema.exceptions import (
     UnknownType,
     ValidationError,
 )
-from cfnlint.jsonschema.value import Value
 from cfnlint.template import Template
 
 
@@ -70,7 +69,7 @@ def create(
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=lambda: context_arg)
 
-        fn_resolvers: Mapping[str, V] = field(
+        fn_resolvers: Mapping[str, Callable[["Validator", Any], Any]] = field(
             init=False, default_factory=lambda: fn_resolvers_arg
         )
 
@@ -124,12 +123,12 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def resolve(self, instance: Any) -> Iterator[Any]:
+        def resolve_value(self, instance: Any) -> Iterator[Any]:
             if self.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
                         if k in self.fn_resolvers:
-                            for value in self.resolve(v):
+                            for value in self.resolve_value(v):
                                 yield from self.fn_resolvers[k](self, value)
                             return
 
@@ -258,7 +257,7 @@ def create(
             validators: Dict[str, V] | None = None,
             function_filter: FunctionFilter | None = None,
             context: Context | None = None,
-            fn_resolvers: Mapping[str, V] | None = None,
+            fn_resolvers: Mapping[str, Callable[["Validator", Any], Any]] | None = None,
         ) -> "Validator":
             """
             Extends the current validator.

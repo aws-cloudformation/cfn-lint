@@ -3,8 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.data.schemas.other import cfn_init
-from cfnlint.helpers import FUNCTIONS, load_resource, valid_snapshot_types
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.helpers import FUNCTIONS, load_resource
+from cfnlint.rules import CloudFormationLintRule
 
 
 class CfnInit(CloudFormationLintRule):
