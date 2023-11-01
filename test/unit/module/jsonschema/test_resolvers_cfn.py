@@ -117,6 +117,31 @@ def test_resolvers_ref(name, instance, response):
             {"Fn::GetAZs": "foo"},
             [],
         ),
+        (
+            "Invalid FindInMap with an invalid type",
+            {"Fn::FindInMap": {"foo": "bar"}},
+            [],
+        ),
+        (
+            "Invalid FindInMap with an invalid length",
+            {"Fn::FindInMap": ["foo", "bar"]},
+            [],
+        ),
+        (
+            "Invalid FindInMap with an invalid type for first element",
+            {"Fn::FindInMap": [["foo"], "bar", "value"]},
+            [],
+        ),
+        (
+            "Invalid FindInMap with an invalid type for second element",
+            {"Fn::FindInMap": ["foo", ["bar"], "value"]},
+            [],
+        ),
+        (
+            "Invalid FindInMap with an invalid type for third element",
+            {"Fn::FindInMap": ["foo", "bar", ["value"]]},
+            [],
+        ),
     ],
 )
 def test_invalid_functions(name, instance, response):
@@ -149,6 +174,11 @@ def test_invalid_functions(name, instance, response):
                     "us-east-1f",
                 ]
             ],
+        ),
+        (
+            "Valid FindInMap with a default value",
+            {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
+            ["default"],
         ),
     ],
 )
