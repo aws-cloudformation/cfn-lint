@@ -18,6 +18,12 @@ class _AttributeDict(UserDict):
         super().__init__(__dict)
         self.data: Dict[str, GetAtt] = {}
 
+    def get(self, key: str, default: Any = None) -> Any:
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
+
     def __getitem__(self, key: str) -> GetAtt:
         possible_items = {}
         for k, v in self.data.items():
@@ -39,6 +45,12 @@ class _ResourceDict(UserDict):
         if key.endswith(".*"):
             self._has_modules = True
         return super().__setitem__(key, item)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
 
     def __getitem__(self, key: str) -> _AttributeDict:
         attr = self.data.get(key)
