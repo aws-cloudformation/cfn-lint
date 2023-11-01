@@ -54,6 +54,10 @@
    },
    "type": "object"
   },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification",
+   "description": "The configuration options for customer provided KMS encryption."
+  },
   "Tag": {
    "additionalProperties": false,
    "description": "A key-value pair to associate with a resource.",
@@ -86,7 +90,12 @@
     "ec2:DescribeVerifiedAccessTrustProviders",
     "ec2:CreateTags",
     "ec2:DescribeTags",
-    "sso:GetSharedSsoConfiguration"
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "delete": {
@@ -94,19 +103,30 @@
     "ec2:DeleteVerifiedAccessTrustProvider",
     "ec2:DeleteTags",
     "ec2:DescribeVerifiedAccessTrustProviders",
-    "ec2:DescribeTags"
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "list": {
    "permissions": [
     "ec2:DescribeVerifiedAccessTrustProviders",
-    "ec2:DescribeTags"
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "read": {
    "permissions": [
     "ec2:DescribeVerifiedAccessTrustProviders",
-    "ec2:DescribeTags"
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -115,7 +135,12 @@
     "ec2:DescribeVerifiedAccessTrustProviders",
     "ec2:DescribeTags",
     "ec2:DeleteTags",
-    "ec2:CreateTags"
+    "ec2:CreateTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   }
  },
@@ -148,6 +173,21 @@
   "PolicyReferenceName": {
    "description": "The identifier to be used when working with policy rules.",
    "type": "string"
+  },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "description": "The configuration options for customer provided KMS encryption.",
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "description": "Whether to encrypt the policy with the provided key or disable encryption",
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "description": "KMS Key Arn used to encrypt the group policy",
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "Tags": {
    "description": "An array of key-value pairs to apply to this resource.",
