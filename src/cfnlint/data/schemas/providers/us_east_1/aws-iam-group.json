@@ -8,9 +8,14 @@
    "additionalProperties": false,
    "properties": {
     "PolicyDocument": {
-     "type": "object"
+     "description": "The policy document.",
+     "type": [
+      "string",
+      "object"
+     ]
     },
     "PolicyName": {
+     "description": "The friendly name (not ARN) identifying the policy.",
      "type": "string"
     }
    },
@@ -22,20 +27,67 @@
   }
  },
  "description": "Resource Type definition for AWS::IAM::Group",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateGroup",
+    "iam:PutGroupPolicy",
+    "iam:AttachGroupPolicy",
+    "iam:GetGroupPolicy",
+    "iam:GetGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:DeleteGroup",
+    "iam:ListAttachedGroupPolicies",
+    "iam:ListGroupPolicies",
+    "iam:DetachGroupPolicy",
+    "iam:DeleteGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:ListGroupPolicies",
+    "iam:GetGroupPolicy",
+    "iam:ListAttachedGroupPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:UpdateGroup",
+    "iam:DetachGroupPolicy",
+    "iam:AttachGroupPolicy",
+    "iam:DeleteGroupPolicy",
+    "iam:PutGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/GroupName"
  ],
  "properties": {
   "Arn": {
+   "description": "The Arn of the group to create",
    "type": "string"
   },
   "GroupName": {
-   "type": "string"
-  },
-  "Id": {
+   "description": "The name of the group to create",
    "type": "string"
   },
   "ManagedPolicyArns": {
+   "description": "A list of Amazon Resource Names (ARNs) of the IAM managed policies that you want to attach to the role. ",
+   "insertionOrder": false,
    "items": {
     "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
     "type": "string"
@@ -46,20 +98,29 @@
    "uniqueItems": true
   },
   "Path": {
+   "description": "The path to the group",
    "pattern": "^/(.+/)*$",
    "type": "string"
   },
   "Policies": {
+   "description": "Adds or updates an inline policy document that is embedded in the specified IAM group",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Policy"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   }
  },
  "readOnlyProperties": [
-  "/properties/Arn",
-  "/properties/Id"
+  "/properties/Arn"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::IAM::Group"
 }
