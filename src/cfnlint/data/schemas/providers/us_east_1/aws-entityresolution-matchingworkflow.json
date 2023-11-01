@@ -47,6 +47,19 @@
    ],
    "type": "object"
   },
+  "IntermediateSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateS3Path": {
+     "description": "The s3 path that would be used to stage the intermediate data being generated during workflow execution.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntermediateS3Path"
+   ],
+   "type": "object"
+  },
   "KMSArn": {
    "pattern": "^arn:(aws|aws-us-gov|aws-cn):kms:.*:[0-9]+:.*$",
    "type": "string"
@@ -101,13 +114,43 @@
    ],
    "type": "object"
   },
+  "ProviderProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateSourceConfiguration": {
+     "$ref": "#/definitions/IntermediateSourceConfiguration"
+    },
+    "ProviderConfiguration": {
+     "additionalProperties": false,
+     "description": "Additional Provider configuration that would be required for the provider service. The Configuration must be in JSON string format",
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ProviderServiceArn": {
+     "description": "Arn of the Provider service being used.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderServiceArn"
+   ],
+   "type": "object"
+  },
   "ResolutionTechniques": {
    "additionalProperties": false,
    "properties": {
+    "ProviderProperties": {
+     "$ref": "#/definitions/ProviderProperties"
+    },
     "ResolutionType": {
      "enum": [
       "RULE_MATCHING",
-      "ML_MATCHING"
+      "ML_MATCHING",
+      "PROVIDER"
      ],
      "type": "string"
     },
@@ -216,7 +259,8 @@
   "delete": {
    "permissions": [
     "entityresolution:DeleteMatchingWorkflow",
-    "entityresolution:GetMatchingWorkflow"
+    "entityresolution:GetMatchingWorkflow",
+    "entityresolution:UntagResource"
    ]
   },
   "list": {
