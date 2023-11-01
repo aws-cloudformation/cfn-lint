@@ -6,7 +6,8 @@
   "/properties/ElasticsearchDestinationConfiguration/VpcConfiguration",
   "/properties/AmazonopensearchserviceDestinationConfiguration/VpcConfiguration",
   "/properties/AmazonOpenSearchServerlessDestinationConfiguration/VpcConfiguration",
-  "/properties/KinesisStreamSourceConfiguration"
+  "/properties/KinesisStreamSourceConfiguration",
+  "/properties/MSKSourceConfiguration"
  ],
  "definitions": {
   "AmazonOpenSearchServerlessBufferingHints": {
@@ -179,6 +180,29 @@
      "type": "integer"
     }
    },
+   "type": "object"
+  },
+  "AuthenticationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Connectivity": {
+     "enum": [
+      "PUBLIC",
+      "PRIVATE"
+     ],
+     "type": "string"
+    },
+    "RoleARN": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "arn:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleARN",
+    "Connectivity"
+   ],
    "type": "object"
   },
   "BufferingHints": {
@@ -654,6 +678,32 @@
    "required": [
     "RoleARN",
     "KinesisStreamARN"
+   ],
+   "type": "object"
+  },
+  "MSKSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationConfiguration": {
+     "$ref": "#/definitions/AuthenticationConfiguration"
+    },
+    "MSKClusterARN": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "arn:.*",
+     "type": "string"
+    },
+    "TopicName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9\\._\\-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MSKClusterARN",
+    "TopicName",
+    "AuthenticationConfiguration"
    ],
    "type": "object"
   },
@@ -1164,7 +1214,8 @@
   "DeliveryStreamType": {
    "enum": [
     "DirectPut",
-    "KinesisStreamAsSource"
+    "KinesisStreamAsSource",
+    "MSKAsSource"
    ],
    "type": "string"
   },
@@ -1179,6 +1230,9 @@
   },
   "KinesisStreamSourceConfiguration": {
    "$ref": "#/definitions/KinesisStreamSourceConfiguration"
+  },
+  "MSKSourceConfiguration": {
+   "$ref": "#/definitions/MSKSourceConfiguration"
   },
   "RedshiftDestinationConfiguration": {
    "$ref": "#/definitions/RedshiftDestinationConfiguration"
