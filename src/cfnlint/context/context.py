@@ -7,11 +7,11 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterable, List, Mapping, Sequence, Iterator
-from cfnlint.helpers import get_hash
-from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY, FUNCTION_FOR_EACH
+from typing import Any, Deque, Dict, Iterable, Iterator, List, Mapping, Sequence
+
+from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
-import regex as re
+
 
 @dataclass
 class Transforms:
@@ -71,12 +71,10 @@ class Context:
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
     resources: Dict[str, "Resource"] = field(init=True, default_factory=dict)
     conditions: Dict[str, "Condition"] = field(init=True, default_factory=dict)
+    mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
 
-    # other Refs from Fn::Sub or Fn::ForEach
+    # other Refs from Fn::Sub
     ref_values: Dict[str, List[Any]] = field(init=True, default_factory=dict)
-    
-    # For Each functions.
-    fn_foreach: Dict[str, "ForEach"] = field(init=True, default_factory=dict)
 
     # Resolved value
     resolved_value: bool = field(init=True, default=False)
@@ -85,8 +83,6 @@ class Context:
     transforms: Transforms = field(init=True, default=Transforms([]))
 
     def __post_init__(self) -> None:
-        if self.transforms is None:
-            self.transforms = _init_transforms([])
         if self.path is None:
             self.path = deque([])
         for pseudo_parameter in PSEUDOPARAMS:
@@ -142,7 +138,12 @@ class Context:
                     yield from self.parameters[v].ref(self)
                 return
             if k == "Fn::FindInMap":
-                yield from self.fn_find_in_map(v)
+                if not (isinstance(v, list) and len(v) == 3):
+                    return
+                try:
+                    yield from self.mappings[v[0]].find_in_map(v[1], v[2])
+                except KeyError:
+                    pass
             raise ValueError(f"Unsupported value {v!r}")
 
 
@@ -164,11 +165,11 @@ def _get_pseudo_value(parameter: str, region: str) -> str | List[str] | None:
         )
     if parameter == "AWS::StackName":
         return "teststack"
-    if parameter == "AWS::URLSuffix":
-        if region in ("cn-north-1", "cn-northwest-1"):
-            return "amazonaws.com.cn"
-        else:
-            return "amazonaws.com"
+    # if parameter == "AWS::URLSuffix":
+    if region in ("cn-north-1", "cn-northwest-1"):
+        return "amazonaws.com.cn"
+    else:
+        return "amazonaws.com"
 
 
 def _get_partition(region) -> str:
@@ -186,7 +187,7 @@ class _Ref(ABC):
     """
 
     @abstractmethod
-    def ref(self) -> Iterable[Any]:
+    def ref(self, context: Context) -> Iterable[Any]:
         pass
 
 
@@ -242,7 +243,7 @@ class Resource(_Ref):
         self.type = t
 
     @property
-    def get_atts(self, region:str="us-east-1") -> AttributeDict:
+    def get_atts(self, region: str = "us-east-1") -> AttributeDict:
         return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
 
     def ref(self, context: Context) -> Iterable[Any]:
@@ -251,27 +252,46 @@ class Resource(_Ref):
 
 
 @dataclass
-class _ForEachCollection:
-    pass
+class _MappingSecondaryKey:
+    """
+    This class holds a mapping value
+    """
 
+    keys: Dict[str, List[Any] | str] = field(init=False)
+    instance: InitVar[Any]
 
-_ForEachCollections: Dict[str, _ForEachCollection] = {}
+    def __post_init__(self, instance) -> None:
+        if not isinstance(instance, dict):
+            raise ValueError("Secondary keys must be a object")
+        for k, v in instance.items():
+            if isinstance(v, (str, list)):
+                self.keys[k] = v
+
+    def value(self, secondary_key: str):
+        if secondary_key not in self.keys:
+            raise KeyError(secondary_key)
+        return self.keys[secondary_key]
+
 
 @dataclass
-class ForEach(_Ref):
+class Map:
     """
-    This class holds a resources and its type
+    This class holds a mapping
     """
 
-    foreach: InitVar[Any]
-    identifier: str = field(init=False)
-    collection: Dict | List[str | Dict] = field(init=False)
-    output: Dict[str, Any] = field(init=False)
+    keys: Dict[str, _MappingSecondaryKey] = field(init=False)
+    resource: InitVar[Any]
 
-    def __post_init__(self, foreach) -> None:
-        identifier = foreach[0]
-        h = get_hash(foreach[1])
-        collection = _ForEachCollection(foreach[1])
+    def __post_init__(self, mapping) -> None:
+        if not isinstance(mapping, dict):
+            raise ValueError("Mapping must be a object")
+        for k, v in mapping.items():
+            self.keys[k] = _MappingSecondaryKey(v)
+
+    def find_in_map(self, top_key: str, secondary_key: str) -> Iterable[Any]:
+        if top_key not in self.keys:
+            raise KeyError(top_key)
+        yield self.keys[top_key].value(secondary_key)
 
 
 @dataclass
@@ -281,12 +301,13 @@ class ContextManager:
     resources: Dict[str, Resource] = field(init=False)
     transforms: Transforms = field(init=False)
     conditions: Dict[str, Condition] = field(init=False)
-    collections: Dict[str, _ForEachCollection] = field(init=False)
+    mappings: Dict[str, Map] = field(init=False)
 
     def __post_init__(self, cfn: Any) -> None:
         self.parameters = {}
         self.resources = {}
         self.conditions = {}
+        self.mappings = {}
         try:
             self._init_parameters(cfn.template.get("Parameters", {}))
         except (ValueError, AttributeError):
@@ -300,48 +321,40 @@ class ContextManager:
             self._init_conditions(cfn.template.get("Conditions", {}))
         except (ValueError, AttributeError):
             pass
+        try:
+            self._init_mappings(cfn.template.get("Mappings", {}))
+        except (ValueError, AttributeError):
+            pass
 
-    def _expand_foreach(self, instance: Dict[str, Dict], values: Dict[str, str] | None=None) -> Iterable[str, Dict]:
-        if values is None:
-            values = {}
-        for k, v in instance.items():
-            for id, iteration in values:
-                k = re.sub(rf"\${{\s?{id}\s?}}", iteration, k)
-            try:
-                if k.startswith("Fn::ForEach::"):
-                    if len(v) != 3:
-                        continue
-                    id = v[0]
-                    collection = v[1]
-                    output = v[2]
-                    if not isinstance(id, str):
-                        continue
-                    if not isinstance(output, dict):
-                        continue
-                    for iterator in collection:
-                        yield from self._expand_foreach(output, {id: iterator})
-                else:
-                    yield (k, v)
-            except ValueError:
-                pass
-
-    def _init_parameters(self, parameters: Any):
-        for k, v in self._expand_foreach(parameters):
+    def _init_parameters(self, parameters: Any) -> None:
+        if not isinstance(parameters, dict):
+            raise ValueError("Parameters must be a object")
+        for k, v in parameters.items():
             self.parameters[k] = Parameter(v)
 
-    def _init_resources(self, resources: Any) -> Dict[str, Resource]:
-        for k, v in self._expand_foreach(resources):
+    def _init_resources(self, resources: Any) -> None:
+        if not isinstance(resources, dict):
+            raise ValueError("Resource must be a object")
+        for k, v in resources.items():
             self.resources[k] = Resource(v)
 
-    def _init_transforms(self, transforms: Any):
+    def _init_transforms(self, transforms: Any) -> None:
         if isinstance(transforms, (str, list)):
             self.transforms = Transforms(transforms)
             return
         self.transforms = Transforms([])
-    
-    def _init_conditions(self, conditions: Any) -> Dict[str, Condition]:
-        for k, v in self._expand_foreach(conditions):
+
+    def _init_conditions(self, conditions: Any) -> None:
+        if not isinstance(conditions, dict):
+            raise ValueError("Conditions must be a object")
+        for k, v in conditions.items():
             self.conditions[k] = Condition(v)
+
+    def _init_mappings(self, mappings: Any) -> None:
+        if not isinstance(mappings, dict):
+            raise ValueError("Mappings must be a object")
+        for k, v in mappings.items():
+            self.mappings[k] = Map(v)
 
     collection: Dict | List[str | Dict] = field(init=False)
     output: Dict[str, Any] = field(init=False)
@@ -350,52 +363,51 @@ class ContextManager:
         """
         Create a context for a resources
         """
-        functions = []
-        if self.transforms.has_language_extensions_transform():
-            functions = ["Fn::ForEach::[a-zA-Z0-9]+"]
-
         return Context(
             parameters=self.parameters,
             resources=self.resources,
             conditions=self.conditions,
             transforms=self.transforms,
+            mappings=self.mappings,
             region=region,
             path=deque(["Resources"]),
-            functions=functions,
+            functions=[],
         )
-    
+
     def create_context_for_resource_properties(
         self, region: str, resource_name: str
     ) -> Context:
         """
         Create a context for a resource properties
         """
-       
+
         return Context(
             parameters=self.parameters,
             resources=self.resources,
             conditions=self.conditions,
             transforms=self.transforms,
+            mappings=self.mappings,
             region=region,
             path=deque(["Resources", resource_name, "Properties"]),
             functions=list(FUNCTIONS),
         )
-    
+
     def create_context_for_outputs(self, region: str) -> Context:
         """
         Create a context for a resource properties
         """
-    
+
         return Context(
             parameters=self.parameters,
             resources=self.resources,
             conditions=self.conditions,
             transforms=self.transforms,
+            mappings=self.mappings,
             region=region,
             path=deque(["Outputs"]),
-            functions=["Fn::ForEach"],
+            functions=[],
         )
-    
+
     def create_context_for_conditions(self, region: str) -> Context:
         """
         Create a context for a conditions
@@ -405,8 +417,9 @@ class ContextManager:
             parameters=self.parameters,
             resources={},
             conditions=self.conditions,
+            mappings=self.mappings,
             transforms=self.transforms,
             region=region,
             path=deque(["Conditions"]),
-            functions=["Fn::ForEach"],
+            functions=[],
         )
