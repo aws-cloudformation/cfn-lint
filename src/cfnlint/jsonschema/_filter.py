@@ -113,7 +113,11 @@ class FunctionFilter:
             if hasattr(instance, "start_mark"):
                 start_mark = instance.start_mark
                 end_mark = instance.end_mark
-                instance = dict_node(dict(self._cleanse_object(validator, instance)), start_mark=start_mark, end_mark=end_mark)
+                instance = dict_node(
+                    dict(self._cleanse_object(validator, instance)),
+                    start_mark=start_mark,
+                    end_mark=end_mark,
+                )
             else:
                 instance = dict(self._cleanse_object(validator, instance))
             if len(instance) == 1:
