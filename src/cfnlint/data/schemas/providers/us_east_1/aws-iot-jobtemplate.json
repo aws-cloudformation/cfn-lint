@@ -10,7 +10,10 @@
   "/properties/JobExecutionsRolloutConfig",
   "/properties/AbortConfig",
   "/properties/PresignedUrlConfig",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/DestinationPackageVersions",
+  "/properties/JobExecutionsRetryConfig",
+  "/properties/MaintenanceWindows"
  ],
  "definitions": {
   "AbortCriteria": {
@@ -51,6 +54,12 @@
   "BaseRatePerMinute": {
    "minimum": 1,
    "type": "integer"
+  },
+  "DestinationPackageVersion": {
+   "description": "Specifies target package version ARNs for a software update job.",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
   },
   "ExpiresInSec": {
    "description": "How number (in seconds) pre-signed URLs are valid.",
@@ -212,7 +221,8 @@
    "permissions": [
     "iot:CreateJobTemplate",
     "iam:PassRole",
-    "s3:GetObject"
+    "s3:GetObject",
+    "iot:TagResource"
    ]
   },
   "delete": {
@@ -261,6 +271,13 @@
    "maxLength": 2028,
    "pattern": "[^\\p{C}]+",
    "type": "string"
+  },
+  "DestinationPackageVersions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DestinationPackageVersion"
+   },
+   "type": "array"
   },
   "Document": {
    "description": "The job document. Required if you don't specify a value for documentSource.",
@@ -372,6 +389,15 @@
  "typeName": "AWS::IoT::JobTemplate",
  "writeOnlyProperties": [
   "/properties/JobArn",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/Document",
+  "/properties/DocumentSource",
+  "/properties/TimeoutConfig",
+  "/properties/JobExecutionsRolloutConfig",
+  "/properties/AbortConfig",
+  "/properties/PresignedUrlConfig",
+  "/properties/DestinationPackageVersions",
+  "/properties/JobExecutionsRetryConfig",
+  "/properties/MaintenanceWindows"
  ]
 }

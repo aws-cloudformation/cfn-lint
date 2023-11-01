@@ -3,12 +3,32 @@
  "createOnlyProperties": [
   "/properties/PolicyName"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "description": "Resource Type definition for AWS::IoT::Policy",
  "handlers": {
   "create": {
    "permissions": [
     "iot:CreatePolicy",
-    "iot:GetPolicy"
+    "iot:GetPolicy",
+    "iot:TagResource",
+    "iot:ListTagsForResource"
    ]
   },
   "delete": {
@@ -26,15 +46,20 @@
   },
   "read": {
    "permissions": [
-    "iot:GetPolicy"
+    "iot:GetPolicy",
+    "iot:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
+    "iot:GetPolicy",
     "iot:ListPolicyVersions",
     "iot:CreatePolicyVersion",
     "iot:DeletePolicyVersion",
-    "iot:SetDefaultPolicyVersion"
+    "iot:SetDefaultPolicyVersion",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:ListTagsForResource"
    ]
   }
  },
@@ -58,6 +83,13 @@
   },
   "PolicyName": {
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -68,10 +100,11 @@
   "PolicyDocument"
  ],
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::IoT::Policy"
 }
