@@ -1,4 +1,1 @@
-from cfnlint.context.context import (
-    Context,
-    ContextManager,
-)
+from cfnlint.context.context import Context, ContextManager
