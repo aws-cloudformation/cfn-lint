@@ -929,7 +929,6 @@ cached: List[str] = [
     "aws-config-deliverychannel.json",
     "aws-certificatemanager-account.json",
     "aws-iam-oidcprovider.json",
-    "aws-resourcegroups-group.json",
     "aws-cloudformation-resourcedefaultversion.json",
     "aws-ec2-ipam.json",
     "aws-ec2-transitgatewaypeeringattachment.json",
