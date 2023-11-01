@@ -21,6 +21,7 @@ class TestGetAtts(BaseTestCase):
         getatts = GetAtts(["us-east-1", "us-west-2"])
         getatts.add("Module", "Organization::Resource::Type::MODULE")
         getatts.add("Module1", "Organization::Resource::Type::MODULE")
+        print("start")
         results = getatts.match("us-east-1", "ModuleResource.Module")
         self.assertIsNone(results.type)
         self.assertEqual(results.getatt_type, GetAttType.ReadOnly)
