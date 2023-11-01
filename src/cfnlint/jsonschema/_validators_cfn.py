@@ -588,6 +588,13 @@ class FnFindInMap(FnArray):
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
 
+        for value in validator.resolve_value(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
+
 
 class FnSelect(FnArray):
     def __init__(self) -> None:
@@ -917,23 +924,6 @@ class FnForEach(FnArray):
         output.types = ["object"]
         self.items.append(output)
 
-    def _expand_iterator(self, iterator: Any, validator: Validator) -> Iterator[Any]:
-        if validator.is_type(iterator, "string"):
-            yield iterator
-            return
-
-        if validator.is_type(iterator, "object"):
-            yield from validator.context.fn_value(iterator)
-
-    def _expand_collection(
-        self, collection: Any, validator: Validator
-    ) -> Iterator[Any]:
-        if validator.is_type(collection, "array"):
-            for item in collection:
-                yield from self._expand_iterator(item, validator)
-        if validator.is_type(collection, "object"):
-            pass
-
     def for_each(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -951,27 +941,6 @@ class FnForEach(FnArray):
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
-
-        # reset this value because of nested ForEach
-        # because of the dynamic keys
-        self.fn = ToPy(key)
-        # update the context about parameters and descend
-        values = instance.get(self.fn.name)
-        identifier = values[0]
-        collection = values[1]
-        output = values[2]
-        for iterator in self._expand_collection(collection, validator):
-            validator_iterator = validator.evolve(
-                context=validator.context.evolve(
-                    ref_values={
-                        identifier: iterator,
-                    }
-                )
-            )
-
-            for err in validator_iterator.descend(output, s, self.fn.name):
-                yield err
-                return
 
 
 #####
