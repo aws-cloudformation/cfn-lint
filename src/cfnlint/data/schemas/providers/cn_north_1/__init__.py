@@ -1067,7 +1067,6 @@ cached: List[str] = [
     "aws-lakeformation-tag.json",
     "aws-ec2-vpngateway.json",
     "aws-cloudformation-stack.json",
-    "aws-resourcegroups-group.json",
     "aws-cloudformation-resourcedefaultversion.json",
     "aws-greengrass-loggerdefinitionversion.json",
     "aws-databrew-job.json",

@@ -58,7 +58,8 @@
  "handlers": {
   "create": {
    "permissions": [
-    "wisdom:CreateAssistantAssociation"
+    "wisdom:CreateAssistantAssociation",
+    "wisdom:TagResource"
    ]
   },
   "delete": {
@@ -67,6 +68,16 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AssistantId": {
+      "$ref": "resource-schema.json#/properties/AssistantId"
+     }
+    },
+    "required": [
+     "AssistantId"
+    ]
+   },
    "permissions": [
     "wisdom:ListAssistantAssociations"
    ]
@@ -75,6 +86,9 @@
    "permissions": [
     "wisdom:GetAssistantAssociation"
    ]
+  },
+  "update": {
+   "permissions": []
   }
  },
  "primaryIdentifier": [
@@ -124,6 +138,7 @@
   "AssociationType",
   "AssistantId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk",
  "taggable": false,
  "typeName": "AWS::Wisdom::AssistantAssociation"
 }
