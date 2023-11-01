@@ -5,6 +5,17 @@
   "/properties/BranchName"
  ],
  "definitions": {
+  "Backend": {
+   "additionalProperties": false,
+   "properties": {
+    "StackArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "BasicAuthConfig": {
    "additionalProperties": false,
    "properties": {
@@ -102,6 +113,16 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AppId": {
+      "$ref": "resource-schema.json#/properties/AppId"
+     }
+    },
+    "required": [
+     "AppId"
+    ]
+   },
    "permissions": [
     "amplify:GetBranch",
     "amplify:ListBranches",
@@ -155,6 +176,9 @@
    "maxLength": 1000,
    "pattern": "(?s).*",
    "type": "string"
+  },
+  "Backend": {
+   "$ref": "#/definitions/Backend"
   },
   "BasicAuthConfig": {
    "$ref": "#/definitions/BasicAuthConfig"
@@ -227,6 +251,7 @@
   "AppId",
   "BranchName"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-amplify",
  "typeName": "AWS::Amplify::Branch",
  "writeOnlyProperties": [
   "/properties/BasicAuthConfig"

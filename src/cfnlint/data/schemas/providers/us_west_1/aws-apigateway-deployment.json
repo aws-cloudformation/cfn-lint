@@ -1,0 +1,328 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeploymentCanarySettings",
+  "/properties/RestApiId"
+ ],
+ "definitions": {
+  "AccessLogSetting": {
+   "additionalProperties": false,
+   "description": "The ``AccessLogSetting`` property type specifies settings for logging access in this stage.\n  ``AccessLogSetting`` is a property of the [StageDescription](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-deployment-stagedescription.html) property type.",
+   "properties": {
+    "DestinationArn": {
+     "description": "The Amazon Resource Name (ARN) of the CloudWatch Logs log group or Kinesis Data Firehose delivery stream to receive access logs. If you specify a Kinesis Data Firehose delivery stream, the stream name must begin with ``amazon-apigateway-``.",
+     "type": "string"
+    },
+    "Format": {
+     "description": "A single line format of the access logs of data, as specified by selected $context variables. The format must include at least ``$context.requestId``.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CanarySetting": {
+   "additionalProperties": false,
+   "description": "The ``CanarySetting`` property type specifies settings for the canary deployment in this stage.\n ``CanarySetting`` is a property of the [StageDescription](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-deployment-stagedescription.html) property type.",
+   "properties": {
+    "PercentTraffic": {
+     "description": "The percent (0-100) of traffic diverted to a canary deployment.",
+     "type": "number"
+    },
+    "StageVariableOverrides": {
+     "additionalProperties": false,
+     "description": "Stage variables overridden for a canary release deployment, including new stage variables introduced in the canary. These stage variables are represented as a string-to-string map between stage variable names and their values.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "UseStageCache": {
+     "description": "A Boolean flag to indicate whether the canary deployment uses the stage cache or not.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DeploymentCanarySettings": {
+   "additionalProperties": false,
+   "description": "The ``DeploymentCanarySettings`` property type specifies settings for the canary deployment.",
+   "properties": {
+    "PercentTraffic": {
+     "description": "The percentage (0.0-100.0) of traffic routed to the canary deployment.",
+     "type": "number"
+    },
+    "StageVariableOverrides": {
+     "additionalProperties": false,
+     "description": "A stage variable overrides used for the canary release deployment. They can override existing stage variables or add new stage variables for the canary release deployment. These stage variables are represented as a string-to-string map between stage variable names and their values.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "UseStageCache": {
+     "description": "A Boolean flag to indicate whether the canary release deployment uses the stage cache or not.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MethodSetting": {
+   "additionalProperties": false,
+   "description": "The ``MethodSetting`` property type configures settings for all methods in a stage.\n The ``MethodSettings`` property of the [Amazon API Gateway Deployment StageDescription](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-deployment-stagedescription.html) property type contains a list of ``MethodSetting`` property types.",
+   "properties": {
+    "CacheDataEncrypted": {
+     "description": "Specifies whether the cached responses are encrypted.",
+     "type": "boolean"
+    },
+    "CacheTtlInSeconds": {
+     "description": "Specifies the time to live (TTL), in seconds, for cached responses. The higher the TTL, the longer the response will be cached.",
+     "type": "integer"
+    },
+    "CachingEnabled": {
+     "description": "Specifies whether responses should be cached and returned for requests. A cache cluster must be enabled on the stage for responses to be cached.",
+     "type": "boolean"
+    },
+    "DataTraceEnabled": {
+     "description": "Specifies whether data trace logging is enabled for this method, which affects the log entries pushed to Amazon CloudWatch Logs. This can be useful to troubleshoot APIs, but can result in logging sensitive data. We recommend that you don't enable this option for production APIs.",
+     "type": "boolean"
+    },
+    "HttpMethod": {
+     "description": "The HTTP method.",
+     "type": "string"
+    },
+    "LoggingLevel": {
+     "description": "Specifies the logging level for this method, which affects the log entries pushed to Amazon CloudWatch Logs. Valid values are ``OFF``, ``ERROR``, and ``INFO``. Choose ``ERROR`` to write only error-level entries to CloudWatch Logs, or choose ``INFO`` to include all ``ERROR`` events as well as extra informational events.",
+     "type": "string"
+    },
+    "MetricsEnabled": {
+     "description": "Specifies whether Amazon CloudWatch metrics are enabled for this method.",
+     "type": "boolean"
+    },
+    "ResourcePath": {
+     "description": "The resource path for this method. Forward slashes (``/``) are encoded as ``~1`` and the initial slash must include a forward slash. For example, the path value ``/resource/subresource`` must be encoded as ``/~1resource~1subresource``. To specify the root path, use only a slash (``/``).",
+     "type": "string"
+    },
+    "ThrottlingBurstLimit": {
+     "description": "Specifies the throttling burst limit.",
+     "type": "integer"
+    },
+    "ThrottlingRateLimit": {
+     "description": "Specifies the throttling rate limit.",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "StageDescription": {
+   "additionalProperties": false,
+   "description": "``StageDescription`` is a property of the [AWS::ApiGateway::Deployment](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-deployment.html) resource that configures a deployment stage.",
+   "properties": {
+    "AccessLogSetting": {
+     "$ref": "#/definitions/AccessLogSetting",
+     "description": "Specifies settings for logging access in this stage."
+    },
+    "CacheClusterEnabled": {
+     "description": "Specifies whether a cache cluster is enabled for the stage.",
+     "type": "boolean"
+    },
+    "CacheClusterSize": {
+     "description": "The size of the stage's cache cluster. For more information, see [cacheClusterSize](https://docs.aws.amazon.com/apigateway/latest/api/API_CreateStage.html#apigw-CreateStage-request-cacheClusterSize) in the *API Gateway API Reference*.",
+     "type": "string"
+    },
+    "CacheDataEncrypted": {
+     "description": "Indicates whether the cached responses are encrypted.",
+     "type": "boolean"
+    },
+    "CacheTtlInSeconds": {
+     "description": "The time-to-live (TTL) period, in seconds, that specifies how long API Gateway caches responses.",
+     "type": "integer"
+    },
+    "CachingEnabled": {
+     "description": "Indicates whether responses are cached and returned for requests. You must enable a cache cluster on the stage to cache responses. For more information, see [Enable API Gateway Caching in a Stage to Enhance API Performance](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html) in the *API Gateway Developer Guide*.",
+     "type": "boolean"
+    },
+    "CanarySetting": {
+     "$ref": "#/definitions/CanarySetting",
+     "description": "Specifies settings for the canary deployment in this stage."
+    },
+    "ClientCertificateId": {
+     "description": "The identifier of the client certificate that API Gateway uses to call your integration endpoints in the stage.",
+     "type": "string"
+    },
+    "DataTraceEnabled": {
+     "description": "Indicates whether data trace logging is enabled for methods in the stage. API Gateway pushes these logs to Amazon CloudWatch Logs.",
+     "type": "boolean"
+    },
+    "Description": {
+     "description": "A description of the purpose of the stage.",
+     "type": "string"
+    },
+    "DocumentationVersion": {
+     "description": "The version identifier of the API documentation snapshot.",
+     "type": "string"
+    },
+    "LoggingLevel": {
+     "description": "The logging level for this method. For valid values, see the ``loggingLevel`` property of the [MethodSetting](https://docs.aws.amazon.com/apigateway/latest/api/API_MethodSetting.html) resource in the *Amazon API Gateway API Reference*.",
+     "type": "string"
+    },
+    "MethodSettings": {
+     "description": "Configures settings for all of the stage's methods.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MethodSetting"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricsEnabled": {
+     "description": "Indicates whether Amazon CloudWatch metrics are enabled for methods in the stage.",
+     "type": "boolean"
+    },
+    "Tags": {
+     "description": "An array of arbitrary tags (key-value pairs) to associate with the stage.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ThrottlingBurstLimit": {
+     "description": "The target request burst rate limit. This allows more requests through for a period of time than the target rate limit. For more information, see [Manage API Request Throttling](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html) in the *API Gateway Developer Guide*.",
+     "type": "integer"
+    },
+    "ThrottlingRateLimit": {
+     "description": "The target request steady-state rate limit. For more information, see [Manage API Request Throttling](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html) in the *API Gateway Developer Guide*.",
+     "type": "number"
+    },
+    "TracingEnabled": {
+     "description": "Specifies whether active tracing with X-ray is enabled for this stage.\n For more information, see [Trace API Gateway API Execution with X-Ray](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-xray.html) in the *API Gateway Developer Guide*.",
+     "type": "boolean"
+    },
+    "Variables": {
+     "additionalProperties": false,
+     "description": "A map that defines the stage variables. Variable names must consist of alphanumeric characters, and the values must match the following regular expression: ``[A-Za-z0-9-._~:/?#&=,]+``.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::ApiGateway::Deployment`` resource deploys an API Gateway ``RestApi`` resource to a stage so that clients can call the API over the internet. The stage acts as an environment.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:PATCH",
+    "apigateway:PUT",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT",
+    "apigateway:DELETE"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DeploymentId",
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "DeploymentCanarySettings": {
+   "$ref": "#/definitions/DeploymentCanarySettings",
+   "description": "The input configuration for a canary deployment."
+  },
+  "DeploymentId": {
+   "description": "",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description for the Deployment resource to create.",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The string identifier of the associated RestApi.",
+   "type": "string"
+  },
+  "StageDescription": {
+   "$ref": "#/definitions/StageDescription",
+   "description": "The description of the Stage resource for the Deployment resource to create. To specify a stage description, you must also provide a stage name."
+  },
+  "StageName": {
+   "description": "The name of the Stage resource for the Deployment resource to create.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeploymentId"
+ ],
+ "required": [
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "taggable": true,
+ "typeName": "AWS::ApiGateway::Deployment",
+ "writeOnlyProperties": [
+  "/properties/StageName",
+  "/properties/StageDescription",
+  "/properties/DeploymentCanarySettings"
+ ]
+}

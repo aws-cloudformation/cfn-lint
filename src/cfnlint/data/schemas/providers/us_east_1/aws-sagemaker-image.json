@@ -72,7 +72,10 @@
   "create": {
    "permissions": [
     "sagemaker:CreateImage",
-    "iam:PassRole"
+    "sagemaker:DescribeImage",
+    "iam:PassRole",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
    ]
   },
   "delete": {
@@ -128,7 +131,6 @@
     "$ref": "#/definitions/Tag"
    },
    "maxItems": 50,
-   "minItems": 1,
    "type": "array"
   }
  },
@@ -139,5 +141,12 @@
   "ImageName",
   "ImageRoleArn"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::SageMaker::Image"
 }
