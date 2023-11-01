@@ -2124,9 +2124,21 @@
    ],
    "type": "object"
   },
+  "DataPathType": {
+   "additionalProperties": false,
+   "properties": {
+    "PivotTableDataPathType": {
+     "$ref": "#/definitions/PivotTableDataPathType"
+    }
+   },
+   "type": "object"
+  },
   "DataPathValue": {
    "additionalProperties": false,
    "properties": {
+    "DataPathType": {
+     "$ref": "#/definitions/DataPathType"
+    },
     "FieldId": {
      "maxLength": 512,
      "minLength": 1,
@@ -2138,10 +2150,6 @@
      "type": "string"
     }
    },
-   "required": [
-    "FieldId",
-    "FieldValue"
-   ],
    "type": "object"
   },
   "DataSetConfiguration": {
@@ -3175,6 +3183,9 @@
     },
     "MatchOperator": {
      "$ref": "#/definitions/CategoryFilterMatchOperator"
+    },
+    "NullOption": {
+     "$ref": "#/definitions/FilterNullOption"
     },
     "SelectAllOptions": {
      "$ref": "#/definitions/CategoryFilterSelectAllOptions"
@@ -4880,6 +4891,30 @@
    },
    "type": "object"
   },
+  "KPIActualValueConditionalFormatting": {
+   "additionalProperties": false,
+   "properties": {
+    "Icon": {
+     "$ref": "#/definitions/ConditionalFormattingIcon"
+    },
+    "TextColor": {
+     "$ref": "#/definitions/ConditionalFormattingColor"
+    }
+   },
+   "type": "object"
+  },
+  "KPIComparisonValueConditionalFormatting": {
+   "additionalProperties": false,
+   "properties": {
+    "Icon": {
+     "$ref": "#/definitions/ConditionalFormattingIcon"
+    },
+    "TextColor": {
+     "$ref": "#/definitions/ConditionalFormattingColor"
+    }
+   },
+   "type": "object"
+  },
   "KPIConditionalFormatting": {
    "additionalProperties": false,
    "properties": {
@@ -4897,6 +4932,12 @@
   "KPIConditionalFormattingOption": {
    "additionalProperties": false,
    "properties": {
+    "ActualValue": {
+     "$ref": "#/definitions/KPIActualValueConditionalFormatting"
+    },
+    "ComparisonValue": {
+     "$ref": "#/definitions/KPIComparisonValueConditionalFormatting"
+    },
     "PrimaryValue": {
      "$ref": "#/definitions/KPIPrimaryValueConditionalFormatting"
     },
@@ -4972,8 +5013,14 @@
     "SecondaryValueFontConfiguration": {
      "$ref": "#/definitions/FontConfiguration"
     },
+    "Sparkline": {
+     "$ref": "#/definitions/KPISparklineOptions"
+    },
     "TrendArrows": {
      "$ref": "#/definitions/TrendArrowOptions"
+    },
+    "VisualLayoutOptions": {
+     "$ref": "#/definitions/KPIVisualLayoutOptions"
     }
    },
    "type": "object"
@@ -5012,6 +5059,35 @@
     }
    },
    "type": "object"
+  },
+  "KPISparklineOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Color": {
+     "pattern": "^#[A-F0-9]{6}$",
+     "type": "string"
+    },
+    "TooltipVisibility": {
+     "$ref": "#/definitions/Visibility"
+    },
+    "Type": {
+     "$ref": "#/definitions/KPISparklineType"
+    },
+    "Visibility": {
+     "$ref": "#/definitions/Visibility"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "KPISparklineType": {
+   "enum": [
+    "LINE",
+    "AREA"
+   ],
+   "type": "string"
   },
   "KPIVisual": {
    "additionalProperties": false,
@@ -5055,6 +5131,34 @@
     "VisualId"
    ],
    "type": "object"
+  },
+  "KPIVisualLayoutOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "StandardLayout": {
+     "$ref": "#/definitions/KPIVisualStandardLayout"
+    }
+   },
+   "type": "object"
+  },
+  "KPIVisualStandardLayout": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/KPIVisualStandardLayoutType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "KPIVisualStandardLayoutType": {
+   "enum": [
+    "CLASSIC",
+    "VERTICAL"
+   ],
+   "type": "string"
   },
   "LabelOptions": {
    "additionalProperties": false,
@@ -6819,6 +6923,15 @@
    ],
    "type": "object"
   },
+  "PivotTableDataPathType": {
+   "enum": [
+    "HIERARCHY_ROWS_LAYOUT_COLUMN",
+    "MULTIPLE_ROW_METRICS_COLUMN",
+    "EMPTY_COLUMN_HEADER",
+    "COUNT_METRIC_COLUMN"
+   ],
+   "type": "string"
+  },
   "PivotTableFieldCollapseState": {
    "enum": [
     "COLLAPSED",
@@ -7118,6 +7231,14 @@
     },
     "ScrollStatus": {
      "$ref": "#/definitions/TableTotalsScrollStatus"
+    },
+    "TotalAggregationOptions": {
+     "items": {
+      "$ref": "#/definitions/TotalAggregationOption"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array"
     },
     "TotalCellStyle": {
      "$ref": "#/definitions/TableCellStyle"
@@ -7426,6 +7547,9 @@
     "DynamicConfiguration": {
      "$ref": "#/definitions/ReferenceLineDynamicDataConfiguration"
     },
+    "SeriesType": {
+     "$ref": "#/definitions/ReferenceLineSeriesType"
+    },
     "StaticConfiguration": {
      "$ref": "#/definitions/ReferenceLineStaticDataConfiguration"
     }
@@ -7496,6 +7620,13 @@
     "SOLID",
     "DASHED",
     "DOTTED"
+   ],
+   "type": "string"
+  },
+  "ReferenceLineSeriesType": {
+   "enum": [
+    "BAR",
+    "LINE"
    ],
    "type": "string"
   },
@@ -8516,6 +8647,17 @@
    ],
    "type": "string"
   },
+  "SimpleTotalAggregationFunction": {
+   "enum": [
+    "DEFAULT",
+    "SUM",
+    "AVERAGE",
+    "MIN",
+    "MAX",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "SliderControlDisplayOptions": {
    "additionalProperties": false,
    "properties": {
@@ -9019,6 +9161,9 @@
      "minItems": 0,
      "type": "array"
     },
+    "PinnedFieldOptions": {
+     "$ref": "#/definitions/TablePinnedFieldOptions"
+    },
     "SelectedFieldOptions": {
      "items": {
       "$ref": "#/definitions/TableFieldOption"
@@ -9100,6 +9245,22 @@
    },
    "type": "object"
   },
+  "TablePinnedFieldOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PinnedLeftFields": {
+     "items": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 201,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "TableRowConditionalFormatting": {
    "additionalProperties": false,
    "properties": {
@@ -9168,7 +9329,8 @@
   "TableTotalsPlacement": {
    "enum": [
     "START",
-    "END"
+    "END",
+    "AUTO"
    ],
    "type": "string"
   },
@@ -9564,6 +9726,9 @@
      "pattern": "^[a-zA-Z0-9]+$",
      "type": "string"
     },
+    "RollingDate": {
+     "$ref": "#/definitions/RollingDateConfiguration"
+    },
     "TimeGranularity": {
      "$ref": "#/definitions/TimeGranularity"
     },
@@ -9864,6 +10029,33 @@
    ],
    "type": "object"
   },
+  "TotalAggregationFunction": {
+   "additionalProperties": false,
+   "properties": {
+    "SimpleTotalAggregationFunction": {
+     "$ref": "#/definitions/SimpleTotalAggregationFunction"
+    }
+   },
+   "type": "object"
+  },
+  "TotalAggregationOption": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TotalAggregationFunction": {
+     "$ref": "#/definitions/TotalAggregationFunction"
+    }
+   },
+   "required": [
+    "FieldId",
+    "TotalAggregationFunction"
+   ],
+   "type": "object"
+  },
   "TotalOptions": {
    "additionalProperties": false,
    "properties": {
@@ -9875,6 +10067,14 @@
     },
     "ScrollStatus": {
      "$ref": "#/definitions/TableTotalsScrollStatus"
+    },
+    "TotalAggregationOptions": {
+     "items": {
+      "$ref": "#/definitions/TotalAggregationOption"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array"
     },
     "TotalCellStyle": {
      "$ref": "#/definitions/TableCellStyle"
@@ -10072,6 +10272,25 @@
     "ComputationId"
    ],
    "type": "object"
+  },
+  "ValidationStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/ValidationStrategyMode"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "ValidationStrategyMode": {
+   "enum": [
+    "STRICT",
+    "LENIENT"
+   ],
+   "type": "string"
   },
   "ValueWhenUnsetOption": {
    "enum": [
@@ -10736,6 +10955,9 @@
    "pattern": "[\\w\\-]+",
    "type": "string"
   },
+  "ValidationStrategy": {
+   "$ref": "#/definitions/ValidationStrategy"
+  },
   "Version": {
    "$ref": "#/definitions/TemplateVersion"
   },
@@ -10762,6 +10984,7 @@
   "/properties/SourceEntity",
   "/properties/CreatedTime",
   "/properties/Version",
-  "/properties/LastUpdatedTime"
+  "/properties/LastUpdatedTime",
+  "/properties/ValidationStrategy"
  ]
 }
