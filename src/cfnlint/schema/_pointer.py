@@ -82,7 +82,7 @@ class SchemaPointer:
                 except KeyError as ke:
                     raise ke
             if obj.get("oneOf"):
-                for oneOf in obj.get("oneOf"):
+                for oneOf in obj.get("oneOf"):  # type: ignore
                     try:
                         return self.walk(oneOf, part)
                     except KeyError:
