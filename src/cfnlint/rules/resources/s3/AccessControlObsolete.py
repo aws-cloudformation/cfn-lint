@@ -12,8 +12,9 @@ class AccessControlObsolete(CloudFormationLintRule):
     id = "W3045"
     shortdesc = "Controlling access to an S3 bucket should be done with bucket policies"
     description = (
-        "Nearly all access control configurations can be more successfully achieved with "
-        "bucket policies. Consider using bucket policies instead of access control."
+        "Nearly all access control configurations can be more successfully achieved "
+        "with bucket policies. Consider using bucket policies instead of access "
+        "control."
     )
     source_url = "https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html"
     tags = ["resources", "s3"]
