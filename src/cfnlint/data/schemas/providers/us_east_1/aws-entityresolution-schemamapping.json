@@ -1,9 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/SchemaName",
-  "/properties/Description",
-  "/properties/MappedInputFields"
+  "/properties/SchemaName"
  ],
  "definitions": {
   "AttributeName": {
@@ -26,6 +24,10 @@
    "minLength": 0,
    "pattern": "^[a-zA-Z_0-9-]*$",
    "type": "string"
+  },
+  "HasWorkflows": {
+   "description": "The boolean value that indicates whether or not a SchemaMapping has MatchingWorkflows that are associated with",
+   "type": "boolean"
   },
   "MappedInputFields": {
    "insertionOrder": false,
@@ -56,7 +58,8 @@
     "EMAIL_ADDRESS",
     "UNIQUE_ID",
     "DATE",
-    "STRING"
+    "STRING",
+    "PROVIDER_ID"
    ],
    "type": "string"
   },
@@ -71,6 +74,10 @@
     },
     "MatchKey": {
      "$ref": "#/definitions/AttributeName"
+    },
+    "SubType": {
+     "description": "The subtype of the Attribute. Would be required only when type is PROVIDER_ID",
+     "type": "string"
     },
     "Type": {
      "$ref": "#/definitions/SchemaAttributeType"
@@ -144,6 +151,7 @@
   "update": {
    "permissions": [
     "entityresolution:GetSchemaMapping",
+    "entityresolution:UpdateSchemaMapping",
     "entityresolution:ListTagsForResource",
     "entityresolution:TagResource",
     "entityresolution:UntagResource"
@@ -160,6 +168,9 @@
   "Description": {
    "$ref": "#/definitions/Description",
    "description": "The description of the SchemaMapping"
+  },
+  "HasWorkflows": {
+   "$ref": "#/definitions/HasWorkflows"
   },
   "MappedInputFields": {
    "$ref": "#/definitions/MappedInputFields",
@@ -189,7 +200,8 @@
  "readOnlyProperties": [
   "/properties/SchemaArn",
   "/properties/CreatedAt",
-  "/properties/UpdatedAt"
+  "/properties/UpdatedAt",
+  "/properties/HasWorkflows"
  ],
  "required": [
   "SchemaName",

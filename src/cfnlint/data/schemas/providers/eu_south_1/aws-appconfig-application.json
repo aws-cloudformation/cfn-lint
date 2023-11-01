@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "description": "Metadata to assign to the application. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
+   "properties": {
+    "Key": {
+     "description": "The key-value string map. The valid character set is [a-zA-Z1-9+-=._:/]. The tag key can be up to 128 characters and must not start with aws:.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:.)[a-zA-Z1-9+=._:/-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag value can be up to 256 characters.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::AppConfig::Application",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appconfig:CreateApplication",
+    "appconfig:GetApplication",
+    "appconfig:ListTagsForResource",
+    "appconfig:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appconfig:GetApplication",
+    "appconfig:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appconfig:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appconfig:GetApplication",
+    "appconfig:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appconfig:UpdateApplication",
+    "appconfig:TagResource",
+    "appconfig:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "description": "The application Id",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description of the application.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "A name for the application.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Metadata to assign to the application. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::Application"
+}
