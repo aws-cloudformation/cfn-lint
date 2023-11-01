@@ -2,9 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.jsonschema._validators_cfn import cfn_type
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import CloudFormationLintRule
 
 
 class Configuration(CloudFormationLintRule):
