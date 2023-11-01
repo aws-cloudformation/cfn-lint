@@ -11,13 +11,7 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
-from cfnlint.helpers import (
-    FUNCTIONS,
-    FUNCTIONS_SINGLE,
-    REGEX_SUB_PARAMETERS,
-    REGIONS,
-    ToPy,
-)
+from cfnlint.helpers import FUNCTIONS_SINGLE, REGEX_SUB_PARAMETERS, REGIONS, ToPy
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
@@ -283,7 +277,7 @@ class Ref(Fn):
         validator = validator.evolve(
             context=validator.context.evolve(resolved_value=True)
         )
-        for value in validator.resolve(instance):
+        for value in validator.resolve_value(instance):
             if value is None:
                 continue
             yield from self.iter_errors_resolve(validator, value, instance, key, s)
@@ -424,7 +418,7 @@ class FnGetAZs(Fn):
         validator = validator.evolve(
             context=validator.context.evolve(resolved_value=True)
         )
-        for value in validator.resolve(instance):
+        for value in validator.resolve_value(instance):
             for err in validator.descend(value, s):
                 err.path.appendleft(self.fn.name)
                 err.message = err.message.replace(f"{value!r}", f"{instance!r}")
@@ -509,6 +503,13 @@ class FnJoin(FnArray):
                     yield err
                     return
 
+        for value in validator.resolve_value(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
+
 
 class FnSplit(FnArray):
     def __init__(self) -> None:
@@ -537,6 +538,13 @@ class FnSplit(FnArray):
         for err in self.iter_errors(validator, s, instance, schema):
             yield err
             return
+
+        for value in validator.resolve_value(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
 
 
 class _FindInMapDefault(Scalar):
@@ -626,6 +634,13 @@ class FnSelect(FnArray):
                 for err in scalar.iter_errors(validator, s, value, schema):
                     yield err
                     return
+
+        for value in validator.resolve_value(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
 
 
 class FnIf(FnArray):
@@ -906,11 +921,13 @@ class FnForEach(FnArray):
         if validator.is_type(iterator, "string"):
             yield iterator
             return
-        
+
         if validator.is_type(iterator, "object"):
             yield from validator.context.fn_value(iterator)
-            
-    def _expand_collection(self, collection: Any, validator: Validator) -> Iterator[Any]:
+
+    def _expand_collection(
+        self, collection: Any, validator: Validator
+    ) -> Iterator[Any]:
         if validator.is_type(collection, "array"):
             for item in collection:
                 yield from self._expand_iterator(item, validator)

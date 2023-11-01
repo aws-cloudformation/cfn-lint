@@ -13,7 +13,10 @@ class JsonSchema(BaseJsonSchema):
 
     id = "E8000"
     shortdesc = "JSON Schema validation of Conditions section"
-    description = "Validate conditions in the Conditions section to make sure they are configured correctly"
+    description = (
+        "Validate conditions in the Conditions section to make "
+        "sure they are configured correctly"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html"
     tags = ["conditions"]
 
