@@ -1202,34 +1202,46 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/DistributionConfig/properties/CustomOrigin",
+  "/properties/DistributionConfig/properties/S3Origin"
+ ],
  "description": "Resource Type definition for AWS::CloudFront::Distribution",
  "handlers": {
   "create": {
    "permissions": [
-    "cloudfront:CreateDistribution*",
+    "cloudfront:CreateDistribution",
+    "cloudfront:CreateDistributionWithTags",
+    "cloudfront:GetDistribution",
+    "cloudfront:GetDistributionConfig",
     "cloudfront:TagResource"
    ]
   },
   "delete": {
    "permissions": [
-    "cloudfront:DeleteDistribution*"
+    "cloudfront:DeleteDistribution",
+    "cloudfront:GetDistribution",
+    "cloudfront:GetDistributionConfig"
    ]
   },
   "list": {
    "permissions": [
-    "cloudfront:ListDistributions*"
+    "cloudfront:ListDistributions"
    ]
   },
   "read": {
    "permissions": [
-    "cloudfront:GetDistribution*"
+    "cloudfront:GetDistribution",
+    "cloudfront:GetDistributionConfig"
    ]
   },
   "update": {
    "permissions": [
-    "cloudfront:GetDistribution*",
-    "cloudfront:UpdateDistribution*",
-    "cloudfront:ListTagsForResource*",
+    "cloudfront:GetDistribution",
+    "cloudfront:GetDistributionConfig",
+    "cloudfront:UpdateDistribution",
+    "cloudfront:UpdateDistributionWithStagingConfig",
+    "cloudfront:ListTagsForResource",
     "cloudfront:TagResource",
     "cloudfront:UntagResource"
    ]
@@ -1263,5 +1275,11 @@
  "required": [
   "DistributionConfig"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::CloudFront::Distribution"
 }

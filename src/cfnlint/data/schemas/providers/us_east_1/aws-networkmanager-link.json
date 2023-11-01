@@ -30,12 +30,18 @@
    "description": "A key-value pair to associate with a link resource.",
    "properties": {
     "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "type": "string"
     },
     "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "type": "string"
     }
    },
+   "required": [
+    "Key",
+    "Value"
+   ],
    "type": "object"
   }
  },
@@ -43,15 +49,28 @@
  "handlers": {
   "create": {
    "permissions": [
-    "networkmanager:CreateLink"
+    "networkmanager:CreateLink",
+    "networkmanager:GetLinks",
+    "networkmanager:TagResource"
    ]
   },
   "delete": {
    "permissions": [
+    "networkmanager:GetLinks",
     "networkmanager:DeleteLink"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "GlobalNetworkId": {
+      "$ref": "resource-schema.json#/properties/GlobalNetworkId"
+     }
+    },
+    "required": [
+     "GlobalNetworkId"
+    ]
+   },
    "permissions": [
     "networkmanager:GetLinks"
    ]
@@ -65,6 +84,7 @@
    "permissions": [
     "networkmanager:ListTagsForResource",
     "networkmanager:TagResource",
+    "networkmanager:GetLinks",
     "networkmanager:UntagResource",
     "networkmanager:UpdateLink"
    ]
@@ -78,6 +98,10 @@
   "Bandwidth": {
    "$ref": "#/definitions/Bandwidth",
    "description": "The Bandwidth for the link."
+  },
+  "CreatedAt": {
+   "description": "The date and time that the device was created.",
+   "type": "string"
   },
   "Description": {
    "description": "The description of the link.",
@@ -103,12 +127,18 @@
    "description": "The ID of the site",
    "type": "string"
   },
+  "State": {
+   "description": "The state of the link.",
+   "type": "string"
+  },
   "Tags": {
    "description": "The tags for the link.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": true
   },
   "Type": {
    "description": "The type of the link.",
@@ -117,7 +147,9 @@
  },
  "readOnlyProperties": [
   "/properties/LinkId",
-  "/properties/LinkArn"
+  "/properties/LinkArn",
+  "/properties/CreatedAt",
+  "/properties/State"
  ],
  "required": [
   "GlobalNetworkId",
@@ -125,5 +157,12 @@
   "Bandwidth"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::NetworkManager::Link"
 }
