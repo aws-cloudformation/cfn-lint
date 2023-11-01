@@ -30,6 +30,11 @@
     "DatasetFormat": {
      "$ref": "#/definitions/DatasetFormat"
     },
+    "ExcludeFeaturesAttribute": {
+     "description": "Indexes or names of the features to be excluded from analysis",
+     "maxLength": 100,
+     "type": "string"
+    },
     "LocalPath": {
      "description": "Path to the filesystem where the endpoint data is available to the container.",
      "maxLength": 256,
@@ -122,6 +127,13 @@
    },
    "type": "object"
   },
+  "DataAnalysisTimeString": {
+   "description": "Analysis time in ISO duration format",
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^.?P.*",
+   "type": "string"
+  },
   "DatasetFormat": {
    "description": "The dataset format of the data to monitor",
    "properties": {
@@ -143,6 +155,11 @@
    "properties": {
     "EndpointName": {
      "$ref": "#/definitions/EndpointName"
+    },
+    "ExcludeFeaturesAttribute": {
+     "description": "Indexes or names of the features to be excluded from analysis",
+     "maxLength": 100,
+     "type": "string"
     },
     "LocalPath": {
      "description": "Path to the filesystem where the endpoint data is available to the container.",
@@ -519,8 +536,16 @@
    "additionalProperties": false,
    "description": "Configuration details about the monitoring schedule.",
    "properties": {
+    "DataAnalysisEndTime": {
+     "$ref": "#/definitions/DataAnalysisTimeString",
+     "description": "Data Analysis end time, e.g. PT0H"
+    },
+    "DataAnalysisStartTime": {
+     "$ref": "#/definitions/DataAnalysisTimeString",
+     "description": "Data Analysis start time, e.g. -PT1H"
+    },
     "ScheduleExpression": {
-     "description": "A cron expression that describes details about the monitoring schedule.",
+     "description": "A cron expression or 'NOW' that describes details about the monitoring schedule.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"

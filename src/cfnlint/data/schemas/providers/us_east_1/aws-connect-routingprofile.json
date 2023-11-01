@@ -182,7 +182,8 @@
     "connect:UpdateRoutingProfileQueues",
     "connect:TagResource",
     "connect:UntagResource",
-    "connect:ListRoutingProfileQueues"
+    "connect:ListRoutingProfileQueues",
+    "connect:UpdateRoutingProfileAgentAvailabilityTimer"
    ]
   }
  },
@@ -190,6 +191,14 @@
   "/properties/RoutingProfileArn"
  ],
  "properties": {
+  "AgentAvailabilityTimer": {
+   "description": "Whether agents with this routing profile will have their routing order calculated based on longest idle time or time since their last inbound contact.",
+   "enum": [
+    "TIME_SINCE_LAST_ACTIVITY",
+    "TIME_SINCE_LAST_INBOUND"
+   ],
+   "type": "string"
+  },
   "DefaultOutboundQueueArn": {
    "description": "The identifier of the default outbound queue for this routing profile.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
