@@ -36,31 +36,34 @@ def ref(validator: Validator, instance: Any) -> Iterator[Any]:
 def find_in_map(validator: Validator, instance: Any) -> Iterator[Any]:
     if not validator.is_type(instance, "array"):
         return
-    if not len(instance) == 3:
+    if len(instance) not in [3, 4]:
         return
 
-    # get the values from the list
-    map_names = validator.resolve_value(instance[0])
-    top_level_keys = validator.resolve_value(instance[1])
-    second_level_keys = validator.resolve_value(instance[2])
-
-    for map_name in map_names:
+    for map_name in validator.resolve_value(instance[0]):
         if not validator.is_type(map_name, "string"):
             continue
-        for top_level_key in top_level_keys:
+        for top_level_key in validator.resolve_value(instance[1]):
             if not validator.is_type(top_level_key, "string"):
                 continue
-            for second_level_key in second_level_keys:
+            for second_level_key in validator.resolve_value(instance[2]):
                 if not validator.is_type(second_level_key, "string"):
                     continue
-                if map_name in validator.context.mappings:
-                    try:
-                        yield validator.context.mappings[map_name].find_in_map(
-                            top_level_key,
-                            second_level_key,
-                        )
-                    except KeyError:
-                        pass
+                try:
+                    yield validator.context.mappings[map_name].find_in_map(
+                        top_level_key,
+                        second_level_key,
+                    )
+                except KeyError:
+                    pass
+
+    if len(instance) == 4:
+        options = instance[3]
+        if not validator.is_type(options, "object"):
+            return
+        if "DefaultValue" not in options:
+            return
+        for value in validator.resolve_value(options["DefaultValue"]):
+            yield value
 
 
 def get_azs(validator: Validator, instance: Any) -> Iterator[Any]:
