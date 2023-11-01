@@ -1,0 +1,80 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PathPart",
+  "/properties/ParentId",
+  "/properties/RestApiId"
+ ],
+ "description": "The ``AWS::ApiGateway::Resource`` resource creates a resource in an API.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/ResourceId"
+ ],
+ "properties": {
+  "ParentId": {
+   "description": "The parent resource's identifier.",
+   "type": "string"
+  },
+  "PathPart": {
+   "description": "The last path segment for this resource.",
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The string identifier of the associated RestApi.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceId"
+ ],
+ "required": [
+  "ParentId",
+  "PathPart",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "taggable": false,
+ "typeName": "AWS::ApiGateway::Resource"
+}

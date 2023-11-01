@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Application",
+  "/properties/Resource",
+  "/properties/ResourceType"
+ ],
+ "description": "Resource Schema for AWS::ServiceCatalogAppRegistry::ResourceAssociation",
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-resourceassociation.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:AssociateResource",
+    "cloudformation:DescribeStacks"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DisassociateResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:ListAssociatedResources"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Application": {
+   "description": "The name or the Id of the Application.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\w+|[a-z0-9]{12}",
+   "type": "string"
+  },
+  "ApplicationArn": {
+   "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Resource": {
+   "description": "The name or the Id of the Resource.",
+   "pattern": "\\w+|arn:aws[-a-z]*:cloudformation:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:stack/[a-zA-Z][-A-Za-z0-9]{0,127}/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "ResourceArn": {
+   "pattern": "arn:aws[-a-z]*:cloudformation:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:stack/[a-zA-Z][-A-Za-z0-9]{0,127}/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "The type of the CFN Resource for now it's enum CFN_STACK.",
+   "enum": [
+    "CFN_STACK"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/ResourceArn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Application",
+  "Resource",
+  "ResourceType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
+ "taggable": false,
+ "typeName": "AWS::ServiceCatalogAppRegistry::ResourceAssociation"
+}

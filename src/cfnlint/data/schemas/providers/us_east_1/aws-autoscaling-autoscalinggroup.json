@@ -183,7 +183,7 @@
       "$ref": "#/definitions/LaunchTemplateOverrides"
      },
      "type": "array",
-     "uniqueItems": true
+     "uniqueItems": false
     }
    },
    "required": [
@@ -308,10 +308,10 @@
    "additionalProperties": false,
    "properties": {
     "Max": {
-     "type": "integer"
+     "type": "number"
     },
     "Min": {
-     "type": "integer"
+     "type": "number"
     }
    },
    "type": "object"
@@ -397,7 +397,11 @@
      "uniqueItems": false
     },
     "TopicARN": {
-     "type": "string"
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "required": [
@@ -429,10 +433,10 @@
    "additionalProperties": false,
    "properties": {
     "Max": {
-     "type": "integer"
+     "type": "number"
     },
     "Min": {
-     "type": "integer"
+     "type": "number"
     }
    },
    "type": "object"
@@ -533,9 +537,6 @@
   "LaunchTemplate": {
    "$ref": "#/definitions/LaunchTemplateSpecification"
   },
-  "LaunchTemplateSpecification": {
-   "type": "string"
-  },
   "LifecycleHookSpecificationList": {
    "items": {
     "$ref": "#/definitions/LifecycleHookSpecification"
@@ -548,7 +549,7 @@
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "MaxInstanceLifetime": {
    "type": "integer"
@@ -597,14 +598,14 @@
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "TerminationPolicies": {
    "items": {
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "VPCZoneIdentifier": {
    "items": {
@@ -615,8 +616,7 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
-  "/properties/LaunchTemplateSpecification"
+  "/properties/Id"
  ],
  "required": [
   "MinSize",
