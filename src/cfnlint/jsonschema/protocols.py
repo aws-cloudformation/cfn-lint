@@ -17,8 +17,6 @@ from cfnlint.context import Context
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._typing import V, ValidationResult
-from cfnlint.jsonschema.exceptions import ValidationError
-from cfnlint.jsonschema.value import Value
 from cfnlint.template import Template
 
 
@@ -43,9 +41,6 @@ class Validator(Protocol):
     #: The schema that will be used to validate instances
     schema: Mapping | bool
     resolver: RefResolver
-
-    #: Resolve a function to validate the resolved value
-    fn_resolvers: V | None
 
     cfn: Template | None
     context: Context
@@ -167,7 +162,7 @@ class Validator(Protocol):
         ValidationError: [2, 3, 4] is too long
         """
 
-    def resolve(self, instance: Any) -> Iterator[Any]:
+    def resolve_value(self, instance: Any) -> Iterator[Any]:
         """
         Resolve the given instance, yielding each of its values.
 
