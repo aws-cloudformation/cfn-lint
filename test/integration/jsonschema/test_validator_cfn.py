@@ -11,7 +11,6 @@ from typing import List
 
 import jsonpatch
 
-from cfnlint.context import ContextManager
 from cfnlint.decode import decode_str
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.template import Template
@@ -97,7 +96,9 @@ class TestValidatorCfnConditions(unittest.TestCase):
             .get("Properties", {})
         )
 
-        context = cfn.context.create_context_for_resource_properties("us-east-1", "MyResource")
+        context = cfn.context.create_context_for_resource_properties(
+            "us-east-1", "MyResource"
+        )
         validator = CfnTemplateValidator(schema=schema, cfn=cfn, context=context)
         errs = list(validator.iter_errors(props))
 

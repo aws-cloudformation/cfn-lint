@@ -12,11 +12,11 @@ import regex as re
 
 import cfnlint.conditions
 import cfnlint.helpers
+from cfnlint.context import ContextManager
 from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.getatts import GetAtts
 from cfnlint.template.transforms import Transform
-from cfnlint.context import ContextManager
 
 LOGGER = logging.getLogger(__name__)
 
