@@ -4,6 +4,20 @@
   "/properties/ConnectInstanceArn"
  ],
  "definitions": {
+  "AgentlessDialerConfig": {
+   "additionalProperties": false,
+   "description": "Agentless Dialer config",
+   "properties": {
+    "DialingCapacity": {
+     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
+     "maximum": 1,
+     "minimum": 0.01,
+     "type": "number"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
   "AnswerMachineDetectionConfig": {
    "additionalProperties": false,
    "description": "The configuration used for answering machine detection during outbound calls",
@@ -31,9 +45,17 @@
      "required": [
       "PredictiveDialerConfig"
      ]
+    },
+    {
+     "required": [
+      "AgentlessDialerConfig"
+     ]
     }
    ],
    "properties": {
+    "AgentlessDialerConfig": {
+     "$ref": "#/definitions/AgentlessDialerConfig"
+    },
     "PredictiveDialerConfig": {
      "$ref": "#/definitions/PredictiveDialerConfig"
     },
@@ -69,8 +91,7 @@
     }
    },
    "required": [
-    "ConnectContactFlowArn",
-    "ConnectQueueArn"
+    "ConnectContactFlowArn"
    ],
    "type": "object"
   },
@@ -82,6 +103,12 @@
      "description": "The bandwidth allocation of a queue resource.",
      "maximum": 1,
      "minimum": 0,
+     "type": "number"
+    },
+    "DialingCapacity": {
+     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
+     "maximum": 1,
+     "minimum": 0.01,
      "type": "number"
     }
    },
@@ -98,6 +125,12 @@
      "description": "The bandwidth allocation of a queue resource.",
      "maximum": 1,
      "minimum": 0,
+     "type": "number"
+    },
+    "DialingCapacity": {
+     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
+     "maximum": 1,
+     "minimum": 0.01,
      "type": "number"
     }
    },
