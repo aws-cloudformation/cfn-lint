@@ -6,14 +6,34 @@
   "/properties/Username"
  ],
  "description": "Resource Type definition for AWS::Cognito::UserPoolUserToGroupAttachment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:AdminAddUserToGroup",
+    "cognito-idp:AdminListGroupsForUser"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:AdminRemoveUserFromGroup",
+    "cognito-idp:AdminListGroupsForUser"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:AdminListGroupsForUser"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/UserPoolId",
+  "/properties/GroupName",
+  "/properties/Username"
  ],
  "properties": {
   "GroupName": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "UserPoolId": {
@@ -23,13 +43,17 @@
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
-  "GroupName",
+  "UserPoolId",
   "Username",
-  "UserPoolId"
+  "GroupName"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::Cognito::UserPoolUserToGroupAttachment"
 }

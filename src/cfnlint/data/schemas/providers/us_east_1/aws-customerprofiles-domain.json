@@ -4,6 +4,323 @@
   "/properties/DomainName"
  ],
  "definitions": {
+  "AttributeTypesSelector": {
+   "additionalProperties": false,
+   "description": "Configures information about the AttributeTypesSelector where the rule-based identity resolution uses to match profiles.",
+   "properties": {
+    "Address": {
+     "description": "The Address type. You can choose from Address, BusinessAddress, MaillingAddress, and ShippingAddress. You only can use the Address type in the MatchingRule. For example, if you want to match profile based on BusinessAddress.City or MaillingAddress.City, you need to choose the BusinessAddress and the MaillingAddress to represent the Address type and specify the Address.City on the matching rule.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    },
+    "AttributeMatchingModel": {
+     "description": "Configures the AttributeMatchingModel, you can either choose ONE_TO_ONE or MANY_TO_MANY.",
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "EmailAddress": {
+     "description": "The Email type. You can choose from EmailAddress, BusinessEmailAddress and PersonalEmailAddress. You only can use the EmailAddress type in the MatchingRule. For example, if you want to match profile based on PersonalEmailAddress or BusinessEmailAddress, you need to choose the PersonalEmailAddress and the BusinessEmailAddress to represent the EmailAddress type and only specify the EmailAddress on the matching rule.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PhoneNumber": {
+     "description": "The PhoneNumber type. You can choose from PhoneNumber, HomePhoneNumber, and MobilePhoneNumber. You only can use the PhoneNumber type in the MatchingRule. For example, if you want to match a profile based on Phone or HomePhone, you need to choose the Phone and the HomePhone to represent the PhoneNumber type and only specify the PhoneNumber on the matching rule.",
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AttributeMatchingModel"
+   ],
+   "type": "object"
+  },
+  "AutoMerging": {
+   "additionalProperties": false,
+   "description": "Configuration information about the auto-merging process.",
+   "properties": {
+    "ConflictResolution": {
+     "$ref": "#/definitions/ConflictResolution"
+    },
+    "Consolidation": {
+     "$ref": "#/definitions/Consolidation"
+    },
+    "Enabled": {
+     "description": "The flag that enables the auto-merging of duplicate profiles.",
+     "type": "boolean"
+    },
+    "MinAllowedConfidenceScoreForMerging": {
+     "description": "A number between 0 and 1 that represents the minimum confidence score required for profiles within a matching group to be merged during the auto-merge process. A higher score means higher similarity required to merge profiles.",
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "ConflictResolution": {
+   "additionalProperties": false,
+   "description": "How the auto-merging process should resolve conflicts between different profiles. For example, if Profile A and Profile B have the same FirstName and LastName (and that is the matching criteria), which EmailAddress should be used? ",
+   "properties": {
+    "ConflictResolvingModel": {
+     "description": "How the auto-merging process should resolve conflicts between different profiles.",
+     "enum": [
+      "RECENCY",
+      "SOURCE"
+     ],
+     "type": "string"
+    },
+    "SourceName": {
+     "description": "The ObjectType name that is used to resolve profile merging conflicts when choosing SOURCE as the ConflictResolvingModel.",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConflictResolvingModel"
+   ],
+   "type": "object"
+  },
+  "Consolidation": {
+   "additionalProperties": false,
+   "description": "A list of matching attributes that represent matching criteria. If two profiles meet at least one of the requirements in the matching attributes list, they will be merged.",
+   "properties": {
+    "MatchingAttributesList": {
+     "description": "A list of matching criteria.",
+     "items": {
+      "$ref": "#/definitions/MatchingAttributes"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "MatchingAttributesList"
+   ],
+   "type": "object"
+  },
+  "DomainStats": {
+   "additionalProperties": false,
+   "description": "Usage-specific statistics about the domain.",
+   "properties": {
+    "MeteringProfileCount": {
+     "description": "The number of profiles that you are currently paying for in the domain. If you have more than 100 objects associated with a single profile, that profile counts as two profiles. If you have more than 200 objects, that profile counts as three, and so on.",
+     "type": "number"
+    },
+    "ObjectCount": {
+     "description": "The total number of objects in domain.",
+     "type": "number"
+    },
+    "ProfileCount": {
+     "description": "The total number of profiles currently in the domain.",
+     "type": "number"
+    },
+    "TotalSize": {
+     "description": "The total size, in bytes, of all objects in the domain.",
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ExportingConfig": {
+   "additionalProperties": false,
+   "description": "Configuration information for exporting Identity Resolution results, for example, to an S3 bucket.",
+   "properties": {
+    "S3Exporting": {
+     "$ref": "#/definitions/S3ExportingConfig"
+    }
+   },
+   "type": "object"
+  },
+  "JobSchedule": {
+   "additionalProperties": false,
+   "description": "The day and time when do you want to start the Identity Resolution Job every week.",
+   "properties": {
+    "DayOfTheWeek": {
+     "description": "The day when the Identity Resolution Job should run every week.",
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "Time": {
+     "description": "The time when the Identity Resolution Job should run every week.",
+     "maxLength": 5,
+     "minLength": 3,
+     "pattern": "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DayOfTheWeek",
+    "Time"
+   ],
+   "type": "object"
+  },
+  "Matching": {
+   "additionalProperties": false,
+   "description": "The process of matching duplicate profiles. If Matching = true, Amazon Connect Customer Profiles starts a weekly batch process called Identity Resolution Job. If you do not specify a date and time for Identity Resolution Job to run, by default it runs every Saturday at 12AM UTC to detect duplicate profiles in your domains. After the Identity Resolution Job completes, use the GetMatches API to return and review the results. Or, if you have configured ExportingConfig in the MatchingRequest, you can download the results from S3.",
+   "properties": {
+    "AutoMerging": {
+     "$ref": "#/definitions/AutoMerging"
+    },
+    "Enabled": {
+     "description": "The flag that enables the matching process of duplicate profiles.",
+     "type": "boolean"
+    },
+    "ExportingConfig": {
+     "$ref": "#/definitions/ExportingConfig"
+    },
+    "JobSchedule": {
+     "$ref": "#/definitions/JobSchedule"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "MatchingAttributes": {
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "MatchingRule": {
+   "additionalProperties": false,
+   "description": "Specifies how does the rule-based matching process should match profiles.",
+   "properties": {
+    "Rule": {
+     "$ref": "#/definitions/MatchingRuleAttributeList"
+    }
+   },
+   "required": [
+    "Rule"
+   ],
+   "type": "object"
+  },
+  "MatchingRuleAttributeList": {
+   "description": "A single rule level of the MatchRules. Configures how the rule-based matching process should match profiles.",
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 15,
+   "minItems": 1,
+   "type": "array"
+  },
+  "RuleBasedMatching": {
+   "additionalProperties": false,
+   "description": "The process of matching duplicate profiles using the Rule-Based matching. If RuleBasedMatching = true, Amazon Connect Customer Profiles will start to match and merge your profiles according to your configuration in the RuleBasedMatchingRequest. You can use the ListRuleBasedMatches and GetSimilarProfiles API to return and review the results. Also, if you have configured ExportingConfig in the RuleBasedMatchingRequest, you can download the results from S3.",
+   "properties": {
+    "AttributeTypesSelector": {
+     "$ref": "#/definitions/AttributeTypesSelector"
+    },
+    "ConflictResolution": {
+     "$ref": "#/definitions/ConflictResolution"
+    },
+    "Enabled": {
+     "description": "The flag that enables the rule-based matching process of duplicate profiles.",
+     "type": "boolean"
+    },
+    "ExportingConfig": {
+     "$ref": "#/definitions/ExportingConfig"
+    },
+    "MatchingRules": {
+     "description": "Configures how the rule-based matching process should match profiles. You can have up to 15 MatchingRule in the MatchingRules.",
+     "items": {
+      "$ref": "#/definitions/MatchingRule"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    },
+    "MaxAllowedRuleLevelForMatching": {
+     "description": "Indicates the maximum allowed rule level for matching.",
+     "maximum": 15,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxAllowedRuleLevelForMerging": {
+     "description": "Indicates the maximum allowed rule level for merging.",
+     "maximum": 15,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "enum": [
+      "PENDING",
+      "IN_PROGRESS",
+      "ACTIVE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "S3ExportingConfig": {
+   "additionalProperties": false,
+   "description": "The S3 location where Identity Resolution Jobs write result files.",
+   "properties": {
+    "S3BucketName": {
+     "description": "The name of the S3 bucket where Identity Resolution Jobs write result files.",
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9.-]+$",
+     "type": "string"
+    },
+    "S3KeyName": {
+     "description": "The S3 key name of the location where Identity Resolution Jobs write result files.",
+     "maxLength": 800,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3BucketName"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -105,6 +422,15 @@
    "description": "The time of this integration got last updated at",
    "type": "string"
   },
+  "Matching": {
+   "$ref": "#/definitions/Matching"
+  },
+  "RuleBasedMatching": {
+   "$ref": "#/definitions/RuleBasedMatching"
+  },
+  "Stats": {
+   "$ref": "#/definitions/DomainStats"
+  },
   "Tags": {
    "description": "The tags (keys and values) associated with the domain",
    "items": {
@@ -117,7 +443,9 @@
  },
  "readOnlyProperties": [
   "/properties/LastUpdatedAt",
-  "/properties/CreatedAt"
+  "/properties/CreatedAt",
+  "/properties/RuleBasedMatching/Status",
+  "/properties/Stats"
  ],
  "required": [
   "DomainName"

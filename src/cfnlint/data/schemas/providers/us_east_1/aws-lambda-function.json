@@ -246,6 +246,10 @@
    "additionalProperties": false,
    "description": "The VPC security groups and subnets that are attached to a Lambda function. When you connect a function to a VPC, Lambda creates an elastic network interface for each combination of security group and subnet in the function's VPC configuration. The function can only access resources and the internet through that VPC.",
    "properties": {
+    "Ipv6AllowedForDualStack": {
+     "description": "A boolean indicating whether IPv6 protocols will be allowed for dual stack subnets",
+     "type": "boolean"
+    },
     "SecurityGroupIds": {
      "description": "A list of VPC security groups IDs.",
      "items": {
@@ -291,7 +295,12 @@
     "lambda:GetLayerVersion",
     "lambda:GetRuntimeManagementConfig",
     "lambda:PutRuntimeManagementConfig",
-    "lambda:TagResource"
+    "lambda:TagResource",
+    "lambda:GetPolicy",
+    "lambda:AddPermission",
+    "lambda:RemovePermission",
+    "lambda:GetResourcePolicy",
+    "lambda:PutResourcePolicy"
    ]
   },
   "delete": {
@@ -327,6 +336,7 @@
     "ec2:DescribeSecurityGroups",
     "ec2:DescribeSubnets",
     "ec2:DescribeVpcs",
+    "elasticfilesystem:DescribeMountTargets",
     "kms:CreateGrant",
     "kms:Decrypt",
     "kms:GenerateDataKey",
@@ -335,7 +345,13 @@
     "lambda:PutFunctionCodeSigningConfig",
     "lambda:DeleteFunctionCodeSigningConfig",
     "lambda:GetCodeSigningConfig",
-    "lambda:GetFunctionCodeSigningConfig"
+    "lambda:GetFunctionCodeSigningConfig",
+    "lambda:GetPolicy",
+    "lambda:AddPermission",
+    "lambda:RemovePermission",
+    "lambda:GetResourcePolicy",
+    "lambda:PutResourcePolicy",
+    "lambda:DeleteResourcePolicy"
    ]
   }
  },
@@ -438,6 +454,10 @@
     "Zip"
    ],
    "type": "string"
+  },
+  "Policy": {
+   "description": "The resource policy of your function",
+   "type": "object"
   },
   "ReservedConcurrentExecutions": {
    "description": "The number of simultaneous executions to reserve for the function.",
@@ -548,6 +568,7 @@
   "/properties/Code/S3Bucket",
   "/properties/Code/S3Key",
   "/properties/Code/S3ObjectVersion",
-  "/properties/Code/ZipFile"
+  "/properties/Code/ZipFile",
+  "/properties/Policy"
  ]
 }

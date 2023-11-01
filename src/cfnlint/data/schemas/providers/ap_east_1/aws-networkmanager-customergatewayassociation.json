@@ -1,0 +1,63 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId",
+  "/properties/CustomerGatewayArn",
+  "/properties/DeviceId",
+  "/properties/LinkId"
+ ],
+ "description": "The AWS::NetworkManager::CustomerGatewayAssociation type associates a customer gateway with a device and optionally, with a link.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations",
+    "networkmanager:AssociateCustomerGateway"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DisassociateCustomerGateway"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/CustomerGatewayArn"
+ ],
+ "properties": {
+  "CustomerGatewayArn": {
+   "description": "The Amazon Resource Name (ARN) of the customer gateway.",
+   "type": "string"
+  },
+  "DeviceId": {
+   "description": "The ID of the device",
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "LinkId": {
+   "description": "The ID of the link",
+   "type": "string"
+  }
+ },
+ "required": [
+  "GlobalNetworkId",
+  "CustomerGatewayArn",
+  "DeviceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "taggable": false,
+ "typeName": "AWS::NetworkManager::CustomerGatewayAssociation"
+}

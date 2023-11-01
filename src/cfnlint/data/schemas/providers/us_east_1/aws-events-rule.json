@@ -12,9 +12,11 @@
    ]
   }
  ],
- "createOnlyProperties": [
-  "/properties/Name",
+ "conditionalCreateOnlyProperties": [
   "/properties/EventBusName"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name"
  ],
  "definitions": {
   "AwsVpcConfiguration": {
@@ -24,6 +26,7 @@
      "type": "string"
     },
     "SecurityGroups": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -31,6 +34,7 @@
      "uniqueItems": true
     },
     "Subnets": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -114,6 +118,7 @@
    "additionalProperties": false,
    "properties": {
     "CapacityProviderStrategy": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/CapacityProviderStrategyItem"
      },
@@ -136,6 +141,7 @@
      "$ref": "#/definitions/NetworkConfiguration"
     },
     "PlacementConstraints": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/PlacementConstraint"
      },
@@ -143,6 +149,7 @@
      "uniqueItems": true
     },
     "PlacementStrategies": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/PlacementStrategy"
      },
@@ -159,6 +166,7 @@
      "type": "string"
     },
     "TagList": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Tag"
      },
@@ -181,6 +189,7 @@
    "additionalProperties": false,
    "properties": {
     "HeaderParameters": {
+     "additionalProperties": false,
      "patternProperties": {
       "[a-zA-Z0-9]+": {
        "type": "string"
@@ -189,6 +198,7 @@
      "type": "object"
     },
     "PathParameterValues": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -196,6 +206,7 @@
      "uniqueItems": true
     },
     "QueryStringParameters": {
+     "additionalProperties": false,
      "patternProperties": {
       "[a-zA-Z0-9]+": {
        "type": "string"
@@ -210,6 +221,7 @@
    "additionalProperties": false,
    "properties": {
     "InputPathsMap": {
+     "additionalProperties": false,
      "patternProperties": {
       "[a-zA-Z0-9]+": {
        "type": "string"
@@ -286,6 +298,14 @@
     "Sql": {
      "type": "string"
     },
+    "Sqls": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "StatementName": {
      "type": "string"
     },
@@ -314,6 +334,7 @@
    "additionalProperties": false,
    "properties": {
     "RunCommandTargets": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/RunCommandTarget"
      },
@@ -333,6 +354,7 @@
      "type": "string"
     },
     "Values": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -366,6 +388,7 @@
    "additionalProperties": false,
    "properties": {
     "PipelineParameterList": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/SageMakerPipelineParameter"
      },
@@ -459,41 +482,95 @@
   }
  },
  "description": "Resource Type definition for AWS::Events::Rule",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "events:DescribeRule",
+    "events:PutRule",
+    "events:PutTargets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:PassRole",
+    "events:DescribeRule",
+    "events:DeleteRule",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:PassRole",
+    "events:DescribeRule",
+    "events:ListTargetsByRule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "events:DescribeRule",
+    "events:PutRule",
+    "events:RemoveTargets",
+    "events:PutTargets"
+   ]
+  }
+ },
  "message": {
   "anyOf": "Specify either 'EventPattern' or 'ScheduleExpression'"
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Arn"
  ],
  "properties": {
   "Arn": {
+   "description": "The ARN of the rule, such as arn:aws:events:us-east-2:123456789012:rule/example.",
    "type": "string"
   },
   "Description": {
+   "description": "The description of the rule.",
    "type": "string"
   },
   "EventBusName": {
+   "description": "The name or ARN of the event bus associated with the rule. If you omit this, the default event bus is used.",
    "type": "string"
   },
   "EventPattern": {
-   "type": "object"
-  },
-  "Id": {
-   "type": "string"
+   "description": "The event pattern of the rule. For more information, see Events and Event Patterns in the Amazon EventBridge User Guide.",
+   "type": [
+    "string",
+    "object"
+   ]
   },
   "Name": {
+   "description": "The name of the rule.",
    "type": "string"
   },
   "RoleArn": {
+   "description": "The Amazon Resource Name (ARN) of the role that is used for target invocation.",
    "type": "string"
   },
   "ScheduleExpression": {
+   "description": "The scheduling expression. For example, \"cron(0 20 * * ? *)\", \"rate(5 minutes)\". For more information, see Creating an Amazon EventBridge rule that runs on a schedule.",
    "type": "string"
   },
   "State": {
+   "description": "The state of the rule.",
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
    "type": "string"
   },
   "Targets": {
+   "description": "Adds the specified targets to the specified rule, or updates the targets if they are already associated with the rule.\nTargets are the resources that are invoked when a rule is triggered.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Target"
    },
@@ -502,8 +579,10 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
   "/properties/Arn"
  ],
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::Events::Rule"
 }

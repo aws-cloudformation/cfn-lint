@@ -22,7 +22,6 @@
     }
    },
    "required": [
-    "Status",
     "Value"
    ],
    "type": "object"
@@ -148,12 +147,19 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic"
+ ],
  "description": "The AWS::S3ObjectLambda::AccessPoint resource is an Amazon S3ObjectLambda resource type that you can use to add computation to S3 actions",
  "handlers": {
   "create": {
    "permissions": [
     "s3:CreateAccessPointForObjectLambda",
-    "s3:PutAccessPointConfigurationForObjectLambda"
+    "s3:PutAccessPointConfigurationForObjectLambda",
+    "s3:GetAccessPointForObjectLambda",
+    "s3:GetAccessPointPolicyStatusForObjectLambda",
+    "s3:GetAccessPointConfigurationForObjectLambda"
    ]
   },
   "delete": {
@@ -175,7 +181,10 @@
   },
   "update": {
    "permissions": [
-    "s3:PutAccessPointConfigurationForObjectLambda"
+    "s3:PutAccessPointConfigurationForObjectLambda",
+    "s3:GetAccessPointForObjectLambda",
+    "s3:GetAccessPointPolicyStatusForObjectLambda",
+    "s3:GetAccessPointConfigurationForObjectLambda"
    ]
   }
  },
@@ -218,14 +227,17 @@
   "/properties/Alias",
   "/properties/Alias/Value",
   "/properties/Alias/Status",
-  "/properties/CreationDate",
   "/properties/PolicyStatus",
   "/properties/PolicyStatus/IsPublic",
+  "/properties/CreationDate",
   "/properties/PublicAccessBlockConfiguration"
  ],
  "required": [
   "ObjectLambdaConfiguration"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::S3ObjectLambda::AccessPoint"
 }

@@ -7,13 +7,14 @@
   "/properties/EC2InstanceType",
   "/properties/FleetType",
   "/properties/InstanceRoleARN",
+  "/properties/InstanceRoleCredentialsProvider",
   "/properties/LogPaths",
   "/properties/PeerVpcAwsAccountId",
   "/properties/PeerVpcId",
   "/properties/ScriptId",
   "/properties/ServerLaunchParameters",
   "/properties/ServerLaunchPath",
-  "/properties/CertificateConfiguration/CertificateType",
+  "/properties/CertificateType",
   "/properties/ComputeType"
  ],
  "definitions": {
@@ -331,6 +332,13 @@
    "description": "A unique identifier for an AWS IAM role that manages access to your AWS services. With an instance role ARN set, any application that runs on an instance in this fleet can assume the role, including install scripts, server processes, and daemons (background processes). Create a role or look up a role's ARN from the IAM dashboard in the AWS Management Console.",
    "minLength": 1,
    "pattern": "^arn:aws(-.*)?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "InstanceRoleCredentialsProvider": {
+   "description": "Credentials provider implementation that loads credentials from the Amazon EC2 Instance Metadata Service.",
+   "enum": [
+    "SHARED_CREDENTIAL_FILE"
+   ],
    "type": "string"
   },
   "Locations": {
