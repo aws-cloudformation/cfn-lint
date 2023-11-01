@@ -1142,7 +1142,6 @@ cached: List[str] = [
     "aws-certificatemanager-account.json",
     "aws-iam-oidcprovider.json",
     "aws-timestream-table.json",
-    "aws-resourcegroups-group.json",
     "aws-cloudformation-resourcedefaultversion.json",
     "aws-greengrass-loggerdefinitionversion.json",
     "aws-quicksight-dashboard.json",
