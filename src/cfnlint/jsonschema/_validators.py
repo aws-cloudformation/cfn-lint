@@ -21,7 +21,7 @@ from cfnlint.jsonschema._utils import (
     unbool,
     uniq,
 )
-from cfnlint.jsonschema.exceptions import FormatError, ValidationError
+from cfnlint.jsonschema.exceptions import FormatError
 
 
 def additionalProperties(
@@ -427,18 +427,13 @@ def propertyNames(
 def ref(
     validator: Validator, ref: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    resolve = getattr(validator.resolver, "resolve", None)
-    if resolve is None:
-        with validator.resolver.resolving(ref) as resolved:
-            yield from validator.descend(instance, resolved)
-    else:
-        scope, resolved = validator.resolver.resolve(ref)
-        validator.resolver.push_scope(scope)
+    scope, resolved = validator.resolver.resolve(ref)
+    validator.resolver.push_scope(scope)
 
-        try:
-            yield from validator.descend(instance, resolved)
-        finally:
-            validator.resolver.pop_scope()
+    try:
+        yield from validator.descend(instance, resolved)
+    finally:
+        validator.resolver.pop_scope()
 
 
 def required(
