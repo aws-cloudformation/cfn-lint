@@ -7,6 +7,44 @@
     "Enabled": {
      "type": "boolean"
     },
+    "SingleHeaderPolicyConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "Header": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      },
+      "Value": {
+       "maxLength": 1783,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "Header",
+      "Value"
+     ],
+     "type": "object"
+    },
+    "SingleWeightPolicyConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "SessionStickinessConfig": {
+       "$ref": "#/definitions/SessionStickinessConfig"
+      },
+      "Weight": {
+       "maximum": 1,
+       "minimum": 0,
+       "multipleOf": 0.01,
+       "type": "number"
+      }
+     },
+     "required": [
+      "Weight"
+     ],
+     "type": "object"
+    },
     "StagingDistributionDnsNames": {
      "insertionOrder": true,
      "items": {
@@ -18,6 +56,13 @@
     },
     "TrafficConfig": {
      "$ref": "#/definitions/TrafficConfig"
+    },
+    "Type": {
+     "enum": [
+      "SingleWeight",
+      "SingleHeader"
+     ],
+     "type": "string"
     }
    },
    "required": [
@@ -109,6 +154,11 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/definitions/ContinuousDeploymentPolicyConfig/properties/Type",
+  "/definitions/ContinuousDeploymentPolicyConfig/properties/SingleHeaderPolicyConfig",
+  "/definitions/ContinuousDeploymentPolicyConfig/properties/SingleWeightPolicyConfig"
+ ],
  "description": "Resource Type definition for AWS::CloudFront::ContinuousDeploymentPolicy",
  "handlers": {
   "create": {
@@ -118,7 +168,8 @@
   },
   "delete": {
    "permissions": [
-    "cloudfront:DeleteContinuousDeploymentPolicy"
+    "cloudfront:DeleteContinuousDeploymentPolicy",
+    "cloudfront:GetContinuousDeploymentPolicy"
    ]
   },
   "list": {
@@ -133,7 +184,8 @@
   },
   "update": {
    "permissions": [
-    "cloudfront:UpdateContinuousDeploymentPolicy"
+    "cloudfront:UpdateContinuousDeploymentPolicy",
+    "cloudfront:GetContinuousDeploymentPolicy"
    ]
   }
  },

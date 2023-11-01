@@ -5,6 +5,13 @@
   "/properties/Tier"
  ],
  "definitions": {
+  "AdMarkupType": {
+   "enum": [
+    "DATERANGE",
+    "SCTE35_ENHANCED"
+   ],
+   "type": "string"
+  },
   "DashPlaylistSettings": {
    "additionalProperties": false,
    "description": "<p>Dash manifest configuration parameters.</p>",
@@ -36,6 +43,13 @@
    "additionalProperties": false,
    "description": "<p>HLS playlist configuration parameters.</p>",
    "properties": {
+    "AdMarkupType": {
+     "description": "<p>Determines the type of SCTE 35 tags to use in ad markup. Specify <code>DATERANGE</code> to use <code>DATERANGE</code> tags (for live or VOD content). Specify <code>SCTE35_ENHANCED</code> to use <code>EXT-X-CUE-OUT</code> and <code>EXT-X-CUE-IN</code> tags (for VOD content only).</p>",
+     "items": {
+      "$ref": "#/definitions/AdMarkupType"
+     },
+     "type": "array"
+    },
     "ManifestWindowSeconds": {
      "default": 0,
      "description": "<p>The total duration (in seconds) of each manifest. Minimum value: <code>30</code> seconds. Maximum value: <code>3600</code> seconds.</p>",
