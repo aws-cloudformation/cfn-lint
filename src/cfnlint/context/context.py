@@ -74,7 +74,7 @@ class Context:
     mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
 
     # other Refs from Fn::Sub
-    ref_values: Dict[str, List[Any]] = field(init=True, default_factory=dict)
+    ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
 
     # Resolved value
     resolved_value: bool = field(init=True, default=False)
@@ -86,9 +86,9 @@ class Context:
         if self.path is None:
             self.path = deque([])
         for pseudo_parameter in PSEUDOPARAMS:
-            self.ref_values[pseudo_parameter] = [
-                _get_pseudo_value(pseudo_parameter, self.region)
-            ]
+            self.ref_values[pseudo_parameter] = _get_pseudo_value(
+                pseudo_parameter, self.region
+            )
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -233,7 +233,7 @@ class _MappingSecondaryKey:
     This class holds a mapping value
     """
 
-    keys: Dict[str, List[Any] | str] = field(init=False)
+    keys: Dict[str, List[Any] | str] = field(init=False, default_factory=dict)
     instance: InitVar[Any]
 
     def __post_init__(self, instance) -> None:
@@ -255,7 +255,7 @@ class Map:
     This class holds a mapping
     """
 
-    keys: Dict[str, _MappingSecondaryKey] = field(init=False)
+    keys: Dict[str, _MappingSecondaryKey] = field(init=False, default_factory=dict)
     resource: InitVar[Any]
 
     def __post_init__(self, mapping) -> None:
