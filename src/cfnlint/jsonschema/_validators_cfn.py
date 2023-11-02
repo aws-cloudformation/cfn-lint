@@ -585,8 +585,10 @@ class FnFindInMap(FnArray):
             self._max_length = 4
             self.items.append(_FindInMapDefault())
 
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
+        errs = self.iter_errors(validator, s, instance, schema)
+        if errs:
+            yield from iter(errs)
+            return
 
         for value in validator.resolve_value(instance):
             for err in validator.descend(value, s):
@@ -781,14 +783,26 @@ class FnSub(Fn):
             if errs > 0:
                 return
 
-            validator = validator.evolve(
+            validator_string = validator.evolve(
                 context=validator.context.evolve(
                     ref_values=dict.fromkeys(keys, Parameter({"Type": "String"})),
                 )
             )
             value = value[0]
+        else:
+            validator_string = validator
 
-        yield from self._validate_string(validator, value)
+        errors = list(self._validate_string(validator_string, value))
+        if errors:
+            yield from iter(errors)
+            return
+
+        for value in validator.resolve_value(instance):
+            for err in validator.descend(value, s):
+                err.path.appendleft(self.fn.name)
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
 
 
 class FnCidr(FnArray):

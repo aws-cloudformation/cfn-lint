@@ -88,11 +88,11 @@ class TestIdentityPolicies(TestCase):
                     ],
                     "Resource": [
                         {
-                            "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012/role/object-role"
+                            "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
                         },
                         {
                             "NotValid": [
-                                "arn:${AWS::Partition}:iam::123456789012/role/object-role"
+                                "arn:${AWS::Partition}:iam::123456789012:role/object-role"
                             ]
                         },
                     ],
@@ -110,7 +110,7 @@ class TestIdentityPolicies(TestCase):
         self.assertListEqual(list(errs[0].path), ["Statement", 0, "Effect"])
         self.assertEqual(
             errs[1].message,
-            "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012/role/object-role']} is not of type 'string'",
+            "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012:role/object-role']} is not of type 'string'",
         )
         self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
 
