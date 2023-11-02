@@ -1,5 +1,13 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
+from __future__ import annotations
+
 import json
 from typing import Any, Dict, Iterator
+
+import regex as re
 
 from cfnlint.helpers import AVAILABILITY_ZONES
 from cfnlint.jsonschema import Validator
@@ -20,7 +28,7 @@ def ref(validator: Validator, instance: Any) -> Iterator[Any]:
             if instance in validator.context.ref_values:
                 # Ref: AWS::NoValue returns None making this fail
                 if validator.context.ref_values[instance] is not None:
-                    yield from iter(validator.context.ref_values[instance])
+                    yield validator.context.ref_values[instance]
                     return
             if instance in validator.context.parameters:
                 if validator.context.parameters[instance].allowed_values:
@@ -49,7 +57,7 @@ def find_in_map(validator: Validator, instance: Any) -> Iterator[Any]:
                 if not validator.is_type(second_level_key, "string"):
                     continue
                 try:
-                    yield validator.context.mappings[map_name].find_in_map(
+                    yield from validator.context.mappings[map_name].find_in_map(
                         top_level_key,
                         second_level_key,
                     )
@@ -150,9 +158,71 @@ def split(validator: Validator, instance: Any) -> Iterator[Any]:
             yield source_string.split(delimiter)
 
 
+def _sub_parameter_expansion(
+    validator: Validator, parameters: Dict[str, Any]
+) -> Iterator[Dict[str, Any]]:
+    parameters = parameters.copy()
+    if len(parameters) == 0:
+        yield {}
+        return
+
+    if len(parameters) == 1:
+        for key, value in parameters.items():
+            for resolved_value in validator.resolve_value(value):
+                yield {key: resolved_value}
+        return
+
+    key = list(parameters.keys())[0]
+    value = parameters.pop(key)
+    for resolved_value in validator.resolve_value(value):
+        for values in _sub_parameter_expansion(validator, parameters):
+            yield dict({key: resolved_value}, **values)
+
+
+def _sub_string(validator: Validator, string: str) -> Iterator[str]:
+    sub_regex = re.compile(r"(\${([^!].*?)})")
+
+    def _replace(matchobj):
+        if matchobj.group(2) in validator.context.ref_values:
+            return validator.context.ref_values[matchobj.group(2)]
+        raise ValueError(f"No matches for {matchobj.group(2)}")
+
+    try:
+        yield re.sub(sub_regex, _replace, string)
+    except ValueError:
+        return
+
+
 def sub(validator: Validator, instance: Any) -> Iterator[Any]:
-    return
-    yield
+    if not (
+        validator.is_type(instance, "array") or validator.is_type(instance, "string")
+    ):
+        return
+
+    if validator.is_type(instance, "array"):
+        if len(instance) != 2:
+            return
+
+        string = instance[0]
+        parameters = instance[1]
+        if not validator.is_type(string, "string"):
+            return
+        if not validator.is_type(parameters, "object"):
+            return
+
+        for resolved_parameters in _sub_parameter_expansion(validator, parameters):
+            resolved_validator = validator.evolve(
+                context=validator.context.evolve(
+                    ref_values=resolved_parameters,
+                )
+            )
+            for resolved_string in _sub_string(resolved_validator, string):
+                yield resolved_string
+
+        return
+
+    # its a string
+    yield from _sub_string(validator, instance)
 
 
 def to_json_string(validator: Validator, instance: Any) -> Iterator[Any]:
