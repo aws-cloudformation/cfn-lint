@@ -77,7 +77,6 @@ class Context:
     ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
 
     # Resolved value
-    resolved_value: bool = field(init=True, default=False)
     resolved_conditions: Mapping[str, bool] = field(init=True, default_factory=dict)
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))

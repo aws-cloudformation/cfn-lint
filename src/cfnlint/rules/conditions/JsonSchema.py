@@ -34,6 +34,7 @@ class JsonSchema(BaseJsonSchema):
             "fn_and": "E8004",
             "fn_or": "E8006",
             "condition": "E8007",
+            "ref": "E1020",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
         self.schema = load_resource(schema_conditions, "conditions.json")
