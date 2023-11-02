@@ -152,6 +152,21 @@ class Fn(Scalar):
             validator.descend(value, self.schema(validator, instance), key)
         )
 
+    def iter_errors_resolved(
+        self,
+        validator: Validator,
+        s: Any,
+        instance: Any,
+        schema: Any,
+    ) -> ValidationResult:
+        key = list(instance.keys())[0]
+
+        for value in validator.resolve_value(instance):
+            for err in self._resolve_errors(validator.descend(value, s, key)):
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
+
 
 class FnArray:
     def __init__(self, name: str, min_length: int = 0, max_length: int = 0) -> None:
@@ -233,7 +248,6 @@ class FnArray:
                 for err in self._resolve_errors(
                     self.items[i].iter_errors(validator, s, value[i], schema)
                 ):
-                    err.validator = self.fn.py
                     err.path.extendleft([i, key])
                     yield err
             except (IndexError, StopIteration):
@@ -274,9 +288,6 @@ class Ref(Fn):
             yield err
             return
 
-        validator = validator.evolve(
-            context=validator.context.evolve(resolved_value=True)
-        )
         for value in validator.resolve_value(instance):
             if value is None:
                 continue
@@ -415,15 +426,7 @@ class FnGetAZs(Fn):
         if errs:
             return
 
-        validator = validator.evolve(
-            context=validator.context.evolve(resolved_value=True)
-        )
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
+        yield from self.iter_errors_resolved(validator, s, instance, schema)
 
 
 class FnImportValue(Fn):
