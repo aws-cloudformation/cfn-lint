@@ -142,6 +142,26 @@ def test_resolvers_ref(name, instance, response):
             {"Fn::FindInMap": ["foo", "bar", ["value"]]},
             [],
         ),
+        (
+            "Invalid FnSub with an invalid type",
+            {"Fn::Sub": {"foo": "bar"}},
+            [],
+        ),
+        (
+            "Invalid FnSub with an array of wrong length",
+            {"Fn::Sub": ["foo", "bar", "value"]},
+            [],
+        ),
+        (
+            "Invalid FnSub with the wrong type for element one",
+            {"Fn::Sub": [["foo"], {"foo": "bar"}]},
+            [],
+        ),
+        (
+            "Invalid FnSub with the wrong type for element two",
+            {"Fn::Sub": ["foo", ["bar"]]},
+            [],
+        ),
     ],
 )
 def test_invalid_functions(name, instance, response):
@@ -179,6 +199,16 @@ def test_invalid_functions(name, instance, response):
             "Valid FindInMap with a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
             ["default"],
+        ),
+        (
+            "Valid Sub with a resolvable values",
+            {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
+            ["foo-bar"],
+        ),
+        (
+            "Valid Sub with empty parameters",
+            {"Fn::Sub": ["foo", {}]},
+            ["foo"],
         ),
     ],
 )
