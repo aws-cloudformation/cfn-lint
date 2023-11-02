@@ -24,9 +24,6 @@ class AvailabilityZone(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def availabilityzone(self, validator, aZ, zone, schema):
-        if validator.context.resolved_value:
-            return
-
         if not validator.is_type(zone, "string"):
             return
         
@@ -37,9 +34,8 @@ class AvailabilityZone(CloudFormationLintRule):
         if zone in self.exceptions:
             return
 
-        if len(validator.context.path) > 0:
-            if validator.context.path[-1] in FUNCTIONS:
-                return
+        if any(fn in validator.context.path for fn in FUNCTIONS):
+            return
 
         yield ValidationError(
             f"Avoid hardcoding availability zones {zone!r}",
@@ -48,9 +44,6 @@ class AvailabilityZone(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def availabilityzones(self, validator, aZ, zones, schema):
-        if validator.context.resolved_value:
-            return
-
         if not validator.is_type(zones, "array"):
             return
         
@@ -58,9 +51,8 @@ class AvailabilityZone(CloudFormationLintRule):
         if validator.template.is_cdk_template():
             return
 
-        if len(validator.context.path) > 0:
-            if validator.context.path[-1] in FUNCTIONS:
-                return
+        if any(fn in validator.context.path for fn in FUNCTIONS):
+            return
 
         for zone in zones:
             yield from self.availabilityzone(validator, aZ, zone, schema)
