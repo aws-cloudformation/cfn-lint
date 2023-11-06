@@ -62,9 +62,6 @@ class Context:
     # path keeps track of the path as we move down the template
     # Example: Resources, MyResource, Properties, Name, ...
     path: Deque[str] = field(init=True, default_factory=deque)
-
-    # The path of the value we are currently processing
-    # Example: When using a Ref this could be to default parameter value
     value_path: Deque[str] = field(init=True, default_factory=deque)
 
     # cfn-lint Template class
