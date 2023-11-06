@@ -214,7 +214,15 @@ _ref_tests: List[Tuple] = [
         "Invalid Ref with bad type",
         {"Ref": ["foo"]},
         {"type": "string"},
-        ["['foo'] is not of type 'string'"],
+        [
+            "['foo'] is not of type 'string'",
+            (
+                "['foo'] is not one of ['MyResource', 'AWS::NoValue', "
+                "'AWS::AccountId', 'AWS::Partition', 'AWS::Region', "
+                "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix', "
+                "'AWS::NotificationARNs']"
+            ),
+        ],
         [],
     ),
 ]
@@ -251,7 +259,7 @@ _getatt_tests: List[Tuple] = [
         "Invalid GetAtt with a bad type",
         {"Fn::GetAtt": {"foo": "bar"}},
         {"type": "string"},
-        ["{'foo': 'bar'} is not of type 'array', 'string'"],
+        ["{'foo': 'bar'} is not of type 'string', 'array'"],
         [],
     ),
 ]
@@ -358,9 +366,9 @@ _join_tests: List[Tuple] = [
     ),
     (
         "Invalid Fn::Join with wrong output type",
-        {"Fn::Join": ["foo", "bar"]},
+        {"Fn::Join": ["foo", ["bar"]]},
         {"type": "array"},
-        ["{'Fn::Join': ['foo', 'bar']} is not of type 'array'"],
+        ["{'Fn::Join': ['foo', ['bar']]} is not of type 'array'"],
         [],
     ),
     (
@@ -372,9 +380,9 @@ _join_tests: List[Tuple] = [
     ),
     (
         "Invalid Fn::Join using a function for delimiter",
-        {"Fn::Join": [{"foo": "bar"}, "bar"]},
+        {"Fn::Join": [{"Ref": "MyResource"}, ["bar"]]},
         {"type": "string"},
-        ["{'foo': 'bar'} is not of type 'string'"],
+        ["{'Ref': 'MyResource'} is not of type 'string'"],
         [],
     ),
     (
@@ -407,9 +415,9 @@ _join_tests: List[Tuple] = [
     ),
     (
         "Invalid Fn::Join with an invalid function",
-        {"Fn::Join": ["-", [{"Fn::Split": "bar"}]]},
+        {"Fn::Join": ["-", [{"Fn::Split": ["-", {"Ref": "MyResource"}]}]]},
         {"type": "string"},
-        ["{'Fn::Split': 'bar'} is not of type 'string'"],
+        ["{'Fn::Split': ['-', {'Ref': 'MyResource'}]} is not of type 'string'"],
         [],
     ),
 ]
@@ -431,9 +439,9 @@ _select_tests: List[Tuple] = [
     ),
     (
         "Invalid Fn::Select using an invalid function for index",
-        {"Fn::Select": [{"foo": "bar"}, "bar"]},
+        {"Fn::Select": [{"Fn::GetAtt": "MyResource"}, ["bar"]]},
         {"type": "string"},
-        ["{'foo': 'bar'} is not of type 'integer'"],
+        ["{'Fn::GetAtt': 'MyResource'} is not of type 'integer'"],
         [],
     ),
     (
@@ -468,7 +476,12 @@ _select_tests: List[Tuple] = [
         "Invalid Fn::Select with an invalid function",
         {"Fn::Select": [1, ["foo", {"foo": "bar"}]]},
         {"type": "string"},
-        ["{'foo': 'bar'} is not of type 'string'"],
+        [
+            (
+                "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not of type "
+                "'string' when 'Fn::Select' is resolved"
+            )
+        ],
         [],
     ),
 ]
@@ -477,23 +490,23 @@ _select_tests: List[Tuple] = [
 _cidr_tests: List[Tuple] = [
     (
         "Valid Fn::Cidr with 2 element array",
-        {"Fn::Cidr": ["foo", "bar"]},
+        {"Fn::Cidr": ["192.168.0.0/24", 6]},
         {"type": "array"},
         [],
         [],
     ),
     (
         "Valid Fn::Cidr with 3 element array",
-        {"Fn::Cidr": ["foo", "bar", "foobar"]},
+        {"Fn::Cidr": ["192.168.0.0/24", 6, 5]},
         {"type": "array"},
         [],
         [],
     ),
     (
         "Invalid Fn::Cidr with wrong output type",
-        {"Fn::Cidr": ["foo", "bar"]},
+        {"Fn::Cidr": ["192.168.0.0/24", 2]},
         {"type": "string"},
-        ["{'Fn::Cidr': ['foo', 'bar']} is not of type 'string'"],
+        ["{'Fn::Cidr': ['192.168.0.0/24', 2]} is not of type 'string'"],
         [],
     ),
     (
@@ -505,7 +518,7 @@ _cidr_tests: List[Tuple] = [
     ),
     (
         "Valid Fn::Cidr with a valid function",
-        {"Fn::Cidr": ["foo", {"Fn::FindInMap": ["a", "b", "c"]}]},
+        {"Fn::Cidr": ["192.168.0.0/24", {"Fn::FindInMap": ["a", "b", "c"]}]},
         {"type": "array"},
         [],
         [],
@@ -514,7 +527,7 @@ _cidr_tests: List[Tuple] = [
         "Invalid Fn::Cidr with an invalid function",
         {"Fn::Cidr": ["foo", {"Fn::Join": ["-", "bar"]}]},
         {"type": "array"},
-        ["{'Fn::Join': ['-', 'bar']} is not of type 'string'"],
+        ["{'Fn::Join': ['-', 'bar']} is not of type 'integer'"],
         [],
     ),
 ]
@@ -713,7 +726,7 @@ _sub_tests: List[Tuple] = [
         [],
     ),
     (
-        "Invalid Fn::Sub with a bad object",
+        "Invalid Fn::Sub with a bad object type",
         {
             "Fn::Sub": [
                 "${foo}",
@@ -925,13 +938,6 @@ def test_functions(name, instance, schema, errors, cfn_response):
             [],
         ),
         (
-            "Fn::Length using invalid function in array",
-            {"Fn::Length": [{"Fn::GetAZs": ""}]},
-            {"type": "integer"},
-            ["{'Fn::GetAZs': ''} is not of type 'string'"],
-            [],
-        ),
-        (
             "Fn::ToJsonString is valid",
             {"Fn::ToJsonString": {"foo": "bar"}},
             {"type": "string"},
@@ -1011,7 +1017,10 @@ def test_functions(name, instance, schema, errors, cfn_response):
             "Invalid Fn::ForEach with invalid output type",
             {"Fn::ForEach::Test": ["foo", ["bar"], []]},
             {"type": "array"},
-            ["{'Fn::ForEach::Test': ['foo', ['bar'], []]} is not of type 'array'"],
+            [
+                "{'Fn::ForEach::Test': ['foo', ['bar'], []]} is not of type 'array'",
+                "[] is not of type 'object'",
+            ],
             [],
         ),
         (
