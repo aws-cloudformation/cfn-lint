@@ -2,6 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from collections import deque
+
 import pytest
 
 from cfnlint.jsonschema.validators import CfnTemplateValidator
@@ -177,38 +179,41 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
-            "Valid Join with an empty type",
+            "Valid Join with a list of strings",
             {"Fn::Join": [".", ["a", "b", "c"]]},
-            ["a.b.c"],
+            [("a.b.c", deque([]))],
         ),
         (
             "Valid GetAZs with empty string",
             {"Fn::GetAZs": ""},
             [
-                [
-                    "us-east-1a",
-                    "us-east-1b",
-                    "us-east-1c",
-                    "us-east-1d",
-                    "us-east-1e",
-                    "us-east-1f",
-                ]
+                (
+                    [
+                        "us-east-1a",
+                        "us-east-1b",
+                        "us-east-1c",
+                        "us-east-1d",
+                        "us-east-1e",
+                        "us-east-1f",
+                    ],
+                    deque([]),
+                )
             ],
         ),
         (
             "Valid FindInMap with a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
-            ["default"],
+            [("default", deque([]))],
         ),
         (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
-            ["foo-bar"],
+            [("foo-bar", deque([]))],
         ),
         (
             "Valid Sub with empty parameters",
             {"Fn::Sub": ["foo", {}]},
-            ["foo"],
+            [("foo", deque([]))],
         ),
     ],
 )
