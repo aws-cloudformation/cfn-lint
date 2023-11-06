@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, ClassVar, Dict, Iterator, Type
+from typing import Any, ClassVar, Deque, Dict, Iterator, Tuple, Type
 
 # for python 3.7 support can be removed when we
 # drop support
@@ -162,7 +162,7 @@ class Validator(Protocol):
         ValidationError: [2, 3, 4] is too long
         """
 
-    def resolve_value(self, instance: Any) -> Iterator[Any]:
+    def resolve_value(self, instance: Any) -> Iterator[Tuple[Any, Deque]]:
         """
         Resolve the given instance, yielding each of its values.
 

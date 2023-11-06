@@ -28,7 +28,7 @@ class Equals(CloudFormationLintRule):
     def fn_equals(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        yield from FnEquals().equals(validator, s, instance, schema)
+        yield from FnEquals().validate(validator, s, instance, schema)
 
         if self.child_rules.get("W8003"):
             yield from self.child_rules["W8003"].equals_is_useful(
