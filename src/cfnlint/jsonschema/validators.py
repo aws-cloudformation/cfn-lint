@@ -6,9 +6,10 @@ SPDX-License-Identifier: MIT-0
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py
 from __future__ import annotations
 
+from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from typing import Any, Callable, Dict, Iterator
+from typing import Any, Callable, Deque, Dict, Iterator, Tuple
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
@@ -123,16 +124,16 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def resolve_value(self, instance: Any) -> Iterator[Any]:
+        def resolve_value(self, instance: Any) -> Iterator[Tuple[Any, Deque]]:
             if self.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
                         if k in self.fn_resolvers:
-                            for value in self.resolve_value(v):
+                            for value, _ in self.resolve_value(v):
                                 yield from self.fn_resolvers[k](self, value)
                             return
 
-            yield instance
+            yield instance, deque([])
 
         def iter_errors(self, instance: Any) -> ValidationResult:
             r"""
