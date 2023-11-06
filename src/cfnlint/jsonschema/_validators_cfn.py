@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import deque
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, List, Tuple
 
 import regex as re
 
@@ -67,68 +67,51 @@ def _validate_fn_output_types(
             yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
-class Scalar:
-    def __init__(self) -> None:
-        self.types: List[str] = ["string"]
-        self.supported_functions: List[str] = []
+class _Fn:
+    def __init__(self, name: str, types: List[str], functions: List[str]) -> None:
+        self.fn = ToPy(name)
+        self.types = types
+        self.functions = functions
 
-    def schema(self, validator, instance) -> Dict[str, str | List[str] | int]:
+    def _key_value(self, instance: Dict[str, Any]) -> Tuple[str, Any]:
+        return list(instance.keys())[0], instance.get(self.fn.name)
+
+    def _fix_errors(self, errs: ValidationResult) -> ValidationResult:
+        for err in errs:
+            if err.validator not in cfn_validators:
+                err.validator = self.fn.py
+            yield err
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
         return {
-            "type": self.types,
+            "type": ["string"],
         }
 
-    def iter_errors(
+    def _validator(self, validator: Validator) -> Validator:
+        return validator.evolve(
+            context=validator.context.evolve(functions=self.functions),
+        )
+
+    def resolve(
         self,
         validator: Validator,
         s: Any,
         instance: Any,
         schema: Any,
     ) -> ValidationResult:
-        context = validator.context.evolve(functions=self.supported_functions)
-        v = validator.evolve(context=context)
-        try:
-            yield from v.descend(instance, self.schema(validator, instance), None, None)
-        except StopIteration:
-            pass
+        key, _ = self._key_value(instance)
 
+        for value, value_path in validator.resolve_value(instance):
+            for err in self._fix_errors(
+                validator.evolve(
+                    context=validator.context.evolve(value_path=value_path),
+                ).descend(value, s, key)
+            ):
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                err.message = f"{err.message} when {self.fn.name!r} is resolved"
+                yield err
 
-class Fn(Scalar):
-    def __init__(self, name: str) -> None:
-        super().__init__()
-        self.fn = ToPy(name)
-        self.supported_types = _singular_types
-
-    def value(self, instance: Dict[str, Any]) -> Any:
-        return instance.get(self.fn.name)
-
-    def iter_errors_resolve(
-        self, validator: Validator, value: Any, instance: Any, key: str, schema
-    ) -> Iterator[ValidationError]:
-        for err in validator.descend(value, schema, key):
-            err.validator = self.fn.py
-            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-            err.message = f"{err.message} when {self.fn.name!r} is resolved"
-            yield err
-
-    def _resolve_errors(self, errs: ValidationResult) -> ValidationResult:
-        for err in errs:
-            if err.validator not in cfn_validators:
-                err.validator = self.fn.py
-            yield err
-
-    def descend(
-        self,
-        validator: Validator,
-        instance: Any,
-        schema: Any,
-        path: str | int | None = None,
-    ) -> ValidationResult:
-        validator = validator.evolve(
-            context=validator.context.evolve(path=self.fn.name)
-        )
-        yield from self._resolve_errors(validator.descend(instance, schema, path))
-
-    def iter_errors(
+    def validate(
         self,
         validator: Validator,
         s: Any,
@@ -136,218 +119,109 @@ class Fn(Scalar):
         schema: Any,
     ) -> ValidationResult:
         # validate this function will return the correct type
-        yield from _validate_fn_output_types(
-            validator, s, instance, self.supported_types
+        errs = list(_validate_fn_output_types(validator, s, instance, self.types))
+
+        _, value = self._key_value(instance)
+        errs.extend(
+            list(
+                self._fix_errors(
+                    self._validator(validator).descend(
+                        value,
+                        self.schema(validator, instance),
+                    )
+                )
+            )
         )
 
-        validator = validator.evolve(
-            context=validator.context.evolve(
-                path=self.fn.name, functions=self.supported_functions
-            ),
-        )
+        if errs:
+            yield from iter(errs)
+            return
 
-        key = list(instance.keys())[0]
-        value = instance.get(self.fn.name)
-        yield from self._resolve_errors(
-            validator.descend(value, self.schema(validator, instance), key)
-        )
+        yield from self.resolve(validator, s, instance, schema)
 
-    def iter_errors_resolved(
+
+class FnItems:
+    def validate(
         self,
         validator: Validator,
         s: Any,
         instance: Any,
         schema: Any,
     ) -> ValidationResult:
-        key = list(instance.keys())[0]
-
-        for value in validator.resolve_value(instance):
-            for err in self._resolve_errors(validator.descend(value, s, key)):
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
-
-
-class FnArray:
-    def __init__(self, name: str, min_length: int = 0, max_length: int = 0) -> None:
-        self.fn = ToPy(name)
-        self._min_length = min_length
-        self._max_length = max_length
-        self.items: List[Scalar] = []
-        self.supported_types = ["array"]
-        self.supported_functions: List[str] = []
-
-    def value(self, instance: Dict[str, Any]) -> Any:
-        return instance.get(self.fn.name)
-
-    def iter_errors_resolve(
-        self, validator: Validator, value: Any, instance: Any, key: str, schema
-    ) -> Iterator[ValidationError]:
-        for err in validator.descend(value, schema, key):
-            err.validator = self.fn.py
-            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-            err.message = f"{err.message} when {self.fn.name!r} is resolved"
-            yield err
-
-    def schema(self) -> Dict[str, str | int]:
-        schema: Dict[str, str | int] = {
-            "type": "array",
-        }
-        if self._min_length:
-            schema["minItems"] = self._min_length
-
-        if self._max_length:
-            schema["maxItems"] = self._max_length
-        return schema
-
-    def _resolve_errors(self, errs: ValidationResult) -> ValidationResult:
-        for err in errs:
-            if err.validator not in cfn_validators:
-                err.validator = self.fn.py
-            yield err
-
-    def descend(
-        self,
-        validator: Validator,
-        instance: Any,
-        schema: Any,
-        path: str | int | None = None,
-    ) -> ValidationResult:
-        yield from self._resolve_errors(validator.descend(instance, schema, path))
-
-    def iter_errors(
-        self,
-        validator: Validator,
-        s: Any,
-        instance: Any,
-        schema: Any,
-    ) -> ValidationResult:
-        # validate that the function supports the
-        # types required by the schema
-        yield from _validate_fn_output_types(
-            validator, s, instance, self.supported_types
-        )
-
-        # safety check to make sure this is an object
-        if not validator.is_type(instance, "object"):
+        if not validator.is_type(instance, "array"):
             return
 
-        value = instance.get(self.fn.name)
-        key = list(instance.keys())[0]
+        if validator.is_type(s, "array"):
+            for (index, item), subschema in zip(enumerate(instance), s):
+                yield from validator.evolve(
+                    context=validator.context.evolve(
+                        functions=subschema.get("functions", [])
+                    ),
+                ).descend(
+                    instance=item,
+                    schema=subschema.get("schema", {}),
+                    path=index,
+                )
+        else:
+            for index, item in enumerate(instance):
+                yield from validator.evolve(
+                    context=validator.context.evolve(functions=s.get("functions", [])),
+                ).descend(
+                    instance=item,
+                    schema=s.get("schema", {}),
+                    path=index,
+                )
 
-        # with arrays we expect the value to be an array
-        value_validator = validator.evolve(
-            context=validator.context.evolve(functions=self.supported_functions)
-        )
-        yield from self.descend(value_validator, value, self.schema(), key)
 
-        if not validator.is_type(value, "array"):
-            return
-        for i in range(0, self._max_length):
-            try:
-                for err in self._resolve_errors(
-                    self.items[i].iter_errors(validator, s, value[i], schema)
-                ):
-                    err.path.extendleft([i, key])
-                    yield err
-            except (IndexError, StopIteration):
-                pass
-
-
-class Ref(Fn):
+class FnGetAtt(_Fn):
     def __init__(self) -> None:
-        super().__init__("Ref")
-        self.supported_types = ["array", "object"] + _singular_types
-        self.types = ["string"]
+        super().__init__("Fn::GetAtt", _all_types, [])
 
-    def ref(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        resource_functions = []
         if validator.context.transforms.has_language_extensions_transform():
-            self.supported_functions = [
-                "Ref",
-                "Fn::Base64",
-                "Fn::FindInMap",
-                "Fn::If",
-                "Fn::Join",
-                "Fn::Sub",
-                "Fn::ToJsonString",
-            ]
-            self.types.append("object")
+            resource_functions = ["Ref"]
 
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        value = instance.get(self.fn.name)
-        key = list(instance.keys())[0]
-
-        for err in self.descend(
-            validator, value, {"enum": validator.context.refs}, self.fn.name
-        ):
-            yield err
-            return
-
-        for value in validator.resolve_value(instance):
-            if value is None:
-                continue
-            yield from self.iter_errors_resolve(validator, value, instance, key, s)
-
-
-class FnGetAtt(Fn):
-    def __init__(self) -> None:
-        super().__init__("Fn::GetAtt")
-        self.types = ["array", "string"]
-        self.schema_array = {
-            "type": "array",
+        return {
+            "type": ["string", "array"],
             "minItems": 2,
             "maxItems": 2,
-            "items": [
-                {"type": "string"},
-                {"type": "string"},
+            "fn_items": [
+                {
+                    "functions": resource_functions,
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
+                {
+                    "functions": ["Ref"],
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
             ],
         }
-        self.validator_resource = Scalar()
-        self.validator_resource.supported_functions = []
-        self.validator_attribute = Scalar()
-        self.validator_attribute.supported_functions = ["Ref"]
-        self.supported_types = _all_types
 
-    def get_att(
+    def validate(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        if validator.context.transforms.has_language_extensions_transform():
-            self.validator_resource.supported_functions.append("Ref")
-
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
             return
 
-        value = self.value(instance)
-        key = list(instance.keys())[0]
+        key, value = self._key_value(instance)
         paths: List[int | None] = [0, 1]
         if validator.is_type(value, "string"):
             paths = [None, None]
             value = value.split(".", 1)
 
-        for err in self.descend(
-            validator,
+        for err in validator.descend(
             value[0],
             {"enum": list(validator.context.resources.keys())},
-            paths[0],
+            key,
         ):
-            err.path.appendleft(key)
-            yield err
-            return
-
-        for err in self._resolve_errors(
-            self.validator_resource.iter_errors(validator, s, value[0], schema)
-        ):
-            yield err
-            return
-        for err in self._resolve_errors(
-            self.validator_attribute.iter_errors(validator, s, value[1], schema)
-        ):
+            err.path.appendleft(paths[0])
             yield err
             return
 
@@ -391,23 +265,40 @@ class FnGetAtt(Fn):
             )
 
 
-class FnBase64(Fn):
+class Ref(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Base64")
-        self.supported_functions = list(FUNCTIONS_SINGLE)
-        self.supported_types = ["string"]
+        super().__init__("Ref", _all_types, [])
 
-    def base64(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["string"],
+            "enum": validator.context.refs,
+        }
+
+    def _validator(self, validator: Validator) -> Validator:
+        if validator.context.transforms.has_language_extensions_transform():
+            supported_functions = [
+                "Ref",
+                "Fn::Base64",
+                "Fn::FindInMap",
+                "Fn::If",
+                "Fn::Join",
+                "Fn::Sub",
+                "Fn::ToJsonString",
+            ]
+        else:
+            supported_functions = []
+        return validator.evolve(
+            context=validator.context.evolve(
+                path=self.fn.name,
+                functions=supported_functions,
+            ),
+        )
 
 
-class FnGetAZs(Fn):
+class FnGetAZs(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::GetAZs")
-        self.supported_functions = ["Ref"]
-        self.supported_types = ["array"]
+        super().__init__("Fn::GetAZs", ["array"], ["Ref"])
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
@@ -415,24 +306,12 @@ class FnGetAZs(Fn):
             "enum": [""] + REGIONS,
         }
 
-    def get_azs(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        errs = False
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            errs = True
 
-        if errs:
-            return
-
-        yield from self.iter_errors_resolved(validator, s, instance, schema)
-
-
-class FnImportValue(Fn):
+class FnImportValue(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::ImportValue")
-        self.supported_functions.extend(
+        super().__init__(
+            "Fn::ImportValue",
+            _singular_types,
             [
                 "Fn::Base64",
                 "Fn::FindInMap",
@@ -441,271 +320,295 @@ class FnImportValue(Fn):
                 "Fn::Select",
                 "Fn::Sub",
                 "Ref",
-            ]
+            ],
         )
 
-    def import_value(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        validator = validator.evolve(
+    def _validator(self, validator: Validator) -> Validator:
+        return validator.evolve(
             context=validator.context.evolve(
+                path=self.fn.name,
+                functions=self.functions,
                 resources={},
-            )
+            ),
         )
-        yield from self.iter_errors(validator, s, instance, schema)
 
 
-class FnJoin(FnArray):
+class FnBase64(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Join", 2, 2)
-        self.items.append(Scalar())
-        values = Scalar()
-        values.types = ["array"]
-        values.supported_functions.extend(
-            [
-                "Fn::FindInMap",
-                "Fn::If",
-                "Fn::Split",
-                "Ref",
-            ]
-        )
-        self.supported_types = ["string"]
-        self.items.append(values)
-
-    def join(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        value = instance.get(self.fn.name)
-        if not validator.is_type(value, "array"):
-            return
-
-        # we have to validate the second element manually
-        values = value[1]
-
-        if validator.is_type(values, "array"):
-            for value in values:
-                scalar = Scalar()
-                scalar.supported_functions = [
-                    "Fn::Base64",
-                    "Fn::FindInMap",
-                    "Fn::GetAtt",
-                    "Fn::If",
-                    "Fn::ImportValue",
-                    "Fn::Join",
-                    "Fn::Select",
-                    "Fn::Sub",
-                    "Fn::Transform",
-                    "Ref",
-                ]
-
-                for err in scalar.iter_errors(validator, s, value, schema):
-                    yield err
-                    return
-
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
+        super().__init__("Fn::Base64", ["string"], list(FUNCTIONS_SINGLE))
 
 
-class FnSplit(FnArray):
+class FnJoin(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Split", 2, 2)
-        self.items.append(Scalar())
-        s = Scalar()
-        s.supported_functions.extend(
-            [
-                "Fn::Base64",
-                "Fn::FindInMap",
-                "Fn::GetAtt",
-                "Fn::GetAZs",
-                "Fn::If",
-                "Fn::ImportValue",
-                "Fn::Join",
-                "Fn::Select",
-                "Fn::Sub",
-                "Ref",
-            ]
-        )
-        self.items.append(s)
-
-    def split(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
-
-
-class _FindInMapDefault(Scalar):
-    def __init__(self) -> None:
-        super().__init__()
-        self.types = ["object"]
+        super().__init__("Fn::Join", ["string"], [])
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
-            "types": ["object"],
-            "properties": {
-                "DefaultValue": {
-                    "type": _singular_types,
-                }
-            },
-            "additionalProperties": False,
-            "required": ["DefaultValue"],
-        }
-
-
-class FnFindInMap(FnArray):
-    def __init__(self) -> None:
-        super().__init__("Fn::FindInMap", 3, 3)
-        s = Scalar()
-        s.supported_functions.extend(
-            [
-                "Fn::FindInMap",
-                "Ref",
-            ]
-        )
-        self.supported_types = ["array"] + _singular_types
-        self.items.extend([s, s, s])
-
-    def find_in_map(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        if validator.context.transforms.has_language_extensions_transform():
-            self._max_length = 4
-            self.items.append(_FindInMapDefault())
-
-        errs = self.iter_errors(validator, s, instance, schema)
-        if errs:
-            yield from iter(errs)
-            return
-
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
-
-
-class FnSelect(FnArray):
-    def __init__(self) -> None:
-        super().__init__("Fn::Select", 2, 2)
-        index = Scalar()
-        index.types = ["integer"]
-        index.supported_functions.extend(["Ref", "Fn::FindInMap"])
-        self.supported_types = ["array", "object"] + _singular_types
-        self.items.append(index)
-        values = Scalar()
-        values.types = ["array"]
-        values.supported_functions.extend(
-            [
-                "Fn::FindInMap",
-                "Fn::GetAtt",
-                "Fn::GetAZs",
-                "Fn::If",
-                "Fn::Split",
-                "Fn::Cidr",
-                "Ref",
-            ]
-        )
-        self.items.append(values)
-
-    def select(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        # we have to validate the second element manually
-        values = instance.get(self.fn.name)[1]
-
-        if validator.is_type(values, "array"):
-            scalar = Scalar()
-            scalar.supported_functions = [
-                "Fn::FindInMap",
-                "Fn::GetAtt",
-                "Fn::If",
-                "Ref",
-            ]
-            for value in values:
-                for err in scalar.iter_errors(validator, s, value, schema):
-                    yield err
-                    return
-
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
-
-
-class FnIf(FnArray):
-    def __init__(self) -> None:
-        super().__init__("Fn::If", 3, 3)
-        condition = Scalar()
-        self.items.extend([condition])
-        self.supported_types = _all_types
-
-    def if_(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        value = self.value(instance)
-        key = list(instance.keys())[0]
-        for i in [1, 2]:
-            for err in self.descend(validator, value[i], s, i):
-                err.path.appendleft(key)
-                yield err
-
-
-class FnSub(Fn):
-    def __init__(self) -> None:
-        super().__init__("Fn::Sub")
-        self.types = ["array", "string"]
-        self.schema_array = {
             "type": "array",
-            "minItems": 2,
             "maxItems": 2,
-            "items": [
-                {"type": "string"},
-                {"type": "object"},
+            "minItems": 2,
+            "fn_items": [
+                {
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
+                {
+                    "functions": [
+                        "Fn::FindInMap",
+                        "Fn::If",
+                        "Fn::Split",
+                        "Ref",
+                    ],
+                    "schema": {
+                        "type": ["array"],
+                        "fn_items": {
+                            "functions": [
+                                "Fn::Base64",
+                                "Fn::FindInMap",
+                                "Fn::GetAtt",
+                                "Fn::If",
+                                "Fn::ImportValue",
+                                "Fn::Join",
+                                "Fn::Select",
+                                "Fn::Sub",
+                                "Fn::Transform",
+                                "Ref",
+                            ],
+                            "schema": {
+                                "type": ["string"],
+                            },
+                        },
+                    },
+                },
             ],
         }
 
-        self.validator_var = Scalar()
-        self.validator_var.supported_functions = [
-            "Fn::Base64",
-            "Fn::FindInMap",
-            "Fn::GetAZs",
-            "Fn::GetAtt",
-            "Fn::If",
-            "Fn::ImportValue",
-            "Fn::Join",
-            "Fn::Select",
-            "Fn::Sub",
-            "Ref",
-            "Fn::ToJsonString",
-        ]
+
+class FnSplit(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::Split", ["array"], [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "fn_items": [
+                {
+                    "schema": {
+                        "type": ["string"],
+                    }
+                },
+                {
+                    "functions": [
+                        "Fn::Base64",
+                        "Fn::FindInMap",
+                        "Fn::GetAtt",
+                        "Fn::GetAZs",
+                        "Fn::If",
+                        "Fn::ImportValue",
+                        "Fn::Join",
+                        "Fn::Select",
+                        "Fn::Sub",
+                        "Ref",
+                    ],
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
+            ],
+        }
+
+
+class FnFindInMap(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::FindInMap", ["array"] + _singular_types, [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        scalar_schema = {
+            "functions": [
+                "Fn::FindInMap",
+                "Ref",
+            ],
+            "schema": {
+                "type": ["string"],
+            },
+        }
+
+        schema = {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "fn_items": [
+                scalar_schema,
+                scalar_schema,
+                scalar_schema,
+            ],
+        }
+
+        if validator.context.transforms.has_language_extensions_transform():
+            schema["maxItems"] = 4
+            schema["fn_items"] = [
+                scalar_schema,
+                scalar_schema,
+                scalar_schema,
+                {
+                    "schema": {
+                        "type": ["object"],
+                        "properties": {
+                            "DefaultValue": {
+                                "type": ["array"] + _singular_types,
+                            }
+                        },
+                        "additionalProperties": False,
+                        "required": ["DefaultValue"],
+                    }
+                },
+            ]
+
+        return schema
+
+
+class FnSelect(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::Select", _all_types, [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "fn_items": [
+                {
+                    "functions": ["Ref", "Fn::FindInMap"],
+                    "schema": {
+                        "type": ["integer"],
+                    },
+                },
+                {
+                    "functions": [
+                        "Fn::FindInMap",
+                        "Fn::GetAtt",
+                        "Fn::GetAZs",
+                        "Fn::If",
+                        "Fn::Split",
+                        "Fn::Cidr",
+                        "Ref",
+                    ],
+                    "schema": {
+                        "type": ["array"],
+                        "fn_items": {
+                            "functions": [
+                                "Fn::FindInMap",
+                                "Fn::GetAtt",
+                                "Fn::If",
+                                "Ref",
+                            ],
+                            "schema": {
+                                "type": _all_types,
+                            },
+                        },
+                    },
+                },
+            ],
+        }
+
+
+class FnIf(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::If", _all_types, [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array"],
+            "minItems": 3,
+            "maxItems": 3,
+            "fn_items": [
+                {
+                    "schema": {
+                        "type": ["string"],
+                    }
+                },
+            ],
+        }
+
+    def resolve(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        key, _ = self._key_value(instance)
+        for value, value_path in validator.resolve_value(instance):
+            for err in self._fix_errors(
+                validator.evolve(
+                    context=validator.context.evolve(value_path=value_path),
+                ).descend(value, s, key)
+            ):
+                err.path.extend(value_path)
+                yield err
+
+
+class FnSub1(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::Sub", ["string"], [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array", "string"],
+            "minItems": 2,
+            "maxItems": 2,
+            "fn_items": [
+                {
+                    "schema": {"type": "string"},
+                },
+                {
+                    "schema": {
+                        "type": ["object"],
+                    }
+                },
+            ],
+        }
+
+
+class FnSub(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::Sub", ["string"], [])
         self.sub_parameter_types = ["string", "integer", "number", "boolean"]
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array", "string"],
+            "minItems": 2,
+            "maxItems": 2,
+            "fn_items": [
+                {
+                    "schema": {"type": "string"},
+                },
+                {
+                    "functions": [
+                        "Fn::Base64",
+                        "Fn::FindInMap",
+                        "Fn::GetAZs",
+                        "Fn::GetAtt",
+                        "Fn::If",
+                        "Fn::ImportValue",
+                        "Fn::Join",
+                        "Fn::Select",
+                        "Fn::Sub",
+                        "Ref",
+                        "Fn::ToJsonString",
+                    ],
+                    "schema": {
+                        "type": ["object"],
+                        "patternProperties": {
+                            "[a-zA-Z0-9]+": {
+                                "type": ["string"],
+                            }
+                        },
+                        "additionalProperties": False,
+                    },
+                },
+            ],
+        }
 
     def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
         params = re.findall(REGEX_SUB_PARAMETERS, instance)
@@ -749,70 +652,40 @@ class FnSub(Fn):
                     path=deque([self.fn.name]),
                 )
 
-    def sub(
+    def validate(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
+        yield from super().validate(validator, s, instance, schema)
 
-        value = self.value(instance)
-        key = list(instance.keys())[0]
+        _, value = self._key_value(instance)
         if validator.is_type(value, "array"):
-            # we have to manually validate for this function
-            for err in self.descend(
-                validator,
-                value,
-                self.schema_array,
-            ):
-                err.path.appendleft(key)
-                yield err
+            if len(value) != 2:
                 return
-
-            keys = []
-
-            errs = 0
-            for k, v in value[1].items():
-                keys.append(k)
-                for err in self.validator_var.iter_errors(
-                    validator,
-                    True,
-                    v,
-                    {"type": "string"},
-                ):
-                    err.path.appendleft([k, 1, self.fn.name])
-                    yield err
-                    errs += 1
-            if errs > 0:
+            if not validator.is_type(value[1], "object"):
                 return
 
             validator_string = validator.evolve(
                 context=validator.context.evolve(
-                    ref_values=dict.fromkeys(keys, Parameter({"Type": "String"})),
+                    ref_values=dict.fromkeys(
+                        list(value[1].keys()), Parameter({"Type": "String"})
+                    ),
                 )
             )
             value = value[0]
-        else:
+        elif validator.is_type(value, "string"):
             validator_string = validator
-
-        errors = list(self._validate_string(validator_string, value))
-        if errors:
-            yield from iter(errors)
+        else:
             return
 
-        for value in validator.resolve_value(instance):
-            for err in validator.descend(value, s):
-                err.path.appendleft(self.fn.name)
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
+        yield from self._validate_string(validator_string, value)
 
 
-class FnCidr(FnArray):
+class FnCidr(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Cidr", 2, 3)
-        s = Scalar()
-        s.supported_functions = [
+        super().__init__("Fn::Cidr", ["array"], [])
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        functions = [
             "Fn::FindInMap",
             "Fn::Select",
             "Ref",
@@ -820,132 +693,74 @@ class FnCidr(FnArray):
             "Fn::Sub",
             "Fn::ImportValue",
         ]
-        self.items.extend([s, s, s])
+        return {
+            "type": ["array"],
+            "maxItems": 3,
+            "minItems": 2,
+            "fn_items": [
+                {
+                    "functions": functions,
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
+                {
+                    "functions": functions,
+                    "schema": {
+                        "type": ["integer"],
+                        "minimum": 1,
+                        "maximum": 256,
+                    },
+                },
+                {
+                    "functions": functions,
+                    "schema": {
+                        "type": ["integer"],
+                        "minimum": 1,
+                        "maximum": 128,
+                    },
+                },
+            ],
+        }
 
-    def cidr(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
 
-
-class FnLength(FnArray):
+class FnLength(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Length")
-        self.supported_types = ["integer"]
-        self.supported_functions = [
-            "Ref",
-            "Fn::FindInMap",
-            "Fn::Split",
-            "Fn::If",
-            "Fn::GetAZs",
-        ]
-        values = Scalar()
-        values.supported_functions.extend(
-            ["Ref", "Fn::FindInMap", "Fn::Split", "Fn::If"]
-        )
-        self.items.append(values)
-
-    def length(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        if not validator.context.transforms.has_language_extensions_transform():
-            yield ValidationError(
-                (
-                    f"{self.fn.name} is not supported without "
-                    "'AWS::LanguageExtensions' transform"
-                )
-            )
-            return
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        # we have to validate the second element manually
-        values = instance.get(self.fn.name)
-        if validator.is_type(values, "array"):
-            scalar = Scalar()
-            scalar.supported_functions = [
-                "Fn::If",
-                "Fn::Base64",
-                "Fn::FindInMap",
-                "Fn::Join",
-                "Fn::Select",
-                "Fn::Sub",
-                "Fn::ToJsonString",
-                "Ref",
-            ]
-            for value in values:
-                for err in scalar.iter_errors(validator, s, value, schema):
-                    yield err
-                    return
-
-
-class FnToJsonString(Fn):
-    def __init__(self) -> None:
-        super().__init__("Fn::ToJsonString")
-        self.types = ["array", "object"]
-        self.supported_types = ["string"]
-
-    def to_json_string(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        if not validator.context.transforms.has_language_extensions_transform():
-            yield ValidationError(
-                (
-                    f"{self.fn.name} is not supported without "
-                    "'AWS::LanguageExtensions' transform"
-                )
-            )
-            return
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        # we don't validate the elements inside a JsonString
-        # as it can be anything
-
-
-class FnForEach(FnArray):
-    def __init__(self) -> None:
-        super().__init__("Fn::ForEach", 3, 3)
-        self.supported_types = ["object"]
-        identifier = Scalar()
-        identifier.supported_functions = [
-            "Fn::Base64",
-            "Fn::FindInMap",
-            "Fn::GetAtt",
-            "Fn::ImportValue",
-            "Fn::Join",
+        super().__init__(
             "Fn::Length",
-            "Fn::Transform",
-            "Fn::Select",
-            "Fn::Sub",
-            "Fn::ToJsonString",
-            "Ref",
-        ]
-        self.items.append(identifier)
-        collection = Scalar()
-        collection.types = ["array"]
-        collection.supported_functions = [
-            "Fn::FindInMap",
-            "Fn::GetAtt",
-            "Fn::GetAZs",
-            "Fn::Transform",
-            "Fn::Select",
-            "Fn::Sub",
-            "Fn::ToJsonString",
-            "Ref",
-        ]
-        self.items.append(collection)
-        output = Scalar()
-        output.types = ["object"]
-        self.items.append(output)
+            ["integer"],
+            [
+                "Ref",
+                "Fn::FindInMap",
+                "Fn::Split",
+                "Fn::If",
+                "Fn::GetAZs",
+            ],
+        )
 
-    def for_each(
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array"],
+            "fn_items": {
+                "functions": [
+                    "Fn::If",
+                    "Fn::Base64",
+                    "Fn::FindInMap",
+                    "Fn::Join",
+                    "Fn::Select",
+                    "Fn::Sub",
+                    "Fn::ToJsonString",
+                    "Ref",
+                ],
+                "schema": {
+                    "type": _all_types,
+                },
+            },
+        }
+
+    def validate(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        key = list(instance.keys())[0]
-        self.fn = ToPy(key)
         if not validator.context.transforms.has_language_extensions_transform():
             yield ValidationError(
                 (
@@ -955,9 +770,133 @@ class FnForEach(FnArray):
             )
             return
 
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
+        yield from super().validate(validator, s, instance, schema)
+
+
+class FnToJsonString(_Fn):
+    def __init__(self) -> None:
+        super().__init__(
+            "Fn::ToJsonString",
+            ["string"],
+            [],
+        )
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array", "object"],
+        }
+
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        if not validator.context.transforms.has_language_extensions_transform():
+            yield ValidationError(
+                (
+                    f"{self.fn.name} is not supported without "
+                    "'AWS::LanguageExtensions' transform"
+                )
+            )
             return
+
+        yield from super().validate(validator, s, instance, schema)
+
+
+class FnForEach(_Fn):
+    def __init__(self) -> None:
+        super().__init__("Fn::ForEach", ["object"], [])
+
+    def _key_value(self, instance: Dict[str, Any]) -> Tuple[str, Any]:
+        for key, value in instance.items():
+            if key.startswith(self.fn.name):
+                return key, value
+
+        return super()._key_value(instance)
+
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": ["array"],
+            "minItems": 3,
+            "maxItems": 3,
+            "fn_items": [
+                {
+                    "functions": [
+                        "Fn::Base64",
+                        "Fn::FindInMap",
+                        "Fn::GetAtt",
+                        "Fn::ImportValue",
+                        "Fn::Join",
+                        "Fn::Length",
+                        "Fn::Transform",
+                        "Fn::Select",
+                        "Fn::Sub",
+                        "Fn::ToJsonString",
+                        "Ref",
+                    ],
+                    "schema": {
+                        "type": ["string"],
+                    },
+                },
+                {
+                    "functions": [
+                        "Fn::FindInMap",
+                        "Fn::GetAtt",
+                        "Fn::GetAZs",
+                        "Fn::Transform",
+                        "Fn::Select",
+                        "Fn::Sub",
+                        "Fn::ToJsonString",
+                        "Ref",
+                    ],
+                    "schema": {
+                        "type": ["array"],
+                        "fn_items": {
+                            "functions": [
+                                "Fn::FindInMap",
+                                "Fn::GetAtt",
+                                "Fn::Transform",
+                                "Fn::Select",
+                                "Fn::Sub",
+                                "Fn::ToJsonString",
+                                "Ref",
+                            ],
+                            "schema": {
+                                "type": ["string"],
+                            },
+                        },
+                    },
+                },
+                {
+                    "schema": {
+                        "type": ["object"],
+                    }
+                },
+            ],
+        }
+
+    def resolve(
+        self,
+        validator: Validator,
+        s: Any,
+        instance: Any,
+        schema: Any,
+    ) -> ValidationResult:
+        return
+        yield
+
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        key, _ = self._key_value(instance)
+        if not validator.context.transforms.has_language_extensions_transform():
+            yield ValidationError(
+                (
+                    f"{key} is not supported without "
+                    "'AWS::LanguageExtensions' transform"
+                )
+            )
+            return
+
+        yield from super().validate(validator, s, instance, schema)
 
 
 #####
@@ -965,111 +904,114 @@ class FnForEach(FnArray):
 #####
 
 
-class FnEquals(FnArray):
+class FnEquals(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Equals", 2, 2)
-        s = Scalar()
-        s.supported_functions = [
-            "Ref",
-            "Fn::FindInMap",
-            "Fn::Sub",
-            "Fn::Join",
-            "Fn::Select",
-            "Fn::Split",
-            "Fn::Length",
-            "Fn::ToJsonString",
-        ]
-        self.items.extend([s] * 2)
-        self.supported_types = ["boolean"]
+        super().__init__("Fn::Equals", ["boolean"], [])
 
-    def equals(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "fn_items": {
+                "functions": [
+                    "Ref",
+                    "Fn::FindInMap",
+                    "Fn::Sub",
+                    "Fn::Join",
+                    "Fn::Select",
+                    "Fn::Split",
+                    "Fn::Length",
+                    "Fn::ToJsonString",
+                ],
+                "schema": {
+                    "type": ["string"],
+                },
+            },
+        }
 
 
-class FnOr(FnArray):
+class FnOr(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Or", 2, 10)
-        s = Scalar()
-        s.supported_functions = [
-            "Condition",
-            "Fn::Equals",
-            "Fn::Not",
-            "Fn::And",
-            "Fn::Or",
-        ]
-        s.types = ["boolean"]
-        self.items.extend([s] * 10)
-        self.supported_types = ["boolean"]
+        super().__init__("Fn::Or", ["boolean"], [])
 
-    def or_(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 10,
+            "fn_items": {
+                "functions": [
+                    "Condition",
+                    "Fn::Equals",
+                    "Fn::Not",
+                    "Fn::And",
+                    "Fn::Or",
+                ],
+                "schema": {
+                    "type": ["boolean"],
+                },
+            },
+        }
 
 
-class FnAnd(FnArray):
+class FnAnd(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::And", 2, 10)
-        s = Scalar()
-        s.supported_functions = [
-            "Condition",
-            "Fn::Equals",
-            "Fn::Not",
-            "Fn::And",
-            "Fn::Or",
-        ]
-        s.types = ["boolean"]
-        self.items.extend([s] * 10)
-        self.supported_types = ["boolean"]
+        super().__init__("Fn::And", ["boolean"], [])
 
-    def and_(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 10,
+            "fn_items": {
+                "functions": [
+                    "Condition",
+                    "Fn::Equals",
+                    "Fn::Not",
+                    "Fn::And",
+                    "Fn::Or",
+                ],
+                "schema": {
+                    "type": ["boolean"],
+                },
+            },
+        }
 
 
-class FnNot(FnArray):
+class FnNot(_Fn):
     def __init__(self) -> None:
-        super().__init__("Fn::Not", 1, 1)
-        s = Scalar()
-        s.supported_functions = [
-            "Condition",
-            "Fn::Equals",
-            "Fn::Not",
-            "Fn::And",
-            "Fn::Or",
-        ]
-        s.types = ["boolean"]
-        self.items.extend([s])
-        self.supported_types = ["boolean"]
+        super().__init__("Fn::Not", ["boolean"], [])
 
-    def not_(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        yield from self.iter_errors(validator, s, instance, schema)
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "maxItems": 1,
+            "minItems": 1,
+            "fn_items": {
+                "functions": [
+                    "Condition",
+                    "Fn::Equals",
+                    "Fn::Not",
+                    "Fn::And",
+                    "Fn::Or",
+                ],
+                "schema": {
+                    "type": ["boolean"],
+                },
+            },
+        }
 
 
-class Condition(Fn):
+class Condition(_Fn):
     def __init__(self) -> None:
-        super().__init__("Condition")
-        self.supported_types = ["boolean"]
-        self.types = ["string"]
+        super().__init__("Condition", ["boolean"], [])
 
-    def condition(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        for err in self.iter_errors(validator, s, instance, schema):
-            yield err
-            return
-
-        value = instance.get(self.fn.name)
-        for err in self.descend(
-            validator, value, {"enum": validator.context.conditions}, self.fn.name
-        ):
-            yield err
-            return
+    def schema(self, validator, instance) -> Dict[str, Any]:
+        return {
+            "type": "string",
+            "enum": validator.context.conditions,
+        }
 
 
 #####
@@ -1136,24 +1078,25 @@ def cfn_type(
 
 cfn_validators: Dict[str, V] = {
     "additionalProperties": additionalProperties,
-    "ref": Ref().ref,
-    "fn_base64": FnBase64().base64,
-    "fn_cidr": FnCidr().cidr,
-    "fn_if": FnIf().if_,
-    "fn_findinmap": FnFindInMap().find_in_map,
-    "fn_foreach": FnForEach().for_each,
-    "fn_getatt": FnGetAtt().get_att,
-    "fn_getazs": FnGetAZs().get_azs,
-    "fn_importvalue": FnImportValue().import_value,
-    "fn_join": FnJoin().join,
-    "fn_length": FnLength().length,
-    "fn_select": FnSelect().select,
-    "fn_split": FnSplit().split,
-    "fn_sub": FnSub().sub,
-    "fn_tojsonstring": FnToJsonString().to_json_string,
-    "fn_equals": FnEquals().equals,
-    "fn_or": FnOr().or_,
-    "fn_and": FnAnd().and_,
-    "fn_not": FnNot().not_,
-    "condition": Condition().condition,
+    "ref": Ref().validate,
+    "fn_base64": FnBase64().validate,
+    "fn_cidr": FnCidr().validate,
+    "fn_if": FnIf().validate,
+    "fn_findinmap": FnFindInMap().validate,
+    "fn_foreach": FnForEach().validate,
+    "fn_getatt": FnGetAtt().validate,
+    "fn_getazs": FnGetAZs().validate,
+    "fn_importvalue": FnImportValue().validate,
+    "fn_join": FnJoin().validate,
+    "fn_items": FnItems().validate,
+    "fn_length": FnLength().validate,
+    "fn_select": FnSelect().validate,
+    "fn_split": FnSplit().validate,
+    "fn_sub": FnSub().validate,
+    "fn_tojsonstring": FnToJsonString().validate,
+    "fn_equals": FnEquals().validate,
+    "fn_or": FnOr().validate,
+    "fn_and": FnAnd().validate,
+    "fn_not": FnNot().validate,
+    "condition": Condition().validate,
 }
