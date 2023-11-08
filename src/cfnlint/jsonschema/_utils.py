@@ -70,15 +70,6 @@ def custom_msg(validator, schema):
     return None
 
 
-def extras_msg(extras):
-    """
-    Create an error message for extra items or properties.
-    """
-
-    verb = "was" if len(extras) == 1 else "were"
-    return ", ".join(repr(extra) for extra in sorted(extras)), verb
-
-
 def ensure_list(thing):
     """
     Wrap ``thing`` in a list if it's a single str.
