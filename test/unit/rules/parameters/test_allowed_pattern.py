@@ -60,6 +60,7 @@ class TestAllowedPattern(BaseRuleTestCase):
         errs = list(self.rule.pattern(validator, "^[A-Z]$", "1", {}))
         self.assertEqual(len(errs), 1)
         for err in errs:
+            self.assertEqual(err.rule.id, "W2031")
             self.assertEqual(err.message, "'1' does not match '^[A-Z]$'")
             self.assertEqual(err.rule, self.rule)
             self.assertEqual(
