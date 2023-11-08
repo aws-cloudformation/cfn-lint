@@ -547,28 +547,6 @@ class FnIf(_Fn):
                 yield err
 
 
-class FnSub1(_Fn):
-    def __init__(self) -> None:
-        super().__init__("Fn::Sub", ["string"], [])
-
-    def schema(self, validator, instance) -> Dict[str, Any]:
-        return {
-            "type": ["array", "string"],
-            "minItems": 2,
-            "maxItems": 2,
-            "fn_items": [
-                {
-                    "schema": {"type": "string"},
-                },
-                {
-                    "schema": {
-                        "type": ["object"],
-                    }
-                },
-            ],
-        }
-
-
 class FnSub(_Fn):
     def __init__(self) -> None:
         super().__init__("Fn::Sub", ["string"], [])
