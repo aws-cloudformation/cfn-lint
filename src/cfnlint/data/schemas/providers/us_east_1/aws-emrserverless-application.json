@@ -9,7 +9,9 @@
   "/properties/AutoStartConfiguration",
   "/properties/AutoStopConfiguration",
   "/properties/NetworkConfiguration",
-  "/properties/ImageConfiguration"
+  "/properties/ImageConfiguration",
+  "/properties/MonitoringConfiguration",
+  "/properties/RuntimeConfiguration"
  ],
  "createOnlyProperties": [
   "/properties/Name",
@@ -54,6 +56,52 @@
    "required": [],
    "type": "object"
   },
+  "Classification": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ConfigurationList": {
+   "description": "Runtime configuration for batch and interactive JobRun.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigurationObject"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ConfigurationObject": {
+   "additionalProperties": false,
+   "description": "Configuration for a JobRun.",
+   "properties": {
+    "Classification": {
+     "$ref": "#/definitions/Classification",
+     "description": "String with a maximum length of 1024."
+    },
+    "Configurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConfigurationObject"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[a-zA-Z]+[-_]*[a-zA-Z]+$": {
+       "$ref": "#/definitions/SensitivePropertiesMap"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Classification"
+   ],
+   "type": "object"
+  },
   "CpuSize": {
    "description": "Per worker CPU resource. vCPU is the only supported unit and specifying vCPU is optional.",
    "maxLength": 15,
@@ -66,6 +114,12 @@
    "maxLength": 15,
    "minLength": 1,
    "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)$",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):kms:[a-zA-Z0-9\\-]*:(\\d{12})?:key\\/[a-zA-Z0-9-]+$",
    "type": "string"
   },
   "ImageConfigurationInput": {
@@ -130,6 +184,20 @@
    "type": "array",
    "uniqueItems": true
   },
+  "ManagedPersistenceMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "description": "If set to false, managed logging will be turned off. Defaults to true.",
+     "type": "boolean"
+    },
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn",
+     "description": "KMS key ARN to encrypt the logs stored in managed persistence"
+    }
+   }
+  },
   "MaximumAllowedResources": {
    "additionalProperties": false,
    "properties": {
@@ -158,6 +226,21 @@
    "minLength": 1,
    "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)?$",
    "type": "string"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "description": "Monitoring configuration for batch and interactive JobRun.",
+   "properties": {
+    "ManagedPersistenceMonitoringConfiguration": {
+     "$ref": "#/definitions/ManagedPersistenceMonitoringConfiguration",
+     "description": "Managed log persistence configurations for a JobRun."
+    },
+    "S3MonitoringConfiguration": {
+     "$ref": "#/definitions/S3MonitoringConfiguration",
+     "description": "S3 monitoring configurations for a JobRun."
+    }
+   },
+   "type": "object"
   },
   "NetworkConfiguration": {
    "additionalProperties": false,
@@ -188,11 +271,35 @@
    "required": [],
    "type": "object"
   },
+  "S3MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn",
+     "description": "KMS key ARN to encrypt the logs stored in given s3"
+    },
+    "LogUri": {
+     "$ref": "#/definitions/UriString"
+    }
+   }
+  },
   "SecurityGroupId": {
    "description": "Identifier of a security group",
    "maxLength": 32,
    "minLength": 1,
    "pattern": "^[-0-9a-zA-Z]+",
+   "type": "string"
+  },
+  "SensitivePropertiesKeyValuePair": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SensitivePropertiesMap": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
    "type": "string"
   },
   "SubnetId": {
@@ -226,6 +333,12 @@
     "Value"
    ],
    "type": "object"
+  },
+  "UriString": {
+   "maxLength": 10280,
+   "minLength": 1,
+   "pattern": "[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\r\\n\\t]*",
+   "type": "string"
   },
   "WorkerConfiguration": {
    "additionalProperties": false,
@@ -273,6 +386,22 @@
  "handlers": {
   "create": {
    "permissions": [
+    "kms:Create*",
+    "kms:Describe*",
+    "kms:Enable*",
+    "kms:List*",
+    "kms:Put*",
+    "kms:Update*",
+    "kms:Revoke*",
+    "kms:Disable*",
+    "kms:Get*",
+    "kms:Delete*",
+    "kms:ScheduleKeyDeletion",
+    "kms:CancelKeyDeletion",
+    "kms:GenerateDataKey",
+    "kms:TagResource",
+    "kms:UntagResource",
+    "kms:Decrypt",
     "emr-serverless:CreateApplication",
     "emr-serverless:TagResource",
     "emr-serverless:GetApplication",
@@ -308,7 +437,23 @@
     "ec2:CreateNetworkInterface",
     "ecr:BatchGetImage",
     "ecr:DescribeImages",
-    "ecr:GetDownloadUrlForLayer"
+    "ecr:GetDownloadUrlForLayer",
+    "kms:Create*",
+    "kms:Describe*",
+    "kms:Enable*",
+    "kms:List*",
+    "kms:Put*",
+    "kms:Update*",
+    "kms:Revoke*",
+    "kms:Disable*",
+    "kms:Get*",
+    "kms:Delete*",
+    "kms:ScheduleKeyDeletion",
+    "kms:CancelKeyDeletion",
+    "kms:GenerateDataKey",
+    "kms:TagResource",
+    "kms:UntagResource",
+    "kms:Decrypt"
    ]
   }
  },
@@ -348,6 +493,9 @@
    "$ref": "#/definitions/MaximumAllowedResources",
    "description": "Maximum allowed cumulative resources for an Application. No new resources will be created once the limit is hit."
   },
+  "MonitoringConfiguration": {
+   "$ref": "#/definitions/MonitoringConfiguration"
+  },
   "Name": {
    "description": "User friendly Application name.",
    "maxLength": 64,
@@ -365,6 +513,9 @@
    "minLength": 1,
    "pattern": "^[A-Za-z0-9._/-]+$",
    "type": "string"
+  },
+  "RuntimeConfiguration": {
+   "$ref": "#/definitions/ConfigurationList"
   },
   "Tags": {
    "description": "Tag map with key and value",
