@@ -1,0 +1,292 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProgramName",
+  "/properties/MultiplexId"
+ ],
+ "definitions": {
+  "MultiplexProgramPacketIdentifiersMap": {
+   "additionalProperties": false,
+   "description": "Packet identifiers map for a given Multiplex program.",
+   "properties": {
+    "AudioPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "DvbSubPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "DvbTeletextPid": {
+     "type": "integer"
+    },
+    "EtvPlatformPid": {
+     "type": "integer"
+    },
+    "EtvSignalPid": {
+     "type": "integer"
+    },
+    "KlvDataPids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "PcrPid": {
+     "type": "integer"
+    },
+    "PmtPid": {
+     "type": "integer"
+    },
+    "PrivateMetadataPid": {
+     "type": "integer"
+    },
+    "Scte27Pids": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "Scte35Pid": {
+     "type": "integer"
+    },
+    "TimedMetadataPid": {
+     "type": "integer"
+    },
+    "VideoPid": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexProgramPipelineDetail": {
+   "additionalProperties": false,
+   "description": "The current source for one of the pipelines in the multiplex.",
+   "properties": {
+    "ActiveChannelPipeline": {
+     "description": "Identifies the channel pipeline that is currently active for the pipeline (identified by PipelineId) in the multiplex.",
+     "type": "string"
+    },
+    "PipelineId": {
+     "description": "Identifies a specific pipeline in the multiplex.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexProgramServiceDescriptor": {
+   "additionalProperties": false,
+   "description": "Transport stream service descriptor configuration for the Multiplex program.",
+   "properties": {
+    "ProviderName": {
+     "description": "Name of the provider.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ServiceName": {
+     "description": "Name of the service.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderName",
+    "ServiceName"
+   ],
+   "type": "object"
+  },
+  "MultiplexProgramSettings": {
+   "additionalProperties": false,
+   "description": "Multiplex Program settings configuration.",
+   "properties": {
+    "PreferredChannelPipeline": {
+     "$ref": "#/definitions/PreferredChannelPipeline",
+     "type": "string"
+    },
+    "ProgramNumber": {
+     "description": "Unique program number.",
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ServiceDescriptor": {
+     "$ref": "#/definitions/MultiplexProgramServiceDescriptor",
+     "description": "Transport stream service descriptor configuration for the Multiplex program."
+    },
+    "VideoSettings": {
+     "$ref": "#/definitions/MultiplexVideoSettings",
+     "description": "Program video settings configuration."
+    }
+   },
+   "required": [
+    "ProgramNumber"
+   ],
+   "type": "object"
+  },
+  "MultiplexStatmuxVideoSettings": {
+   "additionalProperties": false,
+   "description": "Statmux rate control settings",
+   "properties": {
+    "MaximumBitrate": {
+     "description": "Maximum statmux bitrate.",
+     "maximum": 100000000,
+     "minimum": 100000,
+     "type": "integer"
+    },
+    "MinimumBitrate": {
+     "description": "Minimum statmux bitrate.",
+     "maximum": 100000000,
+     "minimum": 100000,
+     "type": "integer"
+    },
+    "Priority": {
+     "description": "The purpose of the priority is to use a combination of the\\nmultiplex rate control algorithm and the QVBR capability of the\\nencoder to prioritize the video quality of some channels in a\\nmultiplex over others.  Channels that have a higher priority will\\nget higher video quality at the expense of the video quality of\\nother channels in the multiplex with lower priority.",
+     "maximum": 5,
+     "minimum": -5,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MultiplexVideoSettings": {
+   "description": "The video configuration for each program in a multiplex.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ConstantBitrate": {
+       "description": "The constant bitrate configuration for the video encode.\nWhen this field is defined, StatmuxSettings must be undefined.",
+       "maximum": 100000000,
+       "minimum": 100000,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "ConstantBitrate"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StatmuxSettings": {
+       "$ref": "#/definitions/MultiplexStatmuxVideoSettings",
+       "description": "Statmux rate control settings.\nWhen this field is defined, ConstantBitrate must be undefined."
+      }
+     },
+     "required": [
+      "StatmuxSettings"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "PreferredChannelPipeline": {
+   "description": "Indicates which pipeline is preferred by the multiplex for program ingest.\nIf set to \\\"PIPELINE_0\\\" or \\\"PIPELINE_1\\\" and an unhealthy ingest causes the multiplex to switch to the non-preferred pipeline,\nit will switch back once that ingest is healthy again. If set to \\\"CURRENTLY_ACTIVE\\\",\nit will not switch back to the other pipeline based on it recovering to a healthy state,\nit will only switch if the active pipeline becomes unhealthy.\n",
+   "enum": [
+    "CURRENTLY_ACTIVE",
+    "PIPELINE_0",
+    "PIPELINE_1"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource schema for AWS::MediaLive::Multiplexprogram",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "medialive:CreateMultiplexProgram",
+    "medialive:DescribeMultiplexProgram"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "medialive:DeleteMultiplexProgram",
+    "medialive:DescribeMultiplexProgram"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/MultiplexId"
+     }
+    },
+    "required": [
+     "MultiplexId"
+    ]
+   },
+   "permissions": [
+    "medialive:ListMultiplexPrograms"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "medialive:DescribeMultiplexProgram"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "medialive:UpdateMultiplexProgram",
+    "medialive:DescribeMultiplexProgram"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProgramName",
+  "/properties/MultiplexId"
+ ],
+ "properties": {
+  "ChannelId": {
+   "description": "The MediaLive channel associated with the program.",
+   "type": "string"
+  },
+  "MultiplexId": {
+   "description": "The ID of the multiplex that the program belongs to.",
+   "type": "string"
+  },
+  "MultiplexProgramSettings": {
+   "$ref": "#/definitions/MultiplexProgramSettings",
+   "description": "The settings for this multiplex program."
+  },
+  "PacketIdentifiersMap": {
+   "$ref": "#/definitions/MultiplexProgramPacketIdentifiersMap",
+   "description": "The packet identifier map for this multiplex program."
+  },
+  "PipelineDetails": {
+   "description": "Contains information about the current sources for the specified program in the specified multiplex. Keep in mind that each multiplex pipeline connects to both pipelines in a given source channel (the channel identified by the program). But only one of those channel pipelines is ever active at one time.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MultiplexProgramPipelineDetail"
+   },
+   "type": "array"
+  },
+  "PreferredChannelPipeline": {
+   "$ref": "#/definitions/PreferredChannelPipeline",
+   "description": "The settings for this multiplex program."
+  },
+  "ProgramName": {
+   "description": "The name of the multiplex program.",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialiveprogram.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaLive::Multiplexprogram",
+ "writeOnlyProperties": [
+  "/properties/PreferredChannelPipeline"
+ ]
+}

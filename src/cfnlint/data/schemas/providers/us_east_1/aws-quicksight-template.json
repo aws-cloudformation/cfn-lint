@@ -145,6 +145,18 @@
    ],
    "type": "string"
   },
+  "AssetOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Timezone": {
+     "type": "string"
+    },
+    "WeekStart": {
+     "$ref": "#/definitions/DayOfTheWeek"
+    }
+   },
+   "type": "object"
+  },
   "AttributeAggregationFunction": {
    "additionalProperties": false,
    "properties": {
@@ -2395,6 +2407,18 @@
     }
    },
    "type": "object"
+  },
+  "DayOfTheWeek": {
+   "enum": [
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY"
+   ],
+   "type": "string"
   },
   "DecimalDefaultValues": {
    "additionalProperties": false,
@@ -9517,6 +9541,9 @@
      "minItems": 1,
      "type": "array"
     },
+    "Options": {
+     "$ref": "#/definitions/AssetOptions"
+    },
     "Sheets": {
      "items": {
       "$ref": "#/definitions/Sheet"
@@ -9578,6 +9605,9 @@
      "maxItems": 2000,
      "minItems": 0,
      "type": "array"
+    },
+    "Options": {
+     "$ref": "#/definitions/AssetOptions"
     },
     "ParameterDeclarations": {
      "items": {
