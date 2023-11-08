@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResponseType",
+  "/properties/RestApiId"
+ ],
+ "description": "The ``AWS::ApiGateway::GatewayResponse`` resource creates a gateway response for your API. For more information, see [API Gateway Responses](https://docs.aws.amazon.com/apigateway/latest/developerguide/customize-gateway-responses.html#api-gateway-gatewayResponse-definition) in the *API Gateway Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:PUT",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "description": "A Cloudformation auto generated ID.",
+   "type": "string"
+  },
+  "ResponseParameters": {
+   "additionalProperties": false,
+   "description": "Response parameters (paths, query strings and headers) of the GatewayResponse as a string-to-string map of key-value pairs.",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseTemplates": {
+   "additionalProperties": false,
+   "description": "Response templates of the GatewayResponse as a string-to-string map of key-value pairs.",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseType": {
+   "description": "The response type of the associated GatewayResponse.",
+   "enum": [
+    "DEFAULT_4XX",
+    "DEFAULT_5XX",
+    "RESOURCE_NOT_FOUND",
+    "UNAUTHORIZED",
+    "INVALID_API_KEY",
+    "ACCESS_DENIED",
+    "AUTHORIZER_FAILURE",
+    "AUTHORIZER_CONFIGURATION_ERROR",
+    "INVALID_SIGNATURE",
+    "EXPIRED_TOKEN",
+    "MISSING_AUTHENTICATION_TOKEN",
+    "INTEGRATION_FAILURE",
+    "INTEGRATION_TIMEOUT",
+    "API_CONFIGURATION_ERROR",
+    "UNSUPPORTED_MEDIA_TYPE",
+    "BAD_REQUEST_PARAMETERS",
+    "BAD_REQUEST_BODY",
+    "REQUEST_TOO_LARGE",
+    "THROTTLED",
+    "QUOTA_EXCEEDED",
+    "WAF_FILTERED"
+   ],
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The string identifier of the associated RestApi.",
+   "type": "string"
+  },
+  "StatusCode": {
+   "description": "The HTTP status code for this GatewayResponse.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResponseType",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": false,
+ "typeName": "AWS::ApiGateway::GatewayResponse"
+}

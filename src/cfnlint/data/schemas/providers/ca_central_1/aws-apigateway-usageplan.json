@@ -3,18 +3,19 @@
  "definitions": {
   "ApiStage": {
    "additionalProperties": false,
+   "description": "API stage name of the associated API stage in a usage plan.",
    "properties": {
     "ApiId": {
-     "description": "The ID of an API that is in the specified Stage property that you want to associate with the usage plan.",
+     "description": "API Id of the associated API stage in a usage plan.",
      "type": "string"
     },
     "Stage": {
-     "description": "The name of the stage to associate with the usage plan.",
+     "description": "API stage name of the associated API stage in a usage plan.",
      "type": "string"
     },
     "Throttle": {
      "additionalProperties": false,
-     "description": "Map containing method-level throttling information for an API stage in a usage plan. The key for the map is the path and method for which to configure custom throttling, for example, '/pets/GET'. Duplicates are not allowed.",
+     "description": "Map containing method level throttling information for API stage in a usage plan.",
      "patternProperties": {
       ".*": {
        "$ref": "#/definitions/ThrottleSettings"
@@ -27,19 +28,20 @@
   },
   "QuotaSettings": {
    "additionalProperties": false,
+   "description": "``QuotaSettings`` is a property of the [AWS::ApiGateway::UsagePlan](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-usageplan.html) resource that specifies a target for the maximum number of requests users can make to your REST APIs.\n In some cases clients can exceed the targets that you set. Don\u2019t rely on usage plans to control costs. Consider using [](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) to monitor costs and [](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html) to manage API requests.",
    "properties": {
     "Limit": {
-     "description": "The maximum number of requests that users can make within the specified time period.",
+     "description": "The target maximum number of requests that can be made in a given time period.",
      "minimum": 0,
      "type": "integer"
     },
     "Offset": {
-     "description": "For the initial time period, the number of requests to subtract from the specified limit. When you first implement a usage plan, the plan might start in the middle of the week or month. With this property, you can decrease the limit for this initial time period.",
+     "description": "The number of requests subtracted from the given limit in the initial time period.",
      "minimum": 0,
      "type": "integer"
     },
     "Period": {
-     "description": "The time period for which the maximum limit of requests applies, such as DAY or WEEK. For valid values, see the period property for the UsagePlan resource in the Amazon API Gateway REST API Reference.",
+     "description": "The time period in which the limit applies. Valid values are \"DAY\", \"WEEK\" or \"MONTH\".",
      "type": "string"
     }
    },
@@ -69,14 +71,15 @@
   },
   "ThrottleSettings": {
    "additionalProperties": false,
+   "description": "``ThrottleSettings`` is a property of the [AWS::ApiGateway::UsagePlan](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-usageplan.html) resource that specifies the overall request rate (average requests per second) and burst capacity when users call your REST APIs.",
    "properties": {
     "BurstLimit": {
-     "description": "The maximum API request rate limit over a time ranging from one to a few seconds. The maximum API request rate limit depends on whether the underlying token bucket is at its full capacity.",
+     "description": "The API target request burst rate limit. This allows more requests through for a period of time than the target rate limit.",
      "minimum": 0,
      "type": "integer"
     },
     "RateLimit": {
-     "description": "The API request steady-state rate limit (average requests per second over an extended period of time).",
+     "description": "The API target request rate limit.",
      "minimum": 0,
      "type": "number"
     }
@@ -84,17 +87,20 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::ApiGateway::UsagePlan",
+ "description": "The ``AWS::ApiGateway::UsagePlan`` resource creates a usage plan for deployed APIs. A usage plan sets a target for the throttling and quota limits on individual client API keys. For more information, see [Creating and Using API Usage Plans in Amazon API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-usage-plans.html) in the *API Gateway Developer Guide*.\n In some cases clients can exceed the targets that you set. Don\u2019t rely on usage plans to control costs. Consider using [](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) to monitor costs and [](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html) to manage API requests.",
  "handlers": {
   "create": {
    "permissions": [
     "apigateway:POST",
-    "apigateway:GET"
+    "apigateway:GET",
+    "apigateway:PUT"
    ]
   },
   "delete": {
    "permissions": [
-    "apigateway:DELETE"
+    "apigateway:DELETE",
+    "apigateway:GET",
+    "apigateway:PATCH"
    ]
   },
   "list": {
@@ -121,7 +127,7 @@
  ],
  "properties": {
   "ApiStages": {
-   "description": "The API stages to associate with this usage plan.",
+   "description": "The associated API stages of a usage plan.",
    "items": {
     "$ref": "#/definitions/ApiStage"
    },
@@ -129,7 +135,7 @@
    "uniqueItems": true
   },
   "Description": {
-   "description": "A description of the usage plan.",
+   "description": "The description of a usage plan.",
    "type": "string"
   },
   "Id": {
@@ -138,10 +144,10 @@
   },
   "Quota": {
    "$ref": "#/definitions/QuotaSettings",
-   "description": "Configures the number of requests that users can make within a given interval."
+   "description": "The target maximum number of permitted requests per a given unit time interval."
   },
   "Tags": {
-   "description": "An array of arbitrary tags (key-value pairs) to associate with the usage plan.",
+   "description": "The collection of tags. Each tag element is associated with a given resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -151,10 +157,10 @@
   },
   "Throttle": {
    "$ref": "#/definitions/ThrottleSettings",
-   "description": "Configures the overall request rate (average requests per second) and burst capacity."
+   "description": "A map containing method level throttling information for API stage in a usage plan."
   },
   "UsagePlanName": {
-   "description": "A name for the usage plan.",
+   "description": "The name of a usage plan.",
    "type": "string"
   }
  },
