@@ -8,13 +8,14 @@
  "definitions": {
   "StageKey": {
    "additionalProperties": false,
+   "description": "``StageKey`` is a property of the [AWS::ApiGateway::ApiKey](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-apikey.html) resource that specifies the stage to associate with the API key. This association allows only clients with the key to make requests to methods in that stage.",
    "properties": {
     "RestApiId": {
-     "description": "The ID of a RestApi resource that includes the stage with which you want to associate the API key.",
+     "description": "The string identifier of the associated RestApi.",
      "type": "string"
     },
     "StageName": {
-     "description": "The name of the stage with which to associate the API key. The stage must be included in the RestApi resource that you specified in the RestApiId property. ",
+     "description": "The stage name associated with the stage key.",
      "type": "string"
     }
    },
@@ -42,17 +43,19 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::ApiGateway::ApiKey",
+ "description": "The ``AWS::ApiGateway::ApiKey`` resource creates a unique key that you can distribute to clients who are executing API Gateway ``Method`` resources that require an API key. To specify which API key clients must use, map the API key with the ``RestApi`` and ``Stage`` resources that include the methods that require a key.",
  "handlers": {
   "create": {
    "permissions": [
     "apigateway:POST",
-    "apigateway:GET"
+    "apigateway:GET",
+    "apigateway:PUT"
    ]
   },
   "delete": {
    "permissions": [
-    "apigateway:DELETE"
+    "apigateway:DELETE",
+    "apigateway:GET"
    ]
   },
   "list": {
@@ -83,28 +86,28 @@
    "type": "string"
   },
   "CustomerId": {
-   "description": "An AWS Marketplace customer identifier to use when integrating with the AWS SaaS Marketplace.",
+   "description": "An MKT customer identifier, when integrating with the AWS SaaS Marketplace.",
    "type": "string"
   },
   "Description": {
-   "description": "A description of the purpose of the API key.",
+   "description": "The description of the ApiKey.",
    "type": "string"
   },
   "Enabled": {
    "default": false,
-   "description": "Indicates whether the API key can be used by clients.",
+   "description": "Specifies whether the ApiKey can be used by callers.",
    "type": "boolean"
   },
   "GenerateDistinctId": {
-   "description": "Specifies whether the key identifier is distinct from the created API key value. This parameter is deprecated and should not be used.",
+   "description": "Specifies whether (``true``) or not (``false``) the key identifier is distinct from the created API key value. This parameter is deprecated and should not be used.",
    "type": "boolean"
   },
   "Name": {
-   "description": "A name for the API key. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the API key name.",
+   "description": "A name for the API key. If you don't specify a name, CFN generates a unique physical ID and uses that ID for the API key name. For more information, see [Name Type](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-name.html).\n If you specify a name, you cannot perform updates that require replacement of this resource. You can perform updates that require no or some interruption. If you must replace the resource, specify a new name.",
    "type": "string"
   },
   "StageKeys": {
-   "description": "A list of stages to associate with this API key.",
+   "description": "DEPRECATED FOR USAGE PLANS - Specifies stages associated with the API key.",
    "items": {
     "$ref": "#/definitions/StageKey"
    },
@@ -112,7 +115,7 @@
    "uniqueItems": true
   },
   "Tags": {
-   "description": "An array of arbitrary tags (key-value pairs) to associate with the API key.",
+   "description": "The key-value map of strings. The valid character set is [a-zA-Z+-=._:/]. The tag key can be up to 128 characters and must not start with ``aws:``. The tag value can be up to 256 characters.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -120,7 +123,7 @@
    "uniqueItems": false
   },
   "Value": {
-   "description": "The value of the API key. Must be at least 20 characters long.",
+   "description": "Specifies a value of the API key.",
    "type": "string"
   }
  },
