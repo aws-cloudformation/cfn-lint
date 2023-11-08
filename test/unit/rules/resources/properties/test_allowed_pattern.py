@@ -3,70 +3,58 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
+
+import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.parameters.AllowedPattern import (
+    AllowedPattern as ParameterAllowedPattern,
+)
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern
 
 
-class TestAllowedPattern(BaseRuleTestCase):
-    """Test allowed pattern Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AllowedPattern()
+    rule.child_rules["W2031"] = ParameterAllowedPattern()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        self.rule = AllowedPattern()
 
-    def test_allowed_pattern(self):
-        validator = CfnTemplateValidator(schema={"type": "string"})
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-        self.assertEqual(
-            len(list(self.rule.pattern(validator, ".*", "foo", {}))),
-            0,
-        )
-        self.assertEqual(
-            len(list(self.rule.pattern(validator, "foo", "bar", {}))),
-            1,
-        )
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.pattern(
-                        validator,
-                        "foo",
-                        {
-                            "Ref": "foo",
-                            "Fn::GetAtt": "bar",
-                        },
-                        {},
-                    )
-                )
-            ),
-            0,
-        )
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.pattern(
-                        validator,
-                        "foo",
-                        "{{resolve:ssm:S3AccessControl:2}}",
-                        {},
-                    )
-                )
-            ),
-            0,
-        )
 
-    def test_allowed_pattern_exceptions(self):
-        validator = CfnTemplateValidator(schema={"type": "string"})
+def test_allowed_pattern(rule, validator):
+    assert len(list(rule.pattern(validator, ".*", "foo", {}))) == 0
+    assert len(list(rule.pattern(validator, "foo", "bar", {}))) == 1
 
-        self.rule.configure({"exceptions": ["AWS::"]})
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Fn::Sub"]),
+        )
+    )
+    errs = list(rule.pattern(evolved, "bar", "bar", {}))
+    assert len(errs) == 0
 
-        self.assertEqual(
-            len(list(self.rule.pattern(validator, "foo", "Another AWS::Instance", {}))),
-            1,
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Ref"]),
+            value_path=deque(["Parameters", "MyParameter", "Default"]),
         )
-        self.assertEqual(
-            len(list(self.rule.pattern(validator, "foo", "AWS::Dummy::Resource", {}))),
-            0,
-        )
+    )
+    errs = list(rule.pattern(evolved, "foo", "bar", {}))
+    assert len(errs) == 1
+    assert errs[0].rule.id == ParameterAllowedPattern.id
+
+    rule.child_rules["W2031"] = None
+    errs = list(rule.pattern(evolved, "foo", "bar", {}))
+    assert len(errs) == 0
+
+
+def test_allowed_pattern_exceptions(rule, validator):
+    rule.configure({"exceptions": ["AWS::"]})
+
+    assert len(list(rule.pattern(validator, "foo", "Another AWS::Instance", {}))) == 1
+    assert len(list(rule.pattern(validator, "foo", "AWS::Dummy::Resource", {}))) == 0
