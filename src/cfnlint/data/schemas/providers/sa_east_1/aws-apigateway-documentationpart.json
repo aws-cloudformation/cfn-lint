@@ -1,0 +1,122 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Location",
+  "/properties/RestApiId"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "description": "The ``Location`` property specifies the location of the Amazon API Gateway API entity that the documentation applies to. ``Location`` is a property of the [AWS::ApiGateway::DocumentationPart](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-documentationpart.html) resource.\n For more information about each property, including constraints and valid values, see [DocumentationPart](https://docs.aws.amazon.com/apigateway/latest/api/API_DocumentationPartLocation.html) in the *Amazon API Gateway REST API Reference*.",
+   "properties": {
+    "Method": {
+     "description": "The HTTP verb of a method. It is a valid field for the API entity types of ``METHOD``, ``PATH_PARAMETER``, ``QUERY_PARAMETER``, ``REQUEST_HEADER``, ``REQUEST_BODY``, ``RESPONSE``, ``RESPONSE_HEADER``, and ``RESPONSE_BODY``. The default value is ``*`` for any method. When an applicable child entity inherits the content of an entity of the same type with more general specifications of the other ``location`` attributes, the child entity's ``method`` attribute must match that of the parent entity exactly.",
+     "type": "string"
+    },
+    "Name": {
+     "description": "The name of the targeted API entity. It is a valid and required field for the API entity types of ``AUTHORIZER``, ``MODEL``, ``PATH_PARAMETER``, ``QUERY_PARAMETER``, ``REQUEST_HEADER``, ``REQUEST_BODY`` and ``RESPONSE_HEADER``. It is an invalid field for any other entity type.",
+     "type": "string"
+    },
+    "Path": {
+     "description": "The URL path of the target. It is a valid field for the API entity types of ``RESOURCE``, ``METHOD``, ``PATH_PARAMETER``, ``QUERY_PARAMETER``, ``REQUEST_HEADER``, ``REQUEST_BODY``, ``RESPONSE``, ``RESPONSE_HEADER``, and ``RESPONSE_BODY``. The default value is ``/`` for the root resource. When an applicable child entity inherits the content of another entity of the same type with more general specifications of the other ``location`` attributes, the child entity's ``path`` attribute must match that of the parent entity as a prefix.",
+     "type": "string"
+    },
+    "StatusCode": {
+     "description": "The HTTP status code of a response. It is a valid field for the API entity types of ``RESPONSE``, ``RESPONSE_HEADER``, and ``RESPONSE_BODY``. The default value is ``*`` for any status code. When an applicable child entity inherits the content of an entity of the same type with more general specifications of the other ``location`` attributes, the child entity's ``statusCode`` attribute must match that of the parent entity exactly.",
+     "type": "string"
+    },
+    "Type": {
+     "description": "The type of API entity to which the documentation content applies. Valid values are ``API``, ``AUTHORIZER``, ``MODEL``, ``RESOURCE``, ``METHOD``, ``PATH_PARAMETER``, ``QUERY_PARAMETER``, ``REQUEST_HEADER``, ``REQUEST_BODY``, ``RESPONSE``, ``RESPONSE_HEADER``, and ``RESPONSE_BODY``. Content inheritance does not apply to any entity of the ``API``, ``AUTHORIZER``, ``METHOD``, ``MODEL``, ``REQUEST_BODY``, or ``RESOURCE`` type.",
+     "enum": [
+      "API",
+      "AUTHORIZER",
+      "MODEL",
+      "RESOURCE",
+      "METHOD",
+      "PATH_PARAMETER",
+      "QUERY_PARAMETER",
+      "REQUEST_HEADER",
+      "REQUEST_BODY",
+      "RESPONSE",
+      "RESPONSE_HEADER",
+      "RESPONSE_BODY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The ``AWS::ApiGateway::DocumentationPart`` resource creates a documentation part for an API. For more information, see [Representation of API Documentation in API Gateway](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-documenting-api-content-representation.html) in the *API Gateway Developer Guide*.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DocumentationPartId",
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "DocumentationPartId": {
+   "description": "The identifier of the documentation Part.",
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location",
+   "description": "The location of the targeted API entity of the to-be-created documentation part."
+  },
+  "Properties": {
+   "description": "The new documentation content map of the targeted API entity. Enclosed key-value pairs are API-specific, but only OpenAPI-compliant key-value pairs can be exported and, hence, published.",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The string identifier of the associated RestApi.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DocumentationPartId"
+ ],
+ "required": [
+  "Location",
+  "Properties",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "typeName": "AWS::ApiGateway::DocumentationPart"
+}
