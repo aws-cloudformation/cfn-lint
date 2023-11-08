@@ -689,12 +689,12 @@ patches.extend(
                 Patch(
                     values={
                         "allOf": [
-                            {
-                                "anyOf": [
-                                    {"required": ["ImageId"]},
-                                    {"required": ["LaunchTemplate"]},
-                                ],
-                            }
+                            make_only_one_required_with_description(
+                                [
+                                    "ImageId",
+                                    "LaunchTemplate",
+                                ]
+                            ),
                         ],
                         "dependencies": make_only_one(
                             ["NetworkInterfaces", "SubnetId"]

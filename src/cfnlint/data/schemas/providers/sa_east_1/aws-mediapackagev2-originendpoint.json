@@ -1,0 +1,495 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ChannelGroupName",
+   "/properties/ChannelName",
+   "/properties/OriginEndpointName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelGroupName",
+  "/properties/ChannelName",
+  "/properties/OriginEndpointName"
+ ],
+ "definitions": {
+  "AdMarkerHls": {
+   "enum": [
+    "DATERANGE"
+   ],
+   "type": "string"
+  },
+  "CmafEncryptionMethod": {
+   "enum": [
+    "CENC",
+    "CBCS"
+   ],
+   "type": "string"
+  },
+  "ContainerType": {
+   "enum": [
+    "TS",
+    "CMAF"
+   ],
+   "type": "string"
+  },
+  "DrmSystem": {
+   "enum": [
+    "CLEAR_KEY_AES_128",
+    "FAIRPLAY",
+    "PLAYREADY",
+    "WIDEVINE"
+   ],
+   "type": "string"
+  },
+  "Encryption": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for encrypting content.</p>",
+   "properties": {
+    "ConstantInitializationVector": {
+     "description": "<p>A 128-bit, 16-byte hex value represented by a 32-character string, used in conjunction with the key for encrypting content. If you don't specify a value, then MediaPackage creates the constant initialization vector (IV).</p>",
+     "maxLength": 32,
+     "minLength": 32,
+     "pattern": "^[0-9a-fA-F]+$",
+     "type": "string"
+    },
+    "EncryptionMethod": {
+     "$ref": "#/definitions/EncryptionMethod"
+    },
+    "KeyRotationIntervalSeconds": {
+     "description": "<p>The frequency (in seconds) of key changes for live workflows, in which content is streamed real time. The service retrieves content keys before the live content begins streaming, and then retrieves them as needed over the lifetime of the workflow. By default, key rotation is set to 300 seconds (5 minutes), the minimum rotation interval, which is equivalent to setting it to 300. If you don't enter an interval, content keys aren't rotated.</p>\n         <p>The following example setting causes the service to rotate keys every thirty minutes: <code>1800</code>\n         </p>",
+     "maximum": 31536000,
+     "minimum": 300,
+     "type": "integer"
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "EncryptionMethod",
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "EncryptionContractConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>Configure one or more content encryption keys for your endpoints that use SPEKE Version 2.0. The encryption contract defines which content keys are used to encrypt the audio and video tracks in your stream. To configure the encryption contract, specify which audio and video encryption presets to use.</p>",
+   "properties": {
+    "PresetSpeke20Audio": {
+     "$ref": "#/definitions/PresetSpeke20Audio"
+    },
+    "PresetSpeke20Video": {
+     "$ref": "#/definitions/PresetSpeke20Video"
+    }
+   },
+   "required": [
+    "PresetSpeke20Audio",
+    "PresetSpeke20Video"
+   ],
+   "type": "object"
+  },
+  "EncryptionMethod": {
+   "additionalProperties": false,
+   "description": "<p>The encryption type.</p>",
+   "properties": {
+    "CmafEncryptionMethod": {
+     "$ref": "#/definitions/CmafEncryptionMethod"
+    },
+    "TsEncryptionMethod": {
+     "$ref": "#/definitions/TsEncryptionMethod"
+    }
+   },
+   "type": "object"
+  },
+  "HlsManifestConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>Retrieve the HTTP live streaming (HLS) manifest configuration.</p>",
+   "properties": {
+    "ChildManifestName": {
+     "description": "<p>A short string that's appended to the endpoint URL. The child manifest name creates a unique path to this endpoint. If you don't enter a value, MediaPackage uses the default child manifest name, index_1. The manifestName on the HLSManifest object overrides the manifestName you provided on the originEndpoint object.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestName": {
+     "description": "<p>A short short string that's appended to the endpoint URL. The manifest name creates a unique path to this endpoint. If you don't enter a value, MediaPackage uses the default manifest name, index. MediaPackage automatically inserts the format extension, such as .m3u8. You can't use the same manifest name if you use HLS manifest and low-latency HLS manifest. The manifestName on the HLSManifest object overrides the manifestName you provided on the originEndpoint object.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "description": "<p>The total duration (in seconds) of the manifest's content.</p>",
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "description": "<p>Inserts EXT-X-PROGRAM-DATE-TIME tags in the output manifest at the interval that you specify. If you don't enter an interval, \n         EXT-X-PROGRAM-DATE-TIME tags aren't included in the manifest. \n         The tags sync the stream to the wall clock so that viewers can seek to a specific time in the playback timeline on the player. \n         ID3Timed metadata messages generate every 5 seconds whenever the content is ingested.</p>\n         <p>Irrespective of this parameter, if any ID3Timed metadata is in the HLS input, it is passed through to the HLS output.</p>",
+     "type": "integer"
+    },
+    "ScteHls": {
+     "$ref": "#/definitions/ScteHls"
+    },
+    "Url": {
+     "description": "<p>The egress domain URL for stream delivery from MediaPackage.</p>",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "LowLatencyHlsManifestConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>Retrieve the low-latency HTTP live streaming (HLS) manifest configuration.</p>",
+   "properties": {
+    "ChildManifestName": {
+     "description": "<p>A short string that's appended to the endpoint URL. The child manifest name creates a unique path to this endpoint. If you don't enter a value, MediaPackage uses the default child manifest name, index_1. The manifestName on the HLSManifest object overrides the manifestName you provided on the originEndpoint object.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestName": {
+     "description": "<p>A short short string that's appended to the endpoint URL. The manifest name creates a unique path to this endpoint. If you don't enter a value, MediaPackage uses the default manifest name, index. MediaPackage automatically inserts the format extension, such as .m3u8. You can't use the same manifest name if you use HLS manifest and low-latency HLS manifest. The manifestName on the HLSManifest object overrides the manifestName you provided on the originEndpoint object.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "description": "<p>The total duration (in seconds) of the manifest's content.</p>",
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "description": "<p>Inserts EXT-X-PROGRAM-DATE-TIME tags in the output manifest at the interval that you specify. If you don't enter an interval, \n         EXT-X-PROGRAM-DATE-TIME tags aren't included in the manifest. \n         The tags sync the stream to the wall clock so that viewers can seek to a specific time in the playback timeline on the player. \n         ID3Timed metadata messages generate every 5 seconds whenever the content is ingested.</p>\n         <p>Irrespective of this parameter, if any ID3Timed metadata is in the HLS input, it is passed through to the HLS output.</p>",
+     "type": "integer"
+    },
+    "ScteHls": {
+     "$ref": "#/definitions/ScteHls"
+    },
+    "Url": {
+     "description": "<p>The egress domain URL for stream delivery from MediaPackage.</p>",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "PresetSpeke20Audio": {
+   "enum": [
+    "PRESET_AUDIO_1",
+    "PRESET_AUDIO_2",
+    "PRESET_AUDIO_3",
+    "SHARED",
+    "UNENCRYPTED"
+   ],
+   "type": "string"
+  },
+  "PresetSpeke20Video": {
+   "enum": [
+    "PRESET_VIDEO_1",
+    "PRESET_VIDEO_2",
+    "PRESET_VIDEO_3",
+    "PRESET_VIDEO_4",
+    "PRESET_VIDEO_5",
+    "PRESET_VIDEO_6",
+    "PRESET_VIDEO_7",
+    "PRESET_VIDEO_8",
+    "SHARED",
+    "UNENCRYPTED"
+   ],
+   "type": "string"
+  },
+  "Scte": {
+   "additionalProperties": false,
+   "description": "<p>The SCTE configuration.</p>",
+   "properties": {
+    "ScteFilter": {
+     "description": "<p>The SCTE-35 message types that you want to be treated as ad markers in the output.</p>",
+     "items": {
+      "$ref": "#/definitions/ScteFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ScteFilter": {
+   "enum": [
+    "SPLICE_INSERT",
+    "BREAK",
+    "PROVIDER_ADVERTISEMENT",
+    "DISTRIBUTOR_ADVERTISEMENT",
+    "PROVIDER_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+    "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "PROGRAM"
+   ],
+   "type": "string"
+  },
+  "ScteHls": {
+   "additionalProperties": false,
+   "description": "<p>The SCTE configuration.</p>",
+   "properties": {
+    "AdMarkerHls": {
+     "$ref": "#/definitions/AdMarkerHls"
+    }
+   },
+   "type": "object"
+  },
+  "Segment": {
+   "additionalProperties": false,
+   "description": "<p>The segment configuration, including the segment name, duration, and other configuration values.</p>",
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/Encryption"
+    },
+    "IncludeIframeOnlyStreams": {
+     "description": "<p>When selected, the stream set includes an additional I-frame only stream, along with the other tracks. If false, this extra stream is not included. MediaPackage generates an I-frame only stream from the first rendition in the manifest. The service inserts EXT-I-FRAMES-ONLY tags in the output manifest, and then generates and includes an I-frames only playlist in the stream. This playlist permits player functionality like fast forward and rewind.</p>",
+     "type": "boolean"
+    },
+    "Scte": {
+     "$ref": "#/definitions/Scte"
+    },
+    "SegmentDurationSeconds": {
+     "description": "<p>The duration (in seconds) of each segment. Enter a value equal to, or a multiple of, the input segment duration. If the value that you enter is different from the input segment duration, MediaPackage rounds segments to the nearest multiple of the input segment duration.</p>",
+     "maximum": 30,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SegmentName": {
+     "description": "<p>The name that describes the segment. The name is the base name of the segment used in all content manifests inside of the endpoint. You can't use spaces in the name.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "TsIncludeDvbSubtitles": {
+     "description": "<p>By default, MediaPackage excludes all digital video broadcasting (DVB) subtitles from the output. When selected, MediaPackage passes through DVB subtitles into the output.</p>",
+     "type": "boolean"
+    },
+    "TsUseAudioRenditionGroup": {
+     "description": "<p>When selected, MediaPackage bundles all audio tracks in a rendition group. All other tracks in the stream can be used with any audio rendition from the group.</p>",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SpekeKeyProvider": {
+   "additionalProperties": false,
+   "description": "<p>The parameters for the SPEKE key provider.</p>",
+   "properties": {
+    "DrmSystems": {
+     "description": "<p>The DRM solution provider you're using to protect your content during distribution.</p>",
+     "items": {
+      "$ref": "#/definitions/DrmSystem"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    },
+    "EncryptionContractConfiguration": {
+     "$ref": "#/definitions/EncryptionContractConfiguration"
+    },
+    "ResourceId": {
+     "description": "<p>The unique identifier for the content. The service sends this to the key server to identify the current endpoint. How unique you make this depends on how fine-grained you want access controls to be. The service does not permit you to use the same ID for two simultaneous encryption processes. The resource ID is also known as the content ID.</p>\n         <p>The following example shows a resource ID: <code>MovieNight20171126093045</code>\n         </p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z_-]+$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "<p>The ARN for the IAM role granted by the key provider that provides access to the key provider API. This role must have a trust policy that allows MediaPackage to assume the role, and it must have a sufficient permissions policy to allow access to the specific key retrieval URL. Get this from your DRM solution provider.</p>\n         <p>Valid format: <code>arn:aws:iam::{accountID}:role/{name}</code>. The following example shows a role ARN: <code>arn:aws:iam::444455556666:role/SpekeAccess</code>\n         </p>",
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Url": {
+     "description": "<p>The URL of the API Gateway proxy that you set up to talk to your key server. The API Gateway proxy must reside in the same AWS Region as MediaPackage and must start with https://.</p>\n         <p>The following example shows a URL: <code>https://1wm2dx1f33.execute-api.us-west-2.amazonaws.com/SpekeSample/copyProtection</code>\n         </p>",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DrmSystems",
+    "EncryptionContractConfiguration",
+    "ResourceId",
+    "RoleArn",
+    "Url"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TsEncryptionMethod": {
+   "enum": [
+    "AES_128",
+    "SAMPLE_AES"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::MediaPackageV2::OriginEndpoint Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:CreateOriginEndpoint",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediapackagev2:GetOriginEndpoint",
+    "mediapackagev2:DeleteOriginEndpoint"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ChannelGroupName": {
+      "$ref": "resource-schema.json#/properties/ChannelGroupName"
+     },
+     "ChannelName": {
+      "$ref": "resource-schema.json#/properties/ChannelName"
+     }
+    },
+    "required": [
+     "ChannelGroupName",
+     "ChannelName"
+    ]
+   },
+   "permissions": [
+    "mediapackagev2:ListOriginEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediapackagev2:GetOriginEndpoint"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:UntagResource",
+    "mediapackagev2:ListTagsForResource",
+    "mediapackagev2:UpdateOriginEndpoint",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "<p>The Amazon Resource Name (ARN) associated with the resource.</p>",
+   "type": "string"
+  },
+  "ChannelGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ContainerType": {
+   "$ref": "#/definitions/ContainerType"
+  },
+  "CreatedAt": {
+   "description": "<p>The date and time the origin endpoint was created.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "<p>Enter any descriptive text that helps you to identify the origin endpoint.</p>",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "HlsManifests": {
+   "description": "<p>An HTTP live streaming (HLS) manifest configuration.</p>",
+   "items": {
+    "$ref": "#/definitions/HlsManifestConfiguration"
+   },
+   "type": "array"
+  },
+  "LowLatencyHlsManifests": {
+   "description": "<p>A low-latency HLS manifest configuration.</p>",
+   "items": {
+    "$ref": "#/definitions/LowLatencyHlsManifestConfiguration"
+   },
+   "type": "array"
+  },
+  "ModifiedAt": {
+   "description": "<p>The date and time the origin endpoint was modified.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "OriginEndpointName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Segment": {
+   "$ref": "#/definitions/Segment"
+  },
+  "StartoverWindowSeconds": {
+   "description": "<p>The size of the window (in seconds) to create a window of the live stream that's available for on-demand viewing. Viewers can start-over or catch-up on content that falls within the window. The maximum startover window is 1,209,600 seconds (14 days).</p>",
+   "maximum": 1209600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/LowLatencyHlsManifests/*/Url",
+  "/properties/HlsManifests/*/Url"
+ ],
+ "required": [
+  "ContainerType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackageV2::OriginEndpoint"
+}

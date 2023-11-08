@@ -2,6 +2,7 @@
  "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
  "additionalProperties": false,
  "createOnlyProperties": [
+  "/properties/ApplyCapacity",
   "/properties/BuildId",
   "/properties/CertificateConfiguration",
   "/properties/EC2InstanceType",
@@ -183,6 +184,108 @@
    },
    "type": "object"
   },
+  "ScalingPolicy": {
+   "additionalProperties": false,
+   "description": "Rule that controls how a fleet is scaled. Scaling policies are uniquely identified by the combination of name and fleet ID.",
+   "properties": {
+    "ComparisonOperator": {
+     "description": "Comparison operator to use when measuring a metric against the threshold value.",
+     "enum": [
+      "GreaterThanOrEqualToThreshold",
+      "GreaterThanThreshold",
+      "LessThanThreshold",
+      "LessThanOrEqualToThreshold"
+     ],
+     "type": "string"
+    },
+    "EvaluationPeriods": {
+     "description": "Length of time (in minutes) the metric must be at or beyond the threshold before a scaling event is triggered.",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Location": {
+     "$ref": "#/definitions/Location"
+    },
+    "MetricName": {
+     "description": "Name of the Amazon GameLift-defined metric that is used to trigger a scaling adjustment.",
+     "enum": [
+      "ActivatingGameSessions",
+      "ActiveGameSessions",
+      "ActiveInstances",
+      "AvailableGameSessions",
+      "AvailablePlayerSessions",
+      "CurrentPlayerSessions",
+      "IdleInstances",
+      "PercentAvailableGameSessions",
+      "PercentIdleInstances",
+      "QueueDepth",
+      "WaitTime",
+      "ConcurrentActivatableGameSessions"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "description": "A descriptive label that is associated with a fleet's scaling policy. Policy names do not need to be unique.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PolicyType": {
+     "description": "The type of scaling policy to create. For a target-based policy, set the parameter MetricName to 'PercentAvailableGameSessions' and specify a TargetConfiguration. For a rule-based policy set the following parameters: MetricName, ComparisonOperator, Threshold, EvaluationPeriods, ScalingAdjustmentType, and ScalingAdjustment.",
+     "enum": [
+      "RuleBased",
+      "TargetBased"
+     ],
+     "type": "string"
+    },
+    "ScalingAdjustment": {
+     "description": "Amount of adjustment to make, based on the scaling adjustment type.",
+     "type": "integer"
+    },
+    "ScalingAdjustmentType": {
+     "description": "The type of adjustment to make to a fleet's instance count.",
+     "enum": [
+      "ChangeInCapacity",
+      "ExactCapacity",
+      "PercentChangeInCapacity"
+     ],
+     "type": "string"
+    },
+    "Status": {
+     "description": "Current status of the scaling policy. The scaling policy can be in force only when in an ACTIVE status. Scaling policies can be suspended for individual fleets. If the policy is suspended for a fleet, the policy status does not change.",
+     "enum": [
+      "ACTIVE",
+      "UPDATE_REQUESTED",
+      "UPDATING",
+      "DELETE_REQUESTED",
+      "DELETING",
+      "DELETED",
+      "ERROR"
+     ],
+     "type": "string"
+    },
+    "TargetConfiguration": {
+     "$ref": "#/definitions/TargetConfiguration",
+     "description": "An object that contains settings for a target-based scaling policy."
+    },
+    "Threshold": {
+     "description": "Metric value used to trigger a scaling event.",
+     "type": "number"
+    },
+    "UpdateStatus": {
+     "description": "The current status of the fleet's scaling policies in a requested fleet location. The status PENDING_UPDATE indicates that an update was requested for the fleet but has not yet been completed for the location.",
+     "enum": [
+      "PENDING_UPDATE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Name"
+   ],
+   "type": "object"
+  },
   "ServerProcess": {
    "additionalProperties": false,
    "description": "A set of instructions for launching server processes on each instance in a fleet. Each instruction set identifies the location of the server executable, optional launch parameters, and the number of server processes with this configuration to maintain concurrently on the instance. Server process configurations make up a fleet's RuntimeConfiguration.",
@@ -211,6 +314,20 @@
     "LaunchPath"
    ],
    "type": "object"
+  },
+  "TargetConfiguration": {
+   "additionalProperties": false,
+   "description": "Settings for a target-based scaling policy. A target-based policy tracks a particular fleet metric specifies a target value for the metric. As player usage changes, the policy triggers Amazon GameLift to adjust capacity so that the metric returns to the target value. The target configuration specifies settings as needed for the target based policy, including the target value.",
+   "properties": {
+    "TargetValue": {
+     "description": "Desired value to use with a target-based scaling policy. The value must be relevant for whatever metric the scaling policy is using. For example, in a policy using the metric PercentAvailableGameSessions, the target value should be the preferred size of the fleet's buffer (the percent of capacity that should be idle and ready for new game sessions).",
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
   }
  },
  "deprecatedProperties": [
@@ -224,13 +341,19 @@
    "permissions": [
     "gamelift:CreateFleet",
     "gamelift:DescribeFleetAttributes",
-    "gamelift:DescribeFleetLocationAttributes"
+    "gamelift:DescribeFleetLocationAttributes",
+    "gamelift:UpdateFleetCapacity",
+    "gamelift:DescribeFleetLocationCapacity",
+    "gamelift:PutScalingPolicy",
+    "gamelift:DescribeScalingPolicies"
    ]
   },
   "delete": {
    "permissions": [
     "gamelift:DeleteFleet",
-    "gamelift:DescribeFleetLocationCapacity"
+    "gamelift:DescribeFleetLocationCapacity",
+    "gamelift:DescribeScalingPolicies",
+    "gamelift:DeleteScalingPolicy"
    ]
   },
   "list": {
@@ -247,7 +370,8 @@
     "gamelift:DescribeFleetUtilization",
     "gamelift:DescribeRuntimeConfiguration",
     "gamelift:DescribeEC2InstanceLimits",
-    "gamelift:DescribeFleetEvents"
+    "gamelift:DescribeFleetEvents",
+    "gamelift:DescribeScalingPolicies"
    ]
   },
   "update": {
@@ -260,7 +384,10 @@
     "gamelift:UpdateRuntimeConfiguration",
     "gamelift:DescribeFleetLocationCapacity",
     "gamelift:DescribeFleetPortSettings",
-    "gamelift:DescribeFleetLocationAttributes"
+    "gamelift:DescribeFleetLocationAttributes",
+    "gamelift:PutScalingPolicy",
+    "gamelift:DescribeScalingPolicies",
+    "gamelift:DeleteScalingPolicy"
    ]
   }
  },
@@ -271,6 +398,14 @@
   "AnywhereConfiguration": {
    "$ref": "#/definitions/AnywhereConfiguration",
    "description": "Configuration for Anywhere fleet."
+  },
+  "ApplyCapacity": {
+   "description": "ComputeType to differentiate EC2 hardware managed by GameLift and Anywhere hardware managed by the customer.",
+   "enum": [
+    "ON_UPDATE",
+    "ON_CREATE_AND_UPDATE"
+   ],
+   "type": "string"
   },
   "BuildId": {
    "description": "A unique identifier for a build to be deployed on the new fleet. If you are deploying the fleet with a custom game build, you must specify this property. The build must have been successfully uploaded to Amazon GameLift and be in a READY status. This fleet setting cannot be changed once the fleet is created.",
@@ -412,6 +547,15 @@
   "RuntimeConfiguration": {
    "$ref": "#/definitions/RuntimeConfiguration",
    "description": "Instructions for launching server processes on each instance in the fleet. Server processes run either a custom game build executable or a Realtime script. The runtime configuration defines the server executables or launch script file, launch parameters, and the number of processes to run concurrently on each instance. When creating a fleet, the runtime configuration must have at least one server process configuration; otherwise the request fails with an invalid request exception.\n\nThis parameter is required unless the parameters ServerLaunchPath and ServerLaunchParameters are defined. Runtime configuration has replaced these parameters, but fleets that use them will continue to work."
+  },
+  "ScalingPolicies": {
+   "description": "A list of rules that control how a fleet is scaled.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScalingPolicy"
+   },
+   "maxItems": 50,
+   "type": "array"
   },
   "ScriptId": {
    "description": "A unique identifier for a Realtime script to be deployed on a new Realtime Servers fleet. The script must have been successfully uploaded to Amazon GameLift. This fleet setting cannot be changed once the fleet is created.\n\nNote: It is not currently possible to use the !Ref command to reference a script created with a CloudFormation template for the fleet property ScriptId. Instead, use Fn::GetAtt Script.Arn or Fn::GetAtt Script.Id to retrieve either of these properties as input for ScriptId. Alternatively, enter a ScriptId string manually.",
