@@ -58,7 +58,7 @@
      "type": "string"
     },
     "SessionTimeout": {
-     "type": "integer"
+     "type": "string"
     },
     "UserPoolArn": {
      "type": "string"
@@ -110,10 +110,13 @@
      "type": "string"
     },
     "SessionTimeout": {
-     "type": "integer"
+     "type": "string"
     },
     "TokenEndpoint": {
      "type": "string"
+    },
+    "UseExistingClientSecret": {
+     "type": "boolean"
     },
     "UserInfoEndpoint": {
      "type": "string"
@@ -122,7 +125,6 @@
    "required": [
     "TokenEndpoint",
     "Issuer",
-    "ClientSecret",
     "UserInfoEndpoint",
     "ClientId",
     "AuthorizationEndpoint"
@@ -225,16 +227,73 @@
   }
  },
  "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::Listener",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:CreateListener",
+    "elasticloadbalancing:DescribeListeners",
+    "cognito-idp:DescribeUserPoolClient"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DeleteListener",
+    "elasticloadbalancing:DescribeListeners"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "oneOf": [
+     {
+      "required": [
+       "LoadBalancerArn"
+      ]
+     },
+     {
+      "required": [
+       "ListenerArns"
+      ]
+     }
+    ],
+    "properties": {
+     "ListenerArns": {
+      "items": {
+       "$ref": "resource-schema.json#/properties/ListenerArn"
+      },
+      "type": "array",
+      "uniqueItems": false
+     },
+     "LoadBalancerArn": {
+      "$ref": "resource-schema.json#/properties/LoadBalancerArn"
+     }
+    }
+   },
+   "permissions": [
+    "elasticloadbalancing:DescribeListeners"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeListeners"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticloadbalancing:ModifyListener",
+    "elasticloadbalancing:DescribeListeners",
+    "cognito-idp:DescribeUserPoolClient"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ListenerArn"
  ],
  "properties": {
   "AlpnPolicy": {
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": true
+   "type": "array"
   },
   "Certificates": {
    "items": {
@@ -250,7 +309,7 @@
    "type": "array",
    "uniqueItems": true
   },
-  "Id": {
+  "ListenerArn": {
    "type": "string"
   },
   "LoadBalancerArn": {
@@ -267,11 +326,21 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/ListenerArn"
  ],
  "required": [
   "LoadBalancerArn",
   "DefaultActions"
  ],
- "typeName": "AWS::ElasticLoadBalancingV2::Listener"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::Listener",
+ "writeOnlyProperties": [
+  "/properties/DefaultActions/*/AuthenticateOidcConfig/ClientSecret"
+ ]
 }

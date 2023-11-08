@@ -22,6 +22,9 @@
     },
     "DetailedStatusCodesMetrics": {
      "$ref": "#/definitions/DetailedStatusCodesMetrics"
+    },
+    "StorageLensGroupLevel": {
+     "$ref": "#/definitions/StorageLensGroupLevel"
     }
    },
    "required": [
@@ -338,6 +341,43 @@
     "AccountLevel",
     "IsEnabled"
    ],
+   "type": "object"
+  },
+  "StorageLensGroupArn": {
+   "description": "The ARN for the Amazon S3 Storage Lens Group configuration.",
+   "type": "string"
+  },
+  "StorageLensGroupLevel": {
+   "additionalProperties": false,
+   "description": "Specifies the details of Amazon S3 Storage Lens Group configuration.",
+   "properties": {
+    "StorageLensGroupSelectionCriteria": {
+     "$ref": "#/definitions/StorageLensGroupSelectionCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "StorageLensGroupSelectionCriteria": {
+   "additionalProperties": false,
+   "description": "Selection criteria for Storage Lens Group level metrics",
+   "properties": {
+    "Exclude": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/StorageLensGroupArn"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Include": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/StorageLensGroupArn"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
    "type": "object"
   },
   "Tag": {
