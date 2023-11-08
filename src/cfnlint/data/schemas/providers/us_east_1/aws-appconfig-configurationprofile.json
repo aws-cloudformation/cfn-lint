@@ -8,11 +8,19 @@
  "definitions": {
   "Tags": {
    "additionalProperties": false,
+   "description": "Metadata to assign to the configuration profile. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
    "properties": {
     "Key": {
+     "description": "The key-value string map. The tag key can be up to 128 characters and must not start with aws:.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:.)[a-zA-Z0-9 +=._:/-]*$",
      "type": "string"
     },
     "Value": {
+     "description": "The tag value can be up to 256 characters.",
+     "maxLength": 256,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -20,44 +28,122 @@
   },
   "Validators": {
    "additionalProperties": false,
+   "description": "A list of methods for validating the configuration.",
    "properties": {
     "Content": {
+     "description": "Either the JSON Schema content or the Amazon Resource Name (ARN) of an Lambda function.",
+     "maxLength": 32768,
+     "minLength": 0,
      "type": "string"
     },
     "Type": {
+     "description": "AWS AppConfig supports validators of type JSON_SCHEMA and LAMBDA.",
      "type": "string"
     }
    },
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::AppConfig::ConfigurationProfile",
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appconfig:CreateConfigurationProfile",
+    "appconfig:GetConfigurationProfile",
+    "appconfig:TagResource",
+    "appconfig:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appconfig:DeleteConfigurationProfile"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationId": {
+      "$ref": "resource-schema.json#/properties/ApplicationId"
+     }
+    },
+    "required": [
+     "ApplicationId"
+    ]
+   },
+   "permissions": [
+    "appconfig:ListConfigurationProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appconfig:GetConfigurationProfile",
+    "appconfig:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appconfig:UpdateConfigurationProfile",
+    "appconfig:TagResource",
+    "appconfig:UntagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId"
  ],
  "properties": {
   "ApplicationId": {
+   "description": "The application ID.",
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "description": "The configuration profile ID",
    "type": "string"
   },
   "Description": {
+   "description": "A description of the configuration profile.",
+   "maxLength": 1024,
+   "minLength": 0,
    "type": "string"
   },
-  "Id": {
+  "KmsKeyArn": {
+   "description": "The Amazon Resource Name of the AWS Key Management Service key to encrypt new configuration data versions in the AWS AppConfig hosted configuration store. This attribute is only used for hosted configuration types. To encrypt data managed in other configuration stores, see the documentation for how to specify an AWS KMS key for that particular service.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:(aws[a-zA-Z-]*)?:[a-z]+:([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1})?:(\\d{12})?:[a-zA-Z0-9-_/:.]+",
    "type": "string"
   },
   "KmsKeyIdentifier": {
+   "description": "The AWS Key Management Service key identifier (key ID, key alias, or key ARN) provided when the resource was created or updated.",
+   "pattern": "^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}|alias/[a-zA-Z0-9/_-]{1,250}|arn:aws[a-zA-Z-]*:kms:[a-z]{2}(-gov|-iso(b?))?-[a-z]+-\\d{1}:\\d{12}:(key/[0-9a-f-]{36}|alias/[a-zA-Z0-9/_-]{1,250})$",
    "type": "string"
   },
   "LocationUri": {
+   "description": "A URI to locate the configuration. You can specify the AWS AppConfig hosted configuration store, Systems Manager (SSM) document, an SSM Parameter Store parameter, or an Amazon S3 object.",
+   "maxLength": 2048,
+   "minLength": 1,
    "type": "string"
   },
   "Name": {
+   "description": "A name for the configuration profile.",
+   "maxLength": 128,
+   "minLength": 1,
    "type": "string"
   },
   "RetrievalRoleArn": {
+   "description": "The ARN of an IAM role with permission to access the configuration at the specified LocationUri.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((arn):(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):(iam)::\\d{12}:role[/].*)$",
    "type": "string"
   },
   "Tags": {
+   "description": "Metadata to assign to the configuration profile. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tags"
    },
@@ -65,23 +151,37 @@
    "uniqueItems": false
   },
   "Type": {
+   "description": "The type of configurations contained in the profile. When calling this API, enter one of the following values for Type: AWS.AppConfig.FeatureFlags, AWS.Freeform",
+   "pattern": "^[a-zA-Z\\.]+",
    "type": "string"
   },
   "Validators": {
+   "description": "A list of methods for validating the configuration.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Validators"
    },
+   "maxItems": 2,
    "type": "array",
    "uniqueItems": false
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/ConfigurationProfileId",
+  "/properties/KmsKeyArn"
  ],
  "required": [
   "LocationUri",
   "ApplicationId",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::AppConfig::ConfigurationProfile"
 }

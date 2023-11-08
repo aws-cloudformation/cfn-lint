@@ -154,6 +154,18 @@
    ],
    "type": "string"
   },
+  "AssetOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Timezone": {
+     "type": "string"
+    },
+    "WeekStart": {
+     "$ref": "#/definitions/DayOfTheWeek"
+    }
+   },
+   "type": "object"
+  },
   "AttributeAggregationFunction": {
    "additionalProperties": false,
    "properties": {
@@ -2031,6 +2043,9 @@
      "minItems": 1,
      "type": "array"
     },
+    "Options": {
+     "$ref": "#/definitions/AssetOptions"
+    },
     "Sheets": {
      "items": {
       "$ref": "#/definitions/Sheet"
@@ -2092,6 +2107,9 @@
      "maxItems": 2000,
      "minItems": 0,
      "type": "array"
+    },
+    "Options": {
+     "$ref": "#/definitions/AssetOptions"
     },
     "ParameterDeclarations": {
      "items": {
@@ -2635,6 +2653,18 @@
     }
    },
    "type": "object"
+  },
+  "DayOfTheWeek": {
+   "enum": [
+    "SUNDAY",
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY"
+   ],
+   "type": "string"
   },
   "DecimalDefaultValues": {
    "additionalProperties": false,
@@ -5865,6 +5895,20 @@
      },
      "maxItems": 100,
      "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LinkSharingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "items": {
+      "$ref": "#/definitions/ResourcePermission"
+     },
+     "maxItems": 64,
+     "minItems": 1,
      "type": "array"
     }
    },
@@ -11161,6 +11205,9 @@
    "format": "date-time",
    "type": "string"
   },
+  "LinkSharingConfiguration": {
+   "$ref": "#/definitions/LinkSharingConfiguration"
+  },
   "Name": {
    "maxLength": 2048,
    "minLength": 1,
@@ -11219,6 +11266,7 @@
  "writeOnlyProperties": [
   "/properties/DashboardPublishOptions",
   "/properties/Definition",
+  "/properties/LinkSharingConfiguration",
   "/properties/Parameters",
   "/properties/SourceEntity",
   "/properties/ThemeArn",
