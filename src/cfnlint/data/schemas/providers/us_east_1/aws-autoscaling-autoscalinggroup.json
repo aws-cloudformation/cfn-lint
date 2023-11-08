@@ -1,5 +1,12 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/LaunchConfigurationName",
+  "/properties/VPCZoneIdentifier",
+  "/properties/PlacementGroup",
+  "/properties/LaunchTemplate",
+  "/properties/MixedInstancesPolicy"
+ ],
  "createOnlyProperties": [
   "/properties/InstanceId",
   "/properties/AutoScalingGroupName"
@@ -48,6 +55,7 @@
      "$ref": "#/definitions/AcceleratorCountRequest"
     },
     "AcceleratorManufacturers": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -55,6 +63,7 @@
      "uniqueItems": true
     },
     "AcceleratorNames": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -65,6 +74,7 @@
      "$ref": "#/definitions/AcceleratorTotalMemoryMiBRequest"
     },
     "AcceleratorTypes": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -72,6 +82,7 @@
      "uniqueItems": true
     },
     "AllowedInstanceTypes": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -88,6 +99,7 @@
      "type": "string"
     },
     "CpuManufacturers": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -95,6 +107,7 @@
      "uniqueItems": true
     },
     "ExcludedInstanceTypes": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -102,6 +115,7 @@
      "uniqueItems": true
     },
     "InstanceGenerations": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -112,6 +126,7 @@
      "type": "string"
     },
     "LocalStorageTypes": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -179,6 +194,7 @@
      "$ref": "#/definitions/LaunchTemplateSpecification"
     },
     "Overrides": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/LaunchTemplateOverrides"
      },
@@ -217,13 +233,13 @@
       "LaunchTemplateName": false
      },
      "required": [
-      "LaunchTemplateId"
+      "LaunchTemplateID"
      ],
      "type": "object"
     },
     {
      "properties": {
-      "LaunchTemplateId": false
+      "LaunchTemplateID": false
      },
      "required": [
       "LaunchTemplateName"
@@ -256,7 +272,7 @@
      "type": "object"
     }
    ],
-   "oneOfDescription": "Specify only one ['LaunchTemplateId', 'LaunchTemplateName']",
+   "oneOfDescription": "Specify only one ['LaunchTemplateID', 'LaunchTemplateName']",
    "properties": {
     "LaunchTemplateId": {
      "type": "string"
@@ -335,6 +351,7 @@
      "type": "string"
     },
     "Metrics": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -390,6 +407,7 @@
    "additionalProperties": false,
    "properties": {
     "NotificationTypes": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -400,8 +418,10 @@
      "items": {
       "type": "string"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": [
+      "string",
+      "array"
+     ]
     }
    },
    "required": [
@@ -480,9 +500,95 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/NotificationConfiguration"
+ ],
  "description": "Resource Type definition for AWS::AutoScaling::AutoScalingGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "autoscaling:*",
+    "cloudwatch:PutMetricAlarm",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeImages",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstances",
+    "ec2:DescribeInstanceTypes",
+    "ec2:DescribeInstanceTypeOfferings",
+    "ec2:DescribeKeyPairs",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DescribePlacementGroups",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSpotInstanceRequests",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcClassicLink",
+    "ec2:GetInstanceTypesFromInstanceRequirements",
+    "ec2:RunInstances",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeTargetGroups",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "managed-fleets:GetAutoScalingGroup",
+    "managed-fleets:CreateAutoScalingGroup",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 120
+  },
+  "delete": {
+   "permissions": [
+    "autoscaling:*",
+    "managed-fleets:GetAutoScalingGroup",
+    "managed-fleets:DeleteAutoScalingGroup"
+   ],
+   "timeoutInMinutes": 180
+  },
+  "list": {
+   "permissions": [
+    "autoscaling:*"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "autoscaling:*",
+    "managed-fleets:GetAutoScalingGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "autoscaling:*",
+    "cloudwatch:PutMetricAlarm",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeImages",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstances",
+    "ec2:DescribeInstanceTypes",
+    "ec2:DescribeInstanceTypeOfferings",
+    "ec2:DescribeKeyPairs",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DescribePlacementGroups",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSpotInstanceRequests",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcClassicLink",
+    "ec2:GetInstanceTypesFromInstanceRequirements",
+    "ec2:RunInstances",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeTargetGroups",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "managed-fleets:GetAutoScalingGroup",
+    "managed-fleets:RegisterAutoScalingGroup",
+    "managed-fleets:DeregisterAutoScalingGroup",
+    "managed-fleets:UpdateAutoScalingGroup",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 480
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/AutoScalingGroupName"
  ],
  "properties": {
   "AutoScalingGroupName": {
@@ -490,6 +596,7 @@
   },
   "AvailabilityZones": {
    "awsType": "AvailabilityZones",
+   "insertionOrder": false,
    "items": {
     "awsType": "AvailabilityZone",
     "type": "string"
@@ -510,6 +617,7 @@
    "type": "integer"
   },
   "DesiredCapacity": {
+   "pattern": "^[0-9]+$",
    "type": "string"
   },
   "DesiredCapacityType": {
@@ -525,9 +633,6 @@
    ],
    "type": "string"
   },
-  "Id": {
-   "type": "string"
-  },
   "InstanceId": {
    "type": "string"
   },
@@ -538,6 +643,7 @@
    "$ref": "#/definitions/LaunchTemplateSpecification"
   },
   "LifecycleHookSpecificationList": {
+   "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/LifecycleHookSpecification"
    },
@@ -545,6 +651,7 @@
    "uniqueItems": false
   },
   "LoadBalancerNames": {
+   "insertionOrder": true,
    "items": {
     "type": "string"
    },
@@ -555,9 +662,11 @@
    "type": "integer"
   },
   "MaxSize": {
+   "pattern": "^[0-9]+$",
    "type": "string"
   },
   "MetricsCollection": {
+   "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/MetricsCollection"
    },
@@ -565,6 +674,7 @@
    "uniqueItems": false
   },
   "MinSize": {
+   "pattern": "^[0-9]+$",
    "type": "string"
   },
   "MixedInstancesPolicy": {
@@ -573,7 +683,11 @@
   "NewInstancesProtectedFromScaleIn": {
    "type": "boolean"
   },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
   "NotificationConfigurations": {
+   "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/NotificationConfiguration"
    },
@@ -587,13 +701,14 @@
    "type": "string"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/TagProperty"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "TargetGroupARNs": {
+   "insertionOrder": true,
    "items": {
     "type": "string"
    },
@@ -601,6 +716,7 @@
    "uniqueItems": false
   },
   "TerminationPolicies": {
+   "insertionOrder": true,
    "items": {
     "type": "string"
    },
@@ -608,6 +724,7 @@
    "uniqueItems": false
   },
   "VPCZoneIdentifier": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -615,12 +732,22 @@
    "uniqueItems": false
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
+ "propertyTransform": {
+  "/properties/LaunchConfigurationName": "InstanceId? AutoScalingGroupName : LaunchConfigurationName"
+ },
  "required": [
   "MinSize",
   "MaxSize"
  ],
- "typeName": "AWS::AutoScaling::AutoScalingGroup"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AutoScaling::AutoScalingGroup",
+ "writeOnlyProperties": [
+  "/properties/InstanceId"
+ ]
 }
