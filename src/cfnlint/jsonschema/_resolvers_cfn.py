@@ -103,10 +103,14 @@ def _join_expansion(validator: Validator, instances: Any) -> Iterator[Any]:
 
     if len(instances) == 1:
         for value, _ in validator.resolve_value(instances[0]):
+            if not isinstance(value, (str, int, float, bool)):
+                raise ValueError("Incorrect value type for {value!r}")
             yield [value]
         return
 
     for value, _ in validator.resolve_value(instances[0]):
+        if not isinstance(value, (str, int, float, bool)):
+            raise ValueError("Incorrect value type for {value!r}")
         for values in _join_expansion(validator, instances[1:]):
             yield [value] + values
 
@@ -245,7 +249,9 @@ def if_(validator: Validator, instance: Any) -> ResolutionResult:
         return
 
     for i in [1, 2]:
-        yield instance[i], deque([i])
+        for value, value_path in validator.resolve_value(instance[i]):
+            value_path.appendleft(i)
+            yield value, value_path
 
 
 def to_json_string(validator: Validator, instance: Any) -> ResolutionResult:
