@@ -187,16 +187,31 @@ class Parameter(_Ref):
             raise ValueError("Type must be a string")
         self.type = t
 
-        self.default = parameter.get("Default")
-        self.allowed_values = parameter.get("AllowedValues")
         self.description = parameter.get("Description")
 
+        self.default = None
+        self.allowed_values = []
+        # SSM Parameter defaults and allowed values point to
+        # SSM paths not to the actual values
+        if self.type.startswith("AWS::SSM::Parameter::"):
+            return
+
+        if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
+            self.default = parameter.get("Default").split(",")
+            for allowed_value in parameter.get("AllowedValues", []):
+                self.allowed_values.append(allowed_value.split(","))
+        else:
+            self.default = parameter.get("Default")
+            self.allowed_values = parameter.get("AllowedValues")
+
     def ref(self, context: Context) -> Iterable[Any]:
-        if self.default:
-            yield self.default
         if self.allowed_values:
             for allowed_value in self.allowed_values:
                 yield allowed_value
+            return
+        # assume default is an allowed value so we skip it
+        if self.default:
+            yield self.default
 
 
 @dataclass
