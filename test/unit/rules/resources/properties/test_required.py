@@ -29,7 +29,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/properties_required.yaml", 12
+            "test/fixtures/templates/bad/properties_required.yaml", 11
         )
 
     def test_file_negative_generic(self):
@@ -56,5 +56,5 @@ class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
         """Test failure"""
         # Additional Custom::SpecifiedCustomResource failure detected with custom spec
         self.helper_file_negative(
-            "test/fixtures/templates/bad/properties_required.yaml", 13
+            "test/fixtures/templates/bad/properties_required.yaml", 12
         )
