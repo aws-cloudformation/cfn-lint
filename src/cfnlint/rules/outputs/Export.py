@@ -6,7 +6,7 @@ from cfnlint.helpers import FUNCTIONS
 from cfnlint.rules import CloudFormationLintRule
 
 
-class Value(CloudFormationLintRule):
+class Export(CloudFormationLintRule):
     """Check if Output Export values"""
 
     id = "E6102"
