@@ -6,7 +6,7 @@ from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.resources.properties.AwsType import AwsType  # pylint: disable=E0401
+from cfnlint.rules.jsonschema.AwsType import AwsType  # pylint: disable=E0401
 
 
 class ValidType(CloudFormationLintRule):
