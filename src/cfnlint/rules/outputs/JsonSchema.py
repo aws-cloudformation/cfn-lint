@@ -22,9 +22,12 @@ class JsonSchema(BaseJsonSchema):
         super().__init__()
         self.rule_set = {
             "additionalProperties": "E6001",
+            "patternProperties": "E6001",
             "properties": "E6001",
+            "propertyNames": "E6004",
             "required": "E6002",
             "type": "E6003",
+            "maxProperties": "E6010",
             "awsType": "E6100",
             "ref": "E1020",
             "fn_base64": "E1021",
