@@ -1,5 +1,7 @@
 {
- "additionalProperties": false,
+ "additionalProperties": {
+  "$ref": "#/definitions/ResourceConfiguration"
+ },
  "definitions": {
   "CloudFormationInitConfig": {
    "properties": {
@@ -147,13 +149,10 @@
    "type": "object"
   }
  },
- "patternProperties": {
-  "^[\\$\\{\\}a-zA-Z0-9]{1,255}$": {
-   "$ref": "#/definitions/ResourceConfiguration"
-  },
-  "^[a-zA-Z0-9]{1,255}$": {
-   "$ref": "#/definitions/ResourceConfiguration"
-  }
+ "maxProperties": 500,
+ "propertyNames": {
+  "maxLength": 255,
+  "pattern": "^[a-zA-Z0-9]+$"
  },
  "type": "object"
 }
