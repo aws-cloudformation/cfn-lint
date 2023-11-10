@@ -30,6 +30,7 @@ class Configuration(BaseJsonSchema):
             "awsType": self.awsType,
         }
         self.rule_set = {
+            "propertyNames": "E3011",
             "fn_base64": "E1021",
             "fn_cidr": "E1012",
             "fn_findinmap": "E1011",
