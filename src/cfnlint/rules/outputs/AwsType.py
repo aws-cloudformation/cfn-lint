@@ -2,10 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.AwsType import AwsType as ParentAwsType
 
 
-class AwsType(CloudFormationLintRule):
+class AwsType(ParentAwsType):
     """Check if Resource Properties are correct"""
 
     id = "E6100"
@@ -15,7 +15,6 @@ class AwsType(CloudFormationLintRule):
 
     def __init__(self):
         super().__init__()
-        self.cfn = None
 
         self.child_rules = {
             "E6101": None,
@@ -26,13 +25,3 @@ class AwsType(CloudFormationLintRule):
             "outputValue": "E6101",
             "outputExport": "E6102",
         }
-
-    # pylint: disable=unused-argument
-    def awsType(self, validator, uI, instance, schema):
-        rule = self.child_rules.get(self.types.get(uI, ""))
-        if not rule:
-            return
-
-        if hasattr(rule, uI.lower()) and callable(getattr(rule, uI.lower())):
-            validate = getattr(rule, uI.lower())
-            yield from validate(validator, uI, instance, schema)
