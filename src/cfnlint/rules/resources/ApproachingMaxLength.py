@@ -4,10 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.common import approaching_name_limit
 
 
-class LimitName(CloudFormationLintRule):
+class ApproachingMaxLength(CloudFormationLintRule):
     """Check maximum Resource name size limit"""
 
     id = "I3012"
@@ -18,6 +17,3 @@ class LimitName(CloudFormationLintRule):
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["resources", "limits"]
-
-    def match(self, cfn):
-        return approaching_name_limit(cfn, "Resources")
