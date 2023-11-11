@@ -2,20 +2,19 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.common import number_limit
+from cfnlint.rules.jsonschema.MaxProperties import MaxProperties as ParentMaxProperties
 
 
-class LimitNumber(CloudFormationLintRule):
-    """Check if maximum Mapping limit is exceeded"""
+class MaxProperties(ParentMaxProperties):
+    """Check if maximum Mappings limit is exceeded"""
 
     id = "E7010"
-    shortdesc = "Mapping limit not exceeded"
+    shortdesc = "Max number of properties for Mappings"
     description = (
         "Check the number of Mappings in the template is less than the upper limit"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["mappings", "limits"]
 
-    def match(self, cfn):
-        return number_limit(cfn, "Mappings")
+    def __init__(self) -> None:
+        super().__init__("I7010")
