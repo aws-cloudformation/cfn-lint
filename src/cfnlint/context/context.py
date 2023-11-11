@@ -379,6 +379,22 @@ class ContextManager:
             functions=list(FUNCTIONS),
         )
 
+    def create_context_for_mappings(self, region: str) -> Context:
+        """
+        Create a context for a resource properties
+        """
+
+        return Context(
+            parameters={},
+            resources={},
+            conditions={},
+            transforms=self.transforms,
+            mappings={},
+            region=region,
+            path=deque(["Mappings"]),
+            functions=["Fn::Transform"],
+        )
+
     def create_context_for_outputs(self, region: str) -> Context:
         """
         Create a context for a resource properties
