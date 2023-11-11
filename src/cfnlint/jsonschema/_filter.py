@@ -114,6 +114,8 @@ class FunctionFilter:
             for k, v in instance.items():
                 # Fn::ForEach can be supported at the same level as more Fn::ForEach
                 # and other keys
+                if not validator.is_type(k, "string"):
+                    continue
                 if k.startswith("Fn::ForEach::"):
                     k_py = ToPy("Fn::ForEach")
                     k_schema = {
