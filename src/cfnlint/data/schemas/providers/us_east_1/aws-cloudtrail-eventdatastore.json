@@ -122,6 +122,17 @@
    ],
    "type": "object"
   },
+  "InsightSelector": {
+   "additionalProperties": false,
+   "description": "A string that contains Insights types that are logged on an event data store.",
+   "properties": {
+    "InsightType": {
+     "description": "The type of Insights to log on an event data store.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "description": "An arbitrary set of tags (key-value pairs) for this event data store.",
@@ -151,6 +162,7 @@
    "permissions": [
     "CloudTrail:CreateEventDataStore",
     "CloudTrail:AddTags",
+    "CloudTrail:PutInsightSelectors",
     "iam:PassRole",
     "iam:GetRole",
     "iam:CreateServiceLinkedRole",
@@ -170,6 +182,7 @@
    "permissions": [
     "CloudTrail:ListEventDataStores",
     "CloudTrail:GetEventDataStore",
+    "CloudTrail:GetInsightSelectors",
     "CloudTrail:ListTags"
    ]
   },
@@ -177,6 +190,7 @@
    "permissions": [
     "CloudTrail:GetEventDataStore",
     "CloudTrail:ListEventDataStores",
+    "CloudTrail:GetInsightSelectors",
     "CloudTrail:ListTags"
    ]
   },
@@ -189,6 +203,8 @@
     "CloudTrail:StartEventDataStoreIngestion",
     "CloudTrail:StopEventDataStoreIngestion",
     "CloudTrail:GetEventDataStore",
+    "CloudTrail:PutInsightSelectors",
+    "CloudTrail:GetInsightSelectors",
     "iam:PassRole",
     "iam:GetRole",
     "iam:CreateServiceLinkedRole",
@@ -221,6 +237,19 @@
   "IngestionEnabled": {
    "description": "Indicates whether the event data store is ingesting events.",
    "type": "boolean"
+  },
+  "InsightSelectors": {
+   "description": "Lets you enable Insights event logging by specifying the Insights selectors that you want to enable on an existing event data store. Both InsightSelectors and InsightsDestination need to have a value in order to enable Insights events on an event data store.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InsightSelector"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "InsightsDestination": {
+   "description": "Specifies the ARN of the event data store that will collect Insights events. Both InsightSelectors and InsightsDestination need to have a value in order to enable Insights events on an event data store",
+   "type": "string"
   },
   "KmsKeyId": {
    "description": "Specifies the KMS key ID to use to encrypt the events delivered by CloudTrail. The value can be an alias name prefixed by 'alias/', a fully specified ARN to an alias, a fully specified ARN to a key, or a globally unique identifier.",
