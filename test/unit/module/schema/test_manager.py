@@ -259,7 +259,7 @@ class TestManagerGetResourceSchema(BaseTestCase):
         rt = "AWS::EC2::VPC"
 
         self.manager.get_resource_schema("us-east-1", rt)
-        schema = self.manager.get_resource_schema("us-west-2", rt)
+        schema = self.manager.get_resource_schema("us-east-2", rt)
 
         self.assertTrue(schema.is_cached)
 
