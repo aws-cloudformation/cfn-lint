@@ -4,27 +4,31 @@
   "/properties/ViewName"
  ],
  "definitions": {
-  "Filters": {
-   "additionalProperties": false,
-   "properties": {
-    "FilterString": {
-     "type": "string"
-    }
-   },
-   "required": [
-    "FilterString"
-   ],
-   "type": "object"
-  },
   "IncludedProperty": {
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "maxLength": 1011,
+     "minLength": 1,
      "type": "string"
     }
    },
    "required": [
     "Name"
+   ],
+   "type": "object"
+  },
+  "SearchFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterString": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FilterString"
    ],
    "type": "object"
   },
@@ -77,10 +81,9 @@
  ],
  "properties": {
   "Filters": {
-   "$ref": "#/definitions/Filters"
+   "$ref": "#/definitions/SearchFilter"
   },
   "IncludedProperties": {
-   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/IncludedProperty"
    },
