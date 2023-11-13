@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from cfnlint.data.schemas.other import mappings as schema_mappings
 from cfnlint.helpers import REGION_PRIMARY, load_resource
-from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema import StandardValidator
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
@@ -41,13 +41,13 @@ class JsonSchema(BaseJsonSchema):
         mappings = cfn.template.get("Mappings", {})
 
         cfn_validator = self.setup_validator(
-            validator=CfnTemplateValidator,
+            validator=StandardValidator,
             schema=self.schema,
             context=cfn.context.create_context_for_mappings(cfn.regions[0]),
         ).evolve(
             cfn=cfn,
         )
 
-        matches.extend(self.json_schema_validate(cfn_validator, mappings, ["Outputs"]))
+        matches.extend(self.json_schema_validate(cfn_validator, mappings, ["Mappings"]))
 
         return matches
