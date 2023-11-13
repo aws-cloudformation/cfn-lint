@@ -1,3 +1,8 @@
+### v0.83.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `148.0.0` (pull #[2942](https://github.com/aws-cloudformation/cfn-lint/pull/2942))
+- Add in `LoadBalancerArn` to `LoadBalancerV2Arn` (pull #[2936](https://github.com/aws-cloudformation/cfn-lint/pull/2936))
+
 ### v0.83.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `146.0.0` (pull #[2921](https://github.com/aws-cloudformation/cfn-lint/pull/2921))
