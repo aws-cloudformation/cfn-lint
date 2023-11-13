@@ -426,3 +426,19 @@ class ContextManager:
             path=deque(["Conditions"]),
             functions=[],
         )
+
+    def create_context_for_parameters(self, region: str) -> Context:
+        """
+        Create a context for a conditions
+        """
+
+        return Context(
+            parameters={},
+            resources={},
+            conditions={},
+            mappings={},
+            transforms=self.transforms,
+            region=region,
+            path=deque(["Conditions"]),
+            functions=[],
+        )
