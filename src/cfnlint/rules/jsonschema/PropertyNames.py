@@ -67,8 +67,9 @@ class PropertyNames(CloudFormationLintRule):
         )({})
 
         for property in instance:
-            for err in v.descend(instance=property, schema=propertyNames):
-                err.path.appendleft(property)
+            for err in v.descend(
+                instance=property, schema=propertyNames, path=property
+            ):
                 if err.rule is None:
                     err.rule = self
                 yield err
