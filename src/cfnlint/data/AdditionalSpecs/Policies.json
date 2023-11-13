@@ -3506,8 +3506,13 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
     "elasticloadbalancing:CreateAction",
+    "elasticloadbalancing:ListenerProtocol",
     "elasticloadbalancing:ResourceTag/",
-    "elasticloadbalancing:ResourceTag/${TagKey}"
+    "elasticloadbalancing:ResourceTag/${TagKey}",
+    "elasticloadbalancing:Scheme",
+    "elasticloadbalancing:SecurityGroup",
+    "elasticloadbalancing:SecurityPolicy",
+    "elasticloadbalancing:Subnet"
    ]
   },
   "AWS Elastic Load Balancing V2": {
@@ -3557,7 +3562,12 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
     "elasticloadbalancing:CreateAction",
-    "elasticloadbalancing:ResourceTag/${TagKey}"
+    "elasticloadbalancing:ListenerProtocol",
+    "elasticloadbalancing:ResourceTag/${TagKey}",
+    "elasticloadbalancing:Scheme",
+    "elasticloadbalancing:SecurityGroup",
+    "elasticloadbalancing:SecurityPolicy",
+    "elasticloadbalancing:Subnet"
    ]
   },
   "AWS Elemental Appliances and Software": {
@@ -7574,6 +7584,15 @@
     "aws:TagKeys"
    ]
   },
+  "AWS Partner central account management": {
+   "Actions": [
+    "AssociatePartnerAccount",
+    "AssociatePartnerUser",
+    "DisassociatePartnerUser"
+   ],
+   "HasResource": false,
+   "StringPrefix": "partnercentral-account-management"
+  },
   "AWS Payment Cryptography": {
    "ARNFormat": "arn:aws:payment-cryptography:${Region}:${Account}:${ResourceType}/${Id}",
    "ARNRegex": "^arn:aws:payment-cryptography:.+",
@@ -8089,8 +8108,10 @@
    "ARNFormat": "arn:aws:resource-groups:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:resource-groups:.+",
    "Actions": [
+    "AssociateResource",
     "CreateGroup",
     "DeleteGroup",
+    "DisassociateResource",
     "GetAccountSettings",
     "GetGroup",
     "GetGroupConfiguration",
@@ -11466,12 +11487,17 @@
    "Actions": [
     "AssociateKmsKey",
     "CancelExportTask",
+    "CreateDelivery",
     "CreateExportTask",
     "CreateLogDelivery",
     "CreateLogGroup",
     "CreateLogStream",
     "DeleteAccountPolicy",
     "DeleteDataProtectionPolicy",
+    "DeleteDelivery",
+    "DeleteDeliveryDestination",
+    "DeleteDeliveryDestinationPolicy",
+    "DeleteDeliverySource",
     "DeleteDestination",
     "DeleteLogDelivery",
     "DeleteLogGroup",
@@ -11482,6 +11508,9 @@
     "DeleteRetentionPolicy",
     "DeleteSubscriptionFilter",
     "DescribeAccountPolicies",
+    "DescribeDeliveries",
+    "DescribeDeliveryDestinations",
+    "DescribeDeliverySources",
     "DescribeDestinations",
     "DescribeExportTasks",
     "DescribeLogGroups",
@@ -11494,6 +11523,10 @@
     "DisassociateKmsKey",
     "FilterLogEvents",
     "GetDataProtectionPolicy",
+    "GetDelivery",
+    "GetDeliveryDestination",
+    "GetDeliveryDestinationPolicy",
+    "GetDeliverySource",
     "GetLogDelivery",
     "GetLogEvents",
     "GetLogGroupFields",
@@ -11505,6 +11538,9 @@
     "ListTagsLogGroup",
     "PutAccountPolicy",
     "PutDataProtectionPolicy",
+    "PutDeliveryDestination",
+    "PutDeliveryDestinationPolicy",
+    "PutDeliverySource",
     "PutDestination",
     "PutDestinationPolicy",
     "PutLogEvents",
@@ -11530,7 +11566,9 @@
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
+    "aws:TagKeys",
+    "logs:DeliveryDestinationResourceArn",
+    "logs:LogGeneratingResourceArns"
    ]
   },
   "Amazon CloudWatch Observability Access Manager": {
@@ -11987,6 +12025,7 @@
     "DetectSentiment",
     "DetectSyntax",
     "DetectTargetedSentiment",
+    "DetectToxicContent",
     "ImportModel",
     "ListDatasets",
     "ListDocumentClassificationJobs",
