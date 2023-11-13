@@ -120,6 +120,30 @@
    },
    "type": "object"
   },
+  "EBSTagSpecification": {
+   "properties": {
+    "PropagateTags": {
+     "enum": [
+      "SERVICE",
+      "TASK_DEFINITION"
+     ],
+     "type": "string"
+    },
+    "ResourceType": {
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "ResourceType"
+   ],
+   "type": "object"
+  },
   "LoadBalancer": {
    "additionalProperties": false,
    "properties": {
@@ -287,6 +311,47 @@
    },
    "required": [
     "PortName"
+   ],
+   "type": "object"
+  },
+  "ServiceManagedEBSVolumeConfiguration": {
+   "properties": {
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "FilesystemType": {
+     "type": "string"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SizeInGiB": {
+     "type": "integer"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "TagSpecifications": {
+     "items": {
+      "$ref": "#/definitions/EBSTagSpecification"
+     },
+     "type": "array"
+    },
+    "Throughput": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
    ],
    "type": "object"
   },

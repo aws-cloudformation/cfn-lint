@@ -1,3 +1,10 @@
+### v1.2.0a1
+###### Fixes
+- Convert Outputs, Parameters, and Mappings validationg to JSON Schema rules (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+###### CloudFormation Specifications
+- Update CloudFormation schemas from 2023/11/13 (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+
+
 ### v1.1.0a2
 ###### CloudFormation Specifications
 - Update CloudFormation schemas from 2023/06/21 (pull #[2774](https://github.com/aws-cloudformation/cfn-lint/pull/2774))
