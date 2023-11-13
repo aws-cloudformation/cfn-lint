@@ -4,19 +4,15 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.common import number_limit
 
 
 class LimitNumber(CloudFormationLintRule):
-    """Check if maximum Parameter limit is exceeded"""
+    """Check maximum Parameter limit"""
 
-    id = "E2010"
-    shortdesc = "Parameter limit not exceeded"
+    id = "I2010"
+    shortdesc = "Parameter limit"
     description = (
-        "Check the number of Parameters in the template is less than the upper limit"
+        "Check the number of Parameters in the template is approaching the upper limit"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["parameters", "limits"]
-
-    def match(self, cfn):
-        return number_limit(cfn, "Parameters")
