@@ -262,6 +262,27 @@ _getatt_tests: List[Tuple] = [
         ["{'foo': 'bar'} is not of type 'string', 'array'"],
         [],
     ),
+    (
+        "Invalid GetAtt with a bad response type",
+        {"Fn::GetAtt": "MyResource.Arn"},
+        {"type": "array"},
+        ["{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'array'"],
+        [],
+    ),
+    (
+        "Invalid GetAtt with a bad response type and multiple types",
+        {"Fn::GetAtt": "MyResource.Arn"},
+        {"type": ["array", "object"]},
+        ["{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'array', 'object'"],
+        [],
+    ),
+    (
+        "Valid GetAtt with one good response type",
+        {"Fn::GetAtt": "MyResource.Arn"},
+        {"type": ["array", "string"]},
+        [],
+        [],
+    ),
 ]
 
 # Fn::Base64
