@@ -244,25 +244,51 @@ class FnGetAtt(_Fn):
             )
             return
 
-        # validate the GetAtt type
-        tS = ensure_list(s.get("type"))
-        if any(type in tS for type in _singular_types):
-            types = _singular_types
-        else:
-            types = ["array"]
+        # because of the complexities of schemas ($ref, anyOf, allOf, etc.)
+        # we will simplify the validator to just have a type check
+        # then we will provide a simple value to represent the type from the
+        # getAtt
+        evolved = validator.evolve()  # type: ignore
+        evolved.validators = {  # type: ignore
+            "type": validator.validators.get("type"),  # type: ignore
+        }
 
-        if not any(
-            type in types
-            for type in ensure_list(
-                validator.context.resources[value[0]].get_atts[value[1]].type
-            )
-        ):
-            reprs = ", ".join(repr(type) for type in tS)
-            yield ValidationError(
-                f"{instance!r} is not of type {reprs}",
-                validator=self.fn.py,
-                path=deque([self.fn.name, 1]),
-            )
+        def iter_errors(type: str) -> ValidationResult:
+            value: Any = None
+            if type == "string":
+                value = ""
+            elif type == "number":
+                value = 1.0
+            elif type == "integer":
+                value = 1
+            elif type == "boolean":
+                value = True
+            elif type == "array":
+                value = []
+            elif type == "object":
+                value = {}
+            else:
+                return
+
+            for err in evolved.iter_errors(value):
+                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+                yield err
+
+        types = ensure_list(
+            validator.context.resources[value[0]].get_atts[value[1]].type
+        )
+
+        # validate all possible types.  We will only alert when all types fail
+        type_err_ct = 0
+        all_errs = []
+        for type in types:
+            errs = list(iter_errors(type))
+            if errs:
+                type_err_ct += 1
+                all_errs.extend(errs)
+
+        if type_err_ct == len(types):
+            yield from errs
 
 
 class Ref(_Fn):
