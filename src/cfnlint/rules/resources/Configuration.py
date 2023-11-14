@@ -28,6 +28,7 @@ class Configuration(BaseJsonSchema):
         self.cfn = None
         self.validators = {
             "awsType": self.awsType,
+            "awsResourceType": self.awsResourceType,
         }
         self.rule_set = {
             "propertyNames": "E3011",
@@ -71,6 +72,8 @@ class Configuration(BaseJsonSchema):
 
             return
 
+    # pylint: disable=unused-argument
+    def awsResourceType(self, validator, iT, instance, schema):
         resource_type = instance.get("Type")
         if not validator.is_type(resource_type, "string"):
             return
