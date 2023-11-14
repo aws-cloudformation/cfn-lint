@@ -1,9 +1,12 @@
-### v1.2.0a1
+### v1.2.1a1
 ###### Fixes
+- Fix `FnGetAtt` to better validate GetAtt types against JSON Schemas (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+
+### v1.2.0a1
+###### Features
 - Convert Outputs, Parameters, and Mappings validationg to JSON Schema rules (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
 ###### CloudFormation Specifications
 - Update CloudFormation schemas from 2023/11/13 (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
-
 
 ### v1.1.0a2
 ###### CloudFormation Specifications
