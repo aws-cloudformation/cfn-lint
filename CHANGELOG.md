@@ -1,3 +1,7 @@
+### v0.83.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to include `python3.12` (pull #[2947](https://github.com/aws-cloudformation/cfn-lint/pull/2947))
+
 ### v0.83.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `148.0.0` (pull #[2942](https://github.com/aws-cloudformation/cfn-lint/pull/2942))
