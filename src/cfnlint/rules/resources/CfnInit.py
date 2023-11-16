@@ -29,37 +29,34 @@ class CfnInit(CloudFormationLintRule):
     def _validate(self, validator, mL, instance, schema):
         validator = validator.evolve(
             context=validator.context.evolve(functions=FUNCTIONS),
-        )
+        ).extend()(schema)
 
-        yield from validator.descend(
-            instance,
-            schema=schema,
-        )
+        yield from validator.iter_errors(instance)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitcommands(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_commands)
+    def cfninitcommands(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_commands)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitfiles(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_files)
+    def cfninitfiles(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_files)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitgroups(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_groups)
+    def cfninitgroups(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_groups)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitpackages(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_packages)
+    def cfninitpackages(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_packages)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitservices(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_services)
+    def cfninitservices(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_services)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitsources(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_sources)
+    def cfninitsources(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_sources)
 
     # pylint: disable=unused-argument, arguments-renamed
-    def cfninitusers(self, validator, mL, instance, schema):
-        yield from self._validate(validator, mL, instance, self.cfn_init_users)
+    def cfninitusers(self, validator, s, instance, schema):
+        yield from self._validate(validator, s, instance, self.cfn_init_users)
