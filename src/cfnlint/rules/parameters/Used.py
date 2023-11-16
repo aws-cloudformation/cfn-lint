@@ -4,8 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 from __future__ import unicode_literals
 
-import regex as re
-
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -17,20 +15,6 @@ class Used(CloudFormationLintRule):
     description = "Making sure the parameters defined are used"
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["parameters"]
-
-    def searchstring(self, string, parameter):
-        """Search string for tokenized fields"""
-        regex = re.compile(rf"\${({parameter})}")
-        return regex.findall(string)
-
-    def isparaminref(self, subs, parameter):
-        """Search sub strings for parameters"""
-        for sub in subs:
-            if isinstance(sub, (str)):
-                if self.searchstring(sub, parameter):
-                    return True
-
-        return False
 
     def match(self, cfn):
         matches = []
