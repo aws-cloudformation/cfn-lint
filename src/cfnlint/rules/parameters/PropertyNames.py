@@ -10,10 +10,8 @@ class PropertyNames(ParentPropertyNames):
     """Check if maximum Parameter name size limit is exceeded"""
 
     id = "E2003"
-    shortdesc = "Parameter name limit not exceeded"
-    description = (
-        "Check the size of Parameter names in the template is less than the upper limit"
-    )
+    shortdesc = "Check property names in Parameters"
+    description = "Validate property names are property configured in Parameters"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["parameters", "limits"]
 
