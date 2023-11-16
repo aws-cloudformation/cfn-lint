@@ -41,3 +41,46 @@ class TestMaxLength(BaseRuleTestCase):
         errs = list(self.rule.maxLength(validator, 11, "1234567890", {}))
         self.assertEqual(len(errs), 1)
         self.assertEqual(errs[0].rule.id, "ChildMaxLength")
+
+
+class ChildMaxLengthWithFunction(CloudFormationLintRule):
+    id = "ChildMaxLengthWithFunction"
+
+    def maxLength(self, validator, s, instance, schema):
+        yield ValidationError("test", rule=self)
+        yield ValidationError("test", rule=self)
+
+
+class TestMaxLengthWithFunction(BaseRuleTestCase):
+    """Test AWS Types"""
+
+    def setUp(self):
+        """Setup"""
+        super(TestMaxLengthWithFunction, self).setUp()
+        self.rule = MaxLength("ChildMaxLengthWithFunction")
+        self.rule.child_rules = {
+            "ChildMaxLengthWithFunction": ChildMaxLengthWithFunction()
+        }
+
+    def test_property_names(self):
+        validator = CfnTemplateValidator({})
+
+        errs = list(self.rule.maxLength(validator, 11, "1234567890", {}))
+        self.assertEqual(len(errs), 2)
+        self.assertEqual(errs[0].rule.id, "ChildMaxLengthWithFunction")
+
+
+class TestMaxLengthNoChild(BaseRuleTestCase):
+    """Test AWS Types"""
+
+    def setUp(self):
+        """Setup"""
+        super(TestMaxLengthNoChild, self).setUp()
+        self.rule = MaxLength("ChildMaxLength")
+        self.rule.child_rules = {"ChildMaxLength": None}
+
+    def test_property_names(self):
+        validator = CfnTemplateValidator({})
+
+        errs = list(self.rule.maxLength(validator, 11, "1234567890", {}))
+        self.assertEqual(len(errs), 0)
