@@ -9,8 +9,8 @@ class PropertyNames(ParentPropertyNames):
     """Check for string length in Mappings"""
 
     id = "E7002"
-    shortdesc = "Check the max length of strings in Mappings"
-    description = "Check the size of Mappings strings are within the max length"
+    shortdesc = "Check property names in Mappings"
+    description = "Validate property names are property configured in Mappings"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html"
     tags = ["mappings", "limits"]
 
