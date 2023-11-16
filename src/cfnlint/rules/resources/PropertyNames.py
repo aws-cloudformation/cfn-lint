@@ -9,11 +9,9 @@ from cfnlint.rules.jsonschema.PropertyNames import PropertyNames as ParentProper
 class PropertyNames(ParentPropertyNames):
     """Check if maximum Resource name size limit is exceeded"""
 
-    id = "E3011"
-    shortdesc = "Resource name limit not exceeded"
-    description = (
-        "Check the size of Resource names in the template is less than the upper limit"
-    )
+    id = "E3006"
+    shortdesc = "Check property names in Resources"
+    description = "Validate property names are property configured in Resources"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["resources", "limits"]
 
