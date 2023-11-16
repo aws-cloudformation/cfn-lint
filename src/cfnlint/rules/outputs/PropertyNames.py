@@ -9,8 +9,8 @@ class PropertyNames(ParentPropertyNames):
     """Check for string length in Outputs"""
 
     id = "E6004"
-    shortdesc = "Check the max length of strings in Outputs"
-    description = "Check the size of Outputs strings are within the max length"
+    shortdesc = "Check property names in Outputs"
+    description = "Validate property names are property configured in Outputs"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs", "limits"]
 
