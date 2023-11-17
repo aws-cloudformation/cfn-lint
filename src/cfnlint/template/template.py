@@ -238,7 +238,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     element["From"] = "Resources"
                     results[name] = element
 
-        for pseudoparam in cfnlint.PSEUDOPARAMS:
+        for pseudoparam in cfnlint.helpers.PSEUDOPARAMS:
             element = {}
             element["Type"] = "Pseudo"
             element["From"] = "Pseudo"
