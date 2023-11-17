@@ -2,6 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from __future__ import annotations
+
 import logging
 import os
 import sys
@@ -15,16 +17,21 @@ import cfnlint.runner
 from cfnlint.decode import decode
 from cfnlint.helpers import REGIONS
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import Match, ParseError, RulesCollection, TransformError
+from cfnlint.rules import (
+    Match,
+    ParseError,
+    Rules,
+    TransformError,
+)
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger("cfnlint")
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
-__CACHED_RULES = None
+__CACHED_RULES: Rules | None = None
 
 Matches = List[Match]
-RulesCollectionNone = Optional[RulesCollection]
+RulesCollectionNone = Optional[Rules]
 ArgsFilename = Tuple[
     cfnlint.config.ConfigMixIn, List[Optional[str]], cfnlint.formatters.BaseFormatter
 ]
@@ -130,30 +137,18 @@ def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
 
 
 def get_rules(
-    append_rules: List[str],
-    ignore_rules: List[str],
-    include_rules: List[str],
-    configure_rules=None,
-    include_experimental: bool = False,
-    mandatory_rules: Union[List[str], None] = None,
-    custom_rules: Union[str, None] = None,
-) -> RulesCollection:
-    rules = RulesCollection(
-        ignore_rules,
-        include_rules,
-        configure_rules,
-        include_experimental,
-        mandatory_rules,
-    )
-    rules_paths: List[str] = [DEFAULT_RULESDIR] + append_rules
+    config: cfnlint.config.ConfigMixIn,
+) -> Rules:
+    rules = Rules()
+    rules_paths: List[str] = [DEFAULT_RULESDIR] + config.append_rules
     try:
         for rules_path in rules_paths:
             if rules_path and os.path.isdir(os.path.expanduser(rules_path)):
-                rules.create_from_directory(rules_path)
+                rules += Rules.create_from_directory(rules_path)
             else:
-                rules.create_from_module(rules_path)
+                rules += Rules.create_from_module(rules_path)
 
-        rules.create_from_custom_rules_file(custom_rules)
+        rules += Rules.create_from_custom_rules_file(config.custom_rules)
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException(
             f"Tried to append rules but got an error: {str(e)}", 1
@@ -212,9 +207,7 @@ def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
 
     if config.update_documentation:
         # Get ALL rules (ignore the CLI settings))
-        documentation_rules = cfnlint.core.get_rules(
-            [], [], ["I", "E", "W"], {}, True, []
-        )
+        documentation_rules = get_rules(config)
         cfnlint.maintenance.update_documentation(documentation_rules)
         sys.exit(0)
 
@@ -223,13 +216,7 @@ def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
         sys.exit(0)
 
     if config.listrules:
-        rules = cfnlint.core.get_rules(
-            config.append_rules,
-            config.ignore_checks,
-            config.include_checks,
-            config.configure_rules,
-            config.mandatory_checks,
-        )
+        rules = get_rules(config)
         print(rules)
         sys.exit(0)
 
@@ -254,63 +241,50 @@ def _reset_rule_cache() -> None:
     __CACHED_RULES = None
 
 
-def _build_rule_cache(args: cfnlint.config.ConfigMixIn) -> None:
+def _build_rule_cache(config: cfnlint.config.ConfigMixIn) -> None:
     global __CACHED_RULES  # pylint: disable=global-statement
     if __CACHED_RULES:
-        __CACHED_RULES.configure(
-            ignore_rules=args.ignore_checks,
-            include_rules=args.include_checks,
-            configure_rules=args.configure_rules,
-            include_experimental=args.include_experimental,
-            mandatory_rules=args.mandatory_checks,
-        )
+        __CACHED_RULES.configure(config)
     else:
-        __CACHED_RULES = cfnlint.core.get_rules(
-            args.append_rules,
-            args.ignore_checks,
-            args.include_checks,
-            args.configure_rules,
-            args.include_experimental,
-            args.mandatory_checks,
-            args.custom_rules,
-        )
+        __CACHED_RULES = get_rules(config)
 
 
 def get_template_rules(
-    filename: str, args: cfnlint.config.ConfigMixIn
+    filename: str, config: cfnlint.config.ConfigMixIn
 ) -> TemplateRules:
     """Get Template Configuration items and set them as default values"""
 
     ignore_bad_template: bool = False
-    if args.ignore_bad_template:
+    if config.ignore_bad_template:
         ignore_bad_template = True
     else:
         # There is no collection at this point so we need to handle this
         # check directly
         if not ParseError().is_enabled(
             include_experimental=False,
-            ignore_rules=args.ignore_checks,
-            include_rules=args.include_checks,
-            mandatory_rules=args.mandatory_checks,
+            ignore_rules=config.ignore_checks,
+            include_rules=config.include_checks,
+            mandatory_rules=config.mandatory_checks,
         ):
             ignore_bad_template = True
 
     (template, errors) = decode(filename)
 
     if errors:
-        _build_rule_cache(args)
+        _build_rule_cache(config)
         if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == "E0000":
             return (template, __CACHED_RULES, [])
         return (template, __CACHED_RULES, errors)
 
-    args.template_args = template
+    config.template_args = template
 
-    _build_rule_cache(args)
+    _build_rule_cache(config)
 
     return (template, __CACHED_RULES, [])
 
 
 def run_checks(
+    config: cfnlint.config.ConfigMixIn,
     filename: str,
     template: str,
     rules: RulesCollectionNone,
@@ -329,7 +303,7 @@ def run_checks(
 
     errors: Matches = []
 
-    if not isinstance(rules, RulesCollection):
+    if not isinstance(rules, Rules):
         return []
 
     runner = cfnlint.runner.Runner(
@@ -338,8 +312,9 @@ def run_checks(
 
     # Transform logic helps with handling serverless templates
     ignore_transform_error: bool = False
-    if isinstance(rules, RulesCollection) and not rules.is_rule_enabled(
-        TransformError()
+    if isinstance(rules, Rules) and not rules.is_rule_enabled(
+        TransformError(),
+        config,
     ):
         ignore_transform_error = True
 

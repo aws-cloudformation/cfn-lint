@@ -30,6 +30,7 @@ class Configuration(BaseJsonSchema):
             "awsResourceType": self.awsResourceType,
         }
         self.rule_set = {
+            "maxProperties": "E3010",
             "propertyNames": "E3011",
             "fn_base64": "E1021",
             "fn_cidr": "E1012",
