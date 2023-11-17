@@ -2,12 +2,27 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from __future__ import annotations
+from collections.abc import Iterable
+
 import importlib
 import logging
 import os
 import traceback
+from collections import UserList
 from datetime import datetime
-from typing import Any, Callable, Dict, List, MutableSet, Optional, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    MutableSet,
+    Optional,
+    Tuple,
+    Union,
+)
 
 import cfnlint.helpers
 import cfnlint.rules.custom
@@ -16,7 +31,47 @@ from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.match import Match
 from cfnlint.template import Template
 
+if TYPE_CHECKING:
+    from cfnlint.config import ConfigMixIn
+
 LOGGER = logging.getLogger(__name__)
+
+
+def _rule_is_enabled(
+    rule: "CloudFormationLintRule",
+    include_experimental: bool = False,
+    ignore_rules: List[str] | None = None,
+    include_rules: List[str] | None = None,
+    mandatory_rules: List[str] | None = None,
+):
+    """Is the rule enabled based on the configuration"""
+    ignore_rules = ignore_rules or []
+    include_rules = include_rules or []
+    mandatory_rules = mandatory_rules or []
+
+    # Evaluate experimental rules
+    if rule.experimental and not include_experimental:
+        return False
+
+    # Evaluate includes first:
+    include_filter = False
+    for include_rule in include_rules:
+        if rule.id.startswith(include_rule):
+            include_filter = True
+    if not include_filter:
+        return False
+
+    # Enable mandatory rules without checking for if they are ignored
+    for mandatory_rule in mandatory_rules:
+        if rule.id.startswith(mandatory_rule):
+            return True
+
+    # Allowing ignoring of rules based on prefix to ignore checks
+    for ignore_rule in ignore_rules:
+        if rule.id.startswith(ignore_rule) and ignore_rule:
+            return False
+
+    return True
 
 
 class RuleMatch:
@@ -160,34 +215,9 @@ class CloudFormationLintRule:
         include_rules=None,
         mandatory_rules=None,
     ):
-        """Is the rule enabled based on the configuration"""
-        ignore_rules = ignore_rules or []
-        include_rules = include_rules or []
-        mandatory_rules = mandatory_rules or []
-
-        # Evaluate experimental rules
-        if self.experimental and not include_experimental:
-            return False
-
-        # Evaluate includes first:
-        include_filter = False
-        for include_rule in include_rules:
-            if self.id.startswith(include_rule):
-                include_filter = True
-        if not include_filter:
-            return False
-
-        # Enable mandatory rules without checking for if they are ignored
-        for mandatory_rule in mandatory_rules:
-            if self.id.startswith(mandatory_rule):
-                return True
-
-        # Allowing ignoring of rules based on prefix to ignore checks
-        for ignore_rule in ignore_rules:
-            if self.id.startswith(ignore_rule) and ignore_rule:
-                return False
-
-        return True
+        return _rule_is_enabled(
+            self, include_experimental, ignore_rules, include_rules, mandatory_rules
+        )
 
     def configure(self, configs=None, experimental=False):
         """Set the configuration"""
@@ -246,6 +276,105 @@ class CloudFormationLintRule:
         )
 
 
+class Rules(UserList):
+    def __init__(self, initlist: List[CloudFormationLintRule] | None=None):
+        super().__init__()
+        self.data: List[CloudFormationLintRule] = []
+        if initlist is not None:
+            if type(initlist) == type(self.data):
+                self.extend(initlist)
+            elif isinstance(initlist, Rules):
+                self.extend(initlist.data[:])
+            else:
+                self.extend(list(initlist))
+
+    def __delitem__(self, i: int) -> None:
+        raise RuntimeError("Deletion is not allowed")
+
+    def __add__(self, other: Rules) -> Rules:
+        if isinstance(other, Rules):
+            return self.__class__(self.data + other.data)
+        elif isinstance(other, type(self.data)):
+            return self.__class__(self.data + other)
+        return self.__class__(self.data + list(other))
+    
+    def __contains__(self, item: CloudFormationLintRule) -> bool:
+        return any(item.id == r.id for r in self.data)
+    
+    def append(self, item: CloudFormationLintRule):
+        if item.id != "":
+            if item in self:
+                raise DuplicateRuleError(rule_id=item.id)
+            self.data.append(item)
+
+    def extend(self, other: Rules):
+        for rule in other:
+            self.append(rule)
+
+    def filter(
+        self,
+        func: Callable[[List[CloudFormationLintRule], ConfigMixIn], Rules],
+        config: ConfigMixIn,
+    ):
+        return func(self.data, config)
+
+    def is_rule_enabled(
+        self, rule: str | CloudFormationLintRule, config: ConfigMixIn
+    ) -> bool:
+        if isinstance(rule, str):
+            rule = self.data[rule]
+        return rule.is_enabled(
+            config.include_experimental,
+            ignore_rules=config.ignore_checks,
+            include_rules=config.include_checks,
+            mandatory_rules=config.mandatory_checks,
+        )
+
+    def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
+        for rule in self.data:
+            # rules that have children need to be run
+            # we will remove the results later
+            if rule.child_rules:
+                yield rule
+                continue
+            if self.is_rule_enabled(rule.id, config):
+                yield rule
+
+    def enabled_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
+        for rule in self.data:
+            if self.is_rule_enabled(rule.id, config):
+                yield rule
+
+    @classmethod
+    def create_from_module(cls, modpath: str) -> Rules:
+        """Create rules from a module import path"""
+        mod = importlib.import_module(modpath)
+        return cls(cfnlint.helpers.create_rules(mod))
+    
+    @classmethod
+    def create_from_directory(cls, rulesdir: str) -> Rules:
+        if rulesdir != "":
+            return cls(cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir)))
+
+        return Rules([])
+    
+    @classmethod
+    def create_from_custom_rules_file(cls, custom_rules_file) -> Rules:
+        """Create rules from custom rules file"""
+        custom_rules = cls([])
+        if custom_rules_file:
+            with open(custom_rules_file, encoding="utf-8") as customRules:
+                line_number = 1
+                for line in customRules:
+                    LOGGER.debug("Processing Custom Rule Line %d", line_number)
+                    custom_rule = cfnlint.rules.custom.make_rule(line, line_number)
+                    if custom_rule:
+                        custom_rules.append(custom_rule)
+                    line_number += 1
+
+        return custom_rules
+
+
 # pylint: disable=too-many-instance-attributes
 class RulesCollection:
     """Collection of rules"""
@@ -299,7 +428,7 @@ class RulesCollection:
 
     def __register(self, rule: CloudFormationLintRule):
         """Register and configure the rule"""
-        if self.is_rule_enabled(rule):
+        if self.is_rule_enabled(rule) or rule.child_rules:
             self.used_rules.add(rule.id)
             self.rules[rule.id] = rule
             rule.configure(
