@@ -15,7 +15,7 @@ from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
 from cfnlint.match import Match
-from cfnlint.rules import ParseError, RuleError, RulesCollection, TransformError
+from cfnlint.rules import ParseError, RuleError, Rules, TransformError
 from cfnlint.version import __version__
 
 Matches = List[Match]
@@ -287,7 +287,7 @@ class SARIFFormatter(BaseFormatter):
         """Output all the matches"""
 
         if not rules:
-            rules = RulesCollection()
+            rules = Rules()
 
         # These "base" rules are not passed into formatters
         rules.extend([ParseError(), TransformError(), RuleError()])
