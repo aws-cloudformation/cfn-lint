@@ -22,12 +22,14 @@ import itertools
 from collections import deque
 from pprint import pformat
 from textwrap import dedent, indent
-from typing import ClassVar, List, Union
+from typing import TYPE_CHECKING, ClassVar, List, Union
 
 import attr
 
 from cfnlint.jsonschema import _utils
-from cfnlint.rules import CloudFormationLintRule
+
+if TYPE_CHECKING:
+    from cfnlint.rules import CloudFormationLintRule
 
 WEAK_MATCHES: frozenset[str] = frozenset(["anyOf", "oneOf"])
 STRONG_MATCHES: frozenset[str] = frozenset()
