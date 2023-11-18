@@ -312,7 +312,7 @@ class CliArgs:
 
     def __init__(self, cli_args):
         self.parser = self.create_parser()
-        self.cli_args, _ = self.parser.parse_known_args(cli_args)
+        self.cli_args, _ = self.parser.parse_args(cli_args)
 
     def create_parser(self):
         """Do first round of parsing parameters to set options"""
