@@ -66,6 +66,20 @@ In repository to be linted:
 docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
 ```
 
+### Trunk Check
+
+Trunk Check [docs](https://docs.trunk.io/check)
+Source to integration [here](https://github.com/trunk-io/plugins/blob/main/linters/cfnlint/plugin.yaml).
+
+In repository to be linted:
+
+```shell
+     # to enable the latest version
+     trunk check enable cfnlint
+     # to enable a specific version
+     trunk check enable cfnlint@0.58.2
+```
+
 ### Editor Plugins
 
 There are IDE plugins available to get direct linter feedback from you favorite editor:
