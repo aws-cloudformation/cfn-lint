@@ -68,9 +68,7 @@ docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
 
 ### Trunk Check
 
-Trunk Check ([docs](https://docs.trunk.io/check))
-
-Source to integration [here](https://github.com/trunk-io/plugins/blob/main/linters/cfnlint/plugin.yaml).
+Trunk Check: [docs](https://docs.trunk.io/check) and integration [source](https://github.com/trunk-io/plugins/blob/main/linters/cfnlint/plugin.yaml)
 
 In repository to be linted:
 
