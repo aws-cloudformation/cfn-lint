@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Dict
+from typing import Dict, TypedDict, List, Any
 
 import cfnlint.decode.cfn_yaml
 from cfnlint.helpers import REGIONS
@@ -20,6 +20,8 @@ from cfnlint.version import __version__
 
 # pylint: disable=too-many-public-methods
 LOGGER = logging.getLogger("cfnlint")
+
+_DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
 
 
 def configure_logging(debug_logging, info_logging):
@@ -609,11 +611,25 @@ class TemplateArgs:
     template_args = property(get_template_args, set_template_args)
 
 
+class ManualArgs(TypedDict):
+    configure_rules: Dict[str, Any]
+    include_checks: List[str]
+    ignore_checks: List[str]
+    include_expiremental: bool
+    ignore_bad_template: bool
+    ignore_templates: list
+    merge_configs: bool
+    non_zero_exit_code: str
+    output_file: str
+    regions: list
+
+
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     """Mixin for the Configs"""
 
-    def __init__(self, cli_args):
+    def __init__(self, cli_args, **kwargs: ManualArgs):
+        self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
         configure_logging(self.cli_args.debug, self.cli_args.info)
@@ -645,6 +661,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                     return result
 
         # return individual items
+        if arg_name in self._manual_args:
+            return self._manual_args[arg_name]
         if cli_value:
             return cli_value
         if template_value and is_template:
@@ -752,7 +770,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def append_rules(self):
-        return self._get_argument_value("append_rules", False, True)
+        return [_DEFAULT_RULESDIR] + self._get_argument_value(
+            "append_rules", False, True
+        )
 
     @property
     def override_spec(self):

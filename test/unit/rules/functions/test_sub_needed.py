@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.rules.functions.SubNeeded import SubNeeded  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
 
 
 class TestSubNeeded(BaseRuleTestCase):
@@ -27,15 +28,28 @@ class TestSubNeeded(BaseRuleTestCase):
 
     def test_template_config(self):
         """Test custom excludes configuration"""
-        self.helper_file_rule_config(
+        self.helper_file_positive_template(
             "test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml",
-            {"custom_excludes": "^\\$\\{Stage\\}$"},
-            0,
+            ConfigMixIn(
+                [],
+                configure_rules={
+                    "E1029": {"custom_excludes": "^\\$\\{Stage\\}$"},
+                },
+            ),
         )
-        self.helper_file_rule_config(
+        self.helper_file_positive_template(
             "test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml",
-            {},
+            ConfigMixIn(
+                [],
+                configure_rules={
+                    "E1029": {"custom_excludes": "^\\$\\{Stage\\}$"},
+                },
+            ),
+        )
+        self.helper_file_negative(
+            "test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml",
             1,
+            ConfigMixIn([]),
         )
 
     def test_file_negative(self):

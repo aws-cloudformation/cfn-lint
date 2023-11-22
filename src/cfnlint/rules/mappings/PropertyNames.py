@@ -15,4 +15,4 @@ class PropertyNames(ParentPropertyNames):
     tags = ["mappings", "limits"]
 
     def __init__(self) -> None:
-        super().__init__("I7003")
+        super().__init__("I7002")

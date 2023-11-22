@@ -14,6 +14,7 @@ import regex as re
 import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint.context import ContextManager
+from cfnlint.decode.node import dict_node, list_node
 from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.getatts import GetAtts
@@ -921,7 +922,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
             return value
 
-        result = cfnlint.dict_node({}, obj.start_mark, obj.end_mark)
+        result = dict_node({}, obj.start_mark, obj.end_mark)
         if isinstance(obj, dict):
             if len(obj) == 1:
                 if obj.get("Fn::If"):
@@ -984,9 +985,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             start_mark = (0, 0)
             end_mark = (0, 0)
         if isinstance(obj, list):
-            o = cfnlint.list_node([], start_mark=start_mark, end_mark=end_mark)
+            o = list_node([], start_mark=start_mark, end_mark=end_mark)
         else:
-            o = cfnlint.dict_node({}, start_mark=start_mark, end_mark=end_mark)
+            o = dict_node({}, start_mark=start_mark, end_mark=end_mark)
 
         if property_names:
             for property_name in property_names:
