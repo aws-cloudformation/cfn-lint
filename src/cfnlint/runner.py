@@ -3,23 +3,18 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import sys
 import os
-from typing import List, Optional, Sequence, Union
-from cfnlint.rules import (
-    Match,
-    ParseError,
-    Rules,
-    TransformError,
-)
+import sys
+from typing import List, Optional, Sequence, Union, Dict
+
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn
-from cfnlint.rules import Match, Rules
+from cfnlint.decode import decode
+from cfnlint.rules import Iterator, Match, ParseError, Rules, TransformError
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger(__name__)
-_DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
 
 
 def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
@@ -42,6 +37,68 @@ def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
     return cfnlint.formatters.Formatter()
 
 
+class TemplateRunner:
+    def __init__(
+        self, filename: str, template: str, config: ConfigMixIn, rules: Rules
+    ) -> None:
+        self.cfn = Template(filename, template, config.regions)
+        self.rules = rules
+        self.config = config
+
+    def _dedup(self, matches: Iterator[Match]) -> Iterator[Match]:
+        """Deduplicate matches"""
+        seen: List[Match] = []
+        for match in matches:
+            if match not in seen:
+                seen.append(match)
+                yield match
+
+    def run(self) -> Iterator[Match]:
+        """Run rules"""
+        LOGGER.info("Run scan of template %s", self.cfn.filename)
+        matches = self.cfn.transform()
+        if matches:
+            yield from self._dedup(iter(matches))
+            return
+        if self.cfn.template is not None:
+            yield from self._dedup(
+                self.check_metadata_directives(
+                    self.rules.run(self.cfn.filename, self.cfn, self.config)
+                )
+            )
+
+    def check_metadata_directives(self, matches: Sequence[Match]) -> Iterator[Match]:
+        # uniq the list of incidents and filter out exceptions from the template
+        directives = self.cfn.get_directives()
+
+        for match in matches:
+            if match.rule.id not in directives:
+                yield match
+            else:
+                for mandatory_rule in self.mandatory_rules:
+                    if match.rule.id.startswith(mandatory_rule):
+                        yield match
+                        break
+                else:
+                    for directive in directives.get(match.rule.id):
+                        start = directive.get("start")
+                        end = directive.get("end")
+                        if start[0] < match.linenumber < end[0]:
+                            break
+                        if (
+                            start[0] == match.linenumber
+                            and start[1] <= match.columnnumber
+                        ):
+                            break
+                        if (
+                            end[0] == match.linenumber
+                            and end[1] >= match.columnnumberend
+                        ):
+                            break
+                    else:
+                        yield match
+
+
 class Runner:
     def __init__(self, config: ConfigMixIn) -> None:
         self.config = config
@@ -50,23 +107,98 @@ class Runner:
 
     def _get_rules(self):
         self.rules = Rules()
-        rules_paths: List[str] = [_DEFAULT_RULESDIR] + self.config.append_rules
         try:
-            for rules_path in rules_paths:
+            for rules_path in self.config.append_rules:
                 if rules_path and os.path.isdir(os.path.expanduser(rules_path)):
-                    self.rules += Rules.create_from_directory(rules_path)
+                    self.rules.update(Rules.create_from_directory(rules_path))
                 else:
-                    self.rules += Rules.create_from_module(rules_path)
+                    self.rules.update(Rules.create_from_module(rules_path))
 
-            self.rules += Rules.create_from_custom_rules_file(self.config.custom_rules)
+            self.rules.update(
+                Rules.create_from_custom_rules_file(self.config.custom_rules)
+            )
         except (OSError, ImportError) as e:
             raise UnexpectedRuleException(
                 f"Tried to append rules but got an error: {str(e)}", 1
             ) from e
 
-    def run(self) -> None:
-        formatter = get_formatter(self.config)
+    def validate_filenames(self, filenames: Sequence[str]) -> Iterator[Match]:
+        ignore_bad_template: bool = False
+        if self.config.ignore_bad_template:
+            ignore_bad_template = True
+        else:
+            # There is no collection at this point so we need to handle this
+            # check directly
+            if not ParseError().is_enabled(
+                include_experimental=False,
+                ignore_rules=self.config.ignore_checks,
+                include_rules=self.config.include_checks,
+                mandatory_rules=self.config.mandatory_checks,
+            ):
+                ignore_bad_template = True
+        for filename in filenames:
+            (template, matches) = decode(filename)
+            if matches:
+                if not (
+                    len(matches) == 1
+                    and ignore_bad_template
+                    and matches[0].rule.id == "E0000"
+                ):
+                    yield from iter(matches)
+                    continue
+            yield from self.validate_template(filename, template)
 
+    def validate_template(self, filename: str, template: str) -> Iterator[Match]:
+        self.config.template_args = template
+
+        runner = TemplateRunner(filename, template, self.config, self.rules)
+        yield from runner.run()
+
+    def _output(self, matches: Iterator[Match]) -> None:
+        formatter = get_formatter(self.config)
+        matches = list(matches)
+        output = formatter.print_matches(matches)
+        if self.config.output_file:
+            with open(self.config.output_file, "w") as output_file:
+                output_file.write(output)
+        else:
+            print(output)
+
+        self._exit(matches)
+
+    def _exit(self, matches: List[Match]) -> int:
+        """Determine exit code"""
+
+        exit_level: str = self.config.non_zero_exit_code or "informational"
+
+        exit_levels: Dict[str, List[str]] = {
+            "informational": ["informational", "warning", "error"],
+            "warning": ["warning", "error"],
+            "error": ["error"],
+            "none": [],
+        }
+
+        exit_code = 0
+        for match in matches:
+            if (
+                match.rule.severity == "informational"
+                and match.rule.severity in exit_levels[exit_level]
+            ):
+                exit_code = exit_code | 8
+            elif (
+                match.rule.severity == "warning"
+                and match.rule.severity in exit_levels[exit_level]
+            ):
+                exit_code = exit_code | 4
+            elif (
+                match.rule.severity == "error"
+                and match.rule.severity in exit_levels[exit_level]
+            ):
+                exit_code = exit_code | 2
+
+        sys.exit(exit_code)
+
+    def run(self) -> None:
         if self.config.update_specs:
             cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(0)
@@ -88,14 +220,14 @@ class Runner:
             sys.exit(0)
 
         if not sys.stdin.isatty() and not self.config.templates:
-            return (self.config, [None], formatter)
+            self._output(self.validate_filenames([None]))
 
         if not self.config.templates:
             # Not specified, print the help
             self.config.parser.print_help()
             sys.exit(1)
 
-        return (self.config, formatter)
+        self._output(self.validate_filenames(self.config.templates))
 
 
 def main() -> None:

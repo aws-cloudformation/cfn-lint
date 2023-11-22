@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import Rules
 from cfnlint.template.template import Template  # pylint: disable=E0401
 
 
@@ -17,7 +17,7 @@ class TestCfnJson(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.rules = RulesCollection(include_experimental=True)
+        self.rules = Rules(include_experimental=True)
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)

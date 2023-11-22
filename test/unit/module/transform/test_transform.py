@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint import Transform
 from cfnlint.decode import cfn_yaml
+from cfnlint.template.transforms._sam import Transform
 
 
 class TestTransform(BaseTestCase):
