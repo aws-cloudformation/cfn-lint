@@ -18,12 +18,7 @@ import cfnlint.runner
 from cfnlint.decode import decode
 from cfnlint.helpers import REGIONS
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import (
-    Match,
-    ParseError,
-    Rules,
-    TransformError,
-)
+from cfnlint.rules import Match, ParseError, Rules, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
@@ -141,15 +136,14 @@ def get_rules(
     config: cfnlint.config.ConfigMixIn,
 ) -> Rules:
     rules = Rules()
-    rules_paths: List[str] = [DEFAULT_RULESDIR] + config.append_rules
     try:
-        for rules_path in rules_paths:
+        for rules_path in config.append_rules:
             if rules_path and os.path.isdir(os.path.expanduser(rules_path)):
-                rules += Rules.create_from_directory(rules_path)
+                rules.update(Rules.create_from_directory(rules_path))
             else:
-                rules += Rules.create_from_module(rules_path)
+                rules.update(Rules.create_from_module(rules_path))
 
-        rules += Rules.create_from_custom_rules_file(config.custom_rules)
+        rules.update(Rules.create_from_custom_rules_file(config.custom_rules))
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException(
             f"Tried to append rules but got an error: {str(e)}", 1

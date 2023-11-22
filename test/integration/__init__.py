@@ -8,7 +8,9 @@ import subprocess
 import unittest
 from typing import Any, Dict, List
 
-import cfnlint.core
+from cfnlint.config import configure_logging
+from cfnlint.decode import cfn_yaml
+from cfnlint.runner import Runner
 
 
 class BaseCliTestCase(unittest.TestCase):
@@ -79,11 +81,11 @@ class BaseCliTestCase(unittest.TestCase):
                     ),
                 )
 
-    def run_module_integration_scenarios(self, rules):
+    def run_module_integration_scenarios(self, config):
         """Test using cfnlint as a module integrated into another package"""
 
-        cfnlint.core.configure_logging(None)
-        regions = ["us-east-1"]
+        configure_logging(None, False)
+
         for scenario in self.scenarios:
             filename = scenario.get("filename")
             results_filename = scenario.get("results_filename")
@@ -93,11 +95,13 @@ class BaseCliTestCase(unittest.TestCase):
                 with open(results_filename, encoding="utf-8") as json_data:
                     expected_results = json.load(json_data)
 
-            template = cfnlint.decode.cfn_yaml.load(filename)
+            template = cfn_yaml.load(filename)
 
-            matches = cfnlint.core.run_checks(filename, template, rules, regions)
+            runner = Runner(config)
+            matches = list(runner.validate_template(filename, template))
 
             # Only check that the error count matches as the formats are different
+            print(matches, expected_results)
             self.assertEqual(
                 len(expected_results),
                 len(matches),
