@@ -4,8 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from unittest import TestCase
 
-from cfnlint.api import lint, lint_all
-from cfnlint.core import get_rules
+from cfnlint import ConfigMixIn, Rules, lint, lint_all
 from cfnlint.helpers import REGIONS
 
 
@@ -13,7 +12,7 @@ class TestLint(TestCase):
     def helper_lint_string_from_file(
         self,
         filename=None,
-        rules=get_rules([], [], ["I", "W", "E"], include_experimental=True),
+        rules=Rules(),
         regions=REGIONS,
     ):
         with open(filename, "r") as f:
@@ -32,7 +31,7 @@ class TestLint(TestCase):
 
     def test_noecho_yaml_template_warnings_ignored(self):
         filename = "test/fixtures/templates/bad/noecho.yaml"
-        rules = get_rules([], ["W", "I"], [])
+        rules = Rules()
         matches = self.helper_lint_string_from_file(
             filename=filename,
             rules=rules,

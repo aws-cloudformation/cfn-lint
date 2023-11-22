@@ -25,7 +25,7 @@ class JsonSchema(BaseJsonSchema):
             "additionalProperties": "E2001",
             "patternProperties": "E2001",
             "properties": "E2001",
-            "propertyNames": "E2011",
+            "propertyNames": "E2003",
             "maxProperties": "E2010",
             "minProperties": "E2010",
             "required": "E2001",
