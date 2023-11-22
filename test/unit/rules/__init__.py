@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from typing import List
 
-from cfnlint.rules import RulesCollection
-from cfnlint.runner import Runner
+from cfnlint import ConfigMixIn, Rules
+from cfnlint.runner import TemplateRunner
 
 
 class BaseRuleTestCase(BaseTestCase):
@@ -17,48 +17,44 @@ class BaseRuleTestCase(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection(
-            include_rules=["I"], include_experimental=True
+        self.collection = Rules()
+        self.config = ConfigMixIn(
+            None,
+            include_experimental=True,
+            include_checks=["I"],
         )
 
-    def helper_file_positive(self):
+    def helper_file_positive(self, config=None):
         """Success test"""
+        config = config or self.config
         for filename in self.success_templates:
             template = self.load_template(filename)
-            good_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-            good_runner.transform()
-            failures = good_runner.run()
-            assert [] == failures, "Got failures {} on {}".format(failures, filename)
+            good_runner = TemplateRunner(filename, template, config, self.collection)
+            failures = list(good_runner.run())
+            self.assertEqual(
+                [], failures, "Got failures {} on {}".format(failures, filename)
+            )
 
-    def helper_file_rule_config(self, filename, config, err_count):
-        """Success test with rule config included"""
+    def helper_file_positive_template(self, filename, config=None):
+        """Success test with template parameter"""
+        config = config or self.config
         template = self.load_template(filename)
-        rule_id = list(self.collection.rules.keys())[0]
-        self.collection.rules[rule_id].configure(config)
-        good_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-        good_runner.transform()
-        failures = good_runner.run()
+        good_runner = TemplateRunner(filename, template, config, self.collection)
+        failures = list(good_runner.run())
+        self.assertEqual(
+            [],
+            failures,
+            "Expected {} failures but got {} on {}".format(0, failures, filename),
+        )
+
+    def helper_file_negative(self, filename, err_count, config=None):
+        """Failure test"""
+        config = config or self.config
+        template = self.load_template(filename)
+        bad_runner = TemplateRunner(filename, template, config, self.collection)
+        failures = list(bad_runner.run())
         self.assertEqual(
             err_count,
             len(failures),
-            "Expected {} failures but got {} on {}".format(
-                err_count, failures, filename
-            ),
+            "Expected {} failures but got {} on {}".format(0, failures, filename),
         )
-        self.collection.rules[rule_id].configure(config)
-
-    def helper_file_positive_template(self, filename):
-        """Success test with template parameter"""
-        template = self.load_template(filename)
-        good_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-        good_runner.transform()
-        self.assertEqual([], good_runner.run())
-
-    def helper_file_negative(self, filename, err_count, regions=None):
-        """Failure test"""
-        regions = regions or ["us-east-1"]
-        template = self.load_template(filename)
-        bad_runner = Runner(self.collection, filename, template, regions, [])
-        bad_runner.transform()
-        errs = bad_runner.run()
-        self.assertEqual(err_count, len(errs))
