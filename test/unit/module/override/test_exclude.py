@@ -5,7 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.rules import RulesCollection
+from cfnlint import ConfigMixIn
+from cfnlint.rules import Rules
 from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
 from cfnlint.runner import Runner
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
@@ -16,7 +17,7 @@ class TestExclude(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
+        self.collection = Rules()
         self.collection.register(Configuration())
         self.region = "us-east-1"
 
@@ -34,8 +35,10 @@ class TestExclude(BaseTestCase):
             "test/fixtures/templates/override_spec/exclude.json", regions=[self.region]
         )
 
-        good_runner = Runner(self.collection, filename, template, [self.region], [])
-        self.assertEqual([], good_runner.run())
+        good_runner = Runner(
+            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        )
+        self.assertEqual([], list(good_runner.run()))
 
     def test_fail_run(self):
         """Failure test required"""
@@ -46,6 +49,8 @@ class TestExclude(BaseTestCase):
             "test/fixtures/templates/override_spec/exclude.json", regions=[self.region]
         )
 
-        bad_runner = Runner(self.collection, filename, template, [self.region], [])
-        errs = bad_runner.run()
+        bad_runner = Runner(
+            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        )
+        errs = list(bad_runner.run())
         self.assertEqual(2, len(errs))
