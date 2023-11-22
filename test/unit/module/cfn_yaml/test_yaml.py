@@ -7,8 +7,9 @@ from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+from cfnlint.config import ConfigMixIn
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import Rules
 from cfnlint.template.template import Template  # pylint: disable=E0401
 
 
@@ -17,10 +18,10 @@ class TestYamlParse(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.rules = RulesCollection()
+        self.rules = Rules()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
-            self.rules.create_from_directory(rulesdir)
+            self.rules.update(Rules.create_from_directory(rulesdir))
 
         self.filenames = {
             "config_rule": {
@@ -29,7 +30,7 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 39,
+                "failures": 42,
             },
         }
 
@@ -41,8 +42,7 @@ class TestYamlParse(BaseTestCase):
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ["us-east-1"])
 
-            matches = []
-            matches.extend(self.rules.run(filename, cfn))
+            matches = list(self.rules.run(filename, cfn, ConfigMixIn({})))
             assert (
                 len(matches) == failures
             ), "Expected {} failures, got {} on {}".format(
@@ -62,7 +62,7 @@ class TestYamlParse(BaseTestCase):
                 cfn = Template(filename, template, ["us-east-1"])
 
                 matches = []
-                matches.extend(self.rules.run(filename, cfn))
+                matches.extend(self.rules.run(filename, cfn, ConfigMixIn({})))
                 assert (
                     len(matches) == failures
                 ), "Expected {} failures, got {} on {}".format(
