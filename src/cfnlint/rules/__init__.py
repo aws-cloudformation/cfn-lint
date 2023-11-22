@@ -3,13 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from __future__ import annotations
-from collections.abc import Iterable
 
 import importlib
 import logging
 import os
 import traceback
-from collections import UserList
+from collections import UserDict
+from collections.abc import Iterable
 from datetime import datetime
 from typing import (
     TYPE_CHECKING,
@@ -102,58 +102,46 @@ def matching(match_type: Any):
 
         def wrapper(self, filename: str, cfn: Template, *args, **kwargs):
             """Wrapper"""
-            matches = []
-
             if not getattr(self, match_type):
-                return []
+                return
 
             if match_type == "match_resource_properties":
                 if args[1] not in self.resource_property_types:
-                    return []
+                    return
 
             start = datetime.now()
             LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
             # pylint: disable=E1102
-            results = match_function(self, filename, cfn, *args, **kwargs)
+            for result in match_function(self, filename, cfn, *args, **kwargs):
+                error_rule = self
+                if hasattr(result, "rule"):
+                    error_rule = result.rule
+                linenumbers: Union[Tuple[int, int, int, int], None] = None
+                if hasattr(result, "location"):
+                    linenumbers = result.location
+                else:
+                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                if linenumbers:
+                    yield Match(
+                        linenumbers[0] + 1,
+                        linenumbers[1] + 1,
+                        linenumbers[2] + 1,
+                        linenumbers[3] + 1,
+                        filename,
+                        error_rule,
+                        result.message,
+                        result,
+                    )
+                else:
+                    yield Match(
+                        1, 1, 1, 1, filename, error_rule, result.message, result
+                    )
             LOGGER.debug(
                 "Complete match function for rule %s at %s.  Ran in %s",
                 self.id,
                 datetime.now(),
                 datetime.now() - start,
             )
-            LOGGER.debug("Results from rule %s are %s: ", self.id, results)
-
-            if results:
-                for result in results:
-                    error_rule = self
-                    if hasattr(result, "rule"):
-                        error_rule = result.rule
-                    linenumbers: Union[Tuple[int, int, int, int], None] = None
-                    if hasattr(result, "location"):
-                        linenumbers = result.location
-                    else:
-                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                    if linenumbers:
-                        matches.append(
-                            Match(
-                                linenumbers[0] + 1,
-                                linenumbers[1] + 1,
-                                linenumbers[2] + 1,
-                                linenumbers[3] + 1,
-                                filename,
-                                error_rule,
-                                result.message,
-                                result,
-                            )
-                        )
-                    else:
-                        matches.append(
-                            Match(
-                                1, 1, 1, 1, filename, error_rule, result.message, result
-                            )
-                        )
-
-            return matches
 
         return wrapper
 
@@ -276,40 +264,33 @@ class CloudFormationLintRule:
         )
 
 
-class Rules(UserList):
-    def __init__(self, initlist: List[CloudFormationLintRule] | None=None):
+class Rules(UserDict):
+    def __init__(
+        self, dict: Dict[str, CloudFormationLintRule] | None = None, /, **kwargs
+    ):
         super().__init__()
-        self.data: List[CloudFormationLintRule] = []
-        if initlist is not None:
-            if type(initlist) == type(self.data):
-                self.extend(initlist)
-            elif isinstance(initlist, Rules):
-                self.extend(initlist.data[:])
-            else:
-                self.extend(list(initlist))
+        self.data: Dict[str, CloudFormationLintRule] = {}
+        if dict is not None:
+            self.update(dict)
+        if kwargs:
+            self.update(kwargs)
 
     def __delitem__(self, i: int) -> None:
         raise RuntimeError("Deletion is not allowed")
 
-    def __add__(self, other: Rules) -> Rules:
-        if isinstance(other, Rules):
-            return self.__class__(self.data + other.data)
-        elif isinstance(other, type(self.data)):
-            return self.__class__(self.data + other)
-        return self.__class__(self.data + list(other))
-    
-    def __contains__(self, item: CloudFormationLintRule) -> bool:
-        return any(item.id == r.id for r in self.data)
-    
-    def append(self, item: CloudFormationLintRule):
-        if item.id != "":
-            if item in self:
-                raise DuplicateRuleError(rule_id=item.id)
-            self.data.append(item)
+    def __setitem__(self, key: str, item: CloudFormationLintRule) -> None:
+        if not key:
+            return
+        if key in self.data:
+            raise DuplicateRuleError(rule_id=key)
+        return super().__setitem__(key, item)
 
-    def extend(self, other: Rules):
-        for rule in other:
-            self.append(rule)
+    def update(self, other: Dict[str, CloudFormationLintRule]) -> None:
+        for key, value in other.items():
+            self[key] = value
+
+    def register(self, rule: CloudFormationLintRule) -> None:
+        self[rule.id] = rule
 
     def filter(
         self,
@@ -331,7 +312,7 @@ class Rules(UserList):
         )
 
     def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
-        for rule in self.data:
+        for rule in self.data.values():
             # rules that have children need to be run
             # we will remove the results later
             if rule.child_rules:
@@ -341,27 +322,101 @@ class Rules(UserList):
                 yield rule
 
     def enabled_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
-        for rule in self.data:
+        for rule in self.data.values():
             if self.is_rule_enabled(rule.id, config):
                 yield rule
+
+    # pylint: disable=inconsistent-return-statements
+    def run_check(self, check, filename, rule_id, config, *args):
+        """Run a check"""
+        try:
+            return check(*args)
+        except Exception as err:  # pylint: disable=W0703
+            if self.is_rule_enabled(RuleError(), config):
+                # In debug mode, print the error include complete stack trace
+                if LOGGER.getEffectiveLevel() == logging.DEBUG:
+                    error_message = traceback.format_exc()
+                else:
+                    error_message = str(err)
+                message = "Unknown exception while processing rule {}: {}"
+                return [
+                    Match(
+                        1,
+                        1,
+                        1,
+                        1,
+                        filename,
+                        RuleError(),
+                        message.format(rule_id, error_message),
+                    )
+                ]
+
+    def run(
+        self, filename: Optional[str], cfn: Template, config: ConfigMixIn
+    ) -> Iterator[Match]:
+        """Run rules"""
+        for rule in self.runable_rules(config):
+            rule.configure(
+                config.configure_rules.get(rule.id, None), config.include_experimental
+            )
+            rule.initialize(cfn)
+
+        for rule in self.runable_rules(config):
+            for key in rule.child_rules.keys():
+                if not self.is_rule_enabled(key, config):
+                    continue
+                rule.child_rules[key] = self.data.get(key)
+
+        for rule in self.runable_rules(config):
+            yield from self.run_check(
+                rule.matchall, filename, rule.id, config, filename, cfn
+            )
+
+        for resource_name, resource_attributes in cfn.get_resources().items():
+            resource_type = resource_attributes.get("Type")
+            resource_properties = resource_attributes.get("Properties")
+            if isinstance(resource_type, str) and isinstance(resource_properties, dict):
+                path = ["Resources", resource_name, "Properties"]
+                for rule in self.runable_rules(config):
+                    yield from self.run_check(
+                        rule.matchall_resource_properties,
+                        filename,
+                        rule.id,
+                        config,
+                        filename,
+                        cfn,
+                        resource_properties,
+                        resource_type,
+                        path,
+                    )
+
+    @classmethod
+    def _from_list(cls, items: List[CloudFormationLintRule]) -> Rules:
+        rules = Rules()
+        for item in items:
+            rules[item.id] = item
+
+        return rules
 
     @classmethod
     def create_from_module(cls, modpath: str) -> Rules:
         """Create rules from a module import path"""
         mod = importlib.import_module(modpath)
-        return cls(cfnlint.helpers.create_rules(mod))
-    
+        return cls._from_list(cfnlint.helpers.create_rules(mod))
+
     @classmethod
     def create_from_directory(cls, rulesdir: str) -> Rules:
         if rulesdir != "":
-            return cls(cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir)))
+            return cls._from_list(
+                cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
+            )
 
-        return Rules([])
-    
+        return cls({})
+
     @classmethod
     def create_from_custom_rules_file(cls, custom_rules_file) -> Rules:
         """Create rules from custom rules file"""
-        custom_rules = cls([])
+        custom_rules = cls({})
         if custom_rules_file:
             with open(custom_rules_file, encoding="utf-8") as customRules:
                 line_number = 1
@@ -369,7 +424,7 @@ class Rules(UserList):
                     LOGGER.debug("Processing Custom Rule Line %d", line_number)
                     custom_rule = cfnlint.rules.custom.make_rule(line, line_number)
                     if custom_rule:
-                        custom_rules.append(custom_rule)
+                        custom_rules[custom_rule.id] = custom_rule
                     line_number += 1
 
         return custom_rules

@@ -5,8 +5,10 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import Rules
+from cfnlint.runner import TemplateRunner
 from cfnlint.template.template import Template  # pylint: disable=E0401
 
 
@@ -15,7 +17,7 @@ class TestCustomRuleParsing(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.rules = RulesCollection()
+        self.rules = Rules()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)
@@ -138,8 +140,7 @@ class TestCustomRuleParsing(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get("filename")
             template = cfnlint.decode.cfn_yaml.load(filename)
-            Template(filename, template, ["us-east-1"])
-            rules = RulesCollection(None, None, None, False, None)
-            rules.create_from_custom_rules_file(rulename)
-            runner = cfnlint.runner.Runner(rules, filename, template, None, None)
-            return runner.run()
+            rules = Rules()
+            rules.update(rules.create_from_custom_rules_file(rulename))
+            runner = TemplateRunner(filename, template, ConfigMixIn({}), rules)
+            return list(runner.run())

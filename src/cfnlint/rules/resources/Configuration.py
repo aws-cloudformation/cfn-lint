@@ -31,9 +31,9 @@ class Configuration(BaseJsonSchema):
         }
         self.rule_set = {
             "maxProperties": "E3010",
-            "propertyNames": "E3011",
+            "propertyNames": "E3006",
             "fn_base64": "E1021",
-            "fn_cidr": "E1012",
+            "fn_cidr": "E1024",
             "fn_findinmap": "E1011",
             "fn_foreach": "E1032",
             "fn_getatt": "E1010",

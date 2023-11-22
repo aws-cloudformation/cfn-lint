@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 import cfnlint.config  # pylint: disable=E0401
 import cfnlint.core  # pylint: disable=E0401
-from cfnlint.rules import CloudFormationLintRule, RulesCollection
+from cfnlint.rules import CloudFormationLintRule, Rules
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -315,7 +315,7 @@ class TestArgsFilenamesAndRules(BaseTestCase):
             shortdesc = "Bar"
 
         rule = Rule()
-        rules_collection = RulesCollection()
+        rules_collection = Rules()
         rules_collection.rules = {"X0000": rule}
 
         yaml_mock.side_effect = [{}, {}]

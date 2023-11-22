@@ -4,7 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.rules import RulesCollection
+from cfnlint import ConfigMixIn
+from cfnlint.rules import Rules
 from cfnlint.rules.resources.properties.JsonSchema import (
     JsonSchema,  # pylint: disable=E0401
 )
@@ -20,7 +21,7 @@ class TestOverrideRequired(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
+        self.collection = Rules()
         self.collection.register(JsonSchema())
         self.collection.register(Required())
         self.region = "us-east-1"
@@ -39,8 +40,10 @@ class TestOverrideRequired(BaseTestCase):
             "test/fixtures/templates/override_spec/required.json", regions=[self.region]
         )
 
-        good_runner = Runner(self.collection, filename, template, [self.region], [])
-        self.assertEqual([], good_runner.run())
+        good_runner = Runner(
+            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        )
+        self.assertEqual([], list(good_runner.run()))
 
     def test_fail_run(self):
         """Failure test required"""
@@ -51,6 +54,8 @@ class TestOverrideRequired(BaseTestCase):
             "test/fixtures/templates/override_spec/required.json", regions=[self.region]
         )
 
-        bad_runner = Runner(self.collection, filename, template, [self.region], [])
-        errs = bad_runner.run()
+        bad_runner = Runner(
+            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        )
+        errs = list(bad_runner.run())
         self.assertEqual(1, len(errs))
