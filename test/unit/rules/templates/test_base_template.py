@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 
 from test.unit.rules import BaseRuleTestCase
-
 from cfnlint.rules.templates.Base import Base  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
 
 
 class TestBaseTemplate(BaseRuleTestCase):
@@ -21,12 +21,16 @@ class TestBaseTemplate(BaseRuleTestCase):
         self.helper_file_positive()
 
     def test_file_positive_configured(self):
-        self.helper_file_rule_config(
+        self.helper_file_positive_template(
             "test/fixtures/templates/bad/generic.yaml",
-            {
-                "sections": "Errors",
-            },
-            0,
+            ConfigMixIn(
+                [],
+                configure_rules={
+                    "E1001": {
+                        "sections": "Errors",
+                    }
+                },
+            ),
         )
 
     def test_file_negative(self):
