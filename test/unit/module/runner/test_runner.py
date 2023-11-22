@@ -8,7 +8,7 @@ from test.testlib.testcase import BaseTestCase
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import Rules
 from cfnlint.runner import Runner
 
 
@@ -17,9 +17,7 @@ class TestRunner(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.collection = RulesCollection(
-            include_rules=["I"], include_experimental=True
-        )
+        self.collection = Rules(include_rules=["I"], include_experimental=True)
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.collection.create_from_directory(rulesdir)
