@@ -16,4 +16,4 @@ class PropertyNames(ParentPropertyNames):
     tags = ["parameters", "limits"]
 
     def __init__(self) -> None:
-        super().__init__("I2003")
+        super().__init__("I2012")
