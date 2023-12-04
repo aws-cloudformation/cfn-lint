@@ -7,7 +7,7 @@ from test.testlib.testcase import BaseTestCase
 import regex as re
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
 from cfnlint.template.template import Template
@@ -20,7 +20,7 @@ class TestRulesCollection(BaseTestCase):
         """SetUp template object"""
         self.rules = RulesCollection()
         self.rules.include_rules = ["I", "W", "E"]
-        rulesdirs = [DEFAULT_RULESDIR]
+        rulesdirs = [_DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)
 

@@ -100,7 +100,6 @@ class BaseCliTestCase(unittest.TestCase):
             matches = list(runner.validate_template(filename, template))
 
             # Only check that the error count matches as the formats are different
-            print(matches, expected_results)
             self.assertEqual(
                 len(expected_results),
                 len(matches),
