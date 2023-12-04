@@ -2,16 +2,19 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from __future__ import annotations
+
 import logging
 import os
 import sys
-from typing import List, Optional, Sequence, Union, Dict
+from typing import Dict, List, Sequence
 
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn
-from cfnlint.decode import decode
+from cfnlint.decode.decode import decode
 from cfnlint.rules import Iterator, Match, ParseError, Rules, TransformError
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger(__name__)
@@ -39,7 +42,7 @@ def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
 
 class TemplateRunner:
     def __init__(
-        self, filename: str, template: str, config: ConfigMixIn, rules: Rules
+        self, filename: str | None, template: str, config: ConfigMixIn, rules: Rules
     ) -> None:
         self.cfn = Template(filename, template, config.regions)
         self.rules = rules
@@ -58,7 +61,12 @@ class TemplateRunner:
         LOGGER.info("Run scan of template %s", self.cfn.filename)
         matches = self.cfn.transform()
         if matches:
-            yield from self._dedup(iter(matches))
+            # Transform logic helps with handling serverless templates
+            if self.rules.is_rule_enabled(
+                TransformError(),
+                self.config,
+            ):
+                yield from iter(matches)
             return
         if self.cfn.template is not None:
             yield from self._dedup(
@@ -67,7 +75,7 @@ class TemplateRunner:
                 )
             )
 
-    def check_metadata_directives(self, matches: Sequence[Match]) -> Iterator[Match]:
+    def check_metadata_directives(self, matches: Iterator[Match]) -> Iterator[Match]:
         # uniq the list of incidents and filter out exceptions from the template
         directives = self.cfn.get_directives()
 
@@ -75,8 +83,8 @@ class TemplateRunner:
             if match.rule.id not in directives:
                 yield match
             else:
-                for mandatory_rule in self.mandatory_rules:
-                    if match.rule.id.startswith(mandatory_rule):
+                for mandatory_check in self.config.mandatory_checks:
+                    if match.rule.id.startswith(mandatory_check):
                         yield match
                         break
                 else:
@@ -103,7 +111,15 @@ class Runner:
     def __init__(self, config: ConfigMixIn) -> None:
         self.config = config
         self.formatter = get_formatter(self.config)
-        self.rules = Rules()
+        self.rules: Rules = Rules()
+        self._get_rules()
+        if self.config.override_spec:
+            PROVIDER_SCHEMA_MANAGER.patch(
+                self.config.override_spec, self.config.regions
+            )
+        if self.config.registry_schemas:
+            for path in self.config.registry_schemas:
+                PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
 
     def _get_rules(self):
         self.rules = Rules()
@@ -146,23 +162,23 @@ class Runner:
                 ):
                     yield from iter(matches)
                     continue
-            yield from self.validate_template(filename, template)
+            yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
-    def validate_template(self, filename: str, template: str) -> Iterator[Match]:
+    def validate_template(self, filename: str | None, template: str) -> Iterator[Match]:
         self.config.template_args = template
 
         runner = TemplateRunner(filename, template, self.config, self.rules)
         yield from runner.run()
 
-    def _output(self, matches: Iterator[Match]) -> None:
+    def _output(self, matches: List[Match]) -> None:
         formatter = get_formatter(self.config)
-        matches = list(matches)
-        output = formatter.print_matches(matches)
-        if self.config.output_file:
-            with open(self.config.output_file, "w") as output_file:
-                output_file.write(output)
-        else:
-            print(output)
+        output = formatter.print_matches(list(matches), self.rules, config=self.config)
+        if output:
+            if self.config.output_file:
+                with open(self.config.output_file, "w") as output_file:
+                    output_file.write(output)
+            else:
+                print(output)
 
         self._exit(matches)
 
@@ -207,9 +223,6 @@ class Runner:
             cfnlint.maintenance.update_iam_policies()
             sys.exit(0)
 
-        # Remaining actions need rules
-        self._get_rules()
-
         if self.config.update_documentation:
             # Get ALL rules (ignore the CLI settings))
             cfnlint.maintenance.update_documentation(self.rules)
@@ -220,89 +233,20 @@ class Runner:
             sys.exit(0)
 
         if not sys.stdin.isatty() and not self.config.templates:
-            self._output(self.validate_filenames([None]))
+            self._output(list(self.validate_filenames(["-"])))
 
         if not self.config.templates:
             # Not specified, print the help
             self.config.parser.print_help()
             sys.exit(1)
 
-        self._output(self.validate_filenames(self.config.templates))
+        self._output(list(self.validate_filenames(self.config.templates)))
 
 
 def main() -> None:
     config = ConfigMixIn(sys.argv[1:])
     runner = Runner(config)
     runner.run()
-
-
-class LegacyRunner:
-    """Run all the rules"""
-
-    def __init__(
-        self,
-        rules: Rules,
-        filename: Optional[str],
-        template: str,
-        regions: Sequence[str],
-        verbosity=0,
-        mandatory_rules: Union[Sequence[str], None] = None,
-    ):
-        self.rules = rules
-        self.filename = filename
-        self.verbosity = verbosity
-        self.mandatory_rules = mandatory_rules or []
-        self.cfn = Template(filename, template, regions)
-
-    def transform(self):
-        """Transform logic"""
-        matches = self.cfn.transform()
-        return matches
-
-    def run(self) -> List[Match]:
-        """Run rules"""
-        LOGGER.info("Run scan of template %s", self.filename)
-        matches = []
-        if self.cfn.template is not None:
-            matches.extend(self.rules.run(self.filename, self.cfn))
-        return self.check_metadata_directives(matches)
-
-    def check_metadata_directives(self, matches: Sequence[Match]) -> List[Match]:
-        # uniq the list of incidents and filter out exceptions from the template
-        directives = self.cfn.get_directives()
-        return_matches: List[Match] = []
-
-        for check in self.rules.ignore_rules:
-            print(check)
-        for match in matches:
-            if not any(match == u for u in return_matches):
-                if match.rule.id not in directives:
-                    return_matches.append(match)
-                else:
-                    for mandatory_rule in self.mandatory_rules:
-                        if match.rule.id.startswith(mandatory_rule):
-                            return_matches.append(match)
-                            break
-                    else:
-                        for directive in directives.get(match.rule.id):
-                            start = directive.get("start")
-                            end = directive.get("end")
-                            if start[0] < match.linenumber < end[0]:
-                                break
-                            if (
-                                start[0] == match.linenumber
-                                and start[1] <= match.columnnumber
-                            ):
-                                break
-                            if (
-                                end[0] == match.linenumber
-                                and end[1] >= match.columnnumberend
-                            ):
-                                break
-                        else:
-                            return_matches.append(match)
-
-        return return_matches
 
 
 class CfnLintExitException(Exception):

@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
 
-import cfnlint.core
+from cfnlint import ConfigMixIn
 
 
 class TestTransformIgnore(BaseCliTestCase):
@@ -21,5 +21,11 @@ class TestTransformIgnore(BaseCliTestCase):
 
     def test_templates(self):
         """Test same templates using integration approach"""
-        rules = cfnlint.core.get_rules([], ["E0001"], ["I", "E", "W"], {}, True)
-        self.run_module_integration_scenarios(rules)
+        self.run_module_integration_scenarios(
+            ConfigMixIn(
+                [],
+                ignore_checks=["E0001"],
+                include_checks=["I"],
+                include_experimental=True,
+            )
+        )

@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
 
-import cfnlint.core
+from cfnlint import ConfigMixIn
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
@@ -56,15 +56,15 @@ class TestQuickStartTemplates(BaseCliTestCase):
 
     def test_module_integration(self):
         """Test same templates using integration approach"""
-        rules = cfnlint.core.get_rules(
-            [],
-            [],
-            ["I", "E", "W"],
-            {
-                "E3012": {
-                    "strict": False,
-                }
-            },
-            True,
+        self.run_module_integration_scenarios(
+            ConfigMixIn(
+                [],
+                include_checks=["I"],
+                configure_rules={
+                    "E3012": {
+                        "strict": False,
+                    }
+                },
+                include_experimental=True,
+            )
         )
-        self.run_module_integration_scenarios(rules)
