@@ -6,11 +6,11 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from typing import Any, Dict
 
+from cfnlint import ConfigMixIn
 from cfnlint.decode.decode import decode_str
 from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
 from cfnlint.rules import Match, RuleMatch, Rules
-from cfnlint.runner import Runner, TemplateRunner
-from cfnlint import ConfigMixIn
+from cfnlint.runner import TemplateRunner
 
 
 class TestCloudFormationRuleChild(BaseTestCase):
@@ -98,7 +98,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             runner = TemplateRunner(
                 None,
                 template,
-                ConfigMixIn([], ignore_checks=["E1001"]),
+                ConfigMixIn(ignore_checks=["E1001"]),
                 rule_collection,
             )
             failures = list(runner.run())
@@ -147,12 +147,11 @@ class TestCloudFormationRuleChild(BaseTestCase):
 
         template, _ = decode_str('{"key": "value"}')
         self.assertIsNotNone(template)
-        configuration = {"E1001": {"pass": False}}
         if template is not None:
             runner = TemplateRunner(
                 None,
                 template,
-                ConfigMixIn([], configure_rules=configuration),
+                ConfigMixIn(configure_rules={"E1001": {"pass": False}}),
                 rule_collection,
             )
             failures = list(runner.run())

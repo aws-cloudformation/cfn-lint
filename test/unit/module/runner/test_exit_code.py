@@ -5,8 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.core
+from cfnlint import ConfigMixIn
 from cfnlint.rules import CloudFormationLintRule, Match
+from cfnlint.runner import Runner
 
 
 class ErrorRule(CloudFormationLintRule):
@@ -59,12 +60,15 @@ class TestExitCodes(BaseTestCase):
 
         for matches, level, exit_code in params:
             with self.subTest():
+                runner = Runner(ConfigMixIn(non_zero_exit_code=level))
                 match_names = [x.rule.description for x in matches]
+                with self.assertRaises(SystemExit) as e:
+                    runner._exit(matches)
                 self.assertEqual(
-                    cfnlint.core.get_exit_code(matches, level),
+                    e.exception.code,
                     exit_code,
                     (
-                        f"{match_names} matches with {level} level should yield"
-                        f" {exit_code}"
+                        f"{match_names} matches with {level} "
+                        f"level should yield {exit_code}"
                     ),
                 )
