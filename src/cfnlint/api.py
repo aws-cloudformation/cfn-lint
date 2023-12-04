@@ -3,19 +3,25 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import List
+from __future__ import annotations
 
-from cfnlint.config import configure_logging
-from cfnlint.core import get_rules
+from typing import Iterator, List
+
+from cfnlint.config import ConfigMixIn, ManualArgs, configure_logging
 from cfnlint.decode.decode import decode_str
-from cfnlint.helpers import REGIONS
-from cfnlint.rules import Match, RulesCollection
+from cfnlint.helpers import REGION_PRIMARY, REGIONS
+from cfnlint.rules import Match, Rules
 from cfnlint.runner import Runner
 
 Matches = List[Match]
 
 
-def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
+def lint(
+    s: str,
+    rules: Rules | None = None,
+    regions: List[str] | None = None,
+    config: ManualArgs | None = None,
+) -> Iterator[Match]:
     """Validate a string template using the specified rules and regions.
 
     Parameters
@@ -35,24 +41,28 @@ def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
     configure_logging(None, None)
     template, errors = decode_str(s)
     if errors:
-        return errors
+        yield from iter(errors)
 
     if template is None:
-        return []
+        return
 
-    runner = Runner(
-        rules=rules,
-        filename=None,
-        template=template,
-        regions=regions,
-        verbosity=0,
-        mandatory_rules=None,
-    )
-    runner.transform()
-    return runner.run()
+    if not regions:
+        regions = [REGION_PRIMARY]
+
+    if not config:
+        config_mixin = ConfigMixIn(
+            regions=regions,
+        )
+    else:
+        config_mixin = ConfigMixIn(**config)
+
+    runner = Runner(config_mixin)
+    if isinstance(rules, Rules):
+        runner.rules = rules
+    yield from runner.validate_template(None, template)
 
 
-def lint_all(s: str) -> Matches:
+def lint_all(s: str) -> Iterator[Match]:
     """Validate a string template against all regions and rules.
 
     Parameters
@@ -65,8 +75,9 @@ def lint_all(s: str) -> Matches:
     list
         a list of errors if any were found, else an empty list
     """
-    return lint(
+    yield from lint(
         s=s,
-        rules=get_rules([], [], ["I", "W", "E"], include_experimental=True),
-        regions=REGIONS,
+        config=ManualArgs(
+            include_checks=["I"], include_experimental=True, regions=REGIONS
+        ),
     )
