@@ -8,7 +8,8 @@ from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
 from cfnlint.template.template import Template  # pylint: disable=E0401
 
@@ -18,10 +19,10 @@ class TestCfnJson(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.rules = Rules(include_experimental=True)
-        rulesdirs = [DEFAULT_RULESDIR]
-        for rulesdir in rulesdirs:
-            self.rules.create_from_directory(rulesdir)
+        self.rules = Rules.create_from_directory(_DEFAULT_RULESDIR)
+        self.config = ConfigMixIn(
+            include_experimental=True,
+        )
 
         self.filenames = {
             "config_rule": {
@@ -59,13 +60,10 @@ class TestCfnJson(BaseTestCase):
             template = cfnlint.decode.cfn_json.load(filename)
             cfn = Template(filename, template, ["us-east-1"])
 
-            matches = []
-            matches.extend(self.rules.run(filename, cfn))
+            matches = list(self.rules.run(filename, cfn, self.config))
             assert (
                 len(matches) == failures
-            ), "Expected {} failures, got {} on {}".format(
-                failures, len(matches), filename
-            )
+            ), "Expected {} failures, got {} on {}".format(failures, matches, filename)
 
     def test_success_escape_character(self):
         """Test Successful JSON Parsing"""
@@ -74,10 +72,9 @@ class TestCfnJson(BaseTestCase):
         template = cfnlint.decode.cfn_json.load(filename)
         cfn = Template(filename, template, ["us-east-1"])
 
-        matches = []
-        matches.extend(self.rules.run(filename, cfn))
+        matches = list(self.rules.run(filename, cfn, self.config))
         assert len(matches) == failures, "Expected {} failures, got {} on {}".format(
-            failures, len(matches), filename
+            failures, matches, filename
         )
 
     def test_success_parse_stdin(self):
@@ -91,8 +88,7 @@ class TestCfnJson(BaseTestCase):
                 template = cfnlint.decode.cfn_json.load(filename)
                 cfn = Template(filename, template, ["us-east-1"])
 
-                matches = []
-                matches.extend(self.rules.run(filename, cfn))
+                matches = list(self.rules.run(filename, cfn, self.config))
                 assert (
                     len(matches) == failures
                 ), "Expected {} failures, got {} on {}".format(
