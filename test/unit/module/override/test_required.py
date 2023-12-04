@@ -6,13 +6,8 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 
 from cfnlint import ConfigMixIn
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
-from cfnlint.rules.resources.properties.JsonSchema import (
-    JsonSchema,  # pylint: disable=E0401
-)
-from cfnlint.rules.resources.properties.Required import (
-    Required,  # pylint: disable=E0401
-)
 from cfnlint.runner import Runner
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
@@ -22,9 +17,7 @@ class TestOverrideRequired(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = Rules()
-        self.collection.register(JsonSchema())
-        self.collection.register(Required())
+        self.collection = Rules.create_from_directory(_DEFAULT_RULESDIR)
         self.region = "us-east-1"
 
     def tearDown(self):
@@ -35,28 +28,36 @@ class TestOverrideRequired(BaseTestCase):
     def test_success_run(self):
         """Success test"""
         filename = "test/fixtures/templates/good/override/required.yaml"
-        template = self.load_template(filename)
 
         PROVIDER_SCHEMA_MANAGER.patch(
             "test/fixtures/templates/override_spec/required.json", regions=[self.region]
         )
 
-        good_runner = Runner(
-            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        config = ConfigMixIn(
+            regions=[self.region],
+            templates=[filename],
         )
-        self.assertEqual([], list(good_runner.run()))
+        runner = Runner(config)
+        runner.rules = self.collection
+
+        self.assertEqual([], list(runner.validate_filenames([])))
 
     def test_fail_run(self):
         """Failure test required"""
         filename = "test/fixtures/templates/bad/override/required.yaml"
-        template = self.load_template(filename)
 
         PROVIDER_SCHEMA_MANAGER.patch(
             "test/fixtures/templates/override_spec/required.json", regions=[self.region]
         )
 
-        bad_runner = Runner(
-            filename, template, ConfigMixIn({"regions": [self.region]}), self.collection
+        config = ConfigMixIn(
+            regions=[self.region],
+            templates=[filename],
+            ignore_checks=["I", "W", "E"],
+            mandatory_checks=["E3003"],
         )
-        errs = list(bad_runner.run())
-        self.assertEqual(1, len(errs))
+        runner = Runner(config)
+        runner.rules = self.collection
+
+        errs = list(runner.validate_filenames(config.templates))
+        self.assertEqual(1, len(errs), errs)
