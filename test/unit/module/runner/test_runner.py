@@ -6,9 +6,10 @@ from test.testlib.testcase import BaseTestCase
 
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
-from cfnlint.runner import Runner
+from cfnlint.runner import TemplateRunner
 
 
 class TestRunner(BaseTestCase):
@@ -16,10 +17,7 @@ class TestRunner(BaseTestCase):
 
     def setUp(self):
         """SetUp template object"""
-        self.collection = Rules(include_rules=["I"], include_experimental=True)
-        rulesdirs = [DEFAULT_RULESDIR]
-        for rulesdir in rulesdirs:
-            self.collection.create_from_directory(rulesdir)
+        self.rules = Rules.create_from_directory(_DEFAULT_RULESDIR)
         (self.template, _) = cfnlint.decode.decode_str(
             """
             AWSTemplateFormatVersion: "2010-09-09"
@@ -50,23 +48,46 @@ class TestRunner(BaseTestCase):
 
     def test_runner(self):
         """Success test"""
-        runner = Runner(self.collection, "", self.template, ["us-east-1"], [])
-        runner.transform()
-        failures = runner.run()
+        runner = TemplateRunner(
+            filename=None,
+            template=self.template,
+            config=ConfigMixIn(
+                regions=["us-east-1"],
+                include_rules=["I"],
+                include_experimental=True,
+            ),
+            rules=self.rules,
+        )
+        failures = list(runner.run())
         assert [] == failures, "Got failures {}".format(failures)
 
     def test_runner_mandatory_rules(self):
         """Success test"""
-        runner = Runner(
-            self.collection, "", self.template, ["us-east-1"], mandatory_rules=["W1020"]
+        runner = TemplateRunner(
+            filename=None,
+            template=self.template,
+            config=ConfigMixIn(
+                mandatory_checks=["W1020"],
+                regions=["us-east-1"],
+                include_rules=["I"],
+                include_experimental=True,
+            ),
+            rules=self.rules,
         )
-        runner.transform()
-        failures = runner.run()
+
+        failures = list(runner.run())
         self.assertEqual(len(failures), 1)
 
-        runner = Runner(
-            self.collection, "", self.template, ["us-east-1"], mandatory_rules=["W9000"]
+        runner = TemplateRunner(
+            filename=None,
+            template=self.template,
+            config=ConfigMixIn(
+                mandatory_checks=["W9000"],
+                regions=["us-east-1"],
+                include_rules=["I"],
+                include_experimental=True,
+            ),
+            rules=self.rules,
         )
-        runner.transform()
-        failures = runner.run()
+        failures = list(runner.run())
         self.assertEqual(len(failures), 0)

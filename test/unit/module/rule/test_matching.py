@@ -26,7 +26,9 @@ class TestMatching(BaseTestCase):
         f = matching("example")
         r = f(self.example)
         t = r(self, "", None)
-        self.assertEqual(t, [Match(1, 1, 1, 1, "", rule(), "Message", rule_match)])
+        self.assertEqual(
+            list(t), [Match(1, 1, 1, 1, "", rule(), "Message", rule_match)]
+        )
 
     def test_compare(self):
         rule_match_1 = RuleMatch(

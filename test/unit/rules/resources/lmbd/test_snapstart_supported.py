@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
 from cfnlint.rules.resources.lmbd.SnapStartEnabled import SnapStartEnabled
+from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
 
 
 class TestSnapStartSupported(BaseRuleTestCase):
