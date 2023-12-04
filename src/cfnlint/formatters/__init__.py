@@ -46,12 +46,8 @@ class BaseFormatter:
     def _format(self, match):
         """Format the specific match"""
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         """Output all the matches"""
-        # Unused argument http://pylint-messages.wikidot.com/messages:w0613
-        del rules
-        del filenames
-
         if not matches:
             return None
 
@@ -88,7 +84,7 @@ class JUnitFormatter(BaseFormatter):
             match.message, match.filename, match.linenumber, match.columnnumber
         )
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         """Output all the matches"""
 
         if not rules:
@@ -99,7 +95,7 @@ class JUnitFormatter(BaseFormatter):
             rules.extend([ParseError(), TransformError(), RuleError()])
 
         test_cases = []
-        for rule in rules.all_rules.values():
+        for rule in rules.values():
             if rule.id not in rules.used_rules:
                 if not rule.id:
                     continue
@@ -165,7 +161,7 @@ class JsonFormatter(BaseFormatter):
                 }
             return {f"__{o.__class__.__name__}__": o.__dict__}
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         # JSON formatter outputs a single JSON object
         # Unused argument http://pylint-messages.wikidot.com/messages:w0613
         del rules
@@ -218,12 +214,12 @@ class PrettyFormatter(BaseFormatter):
             match.message,
         )
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         results = self._format_matches(matches)
 
         # ruff: noqa: E501
         results.append(
-            f"Cfn-lint scanned {colored(len(filenames), color.bold_reset)} templates against "
+            f"Cfn-lint scanned {colored(len(config.templates), color.bold_reset)} templates against "
             f"{colored(len(rules.used_rules), color.bold_reset)} rules and found "
             f'{colored(len([i for i in matches if i.rule.severity.lower() == "error"]), color.error)} '
             f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
@@ -320,22 +316,19 @@ class SARIFFormatter(BaseFormatter):
 
         # Output only the rules that have matches
         matched_rules = set(r.rule_id for r in results)
-        rules_map = {r.id: r for r in list(rules)}
 
         rules = [
             sarif.ReportingDescriptor(
                 id=rule_id,
                 short_description=sarif.MultiformatMessageString(
-                    text=rules_map[rule_id].shortdesc
+                    text=rules[rule_id].shortdesc
                 ),
                 full_description=sarif.MultiformatMessageString(
-                    text=rules_map[rule_id].description
+                    text=rules[rule_id].description
                 ),
-                help_uri=(
-                    rules_map[rule_id].source_url
-                    if rules_map[rule_id]
-                    else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md"
-                ),
+                help_uri=rules[rule_id].source_url
+                if rules[rule_id]
+                else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md",
             )
             for rule_id in matched_rules
         ]
