@@ -35,6 +35,11 @@ from cfnlint.template import Template
 if TYPE_CHECKING:
     from cfnlint.config import ConfigMixIn
 
+    TypedRules = UserDict[str, "CloudFormationLintRule"]
+else:
+    TypedRules = UserDict
+
+
 LOGGER = logging.getLogger(__name__)
 
 
@@ -265,18 +270,19 @@ class CloudFormationLintRule:
         )
 
 
-class Rules(UserDict):
+class Rules(TypedRules):
     def __init__(
         self, dict: Dict[str, CloudFormationLintRule] | None = None, /, **kwargs
     ):
         super().__init__()
         self.data: Dict[str, CloudFormationLintRule] = {}
+        self._used_rules: Dict[str, CloudFormationLintRule] = {}
         if dict is not None:
             self.update(dict)
         if kwargs:
             self.update(kwargs)
 
-    def __delitem__(self, i: int) -> None:
+    def __delitem__(self, i: str) -> None:
         raise RuntimeError("Deletion is not allowed")
 
     def __setitem__(self, key: str, item: CloudFormationLintRule) -> None:
@@ -286,16 +292,12 @@ class Rules(UserDict):
             raise DuplicateRuleError(rule_id=key)
         return super().__setitem__(key, item)
 
-    def update(self, other: Dict[str, CloudFormationLintRule]) -> None:
-        for key, value in other.items():
-            self[key] = value
-
     def register(self, rule: CloudFormationLintRule) -> None:
         self[rule.id] = rule
 
     def filter(
         self,
-        func: Callable[[List[CloudFormationLintRule], ConfigMixIn], Rules],
+        func: Callable[[Dict[str, CloudFormationLintRule], ConfigMixIn], Rules],
         config: ConfigMixIn,
     ):
         return func(self.data, config)
@@ -304,13 +306,18 @@ class Rules(UserDict):
         self, rule: str | CloudFormationLintRule, config: ConfigMixIn
     ) -> bool:
         if isinstance(rule, str):
+            if rule not in self.data:
+                return False
             rule = self.data[rule]
-        return rule.is_enabled(
+        if rule.is_enabled(
             config.include_experimental,
             ignore_rules=config.ignore_checks,
             include_rules=config.include_checks,
             mandatory_rules=config.mandatory_checks,
-        )
+        ):
+            self._used_rules[rule.id] = rule
+            return True
+        return False
 
     def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
         for rule in self.data.values():
@@ -326,6 +333,14 @@ class Rules(UserDict):
         for rule in self.data.values():
             if self.is_rule_enabled(rule.id, config):
                 yield rule
+
+    def extend(self, rules: List[CloudFormationLintRule]):
+        for rule in rules:
+            self.register(rule)
+
+    @property
+    def used_rules(self) -> Dict[str, CloudFormationLintRule]:
+        return self._used_rules
 
     # pylint: disable=inconsistent-return-statements
     def run_check(self, check, filename, rule_id, config, *args):
