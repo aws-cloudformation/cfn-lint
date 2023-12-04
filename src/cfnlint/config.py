@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import argparse
 import copy
 import glob
@@ -11,10 +13,12 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Sequence, TypedDict, List, Any
+from typing import Any, Dict, List, TypedDict, Sequence
+
+from typing_extensions import Unpack
 
 import cfnlint.decode.cfn_yaml
-from cfnlint.helpers import REGIONS
+from cfnlint.helpers import REGIONS, format_json_string
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.version import __version__
 
@@ -611,11 +615,12 @@ class TemplateArgs:
     template_args = property(get_template_args, set_template_args)
 
 
-class ManualArgs(TypedDict):
-    configure_rules: Dict[str, Any]
+class ManualArgs(TypedDict, total=False):
+    configure_rules: Dict[str, Dict[str, Any]]
     include_checks: List[str]
     ignore_checks: List[str]
-    include_expiremental: bool
+    mandatory_checks: List[str]
+    include_experimental: bool
     ignore_bad_template: bool
     ignore_templates: list
     merge_configs: bool
@@ -628,14 +633,36 @@ class ManualArgs(TypedDict):
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     """Mixin for the Configs"""
 
-    def __init__(self, cli_args, **kwargs: ManualArgs):
+    def __init__(self, cli_args: List[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
-        configure_logging(self.cli_args.debug, self.cli_args.info)
+        configure_logging(self.cli_args.debug, self.cli_args.info)  # type: ignore
         TemplateArgs.__init__(self, {})
         ConfigFileArgs.__init__(
             self, config_file=self._get_argument_value("config_file", False, False)
+        )
+
+    def __repr__(self):
+        return format_json_string(
+            {
+                "ignore_checks": self.ignore_checks,
+                "include_checks": self.include_checks,
+                "mandatory_checks": self.mandatory_checks,
+                "include_experimental": self.include_experimental,
+                "configure_rules": self.configure_rules,
+                "regions": self.regions,
+                "ignore_bad_template": self.ignore_bad_template,
+                "debug": self.debug,
+                "format": self.format,
+                "templates": self.templates,
+                "append_rules": self.append_rules,
+                "override_spec": self.override_spec,
+                "custom_rules": self.custom_rules,
+                "config_file": self.config_file,
+                "merge_configs": self.merge_configs,
+                "non_zero_exit_code": self.non_zero_exit_code,
+            }
         )
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
