@@ -1,3 +1,8 @@
+### v0.83.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `149.0.0` (pull #[2951](https://github.com/aws-cloudformation/cfn-lint/pull/2951))
+- Add `KeyID` as a target for `TargetKeyId` (pull #[2953](https://github.com/aws-cloudformation/cfn-lint/pull/2953))
+
 ### v0.83.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to include `python3.12` (pull #[2947](https://github.com/aws-cloudformation/cfn-lint/pull/2947))
