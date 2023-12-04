@@ -6,6 +6,7 @@ from test.testlib.testcase import BaseTestCase
 from typing import List
 
 from cfnlint import ConfigMixIn, Rules
+from cfnlint.config import ManualArgs
 from cfnlint.runner import TemplateRunner
 
 
@@ -18,7 +19,6 @@ class BaseRuleTestCase(BaseTestCase):
         """Setup"""
         self.collection = Rules()
         self.config = ConfigMixIn(
-            None,
             include_experimental=True,
             include_checks=["I"],
         )
