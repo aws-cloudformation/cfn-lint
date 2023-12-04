@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from test.unit.rules import BaseRuleTestCase
+
 from cfnlint import ConfigMixIn
 from cfnlint.rules.resources.HardCodedArnProperties import (
     HardCodedArnProperties,  # pylint: disable=E0401

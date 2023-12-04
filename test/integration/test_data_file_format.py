@@ -9,7 +9,6 @@ import os
 from unittest import TestCase
 
 import cfnlint
-import cfnlint.core
 from cfnlint.helpers import format_json_string
 
 
