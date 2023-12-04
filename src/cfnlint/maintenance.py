@@ -33,8 +33,7 @@ def update_documentation(rules):
     filename = "docs/rules.md"
 
     # Sort rules by the Rule ID
-    sorted_rules = sorted(rules, key=lambda obj: obj.id)
-
+    sorted_rules = sorted(rules.values(), key=lambda obj: obj.id)
     data = []
 
     # Read current file up to the Rules part, everything up to that point is
@@ -81,6 +80,7 @@ def update_documentation(rules):
             cfnlint.rules.TransformError(),
             cfnlint.rules.RuleError(),
         ] + sorted_rules:
+            print(rule)
             rule_source_code_file = (
                 "../"
                 + subprocess.check_output(

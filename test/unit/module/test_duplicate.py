@@ -6,7 +6,7 @@ from test.testlib.testcase import BaseTestCase
 
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
 
 
@@ -16,7 +16,7 @@ class TestDuplicate(BaseTestCase):
     def setUp(self):
         """SetUp template object"""
         self.rules = Rules()
-        rulesdirs = [DEFAULT_RULESDIR]
+        rulesdirs = [_DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)
 

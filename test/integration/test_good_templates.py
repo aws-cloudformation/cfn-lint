@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
 
-from cfnlint import ConfigMixIn, Rules
+from cfnlint import ConfigMixIn
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
