@@ -23,7 +23,7 @@ Regular Text
 """
 
     def test_update_docs(self):
-        collection = Rules(include_rules=["I"], include_experimental=True)
+        collection = Rules()
 
         builtin_module_name = "builtins"
 
