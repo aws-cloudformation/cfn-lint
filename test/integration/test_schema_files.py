@@ -11,7 +11,6 @@ from unittest import TestCase
 import regex as re
 
 import cfnlint
-import cfnlint.core
 from cfnlint.helpers import REGIONS, load_resource
 from cfnlint.jsonschema import RefResolver, StandardValidator, ValidationError
 from cfnlint.jsonschema._utils import ensure_list
