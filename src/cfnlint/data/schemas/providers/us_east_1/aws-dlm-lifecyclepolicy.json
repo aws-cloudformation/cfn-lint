@@ -158,6 +158,10 @@
    ],
    "type": "object"
   },
+  "CrossRegionCopyTargets": {
+   "additionalProperties": false,
+   "type": "object"
+  },
   "DeprecateRule": {
    "additionalProperties": false,
    "properties": {
@@ -226,6 +230,29 @@
    ],
    "type": "object"
   },
+  "ExcludeTags": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "ExcludeVolumeTypesList": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "Exclusions": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludeBootVolumes": {
+     "type": "boolean"
+    },
+    "ExcludeTags": {
+     "$ref": "#/definitions/ExcludeTags"
+    },
+    "ExcludeVolumeTypes": {
+     "$ref": "#/definitions/ExcludeVolumeTypesList"
+    }
+   },
+   "type": "object"
+  },
   "FastRestoreRule": {
    "additionalProperties": false,
    "properties": {
@@ -277,11 +304,29 @@
      "type": "array",
      "uniqueItems": false
     },
+    "CopyTags": {
+     "type": "boolean"
+    },
+    "CreateInterval": {
+     "type": "integer"
+    },
+    "CrossRegionCopyTargets": {
+     "$ref": "#/definitions/CrossRegionCopyTargets"
+    },
     "EventSource": {
      "$ref": "#/definitions/EventSource"
     },
+    "Exclusions": {
+     "$ref": "#/definitions/Exclusions"
+    },
+    "ExtendDeletion": {
+     "type": "boolean"
+    },
     "Parameters": {
      "$ref": "#/definitions/Parameters"
+    },
+    "PolicyLanguage": {
+     "type": "string"
     },
     "PolicyType": {
      "type": "string"
@@ -293,6 +338,9 @@
      "type": "array",
      "uniqueItems": false
     },
+    "ResourceType": {
+     "type": "string"
+    },
     "ResourceTypes": {
      "items": {
       "enum": [
@@ -303,6 +351,9 @@
      },
      "type": "array",
      "uniqueItems": false
+    },
+    "RetainInterval": {
+     "type": "integer"
     },
     "Schedules": {
      "items": {
@@ -478,17 +529,38 @@
   "Arn": {
    "type": "string"
   },
+  "CopyTags": {
+   "type": "boolean"
+  },
+  "CreateInterval": {
+   "type": "integer"
+  },
+  "CrossRegionCopyTargets": {
+   "$ref": "#/definitions/CrossRegionCopyTargets"
+  },
+  "DefaultPolicy": {
+   "type": "string"
+  },
   "Description": {
    "type": "string"
   },
+  "Exclusions": {
+   "$ref": "#/definitions/Exclusions"
+  },
   "ExecutionRoleArn": {
    "type": "string"
+  },
+  "ExtendDeletion": {
+   "type": "boolean"
   },
   "Id": {
    "type": "string"
   },
   "PolicyDetails": {
    "$ref": "#/definitions/PolicyDetails"
+  },
+  "RetainInterval": {
+   "type": "integer"
   },
   "State": {
    "type": "string"
