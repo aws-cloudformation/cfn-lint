@@ -5,6 +5,55 @@
   "/properties/FifoTopic"
  ],
  "definitions": {
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "SuccessFeedbackRoleArn"
+     ]
+    },
+    {
+     "required": [
+      "SuccessFeedbackSampleRate"
+     ]
+    },
+    {
+     "required": [
+      "FailureFeedbackRoleArn"
+     ]
+    }
+   ],
+   "properties": {
+    "FailureFeedbackRoleArn": {
+     "description": "The IAM role ARN to be used when logging failed message deliveries in Amazon CloudWatch",
+     "type": "string"
+    },
+    "Protocol": {
+     "description": "Indicates one of the supported protocols for the SNS topic",
+     "enum": [
+      "http/s",
+      "sqs",
+      "lambda",
+      "firehose",
+      "application"
+     ],
+     "type": "string"
+    },
+    "SuccessFeedbackRoleArn": {
+     "description": "The IAM role ARN to be used when logging successful message deliveries in Amazon CloudWatch",
+     "type": "string"
+    },
+    "SuccessFeedbackSampleRate": {
+     "description": "The percentage of successful message deliveries to be logged in Amazon CloudWatch. Valid percentage values range from 0 to 100",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Protocol"
+   ],
+   "type": "object"
+  },
   "Subscription": {
    "additionalProperties": false,
    "properties": {
@@ -48,7 +97,9 @@
     "sns:TagResource",
     "sns:Subscribe",
     "sns:GetTopicAttributes",
-    "sns:PutDataProtectionPolicy"
+    "sns:PutDataProtectionPolicy",
+    "iam:GetRole",
+    "iam:PassRole"
    ]
   },
   "delete": {
@@ -81,7 +132,9 @@
     "sns:ListTagsForResource",
     "sns:ListSubscriptionsByTopic",
     "sns:GetDataProtectionPolicy",
-    "sns:PutDataProtectionPolicy"
+    "sns:PutDataProtectionPolicy",
+    "iam:GetRole",
+    "iam:PassRole"
    ]
   }
  },
@@ -100,6 +153,15 @@
   "DataProtectionPolicy": {
    "description": "The body of the policy document you want to use for this topic.\n\nYou can only add one policy per topic.\n\nThe policy must be in JSON string format.\n\nLength Constraints: Maximum length of 30720",
    "type": "object"
+  },
+  "DeliveryStatusLogging": {
+   "description": "Delivery status logging configuration for supported protocols for an Amazon SNS topic.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoggingConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "DisplayName": {
    "description": "The display name to use for an Amazon SNS topic with SMS subscriptions.",

@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyReferenceName",
+  "/properties/DeviceOptions",
+  "/properties/DeviceTrustProviderType",
+  "/properties/TrustProviderType",
+  "/properties/UserTrustProviderType"
+ ],
+ "definitions": {
+  "DeviceOptions": {
+   "additionalProperties": false,
+   "description": "The options for device identity based trust providers.",
+   "properties": {
+    "PublicSigningKeyUrl": {
+     "description": "URL Verified Access will use to verify authenticity of the device tokens.",
+     "type": "string"
+    },
+    "TenantId": {
+     "description": "The ID of the tenant application with the device-identity provider.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OidcOptions": {
+   "additionalProperties": false,
+   "description": "The OpenID Connect details for an oidc -type, user-identity based trust provider.",
+   "properties": {
+    "AuthorizationEndpoint": {
+     "description": "The OIDC authorization endpoint.",
+     "type": "string"
+    },
+    "ClientId": {
+     "description": "The client identifier.",
+     "type": "string"
+    },
+    "ClientSecret": {
+     "description": "The client secret.",
+     "type": "string"
+    },
+    "Issuer": {
+     "description": "The OIDC issuer.",
+     "type": "string"
+    },
+    "Scope": {
+     "description": "OpenID Connect (OIDC) scopes are used by an application during authentication to authorize access to details of a user. Each scope returns a specific set of user attributes.",
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "description": "The OIDC token endpoint.",
+     "type": "string"
+    },
+    "UserInfoEndpoint": {
+     "description": "The OIDC user info endpoint.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification",
+   "description": "The configuration options for customer provided KMS encryption."
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::EC2::VerifiedAccessTrustProvider type describes a verified access trust provider",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVerifiedAccessTrustProvider",
+    "ec2:DescribeVerifiedAccessTrustProviders",
+    "ec2:CreateTags",
+    "ec2:DescribeTags",
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVerifiedAccessTrustProvider",
+    "ec2:DeleteTags",
+    "ec2:DescribeVerifiedAccessTrustProviders",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessTrustProviders",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessTrustProviders",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVerifiedAccessTrustProvider",
+    "ec2:DescribeVerifiedAccessTrustProviders",
+    "ec2:DescribeTags",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessTrustProviderId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "The creation time.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description for the Amazon Web Services Verified Access trust provider.",
+   "type": "string"
+  },
+  "DeviceOptions": {
+   "$ref": "#/definitions/DeviceOptions"
+  },
+  "DeviceTrustProviderType": {
+   "description": "The type of device-based trust provider. Possible values: jamf|crowdstrike",
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "description": "The last updated time.",
+   "type": "string"
+  },
+  "OidcOptions": {
+   "$ref": "#/definitions/OidcOptions"
+  },
+  "PolicyReferenceName": {
+   "description": "The identifier to be used when working with policy rules.",
+   "type": "string"
+  },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "description": "The configuration options for customer provided KMS encryption.",
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "description": "Whether to encrypt the policy with the provided key or disable encryption",
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "description": "KMS Key Arn used to encrypt the group policy",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrustProviderType": {
+   "description": "Type of trust provider. Possible values: user|device",
+   "type": "string"
+  },
+  "UserTrustProviderType": {
+   "description": "The type of device-based trust provider. Possible values: oidc|iam-identity-center",
+   "type": "string"
+  },
+  "VerifiedAccessTrustProviderId": {
+   "description": "The ID of the Amazon Web Services Verified Access trust provider.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessTrustProviderId",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "TrustProviderType",
+  "PolicyReferenceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccesstrustprovider",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessTrustProvider"
+}
