@@ -5,7 +5,8 @@
   "/properties/CreatorMemberAbilities",
   "/properties/DataEncryptionMetadata",
   "/properties/QueryLogStatus",
-  "/properties/Members"
+  "/properties/Members",
+  "/properties/CreatorPaymentConfiguration"
  ],
  "definitions": {
   "CollaborationQueryLogStatus": {
@@ -68,6 +69,9 @@
     },
     "MemberAbilities": {
      "$ref": "#/definitions/MemberAbilities"
+    },
+    "PaymentConfiguration": {
+     "$ref": "#/definitions/PaymentConfiguration"
     }
    },
    "required": [
@@ -91,6 +95,30 @@
    "minLength": 1,
    "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
    "type": "string"
+  },
+  "PaymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryCompute": {
+     "$ref": "#/definitions/QueryComputePaymentConfig"
+    }
+   },
+   "required": [
+    "QueryCompute"
+   ],
+   "type": "object"
+  },
+  "QueryComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
   },
   "Tag": {
    "additionalProperties": false,
@@ -179,6 +207,9 @@
   },
   "CreatorMemberAbilities": {
    "$ref": "#/definitions/MemberAbilities"
+  },
+  "CreatorPaymentConfiguration": {
+   "$ref": "#/definitions/PaymentConfiguration"
   },
   "DataEncryptionMetadata": {
    "$ref": "#/definitions/DataEncryptionMetadata"
