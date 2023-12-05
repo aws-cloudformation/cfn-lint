@@ -480,6 +480,9 @@
     },
     "LogFilePrefix": {
      "type": "string"
+    },
+    "TargetObjectKeyFormat": {
+     "$ref": "#/definitions/TargetObjectKeyFormat"
     }
    },
    "type": "object"
@@ -675,6 +678,21 @@
       "ObjectWriter",
       "BucketOwnerPreferred",
       "BucketOwnerEnforced"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PartitionedPrefix": {
+   "additionalProperties": false,
+   "description": "This format appends a time based prefix to the given log file prefix for delivering server access log file.",
+   "properties": {
+    "PartitionDateSource": {
+     "description": "Date Source for creating a partitioned prefix. This can be event time or delivery time.",
+     "enum": [
+      "EventTime",
+      "DeliveryTime"
      ],
      "type": "string"
     }
@@ -1216,7 +1234,6 @@
     },
     "Value": {
      "maxLength": 256,
-     "minLength": 1,
      "type": "string"
     }
    },
@@ -1240,6 +1257,36 @@
    "required": [
     "Value",
     "Key"
+   ],
+   "type": "object"
+  },
+  "TargetObjectKeyFormat": {
+   "description": "Describes the key format for server access log file in the target bucket. You can choose between SimplePrefix and PartitionedPrefix.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SimplePrefix": {
+       "additionalProperties": false,
+       "description": "This format defaults the prefix to the given log file prefix for delivering server access log file.",
+       "type": "object"
+      }
+     },
+     "required": [
+      "SimplePrefix"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PartitionedPrefix": {
+       "$ref": "#/definitions/PartitionedPrefix"
+      }
+     },
+     "required": [
+      "PartitionedPrefix"
+     ]
+    }
    ],
    "type": "object"
   },
@@ -1453,6 +1500,7 @@
     "s3:PutBucketLogging",
     "s3:PutBucketVersioning",
     "s3:PutObjectLockConfiguration",
+    "s3:PutBucketObjectLockConfiguration",
     "s3:DeleteBucketAnalyticsConfiguration",
     "s3:DeleteBucketCors",
     "s3:DeleteBucketMetricsConfiguration",
@@ -1635,6 +1683,11 @@
  },
  "typeName": "AWS::S3::Bucket",
  "writeOnlyProperties": [
-  "/properties/AccessControl"
+  "/properties/AccessControl",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionExpirationInDays",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionTransition",
+  "/properties/LifecycleConfiguration/Rules/*/Transition",
+  "/properties/ReplicationConfiguration/Rules/*/Prefix",
+  "/properties/LifecycleConfiguration/Rules/*/ExpiredObjectDeleteMarker"
  ]
 }

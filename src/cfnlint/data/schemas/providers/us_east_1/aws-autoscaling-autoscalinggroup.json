@@ -48,6 +48,26 @@
    },
    "type": "object"
   },
+  "InstanceMaintenancePolicy": {
+   "additionalProperties": false,
+   "dependencies": {
+    "MaxHealthyPercentage": [
+     "MinHealthyPercentage"
+    ],
+    "MinHealthyPercentage": [
+     "MaxHealthyPercentage"
+    ]
+   },
+   "properties": {
+    "MaxHealthyPercentage": {
+     "type": "integer"
+    },
+    "MinHealthyPercentage": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "InstanceRequirements": {
    "additionalProperties": false,
    "properties": {
@@ -635,6 +655,9 @@
   },
   "InstanceId": {
    "type": "string"
+  },
+  "InstanceMaintenancePolicy": {
+   "$ref": "#/definitions/InstanceMaintenancePolicy"
   },
   "LaunchConfigurationName": {
    "type": "string"
