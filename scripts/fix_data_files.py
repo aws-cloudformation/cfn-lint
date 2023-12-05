@@ -7,7 +7,6 @@ import json
 import os
 
 import cfnlint
-import cfnlint.core
 from cfnlint.helpers import format_json_string
 
 modules = [

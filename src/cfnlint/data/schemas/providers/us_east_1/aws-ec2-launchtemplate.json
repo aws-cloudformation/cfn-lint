@@ -158,6 +158,25 @@
    },
    "type": "object"
   },
+  "ConnectionTrackingSpecification": {
+   "additionalProperties": false,
+   "description": "Allows customer to specify Connection Tracking options",
+   "properties": {
+    "TcpEstablishedTimeout": {
+     "description": "Integer value for TCP Established Timeout",
+     "type": "integer"
+    },
+    "UdpStreamTimeout": {
+     "description": "Integer value for UDP Stream Timeout",
+     "type": "integer"
+    },
+    "UdpTimeout": {
+     "description": "Integer value for UDP Timeout",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "CpuOptions": {
    "additionalProperties": false,
    "description": "specifies the CPU options for an instance.",
@@ -247,6 +266,31 @@
     "Type": {
      "description": "The type of Elastic Graphics accelerator.",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EnaSrdSpecification": {
+   "additionalProperties": false,
+   "description": "Allows customer to specify ENA-SRD options",
+   "properties": {
+    "EnaSrdEnabled": {
+     "description": "Enables TCP ENA-SRD",
+     "type": "boolean"
+    },
+    "EnaSrdUdpSpecification": {
+     "$ref": "#/definitions/EnaSrdUdpSpecification"
+    }
+   },
+   "type": "object"
+  },
+  "EnaSrdUdpSpecification": {
+   "additionalProperties": false,
+   "description": "Allows customer to specify ENA-SRD (UDP) options",
+   "properties": {
+    "EnaSrdUdpEnabled": {
+     "description": "Enables UDP ENA-SRD",
+     "type": "boolean"
     }
    },
    "type": "object"
@@ -820,6 +864,9 @@
      "description": "Associates a public IPv4 address with eth0 for a new network interface.",
      "type": "boolean"
     },
+    "ConnectionTrackingSpecification": {
+     "$ref": "#/definitions/ConnectionTrackingSpecification"
+    },
     "DeleteOnTermination": {
      "description": "Indicates whether the network interface is deleted when the instance is terminated.",
      "type": "boolean"
@@ -831,6 +878,9 @@
     "DeviceIndex": {
      "description": "The device index for the network interface attachment.",
      "type": "integer"
+    },
+    "EnaSrdSpecification": {
+     "$ref": "#/definitions/EnaSrdSpecification"
     },
     "Groups": {
      "description": "The IDs of one or more security groups.",
