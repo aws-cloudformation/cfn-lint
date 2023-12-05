@@ -4,6 +4,18 @@
   "/properties/CollaborationIdentifier"
  ],
  "definitions": {
+  "MembershipPaymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryCompute": {
+     "$ref": "#/definitions/MembershipQueryComputePaymentConfig"
+    }
+   },
+   "required": [
+    "QueryCompute"
+   ],
+   "type": "object"
+  },
   "MembershipProtectedQueryOutputConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -30,6 +42,18 @@
    },
    "required": [
     "OutputConfiguration"
+   ],
+   "type": "object"
+  },
+  "MembershipQueryComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
    ],
    "type": "object"
   },
@@ -197,6 +221,9 @@
    "minLength": 36,
    "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
    "type": "string"
+  },
+  "PaymentConfiguration": {
+   "$ref": "#/definitions/MembershipPaymentConfiguration"
   },
   "QueryLogStatus": {
    "$ref": "#/definitions/MembershipQueryLogStatus"
