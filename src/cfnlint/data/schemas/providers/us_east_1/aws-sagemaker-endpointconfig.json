@@ -3,11 +3,14 @@
  "createOnlyProperties": [
   "/properties/KmsKeyId",
   "/properties/AsyncInferenceConfig",
+  "/properties/ExecutionRoleArn",
   "/properties/ShadowProductionVariants",
+  "/properties/EnableNetworkIsolation",
   "/properties/ProductionVariants",
   "/properties/DataCaptureConfig",
   "/properties/ExplainerConfig",
-  "/properties/EndpointConfigName"
+  "/properties/EndpointConfigName",
+  "/properties/VpcConfig"
  ],
  "definitions": {
   "AsyncInferenceClientConfig": {
@@ -277,6 +280,21 @@
    },
    "type": "object"
   },
+  "ManagedInstanceScaling": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxInstanceCount": {
+     "type": "integer"
+    },
+    "MinInstanceCount": {
+     "type": "integer"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ProductionVariant": {
    "additionalProperties": false,
    "properties": {
@@ -298,11 +316,17 @@
     "InstanceType": {
      "type": "string"
     },
+    "ManagedInstanceScaling": {
+     "$ref": "#/definitions/ManagedInstanceScaling"
+    },
     "ModelDataDownloadTimeoutInSeconds": {
      "type": "integer"
     },
     "ModelName": {
      "type": "string"
+    },
+    "RoutingConfig": {
+     "$ref": "#/definitions/RoutingConfig"
     },
     "ServerlessConfig": {
      "$ref": "#/definitions/ServerlessConfig"
@@ -315,10 +339,17 @@
     }
    },
    "required": [
-    "ModelName",
-    "VariantName",
-    "InitialVariantWeight"
+    "VariantName"
    ],
+   "type": "object"
+  },
+  "RoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RoutingStrategy": {
+     "type": "string"
+    }
+   },
    "type": "object"
   },
   "ServerlessConfig": {
@@ -355,6 +386,30 @@
     "Key"
    ],
    "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::SageMaker::EndpointConfig",
@@ -368,7 +423,13 @@
   "DataCaptureConfig": {
    "$ref": "#/definitions/DataCaptureConfig"
   },
+  "EnableNetworkIsolation": {
+   "type": "boolean"
+  },
   "EndpointConfigName": {
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
    "type": "string"
   },
   "ExplainerConfig": {
@@ -400,6 +461,9 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
   }
  },
  "readOnlyProperties": [
