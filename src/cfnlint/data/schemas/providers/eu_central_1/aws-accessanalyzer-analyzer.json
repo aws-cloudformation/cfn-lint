@@ -1,0 +1,215 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AnalyzerName",
+  "/properties/Type",
+  "/properties/AnalyzerConfiguration"
+ ],
+ "definitions": {
+  "ArchiveRule": {
+   "additionalProperties": false,
+   "description": "An Access Analyzer archive rule. Archive rules automatically archive new findings that meet the criteria you define when you create the rule.",
+   "properties": {
+    "Filter": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "description": "The archive rule name",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter",
+    "RuleName"
+   ],
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Contains": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Eq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Exists": {
+     "type": "boolean"
+    },
+    "Neq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Property"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnusedAccessConfiguration": {
+   "additionalProperties": false,
+   "description": "The Configuration for Unused Access Analyzer",
+   "properties": {
+    "UnusedAccessAge": {
+     "description": "The specified access age in days for which to generate findings for unused access. For example, if you specify 90 days, the analyzer will generate findings for IAM entities within the accounts of the selected organization for any access that hasn't been used in 90 or more days since the analyzer's last scan. You can choose a value between 1 and 180 days.",
+     "maximum": 180,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::AccessAnalyzer::Analyzer type specifies an analyzer of the user's account",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "access-analyzer:CreateAnalyzer",
+    "access-analyzer:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "organizations:ListAWSServiceAccessForOrganization",
+    "organizations:ListDelegatedAdministrators"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "access-analyzer:DeleteAnalyzer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:GetAnalyzer",
+    "access-analyzer:ListArchiveRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "access-analyzer:CreateArchiveRule",
+    "access-analyzer:DeleteArchiveRule",
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:TagResource",
+    "access-analyzer:UntagResource",
+    "access-analyzer:UpdateArchiveRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AnalyzerConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for the analyzer",
+   "properties": {
+    "UnusedAccessConfiguration": {
+     "$ref": "#/definitions/UnusedAccessConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AnalyzerName": {
+   "description": "Analyzer name",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ArchiveRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ArchiveRule"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the analyzer",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "description": "The type of the analyzer, must be one of ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS or ORGANIZATION_UNUSED_ACCESS",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Type"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "AnalyzerName": "/AnalyzerName"
+  },
+  "templateUri": "/access-analyzer/home?region=${awsRegion}#/analyzer/${AnalyzerName}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-accessanalyzer.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AccessAnalyzer::Analyzer"
+}

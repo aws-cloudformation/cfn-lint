@@ -1,0 +1,317 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn",
+  "/properties/DesktopArn"
+ ],
+ "definitions": {
+  "DayOfWeek": {
+   "enum": [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY"
+   ],
+   "type": "string"
+  },
+  "Hour": {
+   "maximum": 23,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyTimeOf": {
+     "description": "The desired time zone maintenance window.",
+     "enum": [
+      "UTC",
+      "DEVICE"
+     ],
+     "type": "string"
+    },
+    "DaysOfTheWeek": {
+     "description": "The date of maintenance window.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DayOfWeek"
+     },
+     "maxItems": 7,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EndTimeHour": {
+     "$ref": "#/definitions/Hour",
+     "description": "The hour end time of maintenance window."
+    },
+    "EndTimeMinute": {
+     "$ref": "#/definitions/Minute",
+     "description": "The minute end time of maintenance window."
+    },
+    "StartTimeHour": {
+     "$ref": "#/definitions/Hour",
+     "description": "The hour start time of maintenance window."
+    },
+    "StartTimeMinute": {
+     "$ref": "#/definitions/Minute",
+     "description": "The minute start time of maintenance window."
+    },
+    "Type": {
+     "description": "The type of maintenance window.",
+     "enum": [
+      "SYSTEM",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Minute": {
+   "maximum": 59,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource type definition for AWS::WorkSpacesThinClient::Environment.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "thinclient:CreateEnvironment",
+    "thinclient:TagResource",
+    "thinclient:ListTagsForResource",
+    "appstream:DescribeStacks",
+    "workspaces:DescribeWorkspaceDirectories",
+    "workspaces-web:GetPortal",
+    "workspaces-web:GetUserSettings",
+    "kms:DescribeKey",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "thinclient:DeleteEnvironment",
+    "thinclient:UntagResource",
+    "kms:DescribeKey",
+    "kms:RetireGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "thinclient:ListEnvironment",
+    "thinclient:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Encrypt",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "thinclient:GetEnvironment",
+    "thinclient:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Encrypt",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appstream:DescribeStacks",
+    "workspaces:DescribeWorkspaceDirectories",
+    "workspaces-web:GetPortal",
+    "workspaces-web:GetUserSettings",
+    "thinclient:UpdateEnvironment",
+    "thinclient:GetEnvironment",
+    "thinclient:TagResource",
+    "thinclient:UntagResource",
+    "thinclient:ListTagsForResource",
+    "kms:DescribeKey",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ActivationCode": {
+   "description": "Activation code for devices associated with environment.",
+   "pattern": "^[a-z]{2}[a-z0-9]{6}$",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The environment ARN.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[0-9]{0,12}:[a-zA-Z0-9\\-\\/\\._]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The timestamp in unix epoch format when environment was created.",
+   "type": "string"
+  },
+  "DesiredSoftwareSetId": {
+   "description": "The ID of the software set to apply.",
+   "pattern": "^[0-9]{1,9}$",
+   "type": "string"
+  },
+  "DesktopArn": {
+   "description": "The Amazon Resource Name (ARN) of the desktop to stream from Amazon WorkSpaces, WorkSpaces Web, or AppStream 2.0.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[0-9]{0,12}:[a-zA-Z0-9\\-\\/\\._]+$",
+   "type": "string"
+  },
+  "DesktopEndpoint": {
+   "description": "The URL for the identity provider login (only for environments that use AppStream 2.0).",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^(https:\\/\\/)[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,32}(:[0-9]{1,5})?(\\/.*)?$",
+   "type": "string"
+  },
+  "DesktopType": {
+   "description": "The type of VDI.",
+   "enum": [
+    "workspaces",
+    "appstream",
+    "workspaces-web"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "description": "Unique identifier of the environment.",
+   "pattern": "^[a-z0-9]{9}$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "description": "The Amazon Resource Name (ARN) of the AWS Key Management Service key used to encrypt the environment.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[0-9]{0,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "$ref": "#/definitions/MaintenanceWindow",
+   "description": "A specification for a time window to apply software updates."
+  },
+  "Name": {
+   "description": "The name of the environment.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "PendingSoftwareSetId": {
+   "description": "The ID of the software set that is pending to be installed.",
+   "pattern": "^[0-9]{1,9}$",
+   "type": "string"
+  },
+  "PendingSoftwareSetVersion": {
+   "description": "The version of the software set that is pending to be installed.",
+   "type": "string"
+  },
+  "RegisteredDevicesCount": {
+   "description": "Number of devices registered to the environment.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SoftwareSetComplianceStatus": {
+   "description": "Describes if the software currently installed on all devices in the environment is a supported version.",
+   "enum": [
+    "COMPLIANT",
+    "NOT_COMPLIANT",
+    "NO_REGISTERED_DEVICES"
+   ],
+   "type": "string"
+  },
+  "SoftwareSetUpdateMode": {
+   "description": "An option to define which software updates to apply.",
+   "enum": [
+    "USE_LATEST",
+    "USE_DESIRED"
+   ],
+   "type": "string"
+  },
+  "SoftwareSetUpdateSchedule": {
+   "description": "An option to define if software updates should be applied within a maintenance window.",
+   "enum": [
+    "USE_MAINTENANCE_WINDOW",
+    "APPLY_IMMEDIATELY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 20,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "description": "The timestamp in unix epoch format when environment was last updated.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ActivationCode",
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/DesktopType",
+  "/properties/RegisteredDevicesCount",
+  "/properties/UpdatedAt",
+  "/properties/PendingSoftwareSetId",
+  "/properties/PendingSoftwareSetVersion",
+  "/properties/SoftwareSetComplianceStatus"
+ ],
+ "required": [
+  "DesktopArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesThinClient::Environment"
+}
