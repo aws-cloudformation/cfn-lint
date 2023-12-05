@@ -3,7 +3,8 @@
  "createOnlyProperties": [
   "/properties/Name",
   "/properties/KmsKey",
-  "/properties/NetworkConfiguration/SubnetIds"
+  "/properties/NetworkConfiguration/SubnetIds",
+  "/properties/EndpointManagement"
  ],
  "definitions": {
   "AirflowArn": {
@@ -17,6 +18,11 @@
    "description": "Version of airflow to deploy to the environment.",
    "maxLength": 32,
    "pattern": "^[0-9a-z.]+$",
+   "type": "string"
+  },
+  "CeleryExecutorQueue": {
+   "description": "The celery executor queue associated with the environment.",
+   "maxLength": 1224,
    "type": "string"
   },
   "CloudWatchLogGroupArn": {
@@ -39,6 +45,19 @@
   },
   "CreatedAt": {
    "description": "When the environment resource was created.",
+   "type": "string"
+  },
+  "DatabaseVpcEndpointService": {
+   "description": "The database VPC endpoint service name.",
+   "maxLength": 1224,
+   "type": "string"
+  },
+  "EndpointManagement": {
+   "description": "Defines whether the VPC endpoints configured for the environment are created, and managed, by the customer or by Amazon MWAA.",
+   "enum": [
+    "CUSTOMER",
+    "SERVICE"
+   ],
    "type": "string"
   },
   "EnvironmentArn": {
@@ -71,7 +90,8 @@
     "DELETING",
     "DELETED",
     "UPDATE_FAILED",
-    "UNAVAILABLE"
+    "UNAVAILABLE",
+    "PENDING"
    ],
    "type": "string"
   },
@@ -322,6 +342,11 @@
    "pattern": "^https://.+$",
    "type": "string"
   },
+  "WebserverVpcEndpointService": {
+   "description": "The webserver VPC endpoint service name, applicable if private webserver access mode selected.",
+   "maxLength": 1224,
+   "type": "string"
+  },
   "WeeklyMaintenanceWindowStart": {
    "description": "Start time for the weekly maintenance window.",
    "maxLength": 9,
@@ -375,8 +400,17 @@
   "Arn": {
    "$ref": "#/definitions/EnvironmentArn"
   },
+  "CeleryExecutorQueue": {
+   "$ref": "#/definitions/CeleryExecutorQueue"
+  },
   "DagS3Path": {
    "$ref": "#/definitions/RelativePath"
+  },
+  "DatabaseVpcEndpointService": {
+   "$ref": "#/definitions/DatabaseVpcEndpointService"
+  },
+  "EndpointManagement": {
+   "$ref": "#/definitions/EndpointManagement"
   },
   "EnvironmentClass": {
    "$ref": "#/definitions/EnvironmentClass"
@@ -436,12 +470,18 @@
   "WebserverUrl": {
    "$ref": "#/definitions/WebserverUrl"
   },
+  "WebserverVpcEndpointService": {
+   "$ref": "#/definitions/WebserverVpcEndpointService"
+  },
   "WeeklyMaintenanceWindowStart": {
    "$ref": "#/definitions/WeeklyMaintenanceWindowStart"
   }
  },
  "readOnlyProperties": [
   "/properties/Arn",
+  "/properties/CeleryExecutorQueue",
+  "/properties/DatabaseVpcEndpointService",
+  "/properties/WebserverVpcEndpointService",
   "/properties/WebserverUrl",
   "/properties/LoggingConfiguration/DagProcessingLogs/CloudWatchLogGroupArn",
   "/properties/LoggingConfiguration/SchedulerLogs/CloudWatchLogGroupArn",
