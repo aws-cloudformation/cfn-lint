@@ -143,6 +143,49 @@
    },
    "type": "object"
   },
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "description": "The function's logging configuration.",
+   "properties": {
+    "ApplicationLogLevel": {
+     "description": "Application log granularity level, can only be used when LogFormat is set to JSON",
+     "enum": [
+      "TRACE",
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR",
+      "FATAL"
+     ],
+     "type": "string"
+    },
+    "LogFormat": {
+     "description": "Log delivery format for the lambda function",
+     "enum": [
+      "Text",
+      "JSON"
+     ],
+     "type": "string"
+    },
+    "LogGroup": {
+     "description": "The log group name.",
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+     "type": "string"
+    },
+    "SystemLogLevel": {
+     "description": "System log granularity level, can only be used when LogFormat is set to JSON",
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "RuntimeManagementConfig": {
    "additionalProperties": false,
    "properties": {
@@ -440,6 +483,10 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "LoggingConfig": {
+   "$ref": "#/definitions/LoggingConfig",
+   "description": "The logging configuration of your function"
   },
   "MemorySize": {
    "description": "The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation. The default value is 128 MB. The value must be a multiple of 64 MB.",

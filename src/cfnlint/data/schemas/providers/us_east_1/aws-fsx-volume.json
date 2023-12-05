@@ -5,6 +5,22 @@
   "/properties/VolumeType"
  ],
  "definitions": {
+  "AggregateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Aggregates": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ConstituentsPerAggregate": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "AutocommitPeriod": {
    "additionalProperties": false,
    "properties": {
@@ -59,6 +75,9 @@
   "OntapConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "AggregateConfiguration": {
+     "$ref": "#/definitions/AggregateConfiguration"
+    },
     "CopyTagsToBackups": {
      "type": "string"
     },
@@ -69,6 +88,9 @@
      "type": "string"
     },
     "SecurityStyle": {
+     "type": "string"
+    },
+    "SizeInBytes": {
      "type": "string"
     },
     "SizeInMegabytes": {
@@ -88,11 +110,13 @@
     },
     "TieringPolicy": {
      "$ref": "#/definitions/TieringPolicy"
+    },
+    "VolumeStyle": {
+     "type": "string"
     }
    },
    "required": [
-    "StorageVirtualMachineId",
-    "SizeInMegabytes"
+    "StorageVirtualMachineId"
    ],
    "type": "object"
   },
