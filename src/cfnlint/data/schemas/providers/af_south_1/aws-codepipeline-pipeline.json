@@ -137,6 +137,31 @@
    ],
    "type": "object"
   },
+  "GitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Push": {
+     "items": {
+      "$ref": "#/definitions/GitPushDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceActionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GitPushDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Tags": {
+     "$ref": "#/definitions/Tags"
+    }
+   },
+   "type": "object"
+  },
   "InputArtifact": {
    "additionalProperties": false,
    "properties": {
@@ -201,6 +226,56 @@
    "required": [
     "StageName",
     "Reason"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "TriggerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "GitConfiguration": {
+     "$ref": "#/definitions/GitConfiguration"
+    },
+    "ProviderType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VariableDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
    ],
    "type": "object"
   }
@@ -272,6 +347,9 @@
   "Name": {
    "type": "string"
   },
+  "PipelineType": {
+   "type": "string"
+  },
   "RestartExecutionOnUpdate": {
    "type": "boolean"
   },
@@ -281,6 +359,20 @@
   "Stages": {
    "items": {
     "$ref": "#/definitions/StageDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Triggers": {
+   "items": {
+    "$ref": "#/definitions/TriggerDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Variables": {
+   "items": {
+    "$ref": "#/definitions/VariableDeclaration"
    },
    "type": "array",
    "uniqueItems": false

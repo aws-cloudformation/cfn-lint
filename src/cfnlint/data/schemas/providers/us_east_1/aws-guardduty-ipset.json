@@ -1,36 +1,88 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/DetectorId",
-  "/properties/Format"
+  "/properties/Format",
+  "/properties/DetectorId"
  ],
  "definitions": {
-  "Tag": {
+  "TagItem": {
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 0,
      "type": "string"
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::GuardDuty::IPSet",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateIPSet",
+    "guardduty:GetIPSet",
+    "guardduty:TagResource",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:GetDetector",
+    "guardduty:ListDetectors",
+    "guardduty:ListIPSets",
+    "guardduty:GetIPSet",
+    "guardduty:DeleteIPSet",
+    "iam:DeleteRolePolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DetectorId": {
+      "type": "string"
+     }
+    }
+   },
+   "permissions": [
+    "guardduty:ListIPSets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetIPSet"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:UpdateIPSet",
+    "guardduty:GetIPSet",
+    "guardduty:ListIPSets",
+    "iam:PutRolePolicy"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Id",
+  "/properties/DetectorId"
  ],
  "properties": {
   "Activate": {
    "type": "boolean"
   },
   "DetectorId": {
+   "maxLength": 300,
+   "minLength": 1,
    "type": "string"
   },
   "Format": {
@@ -48,17 +100,20 @@
    "type": "string"
   },
   "Location": {
+   "maxLength": 300,
+   "minLength": 1,
    "type": "string"
   },
   "Name": {
+   "maxLength": 300,
+   "minLength": 1,
    "type": "string"
   },
   "Tags": {
    "items": {
-    "$ref": "#/definitions/Tag"
+    "$ref": "#/definitions/TagItem"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -66,9 +121,17 @@
  ],
  "required": [
   "Format",
-  "Activate",
-  "DetectorId",
-  "Location"
+  "Location",
+  "Name"
  ],
- "typeName": "AWS::GuardDuty::IPSet"
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::IPSet",
+ "writeOnlyProperties": [
+  "/properties/Activate"
+ ]
 }
