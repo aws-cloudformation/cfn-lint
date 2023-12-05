@@ -31,6 +31,9 @@
     "Mode": {
      "type": "string"
     },
+    "ModelDataSource": {
+     "$ref": "#/definitions/ModelDataSource"
+    },
     "ModelDataUrl": {
      "type": "string"
     },
@@ -70,6 +73,18 @@
    ],
    "type": "object"
   },
+  "ModelDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3DataSource"
+    }
+   },
+   "required": [
+    "S3DataSource"
+   ],
+   "type": "object"
+  },
   "MultiModelConfig": {
    "additionalProperties": false,
    "properties": {
@@ -88,6 +103,26 @@
    },
    "required": [
     "RepositoryCredentialsProviderArn"
+   ],
+   "type": "object"
+  },
+  "S3DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionType": {
+     "type": "string"
+    },
+    "S3DataType": {
+     "type": "string"
+    },
+    "S3Uri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri",
+    "S3DataType",
+    "CompressionType"
    ],
    "type": "object"
   },
@@ -175,9 +210,6 @@
  },
  "readOnlyProperties": [
   "/properties/Id"
- ],
- "required": [
-  "ExecutionRoleArn"
  ],
  "typeName": "AWS::SageMaker::Model"
 }

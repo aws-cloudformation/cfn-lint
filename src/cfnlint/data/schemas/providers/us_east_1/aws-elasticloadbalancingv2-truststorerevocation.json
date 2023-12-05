@@ -1,0 +1,143 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TrustStoreArn",
+  "/properties/RevocationContents"
+ ],
+ "definitions": {
+  "RevocationContent": {
+   "additionalProperties": false,
+   "properties": {
+    "RevocationType": {
+     "type": "string"
+    },
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    },
+    "S3ObjectVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RevocationId": {
+   "type": "string"
+  },
+  "TrustStoreRevocation": {
+   "additionalProperties": false,
+   "properties": {
+    "NumberOfRevokedEntries": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "RevocationId": {
+     "type": "string"
+    },
+    "RevocationType": {
+     "type": "string"
+    },
+    "TrustStoreArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::TrustStoreRevocation",
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-truststorerevocation.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:AddTrustStoreRevocations",
+    "elasticloadbalancing:DescribeTrustStoreRevocations",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStoreRevocations",
+    "elasticloadbalancing:RemoveTrustStoreRevocations"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RevocationIds": {
+      "insertionOrder": false,
+      "items": {
+       "$ref": "resource-schema.json#/properties/RevocationId"
+      },
+      "type": "array",
+      "uniqueItems": false
+     },
+     "TrustStoreArn": {
+      "$ref": "resource-schema.json#/properties/TrustStoreArn"
+     }
+    },
+    "required": [
+     "TrustStoreArn"
+    ]
+   },
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStoreRevocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStoreRevocations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RevocationId",
+  "/properties/TrustStoreArn"
+ ],
+ "properties": {
+  "RevocationContents": {
+   "description": "The attributes required to create a trust store revocation.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RevocationContent"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RevocationId": {
+   "description": "The ID associated with the revocation.",
+   "format": "int64",
+   "type": "integer"
+  },
+  "TrustStoreArn": {
+   "description": "The Amazon Resource Name (ARN) of the trust store.",
+   "type": "string"
+  },
+  "TrustStoreRevocations": {
+   "description": "The data associated with a trust store revocation",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TrustStoreRevocation"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RevocationId",
+  "/properties/TrustStoreRevocations"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::TrustStoreRevocation",
+ "writeOnlyProperties": [
+  "/properties/RevocationContents"
+ ]
+}
