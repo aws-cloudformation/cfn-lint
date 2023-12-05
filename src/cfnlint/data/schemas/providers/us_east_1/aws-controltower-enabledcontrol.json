@@ -4,14 +4,65 @@
   "/properties/TargetIdentifier",
   "/properties/ControlIdentifier"
  ],
- "definitions": {},
+ "definitions": {
+  "EnabledControlParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "anyOf": [
+      {
+       "insertionOrder": false,
+       "items": {
+        "anyOf": [
+         {
+          "type": "string"
+         },
+         {
+          "type": "number"
+         },
+         {
+          "type": "object"
+         },
+         {
+          "type": "boolean"
+         }
+        ]
+       },
+       "minItems": 1,
+       "type": "array"
+      },
+      {
+       "type": "string"
+      },
+      {
+       "type": "number"
+      },
+      {
+       "type": "object"
+      },
+      {
+       "type": "boolean"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "description": "Enables a control on a specified target.",
  "handlers": {
   "create": {
    "permissions": [
     "controltower:ListEnabledControls",
-    "controltower:GetControlOperation",
     "controltower:GetEnabledControl",
+    "controltower:GetControlOperation",
     "controltower:EnableControl",
     "organizations:UpdatePolicy",
     "organizations:CreatePolicy",
@@ -25,7 +76,15 @@
   "delete": {
    "permissions": [
     "controltower:GetControlOperation",
-    "controltower:DisableControl"
+    "controltower:DisableControl",
+    "organizations:UpdatePolicy",
+    "organizations:DeletePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:ListPoliciesForTarget",
+    "organizations:ListTargetsForPolicy",
+    "organizations:DescribePolicy"
    ]
   },
   "list": {
@@ -48,6 +107,21 @@
     "controltower:ListEnabledControls",
     "controltower:GetEnabledControl"
    ]
+  },
+  "update": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetEnabledControl",
+    "controltower:GetControlOperation",
+    "controltower:UpdateEnabledControl",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:ListPoliciesForTarget",
+    "organizations:ListTargetsForPolicy",
+    "organizations:DescribePolicy"
+   ]
   }
  },
  "primaryIdentifier": [
@@ -61,6 +135,15 @@
    "minLength": 20,
    "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
    "type": "string"
+  },
+  "Parameters": {
+   "description": "Parameters to configure the enabled control behavior.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnabledControlParameter"
+   },
+   "minItems": 1,
+   "type": "array"
   },
   "TargetIdentifier": {
    "description": "Arn for Organizational unit to which the control needs to be applied",

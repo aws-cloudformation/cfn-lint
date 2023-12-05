@@ -1,0 +1,148 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/RepositoryLinkId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/OwnerId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, , ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, , ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Schema for AWS::CodeStarConnections::RepositoryLink resource which is used to aggregate repository metadata relevant to synchronizing source provider content to AWS Resources.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codestar-connections:CreateRepositoryLink",
+    "codestar-connections:TagResource",
+    "codestar-connections:UseConnection",
+    "codestar-connections:PassConnection",
+    "codestar-connections:GetConnection",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codestar-connections:GetRepositoryLink",
+    "codestar-connections:DeleteRepositoryLink",
+    "codestar-connections:GetConnection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codestar-connections:ListRepositoryLinks",
+    "codestar-connections:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codestar-connections:GetRepositoryLink",
+    "codestar-connections:ListTagsForResource",
+    "codestar-connections:GetConnection"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codestar-connections:GetConnection",
+    "codestar-connections:ListTagsForResource",
+    "codestar-connections:PassConnection",
+    "codestar-connections:UseConnection",
+    "codestar-connections:TagResource",
+    "codestar-connections:UntagResource",
+    "codestar-connections:UpdateRepositoryLink"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryLinkArn"
+ ],
+ "properties": {
+  "ConnectionArn": {
+   "description": "The Amazon Resource Name (ARN) of the CodeStarConnection. The ARN is used as the connection reference when the connection is shared between AWS services.",
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "description": "The ARN of the KMS key that the customer can optionally specify to use to encrypt RepositoryLink properties. If not specified, a default key will be used.",
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "OwnerId": {
+   "description": "the ID of the entity that owns the repository.",
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ProviderType": {
+   "description": "The name of the external provider where your third-party code repository is configured.",
+   "pattern": "^(GitHub|Bitbucket|GitHubEnterprise|GitLab)$",
+   "type": "string"
+  },
+  "RepositoryLinkArn": {
+   "description": "A unique Amazon Resource Name (ARN) to designate the repository link.",
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "RepositoryLinkId": {
+   "description": "A UUID that uniquely identifies the RepositoryLink.",
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "RepositoryName": {
+   "description": "The repository for which the link is being created.",
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Specifies the tags applied to a RepositoryLink.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RepositoryLinkArn",
+  "/properties/RepositoryLinkId",
+  "/properties/ProviderType"
+ ],
+ "required": [
+  "RepositoryName",
+  "ConnectionArn",
+  "OwnerId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeStarConnections::RepositoryLink"
+}
