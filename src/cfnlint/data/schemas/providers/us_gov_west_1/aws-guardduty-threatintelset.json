@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorId",
+  "/properties/Format"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::GuardDuty::ThreatIntelSet",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Activate": {
+   "type": "boolean"
+  },
+  "DetectorId": {
+   "type": "string"
+  },
+  "Format": {
+   "enum": [
+    "TXT",
+    "STIX",
+    "OTX_CSV",
+    "ALIEN_VAULT",
+    "PROOF_POINT",
+    "FIRE_EYE"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Location": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Format",
+  "Activate",
+  "DetectorId",
+  "Location"
+ ],
+ "typeName": "AWS::GuardDuty::ThreatIntelSet"
+}
