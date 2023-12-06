@@ -281,6 +281,15 @@ class TestRulesCollection(BaseTestCase):
         match = re.match(pattern, retval)
         assert match, f"{retval} does not match {pattern}"
 
+    def test_custom_rules(self):
+        rules = RulesCollection([], [])
+
+        rules.create_from_custom_rules_file(
+            "test/fixtures/custom_rules/good/custom_rule_perfect.txt"
+        )
+
+        self.assertEqual(len(rules), 15)
+
 
 class TestCreateFromModule(BaseTestCase):
     """Test loading a rules collection from a module"""
