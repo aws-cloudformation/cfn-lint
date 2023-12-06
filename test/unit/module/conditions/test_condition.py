@@ -38,6 +38,18 @@ class TestCondition(TestCase):
                 {},
             )
 
+    def test_not_a_list(self):
+        """Test condition failures"""
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"Fn::And": {}}, {})
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"Condition": {}}, {})
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"BadKey": {}}, {})
+
     def test_condition_test(self):
         equals = {"Ref": "AWS::Region"}
         h = get_hash(equals)
