@@ -329,11 +329,6 @@ class Rules(TypedRules):
             if self.is_rule_enabled(rule.id, config):
                 yield rule
 
-    def enabled_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
-        for rule in self.data.values():
-            if self.is_rule_enabled(rule.id, config):
-                yield rule
-
     def extend(self, rules: List[CloudFormationLintRule]):
         for rule in rules:
             self.register(rule)
@@ -343,10 +338,10 @@ class Rules(TypedRules):
         return self._used_rules
 
     # pylint: disable=inconsistent-return-statements
-    def run_check(self, check, filename, rule_id, config, *args):
+    def run_check(self, check, filename, rule_id, config, *args) -> Iterator[Match]:
         """Run a check"""
         try:
-            return check(*args)
+            yield from iter(check(*args))
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled(RuleError(), config):
                 # In debug mode, print the error include complete stack trace
