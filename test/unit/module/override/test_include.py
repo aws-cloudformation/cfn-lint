@@ -41,5 +41,5 @@ class TestInclude(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        errs = list(runner.validate_filenames(config.templates))
+        errs = list(runner.run())
         self.assertEqual(2, len(errs))

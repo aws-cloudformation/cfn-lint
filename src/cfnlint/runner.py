@@ -7,6 +7,7 @@ from __future__ import annotations
 import logging
 import os
 import sys
+from copy import deepcopy
 from typing import Dict, List, Sequence
 
 import cfnlint.formatters
@@ -46,7 +47,8 @@ class TemplateRunner:
     ) -> None:
         self.cfn = Template(filename, template, config.regions)
         self.rules = rules
-        self.config = config
+        self.config = deepcopy(config)
+        self.config.template_args = template
 
     def _dedup(self, matches: Iterator[Match]) -> Iterator[Match]:
         """Deduplicate matches"""
@@ -138,7 +140,7 @@ class Runner:
                 f"Tried to append rules but got an error: {str(e)}", 1
             ) from e
 
-    def validate_filenames(self, filenames: Sequence[str]) -> Iterator[Match]:
+    def _validate_filenames(self, filenames: Sequence[str | None]) -> Iterator[Match]:
         ignore_bad_template: bool = False
         if self.config.ignore_bad_template:
             ignore_bad_template = True
@@ -165,12 +167,10 @@ class Runner:
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
     def validate_template(self, filename: str | None, template: str) -> Iterator[Match]:
-        self.config.template_args = template
-
         runner = TemplateRunner(filename, template, self.config, self.rules)
         yield from runner.run()
 
-    def _output(self, matches: List[Match]) -> None:
+    def _cli_output(self, matches: List[Match]) -> None:
         formatter = get_formatter(self.config)
         output = formatter.print_matches(list(matches), self.rules, config=self.config)
         if output:
@@ -214,7 +214,14 @@ class Runner:
 
         sys.exit(exit_code)
 
-    def run(self) -> None:
+    def run(self) -> Iterator[Match]:
+        if not sys.stdin.isatty() and not self.config.templates:
+            yield from self._validate_filenames([None])
+            return
+
+        yield from self._validate_filenames(self.config.templates)
+
+    def cli(self) -> None:
         if self.config.update_specs:
             cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(0)
@@ -232,21 +239,18 @@ class Runner:
             print(self.rules)
             sys.exit(0)
 
-        if not sys.stdin.isatty() and not self.config.templates:
-            self._output(list(self.validate_filenames(["-"])))
-
         if not self.config.templates:
-            # Not specified, print the help
-            self.config.parser.print_help()
-            sys.exit(1)
+            if sys.stdin.isatty():
+                self.config.parser.print_help()
+                sys.exit(1)
 
-        self._output(list(self.validate_filenames(self.config.templates)))
+        self._cli_output(list(self.run()))
 
 
 def main() -> None:
     config = ConfigMixIn(sys.argv[1:])
     runner = Runner(config)
-    runner.run()
+    runner.cli()
 
 
 class CfnLintExitException(Exception):
