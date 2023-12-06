@@ -40,7 +40,7 @@ class TestComplete(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        self.assertEqual([], list(runner.validate_filenames(config.templates)))
+        self.assertEqual([], list(runner.run()))
 
     def test_fail_run(self):
         """Failure test required"""
@@ -59,5 +59,5 @@ class TestComplete(BaseTestCase):
         runner = Runner(config)
         runner.rules = self.collection
 
-        errs = list(runner.validate_filenames(config.templates))
+        errs = list(runner.run())
         self.assertEqual(3, len(errs), errs)
