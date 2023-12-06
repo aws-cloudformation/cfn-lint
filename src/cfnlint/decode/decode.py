@@ -2,9 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from __future__ import annotations
+
 import logging
 from json.decoder import JSONDecodeError
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, List, Tuple, Union
 
 from yaml import YAMLError
 from yaml.parser import ParserError
@@ -24,13 +26,13 @@ def decode_str(s: str) -> Decode:
     return _decode(cfn_yaml.loads, cfn_json.loads, s, None)
 
 
-def decode(filename: str) -> Decode:
+def decode(filename: str | None) -> Decode:
     """Decode filename into an object."""
     return _decode(cfn_yaml.load, cfn_json.load, filename, filename)
 
 
 def _decode(
-    yaml_f: Callable, json_f: Callable, payload: str, filename: Optional[str]
+    yaml_f: Callable, json_f: Callable, payload: str | None, filename: str | None
 ) -> Decode:
     """Decode payload using yaml_f and json_f, using filename for log output."""
     template = None
