@@ -561,7 +561,7 @@ class RulesCollection:
                     )
                 ]
 
-    def run(self, filename: Optional[str], cfn: Template):
+    def run(self, filename: Optional[str], cfn: Template, config=None):
         """Run rules"""
         matches = []
         for rule in self.rules.values():
