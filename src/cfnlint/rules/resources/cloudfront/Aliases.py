@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import regex as re
 
-from cfnlint.helpers import FUNCTIONS
+from cfnlint.helpers import FUNCTIONS, REGEX_DYN_REF
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -35,6 +35,8 @@ class Aliases(CloudFormationLintRule):
                 for alias in aliases:
                     if isinstance(alias, str) and alias not in FUNCTIONS:
                         wildcard = alias.split(".")
+                        if re.match(REGEX_DYN_REF, alias):
+                            continue
                         if "*" in wildcard[1:]:
                             path = result["Path"] + ["Aliases"]
                             message = f'Invalid use of wildcards: {alias} at {"/".join(result["Path"])}'

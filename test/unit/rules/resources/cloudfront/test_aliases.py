@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.cloudfront.Aliases import Aliases  # pylint: disable=E0401
+from cfnlint.rules.resources.cloudfront.Aliases import Aliases
 
 
 class TestCloudFrontAliases(BaseRuleTestCase):
@@ -14,6 +14,9 @@ class TestCloudFrontAliases(BaseRuleTestCase):
         """Setup"""
         super(TestCloudFrontAliases, self).setUp()
         self.collection.register(Aliases())
+        self.success_templates = [
+            "test/fixtures/templates/good/resources/cloudfront/aliases.yaml"
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
