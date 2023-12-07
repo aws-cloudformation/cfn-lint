@@ -1,3 +1,8 @@
+### v1.2.1a2
+###### Fixes
+- Redo AWS::CloudFormation::Init validation (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+- Redo runner logic and keep backwards compatibility of the API (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+
 ### v1.2.1a1
 ###### Fixes
 - Fix `FnGetAtt` to better validate GetAtt types against JSON Schemas (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
