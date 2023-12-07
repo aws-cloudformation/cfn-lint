@@ -74,7 +74,9 @@ class TemplateRunner:
         if self.cfn.template is not None:
             yield from self._dedup(
                 self.check_metadata_directives(
-                    self.rules.run(self.cfn.filename, self.cfn, self.config)
+                    self.rules.run(
+                        filename=self.cfn.filename, cfn=self.cfn, config=self.config
+                    )
                 )
             )
 
