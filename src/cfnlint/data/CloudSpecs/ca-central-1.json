@@ -871,9 +871,11 @@
   "AWS::CodeCommit::Repository.RepositoryTrigger": "CACHED",
   "AWS::CodeCommit::Repository.S3": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig.MinimumHealthyHosts": "CACHED",
+  "AWS::CodeDeploy::DeploymentConfig.MinimumHealthyHostsPerZone": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig.TimeBasedCanary": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig.TimeBasedLinear": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig.TrafficRoutingConfig": "CACHED",
+  "AWS::CodeDeploy::DeploymentConfig.ZonalConfig": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup.Alarm": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup.AlarmConfiguration": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup.AutoRollbackConfiguration": "CACHED",
@@ -908,10 +910,15 @@
   "AWS::CodePipeline::Pipeline.ArtifactStoreMap": "CACHED",
   "AWS::CodePipeline::Pipeline.BlockerDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.EncryptionKey": "CACHED",
+  "AWS::CodePipeline::Pipeline.GitConfiguration": "CACHED",
+  "AWS::CodePipeline::Pipeline.GitPushFilter": "CACHED",
+  "AWS::CodePipeline::Pipeline.GitTagFilterCriteria": "CACHED",
   "AWS::CodePipeline::Pipeline.InputArtifact": "CACHED",
   "AWS::CodePipeline::Pipeline.OutputArtifact": "CACHED",
+  "AWS::CodePipeline::Pipeline.PipelineTriggerDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.StageDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.StageTransition": "CACHED",
+  "AWS::CodePipeline::Pipeline.VariableDeclaration": "CACHED",
   "AWS::CodePipeline::Webhook.WebhookAuthConfiguration": "CACHED",
   "AWS::CodePipeline::Webhook.WebhookFilterRule": "CACHED",
   "AWS::CodeStar::GitHubRepository.Code": "CACHED",
@@ -998,6 +1005,8 @@
   "AWS::Config::ConfigurationAggregator.OrganizationAggregationSource": "CACHED",
   "AWS::Config::ConfigurationRecorder.ExclusionByResourceTypes": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingGroup": "CACHED",
+  "AWS::Config::ConfigurationRecorder.RecordingMode": "CACHED",
+  "AWS::Config::ConfigurationRecorder.RecordingModeOverride": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingStrategy": "CACHED",
   "AWS::Config::ConformancePack.ConformancePackInputParameter": "CACHED",
   "AWS::Config::ConformancePack.TemplateSSMDocumentDetails": "CACHED",
@@ -1032,7 +1041,32 @@
   "AWS::Connect::InstanceStorageConfig.EncryptionConfig": "CACHED",
   "AWS::Connect::InstanceStorageConfig.KinesisFirehoseConfig": "CACHED",
   "AWS::Connect::InstanceStorageConfig.KinesisStreamConfig": "CACHED",
-  "AWS::Connect::InstanceStorageConfig.KinesisVideoStreamConfig": "CACHED",
+  "AWS::Connect::InstanceStorageConfig.KinesisVideoStreamConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-instancestorageconfig-kinesisvideostreamconfig.html",
+   "Properties": {
+    "EncryptionConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-instancestorageconfig-kinesisvideostreamconfig.html#cfn-connect-instancestorageconfig-kinesisvideostreamconfig-encryptionconfig",
+     "Required": true,
+     "Type": "EncryptionConfig",
+     "UpdateType": "Mutable"
+    },
+    "Prefix": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-instancestorageconfig-kinesisvideostreamconfig.html#cfn-connect-instancestorageconfig-kinesisvideostreamconfig-prefix",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Connect::InstanceStorageConfig.KinesisVideoStreamConfig.Prefix"
+     }
+    },
+    "RetentionPeriodHours": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-instancestorageconfig-kinesisvideostreamconfig.html#cfn-connect-instancestorageconfig-kinesisvideostreamconfig-retentionperiodhours",
+     "PrimitiveType": "Double",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Connect::InstanceStorageConfig.S3Config": "CACHED",
   "AWS::Connect::Queue.OutboundCallerConfig": "CACHED",
   "AWS::Connect::QuickConnect.PhoneNumberQuickConnectConfig": "CACHED",
@@ -1347,6 +1381,7 @@
   "AWS::EC2::LaunchTemplate.BlockDeviceMapping": "CACHED",
   "AWS::EC2::LaunchTemplate.CapacityReservationSpecification": "CACHED",
   "AWS::EC2::LaunchTemplate.CapacityReservationTarget": "CACHED",
+  "AWS::EC2::LaunchTemplate.ConnectionTrackingSpecification": "CACHED",
   "AWS::EC2::LaunchTemplate.CpuOptions": "CACHED",
   "AWS::EC2::LaunchTemplate.CreditSpecification": "CACHED",
   "AWS::EC2::LaunchTemplate.Ebs": "CACHED",
@@ -1490,7 +1525,32 @@
   "AWS::ECR::Repository.EncryptionConfiguration": "CACHED",
   "AWS::ECR::Repository.ImageScanningConfiguration": "CACHED",
   "AWS::ECR::Repository.LifecyclePolicy": "CACHED",
-  "AWS::ECS::CapacityProvider.AutoScalingGroupProvider": "CACHED",
+  "AWS::ECS::CapacityProvider.AutoScalingGroupProvider": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html",
+   "Properties": {
+    "AutoScalingGroupArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider-autoscalinggrouparn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ManagedScaling": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider-managedscaling",
+     "Required": false,
+     "Type": "ManagedScaling",
+     "UpdateType": "Mutable"
+    },
+    "ManagedTerminationProtection": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider-managedterminationprotection",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ECS::CapacityProvider.AutoScalingGroupProvider.ManagedTerminationProtection"
+     }
+    }
+   }
+  },
   "AWS::ECS::CapacityProvider.ManagedScaling": "CACHED",
   "AWS::ECS::Cluster.CapacityProviderStrategyItem": "CACHED",
   "AWS::ECS::Cluster.ClusterConfiguration": "CACHED",
@@ -1767,6 +1827,7 @@
   "AWS::Events::Rule.Target": "CACHED",
   "AWS::FIS::ExperimentTemplate.CloudWatchLogsConfiguration": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateAction": "CACHED",
+  "AWS::FIS::ExperimentTemplate.ExperimentTemplateExperimentOptions": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateLogConfiguration": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateTarget": "CACHED",
@@ -2694,6 +2755,26 @@
   "AWS::MediaPackageV2::OriginEndpoint.ScteHls": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Segment": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider": "CACHED",
+  "AWS::MediaTailor::Channel.DashPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.HlsPlaylistSettings": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel": "CACHED",
+  "AWS::MediaTailor::Channel.RequestOutputItem": "CACHED",
+  "AWS::MediaTailor::Channel.SlateSource": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.AdMarkerPassthrough": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.Bumper": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.CdnConfiguration": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.HlsConfiguration": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.LivePreRollConfiguration": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.ManifestProcessingRules": "CACHED",
+  "AWS::MediaTailor::SourceLocation.AccessConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.DefaultSegmentDeliveryConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.HttpConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.SecretsManagerAccessTokenConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation.SegmentDeliveryConfiguration": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration": "CACHED",
   "AWS::MemoryDB::Cluster.Endpoint": "CACHED",
   "AWS::MemoryDB::User.AuthenticationMode": "CACHED",
   "AWS::Neptune::DBCluster.DBClusterRole": "CACHED",
@@ -4706,6 +4787,7 @@
   "AWS::SES::Template.Template": "CACHED",
   "AWS::SES::VdmAttributes.DashboardAttributes": "CACHED",
   "AWS::SES::VdmAttributes.GuardianAttributes": "CACHED",
+  "AWS::SNS::Topic.LoggingConfig": "CACHED",
   "AWS::SNS::Topic.Subscription": "CACHED",
   "AWS::SSM::Association.InstanceAssociationOutputLocation": "CACHED",
   "AWS::SSM::Association.ParameterValues": "CACHED",
@@ -5288,64 +5370,7 @@
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias.ConnectionAliasAssociation": "CACHED",
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
-  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html",
-   "Properties": {
-    "ApplyTimeOf": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-applytimeof",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.ApplyTimeOf"
-     }
-    },
-    "DaysOfTheWeek": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-daysoftheweek",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.DaysOfTheWeek"
-     }
-    },
-    "EndTimeHour": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-endtimehour",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EndTimeMinute": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-endtimeminute",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "StartTimeHour": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-starttimehour",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "StartTimeMinute": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-starttimeminute",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-workspacesthinclient-environment-maintenancewindow.html#cfn-workspacesthinclient-environment-maintenancewindow-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.Type"
-     }
-    }
-   }
-  },
+  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings.IpRule": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CookieSpecification": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CookieSynchronizationConfiguration": "CACHED",
@@ -5356,7 +5381,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "149.0.0",
+ "ResourceSpecificationVersion": "150.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -5624,7 +5649,84 @@
   "AWS::CertificateManager::Certificate": "CACHED",
   "AWS::Chatbot::MicrosoftTeamsChannelConfiguration": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration": "CACHED",
-  "AWS::Cloud9::EnvironmentEC2": "CACHED",
+  "AWS::Cloud9::EnvironmentEC2": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html",
+   "Properties": {
+    "AutomaticStopTimeMinutes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-automaticstoptimeminutes",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Cloud9::EnvironmentEC2.AutomaticStopTimeMinutes"
+     }
+    },
+    "ConnectionType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-connectiontype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ImageId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-imageid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "InstanceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-instancetype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "OwnerArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-ownerarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Repositories": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-repositories",
+     "ItemType": "Repository",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "SubnetId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-subnetid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloud9-environmentec2.html#cfn-cloud9-environmentec2-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::CloudFormation::CustomResource": "CACHED",
   "AWS::CloudFormation::HookDefaultVersion": "CACHED",
   "AWS::CloudFormation::HookTypeConfig": "CACHED",
@@ -5655,7 +5757,103 @@
   "AWS::CloudFront::ResponseHeadersPolicy": "CACHED",
   "AWS::CloudFront::StreamingDistribution": "CACHED",
   "AWS::CloudTrail::Channel": "CACHED",
-  "AWS::CloudTrail::EventDataStore": "CACHED",
+  "AWS::CloudTrail::EventDataStore": {
+   "Attributes": {
+    "CreatedTimestamp": {
+     "PrimitiveType": "String"
+    },
+    "EventDataStoreArn": {
+     "PrimitiveType": "String"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    },
+    "UpdatedTimestamp": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html",
+   "Properties": {
+    "AdvancedEventSelectors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-advancedeventselectors",
+     "DuplicatesAllowed": false,
+     "ItemType": "AdvancedEventSelector",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "BillingMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-billingmode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IngestionEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-ingestionenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "InsightSelectors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-insightselectors",
+     "DuplicatesAllowed": false,
+     "ItemType": "InsightSelector",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "InsightsDestination": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-insightsdestination",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "MultiRegionEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-multiregionenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "OrganizationEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-organizationenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RetentionPeriod": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-retentionperiod",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TerminationProtectionEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-eventdatastore.html#cfn-cloudtrail-eventdatastore-terminationprotectionenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::CloudTrail::ResourcePolicy": "CACHED",
   "AWS::CloudTrail::Trail": "CACHED",
   "AWS::CloudWatch::Alarm": "CACHED",
@@ -5773,7 +5971,69 @@
   "AWS::Connect::ContactFlowModule": "CACHED",
   "AWS::Connect::EvaluationForm": "CACHED",
   "AWS::Connect::HoursOfOperation": "CACHED",
-  "AWS::Connect::Instance": "CACHED",
+  "AWS::Connect::Instance": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "InstanceStatus": {
+     "PrimitiveType": "String"
+    },
+    "ServiceRole": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html",
+   "Properties": {
+    "Attributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html#cfn-connect-instance-attributes",
+     "Required": true,
+     "Type": "Attributes",
+     "UpdateType": "Mutable"
+    },
+    "DirectoryId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html#cfn-connect-instance-directoryid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Connect::Instance.DirectoryId"
+     }
+    },
+    "IdentityManagementType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html#cfn-connect-instance-identitymanagementtype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Connect::Instance.IdentityManagementType"
+     }
+    },
+    "InstanceAlias": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html#cfn-connect-instance-instancealias",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Connect::Instance.InstanceAlias"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connect-instance.html#cfn-connect-instance-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Connect::InstanceStorageConfig": "CACHED",
   "AWS::Connect::IntegrationAssociation": "CACHED",
   "AWS::Connect::PhoneNumber": "CACHED",
@@ -6021,7 +6281,140 @@
   "AWS::EMR::InstanceGroupConfig": "CACHED",
   "AWS::EMR::SecurityConfiguration": "CACHED",
   "AWS::EMR::Step": "CACHED",
-  "AWS::EMR::Studio": "CACHED",
+  "AWS::EMR::Studio": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "StudioId": {
+     "PrimitiveType": "String"
+    },
+    "Url": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html",
+   "Properties": {
+    "AuthMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-authmode",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.AuthMode"
+     }
+    },
+    "DefaultS3Location": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-defaults3location",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.DefaultS3Location"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.Description"
+     }
+    },
+    "EngineSecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-enginesecuritygroupid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.EngineSecurityGroupId"
+     }
+    },
+    "IdpAuthUrl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idpauthurl",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.IdpAuthUrl"
+     }
+    },
+    "IdpRelayStateParameterName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idprelaystateparametername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.IdpRelayStateParameterName"
+     }
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.Name"
+     }
+    },
+    "ServiceRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-servicerole",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.ServiceRole"
+     }
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.SubnetIds"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "UserRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-userrole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.UserRole"
+     }
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-vpcid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.VpcId"
+     }
+    },
+    "WorkspaceSecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-workspacesecuritygroupid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EMR::Studio.WorkspaceSecurityGroupId"
+     }
+    }
+   }
+  },
   "AWS::EMR::StudioSessionMapping": "CACHED",
   "AWS::EMRContainers::VirtualCluster": "CACHED",
   "AWS::EMRServerless::Application": "CACHED",
@@ -6049,7 +6442,38 @@
   "AWS::ElasticLoadBalancingV2::TrustStoreRevocation": "CACHED",
   "AWS::Elasticsearch::Domain": "CACHED",
   "AWS::EventSchemas::Discoverer": "CACHED",
-  "AWS::EventSchemas::Registry": "CACHED",
+  "AWS::EventSchemas::Registry": {
+   "Attributes": {
+    "RegistryArn": {
+     "PrimitiveType": "String"
+    },
+    "RegistryName": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eventschemas-registry.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eventschemas-registry.html#cfn-eventschemas-registry-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RegistryName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eventschemas-registry.html#cfn-eventschemas-registry-registryname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eventschemas-registry.html#cfn-eventschemas-registry-tags",
+     "ItemType": "TagsEntry",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EventSchemas::RegistryPolicy": "CACHED",
   "AWS::EventSchemas::Schema": "CACHED",
   "AWS::Events::ApiDestination": "CACHED",
@@ -6105,6 +6529,7 @@
   "AWS::Events::EventBusPolicy": "CACHED",
   "AWS::Events::Rule": "CACHED",
   "AWS::FIS::ExperimentTemplate": "CACHED",
+  "AWS::FIS::TargetAccountConfiguration": "CACHED",
   "AWS::FMS::NotificationChannel": "CACHED",
   "AWS::FMS::Policy": "CACHED",
   "AWS::FMS::ResourceSet": "CACHED",
@@ -6334,6 +6759,12 @@
   "AWS::MediaPackageV2::ChannelPolicy": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint": "CACHED",
   "AWS::MediaPackageV2::OriginEndpointPolicy": "CACHED",
+  "AWS::MediaTailor::Channel": "CACHED",
+  "AWS::MediaTailor::ChannelPolicy": "CACHED",
+  "AWS::MediaTailor::LiveSource": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration": "CACHED",
+  "AWS::MediaTailor::SourceLocation": "CACHED",
+  "AWS::MediaTailor::VodSource": "CACHED",
   "AWS::MemoryDB::ACL": "CACHED",
   "AWS::MemoryDB::Cluster": "CACHED",
   "AWS::MemoryDB::ParameterGroup": "CACHED",
@@ -6661,120 +7092,7 @@
   "AWS::WAFv2::WebACLAssociation": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias": "CACHED",
   "AWS::WorkSpaces::Workspace": "CACHED",
-  "AWS::WorkSpacesThinClient::Environment": {
-   "Attributes": {
-    "ActivationCode": {
-     "PrimitiveType": "String"
-    },
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "CreatedAt": {
-     "PrimitiveType": "String"
-    },
-    "DesktopType": {
-     "PrimitiveType": "String"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    },
-    "PendingSoftwareSetId": {
-     "PrimitiveType": "String"
-    },
-    "PendingSoftwareSetVersion": {
-     "PrimitiveType": "String"
-    },
-    "RegisteredDevicesCount": {
-     "PrimitiveType": "Integer"
-    },
-    "SoftwareSetComplianceStatus": {
-     "PrimitiveType": "String"
-    },
-    "UpdatedAt": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html",
-   "Properties": {
-    "DesiredSoftwareSetId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-desiredsoftwaresetid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.DesiredSoftwareSetId"
-     }
-    },
-    "DesktopArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-desktoparn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.DesktopArn"
-     }
-    },
-    "DesktopEndpoint": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-desktopendpoint",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.DesktopEndpoint"
-     }
-    },
-    "KmsKeyArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-kmskeyarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.KmsKeyArn"
-     }
-    },
-    "MaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-maintenancewindow",
-     "Required": false,
-     "Type": "MaintenanceWindow",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.Name"
-     }
-    },
-    "SoftwareSetUpdateMode": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-softwaresetupdatemode",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateMode"
-     }
-    },
-    "SoftwareSetUpdateSchedule": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-softwaresetupdateschedule",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateSchedule"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-workspacesthinclient-environment.html#cfn-workspacesthinclient-environment-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::WorkSpacesThinClient::Environment": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings": "CACHED",
   "AWS::WorkSpacesWeb::IdentityProvider": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings": "CACHED",
@@ -8113,11 +8431,16 @@
   "AWS::Events::Rule.State": "CACHED",
   "AWS::FIS::ExperimentTemplate.CloudWatchLogsConfiguration.LogGroupArn": "CACHED",
   "AWS::FIS::ExperimentTemplate.Description": "CACHED",
+  "AWS::FIS::ExperimentTemplate.ExperimentTemplateExperimentOptions.AccountTargeting": "CACHED",
+  "AWS::FIS::ExperimentTemplate.ExperimentTemplateExperimentOptions.EmptyTargetResolutionMode": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition.Source": "CACHED",
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition.Value": "CACHED",
   "AWS::FIS::ExperimentTemplate.RoleArn": "CACHED",
   "AWS::FIS::ExperimentTemplate.S3Configuration.BucketName": "CACHED",
   "AWS::FIS::ExperimentTemplate.S3Configuration.Prefix": "CACHED",
+  "AWS::FIS::TargetAccountConfiguration.AccountId": "CACHED",
+  "AWS::FIS::TargetAccountConfiguration.Description": "CACHED",
+  "AWS::FIS::TargetAccountConfiguration.RoleArn": "CACHED",
   "AWS::FMS::NotificationChannel.SnsRoleName": "CACHED",
   "AWS::FMS::NotificationChannel.SnsTopicArn": "CACHED",
   "AWS::FMS::Policy.IEMap.ACCOUNT": "CACHED",
@@ -9340,6 +9663,16 @@
   "AWS::MediaPackageV2::OriginEndpointPolicy.ChannelGroupName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpointPolicy.ChannelName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpointPolicy.OriginEndpointName": "CACHED",
+  "AWS::MediaTailor::Channel.HlsPlaylistSettings.AdMarkupType": "CACHED",
+  "AWS::MediaTailor::Channel.LogConfigurationForChannel.LogTypes": "CACHED",
+  "AWS::MediaTailor::Channel.PlaybackMode": "CACHED",
+  "AWS::MediaTailor::Channel.Tier": "CACHED",
+  "AWS::MediaTailor::LiveSource.HttpPackageConfiguration.Type": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression.Mode": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration.OriginManifestType": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.Name": "CACHED",
+  "AWS::MediaTailor::SourceLocation.AccessConfiguration.AccessType": "CACHED",
+  "AWS::MediaTailor::VodSource.HttpPackageConfiguration.Type": "CACHED",
   "AWS::MemoryDB::ACL.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ACLName": "CACHED",
   "AWS::MemoryDB::Cluster.ClusterName": "CACHED",
@@ -11768,6 +12101,7 @@
   "AWS::SES::Template.Template.TemplateName": "CACHED",
   "AWS::SES::VdmAttributes.DashboardAttributes.EngagementMetrics": "CACHED",
   "AWS::SES::VdmAttributes.GuardianAttributes.OptimizedSharedDelivery": "CACHED",
+  "AWS::SNS::Topic.LoggingConfig.Protocol": "CACHED",
   "AWS::SNS::Topic.TopicName": "CACHED",
   "AWS::SQS::Queue.DelaySeconds": "CACHED",
   "AWS::SQS::Queue.KmsDataKeyReusePeriodSeconds": "CACHED",
@@ -12675,64 +13009,16 @@
   "AWS::WorkSpaces::ConnectionAlias.ConnectionString": "CACHED",
   "AWS::WorkSpaces::Workspace.ComputeTypeName": "CACHED",
   "AWS::WorkSpaces::Workspace.RunningMode": "CACHED",
-  "AWS::WorkSpacesThinClient::Environment.DesiredSoftwareSetId": {
-   "AllowedPatternRegex": "^[0-9]{1,9}$"
-  },
-  "AWS::WorkSpacesThinClient::Environment.DesktopArn": {
-   "AllowedPatternRegex": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[0-9]{0,12}:[a-zA-Z0-9\\-\\/\\._]+$",
-   "StringMax": 2048,
-   "StringMin": 20
-  },
-  "AWS::WorkSpacesThinClient::Environment.DesktopEndpoint": {
-   "AllowedPatternRegex": "^(https:\\/\\/)[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,32}(:[0-9]{1,5})?(\\/.*)?$",
-   "StringMax": 1024,
-   "StringMin": 1
-  },
-  "AWS::WorkSpacesThinClient::Environment.KmsKeyArn": {
-   "AllowedPatternRegex": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[0-9]{0,12}:key\\/[a-zA-Z0-9-]+$",
-   "StringMax": 2048,
-   "StringMin": 20
-  },
-  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.ApplyTimeOf": {
-   "AllowedValues": [
-    "UTC",
-    "DEVICE"
-   ]
-  },
-  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.DaysOfTheWeek": {
-   "AllowedValues": [
-    "MONDAY",
-    "TUESDAY",
-    "WEDNESDAY",
-    "THURSDAY",
-    "FRIDAY",
-    "SATURDAY",
-    "SUNDAY"
-   ]
-  },
-  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.Type": {
-   "AllowedValues": [
-    "SYSTEM",
-    "CUSTOM"
-   ]
-  },
-  "AWS::WorkSpacesThinClient::Environment.Name": {
-   "AllowedPatternRegex": "^.+$",
-   "StringMax": 64,
-   "StringMin": 1
-  },
-  "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateMode": {
-   "AllowedValues": [
-    "USE_LATEST",
-    "USE_DESIRED"
-   ]
-  },
-  "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateSchedule": {
-   "AllowedValues": [
-    "USE_MAINTENANCE_WINDOW",
-    "APPLY_IMMEDIATELY"
-   ]
-  },
+  "AWS::WorkSpacesThinClient::Environment.DesiredSoftwareSetId": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.DesktopArn": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.DesktopEndpoint": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.KmsKeyArn": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.ApplyTimeOf": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.DaysOfTheWeek": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow.Type": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.Name": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateMode": "CACHED",
+  "AWS::WorkSpacesThinClient::Environment.SoftwareSetUpdateSchedule": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings.BrowserPolicy": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings.CustomerManagedKey": "CACHED",
   "AWS::WorkSpacesWeb::IdentityProvider.IdentityProviderName": "CACHED",
@@ -13437,6 +13723,22 @@
     "m7g.medium",
     "m7g.metal",
     "m7g.xlarge",
+    "m7i-flex.2xlarge",
+    "m7i-flex.4xlarge",
+    "m7i-flex.8xlarge",
+    "m7i-flex.large",
+    "m7i-flex.xlarge",
+    "m7i.12xlarge",
+    "m7i.16xlarge",
+    "m7i.24xlarge",
+    "m7i.2xlarge",
+    "m7i.48xlarge",
+    "m7i.4xlarge",
+    "m7i.8xlarge",
+    "m7i.large",
+    "m7i.metal-24xl",
+    "m7i.metal-48xl",
+    "m7i.xlarge",
     "p3.16xlarge",
     "p3.2xlarge",
     "p3.8xlarge",
