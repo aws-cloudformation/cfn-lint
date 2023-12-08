@@ -217,7 +217,7 @@ class TestJsonSchema(BaseRuleTestCase):
 
         expected = [
             self.build_result(
-                "E3AAAA",
+                "E3YYY",
                 "'string' is not of type 'array'",
                 ["Resources", "Table", "Properties", "E", "Fn::If", 1],
             ),
