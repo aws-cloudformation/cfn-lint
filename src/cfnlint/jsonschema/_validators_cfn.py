@@ -577,11 +577,9 @@ class FnIf(_Fn):
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
         for value, value_path in validator.resolve_value(instance):
-            for err in self._fix_errors(
-                validator.evolve(
-                    context=validator.context.evolve(value_path=value_path),
-                ).descend(value, s, key)
-            ):
+            for err in validator.evolve(
+                context=validator.context.evolve(value_path=value_path),
+            ).descend(value, s, key):
                 err.path.extend(value_path)
                 yield err
 
