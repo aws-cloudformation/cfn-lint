@@ -63,6 +63,10 @@ class AvailabilityZone(CloudFormationLintRule):
         """Check itself"""
         matches = []
 
+        # Skip rule if CDK
+        if cfn.is_cdk_template():
+            return matches
+
         matches.extend(
             cfn.check_value(
                 properties,

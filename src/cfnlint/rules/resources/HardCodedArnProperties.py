@@ -74,6 +74,10 @@ class HardCodedArnProperties(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
+        # Skip rule if CDK
+        if cfn.is_cdk_template():
+            return matches
+
         transforms = cfn.transform_pre["Transform"]
         transforms = transforms if isinstance(transforms, list) else [transforms]
         if "AWS::Serverless-2016-10-31" in cfn.transform_pre["Transform"]:

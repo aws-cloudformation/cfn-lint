@@ -202,6 +202,23 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
         return bool(lang_extensions_transform in transform_type)
 
+    def is_cdk_template(self) -> bool:
+        """Check if the template was created by CDK"""
+        resources = self.template.get("Resources")
+        if not isinstance(resources, dict):
+            return False
+
+        for _, properties in resources.items():
+            if not isinstance(properties, dict):
+                continue
+            resource_type = properties.get("Type")
+            if not isinstance(resource_type, str):
+                continue
+            if resource_type == "AWS::CDK::Metadata":
+                return True
+
+        return False
+
     def get_resources(self, resource_type=[]):
         """
         Get Resources
