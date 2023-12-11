@@ -1,3 +1,10 @@
+### v0.83.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to `150.0.0` (pull #[2963](https://github.com/aws-cloudformation/cfn-lint/pull/2963))
+- Patch in `TargetObjectKeyFormat` for `AWS::S3::Bucket` (pull #[2966](https://github.com/aws-cloudformation/cfn-lint/pull/2966))
+###### Fixes
+- Update rule [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3013) to ignore dynamic references in CloudFront aliases (pull #[2967](https://github.com/aws-cloudformation/cfn-lint/pull/2967))
+
 ### v0.83.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `149.0.0` (pull #[2951](https://github.com/aws-cloudformation/cfn-lint/pull/2951))
