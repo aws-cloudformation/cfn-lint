@@ -872,13 +872,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         # if resource condition isn't available then the resource is available
         return results
 
-    def get_object_without_nested_conditions(self, obj, path):
+    def get_object_without_nested_conditions(self, obj, path, region=None):
         """
         Get a list of object values without conditions included.
         Evaluates deep into the object removing any nested conditions as well
         """
         results = []
-        scenarios = self.get_condition_scenarios_below_path(path)
+        scenarios = self.get_condition_scenarios_below_path(path, False, region)
         if not isinstance(obj, (dict, list)):
             return results
 
@@ -978,7 +978,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return result
 
-    def get_object_without_conditions(self, obj, property_names=None):
+    def get_object_without_conditions(self, obj, property_names=None, region=None):
         """
         Gets a list of object values without conditions included
         Input:
@@ -1018,7 +1018,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             o = deepcopy(obj)
         results = []
 
-        scenarios = self.get_conditions_scenarios_from_object([o])
+        scenarios = self.get_conditions_scenarios_from_object([o], region)
         if not isinstance(obj, dict):
             return results
 
@@ -1036,7 +1036,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_condition_scenarios_below_path(self, path, include_if_in_function=False):
+    def get_condition_scenarios_below_path(
+        self, path, include_if_in_function=False, region=None
+    ):
         """
         get Condition Scenarios from below path
         """
@@ -1055,9 +1057,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         else:
                             results[condition_name] = condition_values
 
-        return list(self.conditions.build_scenarios(list(results.keys())))
+        return list(self.conditions.build_scenarios(list(results.keys()), region))
 
-    def get_conditions_scenarios_from_object(self, objs):
+    def get_conditions_scenarios_from_object(self, objs, region=None):
         """
         Get condition from objects
         """
@@ -1105,7 +1107,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     else:
                         con = con.union(get_conditions_from_property(v))
 
-        return list(self.conditions.build_scenarios(list(con)))
+        return list(self.conditions.build_scenarios(list(con), region))
 
     def get_conditions_from_path(
         self,

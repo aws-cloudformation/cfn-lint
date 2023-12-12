@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import logging
 import traceback
-from typing import Any, Dict, Generator, Iterator, List, Tuple
+from typing import Any, Dict, Iterator, List, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
@@ -152,7 +152,9 @@ class Conditions:
 
         return (cnf, equal_vars)
 
-    def build_scenarios(self, condition_names: List[str]) -> Iterator[Dict[str, bool]]:
+    def build_scenarios(
+        self, condition_names: List[str], region: None = None
+    ) -> Iterator[Dict[str, bool]]:
         """Given a list of condition names this function will yield scenarios that represent
         those conditions and there result (True/False)
 
@@ -169,7 +171,14 @@ class Conditions:
         try:
             # build a large matric of True/False options based on the provided conditions
             scenarios_returned = 0
-            for p in itertools.product([True, False], repeat=len(condition_names)):
+            if region:
+                products = itertools.starmap(
+                    self.build_scenerios_on_region,
+                    itertools.product(condition_names, [region]),
+                )
+            else:
+                products = itertools.product([True, False], repeat=len(condition_names))
+            for p in products:
                 cnf = self._cnf.copy()
                 params = dict(zip(condition_names, p))
                 for condition_name, opt in params.items():
@@ -256,8 +265,8 @@ class Conditions:
 
     def build_scenerios_on_region(
         self, condition_name: str, region: str
-    ) -> Generator[bool, None, None]:
-        """Based on a region validate if the condition_name coudle be true
+    ) -> Iterator[bool]:
+        """Based on a region validate if the condition_name could be true
 
         Args:
             condition_name (str): The name of the condition we are validating against
