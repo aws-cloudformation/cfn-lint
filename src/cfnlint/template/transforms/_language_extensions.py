@@ -194,7 +194,7 @@ class _Transform:
     def _replace_string_params(
         self, s: str, params: Mapping[str, Any]
     ) -> Tuple[bool, str]:
-        pattern = r"\${[a-zA-Z0-9:]+}"
+        pattern = r"\${[a-zA-Z0-9\.:]+}"
         if not re.search(pattern, s):
             return (True, s)
         for k, v in params.items():
