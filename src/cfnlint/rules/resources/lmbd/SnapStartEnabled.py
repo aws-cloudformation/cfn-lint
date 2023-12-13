@@ -22,8 +22,11 @@ class SnapStartEnabled(CloudFormationLintRule):
         super().__init__()
         self.resource_property_types.append("AWS::Lambda::Function")
 
-    def validate(self, runtime, path):
+    def validate(self, runtime, path, region, regions):
         if not isinstance(runtime, str):
+            return []
+
+        if region not in regions:
             return []
 
         if not (runtime.startswith("java")) or runtime in ["java8.al2", "java8"]:

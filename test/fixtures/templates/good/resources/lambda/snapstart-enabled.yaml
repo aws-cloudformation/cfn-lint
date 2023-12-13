@@ -1,3 +1,5 @@
+Conditions:
+  IsMeCentral1: !Equals [!Ref AWS::Region, "me-central-1"]
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -21,7 +23,10 @@ Resources:
         S3Key: function.zip
       Runtime: java17
       SnapStart:
-        ApplyOn: PublishedVersions
+        Fn::If:
+        - IsMeCentral1
+        - !Ref AWS::NoValue
+        - ApplyOn: PublishedVersions
       TracingConfig:
         Mode: Active
 
@@ -36,7 +41,10 @@ Resources:
         S3Key: function.zip
       Runtime: java11
       SnapStart:
-        ApplyOn: None
+        Fn::If:
+        - IsMeCentral1
+        - !Ref AWS::NoValue
+        - ApplyOn: None
       TracingConfig:
         Mode: Active
 
