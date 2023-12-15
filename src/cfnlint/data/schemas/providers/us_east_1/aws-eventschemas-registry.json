@@ -22,23 +22,58 @@
   }
  },
  "description": "Resource Type definition for AWS::EventSchemas::Registry",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:CreateRegistry",
+    "schemas:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:DeleteRegistry"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "schemas:ListRegistries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "schemas:DescribeRegistry"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:UpdateRegistry",
+    "schemas:TagResource",
+    "schemas:UntagResource",
+    "schemas:ListTagsForResource"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/RegistryArn"
  ],
  "properties": {
   "Description": {
-   "type": "string"
-  },
-  "Id": {
+   "description": "A description of the registry to be created.",
    "type": "string"
   },
   "RegistryArn": {
+   "description": "The ARN of the registry.",
    "type": "string"
   },
   "RegistryName": {
+   "description": "The name of the schema registry.",
    "type": "string"
   },
   "Tags": {
+   "description": "Tags associated with the resource.",
    "items": {
     "$ref": "#/definitions/TagsEntry"
    },
@@ -47,8 +82,14 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/RegistryArn",
-  "/properties/Id"
+  "/properties/RegistryArn"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EventSchemas::Registry"
 }

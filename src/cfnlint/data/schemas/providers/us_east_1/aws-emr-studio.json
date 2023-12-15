@@ -6,7 +6,11 @@
   "/properties/ServiceRole",
   "/properties/UserRole",
   "/properties/VpcId",
-  "/properties/WorkspaceSecurityGroupId"
+  "/properties/WorkspaceSecurityGroupId",
+  "/properties/TrustedIdentityPropagationEnabled",
+  "/properties/IdcUserAssignment",
+  "/properties/IdcInstanceArn",
+  "/properties/EncryptionKeyArn"
  ],
  "definitions": {
   "Arn": {
@@ -121,11 +125,29 @@
    "minLength": 0,
    "type": "string"
   },
+  "EncryptionKeyArn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The AWS KMS key identifier (ARN) used to encrypt AWS EMR Studio workspace and notebook files when backed up to AWS S3."
+  },
   "EngineSecurityGroupId": {
    "description": "The ID of the Amazon EMR Studio Engine security group. The Engine security group allows inbound network traffic from the Workspace security group, and it must be in the same VPC specified by VpcId.",
    "maxLength": 256,
    "minLength": 4,
    "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
+   "type": "string"
+  },
+  "IdcInstanceArn": {
+   "description": "The ARN of the IAM Identity Center instance to create the Studio application.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "IdcUserAssignment": {
+   "description": "Specifies whether IAM Identity Center user assignment is REQUIRED or OPTIONAL. If the value is set to REQUIRED, users must be explicitly assigned to the Studio application to access the Studio.",
+   "enum": [
+    "REQUIRED",
+    "OPTIONAL"
+   ],
    "type": "string"
   },
   "IdpAuthUrl": {
@@ -169,6 +191,10 @@
   "Tags": {
    "$ref": "#/definitions/Tags",
    "description": "A list of tags to associate with the Studio. Tags are user-defined key-value pairs that consist of a required key string with a maximum of 128 characters, and an optional value string with a maximum of 256 characters."
+  },
+  "TrustedIdentityPropagationEnabled": {
+   "description": "A Boolean indicating whether to enable Trusted identity propagation for the Studio. The default value is false.",
+   "type": "boolean"
   },
   "Url": {
    "description": "The unique Studio access URL.",
