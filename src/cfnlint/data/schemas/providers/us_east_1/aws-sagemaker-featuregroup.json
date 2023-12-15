@@ -91,6 +91,13 @@
    ],
    "type": "object"
   },
+  "StorageType": {
+   "enum": [
+    "Standard",
+    "InMemory"
+   ],
+   "type": "string"
+  },
   "TableFormat": {
    "description": "Format for the offline store feature group. Iceberg is the optimal format for feature groups shared between offline and online stores.",
    "enum": [
@@ -183,6 +190,7 @@
   },
   "FeatureDefinitions": {
    "description": "An Array of Feature Definition",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/FeatureDefinition"
    },
@@ -231,6 +239,9 @@
     },
     "SecurityConfig": {
      "$ref": "#/definitions/OnlineStoreSecurityConfig"
+    },
+    "StorageType": {
+     "$ref": "#/definitions/StorageType"
     }
    },
    "type": "object"
@@ -251,6 +262,7 @@
   },
   "Tags": {
    "description": "An array of key-value pair to apply to this resource.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -269,5 +281,12 @@
   "EventTimeFeatureName",
   "FeatureDefinitions"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::SageMaker::FeatureGroup"
 }
