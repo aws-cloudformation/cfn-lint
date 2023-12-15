@@ -1,0 +1,225 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EdiType": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "X12Details": {
+       "$ref": "#/definitions/X12Details"
+      }
+     },
+     "required": [
+      "X12Details"
+     ],
+     "title": "X12Details",
+     "type": "object"
+    }
+   ]
+  },
+  "FileFormat": {
+   "enum": [
+    "XML",
+    "JSON"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TransformerStatus": {
+   "enum": [
+    "active",
+    "inactive"
+   ],
+   "type": "string"
+  },
+  "X12Details": {
+   "additionalProperties": false,
+   "properties": {
+    "TransactionSet": {
+     "$ref": "#/definitions/X12TransactionSet"
+    },
+    "Version": {
+     "$ref": "#/definitions/X12Version"
+    }
+   },
+   "type": "object"
+  },
+  "X12TransactionSet": {
+   "enum": [
+    "X12_110",
+    "X12_180",
+    "X12_204",
+    "X12_210",
+    "X12_214",
+    "X12_215",
+    "X12_310",
+    "X12_315",
+    "X12_322",
+    "X12_404",
+    "X12_410",
+    "X12_820",
+    "X12_824",
+    "X12_830",
+    "X12_846",
+    "X12_850",
+    "X12_852",
+    "X12_855",
+    "X12_856",
+    "X12_860",
+    "X12_861",
+    "X12_864",
+    "X12_940",
+    "X12_990",
+    "X12_997"
+   ],
+   "type": "string"
+  },
+  "X12Version": {
+   "enum": [
+    "VERSION_4010",
+    "VERSION_4030",
+    "VERSION_5010"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Definition of AWS::B2BI::Transformer Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "b2bi:CreateTransformer",
+    "b2bi:TagResource",
+    "logs:CreateLogDelivery",
+    "logs:CreateLogGroup",
+    "logs:CreateLogStream",
+    "logs:DescribeLogGroups",
+    "logs:DescribeLogStreams",
+    "logs:DescribeResourcePolicies",
+    "logs:ListLogDeliveries",
+    "logs:PutLogEvents",
+    "logs:PutResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "b2bi:DeleteTransformer",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "b2bi:ListTransformers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "b2bi:ListTagsForResource",
+    "b2bi:GetTransformer"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "b2bi:TagResource",
+    "b2bi:UntagResource",
+    "b2bi:UpdateTransformer"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransformerId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "EdiType": {
+   "$ref": "#/definitions/EdiType"
+  },
+  "FileFormat": {
+   "$ref": "#/definitions/FileFormat"
+  },
+  "MappingTemplate": {
+   "maxLength": 350000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 254,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SampleDocument": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/TransformerStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TransformerArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TransformerId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/TransformerArn",
+  "/properties/TransformerId"
+ ],
+ "required": [
+  "EdiType",
+  "FileFormat",
+  "MappingTemplate",
+  "Name",
+  "Status"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::B2BI::Transformer"
+}

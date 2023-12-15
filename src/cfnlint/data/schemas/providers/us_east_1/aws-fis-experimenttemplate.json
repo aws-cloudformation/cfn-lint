@@ -1,7 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/ExperimentOptions/AccountTargeting"
  ],
  "definitions": {
   "ActionId": {
@@ -86,6 +87,28 @@
    "description": "A description for the experiment template.",
    "maxLength": 512,
    "type": "string"
+  },
+  "ExperimentTemplateExperimentOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountTargeting": {
+     "description": "The account targeting setting for the experiment template.",
+     "enum": [
+      "multi-account",
+      "single-account"
+     ],
+     "type": "string"
+    },
+    "EmptyTargetResolutionMode": {
+     "description": "The target resolution failure mode for the experiment template.",
+     "enum": [
+      "fail",
+      "skip"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "ExperimentTemplateId": {
    "type": "string"
@@ -331,6 +354,9 @@
   },
   "Description": {
    "$ref": "#/definitions/ExperimentTemplateDescription"
+  },
+  "ExperimentOptions": {
+   "$ref": "#/definitions/ExperimentTemplateExperimentOptions"
   },
   "Id": {
    "$ref": "#/definitions/ExperimentTemplateId"
