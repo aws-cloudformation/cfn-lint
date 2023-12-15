@@ -159,6 +159,54 @@
    ],
    "type": "object"
   },
+  "GitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Push": {
+     "items": {
+      "$ref": "#/definitions/GitPushFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceActionName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceActionName"
+   ],
+   "type": "object"
+  },
+  "GitPushFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Tags": {
+     "$ref": "#/definitions/GitTagFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitTagFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "InputArtifact": {
    "additionalProperties": false,
    "properties": {
@@ -180,6 +228,21 @@
    },
    "required": [
     "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTriggerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "GitConfiguration": {
+     "$ref": "#/definitions/GitConfiguration"
+    },
+    "ProviderType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderType"
    ],
    "type": "object"
   },
@@ -239,6 +302,24 @@
    "required": [
     "Value",
     "Key"
+   ],
+   "type": "object"
+  },
+  "VariableDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
    ],
    "type": "object"
   }
@@ -317,6 +398,9 @@
   "Name": {
    "type": "string"
   },
+  "PipelineType": {
+   "type": "string"
+  },
   "RestartExecutionOnUpdate": {
    "type": "boolean"
   },
@@ -336,6 +420,20 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "Triggers": {
+   "items": {
+    "$ref": "#/definitions/PipelineTriggerDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Variables": {
+   "items": {
+    "$ref": "#/definitions/VariableDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "Version": {
    "type": "string"
