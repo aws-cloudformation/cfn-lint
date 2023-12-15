@@ -828,7 +828,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         # if resource condition isn't available then the resource is available
         return results
-    
+
     def get_object_without_nested_conditions(self, obj, path, region=None):
         """
         Get a list of object values without conditions included.
@@ -991,7 +991,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             o = deepcopy(obj)
         results = []
 
-        scenarios = self.get_conditions_scenarios_from_object([o], region)
+        scenarios = self.get_conditions_scenarios_from_object(o, region)
+
         if isinstance(obj, list):
             if not scenarios:
                 return [{"Scenario": None, "Object": o}]
@@ -1088,7 +1089,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         con = con.union(get_conditions_from_property(v))
 
         return list(self.conditions.build_scenarios(dict.fromkeys(list(con)), region))
-
 
     def get_conditions_from_path(
         self,
