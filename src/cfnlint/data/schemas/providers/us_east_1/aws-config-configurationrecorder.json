@@ -45,6 +45,48 @@
    },
    "type": "object"
   },
+  "RecordingMode": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordingFrequency": {
+     "type": "string"
+    },
+    "RecordingModeOverrides": {
+     "items": {
+      "$ref": "#/definitions/RecordingModeOverride"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "RecordingFrequency"
+   ],
+   "type": "object"
+  },
+  "RecordingModeOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "RecordingFrequency": {
+     "type": "string"
+    },
+    "ResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ResourceTypes",
+    "RecordingFrequency"
+   ],
+   "type": "object"
+  },
   "RecordingStrategy": {
    "additionalProperties": false,
    "properties": {
@@ -71,6 +113,9 @@
   },
   "RecordingGroup": {
    "$ref": "#/definitions/RecordingGroup"
+  },
+  "RecordingMode": {
+   "$ref": "#/definitions/RecordingMode"
   },
   "RoleARN": {
    "type": "string"
