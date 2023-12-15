@@ -4,6 +4,7 @@
   "/properties/DeploymentConfigName",
   "/properties/MinimumHealthyHosts",
   "/properties/ComputePlatform",
+  "/properties/ZonalConfig",
   "/properties/TrafficRoutingConfig"
  ],
  "definitions": {
@@ -15,6 +16,22 @@
       "HOST_COUNT",
       "FLEET_PERCENT"
      ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MinimumHealthyHostsPerZone": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
      "type": "string"
     },
     "Value": {
@@ -76,6 +93,24 @@
     "Type"
    ],
    "type": "object"
+  },
+  "ZonalConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FirstZoneMonitorDurationInSeconds": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "MinimumHealthyHostsPerZone": {
+     "$ref": "#/definitions/MinimumHealthyHostsPerZone"
+    },
+    "MonitorDurationInSeconds": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
   }
  },
  "description": "Resource Type definition for AWS::CodeDeploy::DeploymentConfig",
@@ -121,6 +156,10 @@
   "TrafficRoutingConfig": {
    "$ref": "#/definitions/TrafficRoutingConfig",
    "description": "The configuration that specifies how the deployment traffic is routed."
+  },
+  "ZonalConfig": {
+   "$ref": "#/definitions/ZonalConfig",
+   "description": "The zonal deployment config that specifies how the zonal deployment behaves"
   }
  },
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codedeploy",
