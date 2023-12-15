@@ -8,27 +8,33 @@
  "handlers": {
   "create": {
    "permissions": [
-    "route53resolver:CreateConfig"
+    "route53resolver:UpdateResolverConfig",
+    "route53resolver:GetResolverConfig",
+    "ec2:DescribeVpcs"
    ]
   },
   "delete": {
    "permissions": [
-    "route53resolver:DeleteConfig"
+    "route53resolver:UpdateResolverConfig",
+    "route53resolver:ListResolverConfigs",
+    "ec2:DescribeVpcs"
    ]
   },
   "list": {
    "permissions": [
-    "route53resolver:ListConfig"
+    "route53resolver:ListResolverConfigs",
+    "ec2:DescribeVpcs"
    ]
   },
   "read": {
    "permissions": [
-    "route53resolver:GetConfig"
+    "route53resolver:GetResolverConfig",
+    "ec2:DescribeVpcs"
    ]
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ResourceId"
  ],
  "properties": {
   "AutodefinedReverse": {
@@ -66,6 +72,9 @@
    "minLength": 1,
    "type": "string"
   }
+ },
+ "propertyTransform": {
+  "/properties/AutodefinedReverseFlag": "$join([AutodefinedReverseFlag, \"D\"])"
  },
  "readOnlyProperties": [
   "/properties/OwnerId",
