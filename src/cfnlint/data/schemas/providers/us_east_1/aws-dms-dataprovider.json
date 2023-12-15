@@ -1,0 +1,293 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DataProviderName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "DmsSslModeValue": {
+   "enum": [
+    "none",
+    "require",
+    "verify_ca",
+    "verify_full"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::DMS::DataProvider",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "dms:CreateDataProvider",
+    "dms:ListDataProviders",
+    "dms:DescribeDataProviders",
+    "dms:AddTagsToResource",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "dms:DeleteDataProvider"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "dms:ListDataProviders",
+    "dms:DescribeDataProviders",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dms:ListDataProviders",
+    "dms:DescribeDataProviders",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "dms:UpdateDataProvider",
+    "dms:ModifyDataProvider",
+    "dms:AddTagsToResource",
+    "dms:RemoveTagsToResource",
+    "dms:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DataProviderArn"
+ ],
+ "properties": {
+  "DataProviderArn": {
+   "description": "The data provider ARN.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderCreationTime": {
+   "description": "The data provider creation time.",
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderIdentifier": {
+   "description": "The property describes an identifier for the data provider. It is used for describing/deleting/modifying can be name/arn",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderName": {
+   "description": "The property describes a name to identify the data provider.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The optional description of the data provider.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engine": {
+   "description": "The property describes a data engine for the data provider.",
+   "enum": [
+    "postgresql",
+    "mysql",
+    "oracle",
+    "sqlserver",
+    "aurora",
+    "aurora_postgresql"
+   ],
+   "type": "string"
+  },
+  "ExactSettings": {
+   "default": false,
+   "description": "The property describes the exact settings which can be modified",
+   "type": "boolean"
+  },
+  "Settings": {
+   "description": "The property identifies the exact type of settings for the data provider.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "description": "PostgreSqlSettings property identifier.",
+     "properties": {
+      "PostgreSqlSettings": {
+       "additionalProperties": false,
+       "properties": {
+        "CertificateArn": {
+         "type": "string"
+        },
+        "DatabaseName": {
+         "type": "string"
+        },
+        "Port": {
+         "type": "integer"
+        },
+        "ServerName": {
+         "type": "string"
+        },
+        "SslMode": {
+         "$ref": "#/definitions/DmsSslModeValue",
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "description": "MySqlSettings property identifier.",
+     "properties": {
+      "MySqlSettings": {
+       "additionalProperties": false,
+       "properties": {
+        "CertificateArn": {
+         "type": "string"
+        },
+        "Port": {
+         "type": "integer"
+        },
+        "ServerName": {
+         "type": "string"
+        },
+        "SslMode": {
+         "$ref": "#/definitions/DmsSslModeValue",
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "description": "OracleSettings property identifier.",
+     "properties": {
+      "OracleSettings": {
+       "additionalProperties": false,
+       "properties": {
+        "AsmServer": {
+         "type": "string"
+        },
+        "CertificateArn": {
+         "type": "string"
+        },
+        "DatabaseName": {
+         "type": "string"
+        },
+        "Port": {
+         "type": "integer"
+        },
+        "SecretsManagerOracleAsmAccessRoleArn": {
+         "type": "string"
+        },
+        "SecretsManagerOracleAsmSecretId": {
+         "type": "string"
+        },
+        "SecretsManagerSecurityDbEncryptionAccessRoleArn": {
+         "type": "string"
+        },
+        "SecretsManagerSecurityDbEncryptionSecretId": {
+         "type": "string"
+        },
+        "ServerName": {
+         "type": "string"
+        },
+        "SslMode": {
+         "$ref": "#/definitions/DmsSslModeValue",
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "description": "MicrosoftSqlServerSettings property identifier.",
+     "properties": {
+      "MicrosoftSqlServerSettings": {
+       "additionalProperties": false,
+       "properties": {
+        "CertificateArn": {
+         "type": "string"
+        },
+        "DatabaseName": {
+         "type": "string"
+        },
+        "Port": {
+         "type": "integer"
+        },
+        "ServerName": {
+         "type": "string"
+        },
+        "SslMode": {
+         "$ref": "#/definitions/DmsSslModeValue",
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataProviderArn",
+  "/properties/DataProviderCreationTime"
+ ],
+ "required": [
+  "Engine"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::DataProvider",
+ "writeOnlyProperties": [
+  "/properties/DataProviderIdentifier",
+  "/properties/ExactSettings"
+ ]
+}

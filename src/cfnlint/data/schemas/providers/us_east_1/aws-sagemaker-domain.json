@@ -1,16 +1,59 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/AppNetworkAccessType",
   "/properties/AuthMode",
   "/properties/DomainName",
   "/properties/DomainSettings/RStudioServerProDomainSettings/DefaultResourceSpec",
   "/properties/KmsKeyId",
-  "/properties/SubnetIds",
   "/properties/VpcId",
   "/properties/Tags"
  ],
  "definitions": {
+  "CodeEditorAppSettings": {
+   "additionalProperties": false,
+   "description": "The CodeEditor app settings.",
+   "properties": {
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec",
+     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the CodeEditor app."
+    },
+    "LifecycleConfigArns": {
+     "description": "A list of LifecycleConfigArns available for use with CodeEditor apps.",
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "CodeRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryUrl": {
+     "description": "A CodeRepository (valid URL) to be used within Jupyter's Git extension.",
+     "maxLength": 256,
+     "pattern": "^https://([.\\-_a-zA-Z0-9]+/?){3,1016}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryUrl"
+   ],
+   "type": "object"
+  },
+  "CustomFileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EFSFileSystemConfig": {
+     "$ref": "#/definitions/EFSFileSystemConfig"
+    }
+   },
+   "type": "object"
+  },
   "CustomImage": {
    "additionalProperties": false,
    "description": "A custom SageMaker image.",
@@ -36,6 +79,45 @@
    "required": [
     "AppImageConfigName",
     "ImageName"
+   ],
+   "type": "object"
+  },
+  "CustomPosixUserConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "maximum": 4000000,
+     "minimum": 1001,
+     "type": "integer"
+    },
+    "Uid": {
+     "maximum": 4000000,
+     "minimum": 10000,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Uid",
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "DefaultEbsStorageSettings": {
+   "additionalProperties": false,
+   "description": "Properties related to the Amazon Elastic Block Store volume. Must be provided if storage type is Amazon EBS and must not be provided if storage type is not Amazon EBS",
+   "properties": {
+    "DefaultEbsVolumeSizeInGb": {
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
+     "description": "Default size of the Amazon EBS volume in Gb"
+    },
+    "MaximumEbsVolumeSizeInGb": {
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
+     "description": "Maximum size of the Amazon EBS volume in Gb. Must be greater than or equal to the DefaultEbsVolumeSizeInGb."
+    }
+   },
+   "required": [
+    "DefaultEbsVolumeSizeInGb",
+    "MaximumEbsVolumeSizeInGb"
    ],
    "type": "object"
   },
@@ -77,6 +159,16 @@
    ],
    "type": "object"
   },
+  "DefaultSpaceStorageSettings": {
+   "additionalProperties": false,
+   "description": "Default storage settings for a space.",
+   "properties": {
+    "DefaultEbsStorageSettings": {
+     "$ref": "#/definitions/DefaultEbsStorageSettings"
+    }
+   },
+   "type": "object"
+  },
   "DomainSettings": {
    "additionalProperties": false,
    "description": "A collection of Domain settings.",
@@ -94,6 +186,68 @@
      },
      "maxItems": 3,
      "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "EFSFileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "maxLength": 21,
+     "minLength": 11,
+     "pattern": "^(fs-[0-9a-f]{8,})$",
+     "type": "string"
+    },
+    "FileSystemPath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\/\\S*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId"
+   ],
+   "type": "object"
+  },
+  "JupyterLabAppSettings": {
+   "additionalProperties": false,
+   "description": "The JupyterLab app settings.",
+   "properties": {
+    "CodeRepositories": {
+     "description": "A list of CodeRepositories available for use with JupyterLab apps.",
+     "items": {
+      "$ref": "#/definitions/CodeRepository"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CustomImages": {
+     "description": "A list of custom images for use for JupyterLab apps.",
+     "items": {
+      "$ref": "#/definitions/CustomImage"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec",
+     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the JupyterLab app."
+    },
+    "LifecycleConfigArns": {
+     "description": "A list of LifecycleConfigArns available for use with JupyterLab apps.",
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
@@ -271,7 +425,10 @@
       "ml.g5.48xlarge",
       "ml.p4d.24xlarge",
       "ml.p4de.24xlarge",
-      "ml.geospatial.interactive"
+      "ml.geospatial.interactive",
+      "ml.trn1.2xlarge",
+      "ml.trn1.32xlarge",
+      "ml.trn1n.32xlarge"
      ],
      "type": "string"
     },
@@ -323,6 +480,17 @@
    },
    "type": "object"
   },
+  "SpaceEbsVolumeSizeInGb": {
+   "maximum": 16384,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "StudioLifecycleConfigArn": {
+   "description": "The Amazon Resource Name (ARN) of the Lifecycle Configuration to attach to the Resource.",
+   "maxLength": 256,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -347,12 +515,35 @@
    "additionalProperties": false,
    "description": "A collection of settings that apply to users of Amazon SageMaker Studio. These settings are specified when the CreateUserProfile API is called, and as DefaultUserSettings when the CreateDomain API is called.",
    "properties": {
+    "CodeEditorAppSettings": {
+     "$ref": "#/definitions/CodeEditorAppSettings"
+    },
+    "CustomFileSystemConfigs": {
+     "items": {
+      "$ref": "#/definitions/CustomFileSystemConfig"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CustomPosixUserConfig": {
+     "$ref": "#/definitions/CustomPosixUserConfig"
+    },
+    "DefaultLandingUri": {
+     "description": "Defines which Amazon SageMaker application users are directed to by default.",
+     "maxLength": 1023,
+     "type": "string"
+    },
     "ExecutionRole": {
      "description": "The execution role for the user.",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/JupyterLabAppSettings"
     },
     "JupyterServerAppSettings": {
      "$ref": "#/definitions/JupyterServerAppSettings",
@@ -384,6 +575,17 @@
     "SharingSettings": {
      "$ref": "#/definitions/SharingSettings",
      "description": "The sharing settings."
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/DefaultSpaceStorageSettings"
+    },
+    "StudioWebPortal": {
+     "description": "Indicates whether the Studio experience is available to users. If not, users cannot access Studio.",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
     }
    },
    "required": [
@@ -512,6 +714,11 @@
    "pattern": "[-0-9a-zA-Z]+",
    "type": "string"
   },
+  "SingleSignOnApplicationArn": {
+   "description": "The ARN of the application managed by SageMaker in IAM Identity Center. This value is only returned for domains created after October 1, 2023.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::[0-9]+:application/[a-zA-Z0-9-_.]+/apl-[a-zA-Z0-9]+$",
+   "type": "string"
+  },
   "SingleSignOnManagedApplicationInstanceId": {
    "description": "The SSO managed application instance ID.",
    "maxLength": 256,
@@ -559,7 +766,8 @@
   "/properties/DomainId",
   "/properties/HomeEfsFileSystemId",
   "/properties/SecurityGroupIdForDomainBoundary",
-  "/properties/SingleSignOnManagedApplicationInstanceId"
+  "/properties/SingleSignOnManagedApplicationInstanceId",
+  "/properties/SingleSignOnApplicationArn"
  ],
  "required": [
   "AuthMode",
