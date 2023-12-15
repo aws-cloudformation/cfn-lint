@@ -203,8 +203,9 @@ class Conditions:
                 )
             else:
                 products = itertools.product([True, False], repeat=len(condition_names))
+
             for p in products:
-                cnf = self._cnf.copy()
+                cnf = c_cnf.copy()
                 params = dict(zip(condition_names, p))
                 for condition_name, opt in params.items():
                     if opt:
