@@ -1,3 +1,7 @@
+### v1.2.1a3
+###### Fixes
+- Pass through all errors from `Fn::If`` (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
+
 ### v1.2.1a2
 ###### Fixes
 - Redo AWS::CloudFormation::Init validation (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
