@@ -2,6 +2,7 @@
  "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
  "additionalProperties": false,
  "createOnlyProperties": [
+  "/properties/ApplyCapacity",
   "/properties/BuildId",
   "/properties/CertificateConfiguration",
   "/properties/EC2InstanceType",
@@ -397,6 +398,14 @@
   "AnywhereConfiguration": {
    "$ref": "#/definitions/AnywhereConfiguration",
    "description": "Configuration for Anywhere fleet."
+  },
+  "ApplyCapacity": {
+   "description": "ComputeType to differentiate EC2 hardware managed by GameLift and Anywhere hardware managed by the customer.",
+   "enum": [
+    "ON_UPDATE",
+    "ON_CREATE_AND_UPDATE"
+   ],
+   "type": "string"
   },
   "BuildId": {
    "description": "A unique identifier for a build to be deployed on the new fleet. If you are deploying the fleet with a custom game build, you must specify this property. The build must have been successfully uploaded to Amazon GameLift and be in a READY status. This fleet setting cannot be changed once the fleet is created.",
