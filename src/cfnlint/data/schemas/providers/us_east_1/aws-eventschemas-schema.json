@@ -23,32 +23,86 @@
   }
  },
  "description": "Resource Type definition for AWS::EventSchemas::Schema",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:CreateSchema",
+    "schemas:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:DeleteSchema",
+    "schemas:DeleteSchemaVersion"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RegistryName": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "RegistryName"
+    ]
+   },
+   "permissions": [
+    "schemas:ListSchemas",
+    "schemas:ListSchemaVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "schemas:DescribeSchema"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:UpdateSchema",
+    "schemas:TagResource",
+    "schemas:UntagResource",
+    "schemas:ListTagsForResource"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/SchemaArn"
  ],
  "properties": {
   "Content": {
+   "description": "The source of the schema definition.",
    "type": "string"
   },
   "Description": {
+   "description": "A description of the schema.",
    "type": "string"
   },
-  "Id": {
+  "LastModified": {
+   "description": "The last modified time of the schema.",
    "type": "string"
   },
   "RegistryName": {
+   "description": "The name of the schema registry.",
    "type": "string"
   },
   "SchemaArn": {
+   "description": "The ARN of the schema.",
    "type": "string"
   },
   "SchemaName": {
+   "description": "The name of the schema.",
    "type": "string"
   },
   "SchemaVersion": {
+   "description": "The version number of the schema.",
    "type": "string"
   },
   "Tags": {
+   "description": "Tags associated with the resource.",
    "items": {
     "$ref": "#/definitions/TagsEntry"
    },
@@ -56,18 +110,32 @@
    "uniqueItems": false
   },
   "Type": {
+   "description": "The type of schema. Valid types include OpenApi3 and JSONSchemaDraft4.",
+   "type": "string"
+  },
+  "VersionCreatedDate": {
+   "description": "The date the schema version was created.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
-  "/properties/SchemaVersion",
-  "/properties/SchemaArn"
+  "/properties/SchemaArn",
+  "/properties/LastModified",
+  "/properties/VersionCreatedDate",
+  "/properties/SchemaVersion"
  ],
  "required": [
   "Type",
   "Content",
   "RegistryName"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eventschemas",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EventSchemas::Schema"
 }

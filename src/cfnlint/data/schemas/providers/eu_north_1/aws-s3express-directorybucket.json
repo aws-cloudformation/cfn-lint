@@ -1,0 +1,82 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName",
+  "/properties/LocationName",
+  "/properties/DataRedundancy"
+ ],
+ "definitions": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the specified bucket.",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3Express::DirectoryBucket.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3express:CreateBucket",
+    "s3express:ListAllMyDirectoryBuckets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3express:DeleteBucket",
+    "s3express:ListAllMyDirectoryBuckets"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3express:ListAllMyDirectoryBuckets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3express:ListAllMyDirectoryBuckets"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BucketName"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "Returns the Amazon Resource Name (ARN) of the specified bucket.",
+   "examples": [
+    "arn:aws:s3express:us-west-2:123456789123:bucket/DOC-EXAMPLE-BUCKET--usw2-az2--x-s3"
+   ]
+  },
+  "BucketName": {
+   "description": "Specifies a name for the bucket. The bucket name must contain only lowercase letters, numbers, dots (.), and hyphens (-). A directory bucket name must be unique in the chosen Availability Zone. The bucket name must also follow the format 'bucket_base_name--az_id--x-s3' (for example, 'DOC-EXAMPLE-BUCKET--usw2-az2--x-s3'). If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the bucket name.",
+   "maxLength": 63,
+   "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",
+   "type": "string"
+  },
+  "DataRedundancy": {
+   "description": "Specifies the number of Avilability Zone that's used for redundancy for the bucket.",
+   "enum": [
+    "SingleAvailabilityZone"
+   ],
+   "type": "string"
+  },
+  "LocationName": {
+   "description": "Specifies the AZ ID of the Availability Zone where the directory bucket will be created. An example AZ ID value is 'use1-az5'.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "LocationName",
+  "DataRedundancy"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Express::DirectoryBucket"
+}
