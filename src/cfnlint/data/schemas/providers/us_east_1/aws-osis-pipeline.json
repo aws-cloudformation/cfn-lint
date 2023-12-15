@@ -4,6 +4,34 @@
   "/properties/PipelineName"
  ],
  "definitions": {
+  "BufferOptions": {
+   "additionalProperties": false,
+   "description": "Key-value pairs to configure buffering.",
+   "properties": {
+    "PersistentBufferEnabled": {
+     "description": "Whether persistent buffering should be enabled.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "PersistentBufferEnabled"
+   ],
+   "type": "object"
+  },
+  "EncryptionAtRestOptions": {
+   "additionalProperties": false,
+   "description": "Key-value pairs to configure encryption at rest.",
+   "properties": {
+    "KmsKeyArn": {
+     "description": "The KMS key to use for encrypting data. By default an AWS owned key is used",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KmsKeyArn"
+   ],
+   "type": "object"
+  },
   "LogPublishingOptions": {
    "additionalProperties": false,
    "description": "Key-value pairs to configure log publishing.",
@@ -19,6 +47,9 @@
        "type": "string"
       }
      },
+     "required": [
+      "LogGroup"
+     ],
      "type": "object"
     },
     "IsLoggingEnabled": {
@@ -96,6 +127,9 @@
      "type": "array"
     }
    },
+   "required": [
+    "SubnetIds"
+   ],
    "type": "object"
   }
  },
@@ -105,14 +139,21 @@
    "permissions": [
     "osis:CreatePipeline",
     "osis:GetPipeline",
+    "osis:TagResource",
     "osis:ListTagsForResource",
     "iam:PassRole",
-    "iam:CreateServiceLinkedRole"
+    "iam:CreateServiceLinkedRole",
+    "logs:CreateLogDelivery",
+    "kms:DescribeKey"
    ]
   },
   "delete": {
    "permissions": [
-    "osis:DeletePipeline"
+    "osis:DeletePipeline",
+    "osis:GetPipeline",
+    "logs:GetLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries"
    ]
   },
   "list": {
@@ -129,10 +170,15 @@
   "update": {
    "permissions": [
     "osis:UpdatePipeline",
+    "osis:GetPipeline",
     "osis:ListTagsForResource",
     "osis:TagResource",
     "osis:UntagResource",
-    "iam:PassRole"
+    "iam:PassRole",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:ListLogDeliveries",
+    "kms:DescribeKey"
    ]
   }
  },
@@ -140,6 +186,12 @@
   "/properties/PipelineArn"
  ],
  "properties": {
+  "BufferOptions": {
+   "$ref": "#/definitions/BufferOptions"
+  },
+  "EncryptionAtRestOptions": {
+   "$ref": "#/definitions/EncryptionAtRestOptions"
+  },
   "IngestEndpointUrls": {
    "description": "A list of endpoints that can be used for ingesting data into a pipeline",
    "insertionOrder": false,

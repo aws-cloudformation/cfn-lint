@@ -1,0 +1,211 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/MigrationProjectName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "DataProviderDescriptor": {
+   "additionalProperties": false,
+   "description": "It is an object that describes Source and Target DataProviders and credentials for connecting to databases that are used in MigrationProject",
+   "properties": {
+    "DataProviderArn": {
+     "type": "string"
+    },
+    "DataProviderIdentifier": {
+     "type": "string"
+    },
+    "DataProviderName": {
+     "type": "string"
+    },
+    "SecretsManagerAccessRoleArn": {
+     "type": "string"
+    },
+    "SecretsManagerSecretId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, , and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, , and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/MigrationProjectCreationTime"
+ ],
+ "description": "Resource schema for AWS::DMS::MigrationProject",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "dms:CreateMigrationProject",
+    "dms:ListMigrationProjects",
+    "dms:DescribeMigrationProjects",
+    "dms:AddTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "dms:DeleteMigrationProject"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "dms:ListMigrationProjects",
+    "dms:DescribeMigrationProjects",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dms:DescribeMigrationProjects",
+    "dms:ListMigrationProjects",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "dms:UpdateMigrationProject",
+    "dms:ModifyMigrationProject",
+    "dms:AddTagsToResource",
+    "dms:RemoveTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MigrationProjectArn"
+ ],
+ "properties": {
+  "Description": {
+   "description": "The optional description of the migration project.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileArn": {
+   "description": "The property describes an instance profile arn for the migration project. For read",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileIdentifier": {
+   "description": "The property describes an instance profile identifier for the migration project. For create",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileName": {
+   "description": "The property describes an instance profile name for the migration project. For read",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectArn": {
+   "description": "The property describes an ARN of the migration project.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectCreationTime": {
+   "description": "The property describes a creating time of the migration project.",
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectIdentifier": {
+   "description": "The property describes an identifier for the migration project. It is used for describing/deleting/modifying can be name/arn",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectName": {
+   "description": "The property describes a name to identify the migration project.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SchemaConversionApplicationAttributes": {
+   "additionalProperties": false,
+   "description": "The property describes schema conversion application attributes for the migration project.",
+   "properties": {
+    "S3BucketPath": {
+     "type": "string"
+    },
+    "S3BucketRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceDataProviderDescriptors": {
+   "description": "The property describes source data provider descriptors for the migration project.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataProviderDescriptor"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetDataProviderDescriptors": {
+   "description": "The property describes target data provider descriptors for the migration project.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataProviderDescriptor"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransformationRules": {
+   "description": "The property describes transformation rules for the migration project.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MigrationProjectArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-csf.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::MigrationProject",
+ "writeOnlyProperties": [
+  "/properties/MigrationProjectIdentifier",
+  "/properties/InstanceProfileIdentifier",
+  "/properties/SourceDataProviderDescriptors/*/DataProviderIdentifier",
+  "/properties/TargetDataProviderDescriptors/*/DataProviderIdentifier"
+ ]
+}

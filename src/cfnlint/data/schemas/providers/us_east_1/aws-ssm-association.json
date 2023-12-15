@@ -74,8 +74,10 @@
    "permissions": [
     "ec2:DescribeInstanceStatus",
     "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
     "ssm:CreateAssociation",
-    "ssm:DescribeAssociation"
+    "ssm:DescribeAssociation",
+    "ssm:GetCalendarState"
    ]
   },
   "delete": {
@@ -99,7 +101,8 @@
   "update": {
    "permissions": [
     "iam:PassRole",
-    "ssm:UpdateAssociation"
+    "ssm:UpdateAssociation",
+    "ssm:GetCalendarState"
    ]
   }
  },
@@ -259,5 +262,8 @@
  "tagging": {
   "taggable": false
  },
- "typeName": "AWS::SSM::Association"
+ "typeName": "AWS::SSM::Association",
+ "writeOnlyProperties": [
+  "/properties/WaitForSuccessTimeoutSeconds"
+ ]
 }
