@@ -47,7 +47,7 @@ class Validator(Protocol):
     #: A mapping of validation keywords (`str`\s) to functions that
     #: validate the keyword with that name. For more information see
     #: `creating-validators`.
-    VALIDATORS: ClassVar[Mapping]
+    validators: ClassVar[Mapping]
 
     #: The schema that will be used to validate instances
     schema: Mapping | bool

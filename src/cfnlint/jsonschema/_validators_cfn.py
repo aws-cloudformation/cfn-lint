@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+import json
 from collections import deque
 from typing import Any, Dict, List, Tuple
 
@@ -24,7 +25,14 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
-from cfnlint.helpers import FUNCTIONS_SINGLE, REGEX_SUB_PARAMETERS, REGIONS, ToPy
+from cfnlint.helpers import (
+    FUNCTIONS_SINGLE,
+    REGEX_CIDR,
+    REGEX_DYN_REF,
+    REGEX_SUB_PARAMETERS,
+    REGIONS,
+    ToPy,
+)
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
@@ -134,13 +142,12 @@ class _Fn:
         # validate this function will return the correct type
         errs = list(_validate_fn_output_types(validator, s, instance, self.types))
 
-        _, value = self._key_value(instance)
+        key, value = self._key_value(instance)
         errs.extend(
             list(
                 self._fix_errors(
                     self._validator(validator).descend(
-                        value,
-                        self.schema(validator, instance),
+                        value, self.schema(validator, instance), path=key
                     )
                 )
             )
@@ -459,6 +466,22 @@ class FnSplit(_Fn):
             ],
         }
 
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+            return
+
+        key, value = self._key_value(instance)
+        if re.fullmatch(REGEX_DYN_REF, json.dumps(value[1])):
+            yield ValidationError(
+                f"{self.fn.name} does not support dynamic references",
+                validator=self.fn.name,
+                path=[key, 1],
+            )
+
 
 class FnFindInMap(_Fn):
     def __init__(self) -> None:
@@ -707,6 +730,7 @@ class FnCidr(_Fn):
             "Fn::GetAtt",
             "Fn::Sub",
             "Fn::ImportValue",
+            "Fn::If",
         ]
         return {
             "type": ["array"],
@@ -717,6 +741,7 @@ class FnCidr(_Fn):
                     "functions": functions,
                     "schema": {
                         "type": ["string"],
+                        "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
                     },
                 },
                 {
