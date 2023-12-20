@@ -27,7 +27,6 @@ import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
 from cfnlint.helpers import (
     FUNCTIONS_SINGLE,
-    REGEX_CIDR,
     REGEX_DYN_REF,
     REGEX_SUB_PARAMETERS,
     REGIONS,
@@ -122,7 +121,10 @@ class _Fn:
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
 
-        for value, value_path in validator.resolve_value(instance):
+        for value, value_path, resolve_err in validator.resolve_value(instance):
+            if resolve_err:
+                yield resolve_err
+                continue
             for err in self._fix_errors(
                 validator.evolve(
                     context=validator.context.evolve(value_path=value_path),
@@ -486,8 +488,17 @@ class FnSplit(_Fn):
 class FnFindInMap(_Fn):
     def __init__(self) -> None:
         super().__init__("Fn::FindInMap", ["array"] + _singular_types, [])
+        self.scalar_schema = {
+            "functions": [
+                "Fn::FindInMap",
+                "Ref",
+            ],
+            "schema": {
+                "type": ["string"],
+            },
+        }
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
         scalar_schema = {
             "functions": [
                 "Fn::FindInMap",
@@ -599,7 +610,7 @@ class FnIf(_Fn):
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
-        for value, value_path in validator.resolve_value(instance):
+        for value, value_path, _ in validator.resolve_value(instance):
             for err in validator.evolve(
                 context=validator.context.evolve(value_path=value_path),
             ).descend(value, s, key):
@@ -741,7 +752,11 @@ class FnCidr(_Fn):
                     "functions": functions,
                     "schema": {
                         "type": ["string"],
-                        "pattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+                        "pattern": (
+                            "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.)"
+                            "{3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
+                            "(\\/([0-9]|[1-2][0-9]|3[0-2]))$"
+                        ),
                     },
                 },
                 {

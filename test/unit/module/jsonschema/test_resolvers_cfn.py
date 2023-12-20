@@ -6,6 +6,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context.context import Context, Map
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
 
@@ -181,7 +182,7 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid Join with a list of strings",
             {"Fn::Join": [".", ["a", "b", "c"]]},
-            [("a.b.c", deque([]))],
+            [("a.b.c", deque([]), None)],
         ),
         (
             "Valid GetAZs with empty string",
@@ -197,25 +198,29 @@ def test_invalid_functions(name, instance, response):
                         "us-east-1f",
                     ],
                     deque([]),
+                    None,
                 )
             ],
         ),
         (
             "Valid FindInMap with a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
-            [("default", deque([]))],
+            [("default", deque([]), None)],
         ),
         (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
-            [("foo-bar", deque([]))],
+            [("foo-bar", deque([]), None)],
         ),
         (
             "Valid Sub with empty parameters",
             {"Fn::Sub": ["foo", {}]},
-            [("foo", deque([]))],
+            [("foo", deque([]), None)],
         ),
     ],
 )
 def test_valid_functions(name, instance, response):
-    _resolve(name, instance, response)
+    context = Context()
+    context.mappings["foo"] = Map({"first": {"second": "bar"}})
+
+    _resolve(name, instance, response, context=context)

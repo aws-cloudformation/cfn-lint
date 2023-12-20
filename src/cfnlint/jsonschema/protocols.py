@@ -27,7 +27,7 @@ from typing_extensions import Protocol
 from cfnlint.context import Context
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._resolver import RefResolver
-from cfnlint.jsonschema._typing import V, ValidationResult
+from cfnlint.jsonschema._typing import V, ValidationError, ValidationResult
 from cfnlint.template import Template
 
 
@@ -173,7 +173,9 @@ class Validator(Protocol):
         ValidationError: [2, 3, 4] is too long
         """
 
-    def resolve_value(self, instance: Any) -> Iterator[Tuple[Any, Deque]]:
+    def resolve_value(
+        self, instance: Any
+    ) -> Iterator[Tuple[Any, Deque, ValidationError | None]]:
         """
         Resolve the given instance, yielding each of its values.
 

@@ -2,12 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
-
-import regex as re
-
-from cfnlint.helpers import REGEX_DYN_REF_SSM
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import CloudFormationLintRule
 
 
 class Split(CloudFormationLintRule):

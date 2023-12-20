@@ -254,14 +254,16 @@ class _MappingSecondaryKey:
     This class holds a mapping value
     """
 
-    keys: Dict[str, List[Any] | str] = field(init=False, default_factory=dict)
+    keys: Dict[str, List[Any] | str | int | float] = field(
+        init=False, default_factory=dict
+    )
     instance: InitVar[Any]
 
     def __post_init__(self, instance) -> None:
         if not isinstance(instance, dict):
             raise ValueError("Secondary keys must be a object")
         for k, v in instance.items():
-            if isinstance(v, (str, list)):
+            if isinstance(v, (str, list, int, float)):
                 self.keys[k] = v
 
     def value(self, secondary_key: str):
