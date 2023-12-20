@@ -546,7 +546,7 @@ _cidr_tests: List[Tuple] = [
     ),
     (
         "Invalid Fn::Cidr with an invalid function",
-        {"Fn::Cidr": ["foo", {"Fn::Join": ["-", "bar"]}]},
+        {"Fn::Cidr": ["192.168.0.0/24", {"Fn::Join": ["-", "bar"]}]},
         {"type": "array"},
         ["{'Fn::Join': ['-', 'bar']} is not of type 'integer'"],
         [],

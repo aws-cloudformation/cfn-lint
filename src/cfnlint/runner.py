@@ -174,7 +174,8 @@ class Runner:
 
     def _cli_output(self, matches: List[Match]) -> None:
         formatter = get_formatter(self.config)
-        output = formatter.print_matches(list(matches), self.rules, config=self.config)
+        matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
+        output = formatter.print_matches(matches, self.rules, config=self.config)
         if output:
             if self.config.output_file:
                 with open(self.config.output_file, "w") as output_file:

@@ -191,6 +191,8 @@ class Parameter(_Ref):
 
         self.default = None
         self.allowed_values = []
+        self.min_value = None
+        self.max_value = None
         # SSM Parameter defaults and allowed values point to
         # SSM paths not to the actual values
         if self.type.startswith("AWS::SSM::Parameter::"):
@@ -203,6 +205,8 @@ class Parameter(_Ref):
         else:
             self.default = parameter.get("Default")
             self.allowed_values = parameter.get("AllowedValues")
+            self.min_value = parameter.get("MinValue")
+            self.max_value = parameter.get("MaxValue")
 
     def ref(self, context: Context) -> Iterable[Any]:
         if self.allowed_values:
@@ -212,6 +216,12 @@ class Parameter(_Ref):
         # assume default is an allowed value so we skip it
         if self.default:
             yield self.default
+
+        if self.min_value:
+            yield self.min_value
+
+        if self.max_value:
+            yield self.max_value
 
 
 @dataclass

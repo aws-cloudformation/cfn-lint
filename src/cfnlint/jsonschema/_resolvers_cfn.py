@@ -44,6 +44,14 @@ def ref(validator: Validator, instance: Any) -> ResolutionResult:
                     yield validator.context.parameters[instance].default, deque(
                         ["Parameters", instance, "Default"]
                     )
+                if validator.context.parameters[instance].min_value is not None:
+                    yield validator.context.parameters[instance].min_value, deque(
+                        ["Parameters", instance, "MinValue"]
+                    )
+                if validator.context.parameters[instance].max_value is not None:
+                    yield validator.context.parameters[instance].max_value, deque(
+                        ["Parameters", instance, "MaxValue"]
+                    )
                 return
             return
 
