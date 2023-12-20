@@ -708,13 +708,19 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-b2bi-capability-s3location.html#cfn-b2bi-capability-s3location-bucketname",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Mutable"
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Capability.S3Location.BucketName"
+     }
     },
     "Key": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-b2bi-capability-s3location.html#cfn-b2bi-capability-s3location-key",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Mutable"
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Capability.S3Location.Key"
+     }
     }
    }
   },
@@ -6165,7 +6171,10 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-capability.html#cfn-b2bi-capability-name",
      "PrimitiveType": "String",
      "Required": true,
-     "UpdateType": "Mutable"
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Capability.Name"
+     }
     },
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-capability.html#cfn-b2bi-capability-tags",
@@ -6179,7 +6188,10 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-capability.html#cfn-b2bi-capability-type",
      "PrimitiveType": "String",
      "Required": true,
-     "UpdateType": "Immutable"
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Capability.Type"
+     }
     }
    }
   },
@@ -6209,31 +6221,46 @@
      "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
-     "UpdateType": "Mutable"
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Partnership.Capabilities"
+     }
     },
     "Email": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-partnership.html#cfn-b2bi-partnership-email",
      "PrimitiveType": "String",
      "Required": true,
-     "UpdateType": "Immutable"
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Partnership.Email"
+     }
     },
     "Name": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-partnership.html#cfn-b2bi-partnership-name",
      "PrimitiveType": "String",
      "Required": true,
-     "UpdateType": "Mutable"
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Partnership.Name"
+     }
     },
     "Phone": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-partnership.html#cfn-b2bi-partnership-phone",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable"
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Partnership.Phone"
+     }
     },
     "ProfileId": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-partnership.html#cfn-b2bi-partnership-profileid",
      "PrimitiveType": "String",
      "Required": true,
-     "UpdateType": "Immutable"
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::B2BI::Partnership.ProfileId"
+     }
     },
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-b2bi-partnership.html#cfn-b2bi-partnership-tags",
@@ -8295,6 +8322,47 @@
   "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMode": "CACHED",
   "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ScalableDimension": "CACHED",
   "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ServiceNamespace": "CACHED",
+  "AWS::B2BI::Capability.Name": {
+   "StringMax": 254,
+   "StringMin": 1
+  },
+  "AWS::B2BI::Capability.S3Location.BucketName": {
+   "StringMax": 63,
+   "StringMin": 3
+  },
+  "AWS::B2BI::Capability.S3Location.Key": {
+   "StringMax": 1024,
+   "StringMin": 0
+  },
+  "AWS::B2BI::Capability.Type": {
+   "AllowedValues": [
+    "edi"
+   ]
+  },
+  "AWS::B2BI::Partnership.Capabilities": {
+   "AllowedPatternRegex": "^[a-zA-Z0-9_-]+$",
+   "StringMax": 64,
+   "StringMin": 1
+  },
+  "AWS::B2BI::Partnership.Email": {
+   "AllowedPatternRegex": "^[\\w\\.\\-]+@[\\w\\.\\-]+$",
+   "StringMax": 254,
+   "StringMin": 5
+  },
+  "AWS::B2BI::Partnership.Name": {
+   "StringMax": 254,
+   "StringMin": 1
+  },
+  "AWS::B2BI::Partnership.Phone": {
+   "AllowedPatternRegex": "^\\+?([0-9 \\t\\-()\\/]{7,})(?:\\s*(?:#|x\\.?|ext\\.?|extension) \\t*(\\d+))?$",
+   "StringMax": 22,
+   "StringMin": 7
+  },
+  "AWS::B2BI::Partnership.ProfileId": {
+   "AllowedPatternRegex": "^[a-zA-Z0-9_-]+$",
+   "StringMax": 64,
+   "StringMin": 1
+  },
   "AWS::B2BI::Profile.BusinessName": "CACHED",
   "AWS::B2BI::Profile.Email": "CACHED",
   "AWS::B2BI::Profile.Logging": "CACHED",
@@ -8319,6 +8387,7 @@
   "AWS::BackupGateway::Hypervisor.Name": "CACHED",
   "AWS::BackupGateway::Hypervisor.Password": "CACHED",
   "AWS::BackupGateway::Hypervisor.Username": "CACHED",
+  "AWS::Batch::JobDefinition.JobDefinitionName": "CACHED",
   "AWS::Batch::JobQueue.JobQueueName": "CACHED",
   "AWS::Batch::JobQueue.SchedulingPolicyArn": "CACHED",
   "AWS::Batch::JobQueue.State": "CACHED",
