@@ -135,16 +135,18 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def resolve_value(self, instance: Any) -> Iterator[Tuple[Any, Deque]]:
+        def resolve_value(
+            self, instance: Any
+        ) -> Iterator[Tuple[Any, Deque, ValidationError | None]]:
             if self.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
                         if k in self.fn_resolvers:
-                            for value, _ in self.resolve_value(v):
+                            for value, _, _ in self.resolve_value(v):
                                 yield from self.fn_resolvers[k](self, value)
                             return
 
-            yield instance, deque([])
+            yield instance, deque([]), None
 
         def iter_errors(self, instance: Any) -> ValidationResult:
             r"""
