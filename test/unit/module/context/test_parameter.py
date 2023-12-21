@@ -57,6 +57,12 @@ from cfnlint.context.context import Parameter
             "AWS::SSM::Parameter::Value<String>",
             [],
         ),
+        (
+            "Valid parameter with a MinValue and MaxValue",
+            {"Type": "Number", "MinValue": "10", "MaxValue": "20"},
+            "Number",
+            ["10", "20"],
+        ),
     ],
 )
 def test_parameter(name, instance, expected_type, expected_ref):
