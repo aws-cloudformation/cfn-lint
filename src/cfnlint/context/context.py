@@ -182,6 +182,11 @@ class Parameter(_Ref):
     parameter: InitVar[Any]
 
     def __post_init__(self, parameter) -> None:
+        self.default = None
+        self.allowed_values = []
+        self.min_value = None
+        self.max_value = None
+
         t = parameter.get("Type")
         if not isinstance(t, str):
             raise ValueError("Type must be a string")
@@ -189,17 +194,14 @@ class Parameter(_Ref):
 
         self.description = parameter.get("Description")
 
-        self.default = None
-        self.allowed_values = []
-        self.min_value = None
-        self.max_value = None
         # SSM Parameter defaults and allowed values point to
         # SSM paths not to the actual values
         if self.type.startswith("AWS::SSM::Parameter::"):
             return
 
         if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
-            self.default = parameter.get("Default", "").split(",")
+            if "Default" in parameter:
+                self.default = parameter.get("Default").split(",")
             for allowed_value in parameter.get("AllowedValues", []):
                 self.allowed_values.append(allowed_value.split(","))
         else:
@@ -307,6 +309,7 @@ class ContextManager:
         self.resources = {}
         self.conditions = {}
         self.mappings = {}
+
         try:
             self._init_parameters(cfn.template.get("Parameters", {}))
         except (ValueError, AttributeError):
