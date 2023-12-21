@@ -160,6 +160,10 @@ def message_errors(name, instance, schema, errors, **kwargs):
             schema=schema,
             context=Context(
                 functions=FUNCTIONS,
+                parameters={
+                    "MyParameter": Parameter({"Type": "String"}),
+                    "MyArrayParameter": Parameter({"Type": "CommaDelimitedList"}),
+                },
                 resources={
                     "MyResource": Resource(
                         {
@@ -200,13 +204,13 @@ def message_transform_errors(name, instance, schema, errors, **kwargs):
                 parameters={
                     "MyParameter": Parameter(
                         {
-                            "Type": "string",
+                            "Type": "String",
                             "Default": "bar",
                         }
                     ),
                     "MyResourceParameter": Parameter(
                         {
-                            "Type": "string",
+                            "Type": "String",
                             "Default": "MyResource",
                         }
                     ),
@@ -227,11 +231,28 @@ _ref_tests: List[Tuple] = [
         [
             "['foo'] is not of type 'string'",
             (
-                "['foo'] is not one of ['MyResource', 'AWS::NoValue', "
+                "['foo'] is not one of ['MyParameter', 'MyArrayParameter', "
+                "'MyResource', 'AWS::NoValue', "
                 "'AWS::AccountId', 'AWS::Partition', 'AWS::Region', "
                 "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix', "
                 "'AWS::NotificationARNs']"
             ),
+        ],
+        [],
+    ),
+    (
+        "Invalid Ref with a type that doesn't match array schema",
+        {"Ref": "MyParameter"},
+        {"type": "array"},
+        ["{'Ref': 'MyParameter'} is not of type 'array'"],
+        [],
+    ),
+    (
+        "Invalid Ref with a type that doesn't match singular schema",
+        {"Ref": "MyArrayParameter"},
+        {"type": "string"},
+        [
+            "{'Ref': 'MyArrayParameter'} is not of type 'string'",
         ],
         [],
     ),
@@ -651,7 +672,8 @@ _importvalue_tests: List[Tuple] = [
         {"type": "string"},
         [
             (
-                "'MyResource' is not one of ['AWS::NoValue', "
+                "'MyResource' is not one of ['MyParameter', "
+                "'MyArrayParameter', 'AWS::NoValue', "
                 "'AWS::AccountId', 'AWS::Partition', "
                 "'AWS::Region', 'AWS::StackId', 'AWS::StackName', "
                 "'AWS::URLSuffix', 'AWS::NotificationARNs']"
@@ -727,7 +749,8 @@ _sub_tests: List[Tuple] = [
         {"type": "string"},
         [
             (
-                "'foo' is not one of ['MyResource', 'AWS::NoValue', 'AWS::AccountId', "
+                "'foo' is not one of ['MyParameter', 'MyArrayParameter', "
+                "'MyResource', 'AWS::NoValue', 'AWS::AccountId', "
                 "'AWS::Partition', 'AWS::Region', 'AWS::StackId', "
                 "'AWS::StackName', 'AWS::URLSuffix', "
                 "'AWS::NotificationARNs']"
