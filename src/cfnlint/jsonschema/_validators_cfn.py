@@ -30,6 +30,8 @@ from cfnlint.helpers import (
     REGEX_DYN_REF,
     REGEX_SUB_PARAMETERS,
     REGIONS,
+    VALID_PARAMETER_TYPES,
+    VALID_PARAMETER_TYPES_LIST,
     ToPy,
 )
 from cfnlint.jsonschema import ValidationError, Validator
@@ -342,6 +344,33 @@ class Ref(_Fn):
                 functions=supported_functions,
             ),
         )
+
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        yield from super().validate(validator, s, instance, schema)
+
+        _, value = self._key_value(instance)
+        if not validator.is_type(value, "string"):
+            return
+
+        if value not in validator.context.parameters:
+            return
+
+        parameter_type = validator.context.parameters[value].type
+        schema_types = ensure_list(s.get("type", ["string"]))
+        reprs = ", ".join(repr(type) for type in schema_types)
+
+        if all(
+            st not in ["string", "boolean", "integer", "number"] for st in schema_types
+        ):
+            if parameter_type not in VALID_PARAMETER_TYPES_LIST:
+                yield ValidationError(f"{instance!r} is not of type {reprs}")
+        elif all(st not in ["array"] for st in schema_types):
+            if parameter_type not in [
+                x for x in VALID_PARAMETER_TYPES if x not in VALID_PARAMETER_TYPES_LIST
+            ]:
+                yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
 class FnGetAZs(_Fn):
@@ -803,8 +832,10 @@ class FnLength(_Fn):
                     "Fn::FindInMap",
                     "Fn::Join",
                     "Fn::Select",
+                    "Fn::Split",
                     "Fn::Sub",
                     "Fn::ToJsonString",
+                    "Fn::GetAZs",
                     "Ref",
                 ],
                 "schema": {
