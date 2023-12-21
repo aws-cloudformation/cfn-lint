@@ -9,7 +9,7 @@ from typing import List, Tuple
 import pytest
 
 from cfnlint.context import Context
-from cfnlint.context.context import Parameter, Resource, Transforms
+from cfnlint.context.context import Map, Parameter, Resource, Transforms
 from cfnlint.helpers import FUNCTIONS, REGIONS
 from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.jsonschema.exceptions import UnknownType
@@ -166,6 +166,16 @@ def message_errors(name, instance, schema, errors, **kwargs):
                             "Type": "AWS::S3::Bucket",
                         },
                     ),
+                },
+                mappings={
+                    "A": Map(
+                        {
+                            "B": {
+                                "C": "foo",
+                                "D": 12,
+                            }
+                        }
+                    )
                 },
             ),
         ),
@@ -487,8 +497,8 @@ _select_tests: List[Tuple] = [
         [],
     ),
     (
-        "Valid Fn::Select with a valid function",
-        {"Fn::Select": [1, ["foo", {"Fn::FindInMap": ["a", "b", "c"]}]]},
+        "Valid Fn::Select with a valid function (FindInMap)",
+        {"Fn::Select": [1, ["foo", {"Fn::FindInMap": ["A", "B", "C"]}]]},
         {"type": "string"},
         [],
         [],
@@ -539,14 +549,14 @@ _cidr_tests: List[Tuple] = [
     ),
     (
         "Valid Fn::Cidr with a valid function",
-        {"Fn::Cidr": ["192.168.0.0/24", {"Fn::FindInMap": ["a", "b", "c"]}]},
+        {"Fn::Cidr": ["192.168.0.0/24", {"Fn::FindInMap": ["A", "B", "D"]}]},
         {"type": "array"},
         [],
         [],
     ),
     (
         "Invalid Fn::Cidr with an invalid function",
-        {"Fn::Cidr": ["foo", {"Fn::Join": ["-", "bar"]}]},
+        {"Fn::Cidr": ["192.168.0.0/24", {"Fn::Join": ["-", "bar"]}]},
         {"type": "array"},
         ["{'Fn::Join': ['-', 'bar']} is not of type 'integer'"],
         [],
@@ -795,7 +805,7 @@ _sub_tests: List[Tuple] = [
 _findinmap_tests: List[Tuple] = [
     (
         "Valid Fn::FindInMap",
-        {"Fn::FindInMap": ["foo", "bar", "key"]},
+        {"Fn::FindInMap": ["A", "B", "C"]},
         {"type": "string"},
         [],
         [],
