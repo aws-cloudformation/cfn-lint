@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+import json
 from collections import deque
 from typing import Any, Dict, List, Tuple
 
@@ -24,7 +25,13 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
-from cfnlint.helpers import FUNCTIONS_SINGLE, REGEX_SUB_PARAMETERS, REGIONS, ToPy
+from cfnlint.helpers import (
+    FUNCTIONS_SINGLE,
+    REGEX_DYN_REF,
+    REGEX_SUB_PARAMETERS,
+    REGIONS,
+    ToPy,
+)
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
@@ -114,7 +121,10 @@ class _Fn:
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
 
-        for value, value_path in validator.resolve_value(instance):
+        for value, value_path, resolve_err in validator.resolve_value(instance):
+            if resolve_err:
+                yield resolve_err
+                continue
             for err in self._fix_errors(
                 validator.evolve(
                     context=validator.context.evolve(value_path=value_path),
@@ -134,13 +144,12 @@ class _Fn:
         # validate this function will return the correct type
         errs = list(_validate_fn_output_types(validator, s, instance, self.types))
 
-        _, value = self._key_value(instance)
+        key, value = self._key_value(instance)
         errs.extend(
             list(
                 self._fix_errors(
                     self._validator(validator).descend(
-                        value,
-                        self.schema(validator, instance),
+                        value, self.schema(validator, instance), path=key
                     )
                 )
             )
@@ -459,12 +468,37 @@ class FnSplit(_Fn):
             ],
         }
 
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+            return
+
+        key, value = self._key_value(instance)
+        if re.fullmatch(REGEX_DYN_REF, json.dumps(value[1])):
+            yield ValidationError(
+                f"{self.fn.name} does not support dynamic references",
+                validator=self.fn.name,
+                path=[key, 1],
+            )
+
 
 class FnFindInMap(_Fn):
     def __init__(self) -> None:
         super().__init__("Fn::FindInMap", ["array"] + _singular_types, [])
+        self.scalar_schema = {
+            "functions": [
+                "Fn::FindInMap",
+                "Ref",
+            ],
+            "schema": {
+                "type": ["string"],
+            },
+        }
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
         scalar_schema = {
             "functions": [
                 "Fn::FindInMap",
@@ -576,7 +610,7 @@ class FnIf(_Fn):
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
-        for value, value_path in validator.resolve_value(instance):
+        for value, value_path, _ in validator.resolve_value(instance):
             for err in validator.evolve(
                 context=validator.context.evolve(value_path=value_path),
             ).descend(value, s, key):
@@ -707,6 +741,7 @@ class FnCidr(_Fn):
             "Fn::GetAtt",
             "Fn::Sub",
             "Fn::ImportValue",
+            "Fn::If",
         ]
         return {
             "type": ["array"],
@@ -717,6 +752,11 @@ class FnCidr(_Fn):
                     "functions": functions,
                     "schema": {
                         "type": ["string"],
+                        "pattern": (
+                            "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.)"
+                            "{3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
+                            "(\\/([0-9]|[1-2][0-9]|3[0-2]))$"
+                        ),
                     },
                 },
                 {
