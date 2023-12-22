@@ -4,10 +4,31 @@
   "/properties/OutpostConfig",
   "/properties/EncryptionConfig",
   "/properties/KubernetesNetworkConfig",
+  "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
   "/properties/Name",
   "/properties/RoleArn"
  ],
  "definitions": {
+  "AccessConfig": {
+   "additionalProperties": false,
+   "description": "An object representing the Access Config to use for the cluster.",
+   "properties": {
+    "AuthenticationMode": {
+     "description": "Specify the authentication mode that should be used to create your cluster.",
+     "enum": [
+      "CONFIG_MAP",
+      "API_AND_CONFIG_MAP",
+      "API"
+     ],
+     "type": "string"
+    },
+    "BootstrapClusterCreatorAdminPermissions": {
+     "description": "Set this value to false to avoid creating a default cluster admin Access Entry using the IAM principal used to create the cluster.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "ClusterLogging": {
    "additionalProperties": false,
    "description": "The cluster control plane logging configuration for your cluster. ",
@@ -271,6 +292,9 @@
   "/properties/Name"
  ],
  "properties": {
+  "AccessConfig": {
+   "$ref": "#/definitions/AccessConfig"
+  },
   "Arn": {
    "description": "The ARN of the cluster, such as arn:aws:eks:us-west-2:666666666666:cluster/prod.",
    "type": "string"
@@ -367,5 +391,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::EKS::Cluster"
+ "typeName": "AWS::EKS::Cluster",
+ "writeOnlyProperties": [
+  "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions"
+ ]
 }

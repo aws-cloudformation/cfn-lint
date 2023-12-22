@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Code": {
+   "additionalProperties": false,
+   "properties": {
+    "BranchName": {
+     "type": "string"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3"
+    }
+   },
+   "required": [
+    "S3"
+   ],
+   "type": "object"
+  },
+  "RepositoryTrigger": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CustomData": {
+     "type": "string"
+    },
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Events": {
+     "items": {
+      "enum": [
+       "all",
+       "updateReference",
+       "createReference",
+       "deleteReference"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Events",
+    "DestinationArn",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "S3": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::CodeCommit::Repository",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CloneUrlHttp": {
+   "type": "string"
+  },
+  "CloneUrlSsh": {
+   "type": "string"
+  },
+  "Code": {
+   "$ref": "#/definitions/Code"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RepositoryDescription": {
+   "type": "string"
+  },
+  "RepositoryName": {
+   "maximum": 100,
+   "minimum": 1,
+   "pattern": "^[a-zA-Z0-9._\\-]+(?<!\\.git)$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Triggers": {
+   "items": {
+    "$ref": "#/definitions/RepositoryTrigger"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CloneUrlHttp",
+  "/properties/Id",
+  "/properties/Name",
+  "/properties/CloneUrlSsh",
+  "/properties/Arn"
+ ],
+ "required": [
+  "RepositoryName"
+ ],
+ "typeName": "AWS::CodeCommit::Repository"
+}

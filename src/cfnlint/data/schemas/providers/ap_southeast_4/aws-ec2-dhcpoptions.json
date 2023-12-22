@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NetbiosNameServers",
+  "/properties/NetbiosNodeType",
+  "/properties/NtpServers",
+  "/properties/DomainName",
+  "/properties/DomainNameServers"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::DHCPOptions",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DomainName": {
+   "type": "string"
+  },
+  "DomainNameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NetbiosNameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NetbiosNodeType": {
+   "enum": [
+    "1",
+    "2",
+    "4",
+    "8"
+   ],
+   "type": "integer"
+  },
+  "NtpServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::EC2::DHCPOptions"
+}
