@@ -145,13 +145,46 @@
   }
  },
  "dependencies": {
-  "SourceDBInstanceIdentifier": {
+  "KmsKeyId": {
    "properties": {
-    "CharacterSetName": false,
-    "MasterUserPassword": false,
-    "MasterUsername": false,
-    "StorageEncrypted": false
-   }
+    "StorageEncrypted": {
+     "enum": [
+      "true",
+      "True",
+      true
+     ]
+    }
+   },
+   "required": [
+    "StorageEncrypted"
+   ]
+  },
+  "SourceDBInstanceIdentifier": {
+   "not": {
+    "anyOf": [
+     {
+      "required": [
+       "CharacterSetName"
+      ]
+     },
+     {
+      "required": [
+       "MasterUserPassword"
+      ]
+     },
+     {
+      "required": [
+       "MasterUsername"
+      ]
+     },
+     {
+      "required": [
+       "StorageEncrypted"
+      ]
+     }
+    ]
+   },
+   "notDescription": "['CharacterSetName', 'MasterUserPassword', 'MasterUsername', and 'StorageEncrypted'] should not be included with 'SourceDBInstanceIdentifier'"
   }
  },
  "deprecatedProperties": [
