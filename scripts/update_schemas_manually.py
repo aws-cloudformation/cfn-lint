@@ -1321,13 +1321,22 @@ patches.extend(
                     values={
                         "dependencies": {
                             "SourceDBInstanceIdentifier": {
+                                "notDescription": "['CharacterSetName', 'MasterUserPassword', 'MasterUsername', and 'StorageEncrypted'] should not be included with 'SourceDBInstanceIdentifier'",
+                                "not": {
+                                    "anyOf": [
+                                        {"required": ["CharacterSetName"]},
+                                        {"required": ["MasterUserPassword"]},
+                                        {"required": ["MasterUsername"]},
+                                        {"required": ["StorageEncrypted"]},
+                                    ]
+                                },
+                            },
+                            "KmsKeyId": {
                                 "properties": {
-                                    "StorageEncrypted": False,
-                                    "MasterUsername": False,
-                                    "MasterUserPassword": False,
-                                    "CharacterSetName": False,
-                                }
-                            }
+                                    "StorageEncrypted": {"enum": ["true", "True", True]}
+                                },
+                                "required": ["StorageEncrypted"],
+                            },
                         }
                     },
                     path="/",
