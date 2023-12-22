@@ -373,6 +373,20 @@
    },
    "type": "object"
   },
+  "ServiceVolumeConfiguration": {
+   "properties": {
+    "ManagedEBSVolume": {
+     "$ref": "#/definitions/ServiceManagedEBSVolumeConfiguration"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -535,6 +549,12 @@
   },
   "TaskDefinition": {
    "type": "string"
+  },
+  "VolumeConfigurations": {
+   "items": {
+    "$ref": "#/definitions/ServiceVolumeConfiguration"
+   },
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -550,6 +570,7 @@
  },
  "typeName": "AWS::ECS::Service",
  "writeOnlyProperties": [
-  "/properties/ServiceConnectConfiguration"
+  "/properties/ServiceConnectConfiguration",
+  "/properties/VolumeConfigurations"
  ]
 }
