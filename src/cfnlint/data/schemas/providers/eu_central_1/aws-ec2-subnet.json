@@ -9,7 +9,11 @@
   "/properties/AvailabilityZoneId",
   "/properties/CidrBlock",
   "/properties/OutpostArn",
-  "/properties/Ipv6Native"
+  "/properties/Ipv6Native",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
  ],
  "definitions": {
   "Tag": {
@@ -88,6 +92,14 @@
   "EnableDns64": {
    "type": "boolean"
   },
+  "Ipv4IpamPoolId": {
+   "description": "The ID of an IPv4 IPAM pool you want to use for allocating this subnet's CIDR",
+   "type": "string"
+  },
+  "Ipv4NetmaskLength": {
+   "description": "The netmask length of the IPv4 CIDR you want to allocate to this subnet from an Amazon VPC IP Address Manager (IPAM) pool",
+   "type": "integer"
+  },
   "Ipv6CidrBlock": {
    "type": "string"
   },
@@ -98,8 +110,16 @@
    "type": "array",
    "uniqueItems": false
   },
+  "Ipv6IpamPoolId": {
+   "description": "The ID of an IPv6 IPAM pool you want to use for allocating this subnet's CIDR",
+   "type": "string"
+  },
   "Ipv6Native": {
    "type": "boolean"
+  },
+  "Ipv6NetmaskLength": {
+   "description": "The netmask length of the IPv6 CIDR you want to allocate to this subnet from an Amazon VPC IP Address Manager (IPAM) pool",
+   "type": "integer"
   },
   "MapPublicIpOnLaunch": {
    "type": "boolean"
@@ -153,5 +173,11 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::EC2::Subnet"
+ "typeName": "AWS::EC2::Subnet",
+ "writeOnlyProperties": [
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ]
 }

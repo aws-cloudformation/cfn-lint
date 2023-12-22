@@ -256,7 +256,7 @@ def get_results(service, product_families):
 
 
 def write_output(resource, filename, obj):
-    filename = f"src/cfnlint/data/AdditionalSchemas/{resource}/{filename}.json"
+    filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
     output = {
         "_description": "Automatically updated using update_specs_from_pricing",
     }
@@ -272,56 +272,56 @@ def main():
     configure_logging()
 
     write_output(
-        "aws-ec2-instance",
-        "instancetype-enum",
+        "aws_ec2_instance",
+        "instancetype_enum",
         get_results("AmazonEC2", ["Compute Instance", "Compute Instance (bare metal)"]),
     )
-    write_output("aws-amazonmq-broker", "instancetype-enum", get_mq_pricing())
-    write_output("aws-rds-dbinstance", "dbinstanceclass-enum", get_rds_pricing())
+    write_output("aws_amazonmq_broker", "instancetype_enum", get_mq_pricing())
+    write_output("aws_rds_dbinstance", "dbinstanceclass_enum", get_rds_pricing())
     write_output(
-        "aws-redshift-cluster",
-        "nodetype-enum",
+        "aws_redshift_cluster",
+        "nodetype_enum",
         get_results("AmazonRedshift", ["Compute Instance"]),
     )
-    write_output("aws-dax-cluster", "nodetype-enum", get_dax_pricing())
+    write_output("aws_dax_cluster", "nodetype_enum", get_dax_pricing())
     write_output(
-        "aws-docdb-dbinstance",
-        "dbinstanceclass-enum",
+        "aws_docdb_dbinstance",
+        "dbinstanceclass_enum",
         get_results("AmazonDocDB", ["Database Instance"]),
     )
     write_output(
-        "aws-neptune-dbinstance",
-        "dbinstanceclass-enum",
+        "aws_neptune_dbinstance",
+        "dbinstanceclass_enum",
         get_results("AmazonNeptune", ["Database Instance"]),
     )
     write_output(
-        "aws-elasticache-cachecluster",
-        "cachenodetype-enum",
+        "aws_elasticache_cachecluster",
+        "cachenodetype_enum",
         get_results("AmazonElastiCache", ["Cache Instance"]),
     )
     write_output(
-        "aws-elasticsearch-domain",
-        "elasticsearchclusterconfig-instancetype-enum",
+        "aws_elasticsearch_domain",
+        "elasticsearchclusterconfig_instancetype_enum",
         get_results("AmazonES", ["Elastic Search Instance"]),
     )
     write_output(
-        "aws-emr-cluster",
-        "instancetypeconfig-instancetype-enum",
+        "aws_emr_cluster",
+        "instancetypeconfig_instancetype_enum",
         get_results("ElasticMapReduce", ["Elastic Map Reduce Instance"]),
     )
     write_output(
-        "aws-managedblockchain-node",
-        "nodeconfiguration-instancetype-enum",
+        "aws_managedblockchain_node",
+        "nodeconfiguration_instancetype_enum",
         get_results("AmazonManagedBlockchain", ["Blockchain Instance"]),
     )
     write_output(
-        "aws-gamelift-fleet",
-        "ec2instancetype-enum",
+        "aws_gamelift_fleet",
+        "ec2instancetype_enum",
         get_results("AmazonGameLift", ["GameLift EC2 Instance"]),
     )
     write_output(
-        "aws-appstream-fleet",
-        "instancetype-enum",
+        "aws_appstream_fleet",
+        "instancetype_enum",
         get_results("AmazonAppStream", ["Streaming Instance"]),
     )
 
