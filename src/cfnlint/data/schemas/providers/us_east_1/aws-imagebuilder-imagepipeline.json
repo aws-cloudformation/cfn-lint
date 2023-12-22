@@ -73,6 +73,58 @@
     }
    },
    "type": "object"
+  },
+  "WorkflowConfiguration": {
+   "additionalProperties": false,
+   "description": "The workflow configuration of the image",
+   "properties": {
+    "OnFailure": {
+     "description": "Define execution decision in case of workflow failure",
+     "enum": [
+      "CONTINUE",
+      "ABORT"
+     ],
+     "type": "string"
+    },
+    "ParallelGroup": {
+     "description": "The parallel group name",
+     "type": "string"
+    },
+    "Parameters": {
+     "description": "The parameters associated with the workflow",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameter"
+     },
+     "type": "array"
+    },
+    "WorkflowArn": {
+     "description": "The Amazon Resource Name (ARN) of the workflow",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "description": "A parameter associated with the workflow",
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameterValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterValue": {
+   "description": "The value associated with the workflow parameter",
+   "type": "string"
   }
  },
  "description": "Resource schema for AWS::ImageBuilder::ImagePipeline",
@@ -81,6 +133,7 @@
    "permissions": [
     "ecr:BatchGetRepositoryScanningConfiguration",
     "iam:GetRole",
+    "iam:PassRole",
     "iam:CreateServiceLinkedRole",
     "imagebuilder:TagResource",
     "imagebuilder:GetImagePipeline",
@@ -88,6 +141,7 @@
     "imagebuilder:GetInfrastructureConfiguration",
     "imagebuilder:GetDistributionConfiguration",
     "imagebuilder:CreateImagePipeline",
+    "imagebuilder:GetWorkflow",
     "inspector2:BatchGetAccountStatus"
    ]
   },
@@ -110,8 +164,10 @@
   },
   "update": {
    "permissions": [
+    "iam:PassRole",
     "imagebuilder:GetImagePipeline",
-    "imagebuilder:UpdateImagePipeline"
+    "imagebuilder:UpdateImagePipeline",
+    "imagebuilder:GetWorkflow"
    ]
   }
  },
@@ -155,6 +211,10 @@
    "description": "Collects additional information about the image being created, including the operating system (OS) version and package list.",
    "type": "boolean"
   },
+  "ExecutionRole": {
+   "description": "The execution role name/ARN for the image build, if provided",
+   "type": "string"
+  },
   "ImageRecipeArn": {
    "description": "The Amazon Resource Name (ARN) of the image recipe that defines how images are configured, tested, and assessed.",
    "type": "string"
@@ -196,6 +256,14 @@
     }
    },
    "type": "object"
+  },
+  "Workflows": {
+   "description": "Workflows to define the image build process",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowConfiguration"
+   },
+   "type": "array"
   }
  },
  "readOnlyProperties": [
