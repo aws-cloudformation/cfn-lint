@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Creates a key-value pair for a specific resource.",
+   "properties": {
+    "Key": {
+     "description": "The name assigned to the tag that you create.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Contains one or more values that you assigned to the key name you create.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Transfer::Agreement",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateAgreement",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteAgreement"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ServerId": {
+      "$ref": "resource-schema.json#/properties/ServerId"
+     }
+    },
+    "required": [
+     "ServerId"
+    ]
+   },
+   "permissions": [
+    "transfer:ListAgreements"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeAgreement"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UpdateAgreement",
+    "transfer:UnTagResource",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgreementId",
+  "/properties/ServerId"
+ ],
+ "properties": {
+  "AccessRole": {
+   "description": "Specifies the access role for the agreement.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "AgreementId": {
+   "description": "A unique identifier for the agreement.",
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^a-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "Specifies the unique Amazon Resource Name (ARN) for the agreement.",
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "BaseDirectory": {
+   "description": "Specifies the base directory for the agreement.",
+   "maxLength": 1024,
+   "pattern": "^(|/.*)$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A textual description for the agreement.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[\\u0021-\\u007E]+$",
+   "type": "string"
+  },
+  "LocalProfileId": {
+   "description": "A unique identifier for the local profile.",
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^p-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "PartnerProfileId": {
+   "description": "A unique identifier for the partner profile.",
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^p-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "ServerId": {
+   "description": "A unique identifier for the server.",
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^s-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Status": {
+   "description": "Specifies the status of the agreement.",
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Key-value pairs that can be used to group and search for agreements. Tags are metadata attached to agreements for any purpose.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgreementId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ServerId",
+  "LocalProfileId",
+  "PartnerProfileId",
+  "BaseDirectory",
+  "AccessRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Agreement"
+}
