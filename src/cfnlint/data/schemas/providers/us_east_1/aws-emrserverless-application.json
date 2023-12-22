@@ -62,6 +62,37 @@
    "pattern": ".*\\S.*",
    "type": "string"
   },
+  "CloudWatchLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": false,
+     "description": "If set to false, CloudWatch logging will be turned off. Defaults to false.",
+     "type": "boolean"
+    },
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn",
+     "description": "KMS key ARN to encrypt the logs stored in given CloudWatch log-group."
+    },
+    "LogGroupName": {
+     "$ref": "#/definitions/LogGroupName",
+     "description": "Log-group name to produce log-streams on CloudWatch. If undefined, logs will be produced in a default log-group /aws/emr-serverless"
+    },
+    "LogStreamNamePrefix": {
+     "$ref": "#/definitions/LogStreamNamePrefix",
+     "description": "Log-stream name prefix by which log-stream names will start in the CloudWatch Log-group."
+    },
+    "LogTypeMap": {
+     "description": "The specific log-streams which need to be uploaded to CloudWatch.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogTypeMapKeyValuePair"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   }
+  },
   "ConfigurationList": {
    "description": "Runtime configuration for batch and interactive JobRun.",
    "insertionOrder": false,
@@ -184,6 +215,51 @@
    "type": "array",
    "uniqueItems": true
   },
+  "LogGroupName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "LogStreamNamePrefix": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[^:*]*$",
+   "type": "string"
+  },
+  "LogTypeList": {
+   "description": "List of Applicable values: [STDOUT, STDERR, HIVE_LOG, TEZ_AM, SYSTEM_LOGS]",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LogTypeString"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LogTypeMapKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/WorkerTypeString"
+    },
+    "Value": {
+     "$ref": "#/definitions/LogTypeList"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "LogTypeString": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+   "type": "string"
+  },
   "ManagedPersistenceMonitoringConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -231,6 +307,10 @@
    "additionalProperties": false,
    "description": "Monitoring configuration for batch and interactive JobRun.",
    "properties": {
+    "CloudWatchLoggingConfiguration": {
+     "$ref": "#/definitions/CloudWatchLoggingConfiguration",
+     "description": "CloudWatch logging configurations for a JobRun."
+    },
     "ManagedPersistenceMonitoringConfiguration": {
      "$ref": "#/definitions/ManagedPersistenceMonitoringConfiguration",
      "description": "Managed log persistence configurations for a JobRun."
@@ -380,6 +460,12 @@
     }
    },
    "type": "object"
+  },
+  "WorkerTypeString": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+   "type": "string"
   }
  },
  "description": "Resource schema for AWS::EMRServerless::Application Type",

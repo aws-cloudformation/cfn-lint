@@ -1,0 +1,65 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupName"
+ ],
+ "definitions": {
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "type": "object"
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyName",
+    "PolicyDocument"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IAM::Group",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "GroupName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ManagedPolicyArns": {
+   "items": {
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Path": {
+   "pattern": "^/(.+/)*$",
+   "type": "string"
+  },
+  "Policies": {
+   "items": {
+    "$ref": "#/definitions/Policy"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "typeName": "AWS::IAM::Group"
+}
