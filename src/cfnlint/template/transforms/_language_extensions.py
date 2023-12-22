@@ -131,7 +131,7 @@ class _Transform:
                                 obj[f_k] = f_v
                             else:
                                 raise _ValueError(
-                                    f"Duplicate {f_k} while doing tranformation",
+                                    f"Duplicate {f_k} while doing transformation",
                                     f_k,
                                 )
                     del obj[k]
