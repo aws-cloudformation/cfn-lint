@@ -1,0 +1,238 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": [
+  "aws_rds_dbcluster/serverless_exclusive"
+ ],
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/MasterUsername",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/DBClusterIdentifier",
+  "/properties/DatabaseName",
+  "/properties/EngineMode",
+  "/properties/AvailabilityZones",
+  "/properties/DBSubnetGroupName",
+  "/properties/SnapshotIdentifier",
+  "/properties/RestoreType",
+  "/properties/UseLatestRestorableTime",
+  "/properties/SourceRegion",
+  "/properties/StorageEncrypted"
+ ],
+ "definitions": {
+  "DBClusterRole": {
+   "additionalProperties": false,
+   "properties": {
+    "FeatureName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoPause": {
+     "type": "boolean"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    },
+    "SecondsUntilAutoPause": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependencies": {
+  "SnapshotIdentifier": {
+   "properties": {
+    "MasterUserPassword": false,
+    "MasterUsername": false
+   }
+  },
+  "SourceDBClusterIdentifier": {
+   "properties": {
+    "MasterUserPassword": false,
+    "MasterUsername": false,
+    "StorageEncrypted": false
+   }
+  }
+ },
+ "description": "Resource Type definition for AWS::RDS::DBCluster",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AssociatedRoles": {
+   "items": {
+    "$ref": "#/definitions/DBClusterRole"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AvailabilityZones": {
+   "awsType": "AvailabilityZones",
+   "items": {
+    "awsType": "AvailabilityZone",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BacktrackWindow": {
+   "type": "integer"
+  },
+  "BackupRetentionPeriod": {
+   "maximum": 35,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "CopyTagsToSnapshot": {
+   "type": "boolean"
+  },
+  "DBClusterIdentifier": {
+   "type": "string"
+  },
+  "DBClusterParameterGroupName": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "DatabaseName": {
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "EnableCloudwatchLogsExports": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EnableHttpEndpoint": {
+   "type": "boolean"
+  },
+  "EnableIAMDatabaseAuthentication": {
+   "type": "boolean"
+  },
+  "EndpointAddress": {
+   "type": "string"
+  },
+  "EndpointPort": {
+   "type": "string"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineMode": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "MasterUserPassword": {
+   "type": "string"
+  },
+  "MasterUsername": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ReadEndpointAddress": {
+   "type": "string"
+  },
+  "ReplicationSourceIdentifier": {
+   "type": "string"
+  },
+  "RestoreType": {
+   "type": "string"
+  },
+  "ScalingConfiguration": {
+   "$ref": "#/definitions/ScalingConfiguration"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "type": "string"
+  },
+  "SourceRegion": {
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UseLatestRestorableTime": {
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ReadEndpoint.Address",
+  "/properties/Endpoint.Port",
+  "/properties/Endpoint.Address"
+ ],
+ "required": [
+  "Engine"
+ ],
+ "typeName": "AWS::RDS::DBCluster"
+}

@@ -8,14 +8,17 @@
   "/properties/Configurations",
   "/properties/ReleaseLabel",
   "/properties/BootstrapActions",
+  "/properties/EbsRootVolumeIops",
   "/properties/KerberosAttributes",
   "/properties/ServiceRole",
   "/properties/LogEncryptionKmsKeyId",
   "/properties/Name",
+  "/properties/EbsRootVolumeThroughput",
   "/properties/JobFlowRole",
   "/properties/AdditionalInfo",
   "/properties/LogUri",
   "/properties/CustomAmiId",
+  "/properties/PlacementGroupConfigs",
   "/properties/OSReleaseLabel",
   "/properties/AutoScalingRole",
   "/properties/Applications"
@@ -513,6 +516,21 @@
    ],
    "type": "object"
   },
+  "PlacementGroupConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceRole": {
+     "type": "string"
+    },
+    "PlacementStrategy": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceRole"
+   ],
+   "type": "object"
+  },
   "PlacementType": {
    "additionalProperties": false,
    "properties": {
@@ -747,7 +765,13 @@
   "CustomAmiId": {
    "type": "string"
   },
+  "EbsRootVolumeIops": {
+   "type": "integer"
+  },
   "EbsRootVolumeSize": {
+   "type": "integer"
+  },
+  "EbsRootVolumeThroughput": {
    "type": "integer"
   },
   "Id": {
@@ -779,6 +803,13 @@
   },
   "OSReleaseLabel": {
    "type": "string"
+  },
+  "PlacementGroupConfigs": {
+   "items": {
+    "$ref": "#/definitions/PlacementGroupConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "ReleaseLabel": {
    "type": "string"
