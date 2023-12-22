@@ -341,8 +341,11 @@ def multipleOf(
 def not_(
     validator: Validator, not_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    description = schema.get("notDescription")
     if validator.evolve(schema=not_schema).is_valid(instance):
-        message = f"{instance!r} should not be valid under {not_schema!r}"
+        message = (
+            description or f"{instance!r} should not be valid under {not_schema!r}"
+        )
         yield ValidationError(message)
 
 
