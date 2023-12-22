@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConsumerName",
+  "/properties/StreamARN"
+ ],
+ "definitions": {},
+ "description": "Resource Type definition for AWS::Kinesis::StreamConsumer",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kinesis:RegisterStreamConsumer",
+    "kinesis:DescribeStreamConsumer"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kinesis:DeregisterStreamConsumer",
+    "kinesis:DescribeStreamConsumer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kinesis:ListStreamConsumers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kinesis:DescribeStreamConsumer"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConsumerARN"
+ ],
+ "properties": {
+  "ConsumerARN": {
+   "description": "The ARN returned by Kinesis Data Streams when you registered the consumer. If you don't know the ARN of the consumer that you want to deregister, you can use the ListStreamConsumers operation to get a list of the descriptions of all the consumers that are currently registered with a given data stream. The description of a consumer contains its ARN.",
+   "type": "string"
+  },
+  "ConsumerCreationTimestamp": {
+   "description": "Timestamp when the consumer was created.",
+   "type": "string"
+  },
+  "ConsumerName": {
+   "description": "The name of the Kinesis Stream Consumer. For a given Kinesis data stream, each consumer must have a unique name. However, consumer names don't have to be unique across data streams.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "ConsumerStatus": {
+   "description": "A consumer can't read data while in the CREATING or DELETING states. Valid Values: CREATING | DELETING | ACTIVE",
+   "type": "string"
+  },
+  "StreamARN": {
+   "description": "The Amazon resource name (ARN) of the Kinesis data stream that you want to register the consumer with.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws.*:kinesis:.*:\\d{12}:stream/\\S+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConsumerARN",
+  "/properties/ConsumerStatus",
+  "/properties/ConsumerCreationTimestamp"
+ ],
+ "required": [
+  "ConsumerName",
+  "StreamARN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Kinesis::StreamConsumer"
+}
