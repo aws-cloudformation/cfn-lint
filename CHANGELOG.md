@@ -1,3 +1,8 @@
+### v0.83.7
+###### CloudFormation Specifications
+- Update CloudFormation specs to `152.0.0` (pull #[2984](https://github.com/aws-cloudformation/cfn-lint/pull/2984))
+- Add `ca-west-1` region (pull #[2980](https://github.com/aws-cloudformation/cfn-lint/pull/2980))
+
 ### v0.83.6
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `151.0.0` (pull #[2969](https://github.com/aws-cloudformation/cfn-lint/pull/2969))
