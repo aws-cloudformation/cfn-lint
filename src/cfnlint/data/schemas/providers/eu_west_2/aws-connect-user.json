@@ -6,6 +6,18 @@
    "minimum": 0,
    "type": "integer"
   },
+  "AttributeName": {
+   "description": "The name of user's proficiency. You must use name of predefined attribute present in the Amazon Connect instance.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AttributeValue": {
+   "description": "The value of user's proficiency. You must use value of predefined attribute present in the Amazon Connect instance.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
   "AutoAccept": {
    "description": "The Auto accept setting.",
    "type": "boolean"
@@ -25,6 +37,12 @@
   "LastName": {
    "description": "The last name. This is required if you are using Amazon Connect or SAML for identity management.",
    "type": "string"
+  },
+  "Level": {
+   "description": "The level of the proficiency. The valid values are 1, 2, 3, 4 and 5.",
+   "maximum": 5.0,
+   "minimum": 1.0,
+   "type": "number"
   },
   "Mobile": {
    "description": "The mobile phone number.",
@@ -113,6 +131,27 @@
    },
    "required": [
     "PhoneType"
+   ],
+   "type": "object"
+  },
+  "UserProficiency": {
+   "additionalProperties": false,
+   "description": "Proficiency of a user.",
+   "properties": {
+    "AttributeName": {
+     "$ref": "#/definitions/AttributeName"
+    },
+    "AttributeValue": {
+     "$ref": "#/definitions/AttributeValue"
+    },
+    "Level": {
+     "$ref": "#/definitions/Level"
+    }
+   },
+   "required": [
+    "AttributeName",
+    "AttributeValue",
+    "Level"
    ],
    "type": "object"
   }
@@ -214,6 +253,14 @@
    "description": "The Amazon Resource Name (ARN) for the user.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$",
    "type": "string"
+  },
+  "UserProficiencies": {
+   "description": "One or more predefined attributes assigned to a user, with a level that indicates how skilled they are.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/UserProficiency"
+   },
+   "type": "array"
   },
   "Username": {
    "description": "The user name for the account.",
