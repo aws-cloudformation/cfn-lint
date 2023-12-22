@@ -1,0 +1,553 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Architecture",
+  "/properties/ReleaseLabel",
+  "/properties/WorkerTypeSpecifications",
+  "/properties/MaximumCapacity",
+  "/properties/InitialCapacity",
+  "/properties/AutoStartConfiguration",
+  "/properties/AutoStopConfiguration",
+  "/properties/NetworkConfiguration",
+  "/properties/ImageConfiguration",
+  "/properties/MonitoringConfiguration",
+  "/properties/RuntimeConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Architecture": {
+   "description": "The cpu architecture of an application.",
+   "enum": [
+    "ARM64",
+    "X86_64"
+   ],
+   "type": "string"
+  },
+  "AutoStartConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for Auto Start of Application",
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "description": "If set to true, the Application will automatically start. Defaults to true.",
+     "type": "boolean"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "AutoStopConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration for Auto Stop of Application",
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "description": "If set to true, the Application will automatically stop after being idle. Defaults to true.",
+     "type": "boolean"
+    },
+    "IdleTimeoutMinutes": {
+     "description": "The amount of time [in minutes] to wait before auto stopping the Application when idle. Defaults to 15 minutes.",
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Classification": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ConfigurationList": {
+   "description": "Runtime configuration for batch and interactive JobRun.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigurationObject"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ConfigurationObject": {
+   "additionalProperties": false,
+   "description": "Configuration for a JobRun.",
+   "properties": {
+    "Classification": {
+     "$ref": "#/definitions/Classification",
+     "description": "String with a maximum length of 1024."
+    },
+    "Configurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConfigurationObject"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[a-zA-Z]+[-a-zA-Z0-9_.]*$": {
+       "$ref": "#/definitions/SensitivePropertiesMap"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Classification"
+   ],
+   "type": "object"
+  },
+  "CpuSize": {
+   "description": "Per worker CPU resource. vCPU is the only supported unit and specifying vCPU is optional.",
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(vCPU|vcpu|VCPU)?$",
+   "type": "string"
+  },
+  "DiskSize": {
+   "description": "Per worker Disk resource. GB is the only supported unit and specifying GB is optional",
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)$",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):kms:[a-zA-Z0-9\\-]*:(\\d{12})?:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ImageConfigurationInput": {
+   "additionalProperties": false,
+   "description": "The image configuration.",
+   "properties": {
+    "ImageUri": {
+     "description": "The URI of an image in the Amazon ECR registry. This field is required when you create a new application. If you leave this field blank in an update, Amazon EMR will remove the image configuration.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^([a-z0-9]+[a-z0-9-.]*)\\/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*\\/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)(?:\\:([a-zA-Z0-9_][a-zA-Z0-9-._]{0,299})|@(sha256:[0-9a-f]{64}))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InitialCapacityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkerConfiguration": {
+     "$ref": "#/definitions/WorkerConfiguration"
+    },
+    "WorkerCount": {
+     "description": "Initial count of workers to be initialized when an Application is started. This count will be continued to be maintained until the Application is stopped",
+     "format": "int64",
+     "maximum": 1000000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "WorkerCount",
+    "WorkerConfiguration"
+   ],
+   "type": "object"
+  },
+  "InitialCapacityConfigKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "Worker type for an analytics framework.",
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/InitialCapacityConfig"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "InitialCapacityConfigMap": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InitialCapacityConfigKeyValuePair"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ManagedPersistenceMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "description": "If set to false, managed logging will be turned off. Defaults to true.",
+     "type": "boolean"
+    },
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn",
+     "description": "KMS key ARN to encrypt the logs stored in managed persistence"
+    }
+   }
+  },
+  "MaximumAllowedResources": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuSize",
+     "description": "Per worker CPU resource. vCPU is the only supported unit and specifying vCPU is optional."
+    },
+    "Disk": {
+     "$ref": "#/definitions/DiskSize",
+     "description": "Per worker Disk resource. GB is the only supported unit and specifying GB is optional"
+    },
+    "Memory": {
+     "$ref": "#/definitions/MemorySize",
+     "description": "Per worker memory resource. GB is the only supported unit and specifying GB is optional."
+    }
+   },
+   "required": [
+    "Cpu",
+    "Memory"
+   ],
+   "type": "object"
+  },
+  "MemorySize": {
+   "description": "Per worker memory resource. GB is the only supported unit and specifying GB is optional.",
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)?$",
+   "type": "string"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "description": "Monitoring configuration for batch and interactive JobRun.",
+   "properties": {
+    "ManagedPersistenceMonitoringConfiguration": {
+     "$ref": "#/definitions/ManagedPersistenceMonitoringConfiguration",
+     "description": "Managed log persistence configurations for a JobRun."
+    },
+    "S3MonitoringConfiguration": {
+     "$ref": "#/definitions/S3MonitoringConfiguration",
+     "description": "S3 monitoring configurations for a JobRun."
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "description": "The ID of the security groups in the VPC to which you want to connect your job or application.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "description": "The ID of the subnets in the VPC to which you want to connect your job or application.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "S3MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn",
+     "description": "KMS key ARN to encrypt the logs stored in given s3"
+    },
+    "LogUri": {
+     "$ref": "#/definitions/UriString"
+    }
+   }
+  },
+  "SecurityGroupId": {
+   "description": "Identifier of a security group",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[-0-9a-zA-Z]+",
+   "type": "string"
+  },
+  "SensitivePropertiesKeyValuePair": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SensitivePropertiesMap": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "Identifier of a subnet",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[-0-9a-zA-Z]+",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The value for the tag. You can specify a value that is 1 to 128 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9 /_.:=+@-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 /_.:=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UriString": {
+   "maxLength": 10280,
+   "minLength": 1,
+   "pattern": "[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\r\\n\\t]*",
+   "type": "string"
+  },
+  "WorkerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuSize",
+     "description": "Per worker CPU resource. vCPU is the only supported unit and specifying vCPU is optional."
+    },
+    "Disk": {
+     "$ref": "#/definitions/DiskSize",
+     "description": "Per worker Disk resource. GB is the only supported unit and specifying GB is optional"
+    },
+    "Memory": {
+     "$ref": "#/definitions/MemorySize",
+     "description": "Per worker memory resource. GB is the only supported unit and specifying GB is optional."
+    }
+   },
+   "required": [
+    "Cpu",
+    "Memory"
+   ],
+   "type": "object"
+  },
+  "WorkerTypeSpecificationInput": {
+   "additionalProperties": false,
+   "description": "The specifications for a worker type.",
+   "properties": {
+    "ImageConfiguration": {
+     "$ref": "#/definitions/ImageConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "WorkerTypeSpecificationInputMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z]+[-_]*[a-zA-Z]+$": {
+     "$ref": "#/definitions/WorkerTypeSpecificationInput"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::EMRServerless::Application Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kms:Create*",
+    "kms:Describe*",
+    "kms:Enable*",
+    "kms:List*",
+    "kms:Put*",
+    "kms:Update*",
+    "kms:Revoke*",
+    "kms:Disable*",
+    "kms:Get*",
+    "kms:Delete*",
+    "kms:ScheduleKeyDeletion",
+    "kms:CancelKeyDeletion",
+    "kms:GenerateDataKey",
+    "kms:TagResource",
+    "kms:UntagResource",
+    "kms:Decrypt",
+    "emr-serverless:CreateApplication",
+    "emr-serverless:TagResource",
+    "emr-serverless:GetApplication",
+    "iam:CreateServiceLinkedRole",
+    "ec2:CreateNetworkInterface",
+    "ecr:BatchGetImage",
+    "ecr:DescribeImages",
+    "ecr:GetDownloadUrlForLayer"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "emr-serverless:DeleteApplication",
+    "emr-serverless:GetApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "emr-serverless:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "emr-serverless:GetApplication"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "emr-serverless:UpdateApplication",
+    "emr-serverless:TagResource",
+    "emr-serverless:UntagResource",
+    "emr-serverless:GetApplication",
+    "ec2:CreateNetworkInterface",
+    "ecr:BatchGetImage",
+    "ecr:DescribeImages",
+    "ecr:GetDownloadUrlForLayer",
+    "kms:Create*",
+    "kms:Describe*",
+    "kms:Enable*",
+    "kms:List*",
+    "kms:Put*",
+    "kms:Update*",
+    "kms:Revoke*",
+    "kms:Disable*",
+    "kms:Get*",
+    "kms:Delete*",
+    "kms:ScheduleKeyDeletion",
+    "kms:CancelKeyDeletion",
+    "kms:GenerateDataKey",
+    "kms:TagResource",
+    "kms:UntagResource",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "description": "The ID of the EMR Serverless Application.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Architecture": {
+   "$ref": "#/definitions/Architecture"
+  },
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the EMR Serverless Application.",
+   "type": "string"
+  },
+  "AutoStartConfiguration": {
+   "$ref": "#/definitions/AutoStartConfiguration",
+   "description": "Configuration for Auto Start of Application."
+  },
+  "AutoStopConfiguration": {
+   "$ref": "#/definitions/AutoStopConfiguration",
+   "description": "Configuration for Auto Stop of Application."
+  },
+  "ImageConfiguration": {
+   "$ref": "#/definitions/ImageConfigurationInput"
+  },
+  "InitialCapacity": {
+   "$ref": "#/definitions/InitialCapacityConfigMap",
+   "description": "Initial capacity initialized when an Application is started."
+  },
+  "MaximumCapacity": {
+   "$ref": "#/definitions/MaximumAllowedResources",
+   "description": "Maximum allowed cumulative resources for an Application. No new resources will be created once the limit is hit."
+  },
+  "MonitoringConfiguration": {
+   "$ref": "#/definitions/MonitoringConfiguration"
+  },
+  "Name": {
+   "description": "User friendly Application name.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9._\\/#-]+$",
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration",
+   "description": "Network Configuration for customer VPC connectivity."
+  },
+  "ReleaseLabel": {
+   "description": "EMR release label.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9._/-]+$",
+   "type": "string"
+  },
+  "RuntimeConfiguration": {
+   "$ref": "#/definitions/ConfigurationList"
+  },
+  "Tags": {
+   "description": "Tag map with key and value",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "description": "The type of the application",
+   "type": "string"
+  },
+  "WorkerTypeSpecifications": {
+   "$ref": "#/definitions/WorkerTypeSpecificationInputMap",
+   "description": "The key-value pairs that specify worker type to WorkerTypeSpecificationInput. This parameter must contain all valid worker types for a Spark or Hive application. Valid worker types include Driver and Executor for Spark applications and HiveDriver and TezTask for Hive applications. You can either set image details in this parameter for each worker type, or in imageConfiguration for all worker types."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ApplicationId"
+ ],
+ "required": [
+  "ReleaseLabel",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagProperty": "/properties/Tags",
+  "taggable": true
+ },
+ "typeName": "AWS::EMRServerless::Application"
+}
