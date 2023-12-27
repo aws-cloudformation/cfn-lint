@@ -1,0 +1,51 @@
+{
+ "description": "When 'awslogs' the options 'awslogs-group' and 'awslogs-region' are required",
+ "if": {
+  "properties": {
+   "LogDriver": {
+    "const": "awslogs"
+   }
+  }
+ },
+ "then": {
+  "properties": {
+   "Options": {
+    "properties": {
+     "awslogs-datetime-format": {
+      "type": "string"
+     },
+     "awslogs-group": {
+      "type": "string"
+     },
+     "awslogs-multiline-pattern": {
+      "type": "string"
+     },
+     "awslogs-region": {
+      "type": "string"
+     },
+     "awslogs-stream-prefix": {
+      "type": "string"
+     },
+     "max-buffer-size": {
+      "type": "string"
+     },
+     "mode": {
+      "enum": [
+       "non-blocking",
+       "blocking"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "awslogs-group",
+     "awslogs-region"
+    ],
+    "type": "object"
+   }
+  },
+  "required": [
+   "Options"
+  ]
+ }
+}
