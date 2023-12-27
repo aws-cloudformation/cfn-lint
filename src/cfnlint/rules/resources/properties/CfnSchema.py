@@ -41,6 +41,7 @@ class CfnSchema(BaseJsonSchema):
 
 class BaseCfnSchema(BaseJsonSchema):
     schema_path = ""
+    all_matches = False
 
     def __init__(self) -> None:
         super().__init__()
@@ -59,19 +60,43 @@ class BaseCfnSchema(BaseJsonSchema):
             schema=self.cfn_schema,
             context=validator.context.evolve(),
         )
-        err = best_match(list(cfn_validator.iter_errors(instance)))
-        if err is not None:
-            yield ValidationError(
-                message=self.shortdesc,
-                validator=err.validator,
-                path=err.path,
-                cause=err.cause,
-                context=err.context,
-                validator_value=err.validator_value,
-                instance=err.instance,
-                schema=err.schema,
-                schema_path=err.schema_path,
-                parent=err.parent,
-                type_checker=err.type_check if hasattr(err, "type_check") else Unset(),
-                rule=self,
-            )
+
+        errs = list(cfn_validator.iter_errors(instance))
+        if not self.all_matches:
+            err = best_match(errs)
+            if err is not None:
+                yield ValidationError(
+                    message=self.shortdesc,
+                    validator=err.validator,
+                    path=err.path,
+                    cause=err.cause,
+                    context=err.context,
+                    validator_value=err.validator_value,
+                    instance=err.instance,
+                    schema=err.schema,
+                    schema_path=err.schema_path,
+                    parent=err.parent,
+                    type_checker=err.type_check
+                    if hasattr(err, "type_check")
+                    else Unset(),
+                    rule=self,
+                )
+
+        else:
+            for err in errs:
+                yield ValidationError(
+                    message=err.message,
+                    validator=err.validator,
+                    path=err.path,
+                    cause=err.cause,
+                    context=err.context,
+                    validator_value=err.validator_value,
+                    instance=err.instance,
+                    schema=err.schema,
+                    schema_path=err.schema_path,
+                    parent=err.parent,
+                    type_checker=err.type_check
+                    if hasattr(err, "type_check")
+                    else Unset(),
+                    rule=self,
+                )
