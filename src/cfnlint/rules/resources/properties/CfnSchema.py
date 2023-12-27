@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 import pathlib
 
 from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import StandardValidator, ValidationError
-from cfnlint.jsonschema._utils import Unset
+from cfnlint.jsonschema import StandardValidator
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
@@ -65,38 +64,8 @@ class BaseCfnSchema(BaseJsonSchema):
         if not self.all_matches:
             err = best_match(errs)
             if err is not None:
-                yield ValidationError(
-                    message=self.shortdesc,
-                    validator=err.validator,
-                    path=err.path,
-                    cause=err.cause,
-                    context=err.context,
-                    validator_value=err.validator_value,
-                    instance=err.instance,
-                    schema=err.schema,
-                    schema_path=err.schema_path,
-                    parent=err.parent,
-                    type_checker=err.type_check
-                    if hasattr(err, "type_check")
-                    else Unset(),
-                    rule=self,
-                )
+                err.message = self.shortdesc
+                err.rule = self
+                errs = [err]
 
-        else:
-            for err in errs:
-                yield ValidationError(
-                    message=err.message,
-                    validator=err.validator,
-                    path=err.path,
-                    cause=err.cause,
-                    context=err.context,
-                    validator_value=err.validator_value,
-                    instance=err.instance,
-                    schema=err.schema,
-                    schema_path=err.schema_path,
-                    parent=err.parent,
-                    type_checker=err.type_check
-                    if hasattr(err, "type_check")
-                    else Unset(),
-                    rule=self,
-                )
+        yield from iter(errs)
