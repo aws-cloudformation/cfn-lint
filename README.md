@@ -5,7 +5,7 @@
 [![Testing](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
 [![PyPI downloads](https://pepy.tech/badge/cfn-lint/week)](https://pypistats.org/packages/cfn-lint)
-[![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)<!-- gh-dependents-info-used-by-start --><!-- gh-dependents-info-used-by-end -->
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-lint/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 [![Discord Shield](https://img.shields.io/discord/981586120448020580?logo=discord)](https://discord.gg/KENDm6DHCv)
 
