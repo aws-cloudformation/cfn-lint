@@ -336,6 +336,7 @@ _standard_validators: Dict[str, V] = {
     "required": _validators.required,
     "type": _validators.type,
     "uniqueItems": _validators.uniqueItems,
+    "uniqueKeys": _validators.uniqueKeys,
 }
 
 CfnTemplateValidator = create(

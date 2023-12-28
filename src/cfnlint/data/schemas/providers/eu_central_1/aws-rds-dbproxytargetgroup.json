@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBProxyName",
+  "/properties/TargetGroupName"
+ ],
+ "definitions": {
+  "ConnectionPoolConfigurationInfoFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionBorrowTimeout": {
+     "description": "The number of seconds for a proxy to wait for a connection to become available in the connection pool.",
+     "type": "integer"
+    },
+    "InitQuery": {
+     "description": "One or more SQL statements for the proxy to run when opening each new database connection.",
+     "type": "string"
+    },
+    "MaxConnectionsPercent": {
+     "description": "The maximum size of the connection pool for each target in a target group.",
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxIdleConnectionsPercent": {
+     "description": "Controls how actively the proxy closes idle database connections in the connection pool.",
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "SessionPinningFilters": {
+     "description": "Each item in the list represents a class of SQL operations that normally cause all later statements in a session using a proxy to be pinned to the same underlying database connection.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::RDS::DBProxyTargetGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:DescribeDBProxies",
+    "rds:DescribeDBProxyTargetGroups",
+    "rds:ModifyDBProxyTargetGroup",
+    "rds:RegisterDBProxyTargets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeregisterDBProxyTargets"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBProxyTargetGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBProxyTargetGroups",
+    "rds:DescribeDBProxyTargets"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:DescribeDBProxyTargetGroups",
+    "rds:ModifyDBProxyTargetGroup",
+    "rds:RegisterDBProxyTargets",
+    "rds:DeregisterDBProxyTargets"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetGroupArn"
+ ],
+ "properties": {
+  "ConnectionPoolConfigurationInfo": {
+   "$ref": "#/definitions/ConnectionPoolConfigurationInfoFormat"
+  },
+  "DBClusterIdentifiers": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DBInstanceIdentifiers": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DBProxyName": {
+   "description": "The identifier for the proxy.",
+   "maxLength": 64,
+   "pattern": "[A-z][0-z]*",
+   "type": "string"
+  },
+  "TargetGroupArn": {
+   "description": "The Amazon Resource Name (ARN) representing the target group.",
+   "type": "string"
+  },
+  "TargetGroupName": {
+   "description": "The identifier for the DBProxyTargetGroup",
+   "enum": [
+    "default"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetGroupArn"
+ ],
+ "required": [
+  "DBProxyName",
+  "TargetGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds-proxy",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::RDS::DBProxyTargetGroup"
+}
