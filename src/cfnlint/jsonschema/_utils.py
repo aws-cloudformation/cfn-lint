@@ -183,30 +183,21 @@ def uniq_keys(container, keys):
     falls back on (slow) brute force.
     """
     c = []
-    try:
-        for i in container:
+    for i in container:
+        try:
             o = {}
             for k in keys:
                 o[k] = i[k]
             c.append(o)
-    except (KeyError, TypeError):
-        return True
+        except (KeyError, TypeError):
+            pass
 
-    try:
-        sort = sorted(unbool(i) for i in c)
-        sliced = itertools.islice(sort, 1, None)
-
-        for i, j in zip(sort, sliced):
-            if equal(i, j):
+    seen = []
+    for e in c:
+        e = unbool(e)
+        for i in seen:
+            if equal(i, e):
                 return False
 
-    except (NotImplementedError, TypeError):
-        seen = []
-        for e in c:
-            e = unbool(e)
-            for i in seen:
-                if equal(i, e):
-                    return False
-
-            seen.append(e)
+        seen.append(e)
     return True
