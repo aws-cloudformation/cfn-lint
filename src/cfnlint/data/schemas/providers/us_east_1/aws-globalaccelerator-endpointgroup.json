@@ -9,6 +9,10 @@
    "additionalProperties": false,
    "description": "The configuration for a given endpoint",
    "properties": {
+    "AttachmentArn": {
+     "description": "Attachment ARN that provides access control to the cross account endpoint. Not required for resources hosted in the same account as the endpoint group.",
+     "type": "string"
+    },
     "ClientIPPreservationEnabled": {
      "default": true,
      "description": "true if client ip should be preserved",
@@ -170,5 +174,8 @@
   "EndpointGroupRegion"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
- "typeName": "AWS::GlobalAccelerator::EndpointGroup"
+ "typeName": "AWS::GlobalAccelerator::EndpointGroup",
+ "writeOnlyProperties": [
+  "/properties/EndpointConfigurations/*/AttachmentArn"
+ ]
 }
