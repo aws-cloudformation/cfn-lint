@@ -820,6 +820,15 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::ECS::TaskDefinition",
+            patches=[
+                Patch(
+                    path="/definitions/ContainerDefinition/properties/Environment",
+                    values={"uniqueKeys": ["Name"]},
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::ElastiCache::ReplicationGroup",
             patches=[
                 Patch(

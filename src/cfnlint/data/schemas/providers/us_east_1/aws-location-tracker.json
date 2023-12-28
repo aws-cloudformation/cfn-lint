@@ -2,9 +2,7 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/KmsKeyId",
-  "/properties/TrackerName",
-  "/properties/Description",
-  "/properties/PositionFiltering"
+  "/properties/TrackerName"
  ],
  "definitions": {
   "PositionFiltering": {
@@ -21,6 +19,44 @@
    ],
    "type": "string"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "iso8601UTC": {
    "description": "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
    "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
@@ -35,22 +71,40 @@
  "handlers": {
   "create": {
    "permissions": [
-    "geo:CreateTracker"
+    "geo:CreateTracker",
+    "geo:DescribeTracker",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "kms:*"
    ]
   },
   "delete": {
    "permissions": [
-    "geo:DeleteTracker"
+    "geo:DeleteTracker",
+    "geo:DescribeTracker",
+    "kms:*"
    ]
   },
   "list": {
    "permissions": [
-    "geo:ListTrackers"
+    "geo:ListTrackers",
+    "kms:*"
    ]
   },
   "read": {
    "permissions": [
-    "geo:DescribeTracker"
+    "geo:DescribeTracker",
+    "kms:*"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "geo:CreateTracker",
+    "geo:DescribeTracker",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "geo:UpdateTracker",
+    "kms:*"
    ]
   }
  },
@@ -71,6 +125,12 @@
    "minLength": 0,
    "type": "string"
   },
+  "EventBridgeEnabled": {
+   "type": "boolean"
+  },
+  "KmsKeyEnableGeospatialQueries": {
+   "type": "boolean"
+  },
   "KmsKeyId": {
    "maxLength": 2048,
    "minLength": 1,
@@ -84,6 +144,17 @@
   },
   "PricingPlanDataSource": {
    "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
   },
   "TrackerArn": {
    "maxLength": 1600,
@@ -102,12 +173,19 @@
  },
  "readOnlyProperties": [
   "/properties/CreateTime",
-  "/properties/TrackerArn",
   "/properties/Arn",
+  "/properties/TrackerArn",
   "/properties/UpdateTime"
  ],
  "required": [
   "TrackerName"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Location::Tracker"
 }
