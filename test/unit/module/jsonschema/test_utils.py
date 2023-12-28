@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import unittest
 
-from cfnlint.jsonschema._utils import equal, uniq
+from cfnlint.jsonschema._utils import equal, uniq, uniq_keys
 
 
 class TestUtils(unittest.TestCase):
@@ -33,3 +33,17 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(uniq([{"foo": "bar"}, {"bar": "foo"}]))
 
         self.assertFalse(uniq(["1", 1]))
+
+    def test_uniq_keys(self):
+        # Bad structure
+        self.assertTrue(uniq_keys(["foo", "bar"], ["foo"]))
+
+        # Unknown keys
+        self.assertTrue(uniq_keys([{"foo": "foo"}, {"bar": "bar"}], ["key"]))
+
+        # Valid and invalid configuration
+        self.assertTrue(uniq_keys([{"foo": "foo"}, {"foo": "bar"}], ["foo"]))
+        self.assertFalse(uniq_keys([{"foo": "foo"}, {"foo": "foo"}], ["foo"]))
+        self.assertFalse(
+            uniq_keys([{"foo": "foo"}, {"bar": "bar"}, {"foo": "foo"}], ["foo"])
+        )
