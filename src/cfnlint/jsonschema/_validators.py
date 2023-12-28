@@ -31,6 +31,7 @@ from cfnlint.jsonschema._utils import (
     find_additional_properties,
     unbool,
     uniq,
+    uniq_keys,
 )
 from cfnlint.jsonschema.exceptions import FormatError
 
@@ -465,6 +466,13 @@ def uniqueItems(
 ) -> ValidationResult:
     if uI and validator.is_type(instance, "array") and not uniq(instance):
         yield ValidationError(f"{instance!r} has non-unique elements")
+
+
+def uniqueKeys(
+    validator: Validator, uKs: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
+    if uKs and validator.is_type(instance, "array") and not uniq_keys(instance, uKs):
+        yield ValidationError(f"{instance!r} has non-unique elements for keys {uKs!r}")
 
 
 def type(
