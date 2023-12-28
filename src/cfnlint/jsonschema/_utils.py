@@ -173,3 +173,31 @@ def uniq(container):
 
             seen.append(e)
     return True
+
+
+def uniq_keys(container, keys):
+    """
+    Check if all of a container's elements are unique based on a key.
+
+    Tries to rely on the container being recursively sortable, or otherwise
+    falls back on (slow) brute force.
+    """
+    c = []
+    for i in container:
+        try:
+            o = {}
+            for k in keys:
+                o[k] = i[k]
+            c.append(o)
+        except (KeyError, TypeError):
+            pass
+
+    seen = []
+    for e in c:
+        e = unbool(e)
+        for i in seen:
+            if equal(i, e):
+                return False
+
+        seen.append(e)
+    return True
