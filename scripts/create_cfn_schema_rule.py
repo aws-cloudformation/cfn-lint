@@ -66,10 +66,17 @@ def main():
     parser.add_argument(
         "--rule-name", metavar="rule_name", help="Rule name", type=str, required=True
     )
+    parser.add_argument(
+        "--type", metavar="type", help="rule type", type=str, required=False
+    )
 
     args = parser.parse_args()
 
     if args.rule_level not in ["I", "W", "E"]:
+        print(parser.usage())
+        return
+
+    if args.type and args.type not in ["only-one", "atleast-one"]:
         print(parser.usage())
         return
 

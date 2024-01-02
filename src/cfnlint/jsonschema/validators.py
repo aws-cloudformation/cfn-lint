@@ -276,7 +276,7 @@ def create(
             """
             Extends the current validator.
 
-            Updates VALIDATORS in the current instance with the validators provided.
+            Updates validator in the current instance with the validators provided.
 
             >>> validator = StandardValidator({}).extend(validators={"type": type})
             """

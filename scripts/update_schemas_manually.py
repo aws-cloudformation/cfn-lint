@@ -35,7 +35,9 @@ def make_only_one_required_with_description(
     props: Sequence[str],
 ) -> Dict[str, Any]:
     return {
-        "oneOfDescription": f"Specify only one {props!r}",
+        "message": {
+            "oneOf": f"Specify only one {props!r}",
+        },
         "oneOf": make_only_one_required(props),
     }
 
@@ -1330,7 +1332,9 @@ patches.extend(
                     values={
                         "dependencies": {
                             "SourceDBInstanceIdentifier": {
-                                "notDescription": "['CharacterSetName', 'MasterUserPassword', 'MasterUsername', and 'StorageEncrypted'] should not be included with 'SourceDBInstanceIdentifier'",
+                                "message": {
+                                    "not": "['CharacterSetName', 'MasterUserPassword', 'MasterUsername', and 'StorageEncrypted'] should not be included with 'SourceDBInstanceIdentifier'",
+                                },
                                 "not": {
                                     "anyOf": [
                                         {"required": ["CharacterSetName"]},

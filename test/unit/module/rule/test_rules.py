@@ -5,7 +5,13 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 
 from cfnlint import ConfigMixIn, Template
-from cfnlint.rules import CloudFormationLintRule, DuplicateRuleError, RuleError, Rules
+from cfnlint.rules import (
+    CloudFormationLintRule,
+    DuplicateRuleError,
+    Match,
+    RuleError,
+    Rules,
+)
 
 
 class Rule(CloudFormationLintRule):
@@ -55,7 +61,23 @@ class TestRules(BaseTestCase):
         cfn = Template("-", {}, regions=["us-east-1"])
 
         matches = list(rules.run("-", cfn, ConfigMixIn([])))
-        self.assertListEqual([], matches)
+        self.assertListEqual(
+            [
+                Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    "",
+                    RuleError(),
+                    (
+                        "Unknown exception while processing rule "
+                        "EYYYY: \"'Bad template'\""
+                    ),
+                )
+            ],
+            matches,
+        )
 
     def test_rule_deletion(self):
         rules = Rules()

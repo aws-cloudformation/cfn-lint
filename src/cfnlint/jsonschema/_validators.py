@@ -342,18 +342,14 @@ def multipleOf(
 def not_(
     validator: Validator, not_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    description = schema.get("notDescription")
     if validator.evolve(schema=not_schema).is_valid(instance):
-        message = (
-            description or f"{instance!r} should not be valid under {not_schema!r}"
-        )
+        message = f"{instance!r} should not be valid under {not_schema!r}"
         yield ValidationError(message)
 
 
 def oneOf(
     validator: Validator, oneOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    description = schema.get("oneOfDescription")
     subschemas = enumerate(oneOf)
     all_errors = []
     for index, subschema in subschemas:
@@ -364,7 +360,7 @@ def oneOf(
         all_errors.extend(errs)
     else:
         yield ValidationError(
-            description or f"{instance!r} is not valid under any of the given schemas",
+            f"{instance!r} is not valid under any of the given schemas",
             context=all_errors,
         )
 
@@ -376,9 +372,7 @@ def oneOf(
     if more_valid:
         more_valid.append(first_valid)
         reprs = ", ".join(repr(schema) for schema in more_valid)
-        yield ValidationError(
-            description or f"{instance!r} is valid under each of {reprs}"
-        )
+        yield ValidationError(f"{instance!r} is valid under each of {reprs}")
 
 
 def pattern(

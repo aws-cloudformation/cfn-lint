@@ -348,18 +348,15 @@ class Rules(TypedRules):
                     error_message = traceback.format_exc()
                 else:
                     error_message = str(err)
-                message = "Unknown exception while processing rule {}: {}"
-                return [
-                    Match(
-                        1,
-                        1,
-                        1,
-                        1,
-                        filename,
-                        RuleError(),
-                        message.format(rule_id, error_message),
-                    )
-                ]
+                yield Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    filename,
+                    RuleError(),
+                    f"Unknown exception while processing rule {rule_id}: {error_message!r}",
+                )
 
     def run(
         self, filename: Optional[str], cfn: Template, config: ConfigMixIn
