@@ -9,7 +9,7 @@ import pathlib
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from cfnlint.helpers import ToPy, load_plugins
+from cfnlint.helpers import ToPy, format_json_string, load_plugins
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -83,8 +83,16 @@ def main():
     path_root = (
         pathlib.Path(__file__).parent.parent / "src" / "cfnlint" / "rules" / "resources"
     )
+    schema_root = (
+        pathlib.Path(__file__).parent.parent
+        / "src"
+        / "cfnlint"
+        / "data"
+        / "schemas"
+        / "extensions"
+    )
     rules = load_plugins(
-        path_root, "BaseCfnSchema", "cfnlint.rules.resources.properties.CfnSchema"
+        path_root, "BaseCfnSchema", "cfnlint.rules.resources.properties"
     )
     # new rule id
     new_rule_id = 3600
@@ -103,6 +111,7 @@ def main():
     resource_type = ToPy(args.resource_type)
     resource_category = resource_type.py.split("_")[1]
     schema_path = f"{resource_type.py}/{args.schema_name}"
+    schema_file = schema_root / f"{schema_path}.json"
 
     rule_folder = path_root / resource_category
     rule_folder.mkdir(exist_ok=True)
@@ -126,6 +135,25 @@ SPDX-License-Identifier: MIT-0
             )
         )
         fh.write("\n")
+
+    if not schema_file.parents[0].exists():
+        LOGGER.info("Create folder %s", schema_file.parents[0])
+        schema_file.parents[0].mkdir()
+        open(schema_file.parents[0] / "__init__.py", "x", encoding="utf8").close()
+
+    schema = {}
+    if args.type == "only-one":
+        schema = {
+            "message": {"oneOf": "Specify only one ['Property1', 'Property2']"},
+            "oneOf": [
+                {"required": ["Property1"]},
+                {"required": ["Property2"]},
+            ],
+        }
+
+    with open(schema_file, "x", encoding="utf8") as fh:
+        LOGGER.info("Create schema file %s", schema_file)
+        fh.write(format_json_string(schema))
 
 
 if __name__ == "__main__":

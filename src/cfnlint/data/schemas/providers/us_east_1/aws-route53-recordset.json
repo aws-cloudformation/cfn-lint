@@ -58,54 +58,6 @@
   }
  },
  "description": "Resource Type definition for AWS::Route53::RecordSet",
- "message": {
-  "oneOf": "Specify only one ['HostedZoneId', 'HostedZoneName']"
- },
- "oneOf": [
-  {
-   "properties": {
-    "HostedZoneName": false
-   },
-   "required": [
-    "HostedZoneId"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "HostedZoneId": false
-   },
-   "required": [
-    "HostedZoneName"
-   ],
-   "type": "object"
-  },
-  {
-   "maxProperties": 1,
-   "minProperties": 1,
-   "propertyNames": {
-    "enum": [
-     "Fn::Base64",
-     "Fn::GetAtt",
-     "Fn::GetAZs",
-     "Fn::ImportValue",
-     "Fn::Join",
-     "Fn::Split",
-     "Fn::FindInMap",
-     "Fn::Select",
-     "Ref",
-     "Fn::If",
-     "Fn::Contains",
-     "Fn::Sub",
-     "Fn::Cidr",
-     "Fn::Length",
-     "Fn::ToJsonString",
-     "Fn::ForEach::[a-zA-Z0-9]+"
-    ]
-   },
-   "type": "object"
-  }
- ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -172,6 +124,10 @@
  "required": [
   "Type",
   "Name"
+ ],
+ "requiredXor": [
+  "HostedZoneId",
+  "HostedZoneName"
  ],
  "typeName": "AWS::Route53::RecordSet"
 }

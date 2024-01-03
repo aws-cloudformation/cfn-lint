@@ -976,7 +976,6 @@ cached: List[str] = [
     "aws-redshift-endpointaccess.json",
     "aws-appconfig-application.json",
     "aws-opsworks-stack.json",
-    "aws-mediatailor-channel.json",
     "aws-lambda-url.json",
     "aws-mediatailor-channelpolicy.json",
     "aws-datasync-locationfsxwindows.json",

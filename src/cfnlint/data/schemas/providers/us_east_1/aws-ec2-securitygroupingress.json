@@ -14,96 +14,6 @@
   "/properties/CidrIpv6"
  ],
  "description": "Resource Type definition for AWS::EC2::SecurityGroupIngress",
- "message": {
-  "oneOf": "Specify only one ['CidrIp', 'CidrIpv6', 'SourcePrefixListId', 'SourceSecurityGroupId', 'SourceSecurityGroupName']"
- },
- "oneOf": [
-  {
-   "properties": {
-    "CidrIpv6": false,
-    "SourcePrefixListId": false,
-    "SourceSecurityGroupId": false,
-    "SourceSecurityGroupName": false
-   },
-   "required": [
-    "CidrIp"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "CidrIp": false,
-    "SourcePrefixListId": false,
-    "SourceSecurityGroupId": false,
-    "SourceSecurityGroupName": false
-   },
-   "required": [
-    "CidrIpv6"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "CidrIp": false,
-    "CidrIpv6": false,
-    "SourceSecurityGroupId": false,
-    "SourceSecurityGroupName": false
-   },
-   "required": [
-    "SourcePrefixListId"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "CidrIp": false,
-    "CidrIpv6": false,
-    "SourcePrefixListId": false,
-    "SourceSecurityGroupName": false
-   },
-   "required": [
-    "SourceSecurityGroupId"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "CidrIp": false,
-    "CidrIpv6": false,
-    "SourcePrefixListId": false,
-    "SourceSecurityGroupId": false
-   },
-   "required": [
-    "SourceSecurityGroupName"
-   ],
-   "type": "object"
-  },
-  {
-   "maxProperties": 1,
-   "minProperties": 1,
-   "propertyNames": {
-    "enum": [
-     "Fn::Base64",
-     "Fn::GetAtt",
-     "Fn::GetAZs",
-     "Fn::ImportValue",
-     "Fn::Join",
-     "Fn::Split",
-     "Fn::FindInMap",
-     "Fn::Select",
-     "Ref",
-     "Fn::If",
-     "Fn::Contains",
-     "Fn::Sub",
-     "Fn::Cidr",
-     "Fn::Length",
-     "Fn::ToJsonString",
-     "Fn::ForEach::[a-zA-Z0-9]+"
-    ]
-   },
-   "type": "object"
-  }
- ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -153,6 +63,13 @@
  ],
  "required": [
   "IpProtocol"
+ ],
+ "requiredXor": [
+  "CidrIp",
+  "CidrIpv6",
+  "SourcePrefixListId",
+  "SourceSecurityGroupId",
+  "SourceSecurityGroupName"
  ],
  "typeName": "AWS::EC2::SecurityGroupIngress"
 }

@@ -334,6 +334,8 @@ _standard_validators: Dict[str, V] = {
     "properties": _validators.properties,
     "propertyNames": _validators.propertyNames,
     "required": _validators.required,
+    "requiredXor": _validators.requiredxor,
+    "requiredAtLeastOne": _validators.requiredatleastone,
     "type": _validators.type,
     "uniqueItems": _validators.uniqueItems,
     "uniqueKeys": _validators.uniqueKeys,

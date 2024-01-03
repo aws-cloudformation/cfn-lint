@@ -95,54 +95,6 @@
    ]
   }
  },
- "message": {
-  "oneOf": "Specify only one ['SubnetMappings', 'Subnets']"
- },
- "oneOf": [
-  {
-   "properties": {
-    "Subnets": false
-   },
-   "required": [
-    "SubnetMappings"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "SubnetMappings": false
-   },
-   "required": [
-    "Subnets"
-   ],
-   "type": "object"
-  },
-  {
-   "maxProperties": 1,
-   "minProperties": 1,
-   "propertyNames": {
-    "enum": [
-     "Fn::Base64",
-     "Fn::GetAtt",
-     "Fn::GetAZs",
-     "Fn::ImportValue",
-     "Fn::Join",
-     "Fn::Split",
-     "Fn::FindInMap",
-     "Fn::Select",
-     "Ref",
-     "Fn::If",
-     "Fn::Contains",
-     "Fn::Sub",
-     "Fn::Cidr",
-     "Fn::Length",
-     "Fn::ToJsonString",
-     "Fn::ForEach::[a-zA-Z0-9]+"
-    ]
-   },
-   "type": "object"
-  }
- ],
  "primaryIdentifier": [
   "/properties/LoadBalancerArn"
  ],
@@ -240,6 +192,10 @@
   "/properties/CanonicalHostedZoneID",
   "/properties/LoadBalancerArn",
   "/properties/DNSName"
+ ],
+ "requiredXor": [
+  "SubnetMappings",
+  "Subnets"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
  "tagging": {

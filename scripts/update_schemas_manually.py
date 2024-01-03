@@ -68,9 +68,7 @@ def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
 
 
 common_patches = {
-    "BlockDeviceMapping": make_only_one_required_with_description(
-        ["VirtualName", "Ebs", "NoDevice"]
-    ),
+    "BlockDeviceMapping": {"requiredXor": ["VirtualName", "Ebs", "NoDevice"]},
 }
 
 patches.extend(
@@ -120,9 +118,7 @@ patches.extend(
                     path="/properties/HealthCheckType",
                 ),
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["LaunchTemplateID", "LaunchTemplateName"]
-                    ),
+                    values={"requiredXor": ["LaunchTemplateID", "LaunchTemplateName"]},
                     path="/definitions/LaunchTemplateSpecification",
                 ),
                 Patch(
@@ -223,13 +219,13 @@ patches.extend(
             patches=[
                 Patch(
                     path="/definitions/ViewerCertificate",
-                    values=make_only_one_required_with_description(
-                        [
+                    values={
+                        "requiredXor": [
                             "AcmCertificateArn",
                             "CloudFrontDefaultCertificate",
                             "IamCertificateId",
                         ]
-                    ),
+                    },
                 ),
                 Patch(
                     path="/definitions/Origin",
@@ -631,9 +627,7 @@ patches.extend(
             resource_type="AWS::CodePipeline::Pipeline",
             patches=[
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["ArtifactStore", "ArtifactStores"]
-                    ),
+                    values={"requiredXor": ["ArtifactStore", "ArtifactStores"]},
                     path="/",
                 ),
             ],
@@ -691,12 +685,12 @@ patches.extend(
                 Patch(
                     values={
                         "allOf": [
-                            make_only_one_required_with_description(
-                                [
+                            {
+                                "requiredXor": [
                                     "ImageId",
                                     "LaunchTemplate",
                                 ]
-                            ),
+                            },
                         ],
                         "dependencies": make_only_one(
                             ["NetworkInterfaces", "SubnetId"]
@@ -714,9 +708,13 @@ patches.extend(
                     path="/definitions/BlockDeviceMapping",
                 ),
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["SecurityGroups", "SecurityGroupIds", "NetworkInterfaces"]
-                    ),
+                    values={
+                        "requiredXor": [
+                            "SecurityGroups",
+                            "SecurityGroupIds",
+                            "NetworkInterfaces",
+                        ]
+                    },
                     path="/definitions/LaunchTemplateData",
                 ),
             ],
@@ -752,26 +750,26 @@ patches.extend(
                 ),
                 Patch(
                     path="/definitions/Egress",
-                    values=make_only_one_required_with_description(
-                        [
+                    values={
+                        "requiredXor": [
                             "CidrIp",
                             "CidrIpv6",
                             "DestinationSecurityGroupId",
                             "DestinationPrefixListId",
                         ]
-                    ),
+                    },
                 ),
                 Patch(
                     path="/definitions/Ingress",
-                    values=make_only_one_required_with_description(
-                        [
+                    values={
+                        "requiredXor": [
                             "CidrIp",
                             "CidrIpv6",
                             "SourcePrefixListId",
                             "SourceSecurityGroupId",
                             "SourceSecurityGroupName",
-                        ]
-                    ),
+                        ],
+                    },
                 ),
             ],
         ),
@@ -780,15 +778,15 @@ patches.extend(
             patches=[
                 Patch(
                     path="/",
-                    values=make_only_one_required_with_description(
-                        [
+                    values={
+                        "requiredXor": [
                             "CidrIp",
                             "CidrIpv6",
                             "SourcePrefixListId",
                             "SourceSecurityGroupId",
                             "SourceSecurityGroupName",
                         ]
-                    ),
+                    },
                 ),
             ],
         ),
@@ -801,9 +799,9 @@ patches.extend(
                 ),
                 Patch(
                     path="/",
-                    values=make_only_one_required_with_description(
-                        ["LaunchSpecifications", "LaunchTemplateConfigs"]
-                    ),
+                    values={
+                        "requiredXor": ["LaunchSpecifications", "LaunchTemplateConfigs"]
+                    },
                 ),
             ],
         ),
@@ -856,9 +854,7 @@ patches.extend(
             resource_type="AWS::ElasticLoadBalancingV2::LoadBalancer",
             patches=[
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["SubnetMappings", "Subnets"]
-                    ),
+                    values={"requiredXor": ["SubnetMappings", "Subnets"]},
                     path="/",
                 ),
             ],
@@ -1023,21 +1019,7 @@ patches.extend(
             resource_type="AWS::IAM::Policy",
             patches=[
                 Patch(
-                    values={
-                        "anyOf": [
-                            {"required": ["Users"]},
-                            {"required": ["Groups"]},
-                            {"required": ["Roles"]},
-                        ],
-                    },
-                    path="/",
-                ),
-                Patch(
-                    values={
-                        "message": {
-                            "anyOf": "At least one of ['Users', 'Groups', and 'Roles'] is a required property."
-                        }
-                    },
+                    values={"requiredAtLeastOne": ["Users", "Groups", "Roles"]},
                     path="/",
                 ),
                 Patch(
@@ -1378,9 +1360,7 @@ patches.extend(
             resource_type="AWS::Route53::RecordSet",
             patches=[
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["HostedZoneId", "HostedZoneName"]
-                    ),
+                    values={"requiredXor": ["HostedZoneId", "HostedZoneName"]},
                     path="/",
                 ),
             ],
@@ -1389,9 +1369,7 @@ patches.extend(
             resource_type="AWS::Route53::RecordSetGroup",
             patches=[
                 Patch(
-                    values=make_only_one_required_with_description(
-                        ["HostedZoneId", "HostedZoneName"]
-                    ),
+                    values={"requiredXor": ["HostedZoneId", "HostedZoneName"]},
                     path="/",
                 ),
             ],

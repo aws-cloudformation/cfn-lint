@@ -52,66 +52,6 @@
   "BlockDeviceMapping": {
    "additionalProperties": false,
    "description": "Information about a block device mapping for an Amazon EC2 launch template.",
-   "message": {
-    "oneOf": "Specify only one ['VirtualName', 'Ebs', 'NoDevice']"
-   },
-   "oneOf": [
-    {
-     "properties": {
-      "Ebs": false,
-      "NoDevice": false
-     },
-     "required": [
-      "VirtualName"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "NoDevice": false,
-      "VirtualName": false
-     },
-     "required": [
-      "Ebs"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "Ebs": false,
-      "VirtualName": false
-     },
-     "required": [
-      "NoDevice"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
    "properties": {
     "DeviceName": {
      "description": "The user data to make available to the instance.",
@@ -129,6 +69,11 @@
      "type": "string"
     }
    },
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
+   ],
    "type": "object"
   },
   "CapacityReservationSpecification": {
@@ -508,66 +453,6 @@
   "LaunchTemplateData": {
    "additionalProperties": false,
    "description": "The information for the launch template.",
-   "message": {
-    "oneOf": "Specify only one ['SecurityGroups', 'SecurityGroupIds', 'NetworkInterfaces']"
-   },
-   "oneOf": [
-    {
-     "properties": {
-      "NetworkInterfaces": false,
-      "SecurityGroupIds": false
-     },
-     "required": [
-      "SecurityGroups"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "NetworkInterfaces": false,
-      "SecurityGroups": false
-     },
-     "required": [
-      "SecurityGroupIds"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "SecurityGroupIds": false,
-      "SecurityGroups": false
-     },
-     "required": [
-      "NetworkInterfaces"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
    "properties": {
     "BlockDeviceMappings": {
      "description": "The block device mapping.",
@@ -715,6 +600,11 @@
      "type": "string"
     }
    },
+   "requiredXor": [
+    "SecurityGroups",
+    "SecurityGroupIds",
+    "NetworkInterfaces"
+   ],
    "type": "object"
   },
   "LaunchTemplateElasticInferenceAccelerator": {
