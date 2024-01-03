@@ -25,5 +25,7 @@ class TestSnapStartSupported(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/snapstart-supported.yaml", 1
+            "test/fixtures/templates/bad/resources/lambda/snapstart-supported.yaml",
+            2,
+            regions=["us-east-1", "me-central-1"],
         )

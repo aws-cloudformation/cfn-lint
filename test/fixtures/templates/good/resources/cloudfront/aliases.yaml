@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - "{{resolve:ssm:/env/fqdns/certifier}}"
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - "GET"
+            - "HEAD"
+          CachedMethods:
+            - "GET"
+            - "HEAD"
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: "s3"
+          ViewerProtocolPolicy: "https-only"
+        Enabled: true
+        Origins:
+          - Id: "s3"
+            DomainName: www.example.com.s3.amazonaws.com"

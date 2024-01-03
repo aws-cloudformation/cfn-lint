@@ -14,6 +14,7 @@ from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple
 import regex as re
 
 from cfnlint.conditions._utils import get_hash
+from cfnlint.decode.node import str_node
 from cfnlint.helpers import FUNCTION_FOR_EACH
 from cfnlint.template.transforms._types import TransformResult
 
@@ -131,7 +132,7 @@ class _Transform:
                                 obj[f_k] = f_v
                             else:
                                 raise _ValueError(
-                                    f"Duplicate {f_k} while doing tranformation",
+                                    f"Duplicate {f_k} while doing transformation",
                                     f_k,
                                 )
                     del obj[k]
@@ -194,13 +195,18 @@ class _Transform:
     def _replace_string_params(
         self, s: str, params: Mapping[str, Any]
     ) -> Tuple[bool, str]:
-        pattern = r"\${[a-zA-Z0-9:]+}"
+        pattern = r"\${[a-zA-Z0-9\.:]+}"
         if not re.search(pattern, s):
             return (True, s)
-        for k, v in params.items():
-            s = re.sub(rf"\$\{{{k}\}}", v, s)
 
-        return (not (bool(re.search(pattern, s))), s)
+        new_s = deepcopy(s)
+        for k, v in params.items():
+            new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
+
+        if isinstance(s, str_node):
+            new_s = str_node(new_s, s.start_mark, s.end_mark)
+
+        return (not (bool(re.search(pattern, new_s))), new_s)
 
 
 class _ForEachValue:

@@ -1,3 +1,27 @@
+### v0.83.7
+###### CloudFormation Specifications
+- Update CloudFormation specs to `152.0.0` (pull #[2984](https://github.com/aws-cloudformation/cfn-lint/pull/2984))
+- Add `ca-west-1` region (pull #[2980](https://github.com/aws-cloudformation/cfn-lint/pull/2980))
+
+### v0.83.6
+###### CloudFormation Specifications
+- Update CloudFormation specs to `151.0.0` (pull #[2969](https://github.com/aws-cloudformation/cfn-lint/pull/2969))
+###### Fixes
+- Fix LanguageTransformer to better handle `Fn::GetAtt` dot notation in `Fn::Sub` (pull #[2974](https://github.com/aws-cloudformation/cfn-lint/pull/2974))
+- Update rule [E2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2530) and [I2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2530) to support regionality of the `SnapStart` feature (pull #[2973](https://github.com/aws-cloudformation/cfn-lint/pull/2973))
+
+### v0.83.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to `150.0.0` (pull #[2963](https://github.com/aws-cloudformation/cfn-lint/pull/2963))
+- Patch in `TargetObjectKeyFormat` for `AWS::S3::Bucket` (pull #[2966](https://github.com/aws-cloudformation/cfn-lint/pull/2966))
+###### Fixes
+- Update rule [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3013) to ignore dynamic references in CloudFront aliases (pull #[2967](https://github.com/aws-cloudformation/cfn-lint/pull/2967))
+
+### v0.83.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `149.0.0` (pull #[2951](https://github.com/aws-cloudformation/cfn-lint/pull/2951))
+- Add `KeyID` as a target for `TargetKeyId` (pull #[2953](https://github.com/aws-cloudformation/cfn-lint/pull/2953))
+
 ### v0.83.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to include `python3.12` (pull #[2947](https://github.com/aws-cloudformation/cfn-lint/pull/2947))
