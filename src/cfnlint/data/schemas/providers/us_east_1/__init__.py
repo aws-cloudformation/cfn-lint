@@ -1097,6 +1097,7 @@ types = [
     "AWS::ServiceCatalogAppRegistry::ResourceAssociation",
     "AWS::Timestream::Table",
     "AWS::EC2::VPNGateway",
+    "AWS::Location::APIKey",
     "AWS::CloudFormation::Stack",
     "AWS::ResourceGroups::Group",
     "AWS::CloudFormation::ResourceDefaultVersion",
