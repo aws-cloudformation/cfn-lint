@@ -5,57 +5,17 @@ SPDX-License-Identifier: MIT-0
 import json
 
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import (
-    CfnTemplateValidator,
-    RefResolver,
-    StandardValidator,
-    ValidationError,
-)
-from cfnlint.jsonschema.exceptions import best_match
+from cfnlint.jsonschema import RefResolver
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
-class _BestOf:
-    def _match_longer_path(self, error):
-        return len(error.path)
-
-    def oneOf(self, validator, oO, instance, schema):
-        subschemas = enumerate(oO)
-        all_errors = []
-        for index, subschema in subschemas:
-            errs = list(validator.descend(instance, subschema, schema_path=index))
-            if not errs:
-                first_valid = subschema
-                break
-            all_errors.extend(errs)
-        else:
-            best_err = best_match(all_errors, key=self._match_longer_path)
-            schema_path = best_err.schema_path[0]
-            for err in all_errors:
-                if err.schema_path[0] == schema_path:
-                    yield err
-
-        more_valid = [
-            each
-            for _, each in subschemas
-            if validator.evolve(schema=each).is_valid(instance)
-        ]
-        if more_valid:
-            more_valid.append(first_valid)
-            reprs = ", ".join(repr(schema) for schema in more_valid)
-            yield ValidationError(f"{instance!r} is valid under each of {reprs}")
-
-    # pylint: disable=unused-argument
-    def anyOf(self, validator, aO, instance, schema):
-        all_errors = []
-        for index, subschema in enumerate(aO):
-            errs = list(validator.descend(instance, subschema, schema_path=index))
-            if not errs:
-                break
-            all_errors.extend(errs)
-        else:
-            best_err = best_match(all_errors, key=self._match_longer_path)
-            yield best_err
+# pylint: disable=unused-argument
+def _scalar_or_array(validator, subschema, instance, schema):
+    if validator.is_type(instance, "array"):
+        for index, i in enumerate(instance):
+            yield from validator.descend(i, subschema, path=index)
+    else:
+        yield from validator.descend(instance, subschema)
 
 
 class IdentityPolicy(BaseJsonSchema):
@@ -73,10 +33,6 @@ class IdentityPolicy(BaseJsonSchema):
     def __init__(self):
         super().__init__()
         self.cfn = None
-        self.validators = {
-            "anyOf": _BestOf().anyOf,
-            "oneOf": _BestOf().oneOf,
-        }
         policy_schema = load_resource("cfnlint.data.schemas.other.iam", "policy.json")
         self.identity_schema = load_resource(
             "cfnlint.data.schemas.other.iam", "policy_identity.json"
@@ -89,29 +45,33 @@ class IdentityPolicy(BaseJsonSchema):
         # this is deprecated in 4.18 of jsonschema
         self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
 
-    def initialize(self, cfn):
-        self.cfn = cfn
-        return super().initialize(cfn)
-
     # pylint: disable=unused-argument
     def iamidentitypolicy(self, validator, policy_type, policy, schema):
         # First time child rules are configured against the rule
         # so we can run this now
-
         if validator.is_type(policy, "string"):
             try:
-                validator_cls = StandardValidator
+                iam_validator = validator.extend(
+                    validators={
+                        "scalarOrArray": _scalar_or_array,
+                    },
+                    context=validator.context.evolve(
+                        functions=[],
+                    ),
+                )(schema=self.identity_schema).evolve(
+                    resolver=self.resolver,
+                )
                 policy = json.loads(policy)
             except json.JSONDecodeError:
                 return
-        elif validator.is_type(policy, "object"):
-            validator_cls = CfnTemplateValidator
-
-        iam_validator = self.setup_validator(
-            validator=validator_cls,
-            schema=self.identity_schema,
-            context=validator.context,
-        ).evolve(resolver=self.resolver)
+        else:
+            iam_validator = validator.extend(
+                validators={
+                    "scalarOrArray": _scalar_or_array,
+                },
+            )(schema=self.identity_schema).evolve(
+                resolver=self.resolver,
+            )
 
         for err in iam_validator.iter_errors(policy):
             err.rule = self
