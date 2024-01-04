@@ -7,64 +7,13 @@ import json
 import logging
 import os
 from collections import namedtuple
-from typing import Any, Dict, List, Sequence
-
-from cfnlint.helpers import FUNCTIONS
+from typing import List
 
 LOGGER = logging.getLogger("cfnlint")
 
 Patch = namedtuple("Patch", ["values", "path"])
 ResourcePatch = namedtuple("ResourcePatch", ["resource_type", "patches"])
 patches: List[ResourcePatch] = []
-
-
-def make_only_one(props: Sequence[str]) -> Dict[str, Any]:
-    dependencies = {}
-    for i in range(0, len(props) - 1):
-        props_false = dict.fromkeys(props, False)
-        del props_false[props[i]]
-        dependencies[props[i]] = {
-            "properties": props_false,
-            "type": "object",
-        }
-
-    return dependencies
-
-
-def make_only_one_required_with_description(
-    props: Sequence[str],
-) -> Dict[str, Any]:
-    return {
-        "message": {
-            "oneOf": f"Specify only one {props!r}",
-        },
-        "oneOf": make_only_one_required(props),
-    }
-
-
-def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
-    results = []
-    for item in props:
-        non_required = dict.fromkeys(props, False)
-        non_required.pop(item)
-        result = {
-            "required": [item],
-            "properties": non_required,
-            "type": "object",
-        }
-        results.append(result)
-
-    # fn helper
-    results.append(
-        {
-            "propertyNames": {"enum": FUNCTIONS},
-            "minProperties": 1,  # type: ignore
-            "maxProperties": 1,  # type: ignore
-            "type": "object",
-        }
-    )
-
-    return results
 
 
 common_patches = {
@@ -123,14 +72,12 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "dependencies": make_only_one(
-                            [
-                                "InstanceId",
-                                "LaunchConfigurationName",
-                                "LaunchTemplate",
-                                "MixedInstancesPolicy",
-                            ]
-                        ),
+                        "propertiesNand": [
+                            "InstanceId",
+                            "LaunchConfigurationName",
+                            "LaunchTemplate",
+                            "MixedInstancesPolicy",
+                        ]
                     },
                     path="/",
                 ),
@@ -230,9 +177,7 @@ patches.extend(
                 Patch(
                     path="/definitions/Origin",
                     values={
-                        "dependencies": make_only_one(
-                            ["CustomOriginConfig", "S3OriginConfig"]
-                        )
+                        "propertiesNand": ["CustomOriginConfig", "S3OriginConfig"],
                     },
                 ),
                 Patch(
@@ -572,10 +517,17 @@ patches.extend(
                             },
                             {"required": ["MetricName"]},
                         ],
-                        "dependencies": {
-                            **make_only_one(["Statistic", "ExtendedStatistic"]),
-                            **make_only_one(["Threshold", "ThresholdMetricId"]),
-                        },
+                        "allOf": [
+                            {
+                                "propertiesNand": ["Statistic", "ExtendedStatistic"],
+                            },
+                            {
+                                "propertiesNand": [
+                                    "Threshold",
+                                    "ThresholdMetricId",
+                                ],
+                            },
+                        ],
                     },
                     path="/",
                 ),
@@ -692,9 +644,7 @@ patches.extend(
                                 ]
                             },
                         ],
-                        "dependencies": make_only_one(
-                            ["NetworkInterfaces", "SubnetId"]
-                        ),
+                        "propertiesNand": ["NetworkInterfaces", "SubnetId"],
                     },
                     path="/",
                 ),
@@ -811,9 +761,7 @@ patches.extend(
                 Patch(
                     path="/",
                     values={
-                        "oneOf": make_only_one_required(
-                            ["CidrBlock", "Ipv4IpamPoolId"]
-                        ),
+                        "requiredXor": ["CidrBlock", "Ipv4IpamPoolId"],
                         "dependencies": {"Ipv4IpamPoolId": ["Ipv4NetmaskLength"]},
                     },
                 ),
@@ -1019,7 +967,7 @@ patches.extend(
             resource_type="AWS::IAM::Policy",
             patches=[
                 Patch(
-                    values={"requiredAtLeastOne": ["Users", "Groups", "Roles"]},
+                    values={"requiredOr": ["Users", "Groups", "Roles"]},
                     path="/",
                 ),
                 Patch(
@@ -1424,9 +1372,10 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "dependencies": make_only_one(
-                            ["HealthCheckConfig", "HealthCheckCustomConfig"]
-                        ),
+                        "propertiesNand": [
+                            "HealthCheckConfig",
+                            "HealthCheckCustomConfig",
+                        ],
                     },
                     path="/",
                 ),

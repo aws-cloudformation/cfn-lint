@@ -27,6 +27,7 @@ class JsonSchema(BaseJsonSchema):
         self.rule_set = {
             "additionalProperties": "E3002",
             "properties": "E3002",
+            "propertiesNand": "E3019",
             "required": "E3003",
             "requiredXor": "E3014",
             "requiredAtLeastOne": "E3015",

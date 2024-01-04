@@ -170,8 +170,8 @@
                         "requiredXor": {
                             "$ref": "#/properties/requiredXor"
                         },
-                        "requiredAtLeastOne": {
-                            "$ref": "#/properties/requiredAtLeastOne"
+                        "requiredOr": {
+                            "$ref": "#/properties/requiredOr"
                         },
                         "properties": {
                             "type": "object",
@@ -182,6 +182,9 @@
                             },
                             "additionalProperties": false,
                             "minProperties": 1
+                        },
+                        "propertiesNand": {
+                            "$ref": "#/properties/propertiesNand"
                         },
                         "additionalProperties": {
                             "$comment": "All properties of a resource must be expressed in the schema - arbitrary inputs are not allowed",
@@ -309,6 +312,12 @@
             "additionalProperties": false,
             "minProperties": 1
         },
+        "propertiesNand": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "definitions": {
             "type": "object",
             "patternProperties": {
@@ -362,7 +371,7 @@
                 "type": ["string"]
             }
         },
-        "requiredAtLeastOne": {
+        "requiredOr": {
             "type": ["array"],
             "items": {
                 "type": ["string"]

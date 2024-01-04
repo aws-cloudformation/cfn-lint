@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 
 from copy import deepcopy
 from difflib import SequenceMatcher
-from typing import Any, Dict
+from typing import Any, Dict, Sequence
 
 import regex as re
 
@@ -433,6 +433,24 @@ def propertyNames(
         yield from validator.descend(instance=property, schema=propertyNames)
 
 
+def propertiesNand(
+    validator: Validator,
+    propertiesNand: Sequence[str],
+    instance: Any,
+    schema: Dict[str, Any],
+):
+    if not validator.is_type(instance, "object"):
+        return
+
+    matches = set(propertiesNand).intersection(instance.keys())
+
+    if len(matches) > 1:
+        for match in matches:
+            yield ValidationError(
+                f"None or only one of {propertiesNand!r} can be specified", path=[match]
+            )
+
+
 def ref(
     validator: Validator, ref: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
@@ -460,7 +478,7 @@ def requiredxor(
 ) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
-    matches = set(required) & set(instance.keys())
+    matches = set(required).intersection(instance.keys())
     if not matches:
         yield ValidationError(f"Only one of {required!r} is a required property")
         return
@@ -471,12 +489,12 @@ def requiredxor(
             )
 
 
-def requiredatleastone(
+def requiredor(
     validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
     if not validator.is_type(instance, "object"):
         return
-    matches = set(required) & set(instance.keys())
+    matches = set(required).intersection(instance.keys())
     if not matches:
         yield ValidationError(f"At least one of {required!r} is a required property")
 

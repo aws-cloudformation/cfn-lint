@@ -726,7 +726,6 @@ cached: List[str] = [
     "aws-ec2-snapshotblockpublicaccess.json",
     "aws-ec2-subnet.json",
     "aws-s3objectlambda-accesspoint.json",
-    "aws-sqs-queuepolicy.json",
     "aws-appsync-domainnameapiassociation.json",
     "aws-globalaccelerator-endpointgroup.json",
     "aws-ec2-transitgatewayconnect.json",
