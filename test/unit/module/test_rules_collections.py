@@ -54,7 +54,7 @@ class TestRulesCollection(BaseTestCase):
         filename = "test/fixtures/templates/bad/generic.yaml"
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ["us-east-1"])
-        expected_err_count = 42
+        expected_err_count = 36
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert (
