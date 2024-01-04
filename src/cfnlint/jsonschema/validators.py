@@ -276,7 +276,7 @@ def create(
             """
             Extends the current validator.
 
-            Updates VALIDATORS in the current instance with the validators provided.
+            Updates validator in the current instance with the validators provided.
 
             >>> validator = StandardValidator({}).extend(validators={"type": type})
             """
@@ -332,8 +332,11 @@ _standard_validators: Dict[str, V] = {
     "pattern": _validators.pattern,
     "patternProperties": _validators.patternProperties,
     "properties": _validators.properties,
+    "propertiesNand": _validators.propertiesNand,
     "propertyNames": _validators.propertyNames,
     "required": _validators.required,
+    "requiredXor": _validators.requiredxor,
+    "requiredOr": _validators.requiredor,
     "type": _validators.type,
     "uniqueItems": _validators.uniqueItems,
     "uniqueKeys": _validators.uniqueKeys,

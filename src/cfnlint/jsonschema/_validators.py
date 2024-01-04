@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 
 from copy import deepcopy
 from difflib import SequenceMatcher
-from typing import Any, Dict
+from typing import Any, Dict, Sequence
 
 import regex as re
 
@@ -342,18 +342,14 @@ def multipleOf(
 def not_(
     validator: Validator, not_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    description = schema.get("notDescription")
     if validator.evolve(schema=not_schema).is_valid(instance):
-        message = (
-            description or f"{instance!r} should not be valid under {not_schema!r}"
-        )
+        message = f"{instance!r} should not be valid under {not_schema!r}"
         yield ValidationError(message)
 
 
 def oneOf(
     validator: Validator, oneOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    description = schema.get("oneOfDescription")
     subschemas = enumerate(oneOf)
     all_errors = []
     for index, subschema in subschemas:
@@ -364,7 +360,7 @@ def oneOf(
         all_errors.extend(errs)
     else:
         yield ValidationError(
-            description or f"{instance!r} is not valid under any of the given schemas",
+            f"{instance!r} is not valid under any of the given schemas",
             context=all_errors,
         )
 
@@ -376,9 +372,7 @@ def oneOf(
     if more_valid:
         more_valid.append(first_valid)
         reprs = ", ".join(repr(schema) for schema in more_valid)
-        yield ValidationError(
-            description or f"{instance!r} is valid under each of {reprs}"
-        )
+        yield ValidationError(f"{instance!r} is valid under each of {reprs}")
 
 
 def pattern(
@@ -439,6 +433,24 @@ def propertyNames(
         yield from validator.descend(instance=property, schema=propertyNames)
 
 
+def propertiesNand(
+    validator: Validator,
+    propertiesNand: Sequence[str],
+    instance: Any,
+    schema: Dict[str, Any],
+):
+    if not validator.is_type(instance, "object"):
+        return
+
+    matches = set(propertiesNand).intersection(instance.keys())
+
+    if len(matches) > 1:
+        for match in matches:
+            yield ValidationError(
+                f"None or only one of {propertiesNand!r} can be specified", path=[match]
+            )
+
+
 def ref(
     validator: Validator, ref: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
@@ -459,6 +471,32 @@ def required(
     for property in required:
         if property not in instance:
             yield ValidationError(f"{property!r} is a required property")
+
+
+def requiredxor(
+    validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
+    if not validator.is_type(instance, "object"):
+        return
+    matches = set(required).intersection(instance.keys())
+    if not matches:
+        yield ValidationError(f"Only one of {required!r} is a required property")
+        return
+    if len(matches) > 1:
+        for match in matches:
+            yield ValidationError(
+                f"Only one of {required!r} is a required property", path=[match]
+            )
+
+
+def requiredor(
+    validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
+) -> ValidationResult:
+    if not validator.is_type(instance, "object"):
+        return
+    matches = set(required).intersection(instance.keys())
+    if not matches:
+        yield ValidationError(f"At least one of {required!r} is a required property")
 
 
 def uniqueItems(
