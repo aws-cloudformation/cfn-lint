@@ -223,52 +223,6 @@
   },
   "LaunchTemplateSpecification": {
    "additionalProperties": false,
-   "oneOf": [
-    {
-     "properties": {
-      "LaunchTemplateName": false
-     },
-     "required": [
-      "LaunchTemplateID"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "LaunchTemplateID": false
-     },
-     "required": [
-      "LaunchTemplateName"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
-   "oneOfDescription": "Specify only one ['LaunchTemplateID', 'LaunchTemplateName']",
    "properties": {
     "LaunchTemplateId": {
      "type": "string"
@@ -282,6 +236,10 @@
    },
    "required": [
     "Version"
+   ],
+   "requiredXor": [
+    "LaunchTemplateID",
+    "LaunchTemplateName"
    ],
    "type": "object"
   },
@@ -462,32 +420,6 @@
    "type": "object"
   }
  },
- "dependencies": {
-  "InstanceId": {
-   "properties": {
-    "LaunchConfigurationName": false,
-    "LaunchTemplate": false,
-    "MixedInstancesPolicy": false
-   },
-   "type": "object"
-  },
-  "LaunchConfigurationName": {
-   "properties": {
-    "InstanceId": false,
-    "LaunchTemplate": false,
-    "MixedInstancesPolicy": false
-   },
-   "type": "object"
-  },
-  "LaunchTemplate": {
-   "properties": {
-    "InstanceId": false,
-    "LaunchConfigurationName": false,
-    "MixedInstancesPolicy": false
-   },
-   "type": "object"
-  }
- },
  "description": "Resource Type definition for AWS::AutoScaling::AutoScalingGroup",
  "primaryIdentifier": [
   "/properties/Id"
@@ -629,6 +561,12 @@
    "uniqueItems": false
   }
  },
+ "propertiesNand": [
+  "InstanceId",
+  "LaunchConfigurationName",
+  "LaunchTemplate",
+  "MixedInstancesPolicy"
+ ],
  "readOnlyProperties": [
   "/properties/Id",
   "/properties/LaunchTemplateSpecification"
