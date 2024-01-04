@@ -23,7 +23,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": (
                 "test/fixtures/results/quickstart/non_strict/nist_application.json"
             ),
-            "exit_code": 12,
+            "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/openshift.yaml",
