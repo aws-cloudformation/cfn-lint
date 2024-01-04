@@ -6,6 +6,9 @@
    "additionalProperties": false,
    "allOf": [
     {
+     "message": {
+      "oneOf": "One of ['Action', 'NotAction'] is a required property"
+     },
      "oneOf": [
       {
        "required": [
@@ -20,6 +23,9 @@
      ]
     },
     {
+     "message": {
+      "oneOf": "One of ['Resource', 'NotResource'] is a required property"
+     },
      "oneOf": [
       {
        "required": [
@@ -74,17 +80,9 @@
    "type": "policy#/properties/Id"
   },
   "Statement": {
-   "oneOf": [
-    {
-     "$ref": "#/definitions/Statement"
-    },
-    {
-     "items": {
-      "$ref": "#/definitions/Statement"
-     },
-     "type": "array"
-    }
-   ]
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
+   }
   },
   "Version": {
    "$ref": "policy#/properties/Version"

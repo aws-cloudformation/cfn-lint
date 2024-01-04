@@ -2,52 +2,10 @@
  "additionalProperties": false,
  "allOf": [
   {
-   "oneOf": [
-    {
-     "properties": {
-      "LaunchTemplate": false
-     },
-     "required": [
-      "ImageId"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "ImageId": false
-     },
-     "required": [
-      "LaunchTemplate"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
-   "oneOfDescription": "Specify only one ['ImageId', 'LaunchTemplate']"
+   "requiredXor": [
+    "ImageId",
+    "LaunchTemplate"
+   ]
   }
  ],
  "createOnlyProperties": [
@@ -93,64 +51,6 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "oneOf": [
-    {
-     "properties": {
-      "Ebs": false,
-      "NoDevice": false
-     },
-     "required": [
-      "VirtualName"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "NoDevice": false,
-      "VirtualName": false
-     },
-     "required": [
-      "Ebs"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "Ebs": false,
-      "VirtualName": false
-     },
-     "required": [
-      "NoDevice"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
-   "oneOfDescription": "Specify only one ['VirtualName', 'Ebs', 'NoDevice']",
    "properties": {
     "DeviceName": {
      "type": "string"
@@ -167,6 +67,11 @@
    },
    "required": [
     "DeviceName"
+   ],
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
    ],
    "type": "object"
   },
@@ -452,14 +357,6 @@
    "type": "object"
   }
  },
- "dependencies": {
-  "NetworkInterfaces": {
-   "properties": {
-    "SubnetId": false
-   },
-   "type": "object"
-  }
- },
  "description": "Resource Type definition for AWS::EC2::Instance",
  "primaryIdentifier": [
   "/properties/Id"
@@ -658,6 +555,10 @@
    "uniqueItems": false
   }
  },
+ "propertiesNand": [
+  "NetworkInterfaces",
+  "SubnetId"
+ ],
  "readOnlyProperties": [
   "/properties/PublicIp",
   "/properties/Id",

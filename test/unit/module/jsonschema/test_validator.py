@@ -368,6 +368,46 @@ class TestValidationErrorMessages(unittest.TestCase):
             "[1, 2, '1'] has non-unique elements",
         )
 
+    def test_required_or(self):
+        message = self.message_for(
+            instance={"foo": "foo"},
+            schema={"requiredOr": ["bar"]},
+        )
+        self.assertEqual(
+            message,
+            "At least one of ['bar'] is a required property",
+        )
+
+    def test_required_xor(self):
+        messages = self.message_for(
+            instance={},
+            schema={"requiredXor": ["foo", "bar"]},
+        )
+        self.assertIn(
+            "Only one of ['foo', 'bar'] is a required property",
+            messages,
+        )
+
+    def test_unique_keys(self):
+        messages = self.message_for(
+            instance=[
+                {
+                    "Name": "foo",
+                },
+                {
+                    "Name": "foo",
+                },
+            ],
+            schema={"uniqueKeys": ["Name"]},
+        )
+        self.assertIn(
+            (
+                "[{'Name': 'foo'}, {'Name': 'foo'}] has non-unique "
+                "elements for keys ['Name']"
+            ),
+            messages,
+        )
+
 
 class TestValidationTwoErrorMessages(unittest.TestCase):
     def message_for(self, instance, schema, **kwargs):
@@ -396,6 +436,26 @@ class TestValidationTwoErrorMessages(unittest.TestCase):
         messages = self.message_for(instance={}, schema={"allOf": [True, False, False]})
         self.assertIn("False schema does not allow {}", messages[0])
         self.assertIn("False schema does not allow {}", messages[1])
+
+    def test_required_xor(self):
+        messages = self.message_for(
+            instance={"foo": "foo", "bar": "bar"},
+            schema={"requiredXor": ["foo", "bar"]},
+        )
+        self.assertIn(
+            "Only one of ['foo', 'bar'] is a required property",
+            messages,
+        )
+
+    def test_properties_nand(self):
+        messages = self.message_for(
+            instance={"foo": "foo", "bar": "bar"},
+            schema={"propertiesNand": ["foo", "bar"]},
+        )
+        self.assertIn(
+            "None or only one of ['foo', 'bar'] can be specified",
+            messages,
+        )
 
 
 class TestNoErrorMessage(unittest.TestCase):
