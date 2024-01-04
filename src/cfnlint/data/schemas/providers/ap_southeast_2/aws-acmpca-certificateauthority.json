@@ -1,0 +1,445 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/KeyAlgorithm",
+  "/properties/SigningAlgorithm",
+  "/properties/Subject",
+  "/properties/CsrExtensions",
+  "/properties/KeyStorageSecurityStandard",
+  "/properties/UsageMode"
+ ],
+ "definitions": {
+  "AccessDescription": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 AccessDescription information.",
+   "properties": {
+    "AccessLocation": {
+     "$ref": "#/definitions/GeneralName"
+    },
+    "AccessMethod": {
+     "$ref": "#/definitions/AccessMethod"
+    }
+   },
+   "required": [
+    "AccessMethod",
+    "AccessLocation"
+   ],
+   "type": "object"
+  },
+  "AccessMethod": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 AccessMethod information. Assign one and ONLY one field.",
+   "properties": {
+    "AccessMethodType": {
+     "$ref": "#/definitions/AccessMethodType"
+    },
+    "CustomObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "AccessMethodType": {
+   "description": "Pre-defined enum string for X.509 AccessMethod ObjectIdentifiers.",
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CrlConfiguration": {
+   "additionalProperties": false,
+   "description": "Your certificate authority can create and maintain a certificate revocation list (CRL). A CRL contains information about certificates that have been revoked.",
+   "properties": {
+    "CustomCname": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "S3BucketName": {
+     "type": "string"
+    },
+    "S3ObjectAcl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CsrExtensions": {
+   "additionalProperties": false,
+   "description": "Structure that contains CSR pass though extensions information.",
+   "properties": {
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    },
+    "SubjectInformationAccess": {
+     "$ref": "#/definitions/SubjectInformationAccess"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAttribute": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.500 attribute type and value.",
+   "properties": {
+    "ObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectIdentifier",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CustomAttributeList": {
+   "description": "Array of X.500 attribute type and value. CustomAttributes cannot be used along with pre-defined attributes.",
+   "items": {
+    "$ref": "#/definitions/CustomAttribute"
+   },
+   "type": "array"
+  },
+  "CustomObjectIdentifier": {
+   "description": "String that contains X.509 ObjectIdentifier information.",
+   "type": "string"
+  },
+  "DnsName": {
+   "description": "String that contains X.509 DnsName information.",
+   "type": "string"
+  },
+  "EdiPartyName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 EdiPartyName information.",
+   "properties": {
+    "NameAssigner": {
+     "type": "string"
+    },
+    "PartyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PartyName",
+    "NameAssigner"
+   ],
+   "type": "object"
+  },
+  "GeneralName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 GeneralName information. Assign one and ONLY one field.",
+   "properties": {
+    "DirectoryName": {
+     "$ref": "#/definitions/Subject"
+    },
+    "DnsName": {
+     "$ref": "#/definitions/DnsName"
+    },
+    "EdiPartyName": {
+     "$ref": "#/definitions/EdiPartyName"
+    },
+    "IpAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "OtherName": {
+     "$ref": "#/definitions/OtherName"
+    },
+    "RegisteredId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Rfc822Name": {
+     "$ref": "#/definitions/Rfc822Name"
+    },
+    "UniformResourceIdentifier": {
+     "$ref": "#/definitions/UniformResourceIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "IpAddress": {
+   "description": "String that contains X.509 IpAddress information.",
+   "type": "string"
+  },
+  "KeyUsage": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 KeyUsage information.",
+   "properties": {
+    "CRLSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DataEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DecipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DigitalSignature": {
+     "default": false,
+     "type": "boolean"
+    },
+    "EncipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyAgreement": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyCertSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "NonRepudiation": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "OcspConfiguration": {
+   "additionalProperties": false,
+   "description": "Helps to configure online certificate status protocol (OCSP) responder for your certificate authority",
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "OcspCustomCname": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OtherName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 OtherName information.",
+   "properties": {
+    "TypeId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TypeId",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RevocationConfiguration": {
+   "additionalProperties": false,
+   "description": "Certificate Authority revocation information.",
+   "properties": {
+    "CrlConfiguration": {
+     "$ref": "#/definitions/CrlConfiguration"
+    },
+    "OcspConfiguration": {
+     "$ref": "#/definitions/OcspConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Rfc822Name": {
+   "description": "String that contains X.509 Rfc822Name information.",
+   "type": "string"
+  },
+  "Subject": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.500 distinguished name information for your CA.",
+   "properties": {
+    "CommonName": {
+     "type": "string"
+    },
+    "Country": {
+     "type": "string"
+    },
+    "CustomAttributes": {
+     "$ref": "#/definitions/CustomAttributeList"
+    },
+    "DistinguishedNameQualifier": {
+     "type": "string"
+    },
+    "GenerationQualifier": {
+     "type": "string"
+    },
+    "GivenName": {
+     "type": "string"
+    },
+    "Initials": {
+     "type": "string"
+    },
+    "Locality": {
+     "type": "string"
+    },
+    "Organization": {
+     "type": "string"
+    },
+    "OrganizationalUnit": {
+     "type": "string"
+    },
+    "Pseudonym": {
+     "type": "string"
+    },
+    "SerialNumber": {
+     "type": "string"
+    },
+    "State": {
+     "type": "string"
+    },
+    "Surname": {
+     "type": "string"
+    },
+    "Title": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubjectInformationAccess": {
+   "description": "Array of X.509 AccessDescription.",
+   "items": {
+    "$ref": "#/definitions/AccessDescription"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UniformResourceIdentifier": {
+   "description": "String that contains X.509 UniformResourceIdentifier information.",
+   "type": "string"
+  }
+ },
+ "description": "Private certificate authority.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm-pca:CreateCertificateAuthority",
+    "acm-pca:DescribeCertificateAuthority",
+    "acm-pca:GetCertificateAuthorityCsr"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm-pca:DeleteCertificateAuthority",
+    "acm-pca:DescribeCertificateAuthority"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "acm-pca:DescribeCertificateAuthority",
+    "acm-pca:GetCertificateAuthorityCsr",
+    "acm-pca:ListCertificateAuthorities",
+    "acm-pca:ListTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm-pca:DescribeCertificateAuthority",
+    "acm-pca:GetCertificateAuthorityCsr",
+    "acm-pca:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "acm-pca:ListTags",
+    "acm-pca:TagCertificateAuthority",
+    "acm-pca:UntagCertificateAuthority",
+    "acm-pca:UpdateCertificateAuthority"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The Amazon Resource Name (ARN) of the certificate authority."
+  },
+  "CertificateSigningRequest": {
+   "description": "The base64 PEM-encoded certificate signing request (CSR) for your certificate authority certificate.",
+   "type": "string"
+  },
+  "CsrExtensions": {
+   "$ref": "#/definitions/CsrExtensions",
+   "description": "Structure that contains CSR pass through extension information used by the CreateCertificateAuthority action."
+  },
+  "KeyAlgorithm": {
+   "description": "Public key algorithm and size, in bits, of the key pair that your CA creates when it issues a certificate.",
+   "type": "string"
+  },
+  "KeyStorageSecurityStandard": {
+   "description": "KeyStorageSecurityStadard defines a cryptographic key management compliance standard used for handling CA keys.",
+   "type": "string"
+  },
+  "RevocationConfiguration": {
+   "$ref": "#/definitions/RevocationConfiguration",
+   "description": "Certificate revocation information used by the CreateCertificateAuthority and UpdateCertificateAuthority actions."
+  },
+  "SigningAlgorithm": {
+   "description": "Algorithm your CA uses to sign certificate requests.",
+   "type": "string"
+  },
+  "Subject": {
+   "$ref": "#/definitions/Subject",
+   "description": "Structure that contains X.500 distinguished name information for your CA."
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "description": "The type of the certificate authority.",
+   "type": "string"
+  },
+  "UsageMode": {
+   "description": "Usage mode of the ceritificate authority.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CertificateSigningRequest"
+ ],
+ "required": [
+  "Type",
+  "KeyAlgorithm",
+  "SigningAlgorithm",
+  "Subject"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+ "typeName": "AWS::ACMPCA::CertificateAuthority",
+ "writeOnlyProperties": [
+  "/properties/Subject",
+  "/properties/Subject",
+  "/properties/CsrExtensions",
+  "/properties/Tags",
+  "/properties/RevocationConfiguration",
+  "/properties/KeyStorageSecurityStandard"
+ ]
+}

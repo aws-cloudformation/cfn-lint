@@ -105,9 +105,6 @@
                         "description": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/description"
                         },
-                        "oneOfDescription": {
-                            "$ref": "http://json-schema.org/draft-07/schema#/properties/description"
-                        },
                         "examples": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/examples"
                         },
@@ -170,6 +167,12 @@
                         "required": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/required"
                         },
+                        "requiredXor": {
+                            "$ref": "#/properties/requiredXor"
+                        },
+                        "requiredOr": {
+                            "$ref": "#/properties/requiredOr"
+                        },
                         "properties": {
                             "type": "object",
                             "patternProperties": {
@@ -179,6 +182,9 @@
                             },
                             "additionalProperties": false,
                             "minProperties": 1
+                        },
+                        "propertiesNand": {
+                            "$ref": "#/properties/propertiesNand"
                         },
                         "additionalProperties": {
                             "$comment": "All properties of a resource must be expressed in the schema - arbitrary inputs are not allowed",
@@ -306,6 +312,12 @@
             "additionalProperties": false,
             "minProperties": 1
         },
+        "propertiesNand": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "definitions": {
             "type": "object",
             "patternProperties": {
@@ -352,6 +364,18 @@
         },
         "required": {
             "$ref": "http://json-schema.org/draft-07/schema#/properties/required"
+        },
+        "requiredXor": {
+            "type": ["array"],
+            "items": {
+                "type": ["string"]
+            }
+        },
+        "requiredOr": {
+            "type": ["array"],
+            "items": {
+                "type": ["string"]
+            }
         },
         "cfnSchema": {
             "type": ["array", "string"],
