@@ -1,81 +1,20 @@
 [
  {
   "op": "add",
-  "path": "/definitions/ViewerCertificate/oneOfDescription",
-  "value": "Specify only one ['AcmCertificateArn', 'CloudFrontDefaultCertificate', 'IamCertificateId']"
- },
- {
-  "op": "add",
-  "path": "/definitions/ViewerCertificate/oneOf",
+  "path": "/definitions/ViewerCertificate/requiredXor",
   "value": [
-   {
-    "properties": {
-     "CloudFrontDefaultCertificate": false,
-     "IamCertificateId": false
-    },
-    "required": [
-     "AcmCertificateArn"
-    ],
-    "type": "object"
-   },
-   {
-    "properties": {
-     "AcmCertificateArn": false,
-     "IamCertificateId": false
-    },
-    "required": [
-     "CloudFrontDefaultCertificate"
-    ],
-    "type": "object"
-   },
-   {
-    "properties": {
-     "AcmCertificateArn": false,
-     "CloudFrontDefaultCertificate": false
-    },
-    "required": [
-     "IamCertificateId"
-    ],
-    "type": "object"
-   },
-   {
-    "maxProperties": 1,
-    "minProperties": 1,
-    "propertyNames": {
-     "enum": [
-      "Fn::Base64",
-      "Fn::GetAtt",
-      "Fn::GetAZs",
-      "Fn::ImportValue",
-      "Fn::Join",
-      "Fn::Split",
-      "Fn::FindInMap",
-      "Fn::Select",
-      "Ref",
-      "Fn::If",
-      "Fn::Contains",
-      "Fn::Sub",
-      "Fn::Cidr",
-      "Fn::Length",
-      "Fn::ToJsonString",
-      "Fn::ForEach::[a-zA-Z0-9]+"
-     ]
-    },
-    "type": "object"
-   }
+   "AcmCertificateArn",
+   "CloudFrontDefaultCertificate",
+   "IamCertificateId"
   ]
  },
  {
   "op": "add",
-  "path": "/definitions/Origin/dependencies",
-  "value": {
-   "CustomOriginConfig": {
-    "properties": {
-     "S3OriginConfig": false
-    },
-    "type": "object"
-   }
-  }
+  "path": "/definitions/Origin/propertiesNand",
+  "value": [
+   "CustomOriginConfig",
+   "S3OriginConfig"
+  ]
  },
  {
   "op": "add",

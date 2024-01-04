@@ -170,17 +170,9 @@
    ]
   },
   "Resource": {
-   "anyOf": [
-    {
-     "$ref": "#/definitions/AwsArn"
-    },
-    {
-     "items": {
-      "$ref": "#/definitions/AwsArn"
-     },
-     "type": "array"
-    }
-   ]
+   "scalarOrArray": {
+    "$ref": "#/definitions/AwsArn"
+   }
   },
   "Statement": {
    "additionalProperties": false,
@@ -253,20 +245,12 @@
    "type": "object"
   },
   "StringArray": {
-   "items": {
-    "type": "string"
-   },
-   "type": "array"
+   "type": "string"
   },
   "StringOrStringArray": {
-   "anyOf": [
-    {
-     "type": "string"
-    },
-    {
-     "$ref": "#/definitions/StringArray"
-    }
-   ]
+   "scalarOrArray": {
+    "$ref": "#/definitions/StringArray"
+   }
   },
   "Wildcard": {
    "const": "*"
@@ -277,24 +261,18 @@
    "type": "string"
   },
   "Statement": {
-   "oneOf": [
-    {
-     "$ref": "#/definitions/Statement"
-    },
-    {
-     "items": {
-      "$ref": "#/definitions/Statement"
-     },
-     "type": "array"
-    }
-   ]
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
+   }
   },
   "Version": {
    "enum": [
     "2008-10-17",
     "2012-10-17"
    ],
-   "type": "string"
+   "type": [
+    "string"
+   ]
   }
  },
  "required": [

@@ -60,64 +60,6 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "oneOf": [
-    {
-     "properties": {
-      "Ebs": false,
-      "NoDevice": false
-     },
-     "required": [
-      "VirtualName"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "NoDevice": false,
-      "VirtualName": false
-     },
-     "required": [
-      "Ebs"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "Ebs": false,
-      "VirtualName": false
-     },
-     "required": [
-      "NoDevice"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
-   "oneOfDescription": "Specify only one ['VirtualName', 'Ebs', 'NoDevice']",
    "properties": {
     "DeviceName": {
      "type": "string"
@@ -134,6 +76,11 @@
    },
    "required": [
     "DeviceName"
+   ],
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
    ],
    "type": "object"
   },
@@ -1012,52 +959,6 @@
    ]
   }
  },
- "oneOf": [
-  {
-   "properties": {
-    "LaunchTemplateConfigs": false
-   },
-   "required": [
-    "LaunchSpecifications"
-   ],
-   "type": "object"
-  },
-  {
-   "properties": {
-    "LaunchSpecifications": false
-   },
-   "required": [
-    "LaunchTemplateConfigs"
-   ],
-   "type": "object"
-  },
-  {
-   "maxProperties": 1,
-   "minProperties": 1,
-   "propertyNames": {
-    "enum": [
-     "Fn::Base64",
-     "Fn::GetAtt",
-     "Fn::GetAZs",
-     "Fn::ImportValue",
-     "Fn::Join",
-     "Fn::Split",
-     "Fn::FindInMap",
-     "Fn::Select",
-     "Ref",
-     "Fn::If",
-     "Fn::Contains",
-     "Fn::Sub",
-     "Fn::Cidr",
-     "Fn::Length",
-     "Fn::ToJsonString",
-     "Fn::ForEach::[a-zA-Z0-9]+"
-    ]
-   },
-   "type": "object"
-  }
- ],
- "oneOfDescription": "Specify only one ['LaunchSpecifications', 'LaunchTemplateConfigs']",
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -1074,6 +975,10 @@
  ],
  "required": [
   "SpotFleetRequestConfigData"
+ ],
+ "requiredXor": [
+  "LaunchSpecifications",
+  "LaunchTemplateConfigs"
  ],
  "typeName": "AWS::EC2::SpotFleet",
  "writeOnlyProperties": [
