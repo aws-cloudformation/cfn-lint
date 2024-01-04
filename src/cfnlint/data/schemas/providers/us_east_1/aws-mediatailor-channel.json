@@ -17,22 +17,18 @@
    "description": "<p>Dash manifest configuration parameters.</p>",
    "properties": {
     "ManifestWindowSeconds": {
-     "default": 0,
      "description": "<p>The total duration (in seconds) of each manifest. Minimum value: <code>30</code> seconds. Maximum value: <code>3600</code> seconds.</p>",
      "type": "number"
     },
     "MinBufferTimeSeconds": {
-     "default": 0,
      "description": "<p>Minimum amount of content (measured in seconds) that a player must keep available in the buffer. Minimum value: <code>2</code> seconds. Maximum value: <code>60</code> seconds.</p>",
      "type": "number"
     },
     "MinUpdatePeriodSeconds": {
-     "default": 0,
      "description": "<p>Minimum amount of time (in seconds) that the player should wait before requesting updates to the manifest. Minimum value: <code>2</code> seconds. Maximum value: <code>60</code> seconds.</p>",
      "type": "number"
     },
     "SuggestedPresentationDelaySeconds": {
-     "default": 0,
      "description": "<p>Amount of time (in seconds) that the player should be from the live point at the end of the manifest. Minimum value: <code>2</code> seconds. Maximum value: <code>60</code> seconds.</p>",
      "type": "number"
     }
@@ -51,7 +47,6 @@
      "type": "array"
     },
     "ManifestWindowSeconds": {
-     "default": 0,
      "description": "<p>The total duration (in seconds) of each manifest. Minimum value: <code>30</code> seconds. Maximum value: <code>3600</code> seconds.</p>",
      "type": "number"
     }
@@ -148,6 +143,20 @@
     "STANDARD"
    ],
    "type": "string"
+  },
+  "TimeShiftConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>The configuration for time-shifted viewing.</p>",
+   "properties": {
+    "MaxTimeDelaySeconds": {
+     "description": "<p>The maximum time delay for time-shifted viewing. The minimum allowed maximum time delay is 0 seconds, and the maximum allowed maximum time delay is 21600 seconds (6 hours).</p>",
+     "type": "number"
+    }
+   },
+   "required": [
+    "MaxTimeDelaySeconds"
+   ],
+   "type": "object"
   }
  },
  "description": "Definition of AWS::MediaTailor::Channel Resource Type",
@@ -227,6 +236,9 @@
   },
   "Tier": {
    "$ref": "#/definitions/Tier"
+  },
+  "TimeShiftConfiguration": {
+   "$ref": "#/definitions/TimeShiftConfiguration"
   }
  },
  "readOnlyProperties": [
