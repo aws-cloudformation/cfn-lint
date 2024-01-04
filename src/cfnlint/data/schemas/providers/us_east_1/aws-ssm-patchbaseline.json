@@ -6,14 +6,40 @@
  "definitions": {
   "PatchFilter": {
    "additionalProperties": false,
+   "description": "Defines which patches should be included in a patch baseline.",
    "properties": {
     "Key": {
+     "enum": [
+      "ADVISORY_ID",
+      "ARCH",
+      "BUGZILLA_ID",
+      "CLASSIFICATION",
+      "CVE_ID",
+      "EPOCH",
+      "MSRC_SEVERITY",
+      "NAME",
+      "PATCH_ID",
+      "PATCH_SET",
+      "PRIORITY",
+      "PRODUCT",
+      "PRODUCT_FAMILY",
+      "RELEASE",
+      "REPOSITORY",
+      "SECTION",
+      "SECURITY",
+      "SEVERITY",
+      "VERSION"
+     ],
      "type": "string"
     },
     "Values": {
      "items": {
+      "maxLength": 64,
+      "minLength": 1,
       "type": "string"
      },
+     "maxItems": 20,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
@@ -22,11 +48,14 @@
   },
   "PatchFilterGroup": {
    "additionalProperties": false,
+   "description": "The patch filter group that defines the criteria for the rule.",
    "properties": {
     "PatchFilters": {
      "items": {
       "$ref": "#/definitions/PatchFilter"
      },
+     "maxItems": 5,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
@@ -35,40 +64,59 @@
   },
   "PatchSource": {
    "additionalProperties": false,
+   "description": "Information about the patches to use to update the instances, including target operating systems and source repository. Applies to Linux instances only.",
    "properties": {
     "Configuration": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     },
     "Name": {
+     "pattern": "^[a-zA-Z0-9_\\-.]{3,50}$",
      "type": "string"
     },
     "Products": {
      "items": {
+      "maxLength": 128,
+      "minLength": 1,
       "type": "string"
      },
+     "maxItems": 20,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
    },
    "type": "object"
   },
-  "PatchStringDate": {
-   "additionalProperties": false,
-   "type": "object"
-  },
   "Rule": {
    "additionalProperties": false,
+   "description": "Defines an approval rule for a patch baseline.",
+   "insertionOrder": false,
    "properties": {
     "ApproveAfterDays": {
+     "maximum": 360,
+     "minimum": 0,
      "type": "integer"
     },
     "ApproveUntilDate": {
-     "$ref": "#/definitions/PatchStringDate"
+     "maxLength": 10,
+     "minLength": 0,
+     "type": "string"
     },
     "ComplianceLevel": {
+     "enum": [
+      "CRITICAL",
+      "HIGH",
+      "INFORMATIONAL",
+      "LOW",
+      "MEDIUM",
+      "UNSPECIFIED"
+     ],
      "type": "string"
     },
     "EnableNonSecurity": {
+     "default": false,
      "type": "boolean"
     },
     "PatchFilterGroup": {
@@ -79,11 +127,15 @@
   },
   "RuleGroup": {
    "additionalProperties": false,
+   "description": "A set of rules defining the approval rules for a patch baseline.",
+   "insertionOrder": false,
    "properties": {
     "PatchRules": {
      "items": {
       "$ref": "#/definitions/Rule"
      },
+     "maxItems": 10,
+     "minItems": 0,
      "type": "array",
      "uniqueItems": false
     }
@@ -92,11 +144,16 @@
   },
   "Tag": {
    "additionalProperties": false,
+   "description": "Metadata that you assign to your AWS resources.",
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -108,6 +165,52 @@
   }
  },
  "description": "Resource Type definition for AWS::SSM::PatchBaseline",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:CreatePatchBaseline",
+    "ssm:RegisterPatchBaselineForPatchGroup",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:ListTagsForResource",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:RegisterDefaultPatchBaseline"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeletePatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:DeregisterPatchBaselineForPatchGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:DescribePatchBaselines",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:UpdatePatchBaseline",
+    "ssm:DeregisterPatchBaselineForPatchGroup",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:ListTagsForResource",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:RegisterDefaultPatchBaseline"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -116,61 +219,135 @@
    "$ref": "#/definitions/RuleGroup"
   },
   "ApprovedPatches": {
+   "description": "A list of explicitly approved patches for the baseline.",
+   "insertionOrder": false,
    "items": {
+    "maxLength": 100,
+    "minLength": 1,
     "type": "string"
    },
+   "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
   "ApprovedPatchesComplianceLevel": {
+   "default": "UNSPECIFIED",
+   "description": "Defines the compliance level for approved patches. This means that if an approved patch is reported as missing, this is the severity of the compliance violation. The default value is UNSPECIFIED.",
+   "enum": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "INFORMATIONAL",
+    "UNSPECIFIED"
+   ],
    "type": "string"
   },
   "ApprovedPatchesEnableNonSecurity": {
+   "default": false,
+   "description": "Indicates whether the list of approved patches includes non-security updates that should be applied to the instances. The default value is 'false'. Applies to Linux instances only.",
+   "type": "boolean"
+  },
+  "DefaultBaseline": {
+   "default": false,
+   "description": "Set the baseline as default baseline. Only registering to default patch baseline is allowed.",
    "type": "boolean"
   },
   "Description": {
+   "description": "The description of the patch baseline.",
+   "maxLength": 1024,
+   "minLength": 1,
    "type": "string"
   },
   "GlobalFilters": {
-   "$ref": "#/definitions/PatchFilterGroup"
+   "$ref": "#/definitions/PatchFilterGroup",
+   "description": "A set of global filters used to include patches in the baseline."
   },
   "Id": {
+   "description": "The ID of the patch baseline.",
+   "maxLength": 128,
+   "minLength": 20,
+   "pattern": "^[a-zA-Z0-9_\\-:/]{20,128}$",
    "type": "string"
   },
   "Name": {
+   "description": "The name of the patch baseline.",
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
    "type": "string"
   },
   "OperatingSystem": {
+   "default": "WINDOWS",
+   "description": "Defines the operating system the patch baseline applies to. The Default value is WINDOWS.",
+   "enum": [
+    "WINDOWS",
+    "AMAZON_LINUX",
+    "AMAZON_LINUX_2",
+    "AMAZON_LINUX_2022",
+    "AMAZON_LINUX_2023",
+    "UBUNTU",
+    "REDHAT_ENTERPRISE_LINUX",
+    "SUSE",
+    "CENTOS",
+    "ORACLE_LINUX",
+    "DEBIAN",
+    "MACOS",
+    "RASPBIAN",
+    "ROCKY_LINUX"
+   ],
    "type": "string"
   },
   "PatchGroups": {
+   "description": "PatchGroups is used to associate instances with a specific patch baseline",
    "items": {
+    "maxLength": 256,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
    "uniqueItems": false
   },
   "RejectedPatches": {
+   "description": "A list of explicitly rejected patches for the baseline.",
+   "insertionOrder": false,
    "items": {
+    "maxLength": 100,
+    "minLength": 1,
     "type": "string"
    },
+   "maxItems": 50,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
   "RejectedPatchesAction": {
+   "default": "ALLOW_AS_DEPENDENCY",
+   "description": "The action for Patch Manager to take on patches included in the RejectedPackages list.",
+   "enum": [
+    "ALLOW_AS_DEPENDENCY",
+    "BLOCK"
+   ],
    "type": "string"
   },
   "Sources": {
+   "description": "Information about the patches to use to update the instances, including target operating systems and source repository. Applies to Linux instances only.",
    "items": {
     "$ref": "#/definitions/PatchSource"
    },
+   "maxItems": 20,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
   "Tags": {
+   "description": "Optional metadata that you assign to a resource. Tags enable you to categorize a resource in different ways.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 1000,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   }
@@ -181,5 +358,12 @@
  "required": [
   "Name"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::SSM::PatchBaseline"
 }
