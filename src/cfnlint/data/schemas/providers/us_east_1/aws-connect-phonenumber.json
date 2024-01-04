@@ -3,7 +3,8 @@
  "createOnlyProperties": [
   "/properties/Type",
   "/properties/CountryCode",
-  "/properties/Prefix"
+  "/properties/Prefix",
+  "/properties/SourcePhoneNumberArn"
  ],
  "definitions": {
   "Tag": {
@@ -37,13 +38,30 @@
     "connect:ClaimPhoneNumber",
     "connect:SearchAvailablePhoneNumbers",
     "connect:DescribePhoneNumber",
-    "connect:TagResource"
+    "connect:TagResource",
+    "connect:ImportPhoneNumber",
+    "sms-voice:DescribePhoneNumbers"
    ]
   },
   "delete": {
    "permissions": [
     "connect:ReleasePhoneNumber",
     "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "TargetArn": {
+      "$ref": "resource-schema.json#/properties/TargetArn"
+     }
+    },
+    "required": [
+     "TargetArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListPhoneNumbersV2"
    ]
   },
   "read": {
@@ -91,6 +109,10 @@
    "pattern": "^\\+[0-9]{1,15}",
    "type": "string"
   },
+  "SourcePhoneNumberArn": {
+   "description": "The source phone number arn.",
+   "type": "string"
+  },
   "Tags": {
    "description": "One or more tags.",
    "insertionOrder": false,
@@ -108,7 +130,7 @@
   },
   "Type": {
    "description": "The phone number type",
-   "pattern": "TOLL_FREE|DID|UIFN|SHARED|THIRD_PARTY_DID|THIRD_PARTY_TF",
+   "pattern": "TOLL_FREE|DID|UIFN|SHARED|THIRD_PARTY_DID|THIRD_PARTY_TF|SHORT_CODE",
    "type": "string"
   }
  },
@@ -117,9 +139,7 @@
   "/properties/Address"
  ],
  "required": [
-  "TargetArn",
-  "Type",
-  "CountryCode"
+  "TargetArn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
  "tagging": {

@@ -32,6 +32,9 @@ class FunctionFilter:
         default_factory=lambda: [
             "dependencies",
             "required",
+            "requiredXor",
+            "requiredAtLeastOne",
+            "propertiesNand",
             "minItems",
             "minProperties",
             "maxItems",
