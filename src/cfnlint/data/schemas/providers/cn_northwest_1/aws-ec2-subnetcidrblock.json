@@ -1,0 +1,69 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Ipv6CidrBlock",
+  "/properties/SubnetId"
+ ],
+ "description": "The AWS::EC2::SubnetCidrBlock resource creates association between subnet and IPv6 CIDR",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateSubnetCidrBlock",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateSubnetCidrBlock",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeSubnets"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "description": "Information about the IPv6 association.",
+   "type": "string"
+  },
+  "Ipv6CidrBlock": {
+   "description": "The IPv6 network range for the subnet, in CIDR notation. The subnet size must use a /64 prefix length",
+   "maxLength": 42,
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Ipv6CidrBlock": "$join([$match($replace(Ipv6CidrBlock, /(^|:)(0{1,4})([0-9a-fA-F]{1,4})/, \"$1$3\"), /^([0-9a-fA-F]{1,4}:){4}/).match, \":/64\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Ipv6CidrBlock",
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2/subnetcidrblock",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::SubnetCidrBlock"
+}

@@ -880,14 +880,6 @@
   },
   "Origin": {
    "additionalProperties": false,
-   "dependencies": {
-    "CustomOriginConfig": {
-     "properties": {
-      "S3OriginConfig": false
-     },
-     "type": "object"
-    }
-   },
    "properties": {
     "ConnectionAttempts": {
      "type": "integer"
@@ -925,6 +917,10 @@
      "$ref": "#/definitions/S3OriginConfig"
     }
    },
+   "propertiesNand": [
+    "CustomOriginConfig",
+    "S3OriginConfig"
+   ],
    "required": [
     "DomainName",
     "Id"
@@ -1110,64 +1106,6 @@
      "SslSupportMethod"
     ]
    },
-   "oneOf": [
-    {
-     "properties": {
-      "CloudFrontDefaultCertificate": false,
-      "IamCertificateId": false
-     },
-     "required": [
-      "AcmCertificateArn"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "AcmCertificateArn": false,
-      "IamCertificateId": false
-     },
-     "required": [
-      "CloudFrontDefaultCertificate"
-     ],
-     "type": "object"
-    },
-    {
-     "properties": {
-      "AcmCertificateArn": false,
-      "CloudFrontDefaultCertificate": false
-     },
-     "required": [
-      "IamCertificateId"
-     ],
-     "type": "object"
-    },
-    {
-     "maxProperties": 1,
-     "minProperties": 1,
-     "propertyNames": {
-      "enum": [
-       "Fn::Base64",
-       "Fn::GetAtt",
-       "Fn::GetAZs",
-       "Fn::ImportValue",
-       "Fn::Join",
-       "Fn::Split",
-       "Fn::FindInMap",
-       "Fn::Select",
-       "Ref",
-       "Fn::If",
-       "Fn::Contains",
-       "Fn::Sub",
-       "Fn::Cidr",
-       "Fn::Length",
-       "Fn::ToJsonString",
-       "Fn::ForEach::[a-zA-Z0-9]+"
-      ]
-     },
-     "type": "object"
-    }
-   ],
-   "oneOfDescription": "Specify only one ['AcmCertificateArn', 'CloudFrontDefaultCertificate', 'IamCertificateId']",
    "properties": {
     "AcmCertificateArn": {
      "type": "string"
@@ -1199,6 +1137,11 @@
      "type": "string"
     }
    },
+   "requiredXor": [
+    "AcmCertificateArn",
+    "CloudFrontDefaultCertificate",
+    "IamCertificateId"
+   ],
    "type": "object"
   }
  },
