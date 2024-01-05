@@ -9,7 +9,7 @@ class PropertiesNand(CloudFormationLintRule):
     """Check Required Resource Configuration"""
 
     id = "E3019"
-    shortdesc = "Validate at none or only one property is provided"
-    description = "Making sure that required resource properties have just one"
+    shortdesc = "Validate one or less properties are provided"
+    description = "Making sure that required resource properties have just one or none"
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#pr"
     tags = ["resources"]
