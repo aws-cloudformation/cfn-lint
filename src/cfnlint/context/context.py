@@ -466,6 +466,6 @@ class ContextManager:
             mappings={},
             transforms=self.transforms,
             region=region,
-            path=deque(["Conditions"]),
+            path=deque(["Parameters"]),
             functions=[],
         )
