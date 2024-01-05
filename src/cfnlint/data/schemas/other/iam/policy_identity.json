@@ -6,37 +6,15 @@
    "additionalProperties": false,
    "allOf": [
     {
-     "message": {
-      "oneOf": "One of ['Action', 'NotAction'] is a required property"
-     },
-     "oneOf": [
-      {
-       "required": [
-        "Action"
-       ]
-      },
-      {
-       "required": [
-        "NotAction"
-       ]
-      }
+     "requiredXor": [
+      "Action",
+      "NotAction"
      ]
     },
     {
-     "message": {
-      "oneOf": "One of ['Resource', 'NotResource'] is a required property"
-     },
-     "oneOf": [
-      {
-       "required": [
-        "Resource"
-       ]
-      },
-      {
-       "required": [
-        "NotResource"
-       ]
-      }
+     "requiredXor": [
+      "Resource",
+      "NotResource"
      ]
     },
     {
@@ -53,11 +31,7 @@
      "$ref": "policy#/definitions/Condition"
     },
     "Effect": {
-     "enum": [
-      "Allow",
-      "Deny"
-     ],
-     "type": "string"
+     "$ref": "policy#/definitions/Statement/properties/Effect"
     },
     "NotAction": {
      "$ref": "policy#/definitions/Action"
@@ -69,7 +43,7 @@
      "$ref": "policy#/definitions/Resource"
     },
     "Sid": {
-     "type": "string"
+     "$ref": "policy#/definitions/Statement/properties/Sid"
     }
    },
    "type": "object"
