@@ -256,6 +256,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if resources:
             for name, value in resources.items():
                 resource_type = value.get("Type", "")
+                if not isinstance(resource_type, str):
+                    continue
                 if resource_type.endswith("::MODULE"):
                     element = {}
                     element["Type"] = "MODULE"
