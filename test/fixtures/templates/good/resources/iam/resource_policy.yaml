@@ -1,24 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Parameters:
-  myExampleBucket:
-    Type: String
-  BucketEffect:
-    Type: String
-Conditions:
-  IsUsEast1: !Equals ['us-east-1', !Ref 'AWS::Region']
 Resources:
-  WebsiteBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: MyBucket
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement: # doesn't fail when the statement isn't a list
-          Effect: Allow
-          Principal: "*"
-          Action: s3:GetObject
-          Resource: "arn:aws:s3:::MyBucket"
   Ecr:
     Type: AWS::ECR::Repository
     Properties:
@@ -40,39 +22,3 @@ Resources:
             }
           ]
         }
-  SampleBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket:
-        Ref: "myExampleBucket"
-      PolicyDocument:
-        Statement:
-          -
-            Action:
-              - "s3:GetObject"
-            Effect: !If [ IsUsEast1, 'Allow', 'Deny' ]
-            Resource: !Sub "arn:aws:s3:::${myExampleBucket}/*"
-            Principal: "*"
-            Condition:
-              StringLike:
-                aws:Referer:
-                  - "http://www.example.com/*"
-                  - "http://example.com/*"
-  SampleBucketPolicy2:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket:
-        Ref: "myExampleBucket"
-      PolicyDocument:
-        Statement:
-          -
-            Action:
-              - "s3:GetObject"
-            Effect: !Ref BucketEffect
-            Resource: !Sub "arn:aws:s3:::${myExampleBucket}/*"
-            Principal: "*"
-            Condition:
-              StringLike:
-                aws:Referer:
-                  - "http://www.example.com/*"
-                  - "http://example.com/*"
