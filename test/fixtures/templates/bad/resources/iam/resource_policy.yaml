@@ -1,39 +1,10 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
 Resources:
-  SampleBucketPolicy:
-    Type: AWS::S3::BucketPolicy
+  ecr1:
+    Type: AWS::ECR::Repository
     Properties:
-      Bucket: "myExampleBucket"
-      PolicyDocument:
-        Statement:
-          -
-            Action:
-              - "s3:GetObject"
-            Effect: "Allow"
-            Condition:
-              StringLike:
-                aws:Referer:
-                  - "http://www.example.com/*"
-                  - "http://example.com/*"
-  SampleBucketPolicy2:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: "myExampleBucket"
-      PolicyDocument:
-        Statement:
-          -
-            Action:
-              - "s3:GetObject"
-            Effect: "Allow"
-            Resource:
-            - "*"
-            Principal: test
-            NotPrincipal: test
-  mysnspolicy:
-    Type: AWS::SNS::TopicPolicy
-    Properties:
-      PolicyDocument:
+      RepositoryPolicyText:
         Id: MyTopicPolicy
         Version: '2012-10-17'
         Statement:
@@ -43,5 +14,14 @@ Resources:
           Action: sns:Publish
           Resource: "*"
           BadProperty: test
-      Topics:
-      - mytopic
+  ecr2:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryPolicyText:
+        Id: MyTopicPolicy
+        Version: '2012-10-17'
+        Statement:
+        - Sid: My-statement-id
+          Effect: Allow
+          Principal: arn:aws:iam::account-id:user/user-name
+          Action: sns:Publish
