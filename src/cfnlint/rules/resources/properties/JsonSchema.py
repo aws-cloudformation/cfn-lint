@@ -77,6 +77,8 @@ class JsonSchema(BaseJsonSchema):
         for n, values in cfn.get_resources().items():
             p = values.get("Properties", {})
             t = values.get("Type", None)
+            if not isinstance(t, str):
+                continue
             if t.startswith("Custom::"):
                 t = "AWS::CloudFormation::CustomResource"
             if t:
