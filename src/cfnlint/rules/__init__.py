@@ -282,6 +282,9 @@ class Rules(TypedRules):
         if kwargs:
             self.update(kwargs)
 
+    def __repr__(self):
+        return "\n".join([self.data[id].verbose() for id in sorted(self.data)])
+
     def __delitem__(self, i: str) -> None:
         raise RuntimeError("Deletion is not allowed")
 
