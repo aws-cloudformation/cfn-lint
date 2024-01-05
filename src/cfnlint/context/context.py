@@ -332,13 +332,19 @@ class ContextManager:
         if not isinstance(parameters, dict):
             raise ValueError("Parameters must be a object")
         for k, v in parameters.items():
-            self.parameters[k] = Parameter(v)
+            try:
+                self.parameters[k] = Parameter(v)
+            except ValueError:
+                pass
 
     def _init_resources(self, resources: Any) -> None:
         if not isinstance(resources, dict):
             raise ValueError("Resource must be a object")
         for k, v in resources.items():
-            self.resources[k] = Resource(v)
+            try:
+                self.resources[k] = Resource(v)
+            except ValueError:
+                pass
 
     def _init_transforms(self, transforms: Any) -> None:
         if isinstance(transforms, (str, list)):
@@ -350,13 +356,19 @@ class ContextManager:
         if not isinstance(conditions, dict):
             raise ValueError("Conditions must be a object")
         for k, v in conditions.items():
-            self.conditions[k] = Condition(v)
+            try:
+                self.conditions[k] = Condition(v)
+            except ValueError:
+                pass
 
     def _init_mappings(self, mappings: Any) -> None:
         if not isinstance(mappings, dict):
             raise ValueError("Mappings must be a object")
         for k, v in mappings.items():
-            self.mappings[k] = Map(v)
+            try:
+                self.mappings[k] = Map(v)
+            except ValueError:
+                pass
 
     collection: Dict | List[str | Dict] = field(init=False)
     output: Dict[str, Any] = field(init=False)
