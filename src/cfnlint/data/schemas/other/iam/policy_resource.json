@@ -1,35 +1,20 @@
 {
+ "$id": "resource",
  "additionalProperties": false,
  "definitions": {
   "Statement": {
    "additionalProperties": false,
    "allOf": [
     {
-     "oneOf": [
-      {
-       "required": [
-        "Action"
-       ]
-      },
-      {
-       "required": [
-        "NotAction"
-       ]
-      }
+     "requiredXor": [
+      "Action",
+      "NotAction"
      ]
     },
     {
-     "oneOf": [
-      {
-       "required": [
-        "Resource"
-       ]
-      },
-      {
-       "required": [
-        "NotResource"
-       ]
-      }
+     "requiredXor": [
+      "Resource",
+      "NotResource"
      ]
     },
     {
@@ -40,16 +25,16 @@
    ],
    "properties": {
     "Action": {
-     "$ref": "policy#/defintions/Action"
+     "$ref": "policy#/definitions/Action"
     },
     "Condition": {
      "$ref": "policy#/definitions/Condition"
     },
     "Effect": {
-     "$ref": "policy#/defintions/Statement/properties/Effect"
+     "$ref": "policy#/definitions/Statement/properties/Effect"
     },
     "NotAction": {
-     "$ref": "policy#/defintions/Version"
+     "$ref": "policy#/definitions/Action"
     },
     "NotPrincipal": {
      "$ref": "policy#/definitions/Principal"
@@ -64,7 +49,7 @@
      "$ref": "policy#/definitions/Resource"
     },
     "Sid": {
-     "$ref": "policy#/defintions/Statement/properties/Sid"
+     "$ref": "policy#/definitions/Statement/properties/Sid"
     }
    },
    "type": "object"
@@ -75,18 +60,8 @@
    "type": "policy#/properties/Id"
   },
   "Statement": {
-   "Statement": {
-    "oneOf": [
-     {
-      "$ref": "#/definitions/Statement"
-     },
-     {
-      "items": {
-       "$ref": "#/definitions/Statement"
-      },
-      "type": "array"
-     }
-    ]
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
    }
   },
   "Version": {

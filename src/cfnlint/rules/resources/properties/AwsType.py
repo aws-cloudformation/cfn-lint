@@ -26,5 +26,7 @@ class AwsType(ParentAwsType):
             "AvailabilityZone": "W3010",
             "AvailabilityZones": "W3010",
             "IamIdentityPolicy": "E3510",
+            "IamResourcePolicy": "E3512",
+            "IamResourceEcrPolicy": "E3513",
             "IamRoleArn": "E3511",
         }

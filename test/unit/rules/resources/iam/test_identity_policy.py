@@ -58,12 +58,21 @@ class TestIdentityPolicies(TestCase):
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
-        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(len(errs), 2, errs)
         self.assertEqual(
             errs[0].message,
-            ("One of ['Action', 'NotAction'] is a required property"),
+            ("Only one of ['Action', 'NotAction'] is a required property"),
         )
-        self.assertListEqual(list(errs[0].path), ["Statement", 0])
+        self.assertEqual(
+            errs[1].message,
+            ("Only one of ['Action', 'NotAction'] is a required property"),
+        )
+        self.assertIn(
+            ["Statement", 0, "NotAction"], [list(errs[0].path), list(errs[1].path)]
+        )
+        self.assertIn(
+            ["Statement", 0, "Action"], [list(errs[0].path), list(errs[1].path)]
+        )
 
     def test_object_statements(self):
         validator = CfnTemplateValidator(context=Context(functions=FUNCTIONS))
