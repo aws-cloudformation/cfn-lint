@@ -452,6 +452,28 @@
    "type": "object"
   }
  },
+ "dependentExcluded": {
+  "InstanceId": [
+   "LaunchConfigurationName",
+   "LaunchTemplate",
+   "MixedInstancesPolicy"
+  ],
+  "LaunchConfigurationName": [
+   "InstanceId",
+   "LaunchTemplate",
+   "MixedInstancesPolicy"
+  ],
+  "LaunchTemplate": [
+   "InstanceId",
+   "LaunchConfigurationName",
+   "MixedInstancesPolicy"
+  ],
+  "MixedInstancesPolicy": [
+   "InstanceId",
+   "LaunchConfigurationName",
+   "LaunchTemplate"
+  ]
+ },
  "deprecatedProperties": [
   "/properties/NotificationConfiguration"
  ],
@@ -687,12 +709,6 @@
    "uniqueItems": false
   }
  },
- "propertiesNand": [
-  "InstanceId",
-  "LaunchConfigurationName",
-  "LaunchTemplate",
-  "MixedInstancesPolicy"
- ],
  "propertyTransform": {
   "/properties/LaunchConfigurationName": "InstanceId? AutoScalingGroupName : LaunchConfigurationName"
  },

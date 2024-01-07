@@ -28,16 +28,10 @@ patches.extend(
                 Patch(
                     path="/",
                     values={
-                        "oneOf": [
-                            {"required": ["ScalingTargetId"]},
-                            {
-                                "required": [
-                                    "ResourceId",
-                                    "ScalableDimension",
-                                    "ServiceNamespace",
-                                ]
-                            },
-                        ]
+                        "requiredXor": ["ScalingTargetId", "ResourceId"],
+                        "dependentRequired": {
+                            "ResourceId": ["ScalableDimension", "ServiceNamespace"],
+                        },
                     },
                 ),
             ],
@@ -72,12 +66,28 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "propertiesNand": [
-                            "InstanceId",
-                            "LaunchConfigurationName",
-                            "LaunchTemplate",
-                            "MixedInstancesPolicy",
-                        ]
+                        "dependentExcluded": {
+                            "InstanceId": [
+                                "LaunchConfigurationName",
+                                "LaunchTemplate",
+                                "MixedInstancesPolicy",
+                            ],
+                            "LaunchConfigurationName": [
+                                "InstanceId",
+                                "LaunchTemplate",
+                                "MixedInstancesPolicy",
+                            ],
+                            "LaunchTemplate": [
+                                "InstanceId",
+                                "LaunchConfigurationName",
+                                "MixedInstancesPolicy",
+                            ],
+                            "MixedInstancesPolicy": [
+                                "InstanceId",
+                                "LaunchConfigurationName",
+                                "LaunchTemplate",
+                            ],
+                        },
                     },
                     path="/",
                 ),
@@ -177,17 +187,22 @@ patches.extend(
                 Patch(
                     path="/definitions/Origin",
                     values={
-                        "propertiesNand": ["CustomOriginConfig", "S3OriginConfig"],
+                        "dependentExcluded": {
+                            "CustomOriginConfig": ["S3OriginConfig"],
+                            "S3OriginConfig": ["CustomOriginConfig"],
+                        }
                     },
                 ),
                 Patch(
                     path="/definitions/CustomErrorResponse",
-                    values={"dependencies": {"ResponseCode": ["ResponsePagePath"]}},
+                    values={
+                        "dependentRequired": {"ResponseCode": ["ResponsePagePath"]}
+                    },
                 ),
                 Patch(
                     path="/definitions/ViewerCertificate",
                     values={
-                        "dependencies": {
+                        "dependentRequired": {
                             "AcmCertificateArn": ["SslSupportMethod"],
                             "IamCertificateId": ["SslSupportMethod"],
                         }
@@ -502,32 +517,22 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "oneOf": [
-                            {
-                                "required": ["Metrics"],
-                                "properties": {
-                                    "MetricName": False,
-                                    "Dimensions": False,
-                                    "Period": False,
-                                    "Namespace": False,
-                                    "Statistic": False,
-                                    "ExtendedStatistic": False,
-                                    "Unit": False,
-                                },
-                            },
-                            {"required": ["MetricName"]},
-                        ],
-                        "allOf": [
-                            {
-                                "propertiesNand": ["Statistic", "ExtendedStatistic"],
-                            },
-                            {
-                                "propertiesNand": [
-                                    "Threshold",
-                                    "ThresholdMetricId",
-                                ],
-                            },
-                        ],
+                        "requiredXor": ["Metrics", "MetricName"],
+                        "dependentExcluded": {
+                            "Metrics": [
+                                "MetricName",
+                                "Dimensions",
+                                "Period",
+                                "Namespace",
+                                "Statistic",
+                                "ExtendedStatistic",
+                                "Unit",
+                            ],
+                            "Statistic": ["ExtendedStatistic"],
+                            "ExtendedStatistic": ["Statistic"],
+                            "Threshold": ["ThresholdMetricId"],
+                            "ThresholdMetricId": ["Threshold"],
+                        },
                     },
                     path="/",
                 ),
@@ -636,15 +641,14 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "allOf": [
-                            {
-                                "requiredXor": [
-                                    "ImageId",
-                                    "LaunchTemplate",
-                                ]
-                            },
+                        "requiredXor": [
+                            "ImageId",
+                            "LaunchTemplate",
                         ],
-                        "propertiesNand": ["NetworkInterfaces", "SubnetId"],
+                        "dependentExcluded": {
+                            "NetworkInterfaces": ["SubnetId"],
+                            "SubnetId": ["NetworkInterfaces"],
+                        },
                     },
                     path="/",
                 ),
@@ -674,10 +678,7 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "anyOf": [
-                            {"required": ["Ipv6CidrBlock"]},
-                            {"required": ["CidrBlock"]},
-                        ],
+                        "requiredXor": ["Ipv6CidrBlock", "CidrBlock"],
                     },
                     path="/",
                 ),
@@ -688,7 +689,7 @@ patches.extend(
             patches=[
                 Patch(
                     path="/",
-                    values={"dependencies": {"SecurityGroupEgress": ["VpcId"]}},
+                    values={"dependentRequired": {"SecurityGroupEgress": ["VpcId"]}},
                 ),
                 Patch(
                     values={
@@ -762,7 +763,7 @@ patches.extend(
                     path="/",
                     values={
                         "requiredXor": ["CidrBlock", "Ipv4IpamPoolId"],
-                        "dependencies": {"Ipv4IpamPoolId": ["Ipv4NetmaskLength"]},
+                        "dependentRequired": {"Ipv4IpamPoolId": ["Ipv4NetmaskLength"]},
                     },
                 ),
             ],
@@ -841,15 +842,7 @@ patches.extend(
             resource_type="AWS::Events::Rule",
             patches=[
                 Patch(
-                    values={
-                        "anyOf": [
-                            {"required": ["EventPattern"]},
-                            {"required": ["ScheduleExpression"]},
-                        ],
-                        "message": {
-                            "anyOf": "Specify either 'EventPattern' or 'ScheduleExpression'"
-                        },
-                    },
+                    values={"requiredXor": ["EventPattern", "ScheduleExpression"]},
                     path="/",
                 ),
             ],
@@ -1182,7 +1175,8 @@ patches.extend(
             resource_type="AWS::OpsWorks::Stack",
             patches=[
                 Patch(
-                    path="/", values={"dependencies": {"VpcId": ["DefaultSubnetId"]}}
+                    path="/",
+                    values={"dependentRequired": {"VpcId": ["DefaultSubnetId"]}},
                 ),
             ],
         ),
@@ -1195,21 +1189,17 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "dependencies": {
-                            "SnapshotIdentifier": {
-                                "properties": {
-                                    "MasterUsername": False,
-                                    "MasterUserPassword": False,
-                                }
-                            },
-                            "SourceDBClusterIdentifier": {
-                                "properties": {
-                                    "StorageEncrypted": False,
-                                    "MasterUsername": False,
-                                    "MasterUserPassword": False,
-                                }
-                            },
-                        }
+                        "dependentExcluded": {
+                            "SnapshotIdentifier": [
+                                "MasterUsername",
+                                "MasterUserPassword",
+                            ],
+                            "SourceDBClusterIdentifier": [
+                                "MasterUsername",
+                                "MasterUserPassword",
+                                "StorageEncrypted",
+                            ],
+                        },
                     },
                     path="/",
                 ),
@@ -1260,27 +1250,22 @@ patches.extend(
                 ),
                 Patch(
                     values={
+                        "dependentExcluded": {
+                            "SourceDBInstanceIdentifier": [
+                                "CharacterSetName",
+                                "MasterUserPassword",
+                                "MasterUsername",
+                                "StorageEncrypted",
+                            ]
+                        },
                         "dependencies": {
-                            "SourceDBInstanceIdentifier": {
-                                "message": {
-                                    "not": "['CharacterSetName', 'MasterUserPassword', 'MasterUsername', and 'StorageEncrypted'] should not be included with 'SourceDBInstanceIdentifier'",
-                                },
-                                "not": {
-                                    "anyOf": [
-                                        {"required": ["CharacterSetName"]},
-                                        {"required": ["MasterUserPassword"]},
-                                        {"required": ["MasterUsername"]},
-                                        {"required": ["StorageEncrypted"]},
-                                    ]
-                                },
-                            },
                             "KmsKeyId": {
                                 "properties": {
                                     "StorageEncrypted": {"enum": ["true", "True", True]}
                                 },
                                 "required": ["StorageEncrypted"],
                             },
-                        }
+                        },
                     },
                     path="/",
                 ),
@@ -1335,23 +1320,21 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "anyOf": [
-                            {"required": ["HttpErrorCodeReturnedEquals"]},
-                            {"required": ["KeyPrefixEquals"]},
+                        "requiredOr": [
+                            "HttpErrorCodeReturnedEquals",
+                            "KeyPrefixEquals",
                         ],
                     },
                     path="/definitions/RoutingRuleCondition",
                 ),
                 Patch(
                     values={
-                        "dependencies": {
-                            "RedirectAllRequestsTo": {
-                                "properties": {
-                                    "ErrorDocument": False,
-                                    "IndexDocument": False,
-                                    "RoutingRules": False,
-                                }
-                            }
+                        "dependentExcluded": {
+                            "RedirectAllRequestsTo": [
+                                "ErrorDocument",
+                                "IndexDocument",
+                                "RoutingRules",
+                            ],
                         }
                     },
                     path="/definitions/RedirectAllRequestsTo",
@@ -1372,10 +1355,10 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "propertiesNand": [
-                            "HealthCheckConfig",
-                            "HealthCheckCustomConfig",
-                        ],
+                        "dependentExcluded": {
+                            "HealthCheckConfig": ["HealthCheckCustomConfig"],
+                            "HealthCheckCustomConfig": ["HealthCheckConfig"],
+                        }
                     },
                     path="/",
                 ),
