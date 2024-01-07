@@ -286,6 +286,12 @@
    "type": "object"
   }
  },
+ "dependentRequired": {
+  "ResourceId": [
+   "ScalableDimension",
+   "ServiceNamespace"
+  ]
+ },
  "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalingPolicy",
  "handlers": {
   "create": {
@@ -328,20 +334,6 @@
    ]
   }
  },
- "oneOf": [
-  {
-   "required": [
-    "ScalingTargetId"
-   ]
-  },
-  {
-   "required": [
-    "ResourceId",
-    "ScalableDimension",
-    "ServiceNamespace"
-   ]
-  }
- ],
  "primaryIdentifier": [
   "/properties/Arn",
   "/properties/ScalableDimension"
@@ -394,6 +386,10 @@
  "required": [
   "PolicyName",
   "PolicyType"
+ ],
+ "requiredXor": [
+  "ScalingTargetId",
+  "ResourceId"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {

@@ -143,6 +143,44 @@ def dependencies(
             )
 
 
+def dependentRequired(
+    validator: Validator,
+    dependentRequired: Dict[str, Sequence[str]],
+    instance: Any,
+    schema: Dict[str, Any],
+):
+    if not validator.is_type(instance, "object"):
+        return
+
+    for property, dependency in dependentRequired.items():
+        if property not in instance:
+            continue
+
+        for each in dependency:
+            if each not in instance:
+                message = f"{each!r} is a dependency of {property!r}"
+                yield ValidationError(message)
+
+
+def dependentExcluded(
+    validator: Validator,
+    dependentExcluded: Dict[str, Sequence[str]],
+    instance: Any,
+    schema: Dict[str, Any],
+):
+    if not validator.is_type(instance, "object"):
+        return
+
+    for property, dependency in dependentExcluded.items():
+        if property not in instance:
+            continue
+
+        for each in dependency:
+            if each in instance:
+                message = f"{each!r} should not be included with {property!r}"
+                yield ValidationError(message, path=[each])
+
+
 def enum(
     validator: Validator, enums: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
@@ -433,24 +471,6 @@ def propertyNames(
         yield from validator.descend(instance=property, schema=propertyNames)
 
 
-def propertiesNand(
-    validator: Validator,
-    propertiesNand: Sequence[str],
-    instance: Any,
-    schema: Dict[str, Any],
-):
-    if not validator.is_type(instance, "object"):
-        return
-
-    matches = set(propertiesNand).intersection(instance.keys())
-
-    if len(matches) > 1:
-        for match in matches:
-            yield ValidationError(
-                f"None or only one of {propertiesNand!r} can be specified", path=[match]
-            )
-
-
 def ref(
     validator: Validator, ref: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
@@ -473,7 +493,7 @@ def required(
             yield ValidationError(f"{property!r} is a required property")
 
 
-def requiredxor(
+def requiredXor(
     validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
     if not validator.is_type(instance, "object"):
@@ -489,7 +509,7 @@ def requiredxor(
             )
 
 
-def requiredor(
+def requiredOr(
     validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
     if not validator.is_type(instance, "object"):
