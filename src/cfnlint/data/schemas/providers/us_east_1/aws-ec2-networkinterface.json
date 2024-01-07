@@ -3,7 +3,8 @@
  "additionalProperties": false,
  "conditionalCreateOnlyProperties": [
   "/properties/PrivateIpAddresses",
-  "/properties/EnablePrimaryIpv6"
+  "/properties/EnablePrimaryIpv6",
+  "/properties/ConnectionTrackingSpecification"
  ],
  "createOnlyProperties": [
   "/properties/PrivateIpAddress",
@@ -11,6 +12,21 @@
   "/properties/SubnetId"
  ],
  "definitions": {
+  "ConnectionTrackingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "TcpEstablishedTimeout": {
+     "type": "integer"
+    },
+    "UdpStreamTimeout": {
+     "type": "integer"
+    },
+    "UdpTimeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "InstanceIpv6Address": {
    "additionalProperties": false,
    "properties": {
@@ -123,6 +139,9 @@
   "/properties/Id"
  ],
  "properties": {
+  "ConnectionTrackingSpecification": {
+   "$ref": "#/definitions/ConnectionTrackingSpecification"
+  },
   "Description": {
    "description": "A description for the network interface.",
    "type": "string"
