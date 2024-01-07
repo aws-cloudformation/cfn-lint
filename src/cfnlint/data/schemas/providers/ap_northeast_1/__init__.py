@@ -1186,6 +1186,7 @@ cached: List[str] = [
     "aws-amplify-branch.json",
     "aws-redshift-clustersubnetgroup.json",
     "aws-rds-dbinstance.json",
+    "aws-ec2-vpcdhcpoptionsassociation.json",
     "aws-lightsail-bucket.json",
     "aws-apigateway-model.json",
     "aws-apigatewayv2-integrationresponse.json",
