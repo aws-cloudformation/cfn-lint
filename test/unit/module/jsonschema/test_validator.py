@@ -447,13 +447,17 @@ class TestValidationTwoErrorMessages(unittest.TestCase):
             messages,
         )
 
-    def test_properties_nand(self):
+    def test_dependent_exclude(self):
         messages = self.message_for(
             instance={"foo": "foo", "bar": "bar"},
-            schema={"propertiesNand": ["foo", "bar"]},
+            schema={"dependentExcluded": {"foo": ["bar"], "bar": ["foo"]}},
         )
         self.assertIn(
-            "None or only one of ['foo', 'bar'] can be specified",
+            "'bar' should not be included with 'foo'",
+            messages,
+        )
+        self.assertIn(
+            "'foo' should not be included with 'bar'",
             messages,
         )
 

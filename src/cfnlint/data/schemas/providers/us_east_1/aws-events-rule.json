@@ -1,17 +1,5 @@
 {
  "additionalProperties": false,
- "anyOf": [
-  {
-   "required": [
-    "EventPattern"
-   ]
-  },
-  {
-   "required": [
-    "ScheduleExpression"
-   ]
-  }
- ],
  "conditionalCreateOnlyProperties": [
   "/properties/EventBusName"
  ],
@@ -537,9 +525,6 @@
    ]
   }
  },
- "message": {
-  "anyOf": "Specify either 'EventPattern' or 'ScheduleExpression'"
- },
  "primaryIdentifier": [
   "/properties/Arn"
  ],
@@ -596,6 +581,10 @@
  },
  "readOnlyProperties": [
   "/properties/Arn"
+ ],
+ "requiredXor": [
+  "EventPattern",
+  "ScheduleExpression"
  ],
  "tagging": {
   "taggable": false
