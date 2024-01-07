@@ -1,13 +1,5 @@
 {
  "additionalProperties": false,
- "allOf": [
-  {
-   "requiredXor": [
-    "ImageId",
-    "LaunchTemplate"
-   ]
-  }
- ],
  "createOnlyProperties": [
   "/properties/ElasticGpuSpecifications",
   "/properties/Ipv6Addresses",
@@ -357,6 +349,14 @@
    "type": "object"
   }
  },
+ "dependentExcluded": {
+  "NetworkInterfaces": [
+   "SubnetId"
+  ],
+  "SubnetId": [
+   "NetworkInterfaces"
+  ]
+ },
  "description": "Resource Type definition for AWS::EC2::Instance",
  "primaryIdentifier": [
   "/properties/Id"
@@ -555,16 +555,16 @@
    "uniqueItems": false
   }
  },
- "propertiesNand": [
-  "NetworkInterfaces",
-  "SubnetId"
- ],
  "readOnlyProperties": [
   "/properties/PublicIp",
   "/properties/Id",
   "/properties/PublicDnsName",
   "/properties/PrivateDnsName",
   "/properties/PrivateIp"
+ ],
+ "requiredXor": [
+  "ImageId",
+  "LaunchTemplate"
  ],
  "typeName": "AWS::EC2::Instance"
 }
