@@ -136,7 +136,7 @@
   },
   "CustomErrorResponse": {
    "additionalProperties": false,
-   "dependencies": {
+   "dependentRequired": {
     "ResponseCode": [
      "ResponsePagePath"
     ]
@@ -880,6 +880,14 @@
   },
   "Origin": {
    "additionalProperties": false,
+   "dependentExcluded": {
+    "CustomOriginConfig": [
+     "S3OriginConfig"
+    ],
+    "S3OriginConfig": [
+     "CustomOriginConfig"
+    ]
+   },
    "properties": {
     "ConnectionAttempts": {
      "type": "integer"
@@ -917,10 +925,6 @@
      "$ref": "#/definitions/S3OriginConfig"
     }
    },
-   "propertiesNand": [
-    "CustomOriginConfig",
-    "S3OriginConfig"
-   ],
    "required": [
     "DomainName",
     "Id"
@@ -1098,7 +1102,7 @@
   },
   "ViewerCertificate": {
    "additionalProperties": false,
-   "dependencies": {
+   "dependentRequired": {
     "AcmCertificateArn": [
      "SslSupportMethod"
     ],
