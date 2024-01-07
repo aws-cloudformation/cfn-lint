@@ -1,17 +1,5 @@
 {
  "additionalProperties": false,
- "anyOf": [
-  {
-   "required": [
-    "EventPattern"
-   ]
-  },
-  {
-   "required": [
-    "ScheduleExpression"
-   ]
-  }
- ],
  "createOnlyProperties": [
   "/properties/Name",
   "/properties/EventBusName"
@@ -459,9 +447,6 @@
   }
  },
  "description": "Resource Type definition for AWS::Events::Rule",
- "message": {
-  "anyOf": "Specify either 'EventPattern' or 'ScheduleExpression'"
- },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -504,6 +489,10 @@
  "readOnlyProperties": [
   "/properties/Id",
   "/properties/Arn"
+ ],
+ "requiredXor": [
+  "EventPattern",
+  "ScheduleExpression"
  ],
  "typeName": "AWS::Events::Rule"
 }
