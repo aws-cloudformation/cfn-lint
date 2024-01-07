@@ -183,9 +183,6 @@
                             "additionalProperties": false,
                             "minProperties": 1
                         },
-                        "propertiesNand": {
-                            "$ref": "#/properties/propertiesNand"
-                        },
                         "additionalProperties": {
                             "$comment": "All properties of a resource must be expressed in the schema - arbitrary inputs are not allowed",
                             "type": "boolean",
@@ -203,6 +200,12 @@
                         },
                         "dependencies": {
                             "$ref": "#/definitions/dependencies"
+                        },
+                        "dependentExcluded": {
+                            "$ref": "#/properties/dependentExcluded"
+                        },
+                        "dependentRequired": {
+                            "$ref": "#/properties/dependentRequired"
                         },
                         "const": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/const"
@@ -312,11 +315,29 @@
             "additionalProperties": false,
             "minProperties": 1
         },
-        "propertiesNand": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
+        "dependentExcluded": {
+            "type": "object",
+            "patternProperties": {
+                "^[A-Za-z0-9]{1,64}$": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "dependentRequired": {
+            "type": "object",
+            "patternProperties": {
+                "^[A-Za-z0-9]{1,64}$": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "additionalProperties": false
         },
         "definitions": {
             "type": "object",
