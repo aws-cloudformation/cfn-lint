@@ -246,21 +246,13 @@
    "type": "object"
   }
  },
+ "dependentRequired": {
+  "ResourceId": [
+   "ScalableDimension",
+   "ServiceNamespace"
+  ]
+ },
  "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalingPolicy",
- "oneOf": [
-  {
-   "required": [
-    "ScalingTargetId"
-   ]
-  },
-  {
-   "required": [
-    "ResourceId",
-    "ScalableDimension",
-    "ServiceNamespace"
-   ]
-  }
- ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -303,6 +295,10 @@
  "required": [
   "PolicyType",
   "PolicyName"
+ ],
+ "requiredXor": [
+  "ScalingTargetId",
+  "ResourceId"
  ],
  "typeName": "AWS::ApplicationAutoScaling::ScalingPolicy"
 }
