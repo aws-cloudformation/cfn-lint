@@ -1,19 +1,5 @@
 {
  "additionalProperties": false,
- "allOf": [
-  {
-   "propertiesNand": [
-    "Statistic",
-    "ExtendedStatistic"
-   ]
-  },
-  {
-   "propertiesNand": [
-    "Threshold",
-    "ThresholdMetricId"
-   ]
-  }
- ],
  "cfnSchema": [
   "aws_cloudwatch_alarm/aws_namespace_period"
  ],
@@ -111,28 +97,30 @@
    "type": "object"
   }
  },
+ "dependentExcluded": {
+  "ExtendedStatistic": [
+   "Statistic"
+  ],
+  "Metrics": [
+   "MetricName",
+   "Dimensions",
+   "Period",
+   "Namespace",
+   "Statistic",
+   "ExtendedStatistic",
+   "Unit"
+  ],
+  "Statistic": [
+   "ExtendedStatistic"
+  ],
+  "Threshold": [
+   "ThresholdMetricId"
+  ],
+  "ThresholdMetricId": [
+   "Threshold"
+  ]
+ },
  "description": "Resource Type definition for AWS::CloudWatch::Alarm",
- "oneOf": [
-  {
-   "properties": {
-    "Dimensions": false,
-    "ExtendedStatistic": false,
-    "MetricName": false,
-    "Namespace": false,
-    "Period": false,
-    "Statistic": false,
-    "Unit": false
-   },
-   "required": [
-    "Metrics"
-   ]
-  },
-  {
-   "required": [
-    "MetricName"
-   ]
-  }
- ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -289,6 +277,10 @@
  "required": [
   "ComparisonOperator",
   "EvaluationPeriods"
+ ],
+ "requiredXor": [
+  "Metrics",
+  "MetricName"
  ],
  "typeName": "AWS::CloudWatch::Alarm"
 }
