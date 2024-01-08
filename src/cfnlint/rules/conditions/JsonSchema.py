@@ -52,7 +52,7 @@ class JsonSchema(BaseJsonSchema):
         cfn_validator = self.setup_validator(
             validator=CfnTemplateValidator,
             schema=self.schema,
-            context=cfn.context.create_context_for_conditions(cfn.regions[0]),
+            context=cfn.context.create_context_for_conditions(cfn.regions),
         ).evolve(
             cfn=cfn,
         )

@@ -104,7 +104,7 @@ class Configuration(BaseJsonSchema):
         validator = self.setup_validator(
             CfnTemplateValidator,
             self.schema,
-            context=cfn.context.create_context_for_resources(cfn.regions[0]),
+            context=cfn.context.create_context_for_resources(cfn.regions),
         )
 
         matches.extend(self.json_schema_validate(validator, resources, ["Resources"]))
