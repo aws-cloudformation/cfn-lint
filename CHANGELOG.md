@@ -1,3 +1,10 @@
+### v0.83.8
+###### CloudFormation Specifications
+- Update CloudFormation specs to `153.0.0` (pull #[2986](https://github.com/aws-cloudformation/cfn-lint/pull/2986))
+###### Fixes
+- Remove rule [E2506](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2506) which results in false positive (pull #[3001](https://github.com/aws-cloudformation/cfn-lint/pull/3001))
+- Return dict str_node when doing transform (pull #[2996](https://github.com/aws-cloudformation/cfn-lint/pull/2996))
+
 ### v0.83.7
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `152.0.0` (pull #[2984](https://github.com/aws-cloudformation/cfn-lint/pull/2984))
