@@ -7809,9 +7809,6 @@
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
-    },
-    "Resource": {
-     "type": "string"
     }
    },
    "required": [
@@ -10897,6 +10894,8 @@
     "quicksight:DescribeTemplatePermissions",
     "quicksight:CreateTemplate",
     "quicksight:DescribeAnalysis",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
    ]
   },
@@ -10907,20 +10906,34 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AwsAccountId": {
+      "$ref": "resource-schema.json#/properties/AwsAccountId"
+     }
+    },
+    "required": [
+     "AwsAccountId"
+    ]
+   },
    "permissions": [
     "quicksight:ListTemplates"
    ]
   },
   "read": {
    "permissions": [
-    "quicksight:DescribeTemplate"
+    "quicksight:DescribeTemplate",
+    "quicksight:DescribeTemplatePermissions",
+    "quicksight:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
+    "quicksight:DescribeTemplate",
+    "quicksight:DescribeTemplatePermissions",
     "quicksight:UpdateTemplate",
     "quicksight:UpdateTemplatePermissions",
-    "quicksight:DescribeAnalysis",
+    "quicksight:PassDataSet",
     "quicksight:TagResource",
     "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
@@ -11004,14 +11017,12 @@
   "AwsAccountId",
   "TemplateId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
  "typeName": "AWS::QuickSight::Template",
  "writeOnlyProperties": [
   "/properties/Definition",
   "/properties/VersionDescription",
   "/properties/SourceEntity",
-  "/properties/CreatedTime",
-  "/properties/Version",
-  "/properties/LastUpdatedTime",
   "/properties/ValidationStrategy"
  ]
 }
