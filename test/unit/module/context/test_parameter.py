@@ -2,6 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from collections import deque
+
 import pytest
 
 from cfnlint.context import Context
@@ -24,8 +26,8 @@ from cfnlint.context.context import Parameter
             },
             "String",
             [
-                "foo",
-                "bar",
+                ("foo", deque(["AllowedValues", 0])),
+                ("bar", deque(["AllowedValues", 1])),
             ],
         ),
         (
@@ -36,7 +38,7 @@ from cfnlint.context.context import Parameter
             },
             "CommaDelimitedList",
             [
-                ["foo"],
+                (["foo"], deque(["Default"])),
             ],
         ),
         (
@@ -46,7 +48,7 @@ from cfnlint.context.context import Parameter
                 "Default": "10,20",
             },
             "List<Number>",
-            [["10", "20"]],
+            [(["10", "20"], deque(["Default"]))],
         ),
         (
             "Valid parameter with a SSM Parameter",
@@ -61,13 +63,14 @@ from cfnlint.context.context import Parameter
             "Valid parameter with a MinValue and MaxValue",
             {"Type": "Number", "MinValue": "10", "MaxValue": "20"},
             "Number",
-            ["10", "20"],
+            [("10", deque(["MinValue"])), ("20", deque(["MaxValue"]))],
         ),
     ],
 )
 def test_parameter(name, instance, expected_type, expected_ref):
-    context = Context("us-east-1")
+    context = Context(["us-east-1"])
     parameter = Parameter(instance)
 
     assert expected_type == parameter.type
+    print(list(parameter.ref(context)))
     assert expected_ref == list(parameter.ref(context))
