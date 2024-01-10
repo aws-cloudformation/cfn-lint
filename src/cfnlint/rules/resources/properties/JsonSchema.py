@@ -65,11 +65,19 @@ class JsonSchema(BaseJsonSchema):
             "fn_tojsonstring": "E1031",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self.regions = [REGION_PRIMARY]
 
-    def initialize(self, cfn):
-        self.regions = cfn.regions
-        return super().initialize(cfn)
+    def _run_json_schema_validate(self, schema, cfn, regions, p, n):
+        cfn_validator = self.setup_validator(
+            validator=CfnTemplateValidator,
+            schema=schema.json_schema,
+            context=cfn.context.create_context_for_resource_properties(
+                regions=regions, resource_name=n
+            ),
+        ).evolve(
+            cfn=cfn,
+        )
+        path = ["Resources", n, "Properties"]
+        return self.json_schema_validate(cfn_validator, p, path)
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
@@ -82,35 +90,34 @@ class JsonSchema(BaseJsonSchema):
                 continue
             if t.startswith("Custom::"):
                 t = "AWS::CloudFormation::CustomResource"
-            if t:
-                cached_validation_run = []
-                for region in cfn.regions:
-                    self.region = region
-                    schema = {}
-                    try:
-                        schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(region, t)
-                    except ResourceNotFoundError as e:
-                        LOGGER.info(e)
-                        continue
+
+            cached_regions = []
+            cached_schema = None
+            for region in cfn.regions:
+                schema = {}
+                try:
+                    schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(region, t)
+                except ResourceNotFoundError as e:
+                    LOGGER.info(e)
+                    continue
+                if schema:
                     if schema.json_schema:
-                        if t in cached_validation_run or region == REGION_PRIMARY:
-                            if schema.is_cached:
-                                # if its cached we already ran the
-                                # same validation lets not run it again
-                                continue
-                            cached_validation_run.append(t)
-                        cfn_validator = self.setup_validator(
-                            validator=CfnTemplateValidator,
-                            schema=schema.json_schema,
-                            context=cfn.context.create_context_for_resource_properties(
-                                region=region, resource_name=n
-                            ),
-                        ).evolve(
-                            cfn=cfn,
-                        )
-                        path = ["Resources", n, "Properties"]
-                        matches.extend(
-                            self.json_schema_validate(cfn_validator, p, path)
-                        )
+                        if not schema.is_cached and region != REGION_PRIMARY:
+                            matches.extend(
+                                self._run_json_schema_validate(
+                                    schema, cfn, [region], p, n
+                                )
+                            )
+                        else:
+                            if not cached_schema:
+                                cached_schema = schema
+                            cached_regions.append(region)
+
+            if cached_regions:
+                matches.extend(
+                    self._run_json_schema_validate(
+                        cached_schema, cfn, cached_regions, p, n
+                    )
+                )
 
         return matches
