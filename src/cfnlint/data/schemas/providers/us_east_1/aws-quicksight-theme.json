@@ -87,9 +87,6 @@
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
-    },
-    "Resource": {
-     "type": "string"
     }
    },
    "required": [
@@ -341,6 +338,8 @@
     "quicksight:DescribeTheme",
     "quicksight:DescribeThemePermissions",
     "quicksight:CreateTheme",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
    ]
   },
@@ -351,13 +350,25 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AwsAccountId": {
+      "$ref": "resource-schema.json#/properties/AwsAccountId"
+     }
+    },
+    "required": [
+     "AwsAccountId"
+    ]
+   },
    "permissions": [
     "quicksight:ListThemes"
    ]
   },
   "read": {
    "permissions": [
-    "quicksight:DescribeTheme"
+    "quicksight:DescribeTheme",
+    "quicksight:DescribeThemePermissions",
+    "quicksight:ListTagsForResource"
    ]
   },
   "update": {
@@ -443,15 +454,8 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Version/Arn",
-  "/properties/Version/BaseThemeId",
-  "/properties/Version/Errors",
-  "/properties/Version/Configuration",
-  "/properties/Version/CreatedTime",
-  "/properties/Version/Description",
-  "/properties/Version/Status",
-  "/properties/Version/VersionNumber",
   "/properties/CreatedTime",
+  "/properties/Version",
   "/properties/LastUpdatedTime",
   "/properties/Arn",
   "/properties/Type"
@@ -463,6 +467,7 @@
   "Configuration",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
  "typeName": "AWS::QuickSight::Theme",
  "writeOnlyProperties": [
   "/properties/VersionDescription",
