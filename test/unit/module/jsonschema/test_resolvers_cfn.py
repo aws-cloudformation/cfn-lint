@@ -15,7 +15,10 @@ def _resolve(name, instance, expected_results, **kwargs):
 
     resolutions = list(validator.resolve_value(instance))
 
-    assert resolutions == expected_results
+    for i, (instance, v, errors) in enumerate(resolutions):
+        assert instance == expected_results[i][0]
+        assert v.context.value_path == expected_results[i][1]
+        assert errors == expected_results[i][2]
 
 
 @pytest.mark.parametrize(
@@ -205,7 +208,7 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
-            [("default", deque([]), None)],
+            [("default", deque([4, "DefaultValue"]), None)],
         ),
         (
             "Valid Sub with a resolvable values",

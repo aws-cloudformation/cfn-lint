@@ -285,6 +285,20 @@ class TestJsonSchema(BaseRuleTestCase):
         delattr(expected[0], "location")
         self.validate(schema, expected)
 
+    def test_bad_types(self):
+        schema = {
+            "properties": {
+                "E": True,
+            },
+            "type": "object",
+            "required": ["E"],
+        }
+
+        self.cfn = Template(
+            "", {"Resources": {"Table": {"Type": {"Foo": "Bar"}}}}, ["us-east-1"]
+        )
+        self.validate(schema, [])
+
 
 def build_node(instance: str | dict, loc: str, type=str_node):
     return type(
