@@ -9,7 +9,7 @@ import logging
 import random
 import string
 from copy import deepcopy
-from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple
+from typing import Any, Iterator, List, Mapping, MutableMapping, Optional, Tuple
 
 import regex as re
 
@@ -475,7 +475,7 @@ class _ForEachCollection:
 
     def values(
         self, cfn: Any, collection_cache: MutableMapping[str, Any]
-    ) -> Iterable[str]:
+    ) -> Iterator[str]:
         if self._collection:
             for item in self._collection:
                 try:
@@ -545,6 +545,6 @@ class _ForEach:
         self._collection = _ForEachCollection(value[1])
         self._output = _ForEachOutput(value[2])
 
-    def items(self, cfn: Any) -> Iterable[str]:
+    def items(self, cfn: Any) -> Iterator[str]:
         items = self._collection.values(cfn, self._collection_cache)
         yield from iter(items)
