@@ -97,7 +97,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
         )
 
         context = cfn.context.create_context_for_resource_properties(
-            "us-east-1", "MyResource"
+            ["us-east-1"], "MyResource"
         )
         validator = CfnTemplateValidator(schema=schema, cfn=cfn, context=context)
         errs = list(validator.iter_errors(props))
@@ -428,22 +428,6 @@ class TestValidatorCfnConditions(unittest.TestCase):
                 ]
             ),
             expected_errs=[
-                ValidationError(
-                    message=(
-                        "{'Ref': 'Name'} does not match '^bar$' when 'Ref' is resolved"
-                    ),
-                    path=deque(["Name", "Ref"]),
-                    validator="ref",
-                    validator_value="^bar$",
-                ),
-                ValidationError(
-                    message=(
-                        "{'Ref': 'Name'} is not one of ['bar'] when 'Ref' is resolved"
-                    ),
-                    path=deque(["Name", "Ref"]),
-                    validator="ref",
-                    validator_value=["bar"],
-                ),
                 ValidationError(
                     message=(
                         "{'Ref': 'Name'} does not match '^bar$' when 'Ref' is resolved"

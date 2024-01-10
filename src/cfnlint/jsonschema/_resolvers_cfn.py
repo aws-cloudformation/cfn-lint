@@ -28,32 +28,8 @@ def ref(validator: Validator, instance: Any) -> ResolutionResult:
     for instance, _, _ in validator.resolve_value(instance):
         if validator.is_type(instance, "string"):
             # if the ref is to pseudo-parameter or parameter we can validate the values
-            if instance in validator.context.ref_values:
-                # Ref: AWS::NoValue returns None making this fail
-                if validator.context.ref_values[instance] is not None:
-                    yield validator.context.ref_values[instance], deque([]), None
-                    return
-            if instance in validator.context.parameters:
-                if validator.context.parameters[instance].allowed_values:
-                    for index, value in enumerate(
-                        validator.context.parameters[instance].allowed_values
-                    ):
-                        yield value, deque(
-                            ["Parameters", instance, "AllowedValues", index]
-                        ), None
-                if validator.context.parameters[instance].default is not None:
-                    yield validator.context.parameters[instance].default, deque(
-                        ["Parameters", instance, "Default"]
-                    ), None
-                if validator.context.parameters[instance].min_value is not None:
-                    yield validator.context.parameters[instance].min_value, deque(
-                        ["Parameters", instance, "MinValue"]
-                    ), None
-                if validator.context.parameters[instance].max_value is not None:
-                    yield validator.context.parameters[instance].max_value, deque(
-                        ["Parameters", instance, "MaxValue"]
-                    ), None
-                return
+            for v, c in validator.context.ref_value(instance):
+                yield v, validator.evolve(context=c), None
             return
 
 
@@ -68,17 +44,19 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         options = instance[3]
         if validator.is_type(options, "object"):
             if "DefaultValue" in options:
-                for value, _, _ in validator.resolve_value(options["DefaultValue"]):
-                    yield value, deque([]), None
+                for value, v, _ in validator.resolve_value(options["DefaultValue"]):
+                    yield value, v.evolve(
+                        context=v.context.evolve(value_path=deque([4, "DefaultValue"]))
+                    ), None
                     default_value = value
 
-    for map_name, _, _ in validator.resolve_value(instance[0]):
+    for map_name, map_v, _ in validator.resolve_value(instance[0]):
         if not validator.is_type(map_name, "string"):
             continue
-        for top_level_key, _, _ in validator.resolve_value(instance[1]):
+        for top_level_key, top_v, _ in validator.resolve_value(instance[1]):
             if not validator.is_type(top_level_key, "string"):
                 continue
-            for second_level_key, _, _ in validator.resolve_value(instance[2]):
+            for second_level_key, second_v, _ in validator.resolve_value(instance[2]):
                 if not validator.is_type(second_level_key, "string"):
                     continue
                 try:
@@ -86,7 +64,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     if not default_value and all(
                         not (equal(map_name, each)) for each in mappings
                     ):
-                        yield None, deque([0]), ValidationError(
+                        yield None, map_v.evolve(
+                            context=map_v.context.evolve(value_path=[0])
+                        ), ValidationError(
                             f"{map_name!r} is not one of {mappings!r}", path=[0]
                         )
                         continue
@@ -97,7 +77,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     if not default_value and all(
                         not (equal(top_level_key, each)) for each in top_level_keys
                     ):
-                        yield None, deque([1]), ValidationError(
+                        yield None, top_v.evolve(
+                            context=top_v.context.evolve(value_path=[1])
+                        ), ValidationError(
                             f"{top_level_key!r} is not one of {top_level_keys!r}",
                             path=[0],
                         )
@@ -112,7 +94,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         not (equal(second_level_key, each))
                         for each in second_level_keys
                     ):
-                        yield None, deque([2]), ValidationError(
+                        yield None, second_v.evolve(
+                            context=second_v.context.evolve(value_path=[2])
+                        ), ValidationError(
                             f"{second_level_key!r} is not one of {second_level_keys!r}",
                             path=[0],
                         )
@@ -122,9 +106,20 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         top_level_key,
                         second_level_key,
                     ):
-                        yield value, deque(
-                            ["Mappings", map_name, top_level_key, second_level_key]
-                        ), None
+                        yield (
+                            value,
+                            validator.evolve(
+                                context=validator.context.evolve(
+                                    value_path=[
+                                        "Mappings",
+                                        map_name,
+                                        top_level_key,
+                                        second_level_key,
+                                    ]
+                                )
+                            ),
+                            None,
+                        )
                 except KeyError:
                     pass
 
@@ -133,13 +128,18 @@ def get_azs(validator: Validator, instance: Any) -> ResolutionResult:
     if not isinstance(instance, (str, dict)):
         return
 
-    for instance, _, _ in validator.resolve_value(instance):
-        if validator.is_type(instance, "string"):
+    for instance, v, _ in validator.resolve_value(instance):
+        if v.is_type(instance, "string"):
             if instance == "":
-                instance = validator.context.region
+                for region in v.context.regions:
+                    yield (
+                        AVAILABILITY_ZONES.get(region),
+                        v,
+                        None,
+                    )
             # if the ref is to pseudo-parameter or parameter we can validate the values
-            if instance in AVAILABILITY_ZONES:
-                yield AVAILABILITY_ZONES.get(instance), deque([]), None
+            elif instance in AVAILABILITY_ZONES:
+                yield AVAILABILITY_ZONES.get(instance), v, None
 
 
 def _join_expansion(validator: Validator, instances: Any) -> Iterator[Any]:
@@ -167,14 +167,14 @@ def join(validator: Validator, instance: Any) -> ResolutionResult:
     if not len(instance) == 2:
         return
 
-    for delimiter, _, _ in validator.resolve_value(instance[0]):
-        if not validator.is_type(delimiter, "string"):
+    for delimiter, delimiter_v, _ in validator.resolve_value(instance[0]):
+        if not delimiter_v.is_type(delimiter, "string"):
             continue
-        for values, _, _ in validator.resolve_value(instance[1]):
-            if not validator.is_type(values, "array"):
+        for values, values_v, _ in validator.resolve_value(instance[1]):
+            if not values_v.is_type(values, "array"):
                 continue
-            for value in _join_expansion(validator, values):
-                yield delimiter.join(value), deque([]), None
+            for value in _join_expansion(values_v, values):
+                yield delimiter.join(value), values_v, None
 
 
 def select(validator: Validator, instance: Any) -> ResolutionResult:
@@ -189,7 +189,7 @@ def select(validator: Validator, instance: Any) -> ResolutionResult:
     objs = validator.resolve_value(instance[1])
 
     for i, _, _ in indexes:
-        for obj, _, _ in objs:
+        for obj, obj_v, _ in objs:
             try:
                 i = int(i)
             except ValueError:
@@ -198,7 +198,7 @@ def select(validator: Validator, instance: Any) -> ResolutionResult:
                 continue
             if len(obj) <= i:
                 continue
-            yield obj[i], deque([]), None
+            yield obj[i], obj_v, None
 
 
 def split(validator: Validator, instance: Any) -> ResolutionResult:
@@ -208,13 +208,13 @@ def split(validator: Validator, instance: Any) -> ResolutionResult:
         return
 
     for delimiter, _, _ in validator.resolve_value(instance[0]):
-        for source_string, _, _ in validator.resolve_value(instance[1]):
-            if not validator.is_type(delimiter, "string"):
+        for source_string, source_v, _ in validator.resolve_value(instance[1]):
+            if not source_v.is_type(delimiter, "string"):
                 continue
-            if not validator.is_type(source_string, "string"):
+            if not source_v.is_type(source_string, "string"):
                 continue
 
-            yield source_string.split(delimiter), deque([]), None
+            yield source_string.split(delimiter), source_v, None
 
 
 def _sub_parameter_expansion(
@@ -250,7 +250,7 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
         raise ValueError(f"No matches for {matchobj.group(2)!r}")
 
     try:
-        yield re.sub(sub_regex, _replace, string), deque([]), None
+        yield re.sub(sub_regex, _replace, string), validator.evolve(), None
     except ValueError:
         return
 
@@ -294,14 +294,19 @@ def if_(validator: Validator, instance: Any) -> ResolutionResult:
         return
 
     for i in [1, 2]:
-        for value, value_path, err in validator.resolve_value(instance[i]):
-            value_path.appendleft(i)
-            yield value, value_path, err
+        for value, v, err in validator.resolve_value(instance[i]):
+            yield (
+                value,
+                v.evolve(
+                    context=v.context.evolve(value_path=deque([i])),
+                ),
+                err,
+            )
 
 
 def to_json_string(validator: Validator, instance: Any) -> ResolutionResult:
-    for value, _, err in validator.resolve_value(instance):
-        yield json.dumps(value), deque([]), err
+    for value, v, err in validator.resolve_value(instance):
+        yield json.dumps(value), v, err
 
 
 # not all functions need to be resolved.  These functions
