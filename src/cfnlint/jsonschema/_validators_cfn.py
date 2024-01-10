@@ -123,15 +123,11 @@ class _Fn:
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
 
-        for value, value_path, resolve_err in validator.resolve_value(instance):
+        for value, v, resolve_err in validator.resolve_value(instance):
             if resolve_err:
                 yield resolve_err
                 continue
-            for err in self._fix_errors(
-                validator.evolve(
-                    context=validator.context.evolve(value_path=value_path),
-                ).descend(value, s, key)
-            ):
+            for err in self._fix_errors(v.descend(value, s, key)):
                 err.message = err.message.replace(f"{value!r}", f"{instance!r}")
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 yield err
@@ -639,11 +635,9 @@ class FnIf(_Fn):
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         key, _ = self._key_value(instance)
-        for value, value_path, _ in validator.resolve_value(instance):
-            for err in validator.evolve(
-                context=validator.context.evolve(value_path=value_path),
-            ).descend(value, s, key):
-                err.path.extend(value_path)
+        for value, v, _ in validator.resolve_value(instance):
+            for err in v.descend(value, s, key):
+                err.path.extend(v.context.value_path)
                 yield err
 
 
