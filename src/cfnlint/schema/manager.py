@@ -99,7 +99,7 @@ class ProviderSchemaManager:
         """Get the provider resource shcema and cache it to speed up future lookups
 
         Args:
-            region (str): the region in which do ge the provider schema for
+            region (str): the region in which do get the provider schema for
             resource_type (str): the :: version of the resource type
         Returns:
             dict: returns the schema

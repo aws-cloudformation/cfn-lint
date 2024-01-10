@@ -58,13 +58,6 @@ def find_additional_properties(validator, instance, schema):
             if validator.is_type(property, "string"):
                 if patterns and re.search(patterns, property):
                     continue
-                # additional properties would
-                if validator.context.transforms.has_language_extensions_transform:
-                    matches = re.findall("\\$\\{([a-zA-Z0-9]+)\\}", property)
-                    if matches and all(
-                        match in validator.context.refs for match in matches
-                    ):
-                        continue
             yield property
 
 
