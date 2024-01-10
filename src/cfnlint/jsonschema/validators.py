@@ -17,10 +17,9 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
-from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from typing import Any, Callable, Deque, Dict, Iterator, Tuple
+from typing import Any, Callable, Dict
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import _resolvers_cfn, _validators, _validators_cfn
@@ -28,7 +27,7 @@ from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
 from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._types import TypeChecker, cfn_type_checker
-from cfnlint.jsonschema._typing import V, ValidationResult
+from cfnlint.jsonschema._typing import ResolutionResult, V, ValidationResult
 from cfnlint.jsonschema._utils import custom_msg, id_of
 from cfnlint.jsonschema.exceptions import (
     UndefinedTypeCheck,
@@ -81,9 +80,10 @@ def create(
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=lambda: context_arg)
 
-        fn_resolvers: Mapping[str, Callable[["Validator", Any], Any]] = field(
-            init=False, default_factory=lambda: fn_resolvers_arg
-        )
+        fn_resolvers: Mapping[
+            str,
+            Callable[["Validator", Any], ResolutionResult],
+        ] = field(init=False, default_factory=lambda: fn_resolvers_arg)
 
         def __post_init__(self):
             if self.resolver is None:
@@ -135,18 +135,18 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def resolve_value(
-            self, instance: Any
-        ) -> Iterator[Tuple[Any, Deque, ValidationError | None]]:
+        def resolve_value(self, instance: Any) -> ResolutionResult:
             if self.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
                         if k in self.fn_resolvers:
-                            for value, _, _ in self.resolve_value(v):
-                                yield from self.fn_resolvers[k](self, value)
+                            for value, v, _ in self.resolve_value(v):
+                                yield from self.fn_resolvers[k](v, value)
                             return
 
-            yield instance, deque([]), None
+            # The return type is a Protocol and we are returning an instance
+            # we will ignore this error
+            yield instance, self, None  # type: ignore[misc]
 
         def iter_errors(self, instance: Any) -> ValidationResult:
             r"""

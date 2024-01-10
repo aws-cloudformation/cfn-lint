@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Type
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import Validator
@@ -21,7 +21,6 @@ class BaseJsonSchema(CloudFormationLintRule):
         super().__init__()
         self.rules: Dict[str, Any] = {}
         self.rule_set: Dict[str, str] = {}
-        self.region: Optional[str] = None
         self.validators: Dict[str, V] = {}
 
     def json_schema_validate(self, validator, properties, path):
