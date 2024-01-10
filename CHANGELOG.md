@@ -1,3 +1,13 @@
+### v1.2.2a1
+###### Features
+- Add rule [E3046](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2530) to validate ECS log config when AWS (pull #[2990](https://github.com/aws-cloudformation/cfn-lint/pull/2990))
+- Add `dependentExcluded` keyword to json schema validation (pull #[3002](https://github.com/aws-cloudformation/cfn-lint/pull/3002))
+- Add `requiredXor` keyword to json schema validation (pull #[2997](https://github.com/aws-cloudformation/cfn-lint/pull/2997))
+- Add `requiredOr` keyword to json schema validation (pull #[2997](https://github.com/aws-cloudformation/cfn-lint/pull/2997))
+- Add `uniqueKeys` keyword to json schema validation (pull #[2992](https://github.com/aws-cloudformation/cfn-lint/pull/2992))
+###### Fixes
+- Make context more effecient (pull #[3007](https://github.com/aws-cloudformation/cfn-lint/pull/3007))
+
 ### v1.2.1a3
 ###### Fixes
 - Pass through all errors from `Fn::If`` (pull #[2583](https://github.com/aws-cloudformation/cfn-lint/pull/2583))
