@@ -9,7 +9,6 @@ import logging
 import os
 import traceback
 from collections import UserDict
-from collections.abc import Iterable
 from datetime import datetime
 from typing import (
     TYPE_CHECKING,
