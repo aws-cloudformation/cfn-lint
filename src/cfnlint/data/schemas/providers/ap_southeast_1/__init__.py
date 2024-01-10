@@ -1472,7 +1472,6 @@ cached: List[str] = [
     "aws-connect-hoursofoperation.json",
     "aws-dms-certificate.json",
     "aws-s3-bucket.json",
-    "aws-guardduty-ipset.json",
     "aws-servicediscovery-httpnamespace.json",
     "aws-emr-securityconfiguration.json",
     "aws-cloudwatch-insightrule.json",
