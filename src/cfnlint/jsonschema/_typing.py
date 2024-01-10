@@ -17,10 +17,11 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
-from typing import Any, Callable, Deque, Dict, Iterator, Optional, Tuple
+from typing import Any, Callable, Dict, Iterator, Optional, Tuple
 
 from cfnlint.jsonschema.exceptions import ValidationError
+from cfnlint.jsonschema.protocols import Validator
 
 ValidationResult = Iterator[ValidationError]
 V = Optional[Callable[[Any, Any, Any, Dict[str, Any]], ValidationResult]]
-ResolutionResult = Iterator[Tuple[Any, Deque, Optional[ValidationError]]]
+ResolutionResult = Iterator[Tuple[Any, Validator, Optional[ValidationError]]]
