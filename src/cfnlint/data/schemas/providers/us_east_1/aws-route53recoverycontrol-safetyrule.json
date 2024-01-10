@@ -123,6 +123,7 @@
   "create": {
    "permissions": [
     "route53-recovery-control-config:CreateSafetyRule",
+    "route53-recovery-control-config:DescribeSafetyRule",
     "route53-recovery-control-config:DescribeControlPanel",
     "route53-recovery-control-config:DescribeRoutingControl",
     "route53-recovery-control-config:ListTagsForResource",
@@ -131,10 +132,21 @@
   },
   "delete": {
    "permissions": [
+    "route53-recovery-control-config:DescribeSafetyRule",
     "route53-recovery-control-config:DeleteSafetyRule"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ControlPanelArn": {
+      "$ref": "resource-schema.json#/properties/ControlPanelArn"
+     }
+    },
+    "required": [
+     "ControlPanelArn"
+    ]
+   },
    "permissions": [
     "route53-recovery-control-config:ListSafetyRules"
    ]
@@ -148,6 +160,7 @@
   "update": {
    "permissions": [
     "route53-recovery-control-config:UpdateSafetyRule",
+    "route53-recovery-control-config:DescribeSafetyRule",
     "route53-recovery-control-config:ListTagsForResource",
     "route53-recovery-control-config:TagResource",
     "route53-recovery-control-config:UntagResource"
