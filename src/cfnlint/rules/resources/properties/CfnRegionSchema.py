@@ -43,7 +43,7 @@ class CfnRegionSchema(BaseJsonSchema):
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
                     yield from rule.validate(
-                        validator, instance, validator.context.region
+                        validator, instance, validator.context.regions
                     )
 
 
@@ -86,27 +86,30 @@ class BaseCfnRegionSchema(BaseJsonSchema):
             )
             self.cfn_validator = None
 
-    def validate(self, validator, instance, region):
+    def validate(self, validator, instance, regions):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
-        self.cfn_validator = self.setup_validator(
-            validator=CfnTemplateValidator,
-            schema=self.cfn_schema.get(region, {}),
-            context=validator.context.evolve(),
-        )
-        err = best_match(list(self.cfn_validator.iter_errors(instance)))
-        if err is not None:
-            yield ValidationError(
-                message=f"{err.message} in {region}",
-                validator=err.validator,
-                path=err.path,
-                cause=err.cause,
-                context=err.context,
-                validator_value=err.validator_value,
-                instance=err.instance,
-                schema=err.schema,
-                schema_path=err.schema_path,
-                parent=err.parent,
-                type_checker=err.type_check if hasattr(err, "type_check") else Unset(),
-                rule=self,
+        for region in regions:
+            self.cfn_validator = self.setup_validator(
+                validator=CfnTemplateValidator,
+                schema=self.cfn_schema.get(region, {}),
+                context=validator.context.evolve(),
             )
+            err = best_match(list(self.cfn_validator.iter_errors(instance)))
+            if err is not None:
+                yield ValidationError(
+                    message=f"{err.message} in {region}",
+                    validator=err.validator,
+                    path=err.path,
+                    cause=err.cause,
+                    context=err.context,
+                    validator_value=err.validator_value,
+                    instance=err.instance,
+                    schema=err.schema,
+                    schema_path=err.schema_path,
+                    parent=err.parent,
+                    type_checker=err.type_check
+                    if hasattr(err, "type_check")
+                    else Unset(),
+                    rule=self,
+                )
