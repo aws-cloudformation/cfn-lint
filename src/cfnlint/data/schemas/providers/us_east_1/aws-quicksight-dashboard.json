@@ -8173,9 +8173,6 @@
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
-    },
-    "Resource": {
-     "type": "string"
     }
    },
    "required": [
@@ -11131,6 +11128,8 @@
     "quicksight:DescribeTemplate",
     "quicksight:DescribeTheme",
     "quicksight:PassDataSet",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
    ]
   },
@@ -11141,13 +11140,25 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AwsAccountId": {
+      "$ref": "resource-schema.json#/properties/AwsAccountId"
+     }
+    },
+    "required": [
+     "AwsAccountId"
+    ]
+   },
    "permissions": [
     "quicksight:ListDashboards"
    ]
   },
   "read": {
    "permissions": [
-    "quicksight:DescribeDashboard"
+    "quicksight:DescribeDashboard",
+    "quicksight:DescribeDashboardPermissions",
+    "quicksight:ListTagsForResource"
    ]
   },
   "update": {
@@ -11157,7 +11168,9 @@
     "quicksight:UpdateDashboard",
     "quicksight:UpdateDashboardPermissions",
     "quicksight:UpdateDashboardPublishedVersion",
+    "quicksight:DescribeTemplate",
     "quicksight:DescribeTheme",
+    "quicksight:PassDataSet",
     "quicksight:TagResource",
     "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
@@ -11259,6 +11272,7 @@
   "DashboardId",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
  "typeName": "AWS::QuickSight::Dashboard",
  "writeOnlyProperties": [
   "/properties/DashboardPublishOptions",
@@ -11268,8 +11282,6 @@
   "/properties/SourceEntity",
   "/properties/ThemeArn",
   "/properties/VersionDescription",
-  "/properties/CreatedTime",
-  "/properties/LastUpdatedTime",
   "/properties/ValidationStrategy"
  ]
 }
