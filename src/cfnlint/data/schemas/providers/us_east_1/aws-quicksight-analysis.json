@@ -7980,9 +7980,6 @@
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
-    },
-    "Resource": {
-     "type": "string"
     }
    },
    "required": [
@@ -10902,6 +10899,8 @@
     "quicksight:DescribeTemplate",
     "quicksight:DescribeTheme",
     "quicksight:PassDataSet",
+    "quicksight:TagResource",
+    "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
    ]
   },
@@ -10912,13 +10911,25 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AwsAccountId": {
+      "$ref": "resource-schema.json#/properties/AwsAccountId"
+     }
+    },
+    "required": [
+     "AwsAccountId"
+    ]
+   },
    "permissions": [
     "quicksight:ListAnalyses"
    ]
   },
   "read": {
    "permissions": [
-    "quicksight:DescribeAnalysis"
+    "quicksight:DescribeAnalysis",
+    "quicksight:DescribeAnalysisPermissions",
+    "quicksight:ListTagsForResource"
    ]
   },
   "update": {
@@ -10927,7 +10938,9 @@
     "quicksight:DescribeAnalysisPermissions",
     "quicksight:UpdateAnalysis",
     "quicksight:UpdateAnalysisPermissions",
+    "quicksight:DescribeTemplate",
     "quicksight:DescribeTheme",
+    "quicksight:PassDataSet",
     "quicksight:TagResource",
     "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
@@ -11029,8 +11042,6 @@
   "/properties/Arn",
   "/properties/CreatedTime",
   "/properties/DataSetArns",
-  "/properties/Errors",
-  "/properties/Sheets",
   "/properties/LastUpdatedTime"
  ],
  "required": [
@@ -11038,14 +11049,13 @@
   "AnalysisId",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
  "typeName": "AWS::QuickSight::Analysis",
  "writeOnlyProperties": [
   "/properties/Definition",
   "/properties/Parameters",
   "/properties/SourceEntity",
-  "/properties/LastUpdatedTime",
   "/properties/Status",
-  "/properties/Sheets",
   "/properties/ValidationStrategy"
  ]
 }
