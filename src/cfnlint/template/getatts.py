@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import UserDict
-from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
 import regex as re
 
@@ -204,7 +204,7 @@ class GetAtts:
 
     def items(
         self, region: Optional[str] = None
-    ) -> Iterable[Tuple[str, _AttributeDict]]:
+    ) -> Iterator[Tuple[str, _AttributeDict]]:
         if region is None:
             region = self._regions[0]
             for k, v in self._getatts.get(region, _ResourceDict()).items():
