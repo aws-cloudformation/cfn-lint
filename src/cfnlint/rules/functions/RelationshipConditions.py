@@ -36,13 +36,10 @@ class RelationshipConditions(CloudFormationLintRule):
             if "Resource" != cfn.graph.graph.nodes[destination]["type"]:
                 continue
 
-            if "Output" != cfn.graph.graph.nodes[destination]["type"]:
-                path = [
-                    f"{cfn.graph.graph.nodes[source].get('type')}s",
-                    source.replace("Output-", ""),
-                ] + data["source_paths"]
-            else:
-                path = ["Resources", source] + data["source_paths"]
+            path = [
+                f"{cfn.graph.graph.nodes[source].get('type')}s",
+                source.replace("Output-", ""),
+            ] + data["source_paths"]
             scenarios = cfn.is_resource_available(path, destination)
 
             for scenario in scenarios:

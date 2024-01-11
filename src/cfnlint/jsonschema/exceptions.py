@@ -100,6 +100,8 @@ class _Error(Exception):
                 return False
             if self.rule.id != __value.rule.id:
                 return False
+        elif __value.rule is not None:
+            return False
 
         return (
             self.message == __value.message
