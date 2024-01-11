@@ -241,7 +241,9 @@ def get_rds_pricing():
     return results
 
 
-def get_results(service, product_families):
+def get_results(service, product_families, default=None):
+    if default is None:
+        default = set()
     results = {}
     for page in get_paginator(service):
         for price_item in page.get("PriceList", []):
@@ -263,7 +265,7 @@ def get_results(service, product_families):
                     ):
                         results[
                             region_map[product.get("attributes").get("location")]
-                        ] = set()
+                        ] = default
                     results[region_map[product.get("attributes").get("location")]].add(
                         product.get("attributes").get("instanceType")
                     )
@@ -302,7 +304,7 @@ def main():
     )
     outputs = update_outputs(
         "NeptuneInstanceClass",
-        get_results("AmazonNeptune", ["Database Instance"]),
+        get_results("AmazonNeptune", ["Database Instance"], default=set(["db.serverless"])), 
         outputs,
     )
     outputs = update_outputs(
