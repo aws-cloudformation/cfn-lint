@@ -11,6 +11,15 @@ from cfnlint.jsonschema.exceptions import (
     ValidationError,
     best_match,
 )
+from cfnlint.rules import CloudFormationLintRule
+
+
+class _RuleX(CloudFormationLintRule):
+    id = "X0000"
+
+
+class _RuleY(CloudFormationLintRule):
+    id = "Y0000"
 
 
 class TestExceptions(unittest.TestCase):
@@ -68,3 +77,33 @@ class TestExceptions(unittest.TestCase):
     def test_format_error(self):
         err = FormatError("foo")
         self.assertEqual(str(err), "foo")
+
+    def test_equals(self):
+        self.assertEqual(
+            ValidationError(message="Failure", path=deque(["foo"])),
+            ValidationError(message="Failure", path=deque(["foo"])),
+        )
+
+        self.assertNotEqual(
+            ValidationError(message="Failure", path=deque(["foo"])),
+            ValidationError(message="Failure", path=deque(["foo"]), rule=_RuleX()),
+        )
+        self.assertNotEqual(
+            ValidationError(message="Failure", path=deque(["foo"]), rule=_RuleX()),
+            ValidationError(
+                message="Failure",
+                path=deque(["foo"]),
+            ),
+        )
+        self.assertNotEqual(
+            ValidationError(message="Failure", path=deque(["foo"]), rule=_RuleX()),
+            ValidationError(
+                message="Failure",
+                path=deque(["foo"]),
+                rule=_RuleY(),
+            ),
+        )
+        self.assertNotEqual(
+            ValidationError(message="Failure", path=deque(["foo"]), rule=_RuleX()),
+            "test",
+        )
