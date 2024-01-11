@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import cfnlint.helpers
 from cfnlint.data.schemas.other import resources
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
@@ -48,10 +48,18 @@ class Configuration(BaseJsonSchema):
             "fn_tojsonstring": "E1031",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self.child_rules["E3009"] = None
         self.types = {
-            "CfnInit": "E3009",
+            "CfnInitCommand": "E3009",
+            "CfnInitFiles": "E3009",
+            "CfnInitGroups": "E3009",
+            "CfnInitPackages": "E3009",
+            "CfnInitServices": "E3009",
+            "CfnInitSources": "E3009",
+            "CfnInitUsers": "E3009",
+            "DeletionPolicy": "E3035",
+            "UpdateReplacePolicy": "E3036",
         }
+        self.child_rules.update(dict.fromkeys(list(self.types.values())))
 
     def initialize(self, cfn):
         super().initialize(cfn)
@@ -60,17 +68,15 @@ class Configuration(BaseJsonSchema):
 
     # pylint: disable=unused-argument
     def awsType(self, validator, iT, instance, schema):
-        if validator.is_type(iT, "string") and iT.startswith("CfnInit"):
-            rule = self.child_rules.get(self.types.get("CfnInit", ""))
-            if not rule:
-                return
+        rule = self.child_rules.get(self.types.get(iT, ""))
 
-            if hasattr(rule, iT.lower()) and callable(getattr(rule, iT.lower())):
-                validate = getattr(rule, iT.lower())
-                for err in validate(validator, iT, instance, schema):
-                    yield err
-
+        if not rule:
             return
+
+        if hasattr(rule, iT.lower()) and callable(getattr(rule, iT.lower())):
+            validate = getattr(rule, iT.lower())
+            for err in validate(validator, iT, instance, schema):
+                yield err
 
     # pylint: disable=unused-argument
     def awsResourceType(self, validator, iT, instance, schema):

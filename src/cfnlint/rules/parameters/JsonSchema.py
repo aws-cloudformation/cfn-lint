@@ -6,7 +6,7 @@ from cfnlint.data.schemas.other import parameters as schema_parameters
 from cfnlint.helpers import REGION_PRIMARY, load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.jsonschema._validators_cfn import cfn_type
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class JsonSchema(BaseJsonSchema):

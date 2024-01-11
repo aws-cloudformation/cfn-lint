@@ -7,7 +7,7 @@ import pathlib
 from cfnlint.helpers import load_plugins, load_resource
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.jsonschema.exceptions import best_match
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class CfnSchema(BaseJsonSchema):
