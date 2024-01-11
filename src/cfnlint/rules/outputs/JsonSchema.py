@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.data.schemas.other import outputs as schema_outputs
 from cfnlint.helpers import REGION_PRIMARY, load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class JsonSchema(BaseJsonSchema):
