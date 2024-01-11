@@ -9,7 +9,7 @@ from cfnlint.helpers import load_plugins, load_resource
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.jsonschema._utils import Unset
 from cfnlint.jsonschema.exceptions import best_match
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class CfnRegionSchema(BaseJsonSchema):
