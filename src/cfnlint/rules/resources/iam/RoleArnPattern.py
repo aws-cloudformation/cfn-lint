@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import regex as re
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class RoleArnPattern(BaseJsonSchema):

@@ -91,6 +91,31 @@ class _Error(Exception):
     def __repr__(self):
         return f"<{self.__class__.__name__}: {self.message!r}>"
 
+    def __eq__(self, __value: object) -> bool:
+        if not isinstance(__value, ValidationError):
+            return False
+
+        if self.rule is not None:
+            if __value.rule is None:
+                return False
+            if self.rule.id != __value.rule.id:
+                return False
+        elif __value.rule is not None:
+            return False
+
+        return (
+            self.message == __value.message
+            and self.path == __value.path
+            and self.schema_path == __value.schema_path
+            and self.context == __value.context
+            and self.cause == __value.cause
+            and self.validator == __value.validator
+            and self.validator_value == __value.validator_value
+            and self.instance == __value.instance
+            and self.parent == __value.parent
+            and self.path_override == __value.path_override
+        )
+
     @property
     def absolute_path(self):
         parent = self.parent
