@@ -6,7 +6,7 @@ import logging
 
 from cfnlint.helpers import REGION_PRIMARY
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
 LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")

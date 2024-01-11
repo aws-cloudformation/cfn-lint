@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import StandardValidator, ValidationError
-from cfnlint.rules.jsonschema.base import BaseJsonSchema
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
 class Rule(BaseJsonSchema):
