@@ -27,5 +27,5 @@ class TestLoadPlugins(BaseTestCase):
         rules = load_plugins(path)
 
         self.assertTrue(all(isinstance(r, CloudFormationLintRule) for r in rules))
-        self.assertTrue("E1001" in (r.id for r in rules))
-        self.assertFalse("E3006" in (r.id for r in rules))
+        self.assertTrue("E1002" in (r.id for r in rules), rules)
+        self.assertFalse("E3006" in (r.id for r in rules), rules)

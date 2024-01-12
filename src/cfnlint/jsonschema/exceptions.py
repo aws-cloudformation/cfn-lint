@@ -103,6 +103,27 @@ class _Error(Exception):
         elif __value.rule is not None:
             return False
 
+        print(self.path, __value.path, self.path == __value.path)
+        print(
+            self.schema_path,
+            __value.schema_path,
+            self.schema_path == __value.schema_path,
+        )
+        print(self.context, __value.context, self.context == __value.context)
+        print(self.cause, __value.cause, self.cause == __value.cause)
+        print(self.validator, __value.validator, self.validator == __value.validator)
+        print(
+            self.validator_value,
+            __value.validator_value,
+            self.validator_value == __value.validator_value,
+        )
+        print(self.instance, __value.instance, self.instance == __value.instance)
+        print(self.parent, __value.parent, self.parent == __value.parent)
+        print(
+            self.path_override,
+            __value.path_override,
+            self.path_override == __value.path_override,
+        )
         return (
             self.message == __value.message
             and self.path == __value.path

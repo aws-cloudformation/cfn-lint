@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint import ConfigMixIn
-from cfnlint.rules.templates.Base import Base  # pylint: disable=E0401
+from cfnlint.rules.jsonschema.JsonSchema import JsonSchema
 
 
 class TestBaseTemplate(BaseRuleTestCase):
@@ -14,7 +14,7 @@ class TestBaseTemplate(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestBaseTemplate, self).setUp()
-        self.collection.register(Base())
+        self.collection.register(JsonSchema())
 
     def test_file_positive(self):
         """Test Positive"""
@@ -50,5 +50,5 @@ class TestBaseTemplate(BaseRuleTestCase):
     def test_file_base_null(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/templates/base_null.yaml", 2
+            "test/fixtures/templates/bad/templates/base_null.yaml", 3
         )

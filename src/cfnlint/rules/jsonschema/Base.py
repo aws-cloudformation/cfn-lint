@@ -66,9 +66,7 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
-    def setup_validator(
-        self, validator: Type[Validator], schema: Any, context: Context
-    ) -> Validator:
+    def _get_validators(self) -> Dict[str, V]:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
             rule = self.child_rules.get(rule_id)
@@ -76,6 +74,18 @@ class BaseJsonSchema(CloudFormationLintRule):
                 if hasattr(rule, name) and callable(getattr(rule, name)):
                     validators[name] = getattr(rule, name)
 
-        return validator({}).extend(validators=validators, context=context)(
+        return validators
+
+    def extend_validator(
+        self, validator: Validator, schema: Any, context: Context
+    ) -> Validator:
+        return validator.extend(validators=self._get_validators(), context=context)(
+            schema=schema
+        ).evolve(cfn=validator.cfn)
+
+    def setup_validator(
+        self, validator: Type[Validator], schema: Any, context: Context
+    ) -> Validator:
+        return validator({}).extend(validators=self._get_validators(), context=context)(
             schema=schema
         )
