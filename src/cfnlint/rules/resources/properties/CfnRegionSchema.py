@@ -6,7 +6,7 @@ import pathlib
 from typing import Sequence
 
 from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema._utils import Unset
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
@@ -90,12 +90,12 @@ class BaseCfnRegionSchema(BaseJsonSchema):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
         for region in regions:
-            self.cfn_validator = self.setup_validator(
-                validator=CfnTemplateValidator,
+            region_validator = self.extend_validator(
+                validator=validator,
                 schema=self.cfn_schema.get(region, {}),
                 context=validator.context.evolve(),
             )
-            err = best_match(list(self.cfn_validator.iter_errors(instance)))
+            err = best_match(list(region_validator.iter_errors(instance)))
             if err is not None:
                 yield ValidationError(
                     message=f"{err.message} in {region}",
