@@ -2,26 +2,84 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.Configuration import Configuration
 
 
 class TestResourceConfiguration(BaseRuleTestCase):
-    """Test base template"""
+    """Test AWS Types"""
 
     def setUp(self):
         """Setup"""
         super(TestResourceConfiguration, self).setUp()
-        self.collection.register(Configuration())
+        self.rule = Configuration()
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+    def test_configurations(self):
+        validator = CfnTemplateValidator({})
+        errors = list(
+            self.rule.cfnresources(
+                validator, "cfnResources", {"foo": {"Type": "bar"}}, {}
+            )
+        )
+        self.assertListEqual(
+            errors,
+            [],
+            errors,
+        )
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/generic.yaml", 1)
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/configuration.yaml", 3
+        errors = list(
+            self.rule.cfnresources(validator, "cfnResources", {"foo": []}, {})
+        )
+
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    (
+                        "[] should not be valid under {'required': "
+                        "['CreationPolicy', 'UpdatePolicy']}"
+                    ),
+                    rule=Configuration(),
+                    path=deque(["foo"]),
+                    schema_path=deque(["additionalProperties", "then", "not"]),
+                    validator="not",
+                    validator_value={"required": ["CreationPolicy", "UpdatePolicy"]},
+                    instance=[],
+                ),
+                ValidationError(
+                    "[] is not of type 'object'",
+                    rule=Configuration(),
+                    path=deque(["foo"]),
+                    schema_path=deque(["additionalProperties", "type"]),
+                    validator="type",
+                    validator_value="object",
+                    instance=[],
+                ),
+            ],
+            errors,
+        )
+
+        errors = list(
+            self.rule.cfnresources(validator, "cfnResources", {"foo": {"Type": []}}, {})
+        )
+
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    "[] is not of type 'string'",
+                    rule=Configuration(),
+                    path=deque(["foo", "Type"]),
+                    schema_path=deque(
+                        ["additionalProperties", "properties", "Type", "type"]
+                    ),
+                    validator="type",
+                    validator_value="string",
+                    instance=[],
+                ),
+            ],
+            errors,
         )
