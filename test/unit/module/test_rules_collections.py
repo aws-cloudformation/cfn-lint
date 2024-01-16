@@ -297,5 +297,5 @@ class TestCreateFromModule(BaseTestCase):
     def test_create_from_module(self):
         """Load rules from a module"""
         rules = RulesCollection()
-        rules.create_from_module("cfnlint.rules.templates.Base")
+        rules.create_from_module("cfnlint.rules.jsonschema.JsonSchema")
         self.assertIn("E1001", (r.id for r in rules))
