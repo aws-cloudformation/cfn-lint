@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+import datetime
 import numbers
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict
@@ -56,6 +57,10 @@ def is_object(checker: "TypeChecker", instance: Any) -> bool:
 
 def is_string(checker: "TypeChecker", instance: Any) -> bool:
     return isinstance(instance, str)
+
+
+def is_date(checker: "TypeChecker", instance: Any) -> bool:
+    return isinstance(instance, datetime.date)
 
 
 @dataclass(frozen=True, repr=False)
@@ -128,5 +133,6 @@ cfn_type_checker = TypeChecker(
         "null": is_null,
         "number": is_number,
         "string": is_string,
+        "date": is_date,
     },
 )
