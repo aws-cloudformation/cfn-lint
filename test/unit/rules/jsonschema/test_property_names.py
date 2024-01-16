@@ -47,6 +47,13 @@ class TestPropertyNames(BaseRuleTestCase):
         self.assertEqual(len(errs), 1)
         self.assertEqual(errs[0].rule.id, "ChildMaxPropertyNames")
 
+        errs = list(self.rule.propertyNames(validator, {"maxLength": 3}, [], {}))
+        self.assertListEqual(errs, [])
+
+    def test_max_length(self):
+        validator = CfnTemplateValidator({})
+        self.assertListEqual(list(self.rule._max_length(validator, 3, [], {})), [])
+
 
 class ChildPropertyNamesWithFunction(CloudFormationLintRule):
     id = "ChildMaxPropertyNamesWithFunction"
