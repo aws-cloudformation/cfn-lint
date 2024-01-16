@@ -45,7 +45,14 @@
   },
   "ResourceConfiguration": {
    "additionalProperties": false,
-   "awsResourceType": true,
+   "allOf": [
+    {
+     "awsType": "CfnResourceType"
+    },
+    {
+     "awsType": "CfnResourceProperties"
+    }
+   ],
    "else": {
     "not": {
      "required": [
@@ -76,7 +83,7 @@
      "type": "object"
     },
     "DeletionPolicy": {
-     "awsType": "DeletionPolicy"
+     "awsType": "CfnDeletionPolicy"
     },
     "DependsOn": {
      "items": {
@@ -91,7 +98,7 @@
      "$ref": "#/definitions/Metadata"
     },
     "Properties": {
-     "awsType": "resourceProperties"
+     "awsType": "CfnResourceProperties"
     },
     "Type": {
      "type": "string"
@@ -100,7 +107,7 @@
      "type": "object"
     },
     "UpdateReplacePolicy": {
-     "awsType": "UpdateReplacePolicy"
+     "awsType": "CfnUpdateReplacePolicy"
     },
     "Version": {
      "type": "string"
