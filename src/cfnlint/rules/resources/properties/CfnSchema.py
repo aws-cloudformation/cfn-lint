@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import pathlib
 
 from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import StandardValidator
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
@@ -54,8 +53,9 @@ class BaseCfnSchema(BaseJsonSchema):
     def validate(self, validator, instance):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
-        cfn_validator = self.setup_validator(
-            validator=StandardValidator,
+
+        cfn_validator = self.extend_validator(
+            validator=validator,
             schema=self.cfn_schema,
             context=validator.context.evolve(),
         )
