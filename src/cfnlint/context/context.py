@@ -9,7 +9,7 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Tuple
 
-from cfnlint.helpers import FUNCTIONS, PSEUDOPARAMS, REGION_PRIMARY
+from cfnlint.helpers import PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
 
 _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
@@ -408,24 +408,7 @@ class ContextManager:
     collection: Dict | List[str | Dict] = field(init=False)
     output: Dict[str, Any] = field(init=False)
 
-    def create_context_for_resources(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a resources
-        """
-        return Context(
-            parameters=self.parameters,
-            resources=self.resources,
-            conditions=self.conditions,
-            transforms=self.transforms,
-            mappings=self.mappings,
-            regions=regions,
-            path=deque(["Resources"]),
-            functions=[],
-        )
-
-    def create_context_for_resource_properties(
-        self, regions: Sequence[str], resource_name: str
-    ) -> Context:
+    def create_context_for_template(self, regions: Sequence[str]) -> Context:
         """
         Create a context for a resource properties
         """
@@ -437,70 +420,6 @@ class ContextManager:
             transforms=self.transforms,
             mappings=self.mappings,
             regions=regions,
-            path=deque(["Resources", resource_name, "Properties"]),
-            functions=list(FUNCTIONS),
-        )
-
-    def create_context_for_mappings(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a resource properties
-        """
-
-        return Context(
-            parameters={},
-            resources={},
-            conditions={},
-            transforms=self.transforms,
-            mappings={},
-            regions=regions,
-            path=deque(["Mappings"]),
+            path=deque([]),
             functions=["Fn::Transform"],
-        )
-
-    def create_context_for_outputs(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a resource properties
-        """
-
-        return Context(
-            parameters=self.parameters,
-            resources=self.resources,
-            conditions=self.conditions,
-            transforms=self.transforms,
-            mappings=self.mappings,
-            regions=regions,
-            path=deque(["Outputs"]),
-            functions=[],
-        )
-
-    def create_context_for_conditions(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a conditions
-        """
-
-        return Context(
-            parameters=self.parameters,
-            resources={},
-            conditions=self.conditions,
-            mappings=self.mappings,
-            transforms=self.transforms,
-            regions=regions,
-            path=deque(["Conditions"]),
-            functions=[],
-        )
-
-    def create_context_for_parameters(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a conditions
-        """
-
-        return Context(
-            parameters={},
-            resources={},
-            conditions={},
-            mappings={},
-            transforms=self.transforms,
-            regions=regions,
-            path=deque(["Parameters"]),
-            functions=[],
         )

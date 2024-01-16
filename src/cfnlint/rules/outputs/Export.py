@@ -15,7 +15,7 @@ class Export(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]
 
-    def outputexport(self, validator, tS, instance, schema):
+    def cfnoutputexport(self, validator, tS, instance, schema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 resources={},
