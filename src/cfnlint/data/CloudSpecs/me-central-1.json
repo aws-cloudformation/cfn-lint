@@ -155,7 +155,41 @@
   "AWS::ACMPCA::Certificate.Validity": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.AccessDescription": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.AccessMethod": "CACHED",
-  "AWS::ACMPCA::CertificateAuthority.CrlConfiguration": "CACHED",
+  "AWS::ACMPCA::CertificateAuthority.CrlConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html",
+   "Properties": {
+    "CustomCname": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html#cfn-acmpca-certificateauthority-crlconfiguration-customcname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Enabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html#cfn-acmpca-certificateauthority-crlconfiguration-enabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ExpirationInDays": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html#cfn-acmpca-certificateauthority-crlconfiguration-expirationindays",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "S3BucketName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html#cfn-acmpca-certificateauthority-crlconfiguration-s3bucketname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "S3ObjectAcl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-acmpca-certificateauthority-crlconfiguration.html#cfn-acmpca-certificateauthority-crlconfiguration-s3objectacl",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ACMPCA::CertificateAuthority.CsrExtensions": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.CustomAttribute": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.EdiPartyName": "CACHED",
@@ -1647,6 +1681,7 @@
   "AWS::EC2::FlowLog.DestinationOptions": "CACHED",
   "AWS::EC2::IPAM.IpamOperatingRegion": "CACHED",
   "AWS::EC2::IPAMPool.ProvisionedCidr": "CACHED",
+  "AWS::EC2::IPAMPool.SourceResource": "CACHED",
   "AWS::EC2::IPAMResourceDiscovery.IpamOperatingRegion": "CACHED",
   "AWS::EC2::Instance.AssociationParameter": "CACHED",
   "AWS::EC2::Instance.BlockDeviceMapping": "CACHED",
@@ -1691,17 +1726,7 @@
   "AWS::EC2::LaunchTemplate.LaunchTemplateElasticInferenceAccelerator": "CACHED",
   "AWS::EC2::LaunchTemplate.LaunchTemplateTagSpecification": "CACHED",
   "AWS::EC2::LaunchTemplate.LicenseSpecification": "CACHED",
-  "AWS::EC2::LaunchTemplate.MaintenanceOptions": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-maintenanceoptions.html",
-   "Properties": {
-    "AutoRecovery": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-maintenanceoptions.html#cfn-ec2-launchtemplate-maintenanceoptions-autorecovery",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::LaunchTemplate.MaintenanceOptions": "CACHED",
   "AWS::EC2::LaunchTemplate.MemoryGiBPerVCpu": "CACHED",
   "AWS::EC2::LaunchTemplate.MemoryMiB": "CACHED",
   "AWS::EC2::LaunchTemplate.MetadataOptions": "CACHED",
@@ -1718,24 +1743,11 @@
   "AWS::EC2::LaunchTemplate.VCpuCount": "CACHED",
   "AWS::EC2::NetworkAclEntry.Icmp": "CACHED",
   "AWS::EC2::NetworkAclEntry.PortRange": "CACHED",
+  "AWS::EC2::NetworkInterface.ConnectionTrackingSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.InstanceIpv6Address": "CACHED",
-  "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-network-interface-privateipspec.html",
-   "Properties": {
-    "Primary": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-network-interface-privateipspec.html#cfn-ec2-networkinterface-privateipspecification-primary",
-     "PrimitiveType": "Boolean",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "PrivateIpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-network-interface-privateipspec.html#cfn-ec2-networkinterface-privateipspecification-privateipaddress",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::NetworkInterface.Ipv4PrefixSpecification": "CACHED",
+  "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
+  "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::PrefixList.Entry": "CACHED",
   "AWS::EC2::SecurityGroup.Egress": "CACHED",
   "AWS::EC2::SecurityGroup.Ingress": "CACHED",
@@ -2812,7 +2824,77 @@
   "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificateScope": "CACHED",
   "AWS::NetworkFirewall::TLSInspectionConfiguration.TLSInspectionConfiguration": "CACHED",
   "AWS::OpenSearchService::Domain.AdvancedSecurityOptionsInput": "CACHED",
-  "AWS::OpenSearchService::Domain.ClusterConfig": "CACHED",
+  "AWS::OpenSearchService::Domain.ClusterConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html",
+   "Properties": {
+    "DedicatedMasterCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-dedicatedmastercount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DedicatedMasterEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-dedicatedmasterenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DedicatedMasterType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-dedicatedmastertype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "InstanceCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-instancecount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "InstanceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-instancetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "MultiAZWithStandbyEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-multiazwithstandbyenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "WarmCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-warmcount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "WarmEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-warmenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "WarmType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-warmtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ZoneAwarenessConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-zoneawarenessconfig",
+     "Required": false,
+     "Type": "ZoneAwarenessConfig",
+     "UpdateType": "Mutable"
+    },
+    "ZoneAwarenessEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-clusterconfig.html#cfn-opensearchservice-domain-clusterconfig-zoneawarenessenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::OpenSearchService::Domain.CognitoOptions": "CACHED",
   "AWS::OpenSearchService::Domain.DomainEndpointOptions": "CACHED",
   "AWS::OpenSearchService::Domain.EBSOptions": "CACHED",
@@ -2928,7 +3010,23 @@
   "AWS::RDS::DBSecurityGroup.Ingress": "CACHED",
   "AWS::RDS::OptionGroup.OptionConfiguration": "CACHED",
   "AWS::RDS::OptionGroup.OptionSetting": "CACHED",
-  "AWS::Redshift::Cluster.LoggingProperties": "CACHED",
+  "AWS::Redshift::Cluster.LoggingProperties": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html",
+   "Properties": {
+    "BucketName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-bucketname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "S3KeyPrefix": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-s3keyprefix",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Redshift::ClusterParameterGroup.Parameter": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html",
    "Properties": {
@@ -3728,7 +3826,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "153.0.0",
+ "ResourceSpecificationVersion": "154.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -5208,94 +5306,7 @@
   "AWS::EC2::NatGateway": "CACHED",
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
-  "AWS::EC2::NetworkInterface": {
-   "Attributes": {
-    "PrimaryPrivateIpAddress": {
-     "PrimitiveType": "String"
-    },
-    "SecondaryPrivateIpAddresses": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "GroupSet": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-groupset",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "InterfaceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-ec2-networkinterface-interfacetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Ipv6AddressCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-ec2-networkinterface-ipv6addresscount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Ipv6Addresses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-ec2-networkinterface-ipv6addresses",
-     "DuplicatesAllowed": false,
-     "ItemType": "InstanceIpv6Address",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "PrivateIpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-privateipaddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PrivateIpAddresses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-privateipaddresses",
-     "DuplicatesAllowed": false,
-     "ItemType": "PrivateIpAddressSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Conditional"
-    },
-    "SecondaryPrivateIpAddressCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-secondaryprivateipcount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SourceDestCheck": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-sourcedestcheck",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SubnetId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-subnetid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::NetworkInterface": "CACHED",
   "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
@@ -5758,99 +5769,7 @@
   "AWS::IoT::CertificateProvider": "CACHED",
   "AWS::IoT::CustomMetric": "CACHED",
   "AWS::IoT::Dimension": "CACHED",
-  "AWS::IoT::DomainConfiguration": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "DomainType": {
-     "PrimitiveType": "String"
-    },
-    "ServerCertificates": {
-     "ItemType": "ServerCertificateSummary",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html",
-   "Properties": {
-    "AuthorizerConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-authorizerconfig",
-     "Required": false,
-     "Type": "AuthorizerConfig",
-     "UpdateType": "Mutable"
-    },
-    "DomainConfigurationName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainconfigurationname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainConfigurationName"
-     }
-    },
-    "DomainConfigurationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainconfigurationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainConfigurationStatus"
-     }
-    },
-    "DomainName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainName"
-     }
-    },
-    "ServerCertificateArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-servercertificatearns",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ServerCertificateArns"
-     }
-    },
-    "ServiceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-servicetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ServiceType"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TlsConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-tlsconfig",
-     "Required": false,
-     "Type": "TlsConfig",
-     "UpdateType": "Mutable"
-    },
-    "ValidationCertificateArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-validationcertificatearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ValidationCertificateArn"
-     }
-    }
-   }
-  },
+  "AWS::IoT::DomainConfiguration": "CACHED",
   "AWS::IoT::FleetMetric": "CACHED",
   "AWS::IoT::JobTemplate": "CACHED",
   "AWS::IoT::Logging": "CACHED",
@@ -8514,6 +8433,7 @@
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.ValidationSettings.Mode": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.PolicyStoreId": "CACHED",
@@ -8693,337 +8613,18 @@
   "EFSFileSystemLifecyclePolicy": "CACHED",
   "EFSFileSystemPerformanceMode": "CACHED",
   "EFSFileSystemThroughputMode": "CACHED",
-  "EMRInstanceType": {
-   "AllowedValues": [
-    "c5.12xlarge",
-    "c5.18xlarge",
-    "c5.24xlarge",
-    "c5.2xlarge",
-    "c5.4xlarge",
-    "c5.9xlarge",
-    "c5.xlarge",
-    "c5d.12xlarge",
-    "c5d.18xlarge",
-    "c5d.24xlarge",
-    "c5d.2xlarge",
-    "c5d.4xlarge",
-    "c5d.9xlarge",
-    "c5d.xlarge",
-    "c6g.12xlarge",
-    "c6g.16xlarge",
-    "c6g.2xlarge",
-    "c6g.4xlarge",
-    "c6g.8xlarge",
-    "c6g.xlarge",
-    "c6in.12xlarge",
-    "c6in.16xlarge",
-    "c6in.24xlarge",
-    "c6in.2xlarge",
-    "c6in.32xlarge",
-    "c6in.4xlarge",
-    "c6in.8xlarge",
-    "c6in.xlarge",
-    "g5.12xlarge",
-    "g5.16xlarge",
-    "g5.24xlarge",
-    "g5.2xlarge",
-    "g5.48xlarge",
-    "g5.4xlarge",
-    "g5.8xlarge",
-    "g5.xlarge",
-    "i3.16xlarge",
-    "i3.2xlarge",
-    "i3.4xlarge",
-    "i3.8xlarge",
-    "i3.xlarge",
-    "i3en.12xlarge",
-    "i3en.24xlarge",
-    "i3en.2xlarge",
-    "i3en.3xlarge",
-    "i3en.6xlarge",
-    "i3en.xlarge",
-    "i4i.12xlarge",
-    "i4i.16xlarge",
-    "i4i.24xlarge",
-    "i4i.2xlarge",
-    "i4i.32xlarge",
-    "i4i.4xlarge",
-    "i4i.8xlarge",
-    "i4i.xlarge",
-    "m5.12xlarge",
-    "m5.16xlarge",
-    "m5.24xlarge",
-    "m5.2xlarge",
-    "m5.4xlarge",
-    "m5.8xlarge",
-    "m5.xlarge",
-    "m5d.12xlarge",
-    "m5d.16xlarge",
-    "m5d.24xlarge",
-    "m5d.2xlarge",
-    "m5d.4xlarge",
-    "m5d.8xlarge",
-    "m5d.xlarge",
-    "m6g.12xlarge",
-    "m6g.16xlarge",
-    "m6g.2xlarge",
-    "m6g.4xlarge",
-    "m6g.8xlarge",
-    "m6g.xlarge",
-    "m6gd.12xlarge",
-    "m6gd.16xlarge",
-    "m6gd.2xlarge",
-    "m6gd.4xlarge",
-    "m6gd.8xlarge",
-    "m6gd.xlarge",
-    "m6i.12xlarge",
-    "m6i.16xlarge",
-    "m6i.24xlarge",
-    "m6i.2xlarge",
-    "m6i.32xlarge",
-    "m6i.4xlarge",
-    "m6i.8xlarge",
-    "m6i.xlarge",
-    "r5.12xlarge",
-    "r5.16xlarge",
-    "r5.24xlarge",
-    "r5.2xlarge",
-    "r5.4xlarge",
-    "r5.8xlarge",
-    "r5.xlarge",
-    "r5d.12xlarge",
-    "r5d.16xlarge",
-    "r5d.24xlarge",
-    "r5d.2xlarge",
-    "r5d.4xlarge",
-    "r5d.8xlarge",
-    "r5d.xlarge",
-    "r6g.12xlarge",
-    "r6g.16xlarge",
-    "r6g.2xlarge",
-    "r6g.4xlarge",
-    "r6g.8xlarge",
-    "r6g.xlarge",
-    "r6i.12xlarge",
-    "r6i.16xlarge",
-    "r6i.24xlarge",
-    "r6i.2xlarge",
-    "r6i.32xlarge",
-    "r6i.4xlarge",
-    "r6i.8xlarge",
-    "r6i.xlarge",
-    "x2idn.16xlarge",
-    "x2idn.24xlarge",
-    "x2idn.32xlarge"
-   ]
-  },
+  "EMRInstanceType": "CACHED",
   "EbsIops": "CACHED",
   "EbsVolumeType": "CACHED",
   "Ec2CpuCredits": "CACHED",
   "Ec2ElasticIpDomain": "CACHED",
   "Ec2FleetOnDemandAllocationStrategy": "CACHED",
   "Ec2HostAutoPlacement": "CACHED",
-  "Ec2InstanceType": {
-   "AllowedValues": [
-    "c5.12xlarge",
-    "c5.18xlarge",
-    "c5.24xlarge",
-    "c5.2xlarge",
-    "c5.4xlarge",
-    "c5.9xlarge",
-    "c5.large",
-    "c5.metal",
-    "c5.xlarge",
-    "c5d.12xlarge",
-    "c5d.18xlarge",
-    "c5d.24xlarge",
-    "c5d.2xlarge",
-    "c5d.4xlarge",
-    "c5d.9xlarge",
-    "c5d.large",
-    "c5d.metal",
-    "c5d.xlarge",
-    "c6g.12xlarge",
-    "c6g.16xlarge",
-    "c6g.2xlarge",
-    "c6g.4xlarge",
-    "c6g.8xlarge",
-    "c6g.large",
-    "c6g.medium",
-    "c6g.metal",
-    "c6g.xlarge",
-    "c6in.12xlarge",
-    "c6in.16xlarge",
-    "c6in.24xlarge",
-    "c6in.2xlarge",
-    "c6in.32xlarge",
-    "c6in.4xlarge",
-    "c6in.8xlarge",
-    "c6in.large",
-    "c6in.metal",
-    "c6in.xlarge",
-    "g5.12xlarge",
-    "g5.16xlarge",
-    "g5.24xlarge",
-    "g5.2xlarge",
-    "g5.48xlarge",
-    "g5.4xlarge",
-    "g5.8xlarge",
-    "g5.xlarge",
-    "i3.16xlarge",
-    "i3.2xlarge",
-    "i3.4xlarge",
-    "i3.8xlarge",
-    "i3.large",
-    "i3.xlarge",
-    "i3en.12xlarge",
-    "i3en.24xlarge",
-    "i3en.2xlarge",
-    "i3en.3xlarge",
-    "i3en.6xlarge",
-    "i3en.large",
-    "i3en.metal",
-    "i3en.xlarge",
-    "i4i.12xlarge",
-    "i4i.16xlarge",
-    "i4i.24xlarge",
-    "i4i.2xlarge",
-    "i4i.32xlarge",
-    "i4i.4xlarge",
-    "i4i.8xlarge",
-    "i4i.large",
-    "i4i.metal",
-    "i4i.xlarge",
-    "m5.12xlarge",
-    "m5.16xlarge",
-    "m5.24xlarge",
-    "m5.2xlarge",
-    "m5.4xlarge",
-    "m5.8xlarge",
-    "m5.large",
-    "m5.metal",
-    "m5.xlarge",
-    "m5d.12xlarge",
-    "m5d.16xlarge",
-    "m5d.24xlarge",
-    "m5d.2xlarge",
-    "m5d.4xlarge",
-    "m5d.8xlarge",
-    "m5d.large",
-    "m5d.metal",
-    "m5d.xlarge",
-    "m6g.12xlarge",
-    "m6g.16xlarge",
-    "m6g.2xlarge",
-    "m6g.4xlarge",
-    "m6g.8xlarge",
-    "m6g.large",
-    "m6g.medium",
-    "m6g.metal",
-    "m6g.xlarge",
-    "m6gd.12xlarge",
-    "m6gd.16xlarge",
-    "m6gd.2xlarge",
-    "m6gd.4xlarge",
-    "m6gd.8xlarge",
-    "m6gd.large",
-    "m6gd.medium",
-    "m6gd.metal",
-    "m6gd.xlarge",
-    "m6i.12xlarge",
-    "m6i.16xlarge",
-    "m6i.24xlarge",
-    "m6i.2xlarge",
-    "m6i.32xlarge",
-    "m6i.4xlarge",
-    "m6i.8xlarge",
-    "m6i.large",
-    "m6i.metal",
-    "m6i.xlarge",
-    "r5.12xlarge",
-    "r5.16xlarge",
-    "r5.24xlarge",
-    "r5.2xlarge",
-    "r5.4xlarge",
-    "r5.8xlarge",
-    "r5.large",
-    "r5.metal",
-    "r5.xlarge",
-    "r5d.12xlarge",
-    "r5d.16xlarge",
-    "r5d.24xlarge",
-    "r5d.2xlarge",
-    "r5d.4xlarge",
-    "r5d.8xlarge",
-    "r5d.large",
-    "r5d.metal",
-    "r5d.xlarge",
-    "r6g.12xlarge",
-    "r6g.16xlarge",
-    "r6g.2xlarge",
-    "r6g.4xlarge",
-    "r6g.8xlarge",
-    "r6g.large",
-    "r6g.medium",
-    "r6g.metal",
-    "r6g.xlarge",
-    "r6i.12xlarge",
-    "r6i.16xlarge",
-    "r6i.24xlarge",
-    "r6i.2xlarge",
-    "r6i.32xlarge",
-    "r6i.4xlarge",
-    "r6i.8xlarge",
-    "r6i.large",
-    "r6i.metal",
-    "r6i.xlarge",
-    "t3.2xlarge",
-    "t3.large",
-    "t3.medium",
-    "t3.micro",
-    "t3.nano",
-    "t3.small",
-    "t3.xlarge",
-    "t4g.2xlarge",
-    "t4g.large",
-    "t4g.medium",
-    "t4g.micro",
-    "t4g.nano",
-    "t4g.small",
-    "t4g.xlarge",
-    "x2idn.16xlarge",
-    "x2idn.24xlarge",
-    "x2idn.32xlarge",
-    "x2idn.metal"
-   ],
-   "Ref": {
-    "Parameters": [
-     "String"
-    ]
-   }
-  },
+  "Ec2InstanceType": "CACHED",
   "Ec2Tenancy": "CACHED",
   "EcsNetworkMode": "CACHED",
   "EcsTaskDefinitionProxyType": "CACHED",
-  "ElastiCacheInstanceType": {
-   "AllowedValues": [
-    "cache.m5.12xlarge",
-    "cache.m5.24xlarge",
-    "cache.m5.2xlarge",
-    "cache.m5.4xlarge",
-    "cache.m5.large",
-    "cache.m5.xlarge",
-    "cache.r5.12xlarge",
-    "cache.r5.24xlarge",
-    "cache.r5.2xlarge",
-    "cache.r5.4xlarge",
-    "cache.r5.large",
-    "cache.r5.xlarge",
-    "cache.t3.medium",
-    "cache.t3.micro",
-    "cache.t3.small"
-   ]
-  },
+  "ElastiCacheInstanceType": "CACHED",
   "ElasticInferenceAccelerator": "CACHED",
   "ElasticsearchInstanceType": "CACHED",
   "ImageId": "CACHED",
@@ -9038,39 +8639,7 @@
   "LoadBalancerPort": "CACHED",
   "LoadBalancerV2Arn": "CACHED",
   "MicrosoftADEdition": "CACHED",
-  "NeptuneInstanceClass": {
-   "AllowedValues": [
-    "db.r5.12xlarge",
-    "db.r5.16xlarge",
-    "db.r5.24xlarge",
-    "db.r5.2xlarge",
-    "db.r5.4xlarge",
-    "db.r5.8xlarge",
-    "db.r5.large",
-    "db.r5.xlarge",
-    "db.r5d.12xlarge",
-    "db.r5d.16xlarge",
-    "db.r5d.24xlarge",
-    "db.r5d.2xlarge",
-    "db.r5d.4xlarge",
-    "db.r5d.8xlarge",
-    "db.r5d.large",
-    "db.r5d.xlarge",
-    "db.r6g.12xlarge",
-    "db.r6g.16xlarge",
-    "db.r6g.2xlarge",
-    "db.r6g.4xlarge",
-    "db.r6g.8xlarge",
-    "db.r6g.large",
-    "db.r6g.xlarge",
-    "db.t3.medium"
-   ],
-   "Ref": {
-    "Parameters": [
-     "String"
-    ]
-   }
-  },
+  "NeptuneInstanceClass": "CACHED",
   "NetworkAclRuleAction": "CACHED",
   "NetworkAclRuleNumber": "CACHED",
   "NetworkInterfacePermission": "CACHED",
@@ -9086,20 +8655,7 @@
   "RecordSetType": "CACHED",
   "RedshiftClusterType": "CACHED",
   "RedshiftClusterVersion": "CACHED",
-  "RedshiftInstanceType": {
-   "AllowedValues": [
-    "dc2.8xlarge",
-    "dc2.large",
-    "ra3.16xlarge",
-    "ra3.4xlarge",
-    "ra3.xlplus"
-   ],
-   "Ref": {
-    "Parameters": [
-     "String"
-    ]
-   }
-  },
+  "RedshiftInstanceType": "CACHED",
   "RestApiId": "CACHED",
   "Route53ResolverEndpointDirection": "CACHED",
   "SecretsManagerTargetType": "CACHED",

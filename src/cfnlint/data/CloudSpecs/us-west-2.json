@@ -156,6 +156,7 @@
   "AWS::ACMPCA::CertificateAuthority.AccessDescription": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.AccessMethod": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.CrlConfiguration": "CACHED",
+  "AWS::ACMPCA::CertificateAuthority.CrlDistributionPointExtensionConfiguration": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.CsrExtensions": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.CustomAttribute": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.EdiPartyName": "CACHED",
@@ -963,9 +964,49 @@
   "AWS::CodeStar::GitHubRepository.Code": "CACHED",
   "AWS::CodeStar::GitHubRepository.S3": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule.Target": "CACHED",
-  "AWS::Cognito::IdentityPool.CognitoIdentityProvider": "CACHED",
+  "AWS::Cognito::IdentityPool.CognitoIdentityProvider": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-cognitoidentityprovider.html",
+   "Properties": {
+    "ClientId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-cognitoidentityprovider.html#cfn-cognito-identitypool-cognitoidentityprovider-clientid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ProviderName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-cognitoidentityprovider.html#cfn-cognito-identitypool-cognitoidentityprovider-providername",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ServerSideTokenCheck": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-cognitoidentityprovider.html#cfn-cognito-identitypool-cognitoidentityprovider-serversidetokencheck",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Cognito::IdentityPool.CognitoStreams": "CACHED",
-  "AWS::Cognito::IdentityPool.PushSync": "CACHED",
+  "AWS::Cognito::IdentityPool.PushSync": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-pushsync.html",
+   "Properties": {
+    "ApplicationArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-pushsync.html#cfn-cognito-identitypool-pushsync-applicationarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-pushsync.html#cfn-cognito-identitypool-pushsync-rolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Cognito::IdentityPoolRoleAttachment.MappingRule": "CACHED",
   "AWS::Cognito::IdentityPoolRoleAttachment.RoleMapping": "CACHED",
   "AWS::Cognito::IdentityPoolRoleAttachment.RulesConfigurationType": "CACHED",
@@ -1093,8 +1134,8 @@
      "Type": "List",
      "UpdateType": "Mutable"
     },
-    "EndAssociatedTaskActions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-rule-actions.html#cfn-connect-rule-actions-endassociatedtaskactions",
+    "EndAssociatedTasksActions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-connect-rule-actions.html#cfn-connect-rule-actions-endassociatedtasksactions",
      "DuplicatesAllowed": false,
      "PrimitiveItemType": "Json",
      "Required": false,
@@ -1562,6 +1603,7 @@
   "AWS::EC2::FlowLog.DestinationOptions": "CACHED",
   "AWS::EC2::IPAM.IpamOperatingRegion": "CACHED",
   "AWS::EC2::IPAMPool.ProvisionedCidr": "CACHED",
+  "AWS::EC2::IPAMPool.SourceResource": "CACHED",
   "AWS::EC2::IPAMResourceDiscovery.IpamOperatingRegion": "CACHED",
   "AWS::EC2::Instance.AssociationParameter": "CACHED",
   "AWS::EC2::Instance.BlockDeviceMapping": "CACHED",
@@ -1643,6 +1685,7 @@
   "AWS::EC2::NetworkInsightsAnalysis.TransitGatewayRouteTableRoute": "CACHED",
   "AWS::EC2::NetworkInsightsPath.FilterPortRange": "CACHED",
   "AWS::EC2::NetworkInsightsPath.PathFilter": "CACHED",
+  "AWS::EC2::NetworkInterface.ConnectionTrackingSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.InstanceIpv6Address": "CACHED",
   "AWS::EC2::NetworkInterface.Ipv4PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
@@ -2379,7 +2422,23 @@
   "AWS::ImageBuilder::LifecyclePolicy.IncludeResources": "CACHED",
   "AWS::ImageBuilder::LifecyclePolicy.LastLaunched": "CACHED",
   "AWS::ImageBuilder::LifecyclePolicy.PolicyDetail": "CACHED",
-  "AWS::ImageBuilder::LifecyclePolicy.RecipeSelection": "CACHED",
+  "AWS::ImageBuilder::LifecyclePolicy.RecipeSelection": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-lifecyclepolicy-recipeselection.html",
+   "Properties": {
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-lifecyclepolicy-recipeselection.html#cfn-imagebuilder-lifecyclepolicy-recipeselection-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SemanticVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-lifecyclepolicy-recipeselection.html#cfn-imagebuilder-lifecyclepolicy-recipeselection-semanticversion",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ImageBuilder::LifecyclePolicy.ResourceSelection": "CACHED",
   "AWS::InspectorV2::Filter.DateFilter": "CACHED",
   "AWS::InspectorV2::Filter.FilterCriteria": "CACHED",
@@ -2401,7 +2460,6 @@
   "AWS::IoT::BillingGroup.BillingGroupProperties": "CACHED",
   "AWS::IoT::CACertificate.RegistrationConfig": "CACHED",
   "AWS::IoT::DomainConfiguration.AuthorizerConfig": "CACHED",
-  "AWS::IoT::DomainConfiguration.ServerCertificateConfig": "CACHED",
   "AWS::IoT::DomainConfiguration.ServerCertificateSummary": "CACHED",
   "AWS::IoT::DomainConfiguration.TlsConfig": "CACHED",
   "AWS::IoT::FleetMetric.AggregationType": "CACHED",
@@ -3185,6 +3243,8 @@
   "AWS::MediaLive::Channel.CaptionSelector": "CACHED",
   "AWS::MediaLive::Channel.CaptionSelectorSettings": "CACHED",
   "AWS::MediaLive::Channel.CdiInputSpecification": "CACHED",
+  "AWS::MediaLive::Channel.ColorCorrection": "CACHED",
+  "AWS::MediaLive::Channel.ColorCorrectionSettings": "CACHED",
   "AWS::MediaLive::Channel.ColorSpacePassthroughSettings": "CACHED",
   "AWS::MediaLive::Channel.DolbyVision81Settings": "CACHED",
   "AWS::MediaLive::Channel.DvbNitSettings": "CACHED",
@@ -3491,6 +3551,7 @@
   "AWS::OpenSearchService::Domain.AdvancedSecurityOptionsInput": "CACHED",
   "AWS::OpenSearchService::Domain.ClusterConfig": "CACHED",
   "AWS::OpenSearchService::Domain.CognitoOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.ColdStorageOptions": "CACHED",
   "AWS::OpenSearchService::Domain.DomainEndpointOptions": "CACHED",
   "AWS::OpenSearchService::Domain.EBSOptions": "CACHED",
   "AWS::OpenSearchService::Domain.EncryptionAtRestOptions": "CACHED",
@@ -4035,28 +4096,7 @@
   "AWS::QuickSight::Analysis.ReferenceLineValueLabelConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.RelativeDateTimeControlDisplayOptions": "CACHED",
   "AWS::QuickSight::Analysis.RelativeDatesFilter": "CACHED",
-  "AWS::QuickSight::Analysis.ResourcePermission": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html",
-   "Properties": {
-    "Actions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html#cfn-quicksight-analysis-resourcepermission-actions",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Principal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html#cfn-quicksight-analysis-resourcepermission-principal",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.ResourcePermission.Principal"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Analysis.ResourcePermission": "CACHED",
   "AWS::QuickSight::Analysis.RollingDateConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.RowAlternateColorOptions": "CACHED",
   "AWS::QuickSight::Analysis.SameSheetTargetVisualConfiguration": "CACHED",
@@ -4538,28 +4578,7 @@
   "AWS::QuickSight::Dashboard.ReferenceLineValueLabelConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.RelativeDateTimeControlDisplayOptions": "CACHED",
   "AWS::QuickSight::Dashboard.RelativeDatesFilter": "CACHED",
-  "AWS::QuickSight::Dashboard.ResourcePermission": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html",
-   "Properties": {
-    "Actions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html#cfn-quicksight-dashboard-resourcepermission-actions",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Principal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html#cfn-quicksight-dashboard-resourcepermission-principal",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Dashboard.ResourcePermission.Principal"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Dashboard.ResourcePermission": "CACHED",
   "AWS::QuickSight::Dashboard.RollingDateConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.RowAlternateColorOptions": "CACHED",
   "AWS::QuickSight::Dashboard.SameSheetTargetVisualConfiguration": "CACHED",
@@ -5107,28 +5126,7 @@
   "AWS::QuickSight::Template.ReferenceLineValueLabelConfiguration": "CACHED",
   "AWS::QuickSight::Template.RelativeDateTimeControlDisplayOptions": "CACHED",
   "AWS::QuickSight::Template.RelativeDatesFilter": "CACHED",
-  "AWS::QuickSight::Template.ResourcePermission": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html",
-   "Properties": {
-    "Actions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html#cfn-quicksight-template-resourcepermission-actions",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Principal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html#cfn-quicksight-template-resourcepermission-principal",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Template.ResourcePermission.Principal"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Template.ResourcePermission": "CACHED",
   "AWS::QuickSight::Template.RollingDateConfiguration": "CACHED",
   "AWS::QuickSight::Template.RowAlternateColorOptions": "CACHED",
   "AWS::QuickSight::Template.SameSheetTargetVisualConfiguration": "CACHED",
@@ -5262,28 +5260,7 @@
   "AWS::QuickSight::Theme.Font": "CACHED",
   "AWS::QuickSight::Theme.GutterStyle": "CACHED",
   "AWS::QuickSight::Theme.MarginStyle": "CACHED",
-  "AWS::QuickSight::Theme.ResourcePermission": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-theme-resourcepermission.html",
-   "Properties": {
-    "Actions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-theme-resourcepermission.html#cfn-quicksight-theme-resourcepermission-actions",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Principal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-theme-resourcepermission.html#cfn-quicksight-theme-resourcepermission-principal",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Theme.ResourcePermission.Principal"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Theme.ResourcePermission": "CACHED",
   "AWS::QuickSight::Theme.SheetStyle": "CACHED",
   "AWS::QuickSight::Theme.ThemeConfiguration": "CACHED",
   "AWS::QuickSight::Theme.ThemeError": "CACHED",
@@ -5341,23 +5318,7 @@
   "AWS::RUM::AppMonitor.MetricDefinition": "CACHED",
   "AWS::RUM::AppMonitor.MetricDestination": "CACHED",
   "AWS::Redshift::Cluster.Endpoint": "CACHED",
-  "AWS::Redshift::Cluster.LoggingProperties": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html",
-   "Properties": {
-    "BucketName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-bucketname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "S3KeyPrefix": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-s3keyprefix",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Redshift::Cluster.LoggingProperties": "CACHED",
   "AWS::Redshift::ClusterParameterGroup.Parameter": "CACHED",
   "AWS::Redshift::EndpointAccess.NetworkInterface": "CACHED",
   "AWS::Redshift::EndpointAccess.VpcEndpoint": "CACHED",
@@ -5705,6 +5666,7 @@
   "AWS::SageMaker::FeatureGroup.OnlineStoreConfig": "CACHED",
   "AWS::SageMaker::FeatureGroup.OnlineStoreSecurityConfig": "CACHED",
   "AWS::SageMaker::FeatureGroup.S3StorageConfig": "CACHED",
+  "AWS::SageMaker::FeatureGroup.ThroughputConfig": "CACHED",
   "AWS::SageMaker::InferenceComponent.DeployedImage": "CACHED",
   "AWS::SageMaker::InferenceComponent.InferenceComponentComputeResourceRequirements": "CACHED",
   "AWS::SageMaker::InferenceComponent.InferenceComponentContainerSpecification": "CACHED",
@@ -6207,7 +6169,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "153.0.0",
+ "ResourceSpecificationVersion": "154.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -6462,7 +6424,91 @@
   "AWS::CodeStarConnections::RepositoryLink": "CACHED",
   "AWS::CodeStarConnections::SyncConfiguration": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule": "CACHED",
-  "AWS::Cognito::IdentityPool": "CACHED",
+  "AWS::Cognito::IdentityPool": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html",
+   "Properties": {
+    "AllowClassicFlow": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-allowclassicflow",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AllowUnauthenticatedIdentities": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-allowunauthenticatedidentities",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "CognitoEvents": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-cognitoevents",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "CognitoIdentityProviders": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-cognitoidentityproviders",
+     "DuplicatesAllowed": true,
+     "ItemType": "CognitoIdentityProvider",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "CognitoStreams": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-cognitostreams",
+     "Required": false,
+     "Type": "CognitoStreams",
+     "UpdateType": "Mutable"
+    },
+    "DeveloperProviderName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-developerprovidername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IdentityPoolName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-identitypoolname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "OpenIdConnectProviderARNs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-openidconnectproviderarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PushSync": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-pushsync",
+     "Required": false,
+     "Type": "PushSync",
+     "UpdateType": "Mutable"
+    },
+    "SamlProviderARNs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-samlproviderarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SupportedLoginProviders": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypool.html#cfn-cognito-identitypool-supportedloginproviders",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Cognito::IdentityPoolPrincipalTag": "CACHED",
   "AWS::Cognito::IdentityPoolRoleAttachment": "CACHED",
   "AWS::Cognito::LogDeliveryConfiguration": "CACHED",
@@ -7284,7 +7330,41 @@
   "AWS::LakeFormation::DataLakeSettings": "CACHED",
   "AWS::LakeFormation::Permissions": "CACHED",
   "AWS::LakeFormation::PrincipalPermissions": "CACHED",
-  "AWS::LakeFormation::Resource": "CACHED",
+  "AWS::LakeFormation::Resource": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html",
+   "Properties": {
+    "HybridAccessEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html#cfn-lakeformation-resource-hybridaccessenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ResourceArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html#cfn-lakeformation-resource-resourcearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html#cfn-lakeformation-resource-rolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "UseServiceLinkedRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html#cfn-lakeformation-resource-useservicelinkedrole",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Conditional"
+    },
+    "WithFederation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lakeformation-resource.html#cfn-lakeformation-resource-withfederation",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::LakeFormation::Tag": "CACHED",
   "AWS::LakeFormation::TagAssociation": "CACHED",
   "AWS::Lambda::Alias": "CACHED",
@@ -7320,7 +7400,52 @@
   "AWS::Location::RouteCalculator": "CACHED",
   "AWS::Location::Tracker": "CACHED",
   "AWS::Location::TrackerConsumer": "CACHED",
-  "AWS::Logs::AccountPolicy": "CACHED",
+  "AWS::Logs::AccountPolicy": {
+   "Attributes": {
+    "AccountId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-accountpolicy.html",
+   "Properties": {
+    "PolicyDocument": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-accountpolicy.html#cfn-logs-accountpolicy-policydocument",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Logs::AccountPolicy.PolicyDocument"
+     }
+    },
+    "PolicyName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-accountpolicy.html#cfn-logs-accountpolicy-policyname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Logs::AccountPolicy.PolicyName"
+     }
+    },
+    "PolicyType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-accountpolicy.html#cfn-logs-accountpolicy-policytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Logs::AccountPolicy.PolicyType"
+     }
+    },
+    "Scope": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-accountpolicy.html#cfn-logs-accountpolicy-scope",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Logs::AccountPolicy.Scope"
+     }
+    }
+   }
+  },
   "AWS::Logs::Delivery": "CACHED",
   "AWS::Logs::DeliveryDestination": "CACHED",
   "AWS::Logs::DeliverySource": "CACHED",
@@ -7489,124 +7614,7 @@
   "AWS::Proton::ServiceTemplate": "CACHED",
   "AWS::QLDB::Ledger": "CACHED",
   "AWS::QLDB::Stream": "CACHED",
-  "AWS::QuickSight::Analysis": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "CreatedTime": {
-     "PrimitiveType": "String"
-    },
-    "DataSetArns": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "LastUpdatedTime": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html",
-   "Properties": {
-    "AnalysisId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-analysisid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.AnalysisId"
-     }
-    },
-    "AwsAccountId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-awsaccountid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.AwsAccountId"
-     }
-    },
-    "Definition": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-definition",
-     "Required": false,
-     "Type": "AnalysisDefinition",
-     "UpdateType": "Mutable"
-    },
-    "Errors": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-errors",
-     "DuplicatesAllowed": true,
-     "ItemType": "AnalysisError",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.Name"
-     }
-    },
-    "Parameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-parameters",
-     "Required": false,
-     "Type": "Parameters",
-     "UpdateType": "Mutable"
-    },
-    "Permissions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-permissions",
-     "DuplicatesAllowed": true,
-     "ItemType": "ResourcePermission",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Sheets": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-sheets",
-     "DuplicatesAllowed": true,
-     "ItemType": "Sheet",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "SourceEntity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-sourceentity",
-     "Required": false,
-     "Type": "AnalysisSourceEntity",
-     "UpdateType": "Mutable"
-    },
-    "Status": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-status",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.Status"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "ThemeArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-themearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ValidationStrategy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-validationstrategy",
-     "Required": false,
-     "Type": "ValidationStrategy",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::QuickSight::Analysis": "CACHED",
   "AWS::QuickSight::Dashboard": "CACHED",
   "AWS::QuickSight::DataSet": "CACHED",
   "AWS::QuickSight::DataSource": "CACHED",
@@ -7632,372 +7640,7 @@
   "AWS::RDS::GlobalCluster": "CACHED",
   "AWS::RDS::OptionGroup": "CACHED",
   "AWS::RUM::AppMonitor": "CACHED",
-  "AWS::Redshift::Cluster": {
-   "Attributes": {
-    "ClusterNamespaceArn": {
-     "PrimitiveType": "String"
-    },
-    "DeferMaintenanceIdentifier": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Address": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Port": {
-     "PrimitiveType": "String"
-    },
-    "MasterPasswordSecretArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html",
-   "Properties": {
-    "AllowVersionUpgrade": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-allowversionupgrade",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AquaConfigurationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-aquaconfigurationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AutomatedSnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-automatedsnapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZone": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzone",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZoneRelocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzonerelocation",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZoneRelocationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzonerelocationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Classic": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-classic",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.ClusterIdentifier"
-     }
-    },
-    "ClusterParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusterparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.ClusterParameterGroupName"
-     }
-    },
-    "ClusterSecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustersecuritygroups",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "ClusterSubnetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustersubnetgroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ClusterType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustertype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftClusterType"
-     }
-    },
-    "ClusterVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusterversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftClusterVersion"
-     }
-    },
-    "DBName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-dbname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "DeferMaintenance": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenance",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceDuration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenanceduration",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceEndTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenanceendtime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceStartTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenancestarttime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DestinationRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-destinationregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ElasticIp": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-elasticip",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Encrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-encrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Endpoint": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-endpoint",
-     "Required": false,
-     "Type": "Endpoint",
-     "UpdateType": "Mutable"
-    },
-    "EnhancedVpcRouting": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-enhancedvpcrouting",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "HsmClientCertificateIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-hsmclientcertificateidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "HsmConfigurationIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-hsmconfigurationidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "IamRoles": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-iamroles",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LoggingProperties": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-loggingproperties",
-     "Required": false,
-     "Type": "LoggingProperties",
-     "UpdateType": "Mutable"
-    },
-    "MaintenanceTrackName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-maintenancetrackname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ManageMasterPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-managemasterpassword",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ManualSnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-manualsnapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterPasswordSecretKmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-masterpasswordsecretkmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-masteruserpassword",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.MasterUserPassword"
-     }
-    },
-    "MasterUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-masterusername",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.MasterUsername"
-     }
-    },
-    "MultiAZ": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-multiaz",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NamespaceResourcePolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-namespaceresourcepolicy",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NodeType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-nodetype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftInstanceType"
-     }
-    },
-    "NumberOfNodes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-numberofnodes",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.NumberOfNodes"
-     }
-    },
-    "OwnerAccount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-owneraccount",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Port": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-port",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredMaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-preferredmaintenancewindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PubliclyAccessible": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-publiclyaccessible",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ResourceAction": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-resourceaction",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RevisionTarget": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-revisiontarget",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RotateEncryptionKey": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-rotateencryptionkey",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SnapshotCopyGrantName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopygrantname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotCopyManual": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopymanual",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotCopyRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopyretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VpcSecurityGroupIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-vpcsecuritygroupids",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Redshift::Cluster": "CACHED",
   "AWS::Redshift::ClusterParameterGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroupIngress": "CACHED",
@@ -8262,6 +7905,7 @@
   "AWS::APS::RuleGroupsNamespace.Name": "CACHED",
   "AWS::APS::RuleGroupsNamespace.Workspace": "CACHED",
   "AWS::APS::Workspace.Alias": "CACHED",
+  "AWS::APS::Workspace.KmsKeyArn": "CACHED",
   "AWS::APS::Workspace.LoggingConfiguration.LogGroupArn": "CACHED",
   "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition.AlarmIdentifier": "CACHED",
   "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition.Type": "CACHED",
@@ -13386,6 +13030,7 @@
   "AWS::QuickSight::Topic.TopicRelativeDateFilter.TimeGranularity": "CACHED",
   "AWS::QuickSight::Topic.TopicSingularFilterConstant.ConstantType": "CACHED",
   "AWS::QuickSight::Topic.TopicSingularFilterConstant.SingularConstant": "CACHED",
+  "AWS::QuickSight::Topic.UserExperienceVersion": "CACHED",
   "AWS::QuickSight::VPCConnection.AvailabilityStatus": "CACHED",
   "AWS::QuickSight::VPCConnection.AwsAccountId": "CACHED",
   "AWS::QuickSight::VPCConnection.Name": "CACHED",
@@ -13985,6 +13630,7 @@
   "AWS::SageMaker::FeatureGroup.RoleArn": "CACHED",
   "AWS::SageMaker::FeatureGroup.S3StorageConfig.KmsKeyId": "CACHED",
   "AWS::SageMaker::FeatureGroup.S3StorageConfig.S3Uri": "CACHED",
+  "AWS::SageMaker::FeatureGroup.ThroughputConfig.ThroughputMode": "CACHED",
   "AWS::SageMaker::Image.ImageDescription": "CACHED",
   "AWS::SageMaker::Image.ImageDisplayName": "CACHED",
   "AWS::SageMaker::Image.ImageName": "CACHED",
@@ -14546,6 +14192,7 @@
   "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.ValidationSettings.Mode": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.PolicyStoreId": "CACHED",
@@ -14838,788 +14485,7 @@
   "Ec2ElasticIpDomain": "CACHED",
   "Ec2FleetOnDemandAllocationStrategy": "CACHED",
   "Ec2HostAutoPlacement": "CACHED",
-  "Ec2InstanceType": {
-   "AllowedValues": [
-    "a1.2xlarge",
-    "a1.4xlarge",
-    "a1.large",
-    "a1.medium",
-    "a1.metal",
-    "a1.xlarge",
-    "c1.medium",
-    "c1.xlarge",
-    "c3.2xlarge",
-    "c3.4xlarge",
-    "c3.8xlarge",
-    "c3.large",
-    "c3.xlarge",
-    "c4.2xlarge",
-    "c4.4xlarge",
-    "c4.8xlarge",
-    "c4.large",
-    "c4.xlarge",
-    "c5.12xlarge",
-    "c5.18xlarge",
-    "c5.24xlarge",
-    "c5.2xlarge",
-    "c5.4xlarge",
-    "c5.9xlarge",
-    "c5.large",
-    "c5.metal",
-    "c5.xlarge",
-    "c5a.12xlarge",
-    "c5a.16xlarge",
-    "c5a.24xlarge",
-    "c5a.2xlarge",
-    "c5a.4xlarge",
-    "c5a.8xlarge",
-    "c5a.large",
-    "c5a.xlarge",
-    "c5ad.12xlarge",
-    "c5ad.16xlarge",
-    "c5ad.24xlarge",
-    "c5ad.2xlarge",
-    "c5ad.4xlarge",
-    "c5ad.8xlarge",
-    "c5ad.large",
-    "c5ad.xlarge",
-    "c5d.12xlarge",
-    "c5d.18xlarge",
-    "c5d.24xlarge",
-    "c5d.2xlarge",
-    "c5d.4xlarge",
-    "c5d.9xlarge",
-    "c5d.large",
-    "c5d.metal",
-    "c5d.xlarge",
-    "c5n.18xlarge",
-    "c5n.2xlarge",
-    "c5n.4xlarge",
-    "c5n.9xlarge",
-    "c5n.large",
-    "c5n.metal",
-    "c5n.xlarge",
-    "c6a.12xlarge",
-    "c6a.16xlarge",
-    "c6a.24xlarge",
-    "c6a.2xlarge",
-    "c6a.32xlarge",
-    "c6a.48xlarge",
-    "c6a.4xlarge",
-    "c6a.8xlarge",
-    "c6a.large",
-    "c6a.metal",
-    "c6a.xlarge",
-    "c6g.12xlarge",
-    "c6g.16xlarge",
-    "c6g.2xlarge",
-    "c6g.4xlarge",
-    "c6g.8xlarge",
-    "c6g.large",
-    "c6g.medium",
-    "c6g.metal",
-    "c6g.xlarge",
-    "c6gd.12xlarge",
-    "c6gd.16xlarge",
-    "c6gd.2xlarge",
-    "c6gd.4xlarge",
-    "c6gd.8xlarge",
-    "c6gd.large",
-    "c6gd.medium",
-    "c6gd.metal",
-    "c6gd.xlarge",
-    "c6gn.12xlarge",
-    "c6gn.16xlarge",
-    "c6gn.2xlarge",
-    "c6gn.4xlarge",
-    "c6gn.8xlarge",
-    "c6gn.large",
-    "c6gn.medium",
-    "c6gn.metal",
-    "c6gn.xlarge",
-    "c6i.12xlarge",
-    "c6i.16xlarge",
-    "c6i.24xlarge",
-    "c6i.2xlarge",
-    "c6i.32xlarge",
-    "c6i.4xlarge",
-    "c6i.8xlarge",
-    "c6i.large",
-    "c6i.metal",
-    "c6i.xlarge",
-    "c6id.12xlarge",
-    "c6id.16xlarge",
-    "c6id.24xlarge",
-    "c6id.2xlarge",
-    "c6id.32xlarge",
-    "c6id.4xlarge",
-    "c6id.8xlarge",
-    "c6id.large",
-    "c6id.metal",
-    "c6id.xlarge",
-    "c6in.12xlarge",
-    "c6in.16xlarge",
-    "c6in.24xlarge",
-    "c6in.2xlarge",
-    "c6in.32xlarge",
-    "c6in.4xlarge",
-    "c6in.8xlarge",
-    "c6in.large",
-    "c6in.metal",
-    "c6in.xlarge",
-    "c7a.12xlarge",
-    "c7a.16xlarge",
-    "c7a.24xlarge",
-    "c7a.2xlarge",
-    "c7a.32xlarge",
-    "c7a.48xlarge",
-    "c7a.4xlarge",
-    "c7a.8xlarge",
-    "c7a.large",
-    "c7a.medium",
-    "c7a.metal-48xl",
-    "c7a.xlarge",
-    "c7g.12xlarge",
-    "c7g.16xlarge",
-    "c7g.2xlarge",
-    "c7g.4xlarge",
-    "c7g.8xlarge",
-    "c7g.large",
-    "c7g.medium",
-    "c7g.metal",
-    "c7g.xlarge",
-    "c7gd.12xlarge",
-    "c7gd.16xlarge",
-    "c7gd.2xlarge",
-    "c7gd.4xlarge",
-    "c7gd.8xlarge",
-    "c7gd.large",
-    "c7gd.medium",
-    "c7gd.xlarge",
-    "c7gn.12xlarge",
-    "c7gn.16xlarge",
-    "c7gn.2xlarge",
-    "c7gn.4xlarge",
-    "c7gn.8xlarge",
-    "c7gn.large",
-    "c7gn.medium",
-    "c7gn.xlarge",
-    "c7i.12xlarge",
-    "c7i.16xlarge",
-    "c7i.24xlarge",
-    "c7i.2xlarge",
-    "c7i.48xlarge",
-    "c7i.4xlarge",
-    "c7i.8xlarge",
-    "c7i.large",
-    "c7i.metal-24xl",
-    "c7i.metal-48xl",
-    "c7i.xlarge",
-    "cc2.8xlarge",
-    "cr1.8xlarge",
-    "d2.2xlarge",
-    "d2.4xlarge",
-    "d2.8xlarge",
-    "d2.xlarge",
-    "d3.2xlarge",
-    "d3.4xlarge",
-    "d3.8xlarge",
-    "d3.xlarge",
-    "d3en.12xlarge",
-    "d3en.2xlarge",
-    "d3en.4xlarge",
-    "d3en.6xlarge",
-    "d3en.8xlarge",
-    "d3en.xlarge",
-    "dl1.24xlarge",
-    "dl2q.24xlarge",
-    "f1.16xlarge",
-    "f1.2xlarge",
-    "f1.4xlarge",
-    "g2.2xlarge",
-    "g2.8xlarge",
-    "g3.16xlarge",
-    "g3.4xlarge",
-    "g3.8xlarge",
-    "g3s.xlarge",
-    "g4ad.16xlarge",
-    "g4ad.2xlarge",
-    "g4ad.4xlarge",
-    "g4ad.8xlarge",
-    "g4ad.xlarge",
-    "g4dn.12xlarge",
-    "g4dn.16xlarge",
-    "g4dn.2xlarge",
-    "g4dn.4xlarge",
-    "g4dn.8xlarge",
-    "g4dn.metal",
-    "g4dn.xlarge",
-    "g5.12xlarge",
-    "g5.16xlarge",
-    "g5.24xlarge",
-    "g5.2xlarge",
-    "g5.48xlarge",
-    "g5.4xlarge",
-    "g5.8xlarge",
-    "g5.xlarge",
-    "g5g.16xlarge",
-    "g5g.2xlarge",
-    "g5g.4xlarge",
-    "g5g.8xlarge",
-    "g5g.metal",
-    "g5g.xlarge",
-    "h1.16xlarge",
-    "h1.2xlarge",
-    "h1.4xlarge",
-    "h1.8xlarge",
-    "hs1.8xlarge",
-    "i2.2xlarge",
-    "i2.4xlarge",
-    "i2.8xlarge",
-    "i2.large",
-    "i2.xlarge",
-    "i3.16xlarge",
-    "i3.2xlarge",
-    "i3.4xlarge",
-    "i3.8xlarge",
-    "i3.large",
-    "i3.metal",
-    "i3.xlarge",
-    "i3en.12xlarge",
-    "i3en.24xlarge",
-    "i3en.2xlarge",
-    "i3en.3xlarge",
-    "i3en.6xlarge",
-    "i3en.large",
-    "i3en.metal",
-    "i3en.xlarge",
-    "i4g.16xlarge",
-    "i4g.2xlarge",
-    "i4g.4xlarge",
-    "i4g.8xlarge",
-    "i4g.large",
-    "i4g.xlarge",
-    "i4i.12xlarge",
-    "i4i.16xlarge",
-    "i4i.24xlarge",
-    "i4i.2xlarge",
-    "i4i.32xlarge",
-    "i4i.4xlarge",
-    "i4i.8xlarge",
-    "i4i.large",
-    "i4i.metal",
-    "i4i.xlarge",
-    "im4gn.16xlarge",
-    "im4gn.2xlarge",
-    "im4gn.4xlarge",
-    "im4gn.8xlarge",
-    "im4gn.large",
-    "im4gn.xlarge",
-    "inf1.24xlarge",
-    "inf1.2xlarge",
-    "inf1.6xlarge",
-    "inf1.xlarge",
-    "inf2.24xlarge",
-    "inf2.48xlarge",
-    "inf2.8xlarge",
-    "inf2.xlarge",
-    "is4gen.2xlarge",
-    "is4gen.4xlarge",
-    "is4gen.8xlarge",
-    "is4gen.large",
-    "is4gen.medium",
-    "is4gen.xlarge",
-    "m1.large",
-    "m1.medium",
-    "m1.small",
-    "m1.xlarge",
-    "m2.2xlarge",
-    "m2.4xlarge",
-    "m2.xlarge",
-    "m3.2xlarge",
-    "m3.large",
-    "m3.medium",
-    "m3.xlarge",
-    "m4.10xlarge",
-    "m4.16xlarge",
-    "m4.2xlarge",
-    "m4.4xlarge",
-    "m4.large",
-    "m4.xlarge",
-    "m5.12xlarge",
-    "m5.16xlarge",
-    "m5.24xlarge",
-    "m5.2xlarge",
-    "m5.4xlarge",
-    "m5.8xlarge",
-    "m5.large",
-    "m5.metal",
-    "m5.xlarge",
-    "m5a.12xlarge",
-    "m5a.16xlarge",
-    "m5a.24xlarge",
-    "m5a.2xlarge",
-    "m5a.4xlarge",
-    "m5a.8xlarge",
-    "m5a.large",
-    "m5a.xlarge",
-    "m5ad.12xlarge",
-    "m5ad.16xlarge",
-    "m5ad.24xlarge",
-    "m5ad.2xlarge",
-    "m5ad.4xlarge",
-    "m5ad.8xlarge",
-    "m5ad.large",
-    "m5ad.xlarge",
-    "m5d.12xlarge",
-    "m5d.16xlarge",
-    "m5d.24xlarge",
-    "m5d.2xlarge",
-    "m5d.4xlarge",
-    "m5d.8xlarge",
-    "m5d.large",
-    "m5d.metal",
-    "m5d.xlarge",
-    "m5dn.12xlarge",
-    "m5dn.16xlarge",
-    "m5dn.24xlarge",
-    "m5dn.2xlarge",
-    "m5dn.4xlarge",
-    "m5dn.8xlarge",
-    "m5dn.large",
-    "m5dn.metal",
-    "m5dn.xlarge",
-    "m5n.12xlarge",
-    "m5n.16xlarge",
-    "m5n.24xlarge",
-    "m5n.2xlarge",
-    "m5n.4xlarge",
-    "m5n.8xlarge",
-    "m5n.large",
-    "m5n.metal",
-    "m5n.xlarge",
-    "m5zn.12xlarge",
-    "m5zn.2xlarge",
-    "m5zn.3xlarge",
-    "m5zn.6xlarge",
-    "m5zn.large",
-    "m5zn.metal",
-    "m5zn.xlarge",
-    "m6a.12xlarge",
-    "m6a.16xlarge",
-    "m6a.24xlarge",
-    "m6a.2xlarge",
-    "m6a.32xlarge",
-    "m6a.48xlarge",
-    "m6a.4xlarge",
-    "m6a.8xlarge",
-    "m6a.large",
-    "m6a.metal",
-    "m6a.xlarge",
-    "m6g.12xlarge",
-    "m6g.16xlarge",
-    "m6g.2xlarge",
-    "m6g.4xlarge",
-    "m6g.8xlarge",
-    "m6g.large",
-    "m6g.medium",
-    "m6g.metal",
-    "m6g.xlarge",
-    "m6gd.12xlarge",
-    "m6gd.16xlarge",
-    "m6gd.2xlarge",
-    "m6gd.4xlarge",
-    "m6gd.8xlarge",
-    "m6gd.large",
-    "m6gd.medium",
-    "m6gd.metal",
-    "m6gd.xlarge",
-    "m6i.12xlarge",
-    "m6i.16xlarge",
-    "m6i.24xlarge",
-    "m6i.2xlarge",
-    "m6i.32xlarge",
-    "m6i.4xlarge",
-    "m6i.8xlarge",
-    "m6i.large",
-    "m6i.metal",
-    "m6i.xlarge",
-    "m6id.12xlarge",
-    "m6id.16xlarge",
-    "m6id.24xlarge",
-    "m6id.2xlarge",
-    "m6id.32xlarge",
-    "m6id.4xlarge",
-    "m6id.8xlarge",
-    "m6id.large",
-    "m6id.metal",
-    "m6id.xlarge",
-    "m6idn.12xlarge",
-    "m6idn.16xlarge",
-    "m6idn.24xlarge",
-    "m6idn.2xlarge",
-    "m6idn.32xlarge",
-    "m6idn.4xlarge",
-    "m6idn.8xlarge",
-    "m6idn.large",
-    "m6idn.metal",
-    "m6idn.xlarge",
-    "m6in.12xlarge",
-    "m6in.16xlarge",
-    "m6in.24xlarge",
-    "m6in.2xlarge",
-    "m6in.32xlarge",
-    "m6in.4xlarge",
-    "m6in.8xlarge",
-    "m6in.large",
-    "m6in.metal",
-    "m6in.xlarge",
-    "m7a.12xlarge",
-    "m7a.16xlarge",
-    "m7a.24xlarge",
-    "m7a.2xlarge",
-    "m7a.32xlarge",
-    "m7a.48xlarge",
-    "m7a.4xlarge",
-    "m7a.8xlarge",
-    "m7a.large",
-    "m7a.medium",
-    "m7a.metal-48xl",
-    "m7a.xlarge",
-    "m7g.12xlarge",
-    "m7g.16xlarge",
-    "m7g.2xlarge",
-    "m7g.4xlarge",
-    "m7g.8xlarge",
-    "m7g.large",
-    "m7g.medium",
-    "m7g.metal",
-    "m7g.xlarge",
-    "m7gd.12xlarge",
-    "m7gd.16xlarge",
-    "m7gd.2xlarge",
-    "m7gd.4xlarge",
-    "m7gd.8xlarge",
-    "m7gd.large",
-    "m7gd.medium",
-    "m7gd.xlarge",
-    "m7i-flex.2xlarge",
-    "m7i-flex.4xlarge",
-    "m7i-flex.8xlarge",
-    "m7i-flex.large",
-    "m7i-flex.xlarge",
-    "m7i.12xlarge",
-    "m7i.16xlarge",
-    "m7i.24xlarge",
-    "m7i.2xlarge",
-    "m7i.48xlarge",
-    "m7i.4xlarge",
-    "m7i.8xlarge",
-    "m7i.large",
-    "m7i.metal-24xl",
-    "m7i.metal-48xl",
-    "m7i.xlarge",
-    "mac1.metal",
-    "mac2-m2.metal",
-    "mac2-m2pro.metal",
-    "mac2.metal",
-    "p2.16xlarge",
-    "p2.8xlarge",
-    "p2.xlarge",
-    "p3.16xlarge",
-    "p3.2xlarge",
-    "p3.8xlarge",
-    "p3dn.24xlarge",
-    "p4d.24xlarge",
-    "p4de.24xlarge",
-    "p5.48xlarge",
-    "r3.2xlarge",
-    "r3.4xlarge",
-    "r3.8xlarge",
-    "r3.large",
-    "r3.xlarge",
-    "r4.16xlarge",
-    "r4.2xlarge",
-    "r4.4xlarge",
-    "r4.8xlarge",
-    "r4.large",
-    "r4.xlarge",
-    "r5.12xlarge",
-    "r5.16xlarge",
-    "r5.24xlarge",
-    "r5.2xlarge",
-    "r5.4xlarge",
-    "r5.8xlarge",
-    "r5.large",
-    "r5.metal",
-    "r5.xlarge",
-    "r5a.12xlarge",
-    "r5a.16xlarge",
-    "r5a.24xlarge",
-    "r5a.2xlarge",
-    "r5a.4xlarge",
-    "r5a.8xlarge",
-    "r5a.large",
-    "r5a.xlarge",
-    "r5ad.12xlarge",
-    "r5ad.16xlarge",
-    "r5ad.24xlarge",
-    "r5ad.2xlarge",
-    "r5ad.4xlarge",
-    "r5ad.8xlarge",
-    "r5ad.large",
-    "r5ad.xlarge",
-    "r5b.12xlarge",
-    "r5b.16xlarge",
-    "r5b.24xlarge",
-    "r5b.2xlarge",
-    "r5b.4xlarge",
-    "r5b.8xlarge",
-    "r5b.large",
-    "r5b.metal",
-    "r5b.xlarge",
-    "r5d.12xlarge",
-    "r5d.16xlarge",
-    "r5d.24xlarge",
-    "r5d.2xlarge",
-    "r5d.4xlarge",
-    "r5d.8xlarge",
-    "r5d.large",
-    "r5d.metal",
-    "r5d.xlarge",
-    "r5dn.12xlarge",
-    "r5dn.16xlarge",
-    "r5dn.24xlarge",
-    "r5dn.2xlarge",
-    "r5dn.4xlarge",
-    "r5dn.8xlarge",
-    "r5dn.large",
-    "r5dn.metal",
-    "r5dn.xlarge",
-    "r5n.12xlarge",
-    "r5n.16xlarge",
-    "r5n.24xlarge",
-    "r5n.2xlarge",
-    "r5n.4xlarge",
-    "r5n.8xlarge",
-    "r5n.large",
-    "r5n.metal",
-    "r5n.xlarge",
-    "r6a.12xlarge",
-    "r6a.16xlarge",
-    "r6a.24xlarge",
-    "r6a.2xlarge",
-    "r6a.32xlarge",
-    "r6a.48xlarge",
-    "r6a.4xlarge",
-    "r6a.8xlarge",
-    "r6a.large",
-    "r6a.metal",
-    "r6a.xlarge",
-    "r6g.12xlarge",
-    "r6g.16xlarge",
-    "r6g.2xlarge",
-    "r6g.4xlarge",
-    "r6g.8xlarge",
-    "r6g.large",
-    "r6g.medium",
-    "r6g.metal",
-    "r6g.xlarge",
-    "r6gd.12xlarge",
-    "r6gd.16xlarge",
-    "r6gd.2xlarge",
-    "r6gd.4xlarge",
-    "r6gd.8xlarge",
-    "r6gd.large",
-    "r6gd.medium",
-    "r6gd.metal",
-    "r6gd.xlarge",
-    "r6i.12xlarge",
-    "r6i.16xlarge",
-    "r6i.24xlarge",
-    "r6i.2xlarge",
-    "r6i.32xlarge",
-    "r6i.4xlarge",
-    "r6i.8xlarge",
-    "r6i.large",
-    "r6i.metal",
-    "r6i.xlarge",
-    "r6id.12xlarge",
-    "r6id.16xlarge",
-    "r6id.24xlarge",
-    "r6id.2xlarge",
-    "r6id.32xlarge",
-    "r6id.4xlarge",
-    "r6id.8xlarge",
-    "r6id.large",
-    "r6id.metal",
-    "r6id.xlarge",
-    "r6idn.12xlarge",
-    "r6idn.16xlarge",
-    "r6idn.24xlarge",
-    "r6idn.2xlarge",
-    "r6idn.32xlarge",
-    "r6idn.4xlarge",
-    "r6idn.8xlarge",
-    "r6idn.large",
-    "r6idn.metal",
-    "r6idn.xlarge",
-    "r6in.12xlarge",
-    "r6in.16xlarge",
-    "r6in.24xlarge",
-    "r6in.2xlarge",
-    "r6in.32xlarge",
-    "r6in.4xlarge",
-    "r6in.8xlarge",
-    "r6in.large",
-    "r6in.metal",
-    "r6in.xlarge",
-    "r7a.12xlarge",
-    "r7a.16xlarge",
-    "r7a.24xlarge",
-    "r7a.2xlarge",
-    "r7a.32xlarge",
-    "r7a.48xlarge",
-    "r7a.4xlarge",
-    "r7a.8xlarge",
-    "r7a.large",
-    "r7a.medium",
-    "r7a.metal-48xl",
-    "r7a.xlarge",
-    "r7g.12xlarge",
-    "r7g.16xlarge",
-    "r7g.2xlarge",
-    "r7g.4xlarge",
-    "r7g.8xlarge",
-    "r7g.large",
-    "r7g.medium",
-    "r7g.metal",
-    "r7g.xlarge",
-    "r7gd.12xlarge",
-    "r7gd.16xlarge",
-    "r7gd.2xlarge",
-    "r7gd.4xlarge",
-    "r7gd.8xlarge",
-    "r7gd.large",
-    "r7gd.medium",
-    "r7gd.xlarge",
-    "r7i.12xlarge",
-    "r7i.16xlarge",
-    "r7i.24xlarge",
-    "r7i.2xlarge",
-    "r7i.48xlarge",
-    "r7i.4xlarge",
-    "r7i.8xlarge",
-    "r7i.large",
-    "r7i.metal-24xl",
-    "r7i.metal-48xl",
-    "r7i.xlarge",
-    "r7iz.12xlarge",
-    "r7iz.16xlarge",
-    "r7iz.2xlarge",
-    "r7iz.32xlarge",
-    "r7iz.4xlarge",
-    "r7iz.8xlarge",
-    "r7iz.large",
-    "r7iz.metal-16xl",
-    "r7iz.metal-32xl",
-    "r7iz.xlarge",
-    "t1.micro",
-    "t2.2xlarge",
-    "t2.large",
-    "t2.medium",
-    "t2.micro",
-    "t2.nano",
-    "t2.small",
-    "t2.xlarge",
-    "t3.2xlarge",
-    "t3.large",
-    "t3.medium",
-    "t3.micro",
-    "t3.nano",
-    "t3.small",
-    "t3.xlarge",
-    "t3a.2xlarge",
-    "t3a.large",
-    "t3a.medium",
-    "t3a.micro",
-    "t3a.nano",
-    "t3a.small",
-    "t3a.xlarge",
-    "t4g.2xlarge",
-    "t4g.large",
-    "t4g.medium",
-    "t4g.micro",
-    "t4g.nano",
-    "t4g.small",
-    "t4g.xlarge",
-    "trn1.2xlarge",
-    "trn1.32xlarge",
-    "trn1n.32xlarge",
-    "u-12tb1.112xlarge",
-    "u-12tb1.metal",
-    "u-18tb1.112xlarge",
-    "u-18tb1.metal",
-    "u-24tb1.112xlarge",
-    "u-24tb1.metal",
-    "u-3tb1.56xlarge",
-    "u-6tb1.112xlarge",
-    "u-6tb1.56xlarge",
-    "u-6tb1.metal",
-    "u-9tb1.112xlarge",
-    "u-9tb1.metal",
-    "vt1.24xlarge",
-    "vt1.3xlarge",
-    "vt1.6xlarge",
-    "x1.16xlarge",
-    "x1.32xlarge",
-    "x1e.16xlarge",
-    "x1e.2xlarge",
-    "x1e.32xlarge",
-    "x1e.4xlarge",
-    "x1e.8xlarge",
-    "x1e.xlarge",
-    "x2gd.12xlarge",
-    "x2gd.16xlarge",
-    "x2gd.2xlarge",
-    "x2gd.4xlarge",
-    "x2gd.8xlarge",
-    "x2gd.large",
-    "x2gd.medium",
-    "x2gd.metal",
-    "x2gd.xlarge",
-    "x2idn.16xlarge",
-    "x2idn.24xlarge",
-    "x2idn.32xlarge",
-    "x2idn.metal",
-    "x2iedn.16xlarge",
-    "x2iedn.24xlarge",
-    "x2iedn.2xlarge",
-    "x2iedn.32xlarge",
-    "x2iedn.4xlarge",
-    "x2iedn.8xlarge",
-    "x2iedn.metal",
-    "x2iedn.xlarge",
-    "x2iezn.12xlarge",
-    "x2iezn.2xlarge",
-    "x2iezn.4xlarge",
-    "x2iezn.6xlarge",
-    "x2iezn.8xlarge",
-    "x2iezn.metal",
-    "z1d.12xlarge",
-    "z1d.2xlarge",
-    "z1d.3xlarge",
-    "z1d.6xlarge",
-    "z1d.large",
-    "z1d.metal",
-    "z1d.xlarge"
-   ],
-   "Ref": {
-    "Parameters": [
-     "String"
-    ]
-   }
-  },
+  "Ec2InstanceType": "CACHED",
   "Ec2Tenancy": "CACHED",
   "EcsNetworkMode": "CACHED",
   "EcsTaskDefinitionProxyType": "CACHED",
