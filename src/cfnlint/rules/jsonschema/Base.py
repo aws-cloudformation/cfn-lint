@@ -23,6 +23,10 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.rule_set: Dict[str, str] = {}
         self.validators: Dict[str, V] = {}
 
+    @property
+    def schema(self):
+        return {}
+
     def json_schema_validate(self, validator, properties, path):
         matches = []
         for e in validator.iter_errors(properties):
@@ -66,9 +70,18 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
-    def setup_validator(
-        self, validator: Type[Validator], schema: Any, context: Context
-    ) -> Validator:
+    # pylint: disable=unused-argument
+    def validate(self, validator: Validator, _, instance: Any, schema):
+        validator = self.extend_validator(validator, self.schema, validator.context)
+        for err in validator.iter_errors(instance):
+            if err.rule is None:
+                if err.validator in self.rule_set:
+                    err.rule = self.child_rules[self.rule_set[err.validator]]
+                elif not err.validator.startswith("fn") and err.validator != "ref":
+                    err.rule = self
+            yield err
+
+    def _get_validators(self) -> Dict[str, V]:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
             rule = self.child_rules.get(rule_id)
@@ -76,6 +89,18 @@ class BaseJsonSchema(CloudFormationLintRule):
                 if hasattr(rule, name) and callable(getattr(rule, name)):
                     validators[name] = getattr(rule, name)
 
-        return validator({}).extend(validators=validators, context=context)(
+        return validators
+
+    def extend_validator(
+        self, validator: Validator, schema: Any, context: Context
+    ) -> Validator:
+        return validator.extend(validators=self._get_validators(), context=context)(
+            schema=schema
+        ).evolve(cfn=validator.cfn)
+
+    def setup_validator(
+        self, validator: Type[Validator], schema: Any, context: Context
+    ) -> Validator:
+        return validator({}).extend(validators=self._get_validators(), context=context)(
             schema=schema
         )
