@@ -166,3 +166,49 @@ class TestBaseJsonSchema(BaseRuleTestCase):
         self.assertEqual(errors[2].rule.id, "E3XXX")
         self.assertEqual(errors[3], RuleMatch(["A"], "Failure4"))
         self.assertEqual(errors[3].rule.id, "E3YYY")
+
+    def test_validate(self):
+        class ChildRule(CloudFormationLintRule):
+            id = "EXXXX"
+
+        class Test(BaseJsonSchema):
+            def __init__(self) -> None:
+                super().__init__()
+                self.rule_set = {"enum": "EXXXX"}
+                self.child_rules = {"EXXXX": ChildRule()}
+
+            @property
+            def schema(self):
+                return {
+                    "type": "object",
+                    "properties": {"foo": True, "bar": {"enum": ["foobar"]}},
+                    "required": ["foo"],
+                }
+
+        validator = CfnTemplateValidator(True)
+        rule = Test()
+
+        errors = list(rule.validate(validator, {}, {"bar": "bad"}, []))
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    "'bad' is not one of ['foobar']",
+                    path=deque(["bar"]),
+                    rule=ChildRule(),
+                    schema_path=deque(["properties", "bar", "enum"]),
+                    validator="enum",
+                    validator_value=["foobar"],
+                    instance="bad",
+                ),
+                ValidationError(
+                    "'foo' is a required property",
+                    path=deque([]),
+                    rule=Test(),
+                    schema_path=deque(["required"]),
+                    validator="required",
+                    validator_value=["foo"],
+                    instance={"bar": "bad"},
+                ),
+            ],
+        )

@@ -23,7 +23,6 @@ class Configuration(BaseJsonSchema):
 
     def __init__(self):
         super().__init__()
-        self.schema = cfnlint.helpers.load_resource(resources, "configuration.json")
         self.validators = {
             "maxProperties": None,
             "propertyNames": None,
@@ -33,6 +32,11 @@ class Configuration(BaseJsonSchema):
             "propertyNames": "E3006",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self._schema = cfnlint.helpers.load_resource(resources, "configuration.json")
+
+    @property
+    def schema(self):
+        return self._schema
 
     # pylint: disable=unused-argument
     def cfnresources(self, validator: Validator, _, instance: Any, schema):

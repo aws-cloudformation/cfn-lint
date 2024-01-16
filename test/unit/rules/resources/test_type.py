@@ -46,12 +46,6 @@ class TestType(BaseRuleTestCase):
             )
         )
 
-        print(
-            errors[0]
-            == ValidationError(
-                "Resource type `Foo::Bar::Type` does not exist in 'us-east-1'"
-            )
-        )
         self.assertListEqual(
             errors,
             [

@@ -23,6 +23,10 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.rule_set: Dict[str, str] = {}
         self.validators: Dict[str, V] = {}
 
+    @property
+    def schema(self):
+        return {}
+
     def json_schema_validate(self, validator, properties, path):
         matches = []
         for e in validator.iter_errors(properties):
@@ -65,6 +69,17 @@ class BaseJsonSchema(CloudFormationLintRule):
             )
 
         return matches
+
+    # pylint: disable=unused-argument
+    def validate(self, validator: Validator, _, instance: Any, schema):
+        validator = self.extend_validator(validator, self.schema, validator.context)
+        for err in validator.iter_errors(instance):
+            if err.rule is None:
+                if err.validator in self.rule_set:
+                    err.rule = self.child_rules[self.rule_set[err.validator]]
+                elif not err.validator.startswith("fn") and err.validator != "ref":
+                    err.rule = self
+            yield err
 
     def _get_validators(self) -> Dict[str, V]:
         validators = self.validators.copy()

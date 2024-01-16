@@ -31,27 +31,22 @@ class Configuration(BaseJsonSchema):
             "condition": "E8007",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self.schema = load_resource(schema_conditions, "conditions.json")
+        self._schema = load_resource(schema_conditions, "conditions.json")
+        self.validators = {
+            "type": cfn_type,
+        }
+
+    @property
+    def schema(self):
+        return self._schema
 
     # pylint: disable=unused-argument
-    def cfnconditions(self, validator: Validator, _, instance: Any, schema):
+    def cfnconditions(self, validator: Validator, conditions, instance: Any, schema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=FUNCTION_CONDITIONS + ["Ref", "Condition"],
                 resources={},
             ),
         )
-        validator = self.extend_validator(validator, self.schema, validator.context)
-        validator = validator.extend(
-            validators={
-                "type": cfn_type,
-            }
-        )(self.schema)
 
-        for err in validator.iter_errors(instance):
-            if err.rule is None:
-                if err.validator in self.rule_set:
-                    err.rule = self.child_rules[self.rule_set[err.validator]]
-                elif not err.validator.startswith("fn") and err.validator != "ref":
-                    err.rule = self
-            yield err
+        yield from super().validate(validator, conditions, instance, schema)
