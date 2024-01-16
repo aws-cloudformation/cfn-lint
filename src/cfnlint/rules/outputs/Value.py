@@ -16,7 +16,7 @@ class Value(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]
 
-    def outputvalue(self, validator, tS, instance, schema):
+    def cfnoutputvalue(self, validator, tS, instance, schema):
         validator = validator.extend(
             validators={
                 "type": self._type,

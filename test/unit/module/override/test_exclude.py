@@ -16,7 +16,6 @@ class TestExclude(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = Rules()
         self.collection = Rules.create_from_directory(_DEFAULT_RULESDIR)
         self.region = "us-east-1"
 
