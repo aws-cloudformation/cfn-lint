@@ -44,6 +44,9 @@ class TestMaxProperties(BaseRuleTestCase):
         self.assertEqual(len(errs), 1)
         self.assertEqual(errs[0].rule.id, "ChildMaxProperties")
 
+        errs = list(self.rule.maxProperties(validator, 1, [], {}))
+        self.assertListEqual(errs, [])
+
 
 class ChildMaxPropertiesWithFunction(CloudFormationLintRule):
     id = "ChildMaxPropertiesWithFunction"
