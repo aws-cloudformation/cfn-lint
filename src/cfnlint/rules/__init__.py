@@ -365,19 +365,20 @@ class Rules(TypedRules):
         self, filename: Optional[str], cfn: Template, config: ConfigMixIn
     ) -> Iterator[Match]:
         """Run rules"""
-        for rule in self.runable_rules(config):
+        runable_rules = list(self.runable_rules(config))
+        for rule in runable_rules:
             rule.configure(
                 config.configure_rules.get(rule.id, None), config.include_experimental
             )
             rule.initialize(cfn)
 
-        for rule in self.runable_rules(config):
+        for rule in runable_rules:
             for key in rule.child_rules.keys():
-                if not self.is_rule_enabled(key, config):
+                if not any(key == r.id for r in runable_rules):
                     continue
                 rule.child_rules[key] = self.data.get(key)
 
-        for rule in self.runable_rules(config):
+        for rule in runable_rules:
             yield from self.run_check(
                 rule.matchall, filename, rule.id, config, filename, cfn
             )
