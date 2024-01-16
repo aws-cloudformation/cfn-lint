@@ -26,15 +26,27 @@ class TestAwsType(BaseRuleTestCase):
         super(TestAwsType, self).setUp()
         self.rule = AwsType()
         self.rule.child_rules = {"AnId": ValidType()}
-        self.rule.types = {"foo": "AnId"}
+        self.rule.types = {
+            "foo": "AnId",
+            "bar": "AnId",
+        }
 
     def test_aws_type(self):
         validator = CfnTemplateValidator
-        self.assertEqual(
-            len(list(self.rule.awsType(validator, "foo", "bar", {}))),
-            0,
+        self.assertListEqual(
+            list(self.rule.awsType(validator, "foo", "bar", {})),
+            [],
+            list(self.rule.awsType(validator, "foo", "bar", {})),
         )
-        self.assertEqual(
-            len(list(self.rule.awsType(validator, "foo", "foo", {}))),
-            1,
+        self.assertListEqual(
+            list(self.rule.awsType(validator, "foo", "foo", {})),
+            [ValidationError("Not bar")],
+        )
+        self.assertListEqual(
+            list(self.rule.awsType(validator, "foobar", {}, {})),
+            [],
+        )
+        self.assertListEqual(
+            list(self.rule.awsType(validator, "bar", {}, {})),
+            [],
         )

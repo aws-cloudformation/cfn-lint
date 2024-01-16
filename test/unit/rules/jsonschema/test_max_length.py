@@ -42,6 +42,9 @@ class TestMaxLength(BaseRuleTestCase):
         self.assertEqual(len(errs), 1)
         self.assertEqual(errs[0].rule.id, "ChildMaxLength")
 
+        errs = list(self.rule.maxLength(validator, 11, {}, {}))
+        self.assertListEqual(errs, [])
+
 
 class ChildMaxLengthWithFunction(CloudFormationLintRule):
     id = "ChildMaxLengthWithFunction"
