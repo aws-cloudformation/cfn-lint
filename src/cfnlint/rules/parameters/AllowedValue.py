@@ -19,6 +19,10 @@ class AllowedValue(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
     tags = ["parameters", "resources", "property", "allowed value"]
 
+    # This rule is triggered from the equivalent rule E3030
+    # the values are fed from there and we adjust the error outputs
+    # appropriately
+
     def enum(self, validator, enums, instance, schema):
         for err in enum(validator, enums, instance, schema):
             err.rule = self
