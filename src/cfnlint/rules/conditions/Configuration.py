@@ -44,7 +44,7 @@ class Configuration(BaseJsonSchema):
     def cfnconditions(self, validator: Validator, conditions, instance: Any, schema):
         validator = validator.evolve(
             context=validator.context.evolve(
-                functions=FUNCTION_CONDITIONS + ["Ref", "Condition"],
+                functions=FUNCTION_CONDITIONS + ["Condition"],
                 resources={},
             ),
         )
