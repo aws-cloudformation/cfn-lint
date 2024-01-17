@@ -18,7 +18,6 @@ class AwsType(CloudFormationLintRule):
         super().__init__()
         self.types = {
             "CfnConditions": "E8001",
-            "CfnCondition": "E8007",
             "CfnInitCommand": "E3009",
             "CfnInitFiles": "E3009",
             "CfnInitGroups": "E3009",

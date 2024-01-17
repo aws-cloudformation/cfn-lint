@@ -18,6 +18,10 @@ class AllowedPattern(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["parameters", "resources", "property", "allowed pattern"]
 
+    # This rule is triggered from the equivalent rule E3031
+    # the values are fed from there and we adjust the error outputs
+    # appropriately
+
     # pylint: disable=unused-argument, arguments-renamed
     def pattern(self, validator, patrn, instance, schema):
         for err in pattern(validator, patrn, instance, schema):
