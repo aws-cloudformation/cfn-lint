@@ -18,9 +18,6 @@ class Value(CloudFormationLintRule):
 
     def cfnoutputvalue(self, validator, tS, instance, schema):
         validator = validator.extend(
-            validators={
-                "type": self._type,
-            },
             context=validator.context.evolve(
                 functions=FUNCTIONS,
             ),
