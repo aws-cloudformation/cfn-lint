@@ -183,6 +183,9 @@ class GetAtts:
             # GetAtt doesn't support going into an array of objects or another array
             # so we only look at an array of strings, etc.
             self._attrs[name] = GetAtt(schema, getatt_type)
+        elif schema.get("$ref"):
+            schema = resolve_pointer(self._schema, schema.get("$ref"))
+            self._process_schema(name, schema, getatt_type)
         else:
             self._attrs[name] = GetAtt(schema, getatt_type)
 
