@@ -294,7 +294,9 @@ def main():
     write_output(
         "aws_neptune_dbinstance",
         "dbinstanceclass_enum",
-        get_results("AmazonNeptune", ["Database Instance"], default=set(["db.serverless"])),
+        get_results(
+            "AmazonNeptune", ["Database Instance"], default=set(["db.serverless"])
+        ),
     )
     write_output(
         "aws_elasticache_cachecluster",
