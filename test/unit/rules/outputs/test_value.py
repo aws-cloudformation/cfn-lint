@@ -13,9 +13,9 @@ from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
     "input,expected",
     [
         ("foo", 0),
-        (1.0, 0),
-        (1, 0),
-        (True, 0),
+        (1.0, 1),
+        (1, 1),
+        (True, 1),
         (["foo"], 1),
         ({"foo": "bar"}, 1),
     ],
