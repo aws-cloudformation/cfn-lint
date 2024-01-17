@@ -1,3 +1,10 @@
+### v0.84.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `154.0.0` (pull #[3005](https://github.com/aws-cloudformation/cfn-lint/pull/3005))
+- Add db.serverless to neptune instance classes (pull #[3009](https://github.com/aws-cloudformation/cfn-lint/pull/3009))
+###### Fixes
+- Drop python 3.7 support (pull #[3005](https://github.com/aws-cloudformation/cfn-lint/pull/3005))
+
 ### v0.83.8
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `153.0.0` (pull #[2986](https://github.com/aws-cloudformation/cfn-lint/pull/2986))
