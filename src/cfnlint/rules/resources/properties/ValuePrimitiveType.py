@@ -32,11 +32,6 @@ class ValuePrimitiveType(CloudFormationLintRule):
             "strict": {"default": False, "type": "boolean"},
         }  # Strict mode is set to false by default
         self.configure()
-        self.cfn = None
-
-    def initialize(self, cfn):
-        self.cfn = cfn
-        return super().initialize(cfn)
 
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
