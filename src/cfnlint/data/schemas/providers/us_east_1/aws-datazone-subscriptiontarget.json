@@ -1,0 +1,212 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentIdentifier"
+ ],
+ "definitions": {
+  "SubscriptionTargetForm": {
+   "additionalProperties": false,
+   "description": "The details of the subscription target configuration.",
+   "properties": {
+    "Content": {
+     "description": "The content of the subscription target configuration.",
+     "type": "string"
+    },
+    "FormName": {
+     "description": "The form name included in the subscription target configuration.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Content",
+    "FormName"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Subscription targets enables one to access the data to which you have subscribed in your projects.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateSubscriptionTarget",
+    "datazone:GetSubscriptionTarget",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteSubscriptionTarget"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "EnvironmentIdentifier": {
+      "$ref": "resource-schema.json#/properties/EnvironmentIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListSubscriptionTargets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetSubscriptionTarget"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateSubscriptionTarget",
+    "datazone:GetSubscriptionTarget",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicableAssetTypes": {
+   "description": "The asset types that can be included in the subscription target.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 1,
+    "pattern": "^[^\\.]*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AuthorizedPrincipals": {
+   "description": "The authorized principals of the subscription target.",
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-zA-Z0-9:/_-]*$",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "CreatedAt": {
+   "description": "The timestamp of when the subscription target was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "description": "The Amazon DataZone user who created the subscription target.",
+   "type": "string"
+  },
+  "DomainId": {
+   "description": "The ID of the Amazon DataZone domain in which subscription target is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The ID of the Amazon DataZone domain in which subscription target would be created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "description": "The ID of the environment in which subscription target is created.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "description": "The ID of the environment in which subscription target would be created.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the subscription target.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "ManageAccessRole": {
+   "description": "The manage access role that is used to create the subscription target.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the subscription target.",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectId": {
+   "description": "The identifier of the project specified in the subscription target.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Provider": {
+   "description": "The provider of the subscription target.",
+   "type": "string"
+  },
+  "SubscriptionTargetConfig": {
+   "description": "The configuration of the subscription target.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubscriptionTargetForm"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "description": "The type of the subscription target.",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp of when the subscription target was updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "UpdatedBy": {
+   "description": "The Amazon DataZone user who updated the subscription target.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id",
+  "/properties/ProjectId",
+  "/properties/UpdatedAt",
+  "/properties/UpdatedBy"
+ ],
+ "required": [
+  "ApplicableAssetTypes",
+  "AuthorizedPrincipals",
+  "DomainIdentifier",
+  "EnvironmentIdentifier",
+  "ManageAccessRole",
+  "Name",
+  "SubscriptionTargetConfig",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::SubscriptionTarget",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentIdentifier"
+ ]
+}

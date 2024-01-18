@@ -1,0 +1,184 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DomainIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentBlueprintIdentifier",
+  "/properties/ProjectIdentifier"
+ ],
+ "definitions": {
+  "EnvironmentParameter": {
+   "additionalProperties": false,
+   "description": "The parameter details of an environment profile.",
+   "properties": {
+    "Name": {
+     "description": "The name of an environment profile parameter.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of an environment profile parameter.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "AWS Datazone Environment Profile is pre-configured set of resources and blueprints that provide reusable templates for creating environments.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateEnvironmentProfile",
+    "datazone:GetEnvironmentProfile"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteEnvironmentProfile",
+    "datazone:GetEnvironmentProfile"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListEnvironmentProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetEnvironmentProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateEnvironmentProfile",
+    "datazone:GetEnvironmentProfile"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "AwsAccountId": {
+   "description": "The AWS account in which the Amazon DataZone environment is created.",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "AwsAccountRegion": {
+   "description": "The AWS region in which this environment profile is created.",
+   "pattern": "^[a-z]{2}-[a-z]{4,10}-\\d$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The timestamp of when this environment profile was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "description": "The Amazon DataZone user who created this environment profile.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of this Amazon DataZone environment profile.",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "description": "The ID of the Amazon DataZone domain in which this environment profile is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "description": "The ID of the Amazon DataZone domain in which this environment profile is created.",
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentBlueprintId": {
+   "description": "The ID of the blueprint with which this environment profile is created.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentBlueprintIdentifier": {
+   "description": "The ID of the blueprint with which this environment profile is created.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of this Amazon DataZone environment profile.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of this Amazon DataZone environment profile.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w -]+$",
+   "type": "string"
+  },
+  "ProjectId": {
+   "description": "The identifier of the project in which to create the environment profile.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "ProjectIdentifier": {
+   "description": "The identifier of the project in which to create the environment profile.",
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "The timestamp of when this environment profile was updated.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "UserParameters": {
+   "description": "The user parameters of this Amazon DataZone environment profile.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnvironmentParameter"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/EnvironmentBlueprintId",
+  "/properties/Id",
+  "/properties/ProjectId",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "EnvironmentBlueprintIdentifier",
+  "ProjectIdentifier",
+  "DomainIdentifier",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::EnvironmentProfile",
+ "writeOnlyProperties": [
+  "/properties/EnvironmentBlueprintIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/DomainIdentifier"
+ ]
+}
