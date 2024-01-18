@@ -14,6 +14,10 @@
      "type": "boolean"
     }
    },
+   "required": [
+    "ProviderName",
+    "ClientId"
+   ],
    "type": "object"
   },
   "CognitoStreams": {
@@ -35,6 +39,7 @@
    "additionalProperties": false,
    "properties": {
     "ApplicationArns": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -49,6 +54,40 @@
   }
  },
  "description": "Resource Type definition for AWS::Cognito::IdentityPool",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-identity:CreateIdentityPool",
+    "cognito-sync:SetIdentityPoolConfiguration",
+    "cognito-sync:SetCognitoEvents",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cognito-identity:DeleteIdentityPool"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cognito-identity:ListIdentityPools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cognito-identity:DescribeIdentityPool"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-identity:UpdateIdentityPool",
+    "cognito-identity:DescribeIdentityPool",
+    "cognito-sync:SetIdentityPoolConfiguration",
+    "cognito-sync:SetCognitoEvents",
+    "iam:PassRole"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -63,6 +102,7 @@
    "type": "object"
   },
   "CognitoIdentityProviders": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/CognitoIdentityProvider"
    },
@@ -85,6 +125,7 @@
    "type": "string"
   },
   "OpenIdConnectProviderARNs": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -95,6 +136,7 @@
    "$ref": "#/definitions/PushSync"
   },
   "SamlProviderARNs": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -112,5 +154,17 @@
  "required": [
   "AllowUnauthenticatedIdentities"
  ],
- "typeName": "AWS::Cognito::IdentityPool"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::IdentityPool",
+ "writeOnlyProperties": [
+  "/properties/PushSync",
+  "/properties/CognitoStreams",
+  "/properties/CognitoEvents"
+ ]
 }
