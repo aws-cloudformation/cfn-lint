@@ -25,29 +25,43 @@ class RuleScheduleExpression(CloudFormationLintRule):
         rate_expression = value[value.find("(") + 1 : value.find(")")]
 
         if not rate_expression:
-            matches.append(
-                RuleMatch(path, "Rate value of ScheduleExpression cannot be empty")
-            )
-        else:
-            # Rate format: rate(Value Unit)
-            items = rate_expression.split(" ")
+            return [RuleMatch(path, "Rate value of ScheduleExpression cannot be empty")]
 
-            if len(items) != 2:
-                message = "Rate expression must contain 2 elements (Value Unit), rate contains {} elements"
-                matches.append(RuleMatch(path, message.format(len(items))))
-            else:
-                # Check the Value
-                if not items[0].isdigit():
-                    message = "Rate Value ({}) should be of type Integer."
-                    extra_args = {
-                        "actual_type": type(items[0]).__name__,
-                        "expected_type": int.__name__,
-                    }
-                    matches.append(
-                        RuleMatch(path, message.format(items[0]), **extra_args)
-                    )
+        # Rate format: rate(Value Unit)
+        items = rate_expression.split(" ")
 
-        return matches
+        if len(items) != 2:
+            message = "Rate expression must contain 2 elements (Value Unit), rate contains {} elements"
+            matches.append(RuleMatch(path, message.format(len(items))))
+            return [RuleMatch(path, message.format(len(items)))]
+
+        # Check the Value
+        if not items[0].isdigit():
+            message = "Rate Value ({}) should be of type Integer."
+            extra_args = {
+                "actual_type": type(items[0]).__name__,
+                "expected_type": int.__name__,
+            }
+            return [RuleMatch(path, message.format(items[0]), **extra_args)]
+
+        if float(items[0]) <= 0:
+            return [
+                RuleMatch(path, f"Rate Value {items[0]!r} should be greater than 0.")
+            ]
+
+        if float(items[0]) <= 1:
+            valid_periods = ["minute", "hour", "day"]
+        elif float(items[0]) > 1:
+            valid_periods = ["minutes", "hours", "days"]
+        # Check the Unit
+        if items[1] not in valid_periods:
+            return [
+                RuleMatch(
+                    path, f"Rate Unit {items[1]!r} should be one of {valid_periods!r}."
+                )
+            ]
+
+        return []
 
     def check_cron(self, value, path):
         """Check Cron configuration"""
