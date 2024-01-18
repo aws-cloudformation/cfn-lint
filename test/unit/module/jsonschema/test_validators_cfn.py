@@ -695,7 +695,7 @@ _if_tests: List[Tuple] = [
         "Invalid Fn::If with to many arguments",
         {"Fn::If": ["condition", "foo", "bar", "key"]},
         {"type": "string"},
-        ["['condition', 'foo', 'bar', 'key'] is too long"],
+        ["['condition', 'foo', 'bar', 'key'] is too long (3)"],
         [],
     ),
     (
@@ -837,7 +837,7 @@ _findinmap_tests: List[Tuple] = [
         "Invalid Fn::FindInMap too long",
         {"Fn::FindInMap": ["foo", "bar", "key", "key2"]},
         {"type": "string"},
-        ["['foo', 'bar', 'key', 'key2'] is too long"],
+        ["['foo', 'bar', 'key', 'key2'] is too long (3)"],
         [],
     ),
     (
@@ -1038,7 +1038,7 @@ def test_functions(name, instance, schema, errors, cfn_response):
             "Invalid Fn::ForEach with invalid length",
             {"Fn::ForEach::Test": ["foo", ["foo", "bar"]]},
             {"type": "object"},
-            ["['foo', ['foo', 'bar']] is too short"],
+            ["['foo', ['foo', 'bar']] is too short (3)"],
             [],
         ),
         (

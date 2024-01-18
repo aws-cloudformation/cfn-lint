@@ -114,6 +114,20 @@
   },
   "LifecycleResourceType": {
    "additionalProperties": false,
+   "if": {
+    "properties": {
+     "DeleteAfterDays": {
+      "type": "number"
+     },
+     "MoveToColdStorageAfterDays": {
+      "type": "number"
+     }
+    },
+    "required": [
+     "DeleteAfterDays",
+     "MoveToColdStorageAfterDays"
+    ]
+   },
    "properties": {
     "DeleteAfterDays": {
      "type": "number"
@@ -121,6 +135,9 @@
     "MoveToColdStorageAfterDays": {
      "type": "number"
     }
+   },
+   "then": {
+    "awsType": "BackupBackupPlanLifecycle"
    },
    "type": "object"
   }
