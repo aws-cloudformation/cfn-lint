@@ -7,7 +7,8 @@
   "/properties/AddressFamily",
   "/properties/PubliclyAdvertisable",
   "/properties/PublicIpSource",
-  "/properties/AwsService"
+  "/properties/AwsService",
+  "/properties/SourceResource"
  ],
  "definitions": {
   "Cidr": {
@@ -24,6 +25,31 @@
    },
    "required": [
     "Cidr"
+   ],
+   "type": "object"
+  },
+  "SourceResource": {
+   "additionalProperties": false,
+   "description": "The resource associated with this pool's space. Depending on the ResourceType, setting a SourceResource changes which space can be provisioned in this pool and which types of resources can receive allocations",
+   "properties": {
+    "ResourceId": {
+     "type": "string"
+    },
+    "ResourceOwner": {
+     "type": "string"
+    },
+    "ResourceRegion": {
+     "type": "string"
+    },
+    "ResourceType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceId",
+    "ResourceType",
+    "ResourceRegion",
+    "ResourceOwner"
    ],
    "type": "object"
   },
@@ -197,6 +223,9 @@
   "SourceIpamPoolId": {
    "description": "The Id of this pool's source. If set, all space provisioned in this pool must be free space provisioned in the parent pool.",
    "type": "string"
+  },
+  "SourceResource": {
+   "$ref": "#/definitions/SourceResource"
   },
   "State": {
    "description": "The state of this pool. This can be one of the following values: \"create-in-progress\", \"create-complete\", \"modify-in-progress\", \"modify-complete\", \"delete-in-progress\", or \"delete-complete\"",
