@@ -4,11 +4,13 @@ SPDX-License-Identifier: MIT-0
 """
 from datetime import datetime
 
-from cfnlint.rules import RuleMatch
-from cfnlint.rules.resources.lmbd.DeprecatedRuntime import DeprecatedRuntime
+from cfnlint.data import AdditionalSpecs
+from cfnlint.helpers import load_resource
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 
 
-class DeprecatedRuntimeEnd(DeprecatedRuntime):
+class DeprecatedRuntimeEnd(CloudFormationLintRule):
     """Check if EOL Lambda Function Runtimes are used"""
 
     id = "E2531"
@@ -21,23 +23,34 @@ class DeprecatedRuntimeEnd(DeprecatedRuntime):
     )
     tags = ["resources", "lambda", "runtime"]
 
-    def check_runtime(self, runtime_value, path):
-        """Check if the given runtime is valid"""
-        matches = []
+    def __init__(self):
+        """Init"""
+        super().__init__()
+        self.child_rules = {
+            "W2531": None,
+        }
+        self.current_date = datetime.today()
+        self.deprecated_runtimes = load_resource(
+            AdditionalSpecs, "LmbdRuntimeLifecycle.json"
+        )
 
-        runtime = self.deprecated_runtimes.get(runtime_value)
-        if runtime:
-            if datetime.strptime(runtime["deprecated"], "%Y-%m-%d") < self.current_date:
-                message = (
-                    "Deprecated runtime ({0}) specified. Updating disabled since {1}."
-                    " Please consider updating to {2}"
-                )
-                matches.append(
-                    RuleMatch(
-                        path,
-                        message.format(
-                            runtime_value, runtime["deprecated"], runtime["successor"]
-                        ),
-                    )
-                )
-        return matches
+    # pylint: disable=unused-argument
+    def lambdaruntime(self, validator, v, runtime, schema):
+        runtime_data = self.deprecated_runtimes.get(runtime)
+        if not runtime_data:
+            return
+        if (
+            datetime.strptime(runtime_data["deprecated"], "%Y-%m-%d")
+            < self.current_date
+        ):
+            yield ValidationError(
+                (
+                    f"Deprecated runtime {runtime!r} specified. Updating "
+                    f"disabled since {runtime_data['deprecated']!r}. "
+                    f"Please consider updating to {runtime_data['successor']!r}"
+                ),
+                rule=self,
+            )
+
+        if self.child_rules["W2531"]:
+            yield from self.child_rules["W2531"].lambdaruntime(runtime, runtime_data)

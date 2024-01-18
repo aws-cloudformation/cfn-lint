@@ -2,7 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from collections import deque
+
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 
 
 class BackupPlanLifecycleRule(CloudFormationLintRule):
@@ -20,33 +23,21 @@ class BackupPlanLifecycleRule(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html"
     tags = ["properties", "backup", "plan", "lifecycle"]
 
-    def match(self, cfn):
-        """Check cold storage and deletion lifecycle period differences"""
-        matches = []
-        results = cfn.get_resource_properties(
-            ["AWS::Backup::BackupPlan", "BackupPlan", "BackupPlanRule", "Lifecycle"]
-        )
+    def backupbackupplanlifecycle(self, validator, uI, instance, schema):
+        delete_after_days = instance.get("DeleteAfterDays")
+        move_to_cold_storage_after_days = instance.get("MoveToColdStorageAfterDays")
 
-        for result in results:
-            backup_rule = result["Value"]
-            # if 'MoveToColdStorageAfterDays' in backup_rule
-            # and 'DeleteAfterDays' in backup_rule:
-            if isinstance(
-                backup_rule.get("MoveToColdStorageAfterDays"), int
-            ) and isinstance(backup_rule.get("DeleteAfterDays"), int):
-                if (
-                    backup_rule["DeleteAfterDays"]
-                    - backup_rule["MoveToColdStorageAfterDays"]
-                    < 90
-                ):
-                    message = (
-                        "DeleteAfterDays in {0} must be at least 90 days after"
-                        " MoveToColdStorageAfterDays"
-                    )
-                    rule_match = RuleMatch(
-                        result["Path"],
-                        message.format("/".join(map(str, result["Path"]))),
-                    )
-                    matches.append(rule_match)
-
-        return matches
+        if not validator.is_type(delete_after_days, "integer"):
+            return
+        if not validator.is_type(move_to_cold_storage_after_days, "integer"):
+            return
+        if delete_after_days - move_to_cold_storage_after_days < 90:
+            yield ValidationError(
+                (
+                    f"DeleteAfterDays {delete_after_days!r} must be at least "
+                    "90 days after MoveToColdStorageAfterDays "
+                    f"{move_to_cold_storage_after_days}"
+                ),
+                path=deque(["DeleteAfterDays"]),
+                rule=self,
+            )
