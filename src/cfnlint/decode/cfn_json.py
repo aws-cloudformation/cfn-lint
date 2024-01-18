@@ -485,8 +485,6 @@ class CfnJSONDecoder(json.JSONDecoder):
         while True:
             begin = end - 1
             key, end = py_scanstring(s, end, strict)
-            # print(lineno, colno, obj)
-            # print(key, lineno, colno)
             key = memo_get(key, key)
             # To skip some function call overhead we optimize the fast paths where
             # the JSON key separator is ": " or just ":".
