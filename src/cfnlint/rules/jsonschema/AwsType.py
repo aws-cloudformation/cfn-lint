@@ -17,6 +17,7 @@ class AwsType(CloudFormationLintRule):
     def __init__(self) -> None:
         super().__init__()
         self.types = {
+            "BackupBackupPlanLifecycle": "E3504",
             "CfnConditions": "E8001",
             "CfnInitCommand": "E3009",
             "CfnInitFiles": "E3009",
@@ -41,6 +42,7 @@ class AwsType(CloudFormationLintRule):
             "IamResourcePolicy": "E3512",
             "IamResourceEcrPolicy": "E3513",
             "IamRoleArn": "E3511",
+            "LambdaRuntime": "E2531",
         }
         self.child_rules = dict.fromkeys(list(self.types.values()))
 
