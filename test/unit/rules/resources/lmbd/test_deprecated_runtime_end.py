@@ -4,29 +4,51 @@ SPDX-License-Identifier: MIT-0
 """
 
 from datetime import datetime
-from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEnd import (
-    DeprecatedRuntimeEnd,  # pylint: disable=E0401
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEnd import DeprecatedRuntimeEnd
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = DeprecatedRuntimeEnd()
+    rule.current_date = datetime(2019, 6, 29)
+    yield rule
+
+
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
+
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        (
+            "nodejs16.x",
+            [],
+        ),
+        (
+            "foo",
+            [],
+        ),
+        (
+            "nodejs4.3",
+            [
+                ValidationError(
+                    (
+                        "Deprecated runtime 'nodejs4.3' specified. "
+                        "Updating disabled since '2019-04-30'. "
+                        "Please consider updating to 'nodejs16.x'"
+                    ),
+                    rule=DeprecatedRuntimeEnd(),
+                )
+            ],
+        ),
+    ],
 )
-
-
-class TestDeprecatedRuntimeEnd(BaseRuleTestCase):
-    """Test Lambda Deprecated Runtime usage"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestDeprecatedRuntimeEnd, self).setUp()
-        rule = DeprecatedRuntimeEnd()
-        self.collection.register(rule)
-        self.collection.data[rule.id].current_date = datetime(2019, 6, 29)
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/runtimes.yaml", 3
-        )
+def test_lambda_runtime(instance, expected, rule, validator):
+    errs = list(rule.lambdaruntime(validator, "LambdaRuntime", instance, {}))
+    assert errs == expected, f"Expected {expected} got {errs}"
