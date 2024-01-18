@@ -845,6 +845,10 @@ patches.extend(
                     values={"requiredXor": ["EventPattern", "ScheduleExpression"]},
                     path="/",
                 ),
+                Patch(
+                    values={"maxItems": 5},
+                    path="/properties/Targets",
+                ),
             ],
         ),
         ResourcePatch(

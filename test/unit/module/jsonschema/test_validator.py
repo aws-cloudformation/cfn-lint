@@ -230,11 +230,11 @@ class TestValidationErrorMessages(unittest.TestCase):
 
     def test_minItems(self):
         message = self.message_for(instance=[], schema={"minItems": 2})
-        self.assertEqual(message, "[] is too short")
+        self.assertEqual(message, "[] is too short (2)")
 
     def test_maxItems(self):
         message = self.message_for(instance=[1, 2, 3], schema={"maxItems": 2})
-        self.assertEqual(message, "[1, 2, 3] is too long")
+        self.assertEqual(message, "[1, 2, 3] is too long (2)")
 
     def test_minLength(self):
         message = self.message_for(
