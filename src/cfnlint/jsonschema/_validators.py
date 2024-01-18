@@ -278,7 +278,7 @@ def maxItems(
     validator: Validator, mI: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:  # pylint: disable=arguments-renamed
     if validator.is_type(instance, "array") and len(instance) > mI:
-        yield ValidationError(f"{instance!r} is too long")
+        yield ValidationError(f"{instance!r} is too long ({mI})")
 
 
 def maxLength(
@@ -318,7 +318,7 @@ def minItems(
     validator: Validator, mI: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
     if validator.is_type(instance, "array") and len(instance) < mI:
-        yield ValidationError(f"{instance!r} is too short")
+        yield ValidationError(f"{instance!r} is too short ({mI})")
 
 
 def minLength(
