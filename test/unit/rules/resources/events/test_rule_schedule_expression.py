@@ -28,5 +28,5 @@ class TestRuleScheduleExpression(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/resources/events/rule_schedule_expression.yaml",
-            8,
+            11,
         )

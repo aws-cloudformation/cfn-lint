@@ -33,3 +33,15 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       ScheduleExpression: "cron(* 1 * * * *)" # specify the Day-of-month and Day-of-week fields in the same cron expression
+  MyScheduledRule9:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(1 minutes)" # Value of 1 should be singular. 'minute' not 'minutes'
+  MyScheduledRule10:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(2 hour)" # Value of 2 should be plural. 'hours' not `hour`
+  MyScheduledRule11:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(0 hour)" # Value has to be greater than 0
