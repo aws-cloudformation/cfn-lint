@@ -23,6 +23,17 @@ common_patches = {
 patches.extend(
     [
         ResourcePatch(
+            resource_type="AWS::ApiGateway::Stage",
+            patches=[
+                Patch(
+                    path="/definitions/MethodSetting/properties/ResourcePath",
+                    values={
+                        "pattern": r"^/.*$",
+                    },
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::ApplicationAutoScaling::ScalingPolicy",
             patches=[
                 Patch(
