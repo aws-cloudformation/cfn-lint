@@ -347,7 +347,6 @@ types = [
 # pylint: disable=too-many-lines
 cached: List[str] = [
     "aws-ce-anomalysubscription.json",
-    "aws-ecs-service.json",
     "aws-ram-resourceshare.json",
     "aws-dynamodb-table.json",
     "aws-ec2-securitygroupegress.json",
@@ -567,7 +566,6 @@ cached: List[str] = [
     "aws-ec2-vpcendpointservice.json",
     "aws-ec2-launchtemplate.json",
     "aws-cloudfront-originrequestpolicy.json",
-    "aws-ec2-dhcpoptions.json",
     "aws-iam-servicelinkedrole.json",
     "aws-cloudformation-hooktypeconfig.json",
     "aws-ec2-eip.json",
