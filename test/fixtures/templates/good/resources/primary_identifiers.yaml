@@ -1,0 +1,99 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  NotUsEast1: !Not [!Condition IsUsEast1]
+Resources:
+  RootRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      RoleName: root
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+  RootRole3:
+    Type: 'AWS::IAM::Role'
+    Condition: IsUsEast1
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      RoleName: useast1
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+  RootRole4:
+    Type: 'AWS::IAM::Role'
+    Condition: NotUsEast1
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      RoleName: useast1
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: '*'
+                Resource: '*'
+
+  Bucket1:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      Fn::If:
+        - IsUsEast1
+        - BucketName: us-east-1
+        - !Ref 'AWS::NoValue'
+  Bucket2:
+    Type: 'AWS::S3::Bucket'
+
+  # primaryIdentifier.  ID is read only so FunctionName
+  # being the same should pass
+  # "/properties/FunctionName",
+  # "/properties/Id"
+  FunctionPermission1:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref AWS::Region
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+  FunctionPermission2:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref AWS::Region
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
