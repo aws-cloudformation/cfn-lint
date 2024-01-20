@@ -354,7 +354,9 @@ class Ref(_Fn):
             return
 
         parameter_type = validator.context.parameters[value].type
-        schema_types = ensure_list(s.get("type", ["string"]))
+        schema_types = _resolve_type(validator, s)
+        if not schema_types:
+            return
         reprs = ", ".join(repr(type) for type in schema_types)
 
         if all(
