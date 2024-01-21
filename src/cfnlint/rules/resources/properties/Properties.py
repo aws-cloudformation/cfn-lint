@@ -72,7 +72,7 @@ class Properties(BaseJsonSchema):
         )
 
         t = instance.get("Type")
-        if not t:
+        if not validator.is_type(t, "string"):
             return
 
         if t.startswith("Custom::"):
