@@ -127,7 +127,9 @@ class PrimaryIdentifiers(CloudFormationLintRule):
     def match(self, cfn):
         tS = set()
         for _, resource_properties in cfn.get_resources().items():
-            tS.add(resource_properties.get("Type"))
+            t = resource_properties.get("Type")
+            if isinstance(t, str):
+                tS.add(t)
 
         matches = []
         for t in tS:
