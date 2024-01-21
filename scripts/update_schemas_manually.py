@@ -751,6 +751,19 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::EC2::SecurityGroupEgress",
+            patches=[
+                Patch(
+                    path="/properties/FromPort",
+                    values={"minimum": -1},
+                ),
+                Patch(
+                    path="/properties/ToPort",
+                    values={"minimum": -1},
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::EC2::SecurityGroupIngress",
             patches=[
                 Patch(
@@ -762,8 +775,16 @@ patches.extend(
                             "SourcePrefixListId",
                             "SourceSecurityGroupId",
                             "SourceSecurityGroupName",
-                        ]
+                        ],
                     },
+                ),
+                Patch(
+                    path="/properties/FromPort",
+                    values={"minimum": -1},
+                ),
+                Patch(
+                    path="/properties/ToPort",
+                    values={"minimum": -1},
                 ),
             ],
         ),
