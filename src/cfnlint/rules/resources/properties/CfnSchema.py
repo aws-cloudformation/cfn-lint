@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import pathlib
+from typing import Any
 
 from cfnlint.helpers import load_plugins, load_resource
 from cfnlint.jsonschema import ValidationError
@@ -51,7 +52,7 @@ class BaseCfnSchema(BaseJsonSchema):
                 filename=(f"{schema_split[1]}.json"),
             )
 
-    def message(self, err: ValidationError) -> str:
+    def message(self, instance: Any, err: ValidationError) -> str:
         return self.shortdesc
 
     def validate(self, validator, instance):
@@ -68,7 +69,7 @@ class BaseCfnSchema(BaseJsonSchema):
         if not self.all_matches:
             err = best_match(errs)
             if err is not None:
-                err.message = self.message(err)
+                err.message = self.message(instance, err)
                 err.rule = self
                 errs = [err]
 
