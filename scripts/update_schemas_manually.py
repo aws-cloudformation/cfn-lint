@@ -733,6 +733,21 @@ patches.extend(
                         ],
                     },
                 ),
+                Patch(
+                    path="/definitions/Ingress/properties/FromPort",
+                    values={"minimum": -1},
+                ),
+                Patch(
+                    path="/definitions/Ingress/properties/ToPort",
+                    values={"minimum": -1},
+                ),
+                Patch(
+                    path="/definitions/Egress/properties/FromPort",
+                    values={"minimum": -1},
+                ),
+                Patch(
+                    path="/definitions/Egress/properties/ToPort", values={"minimum": -1}
+                ),
             ],
         ),
         ResourcePatch(

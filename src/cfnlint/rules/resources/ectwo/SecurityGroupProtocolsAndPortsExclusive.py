@@ -8,7 +8,7 @@ from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.properties.CfnSchema import BaseCfnSchema
 
 
-class SecurityGroupProtocolsAndPorts(BaseCfnSchema):
+class SecurityGroupProtocolsAndPortsExclusive(BaseCfnSchema):
     id = "W3687"
     shortdesc = "Validate that ports aren't specified for certain protocols"
     description = (
@@ -16,13 +16,13 @@ class SecurityGroupProtocolsAndPorts(BaseCfnSchema):
         "the port ranges properties are ignored"
     )
     tags = ["resources"]
-    schema_path = "aws_ec2_securitygroup/to_and_from_port"
+    schema_path = "aws_ec2_securitygroup/protocols_and_port_ranges_exclude"
 
     def message(self, instance: Any, err: ValidationError) -> str:
         if not isinstance(instance, dict):
             return self.description
 
         return (
-            f"['FromPort', 'ToPort'] are ignored when using "
+            "['FromPort', 'ToPort'] are ignored when using "
             f"'IpProtocol' value {instance.get('IpProtocol')!r}"
         )

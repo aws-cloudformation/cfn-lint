@@ -9,8 +9,9 @@
   "Egress": {
    "additionalProperties": false,
    "cfnSchema": [
-    "aws_ec2_securitygroup/protocols_and_port_ranges",
-    "aws_ec2_securitygroup/to_and_from_port"
+    "aws_ec2_securitygroup/protocols_and_port_ranges_include",
+    "aws_ec2_securitygroup/protocols_and_port_ranges_exclude",
+    "aws_ec2_securitygroup/all_to_and_from_ports"
    ],
    "properties": {
     "CidrIp": {
@@ -29,12 +30,14 @@
      "type": "string"
     },
     "FromPort": {
+     "minimum": -1,
      "type": "integer"
     },
     "IpProtocol": {
      "type": "string"
     },
     "ToPort": {
+     "minimum": -1,
      "type": "integer"
     }
    },
@@ -52,9 +55,18 @@
   "Ingress": {
    "additionalProperties": false,
    "cfnSchema": [
-    "aws_ec2_securitygroup/protocols_and_port_ranges",
-    "aws_ec2_securitygroup/to_and_from_port"
+    "aws_ec2_securitygroup/protocols_and_port_ranges_include",
+    "aws_ec2_securitygroup/protocols_and_port_ranges_exclude",
+    "aws_ec2_securitygroup/all_to_and_from_ports"
    ],
+   "dependencies": {
+    "FromPort": [
+     "ToPort"
+    ],
+    "ToPort": [
+     "FromPort"
+    ]
+   },
    "properties": {
     "CidrIp": {
      "type": "string"
@@ -66,6 +78,7 @@
      "type": "string"
     },
     "FromPort": {
+     "minimum": -1,
      "type": "integer"
     },
     "IpProtocol": {
@@ -84,6 +97,7 @@
      "type": "string"
     },
     "ToPort": {
+     "minimum": -1,
      "type": "integer"
     }
    },
