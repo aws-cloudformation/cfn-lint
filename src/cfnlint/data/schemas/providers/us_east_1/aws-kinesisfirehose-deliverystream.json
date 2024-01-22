@@ -7,7 +7,8 @@
   "/properties/AmazonopensearchserviceDestinationConfiguration/VpcConfiguration",
   "/properties/AmazonOpenSearchServerlessDestinationConfiguration/VpcConfiguration",
   "/properties/KinesisStreamSourceConfiguration",
-  "/properties/MSKSourceConfiguration"
+  "/properties/MSKSourceConfiguration",
+  "/properties/SnowflakeDestinationConfiguration/SnowflakeVpcConfiguration"
  ],
  "definitions": {
   "AmazonOpenSearchServerlessBufferingHints": {
@@ -1026,6 +1027,146 @@
    },
    "type": "object"
   },
+  "SnowflakeDestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountUrl": {
+     "maxLength": 2048,
+     "minLength": 24,
+     "pattern": ".+?\\.snowflakecomputing\\.com",
+     "type": "string"
+    },
+    "CloudWatchLoggingOptions": {
+     "$ref": "#/definitions/CloudWatchLoggingOptions"
+    },
+    "ContentColumnName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DataLoadingOption": {
+     "enum": [
+      "JSON_MAPPING",
+      "VARIANT_CONTENT_MAPPING",
+      "VARIANT_CONTENT_AND_METADATA_MAPPING"
+     ],
+     "type": "string"
+    },
+    "Database": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KeyPassphrase": {
+     "maxLength": 255,
+     "minLength": 7,
+     "type": "string"
+    },
+    "MetaDataColumnName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PrivateKey": {
+     "maxLength": 4096,
+     "minLength": 256,
+     "pattern": "^(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}==|[A-Za-z0-9+\\/]{3}=)?$",
+     "type": "string"
+    },
+    "ProcessingConfiguration": {
+     "$ref": "#/definitions/ProcessingConfiguration"
+    },
+    "RetryOptions": {
+     "$ref": "#/definitions/SnowflakeRetryOptions"
+    },
+    "RoleARN": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "arn:.*",
+     "type": "string"
+    },
+    "S3BackupMode": {
+     "enum": [
+      "FailedDataOnly",
+      "AllData"
+     ],
+     "type": "string"
+    },
+    "S3Configuration": {
+     "$ref": "#/definitions/S3DestinationConfiguration"
+    },
+    "Schema": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SnowflakeRoleConfiguration": {
+     "$ref": "#/definitions/SnowflakeRoleConfiguration"
+    },
+    "SnowflakeVpcConfiguration": {
+     "$ref": "#/definitions/SnowflakeVpcConfiguration"
+    },
+    "Table": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "User": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountUrl",
+    "PrivateKey",
+    "User",
+    "Database",
+    "Schema",
+    "Table",
+    "RoleARN",
+    "S3Configuration"
+   ],
+   "type": "object"
+  },
+  "SnowflakeRetryOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationInSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "SnowflakeRoleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "SnowflakeRole": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SnowflakeVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PrivateLinkVpceId": {
+     "maxLength": 255,
+     "minLength": 47,
+     "pattern": "([a-zA-Z0-9\\-\\_]+\\.){2,3}vpce\\.[a-zA-Z0-9\\-]*\\.vpce-svc\\-[a-zA-Z0-9\\-]{17}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrivateLinkVpceId"
+   ],
+   "type": "object"
+  },
   "SplunkBufferingHints": {
    "additionalProperties": false,
    "properties": {
@@ -1255,6 +1396,9 @@
   },
   "S3DestinationConfiguration": {
    "$ref": "#/definitions/S3DestinationConfiguration"
+  },
+  "SnowflakeDestinationConfiguration": {
+   "$ref": "#/definitions/SnowflakeDestinationConfiguration"
   },
   "SplunkDestinationConfiguration": {
    "$ref": "#/definitions/SplunkDestinationConfiguration"
