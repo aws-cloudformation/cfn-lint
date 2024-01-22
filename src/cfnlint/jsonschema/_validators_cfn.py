@@ -89,6 +89,42 @@ def _validate_fn_output_types(
             yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
+def tagging(validator: Validator, t: Any, instance: Any, schema: Any):
+    if not t.get("taggable"):
+        return
+    schema = {
+        "properties": {
+            "Tags": {
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "Value": {
+                            "pattern": "^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$",
+                            "maxLength": 256,
+                        }
+                    },
+                },
+                "properties": {},
+                "patternProperties": {
+                    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+                        "pattern": "^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$",
+                        "maxLength": 256,
+                    }
+                },
+                "type": ["array", "object"],
+                "uniqueKeys": ["Key"],
+                "additionalProperties": False,
+            }
+        }
+    }
+    for err in validator.descend(
+        instance,
+        schema,
+    ):
+        err.validator = "tagging"
+        yield err
+
+
 class _Fn:
     def __init__(self, name: str, types: List[str], functions: List[str]) -> None:
         self.fn = ToPy(name)
@@ -1181,4 +1217,5 @@ cfn_validators: Dict[str, V] = {
     "fn_and": FnAnd().validate,
     "fn_not": FnNot().validate,
     "condition": Condition().validate,
+    "tagging": tagging,
 }
