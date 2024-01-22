@@ -152,7 +152,9 @@ class Transform:
 
             self._template = convert_dict(
                 sam_translator.translate(
-                    sam_template=self._template, parameter_values=self._parameters
+                    sam_template=self._template,
+                    parameter_values=self._parameters,
+                    passthrough_metadata=True,
                 )
             )
 
