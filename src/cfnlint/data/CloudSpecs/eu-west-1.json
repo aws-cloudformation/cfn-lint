@@ -675,10 +675,10 @@
   "AWS::Batch::ComputeEnvironment.EksConfiguration": "CACHED",
   "AWS::Batch::ComputeEnvironment.LaunchTemplateSpecification": "CACHED",
   "AWS::Batch::ComputeEnvironment.UpdatePolicy": "CACHED",
+  "AWS::Batch::JobDefinition.AuthorizationConfig": "CACHED",
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
-  "AWS::Batch::JobDefinition.EFSAuthorizationConfig": "CACHED",
-  "AWS::Batch::JobDefinition.EFSVolumeConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerResourceRequirements": "CACHED",
@@ -686,8 +686,6 @@
   "AWS::Batch::JobDefinition.EksContainerVolumeMount": "CACHED",
   "AWS::Batch::JobDefinition.EksEmptyDir": "CACHED",
   "AWS::Batch::JobDefinition.EksHostPath": "CACHED",
-  "AWS::Batch::JobDefinition.EksMetadata": "CACHED",
-  "AWS::Batch::JobDefinition.EksPodProperties": "CACHED",
   "AWS::Batch::JobDefinition.EksProperties": "CACHED",
   "AWS::Batch::JobDefinition.EksSecret": "CACHED",
   "AWS::Batch::JobDefinition.EksVolume": "CACHED",
@@ -695,21 +693,23 @@
   "AWS::Batch::JobDefinition.EphemeralStorage": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
-  "AWS::Batch::JobDefinition.Host": "CACHED",
-  "AWS::Batch::JobDefinition.JobTimeout": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
-  "AWS::Batch::JobDefinition.MountPoint": "CACHED",
+  "AWS::Batch::JobDefinition.Metadata": "CACHED",
+  "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
   "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.RuntimePlatform": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
-  "AWS::Batch::JobDefinition.Volume": "CACHED",
+  "AWS::Batch::JobDefinition.Volumes": "CACHED",
+  "AWS::Batch::JobDefinition.VolumesHost": "CACHED",
   "AWS::Batch::JobQueue.ComputeEnvironmentOrder": "CACHED",
   "AWS::Batch::SchedulingPolicy.FairsharePolicy": "CACHED",
   "AWS::Batch::SchedulingPolicy.ShareAttributes": "CACHED",
@@ -978,7 +978,18 @@
   "AWS::Cognito::IdentityPool.PushSync": "CACHED",
   "AWS::Cognito::IdentityPoolRoleAttachment.MappingRule": "CACHED",
   "AWS::Cognito::IdentityPoolRoleAttachment.RoleMapping": "CACHED",
-  "AWS::Cognito::IdentityPoolRoleAttachment.RulesConfigurationType": "CACHED",
+  "AWS::Cognito::IdentityPoolRoleAttachment.RulesConfigurationType": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypoolroleattachment-rulesconfigurationtype.html",
+   "Properties": {
+    "Rules": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypoolroleattachment-rulesconfigurationtype.html#cfn-cognito-identitypoolroleattachment-rulesconfigurationtype-rules",
+     "ItemType": "MappingRule",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Cognito::LogDeliveryConfiguration.CloudWatchLogsConfiguration": "CACHED",
   "AWS::Cognito::LogDeliveryConfiguration.LogConfiguration": "CACHED",
   "AWS::Cognito::UserPool.AccountRecoverySetting": "CACHED",
@@ -1187,6 +1198,23 @@
   "AWS::DataSync::Task.TaskSchedule": "CACHED",
   "AWS::DataSync::Task.Transferred": "CACHED",
   "AWS::DataSync::Task.Verified": "CACHED",
+  "AWS::DataZone::DataSource.DataSourceConfigurationInput": "CACHED",
+  "AWS::DataZone::DataSource.FilterExpression": "CACHED",
+  "AWS::DataZone::DataSource.FormInput": "CACHED",
+  "AWS::DataZone::DataSource.GlueRunConfigurationInput": "CACHED",
+  "AWS::DataZone::DataSource.RecommendationConfiguration": "CACHED",
+  "AWS::DataZone::DataSource.RedshiftClusterStorage": "CACHED",
+  "AWS::DataZone::DataSource.RedshiftCredentialConfiguration": "CACHED",
+  "AWS::DataZone::DataSource.RedshiftRunConfigurationInput": "CACHED",
+  "AWS::DataZone::DataSource.RedshiftServerlessStorage": "CACHED",
+  "AWS::DataZone::DataSource.RedshiftStorage": "CACHED",
+  "AWS::DataZone::DataSource.RelationalFilterConfiguration": "CACHED",
+  "AWS::DataZone::DataSource.ScheduleConfiguration": "CACHED",
+  "AWS::DataZone::Domain.SingleSignOn": "CACHED",
+  "AWS::DataZone::Environment.EnvironmentParameter": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.RegionalParameter": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.EnvironmentParameter": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.SubscriptionTargetForm": "CACHED",
   "AWS::DevOpsGuru::NotificationChannel.NotificationChannelConfig": "CACHED",
   "AWS::DevOpsGuru::NotificationChannel.NotificationFilterConfig": "CACHED",
   "AWS::DevOpsGuru::NotificationChannel.SnsChannelConfig": "CACHED",
@@ -1460,9 +1488,12 @@
   "AWS::ECS::Service.ServiceConnectClientAlias": "CACHED",
   "AWS::ECS::Service.ServiceConnectConfiguration": "CACHED",
   "AWS::ECS::Service.ServiceConnectService": "CACHED",
+  "AWS::ECS::Service.ServiceConnectTlsCertificateAuthority": "CACHED",
+  "AWS::ECS::Service.ServiceConnectTlsConfiguration": "CACHED",
   "AWS::ECS::Service.ServiceManagedEBSVolumeConfiguration": "CACHED",
   "AWS::ECS::Service.ServiceRegistry": "CACHED",
   "AWS::ECS::Service.ServiceVolumeConfiguration": "CACHED",
+  "AWS::ECS::Service.TimeoutConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.AuthorizationConfig": "CACHED",
   "AWS::ECS::TaskDefinition.ContainerDefinition": "CACHED",
   "AWS::ECS::TaskDefinition.ContainerDependency": "CACHED",
@@ -5780,7 +5811,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "154.0.0",
+ "ResourceSpecificationVersion": "155.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -6094,7 +6125,29 @@
   },
   "AWS::Cognito::IdentityPool": "CACHED",
   "AWS::Cognito::IdentityPoolPrincipalTag": "CACHED",
-  "AWS::Cognito::IdentityPoolRoleAttachment": "CACHED",
+  "AWS::Cognito::IdentityPoolRoleAttachment": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html",
+   "Properties": {
+    "IdentityPoolId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html#cfn-cognito-identitypoolroleattachment-identitypoolid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RoleMappings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html#cfn-cognito-identitypoolroleattachment-rolemappings",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Roles": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-identitypoolroleattachment.html#cfn-cognito-identitypoolroleattachment-roles",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Cognito::LogDeliveryConfiguration": "CACHED",
   "AWS::Cognito::UserPool": "CACHED",
   "AWS::Cognito::UserPoolClient": "CACHED",
@@ -6155,6 +6208,13 @@
   "AWS::DataSync::LocationSMB": "CACHED",
   "AWS::DataSync::StorageSystem": "CACHED",
   "AWS::DataSync::Task": "CACHED",
+  "AWS::DataZone::DataSource": "CACHED",
+  "AWS::DataZone::Domain": "CACHED",
+  "AWS::DataZone::Environment": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration": "CACHED",
+  "AWS::DataZone::EnvironmentProfile": "CACHED",
+  "AWS::DataZone::Project": "CACHED",
+  "AWS::DataZone::SubscriptionTarget": "CACHED",
   "AWS::Detective::Graph": "CACHED",
   "AWS::Detective::MemberInvitation": "CACHED",
   "AWS::Detective::OrganizationAdmin": "CACHED",
@@ -6313,7 +6373,104 @@
   "AWS::ElasticLoadBalancingV2::Listener": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerCertificate": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerRule": "CACHED",
-  "AWS::ElasticLoadBalancingV2::LoadBalancer": "CACHED",
+  "AWS::ElasticLoadBalancingV2::LoadBalancer": {
+   "Attributes": {
+    "CanonicalHostedZoneID": {
+     "PrimitiveType": "String"
+    },
+    "DNSName": {
+     "PrimitiveType": "String"
+    },
+    "LoadBalancerArn": {
+     "PrimitiveType": "String"
+    },
+    "LoadBalancerFullName": {
+     "PrimitiveType": "String"
+    },
+    "LoadBalancerName": {
+     "PrimitiveType": "String"
+    },
+    "SecurityGroups": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html",
+   "Properties": {
+    "IpAddressType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-ipaddresstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "LoadBalancerAttributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-loadbalancerattributes",
+     "DuplicatesAllowed": false,
+     "ItemType": "LoadBalancerAttribute",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Scheme": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-scheme",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SecurityGroups": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-securitygroups",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+      "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
+     }
+    },
+    "SubnetMappings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnetmappings",
+     "DuplicatesAllowed": false,
+     "ItemType": "SubnetMapping",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Subnets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnets",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ListValueType": "SubnetIds",
+      "ValueType": "SubnetId"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-type",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::ElasticLoadBalancingV2::TargetGroup": "CACHED",
   "AWS::ElasticLoadBalancingV2::TrustStore": "CACHED",
   "AWS::ElasticLoadBalancingV2::TrustStoreRevocation": "CACHED",
@@ -6480,33 +6637,7 @@
   "AWS::IVS::Channel": "CACHED",
   "AWS::IVS::PlaybackKeyPair": "CACHED",
   "AWS::IVS::RecordingConfiguration": "CACHED",
-  "AWS::IVS::Stage": {
-   "Attributes": {
-    "ActiveSessionId": {
-     "PrimitiveType": "String"
-    },
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ivs-stage.html",
-   "Properties": {
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ivs-stage.html#cfn-ivs-stage-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ivs-stage.html#cfn-ivs-stage-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::IVS::Stage": "CACHED",
   "AWS::IVS::StreamKey": "CACHED",
   "AWS::IVSChat::LoggingConfiguration": "CACHED",
   "AWS::IVSChat::Room": "CACHED",
@@ -7511,7 +7642,6 @@
   "AWS::BackupGateway::Hypervisor.Name": "CACHED",
   "AWS::BackupGateway::Hypervisor.Password": "CACHED",
   "AWS::BackupGateway::Hypervisor.Username": "CACHED",
-  "AWS::Batch::JobDefinition.JobDefinitionName": "CACHED",
   "AWS::Batch::JobQueue.JobQueueName": "CACHED",
   "AWS::Batch::JobQueue.SchedulingPolicyArn": "CACHED",
   "AWS::Batch::JobQueue.State": "CACHED",
@@ -8073,6 +8203,49 @@
   "AWS::DataSync::Task.TaskSchedule.ScheduleExpression": "CACHED",
   "AWS::DataSync::Task.Transferred.ReportLevel": "CACHED",
   "AWS::DataSync::Task.Verified.ReportLevel": "CACHED",
+  "AWS::DataZone::DataSource.Description": "CACHED",
+  "AWS::DataZone::DataSource.DomainIdentifier": "CACHED",
+  "AWS::DataZone::DataSource.EnableSetting": "CACHED",
+  "AWS::DataZone::DataSource.FormInput.Content": "CACHED",
+  "AWS::DataZone::DataSource.FormInput.FormName": "CACHED",
+  "AWS::DataZone::DataSource.FormInput.TypeIdentifier": "CACHED",
+  "AWS::DataZone::DataSource.FormInput.TypeRevision": "CACHED",
+  "AWS::DataZone::DataSource.Name": "CACHED",
+  "AWS::DataZone::DataSource.ScheduleConfiguration.Schedule": "CACHED",
+  "AWS::DataZone::DataSource.Type": "CACHED",
+  "AWS::DataZone::Domain.DomainExecutionRole": "CACHED",
+  "AWS::DataZone::Domain.KmsKeyIdentifier": "CACHED",
+  "AWS::DataZone::Domain.SingleSignOn.Type": "CACHED",
+  "AWS::DataZone::Domain.SingleSignOn.UserAssignment": "CACHED",
+  "AWS::DataZone::Environment.Description": "CACHED",
+  "AWS::DataZone::Environment.DomainIdentifier": "CACHED",
+  "AWS::DataZone::Environment.EnvironmentProfileIdentifier": "CACHED",
+  "AWS::DataZone::Environment.GlossaryTerms": "CACHED",
+  "AWS::DataZone::Environment.Name": "CACHED",
+  "AWS::DataZone::Environment.ProjectIdentifier": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.DomainIdentifier": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.EnabledRegions": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.EnvironmentBlueprintIdentifier": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.ManageAccessRoleArn": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.ProvisioningRoleArn": "CACHED",
+  "AWS::DataZone::EnvironmentBlueprintConfiguration.RegionalParameter.Region": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.AwsAccountId": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.AwsAccountRegion": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.Description": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.DomainIdentifier": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.EnvironmentBlueprintIdentifier": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.Name": "CACHED",
+  "AWS::DataZone::EnvironmentProfile.ProjectIdentifier": "CACHED",
+  "AWS::DataZone::Project.Description": "CACHED",
+  "AWS::DataZone::Project.DomainIdentifier": "CACHED",
+  "AWS::DataZone::Project.GlossaryTerms": "CACHED",
+  "AWS::DataZone::Project.Name": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.ApplicableAssetTypes": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.AuthorizedPrincipals": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.DomainIdentifier": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.EnvironmentIdentifier": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.Name": "CACHED",
+  "AWS::DataZone::SubscriptionTarget.SubscriptionTargetForm.FormName": "CACHED",
   "AWS::Default::Default.EnabledState": "CACHED",
   "AWS::Detective::MemberInvitation.GraphArn": "CACHED",
   "AWS::Detective::MemberInvitation.MemberEmailAddress": "CACHED",
@@ -8674,6 +8847,7 @@
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.Resolution": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.Storage": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.TargetIntervalSeconds": "CACHED",
+  "AWS::IVS::Stage.Name": "CACHED",
   "AWS::IVS::StreamKey.ChannelArn": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.CloudWatchLogsDestinationConfiguration.LogGroupName": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.FirehoseDestinationConfiguration.DeliveryStreamName": "CACHED",
