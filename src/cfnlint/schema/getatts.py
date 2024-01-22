@@ -11,95 +11,186 @@ import regex as re
 from cfnlint.schema._pointer import resolve_pointer
 
 _all_property_types = [
-    "AWS::Amplify::Branch"
-    "AWS::Amplify::Domain"
-    "AWS::AppMesh::GatewayRoute"
-    "AWS::AppMesh::Mesh"
-    "AWS::AppMesh::Route"
-    "AWS::AppMesh::VirtualGateway"
-    "AWS::AppMesh::VirtualNode"
-    "AWS::AppMesh::VirtualRouter"
-    "AWS::AppMesh::VirtualService"
-    "AWS::AppSync::DataSource"
-    "AWS::AppSync::DomainName"
-    "AWS::AppSync::FunctionConfiguration"
-    "AWS::AppSync::Resolver"
-    "AWS::AutoScaling::AutoScalingGroup"
-    "AWS::Backup::BackupSelection"
-    "AWS::Backup::BackupVault"
-    "AWS::Cloud9::EnvironmentEC2"
-    "AWS::CloudWatch::InsightRule"
-    "AWS::CodeArtifact::Domain"
-    "AWS::CodeArtifact::Repository"
-    "AWS::DocDB::DBCluster"
-    "AWS::EC2::CapacityReservation"
-    "AWS::EC2::Instance"
-    "AWS::EC2::SecurityGroup"
-    "AWS::EC2::Subnet"
-    "AWS::EC2::VPC"
-    "AWS::EFS::MountTarget"
-    "AWS::EKS::Nodegroup"
-    "AWS::ElasticLoadBalancingV2::LoadBalancer"
-    "AWS::Events::EventBus"
-    "AWS::EventSchemas::Discoverer"
-    "AWS::EventSchemas::Registry"
-    "AWS::EventSchemas::Schema"
-    "AWS::GameLift::GameSessionQueue"
-    "AWS::GameLift::MatchmakingConfiguration"
-    "AWS::GameLift::MatchmakingRuleSet"
-    "AWS::Grafana::Workspace"
-    "AWS::Greengrass::ConnectorDefinition"
-    "AWS::Greengrass::CoreDefinition"
-    "AWS::Greengrass::DeviceDefinition"
-    "AWS::Greengrass::FunctionDefinition"
-    "AWS::Greengrass::Group"
-    "AWS::Greengrass::LoggerDefinition"
-    "AWS::Greengrass::ResourceDefinition"
-    "AWS::Greengrass::SubscriptionDefinition"
-    "AWS::ImageBuilder::Component"
-    "AWS::ImageBuilder::ContainerRecipe"
-    "AWS::ImageBuilder::DistributionConfiguration"
-    "AWS::ImageBuilder::ImagePipeline"
-    "AWS::ImageBuilder::ImageRecipe"
-    "AWS::ImageBuilder::InfrastructureConfiguration"
-    "AWS::IoT1Click::Device"
-    "AWS::IoT1Click::Placement"
-    "AWS::IoT1Click::Project"
-    "AWS::Kinesis::StreamConsumer"
-    "AWS::ManagedBlockchain::Member"
-    "AWS::MediaConvert::JobTemplate"
-    "AWS::MediaConvert::Preset"
-    "AWS::MediaConvert::Queue"
-    "AWS::MediaLive::Input"
-    "AWS::Neptune::DBCluster"
-    "AWS::OpsWorks::Instance"
-    "AWS::OpsWorks::UserProfile"
-    "AWS::RDS::DBParameterGroup"
-    "AWS::RoboMaker::RobotApplication"
-    "AWS::RoboMaker::SimulationApplication"
-    "AWS::Route53Resolver::ResolverEndpoint"
-    "AWS::Route53Resolver::ResolverRule"
-    "AWS::Route53Resolver::ResolverRuleAssociation"
-    "AWS::S3::AccessPoint"
-    "AWS::SageMaker::CodeRepository"
-    "AWS::SageMaker::DataQualityJobDefinition"
-    "AWS::SageMaker::Endpoint"
-    "AWS::SageMaker::EndpointConfig"
-    "AWS::SageMaker::Model"
-    "AWS::SageMaker::ModelBiasJobDefinition"
-    "AWS::SageMaker::ModelExplainabilityJobDefinition"
-    "AWS::SageMaker::ModelQualityJobDefinition"
-    "AWS::SageMaker::MonitoringSchedule"
-    "AWS::SageMaker::NotebookInstance"
-    "AWS::SageMaker::NotebookInstanceLifecycleConfig"
-    "AWS::SageMaker::Workteam"
-    "AWS::ServiceDiscovery::Service"
-    "AWS::SNS::Topic"
-    "AWS::SQS::Queue"
-    "AWS::SSM::Parameter"
-    "AWS::StepFunctions::Activity"
-    "AWS::Transfer::User"
+    "AWS::Amplify::Branch",
+    "AWS::Amplify::Domain",
+    "AWS::AppSync::DomainName",
+    "AWS::AppSync::FunctionConfiguration",
+    "AWS::AppSync::Resolver",
+    "AWS::AutoScaling::AutoScalingGroup",
+    "AWS::Backup::BackupSelection",
+    "AWS::Backup::BackupVault",
+    "AWS::CodeArtifact::Domain",
+    "AWS::CodeArtifact::Repository",
+    "AWS::EC2::CapacityReservation",
+    "AWS::EC2::Subnet",
+    "AWS::EC2::VPC",
+    "AWS::EFS::MountTarget",
+    "AWS::EKS::Nodegroup",
+    "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    "AWS::Events::EventBus",
+    "AWS::EventSchemas::Discoverer",
+    "AWS::EventSchemas::Registry",
+    "AWS::EventSchemas::Schema",
+    "AWS::GameLift::GameSessionQueue",
+    "AWS::GameLift::MatchmakingConfiguration",
+    "AWS::GameLift::MatchmakingRuleSet",
+    "AWS::Grafana::Workspace",
+    "AWS::ImageBuilder::Component",
+    "AWS::ImageBuilder::ContainerRecipe",
+    "AWS::ImageBuilder::DistributionConfiguration",
+    "AWS::ImageBuilder::ImagePipeline",
+    "AWS::ImageBuilder::ImageRecipe",
+    "AWS::ImageBuilder::InfrastructureConfiguration",
+    "AWS::Neptune::DBCluster",
+    "AWS::RDS::DBParameterGroup",
+    "AWS::RoboMaker::RobotApplication",
+    "AWS::RoboMaker::SimulationApplication",
+    "AWS::Route53Resolver::ResolverRule",
+    "AWS::Route53Resolver::ResolverRuleAssociation",
+    "AWS::S3::AccessPoint",
+    "AWS::SageMaker::DataQualityJobDefinition",
+    "AWS::SageMaker::ModelBiasJobDefinition",
+    "AWS::SageMaker::ModelExplainabilityJobDefinition",
+    "AWS::SageMaker::ModelQualityJobDefinition",
+    "AWS::SageMaker::MonitoringSchedule",
+    "AWS::SNS::Topic",
+    "AWS::SQS::Queue",
+    "AWS::SSM::Parameter",
+    "AWS::StepFunctions::Activity",
 ]
+
+# Non registry resources that have a difference between readOnlyProperties
+# what is supported by GetAtt
+_exceptions = {
+    "AWS::AppMesh::GatewayRoute": [
+        "GatewayRouteName",
+        "MeshName",
+        "MeshOwner",
+        "VirtualGatewayName",
+    ],
+    "AWS::AppMesh::Mesh": [
+        "MeshName",
+    ],
+    "AWS::AppMesh::Route": [
+        "MeshName",
+        "MeshOwner",
+        "RouteName",
+        "VirtualRouterName",
+    ],
+    "AWS::AppMesh::VirtualGateway": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualGatewayName",
+    ],
+    "AWS::AppMesh::VirtualNode": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualNodeName",
+    ],
+    "AWS::AppMesh::VirtualRouter": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualRouterName",
+    ],
+    "AWS::AppMesh::VirtualService": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualServiceName",
+    ],
+    "AWS::AppSync::DataSource": [
+        "Name",
+    ],
+    "AWS::Cloud9::EnvironmentEC2": [
+        "Name",
+    ],
+    "AWS::CloudWatch::InsightRule": [
+        "RuleName",
+    ],
+    "AWS::DocDB::DBCluster": [
+        "Port",
+    ],
+    "AWS::EC2::Instance": [
+        "AvailabilityZone",
+    ],
+    "AWS::EC2::SecurityGroup": ["VpcId"],
+    "AWS::Greengrass::ConnectorDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::CoreDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::DeviceDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::FunctionDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::Group": [
+        "Name",
+        "RoleArn",
+    ],
+    "AWS::Greengrass::LoggerDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::ResourceDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::SubscriptionDefinition": [
+        "Name",
+    ],
+    "AWS::IoT1Click::Device": [
+        "Enabled",
+    ],
+    "AWS::IoT1Click::Placement": [
+        "PlacementName",
+        "ProjectName",
+    ],
+    "AWS::IoT1Click::Project": [
+        "ProjectName",
+    ],
+    "AWS::Kinesis::StreamConsumer": [
+        "ConsumerName",
+        "StreamARN",
+    ],
+    "AWS::ManagedBlockchain::Member": [
+        "NetworkId",
+    ],
+    "AWS::MediaConvert::JobTemplate": [
+        "Name",
+    ],
+    "AWS::MediaConvert::Preset": [
+        "Name",
+    ],
+    "AWS::MediaConvert::Queue": [
+        "Name",
+    ],
+    "AWS::MediaLive::Input": [
+        "Destinations",
+        "Sources",
+    ],
+    "AWS::OpsWorks::Instance": ["AvailabilityZone"],
+    "AWS::OpsWorks::UserProfile": ["SshUsername"],
+    "AWS::Route53Resolver::ResolverEndpoint": [
+        "Direction",
+        "Name",
+    ],
+    "AWS::SageMaker::CodeRepository": ["CodeRepositoryName"],
+    "AWS::SageMaker::Endpoint": [
+        "EndpointName",
+    ],
+    "AWS::SageMaker::EndpointConfig": ["EndpointConfigName"],
+    "AWS::SageMaker::Model": ["ModelName"],
+    "AWS::SageMaker::NotebookInstance": ["NotebookInstanceName"],
+    "AWS::SageMaker::NotebookInstanceLifecycleConfig": [
+        "NotebookInstanceLifecycleConfigName"
+    ],
+    "AWS::SageMaker::Workteam": ["WorkteamName"],
+    "AWS::ServiceDiscovery::Service": ["Name"],
+    "AWS::Transfer::User": [
+        "ServerId",
+        "UserName",
+    ],
+}
 
 _unnamed_string_types = ("AWS::CloudFormation::Stack",)
 
@@ -173,6 +264,10 @@ class GetAtts:
             for name, value in schema.get("properties", {}).items():
                 self._process_schema(name, value, GetAttType.All)
             return
+        if type_name in _exceptions:
+            for name in _exceptions[type_name]:
+                attr_schema = self._flatten_schema_by_pointer(f"/properties/{name}")
+                self._process_schema(name, attr_schema, GetAttType.ReadOnly)
         for unnamed_type in _unnamed_string_types:
             if type_name.startswith(unnamed_type):
                 self._attrs["Outputs\\..*"] = GetAtt(
