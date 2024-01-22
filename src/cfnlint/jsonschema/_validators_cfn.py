@@ -25,6 +25,7 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
+from cfnlint.data.schemas.other import resources
 from cfnlint.helpers import (
     FUNCTIONS_SINGLE,
     REGEX_DYN_REF,
@@ -33,6 +34,7 @@ from cfnlint.helpers import (
     VALID_PARAMETER_TYPES,
     VALID_PARAMETER_TYPES_LIST,
     ToPy,
+    load_resource,
 )
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
@@ -92,31 +94,7 @@ def _validate_fn_output_types(
 def tagging(validator: Validator, t: Any, instance: Any, schema: Any):
     if not t.get("taggable"):
         return
-    schema = {
-        "properties": {
-            "Tags": {
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "Value": {
-                            "pattern": "^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$",
-                            "maxLength": 256,
-                        }
-                    },
-                },
-                "properties": {},
-                "patternProperties": {
-                    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
-                        "pattern": "^([\p{L}\p{Z}\p{N}_.:/=+\-@]*)$",
-                        "maxLength": 256,
-                    }
-                },
-                "type": ["array", "object"],
-                "uniqueKeys": ["Key"],
-                "additionalProperties": False,
-            }
-        }
-    }
+    schema = load_resource(resources, "tagging.json")
     for err in validator.descend(
         instance,
         schema,
