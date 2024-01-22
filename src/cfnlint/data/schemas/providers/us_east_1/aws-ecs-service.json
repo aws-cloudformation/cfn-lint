@@ -310,10 +310,43 @@
     },
     "PortName": {
      "type": "string"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/TimeoutConfiguration"
+    },
+    "Tls": {
+     "$ref": "#/definitions/ServiceConnectTlsConfiguration"
     }
    },
    "required": [
     "PortName"
+   ],
+   "type": "object"
+  },
+  "ServiceConnectTlsCertificateAuthority": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsPcaAuthorityArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceConnectTlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IssuerCertificateAuthority": {
+     "$ref": "#/definitions/ServiceConnectTlsCertificateAuthority"
+    },
+    "KmsKey": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IssuerCertificateAuthority"
    ],
    "type": "object"
   },
@@ -398,6 +431,18 @@
     },
     "Value": {
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TimeoutConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleTimeoutSeconds": {
+     "type": "integer"
+    },
+    "PerRequestTimeoutSeconds": {
+     "type": "integer"
     }
    },
    "type": "object"
