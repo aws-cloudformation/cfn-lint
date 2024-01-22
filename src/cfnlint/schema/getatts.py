@@ -59,6 +59,139 @@ _all_property_types = [
     "AWS::StepFunctions::Activity",
 ]
 
+# Non registry resources that have a difference between readOnlyProperties
+# what is supported by GetAtt
+_exceptions = {
+    "AWS::AppMesh::GatewayRoute": [
+        "GatewayRouteName",
+        "MeshName",
+        "MeshOwner",
+        "VirtualGatewayName",
+    ],
+    "AWS::AppMesh::Mesh": [
+        "MeshName",
+    ],
+    "AWS::AppMesh::Route": [
+        "MeshName",
+        "MeshOwner",
+        "RouteName",
+        "VirtualRouterName",
+    ],
+    "AWS::AppMesh::VirtualGateway": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualGatewayName",
+    ],
+    "AWS::AppMesh::VirtualNode": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualNodeName",
+    ],
+    "AWS::AppMesh::VirtualRouter": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualRouterName",
+    ],
+    "AWS::AppMesh::VirtualService": [
+        "MeshName",
+        "MeshOwner",
+        "VirtualServiceName",
+    ],
+    "AWS::AppSync::DataSource": [
+        "Name",
+    ],
+    "AWS::Cloud9::EnvironmentEC2": [
+        "Name",
+    ],
+    "AWS::CloudWatch::InsightRule": [
+        "RuleName",
+    ],
+    "AWS::DocDB::DBCluster": [
+        "Port",
+    ],
+    "AWS::EC2::Instance": [
+        "AvailabilityZone",
+    ],
+    "AWS::EC2::SecurityGroup": ["VpcId"],
+    "AWS::Greengrass::ConnectorDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::CoreDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::DeviceDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::FunctionDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::Group": [
+        "Name",
+        "RoleArn",
+    ],
+    "AWS::Greengrass::LoggerDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::ResourceDefinition": [
+        "Name",
+    ],
+    "AWS::Greengrass::SubscriptionDefinition": [
+        "Name",
+    ],
+    "AWS::IoT1Click::Device": [
+        "Enabled",
+    ],
+    "AWS::IoT1Click::Placement": [
+        "PlacementName",
+        "ProjectName",
+    ],
+    "AWS::IoT1Click::Project": [
+        "ProjectName",
+    ],
+    "AWS::Kinesis::StreamConsumer": [
+        "ConsumerName",
+        "StreamARN",
+    ],
+    "AWS::ManagedBlockchain::Member": [
+        "NetworkId",
+    ],
+    "AWS::MediaConvert::JobTemplate": [
+        "Name",
+    ],
+    "AWS::MediaConvert::Preset": [
+        "Name",
+    ],
+    "AWS::MediaConvert::Queue": [
+        "Name",
+    ],
+    "AWS::MediaLive::Input": [
+        "Destinations",
+        "Sources",
+    ],
+    "AWS::OpsWorks::Instance": ["AvailabilityZone"],
+    "AWS::OpsWorks::UserProfile": ["SshUsername"],
+    "AWS::Route53Resolver::ResolverEndpoint": [
+        "Direction",
+        "Name",
+    ],
+    "AWS::SageMaker::CodeRepository": ["CodeRepositoryName"],
+    "AWS::SageMaker::Endpoint": [
+        "EndpointName",
+    ],
+    "AWS::SageMaker::EndpointConfig": ["EndpointConfigName"],
+    "AWS::SageMaker::Model": ["ModelName"],
+    "AWS::SageMaker::NotebookInstance": ["NotebookInstanceName"],
+    "AWS::SageMaker::NotebookInstanceLifecycleConfig": [
+        "NotebookInstanceLifecycleConfigName"
+    ],
+    "AWS::SageMaker::Workteam": ["WorkteamName"],
+    "AWS::ServiceDiscovery::Service": ["Name"],
+    "AWS::Transfer::User": [
+        "ServerId",
+        "UserName",
+    ],
+}
+
 _unnamed_string_types = ("AWS::CloudFormation::Stack",)
 
 _unnamed_unknown_types = (
@@ -131,6 +264,10 @@ class GetAtts:
             for name, value in schema.get("properties", {}).items():
                 self._process_schema(name, value, GetAttType.All)
             return
+        if type_name in _exceptions:
+            for name in _exceptions[type_name]:
+                attr_schema = self._flatten_schema_by_pointer(f"/properties/{name}")
+                self._process_schema(name, attr_schema, GetAttType.ReadOnly)
         for unnamed_type in _unnamed_string_types:
             if type_name.startswith(unnamed_type):
                 self._attrs["Outputs\\..*"] = GetAtt(
