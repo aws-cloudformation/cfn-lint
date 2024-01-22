@@ -1,24 +1,26 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/JobDefinitionName",
-  "/properties/ContainerProperties",
-  "/properties/EksProperties",
-  "/properties/NodeProperties",
-  "/properties/Parameters",
-  "/properties/PlatformCapabilities",
-  "/properties/PropagateTags",
-  "/properties/RetryStrategy",
-  "/properties/SchedulingPriority",
-  "/properties/Timeout",
-  "/properties/Type"
+  "/properties/Tags",
+  "/properties/JobDefinitionName"
  ],
  "definitions": {
+  "AuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessPointId": {
+     "type": "string"
+    },
+    "Iam": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ContainerProperties": {
    "additionalProperties": false,
    "properties": {
     "Command": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -26,7 +28,6 @@
      "uniqueItems": false
     },
     "Environment": {
-     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Environment"
      },
@@ -34,28 +35,13 @@
      "uniqueItems": false
     },
     "EphemeralStorage": {
-     "additionalProperties": false,
-     "properties": {
-      "SizeInGiB": {
-       "type": "integer"
-      }
-     },
-     "required": [
-      "SizeInGiB"
-     ],
-     "type": "object"
+     "$ref": "#/definitions/EphemeralStorage"
     },
     "ExecutionRoleArn": {
      "type": "string"
     },
     "FargatePlatformConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "PlatformVersion": {
-       "type": "string"
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/FargatePlatformConfiguration"
     },
     "Image": {
      "type": "string"
@@ -67,87 +53,23 @@
      "type": "string"
     },
     "LinuxParameters": {
-     "additionalProperties": false,
-     "properties": {
-      "Devices": {
-       "insertionOrder": false,
-       "items": {
-        "$ref": "#/definitions/Device"
-       },
-       "type": "array",
-       "uniqueItems": false
-      },
-      "InitProcessEnabled": {
-       "type": "boolean"
-      },
-      "MaxSwap": {
-       "type": "integer"
-      },
-      "SharedMemorySize": {
-       "type": "integer"
-      },
-      "Swappiness": {
-       "type": "integer"
-      },
-      "Tmpfs": {
-       "insertionOrder": false,
-       "items": {
-        "$ref": "#/definitions/Tmpfs"
-       },
-       "type": "array",
-       "uniqueItems": false
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/LinuxParameters"
     },
     "LogConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "LogDriver": {
-       "type": "string"
-      },
-      "Options": {
-       "additionalProperties": false,
-       "patternProperties": {
-        ".*": {
-         "type": "string"
-        }
-       },
-       "type": "object"
-      },
-      "SecretOptions": {
-       "insertionOrder": false,
-       "items": {
-        "$ref": "#/definitions/Secret"
-       },
-       "type": "array",
-       "uniqueItems": false
-      }
-     },
-     "required": [
-      "LogDriver"
-     ],
-     "type": "object"
+     "$ref": "#/definitions/LogConfiguration"
     },
     "Memory": {
      "type": "integer"
     },
     "MountPoints": {
-     "insertionOrder": false,
      "items": {
-      "$ref": "#/definitions/MountPoint"
+      "$ref": "#/definitions/MountPoints"
      },
      "type": "array",
      "uniqueItems": false
     },
     "NetworkConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "AssignPublicIp": {
-       "type": "string"
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/NetworkConfiguration"
     },
     "Privileged": {
      "type": "boolean"
@@ -156,7 +78,6 @@
      "type": "boolean"
     },
     "ResourceRequirements": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/ResourceRequirement"
      },
@@ -164,19 +85,9 @@
      "uniqueItems": false
     },
     "RuntimePlatform": {
-     "additionalProperties": false,
-     "properties": {
-      "CpuArchitecture": {
-       "type": "string"
-      },
-      "OperatingSystemFamily": {
-       "type": "string"
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/RuntimePlatform"
     },
     "Secrets": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Secret"
      },
@@ -184,7 +95,6 @@
      "uniqueItems": false
     },
     "Ulimits": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Ulimit"
      },
@@ -198,9 +108,8 @@
      "type": "integer"
     },
     "Volumes": {
-     "insertionOrder": false,
      "items": {
-      "$ref": "#/definitions/Volume"
+      "$ref": "#/definitions/Volumes"
      },
      "type": "array",
      "uniqueItems": false
@@ -221,7 +130,6 @@
      "type": "string"
     },
     "Permissions": {
-     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -231,23 +139,11 @@
    },
    "type": "object"
   },
-  "EFSAuthorizationConfig": {
-   "additionalProperties": false,
-   "properties": {
-    "AccessPointId": {
-     "type": "string"
-    },
-    "Iam": {
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "EFSVolumeConfiguration": {
+  "EfsVolumeConfiguration": {
    "additionalProperties": false,
    "properties": {
     "AuthorizationConfig": {
-     "$ref": "#/definitions/EFSAuthorizationConfig"
+     "$ref": "#/definitions/AuthorizationConfig"
     },
     "FileSystemId": {
      "type": "string"
@@ -271,7 +167,6 @@
    "additionalProperties": false,
    "properties": {
     "Args": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -279,7 +174,6 @@
      "uniqueItems": false
     },
     "Command": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -287,7 +181,6 @@
      "uniqueItems": false
     },
     "Env": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainerEnvironmentVariable"
      },
@@ -310,7 +203,6 @@
      "$ref": "#/definitions/EksContainerSecurityContext"
     },
     "VolumeMounts": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainerVolumeMount"
      },
@@ -342,21 +234,9 @@
    "additionalProperties": false,
    "properties": {
     "Limits": {
-     "additionalProperties": false,
-     "patternProperties": {
-      ".*": {
-       "type": "string"
-      }
-     },
      "type": "object"
     },
     "Requests": {
-     "additionalProperties": false,
-     "patternProperties": {
-      ".*": {
-       "type": "string"
-      }
-     },
      "type": "object"
     }
    },
@@ -419,60 +299,11 @@
    },
    "type": "object"
   },
-  "EksMetadata": {
-   "additionalProperties": false,
-   "properties": {
-    "Labels": {
-     "additionalProperties": false,
-     "patternProperties": {
-      ".*": {
-       "type": "string"
-      }
-     },
-     "type": "object"
-    }
-   },
-   "type": "object"
-  },
-  "EksPodProperties": {
-   "additionalProperties": false,
-   "properties": {
-    "Containers": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/EksContainer"
-     },
-     "type": "array",
-     "uniqueItems": false
-    },
-    "DnsPolicy": {
-     "type": "string"
-    },
-    "HostNetwork": {
-     "type": "boolean"
-    },
-    "Metadata": {
-     "$ref": "#/definitions/EksMetadata"
-    },
-    "ServiceAccountName": {
-     "type": "string"
-    },
-    "Volumes": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/EksVolume"
-     },
-     "type": "array",
-     "uniqueItems": false
-    }
-   },
-   "type": "object"
-  },
   "EksProperties": {
    "additionalProperties": false,
    "properties": {
     "PodProperties": {
-     "$ref": "#/definitions/EksPodProperties"
+     "$ref": "#/definitions/PodProperties"
     }
    },
    "type": "object"
@@ -525,6 +356,18 @@
    },
    "type": "object"
   },
+  "EphemeralStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "SizeInGiB": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "SizeInGiB"
+   ],
+   "type": "object"
+  },
   "EvaluateOnExit": {
    "additionalProperties": false,
    "properties": {
@@ -546,25 +389,79 @@
    ],
    "type": "object"
   },
-  "Host": {
+  "FargatePlatformConfiguration": {
    "additionalProperties": false,
    "properties": {
-    "SourcePath": {
+    "PlatformVersion": {
      "type": "string"
     }
    },
    "type": "object"
   },
-  "JobTimeout": {
+  "LinuxParameters": {
    "additionalProperties": false,
    "properties": {
-    "AttemptDurationSeconds": {
+    "Devices": {
+     "items": {
+      "$ref": "#/definitions/Device"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "InitProcessEnabled": {
+     "type": "boolean"
+    },
+    "MaxSwap": {
      "type": "integer"
+    },
+    "SharedMemorySize": {
+     "type": "integer"
+    },
+    "Swappiness": {
+     "type": "integer"
+    },
+    "Tmpfs": {
+     "items": {
+      "$ref": "#/definitions/Tmpfs"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "type": "object"
   },
-  "MountPoint": {
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDriver": {
+     "type": "string"
+    },
+    "Options": {
+     "type": "object"
+    },
+    "SecretOptions": {
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "LogDriver"
+   ],
+   "type": "object"
+  },
+  "Metadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "MountPoints": {
    "additionalProperties": false,
    "properties": {
     "ContainerPath": {
@@ -579,6 +476,15 @@
    },
    "type": "object"
   },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssignPublicIp": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "NodeProperties": {
    "additionalProperties": false,
    "properties": {
@@ -586,7 +492,6 @@
      "type": "integer"
     },
     "NodeRangeProperties": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/NodeRangeProperty"
      },
@@ -598,9 +503,9 @@
     }
    },
    "required": [
-    "NumNodes",
     "MainNode",
-    "NodeRangeProperties"
+    "NodeRangeProperties",
+    "NumNodes"
    ],
    "type": "object"
   },
@@ -617,6 +522,38 @@
    "required": [
     "TargetNodes"
    ],
+   "type": "object"
+  },
+  "PodProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Containers": {
+     "items": {
+      "$ref": "#/definitions/EksContainer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DnsPolicy": {
+     "type": "string"
+    },
+    "HostNetwork": {
+     "type": "boolean"
+    },
+    "Metadata": {
+     "$ref": "#/definitions/Metadata"
+    },
+    "ServiceAccountName": {
+     "type": "string"
+    },
+    "Volumes": {
+     "items": {
+      "$ref": "#/definitions/EksVolume"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
    "type": "object"
   },
   "ResourceRequirement": {
@@ -638,12 +575,23 @@
      "type": "integer"
     },
     "EvaluateOnExit": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EvaluateOnExit"
      },
      "type": "array",
      "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "RuntimePlatform": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuArchitecture": {
+     "type": "string"
+    },
+    "OperatingSystemFamily": {
+     "type": "string"
     }
    },
    "type": "object"
@@ -659,9 +607,18 @@
     }
    },
    "required": [
-    "Name",
-    "ValueFrom"
+    "ValueFrom",
+    "Name"
    ],
+   "type": "object"
+  },
+  "Timeout": {
+   "additionalProperties": false,
+   "properties": {
+    "AttemptDurationSeconds": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "Tmpfs": {
@@ -671,7 +628,6 @@
      "type": "string"
     },
     "MountOptions": {
-     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -683,8 +639,8 @@
     }
    },
    "required": [
-    "ContainerPath",
-    "Size"
+    "Size",
+    "ContainerPath"
    ],
    "type": "object"
   },
@@ -702,22 +658,31 @@
     }
    },
    "required": [
+    "SoftLimit",
     "HardLimit",
-    "Name",
-    "SoftLimit"
+    "Name"
    ],
    "type": "object"
   },
-  "Volume": {
+  "Volumes": {
    "additionalProperties": false,
    "properties": {
     "EfsVolumeConfiguration": {
-     "$ref": "#/definitions/EFSVolumeConfiguration"
+     "$ref": "#/definitions/EfsVolumeConfiguration"
     },
     "Host": {
-     "$ref": "#/definitions/Host"
+     "$ref": "#/definitions/VolumesHost"
     },
     "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VolumesHost": {
+   "additionalProperties": false,
+   "properties": {
+    "SourcePath": {
      "type": "string"
     }
    },
@@ -725,75 +690,29 @@
   }
  },
  "description": "Resource Type definition for AWS::Batch::JobDefinition",
- "handlers": {
-  "create": {
-   "permissions": [
-    "Batch:RegisterJobDefinition",
-    "Batch:TagResource",
-    "Batch:DescribeJobDefinitions",
-    "Iam:PassRole"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "Batch:DescribeJobDefinitions",
-    "Batch:DeregisterJobDefinition",
-    "Iam:PassRole"
-   ]
-  },
-  "list": {
-   "permissions": [
-    "Batch:DescribeJobDefinitions"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "Batch:DescribeJobDefinitions"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "Batch:DescribeJobDefinitions",
-    "Batch:TagResource",
-    "Batch:UntagResource",
-    "Iam:PassRole"
-   ]
-  }
- },
  "primaryIdentifier": [
-  "/properties/JobDefinitionArn"
+  "/properties/Id"
  ],
  "properties": {
-  "ContainerOrchestrationType": {
-   "type": "string"
-  },
   "ContainerProperties": {
    "$ref": "#/definitions/ContainerProperties"
   },
   "EksProperties": {
    "$ref": "#/definitions/EksProperties"
   },
-  "JobDefinitionArn": {
+  "Id": {
    "type": "string"
   },
   "JobDefinitionName": {
-   "maxLength": 128,
    "type": "string"
   },
   "NodeProperties": {
    "$ref": "#/definitions/NodeProperties"
   },
   "Parameters": {
-   "additionalProperties": false,
-   "patternProperties": {
-    ".*": {
-     "type": "string"
-    }
-   },
    "type": "object"
   },
   "PlatformCapabilities": {
-   "insertionOrder": true,
    "items": {
     "type": "string"
    },
@@ -806,53 +725,24 @@
   "RetryStrategy": {
    "$ref": "#/definitions/RetryStrategy"
   },
-  "Revision": {
-   "type": "integer"
-  },
   "SchedulingPriority": {
    "type": "integer"
   },
-  "Status": {
-   "type": "string"
-  },
   "Tags": {
-   "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
-   "patternProperties": {
-    ".*": {
-     "type": "string"
-    }
-   },
    "type": "object"
   },
   "Timeout": {
-   "$ref": "#/definitions/JobTimeout"
+   "$ref": "#/definitions/Timeout"
   },
   "Type": {
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/ContainerOrchestrationType",
-  "/properties/JobDefinitionArn",
-  "/properties/Revision",
-  "/properties/Status"
+  "/properties/Id"
  ],
  "required": [
   "Type"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
- "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": true,
-  "tagProperty": "/properties/Tags",
-  "tagUpdatable": true,
-  "taggable": true
- },
- "typeName": "AWS::Batch::JobDefinition",
- "writeOnlyProperties": [
-  "/properties/ContainerProperties/InstanceType",
-  "/properties/NodeProperties/NodeRangeProperties/*/Container/FargatePlatformConfiguration/PlatformVersion",
-  "/properties/NodeProperties/NodeRangeProperties/*/Container/NetworkConfiguration/AssignPublicIp"
- ]
+ "typeName": "AWS::Batch::JobDefinition"
 }
