@@ -1,5 +1,10 @@
 {
  "additionalProperties": false,
+ "cfnSchema": [
+  "aws_ec2_securitygroup/protocols_and_port_ranges_include",
+  "aws_ec2_securitygroup/protocols_and_port_ranges_exclude",
+  "aws_ec2_securitygroup/all_to_and_from_ports"
+ ],
  "createOnlyProperties": [
   "/properties/IpProtocol",
   "/properties/DestinationSecurityGroupId",
@@ -67,6 +72,7 @@
   },
   "FromPort": {
    "description": "The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 type number. A value of -1 indicates all ICMP/ICMPv6 types. If you specify all ICMP/ICMPv6 types, you must specify all codes.",
+   "minimum": -1,
    "type": "integer"
   },
   "GroupId": {
@@ -83,6 +89,7 @@
   },
   "ToPort": {
    "description": "The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code. A value of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6 types, you must specify all codes.",
+   "minimum": -1,
    "type": "integer"
   }
  },
