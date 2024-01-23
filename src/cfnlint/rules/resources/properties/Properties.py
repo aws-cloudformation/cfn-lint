@@ -49,6 +49,7 @@ class Properties(BaseJsonSchema):
             "oneOf": "E2523",
             "cfnSchema": "E3017",
             "cfnRegionSchema": "E3018",
+            "tagging": "E3021",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
