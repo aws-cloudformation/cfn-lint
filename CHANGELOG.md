@@ -1,3 +1,17 @@
+### v1.2.3a1
+###### Features
+- Add rule [E3019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3019) to validate primaryIdentifiers are unique (pull #[3023](https://github.com/aws-cloudformation/cfn-lint/pull/3023))
+- Add rule [E3687](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3687) to validate ToPort and FromPort (pull #[E3026](https://github.com/aws-cloudformation/cfn-lint/pull/E3026))
+- Add rule [W3687](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3687) to validate ToPort and FromPort (pull #[E3026](https://github.com/aws-cloudformation/cfn-lint/pull/E3026))
+- Add rule [E3688](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3688) to validate both ToPort,FromPort are -1 (pull #[E3026](https://github.com/aws-cloudformation/cfn-lint/pull/E3026))
+- Add rule [E3021](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3021) for validate tagging values (pull #[3031](https://github.com/aws-cloudformation/cfn-lint/pull/3031))
+###### CloudFormation Specifications
+- Update `ResourcePath` `pattern` to check for starting `/` (pull #[3019](https://github.com/aws-cloudformation/cfn-lint/pull/3019))
+###### Fixes
+- Handle refs in REF type checks (pull #[3024](https://github.com/aws-cloudformation/cfn-lint/pull/3024))
+- Ignore_checks was being ignored when the rule was a parent (pull #[3032](https://github.com/aws-cloudformation/cfn-lint/pull/3032))
+- Additional GetAtt support for non registry resources (pull #[3027](https://github.com/aws-cloudformation/cfn-lint/pull/3027))
+
 ### v1.2.2a1
 ###### Features
 - Add rule [E3046](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2530) to validate ECS log config when AWS (pull #[2990](https://github.com/aws-cloudformation/cfn-lint/pull/2990))
