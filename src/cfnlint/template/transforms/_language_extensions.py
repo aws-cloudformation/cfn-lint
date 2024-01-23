@@ -195,13 +195,14 @@ class _Transform:
     def _replace_string_params(
         self, s: str, params: Mapping[str, Any]
     ) -> Tuple[bool, str]:
-        pattern = r"\${[a-zA-Z0-9\.:]+}"
+        pattern = r"(\$|&){[a-zA-Z0-9\.:]+}"
         if not re.search(pattern, s):
             return (True, s)
 
         new_s = deepcopy(s)
         for k, v in params.items():
             new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
+            new_s = re.sub(rf"\&\{{{k}\}}", re.sub("[^0-9a-zA-Z]+", "", v), new_s)
 
         if isinstance(s, str_node):
             new_s = str_node(new_s, s.start_mark, s.end_mark)

@@ -241,7 +241,21 @@ class TestTransform(TestCase):
                                 },
                             }
                         },
-                    ]
+                    ],
+                    "Fn::ForEach::SpecialCharacters": [
+                        "Identifier",
+                        ["a-b", "c-d"],
+                        {
+                            "S3Bucket&{Identifier}": {
+                                "Type": "AWS::S3::Bucket",
+                                "Properties": {
+                                    "BucketName": {
+                                        "Fn::Sub": "bucket-name-&{Identifier}"
+                                    },
+                                },
+                            }
+                        },
+                    ],
                 },
                 "Outputs": {
                     "Fn::ForEach::BucketOutputs": [
@@ -318,6 +332,18 @@ class TestTransform(TestCase):
                     },
                     "Type": "AWS::S3::Bucket",
                 },
+                "S3Bucketab": {
+                    "Properties": {
+                        "BucketName": "bucket-name-ab",
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
+                "S3Bucketcd": {
+                    "Properties": {
+                        "BucketName": "bucket-name-cd",
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
             },
             "Transforms": ["AWS::LanguageExtensions"],
         }
@@ -331,6 +357,7 @@ class TestTransform(TestCase):
         self.assertDictEqual(
             template,
             self.result,
+            template,
         )
 
     def test_transform_findinmap_function(self):
@@ -373,7 +400,7 @@ class TestTransform(TestCase):
         cfn = Template(filename="", template=template_obj, regions=["us-east-1"])
         matches, template = language_extension(cfn)
         self.assertListEqual(matches, [])
-        self.assertTrue(len(template["Resources"]) == 2)
+        self.assertTrue(len(template["Resources"]) == 4)
         self.assertTrue("S3BucketA" in template["Resources"])
 
     def test_duplicate_key(self):
