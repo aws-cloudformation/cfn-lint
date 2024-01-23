@@ -25,6 +25,7 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
+from cfnlint.data.schemas.other import resources
 from cfnlint.helpers import (
     FUNCTIONS_SINGLE,
     REGEX_DYN_REF,
@@ -33,6 +34,7 @@ from cfnlint.helpers import (
     VALID_PARAMETER_TYPES,
     VALID_PARAMETER_TYPES_LIST,
     ToPy,
+    load_resource,
 )
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
@@ -87,6 +89,18 @@ def _validate_fn_output_types(
         else:
             reprs = ", ".join(repr(type) for type in tS)
             yield ValidationError(f"{instance!r} is not of type {reprs}")
+
+
+def tagging(validator: Validator, t: Any, instance: Any, schema: Any):
+    if not t.get("taggable"):
+        return
+    schema = load_resource(resources, "tagging.json")
+    for err in validator.descend(
+        instance,
+        schema,
+    ):
+        err.validator = "tagging"
+        yield err
 
 
 class _Fn:
@@ -1181,4 +1195,5 @@ cfn_validators: Dict[str, V] = {
     "fn_and": FnAnd().validate,
     "fn_not": FnNot().validate,
     "condition": Condition().validate,
+    "tagging": tagging,
 }
