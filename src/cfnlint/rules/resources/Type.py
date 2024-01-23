@@ -51,4 +51,5 @@ class Type(BaseJsonSchema):
                 yield ValidationError(
                     f"Resource type `{resource_type}` does not exist in '{region}'",
                     path=deque(["Type"]),
+                    rule=self,
                 )
