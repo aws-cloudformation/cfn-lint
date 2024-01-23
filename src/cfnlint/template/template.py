@@ -323,14 +323,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     for ignore_rule_id in ignore_rule_ids:
                         if ignore_rule_id not in results:
                             results[ignore_rule_id] = []
-                        value_location = self._loc(resource_values)
-                        name_location = self._loc(resource_name)
-                        results[ignore_rule_id].append(
-                            {
-                                "start": (name_location[0] + 1, name_location[1] + 1),
-                                "end": (value_location[2] + 1, value_location[3] + 1),
-                            }
-                        )
+                        results[ignore_rule_id].append(resource_name)
         return results
 
     # pylint: disable=too-many-locals
