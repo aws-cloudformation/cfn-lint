@@ -1228,14 +1228,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
         )
         directives = template.get_directives()
         expected_result = {
-            "E3012": [
-                {"end": (23, 10), "start": (10, 9)},
-                {"end": (36, 10), "start": (24, 9)},
-            ],
-            "I1001": [{"end": (23, 10), "start": (10, 9)}],
+            "E3012": ["myBucket1", "myBucket2"],
+            "I1001": ["myBucket1"],
         }
-        self.assertEqual(len(expected_result), len(directives))
-        for key, items in directives.items():
-            self.assertIn(key, expected_result)
-            if key in expected_result:
-                self.assertEqualListOfDicts(items, expected_result.get(key))
+        self.assertDictEqual(directives, expected_result)
