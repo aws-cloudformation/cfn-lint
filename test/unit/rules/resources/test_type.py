@@ -53,6 +53,7 @@ class TestType(BaseRuleTestCase):
                     "Resource type `Foo::Bar::Type` does not exist in 'us-east-1'",
                     path=deque(["Type"]),
                     schema_path=deque([]),
+                    rule=Type(),
                 ),
             ],
             errors,

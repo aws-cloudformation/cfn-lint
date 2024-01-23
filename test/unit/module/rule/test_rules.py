@@ -5,11 +5,14 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 
 from cfnlint import ConfigMixIn, Template
+from cfnlint.decode.mark import Mark
+from cfnlint.decode.node import dict_node
 from cfnlint.rules import (
     CloudFormationLintRule,
     DuplicateRuleError,
     Match,
     RuleError,
+    RuleMatch,
     Rules,
 )
 
@@ -51,6 +54,34 @@ class RuleFail(CloudFormationLintRule):
         raise KeyError("Bad template")
 
 
+class RuleChild(CloudFormationLintRule):
+    id = "ECCCC"
+    shortdesc = "Child Rule"
+    description = "Child Rule"
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    tags = ["resources"]
+
+    def validate(self, cfn):
+        return [RuleMatch([], "Child Rule", rule=self)]
+
+
+class RuleParent(CloudFormationLintRule):
+    id = "EPPPP"
+    shortdesc = "Parent Rule"
+    description = "Parent Rule"
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    tags = ["resources"]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.child_rules = {
+            "ECCCC": RuleChild(),
+        }
+
+    def match(self, cfn):
+        return [RuleMatch([], "Parent Rule")] + self.child_rules["ECCCC"].validate(cfn)
+
+
 class TestRules(BaseTestCase):
     """Test CloudFormation Rules"""
 
@@ -76,6 +107,69 @@ class TestRules(BaseTestCase):
                     ),
                 )
             ],
+            matches,
+        )
+
+    def test_parent_child(self):
+        rules = Rules()
+        rules.extend([RuleParent(), RuleChild()])
+
+        cfn = Template(
+            "-", dict_node({}, Mark(0, 0), Mark(0, 0)), regions=["us-east-1"]
+        )
+
+        matches = list(rules.run("-", cfn, ConfigMixIn([])))
+        self.assertListEqual(
+            [
+                Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    "-",
+                    RuleParent(),
+                    ("Parent Rule"),
+                ),
+                Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    "-",
+                    RuleChild(),
+                    ("Child Rule"),
+                ),
+            ],
+            matches,
+            matches,
+        )
+
+    def test_parent_child_ignore(self):
+        rules = Rules()
+        rules.extend([RuleParent(), RuleChild()])
+
+        cfn = Template(
+            "-", dict_node({}, Mark(0, 0), Mark(0, 0)), regions=["us-east-1"]
+        )
+
+        matches = list(
+            rules.run(
+                "-", cfn, ConfigMixIn(ignore_checks=["E"], mandatory_checks=["ECCCC"])
+            )
+        )
+        self.assertListEqual(
+            [
+                Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    "-",
+                    RuleChild(),
+                    ("Child Rule"),
+                )
+            ],
+            matches,
             matches,
         )
 
