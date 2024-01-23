@@ -27,4 +27,7 @@ class RoleArnPattern(BaseJsonSchema):
         patrn = "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+$"
 
         if not re.match(patrn, arn):
-            yield ValidationError(f"{arn!r} does not match {patrn!r}")
+            yield ValidationError(
+                f"{arn!r} does not match {patrn!r}",
+                rule=self,
+            )

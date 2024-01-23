@@ -360,6 +360,14 @@ class Rules(TypedRules):
                     f"Unknown exception while processing rule {rule_id}: {error_message!r}",
                 )
 
+    def _filter_matches(
+        self, config: ConfigMixIn, matches: Iterator[Match]
+    ) -> Iterator[Match]:
+        """Filter matches by config"""
+        for match in matches:
+            if self.is_rule_enabled(match.rule, config):
+                yield match
+
     def run(
         self, filename: Optional[str], cfn: Template, config: ConfigMixIn
     ) -> Iterator[Match]:
@@ -378,8 +386,9 @@ class Rules(TypedRules):
                 rule.child_rules[key] = self.data.get(key)
 
         for rule in runable_rules:
-            yield from self.run_check(
-                rule.matchall, filename, rule.id, config, filename, cfn
+            yield from self._filter_matches(
+                config,
+                self.run_check(rule.matchall, filename, rule.id, config, filename, cfn),
             )
 
         for resource_name, resource_attributes in cfn.get_resources().items():
@@ -388,16 +397,19 @@ class Rules(TypedRules):
             if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ["Resources", resource_name, "Properties"]
                 for rule in self.runable_rules(config):
-                    yield from self.run_check(
-                        rule.matchall_resource_properties,
-                        filename,
-                        rule.id,
+                    yield from self._filter_matches(
                         config,
-                        filename,
-                        cfn,
-                        resource_properties,
-                        resource_type,
-                        path,
+                        self.run_check(
+                            rule.matchall_resource_properties,
+                            filename,
+                            rule.id,
+                            config,
+                            filename,
+                            cfn,
+                            resource_properties,
+                            resource_type,
+                            path,
+                        ),
                     )
 
     @classmethod
