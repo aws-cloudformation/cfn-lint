@@ -1109,3 +1109,99 @@ def test_functions(name, instance, schema, errors, cfn_response):
 )
 def test_language_extension_functions(name, instance, schema, errors, cfn_response):
     message_transform_errors(name, instance, schema, errors)
+
+
+@pytest.mark.parametrize(
+    "name,instance,schema,errors,cfn_response",
+    [
+        (
+            "Valid tag by array",
+            {"Tags": [{"Key": "Foo", "Value": "Bar"}]},
+            {"tagging": {"taggable": True}},
+            [],
+            [],
+        ),
+        (
+            "Valid tag by key/value",
+            {"Tags": {"Foo": "Bar"}},
+            {"tagging": {"taggable": True}},
+            [],
+            [],
+        ),
+        (
+            "Duplicate key",
+            {"Tags": [{"Key": "Foo", "Value": "Bar"}, {"Key": "Foo", "Value": "Bar"}]},
+            {"tagging": {"taggable": True}},
+            [
+                (
+                    "[{'Key': 'Foo', 'Value': 'Bar'}, {'Key': 'Foo', 'Value': 'Bar'}] "
+                    "has non-unique elements for keys ['Key']"
+                )
+            ],
+            [],
+        ),
+        (
+            "Bad special characters in array",
+            {
+                "Tags": [
+                    {"Key": "Foo", "Value": "Foo & Bar"},
+                ]
+            },
+            {"tagging": {"taggable": True}},
+            [
+                (
+                    "'Foo & Bar' does not match "
+                    "'^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
+                )
+            ],
+            [],
+        ),
+        (
+            "Bad special characters in object",
+            {
+                "Tags": {"Foo": "Foo ! Bar"},
+            },
+            {"tagging": {"taggable": True}},
+            [
+                (
+                    "'Foo ! Bar' does not match "
+                    "'^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
+                )
+            ],
+            [],
+        ),
+        (
+            "AWS key name in array",
+            {
+                "Tags": [
+                    {"Key": "aws:Foo", "Value": "Bar"},
+                ],
+            },
+            {"tagging": {"taggable": True}},
+            [
+                (
+                    "'aws:Foo' does not match "
+                    "'^(?!aws:)([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
+                )
+            ],
+            [],
+        ),
+        (
+            "AWS key name in object",
+            {
+                "Tags": {"aws:Foo": "Bar"},
+            },
+            {"tagging": {"taggable": True}},
+            [
+                (
+                    "'aws:Foo' does not match any of "
+                    "the regexes: "
+                    "'^(?!aws:)([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
+                )
+            ],
+            [],
+        ),
+    ],
+)
+def test_tagging(name, instance, schema, errors, cfn_response):
+    message_transform_errors(name, instance, schema, errors)
