@@ -94,30 +94,6 @@ def create_dict_node_class(cls):
         def __copy__(self):
             return self
 
-        def is_function_returning_object(self, mappings=None):
-            """
-            Check if an object is using a function that could return an object
-            Return True when
-                Fn::Select:
-                - 0  # or any number
-                - !FindInMap [mapname, key, value] # or any mapname, key, value
-            Otherwise False
-            """
-            mappings = mappings or {}
-            if len(self) == 1:
-                for k, v in self.items():
-                    if k in ["Fn::Select"]:
-                        if isinstance(v, list):
-                            if len(v) == 2:
-                                p_v = v[1]
-                                if isinstance(p_v, dict):
-                                    if len(p_v) == 1:
-                                        for l_k in p_v.keys():
-                                            if l_k in ["Fn::FindInMap", "Fn::GetAtt"]:
-                                                return True
-
-            return False
-
         def get(self, key, default=None):
             """Override the default get"""
             if not isinstance(key, str):
