@@ -22,8 +22,27 @@ class Sub(CloudFormationLintRule):
     def __init__(self) -> None:
         super().__init__()
         self.validate = FnSub().validate
+        self.child_rules = {
+            "W1019": None,
+            "W1020": None,
+        }
 
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        yield from self.validate(validator, s, instance, schema)
+        found = False
+        for err in self.validate(validator, s, instance, schema):
+            yield err
+            found = True
+
+        # we know the structure is valid at this point
+        # so any child rule doesn't have to revalidate it
+        if not found:
+            for _, rule in self.child_rules.items():
+                if rule:
+                    for err in rule.validate(
+                        validator, s, instance.get("Fn::Sub"), schema
+                    ):
+                        err.path.append("Fn::Sub")
+                        err.rule = rule
+                        yield err
