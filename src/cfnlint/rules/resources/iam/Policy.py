@@ -71,5 +71,6 @@ class Policy(BaseJsonSchema):
             )
 
         for err in iam_validator.iter_errors(policy):
-            err.rule = self
+            if not err.validator.startswith("fn_"):
+                err.rule = self
             yield err

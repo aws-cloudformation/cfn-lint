@@ -15,7 +15,7 @@ from yaml.resolver import Resolver
 from yaml.scanner import Scanner
 
 import cfnlint
-from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
+from cfnlint.decode.node import dict_node, list_node, str_node
 
 try:
     from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,
@@ -168,10 +168,6 @@ class NodeConstructor(SafeConstructor):
 
         (obj,) = SafeConstructor.construct_yaml_map(self, node)
 
-        if len(mapping) == 1:
-            if "Fn::Sub" in mapping:
-                return sub_node(obj, node.start_mark, node.end_mark)
-
         return dict_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_str(self, node):
@@ -250,9 +246,6 @@ def multi_constructor(loader, tag_suffix, node):
         constructor = loader.construct_mapping
     else:
         raise f"Bad tag: !{tag_suffix}"
-
-    if tag_suffix == "Fn::Sub":
-        return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
