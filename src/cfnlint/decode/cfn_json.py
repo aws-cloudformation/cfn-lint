@@ -13,7 +13,7 @@ from json.scanner import NUMBER_RE
 
 import cfnlint
 from cfnlint.decode.mark import Mark
-from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
+from cfnlint.decode.node import dict_node, list_node, str_node
 
 LOGGER = logging.getLogger(__name__)
 
@@ -54,9 +54,6 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     if err is not None:
         raise err
 
-    if len(mapping) == 1:
-        if "Fn::Sub" in mapping:
-            return sub_node(ordered_pairs, beg_mark, end_mark)
     return mapping
 
 
