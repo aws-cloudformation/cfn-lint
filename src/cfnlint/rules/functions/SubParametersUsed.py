@@ -3,8 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.decode.node import sub_node
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any
+
+import regex as re
+
+from cfnlint.helpers import REGEX_SUB_PARAMETERS
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.rules import CloudFormationLintRule
 
 
 class SubParametersUsed(CloudFormationLintRule):
@@ -16,26 +21,15 @@ class SubParametersUsed(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
     tags = ["functions", "sub"]
 
-    def match(self, cfn):
-        matches = []
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        if validator.is_type(instance, "string"):
+            return
 
-        sub_objs = cfn.search_deep_class(sub_node)
-
-        for sub_obj_tuple in sub_objs:
-            path, sub_obj = sub_obj_tuple
-            result_path = path[:] + ["Fn::Sub", 1]
-            sub_string_vars = sub_obj.get_string_vars()
-            sub_vars = sub_obj.get_defined_vars()
-            for sub_var in sub_vars:
-                if sub_var not in sub_string_vars:
-                    message = "Parameter {0} not used in Fn::Sub at {1}"
-                    matches.append(
-                        RuleMatch(
-                            result_path + [sub_var],
-                            message.format(
-                                sub_var, "/".join(map(str, result_path + [sub_var]))
-                            ),
-                        )
-                    )
-
-        return matches
+        variables = re.findall(REGEX_SUB_PARAMETERS, instance[0])
+        for v, _ in instance[1].items():
+            if v not in variables:
+                yield ValidationError(
+                    f"Parameter {v!r} not used in 'Fn::Sub'", path=[1]
+                )
