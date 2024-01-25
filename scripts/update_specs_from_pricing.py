@@ -155,7 +155,7 @@ def get_rds_pricing():
         "No license required": "general-public-license",
     }
 
-    rds_specs = {}
+    rds_details = {}
 
     results = {}
     for page in get_paginator("AmazonRDS"):
@@ -186,44 +186,90 @@ def get_rds_pricing():
                     )
                     instance_type = product.get("attributes").get("instanceType")
                     for product_name in product_names:
-                        if not rds_specs.get(license_name):
-                            rds_specs[license_name] = {}
-                        if not rds_specs.get(license_name).get(product_name):
-                            rds_specs[license_name][product_name] = {}
+                        if not rds_details.get(product_region):
+                            rds_details[product_region] = {}
+                        if not rds_details.get(product_region).get(license_name):
+                            rds_details[product_region][license_name] = {}
                         if (
-                            not rds_specs.get(license_name)
+                            not rds_details.get(product_region)
+                            .get(license_name)
                             .get(product_name)
-                            .get(product_region)
                         ):
                             if (
                                 license_name == "general-public-license"
                                 and product_name
                                 in ["aurora-mysql", "aurora-postgresql"]
                             ):
-                                rds_specs[license_name][product_name][
-                                    product_region
+                                rds_details[product_region][license_name][
+                                    product_name
                                 ] = set(["db.serverless"])
                             else:
-                                rds_specs[license_name][product_name][
-                                    product_region
+                                rds_details[product_region][license_name][
+                                    product_name
                                 ] = set()
 
-                        rds_specs[license_name][product_name][product_region].add(
+                        rds_details[product_region][license_name][product_name].add(
                             instance_type
                         )
-
-    for license_name, license_values in rds_specs.items():
-        for product_name, product_values in license_values.items():
-            for product_region, instance_types in product_values.items():
-                rds_specs[license_name][product_name][product_region] = list(
-                    sorted(instance_types)
+    specs = {}
+    for product_region, product_values in rds_details.items():
+        if product_region not in specs:
+            specs[product_region] = {"allOf": []}
+        for license_name, license_values in product_values.items():
+            for product_name, instance_types in license_values.items():
+                if license_name == "general-public-license":
+                    specs[product_region]["allOf"].append(
+                        {
+                            "if": {
+                                "properties": {
+                                    "Engine": {
+                                        "const": product_name,
+                                    },
+                                    "LicenseModel": False,
+                                    "DBInstanceClass": {"type": "string"},
+                                },
+                                "required": ["Engine", "DBInstanceClass"],
+                            },
+                            "then": {
+                                "properties": {
+                                    "DBInstanceClass": {
+                                        "enum": list(sorted(instance_types)),
+                                    },
+                                }
+                            },
+                        }
+                    )
+                specs[product_region]["allOf"].append(
+                    {
+                        "if": {
+                            "properties": {
+                                "Engine": {
+                                    "const": product_name,
+                                },
+                                "LicenseModel": {
+                                    "const": license_name,
+                                },
+                                "DBInstanceClass": {"type": "string"},
+                            },
+                            "required": ["Engine", "LicenseModel", "DBInstanceClass"],
+                        },
+                        "then": {
+                            "properties": {
+                                "DBInstanceClass": {
+                                    "enum": list(sorted(instance_types)),
+                                },
+                            }
+                        },
+                    }
                 )
 
     LOGGER.info("Updating RDS Spec files")
-    filename = "src/cfnlint/data/AdditionalSpecs/RdsProperties.json"
+    filename = (
+        "src/cfnlint/data/schemas/extensions/"
+        "aws_rds_dbinstance/dbinstanceclass_enum.json"
+    )
     with open(filename, "w+", encoding="utf-8") as f:
-        json.dump(rds_specs, f, indent=1, sort_keys=True, separators=(",", ": "))
-    return results
+        json.dump(specs, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 def get_results(service, product_families, default=None):
@@ -279,7 +325,7 @@ def main():
         get_results("AmazonEC2", ["Compute Instance", "Compute Instance (bare metal)"]),
     )
     write_output("aws_amazonmq_broker", "instancetype_enum", get_mq_pricing())
-    write_output("aws_rds_dbinstance", "dbinstanceclass_enum", get_rds_pricing())
+    get_rds_pricing()
     write_output(
         "aws_redshift_cluster",
         "nodetype_enum",
