@@ -75,6 +75,7 @@ types = [
     "AWS::EC2::NetworkInsightsAccessScopeAnalysis",
     "AWS::Transfer::Certificate",
     "AWS::Pinpoint::GCMChannel",
+    "AWS::SSMGuiConnect::Preferences",
     "AWS::Connect::Instance",
     "AWS::ApiGateway::DocumentationPart",
     "AWS::CloudWatch::CompositeAlarm",
