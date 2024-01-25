@@ -242,17 +242,13 @@ def format(
 def if_(
     validator: Validator, if_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    evolved = validator.extend(
-        validators={"type": type},
-        context=validator.context.evolve(functions=[]),
-    )(schema=if_schema)
-    if evolved.is_valid(instance):
+    if validator.evolve(schema=if_schema).is_valid(instance):
         if "then" in schema:
             then = schema["then"]
-            yield from evolved.descend(instance, then, schema_path="then")
+            yield from validator.descend(instance, then, schema_path="then")
     elif "else" in schema:
         else_ = schema["else"]
-        yield from evolved.descend(instance, else_, schema_path="else")
+        yield from validator.descend(instance, else_, schema_path="else")
 
 
 def items(
