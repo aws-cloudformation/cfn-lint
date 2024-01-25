@@ -3,28 +3,47 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.functions.SubUnneeded import SubUnneeded  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.functions.SubUnneeded import SubUnneeded
 
 
-class TestSubUnneeded(BaseRuleTestCase):
-    """Test Rules Get Att"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = SubUnneeded()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestSubUnneeded, self).setUp()
-        self.collection.register(SubUnneeded())
-        self.success_templates = [
-            "test/fixtures/templates/good/functions/sub.yaml",
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/functions/sub_unneeded.yaml", 1
-        )
+
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        ("Valid with matching parameters", ["${Foo}", {"Foo": "Bar"}], []),
+        (
+            "Invalid with a variables",
+            ["Foo", {"Foo": "Bar", "Bar": "Foo"}],
+            [
+                ValidationError(
+                    "'Fn::Sub' isn't needed because there are no variables", path=[0]
+                ),
+            ],
+        ),
+        (
+            "Invalid with a string",
+            "Foo",
+            [
+                ValidationError(
+                    "'Fn::Sub' isn't needed because there are no variables", path=[]
+                )
+            ],
+        ),
+    ],
+)
+def test_sub_unneeded(name, instance, expected, rule, validator):
+    errors = list(rule.validate(validator, {}, instance, {}))
+    assert errors == expected, f"Test {name!r} got {errors!r}"

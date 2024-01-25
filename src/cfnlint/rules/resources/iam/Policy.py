@@ -71,6 +71,6 @@ class Policy(BaseJsonSchema):
             )
 
         for err in iam_validator.iter_errors(policy):
-            if not err.validator.startswith("fn_"):
+            if not err.validator.startswith("fn_") and err.validator not in ["awsType"]:
                 err.rule = self
             yield err
