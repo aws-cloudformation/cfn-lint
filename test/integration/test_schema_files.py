@@ -8,6 +8,7 @@ import os
 from typing import List
 from unittest import TestCase
 
+import pytest
 import regex as re
 
 import cfnlint
@@ -17,6 +18,7 @@ from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.schema._pointer import resolve_pointer
 
 
+@pytest.mark.data
 class TestSchemaFiles(TestCase):
     """Test schema files"""
 
