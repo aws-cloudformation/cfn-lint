@@ -389,7 +389,6 @@ cached: List[str] = [
     "aws-s3objectlambda-accesspointpolicy.json",
     "aws-elasticache-replicationgroup.json",
     "aws-stepfunctions-statemachinealias.json",
-    "aws-eks-podidentityassociation.json",
     "aws-logs-metricfilter.json",
     "aws-lambda-function.json",
     "aws-sns-topic.json",
