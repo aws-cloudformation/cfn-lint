@@ -1,0 +1,204 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "AWS::AutoScaling::AutoScalingGroup"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "then": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": {
+      "$ref": "#/definitions/AutoScalingGroupUpdatePolicy"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "AWS::Lambda::Alias"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "then": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": {
+      "$ref": "#/definitions/LambdaAliasUpdatePolicy"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "enum": [
+       "AWS::Elasticsearch::Domain",
+       "AWS::OpenSearchService::Domain"
+      ]
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "then": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": {
+      "$ref": "#/definitions/SearchUpdatePolicy"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "Type": {
+      "const": "AWS::ElastiCache::ReplicationGroup"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "then": {
+    "additionalProperties": true,
+    "properties": {
+     "UpdatePolicy": {
+      "$ref": "#/definitions/ElastiCacheReplicationGroupUpdatePolicy"
+     }
+    }
+   }
+  }
+ ],
+ "definitions": {
+  "AutoScalingGroupUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingReplacingUpdate": {
+     "$ref": "#/definitions/AutoScalingReplacingUpdate"
+    },
+    "AutoScalingRollingUpdate": {
+     "$ref": "#/definitions/AutoScalingRollingUpdate"
+    },
+    "AutoScalingScheduledAction": {
+     "$ref": "#/definitions/AutoScalingScheduledAction"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingReplacingUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "WillReplace": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingRollingUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxBatchSize": {
+     "type": "integer"
+    },
+    "MinInstancesInService": {
+     "type": "integer"
+    },
+    "MinSuccessfulInstancesPercent": {
+     "type": "integer"
+    },
+    "PauseTime": {
+     "type": "string"
+    },
+    "SuspendProcesses": {
+     "items": {
+      "enum": [
+       "Launch",
+       "Terminate",
+       "AddToLoadBalancer",
+       "AlarmNotification",
+       "AZRebalance",
+       "HealthCheck",
+       "InstanceRefresh",
+       "ReplaceUnhealthy",
+       "ScheduledActions"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "WaitOnResourceSignals": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AutoScalingScheduledAction": {
+   "additionalProperties": false,
+   "properties": {
+    "IgnoreUnmodifiedGroupSizeProperties": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "CodeDeployLambdaAliasUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "AfterAllowTrafficHook": {
+     "type": "string"
+    },
+    "ApplicationName": {
+     "type": "string"
+    },
+    "BeforeAllowTrafficHook": {
+     "type": "string"
+    },
+    "DeploymentGroupName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElastiCacheReplicationGroupUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "UseOnlineResharding": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaAliasUpdatePolicy": {
+   "properties": {
+    "CodeDeployLambdaAliasUpdate": {
+     "$ref": "#/definitions/CodeDeployLambdaAliasUpdate"
+    }
+   },
+   "type": "object"
+  },
+  "SearchUpdatePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableVersionUpgrade": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ }
+}

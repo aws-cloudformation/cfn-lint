@@ -7,6 +7,7 @@ from typing import Any
 
 from cfnlint.helpers import load_plugins, load_resource
 from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema._validators import type
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
@@ -52,6 +53,8 @@ class BaseCfnSchema(BaseJsonSchema):
                 filename=(f"{schema_split[1]}.json"),
             )
 
+        self.validators["type"] = type
+
     def message(self, instance: Any, err: ValidationError) -> str:
         return self.shortdesc
 
@@ -62,7 +65,7 @@ class BaseCfnSchema(BaseJsonSchema):
         cfn_validator = self.extend_validator(
             validator=validator,
             schema=self.cfn_schema,
-            context=validator.context.evolve(),
+            context=validator.context.evolve(functions=[]),
         )
 
         errs = list(cfn_validator.iter_errors(instance))
