@@ -31,5 +31,5 @@ class SubParametersUsed(CloudFormationLintRule):
         for v, _ in instance[1].items():
             if v not in variables:
                 yield ValidationError(
-                    f"Parameter {v!r} not used in 'Fn::Sub'", path=[1]
+                    f"Parameter {v!r} not used in 'Fn::Sub'", path=[1, v]
                 )

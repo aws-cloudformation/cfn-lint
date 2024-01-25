@@ -17,7 +17,7 @@
    "type": "string"
   },
   "AwsPrincipalArn": {
-   "pattern": "^(arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)",
+   "pattern": "^((arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)|\\d{12})",
    "type": "string"
   },
   "Condition": {
@@ -146,23 +146,18 @@
     {
      "properties": {
       "AWS": {
-       "anyOf": [
-        {
-         "$ref": "#/definitions/AwsPrincipalArn"
-        },
-        {
-         "items": {
-          "$ref": "#/definitions/AwsPrincipalArn"
-         },
-         "type": "array"
-        }
-       ]
+       "scalarOrArray": {
+        "$ref": "#/definitions/AwsPrincipalArn"
+       }
       },
       "CanonicalUser": {
        "$ref": "#/definitions/StringOrStringArray"
       },
       "Federated": {
        "$ref": "#/definitions/StringOrStringArray"
+      },
+      "Service": {
+       "type": "string"
       }
      },
      "type": "object"
@@ -266,6 +261,7 @@
    }
   },
   "Version": {
+   "awsType": "IamPolicyVersion",
    "enum": [
     "2008-10-17",
     "2012-10-17"
