@@ -1,0 +1,208 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexId",
+  "/properties/Name",
+  "/properties/S3Path",
+  "/properties/RoleArn",
+  "/properties/Description",
+  "/properties/FileFormat"
+ ],
+ "definitions": {
+  "Description": {
+   "description": "Description of the FAQ",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FaqName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FileFormat": {
+   "description": "Format of the input file",
+   "enum": [
+    "CSV",
+    "CSV_WITH_HEADER",
+    "JSON"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "description": "Unique ID of the FAQ",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IndexId": {
+   "description": "Unique ID of Index",
+   "maxLength": 36,
+   "minLength": 36,
+   "type": "string"
+  },
+  "LanguageCode": {
+   "description": "The code for a language.",
+   "maxLength": 10,
+   "minLength": 2,
+   "pattern": "[a-zA-Z-]*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 1284,
+   "minLength": 1,
+   "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
+   "type": "string"
+  },
+  "S3BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]",
+   "type": "string"
+  },
+  "S3ObjectKey": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "S3Path": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "$ref": "#/definitions/S3BucketName"
+    },
+    "Key": {
+     "$ref": "#/definitions/S3ObjectKey"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A label for tagging Kendra resources",
+   "properties": {
+    "Key": {
+     "description": "A string used to identify this tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string containing the value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "description": "List of tags",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "description": "A Kendra FAQ resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kendra:CreateFaq",
+    "kendra:DescribeFaq",
+    "iam:PassRole",
+    "kendra:ListTagsForResource",
+    "kendra:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kendra:DeleteFaq",
+    "kendra:DescribeFaq"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kendra:ListFaqs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kendra:DescribeFaq",
+    "kendra:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kendra:ListTagsForResource",
+    "kendra:UntagResource",
+    "kendra:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/IndexId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description",
+   "description": "FAQ description"
+  },
+  "FileFormat": {
+   "$ref": "#/definitions/FileFormat",
+   "description": "FAQ file format"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "IndexId": {
+   "$ref": "#/definitions/IndexId",
+   "description": "Index ID"
+  },
+  "LanguageCode": {
+   "$ref": "#/definitions/LanguageCode"
+  },
+  "Name": {
+   "$ref": "#/definitions/FaqName",
+   "description": "FAQ name"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn",
+   "description": "FAQ role ARN"
+  },
+  "S3Path": {
+   "$ref": "#/definitions/S3Path",
+   "description": "FAQ S3 path"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList",
+   "description": "Tags for labeling the FAQ"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "IndexId",
+  "Name",
+  "S3Path",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/in-creating-faq.html",
+ "typeName": "AWS::Kendra::Faq"
+}
