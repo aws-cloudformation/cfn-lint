@@ -1,0 +1,139 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/Namespace",
+  "/properties/ServiceAccount"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "An object representing an Amazon EKS PodIdentityAssociation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreatePodIdentityAssociation",
+    "eks:DescribePodIdentityAssociation",
+    "eks:TagResource",
+    "iam:PassRole",
+    "iam:GetRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeletePodIdentityAssociation",
+    "eks:DescribePodIdentityAssociation"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListPodIdentityAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribePodIdentityAssociation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "eks:DescribePodIdentityAssociation",
+    "eks:UpdatePodIdentityAssociation",
+    "eks:TagResource",
+    "eks:UntagResource",
+    "iam:PassRole",
+    "iam:GetRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationArn"
+ ],
+ "properties": {
+  "AssociationArn": {
+   "description": "The ARN of the pod identity association.",
+   "type": "string"
+  },
+  "AssociationId": {
+   "description": "The ID of the pod identity association.",
+   "type": "string"
+  },
+  "ClusterName": {
+   "description": "The cluster that the pod identity association is created for.",
+   "type": "string"
+  },
+  "Namespace": {
+   "description": "The Kubernetes namespace that the pod identity association is created for.",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The IAM role ARN that the pod identity association is created for.",
+   "type": "string"
+  },
+  "ServiceAccount": {
+   "description": "The Kubernetes service account that the pod identity association is created for.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationArn",
+  "/properties/AssociationId"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "ClusterName",
+  "RoleArn",
+  "Namespace",
+  "ServiceAccount"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::PodIdentityAssociation"
+}
