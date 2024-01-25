@@ -25,7 +25,7 @@ class TestRunner(BaseTestCase):
             Description: >
                 Template with all error levels: Warning, Error and Informational
             # Adding in an issue outside of the Resources for validating
-            Conditions: 
+            Conditions:
                 IsUsEast1: !Equals ["a", "b", "c"]
             Resources:
                 myTable:
@@ -49,11 +49,11 @@ class TestRunner(BaseTestCase):
                             ReadCapacityUnits: 5
                             WriteCapacityUnits: "5"
                 myTable2:
-                    # With no ignore_checks so we 
+                    # With no ignore_checks so we
                     # should still get issues from this
                     Type: "AWS::DynamoDB::Table"
                     Properties:
-                        TableName: !Sub "TableName"
+                        TableName: !Sub "TableName1"
                         AttributeDefinitions:
                             - AttributeName: "Id"
                               AttributeType: "S" # Valid AllowedValue
@@ -73,7 +73,7 @@ class TestRunner(BaseTestCase):
             template=self.template,
             config=ConfigMixIn(
                 regions=["us-east-1"],
-                include_rules=["I"],
+                include_checks=["I"],
                 include_experimental=True,
             ),
             rules=self.rules,
@@ -89,12 +89,11 @@ class TestRunner(BaseTestCase):
             config=ConfigMixIn(
                 mandatory_checks=["W1020"],
                 regions=["us-east-1"],
-                include_rules=["I"],
+                include_checks=["I"],
                 include_experimental=True,
             ),
             rules=self.rules,
         )
-        runner.transform()
         failures = list(runner.run())
         self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
 
@@ -104,11 +103,10 @@ class TestRunner(BaseTestCase):
             config=ConfigMixIn(
                 mandatory_checks=["W9000"],
                 regions=["us-east-1"],
-                include_rules=["I"],
+                include_checks=["I"],
                 include_experimental=True,
             ),
             rules=self.rules,
         )
-        runner.transform()
         failures = list(runner.run())
         self.assertEqual(len(failures), 3, "Got failures {}".format(failures))
