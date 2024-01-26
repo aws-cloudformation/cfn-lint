@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import itertools
 import json
 import operator
@@ -329,9 +330,11 @@ class SARIFFormatter(BaseFormatter):
                 full_description=sarif.MultiformatMessageString(
                     text=rules_map[rule_id].description
                 ),
-                help_uri=rules_map[rule_id].source_url
-                if rules_map[rule_id]
-                else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md",
+                help_uri=(
+                    rules_map[rule_id].source_url
+                    if rules_map[rule_id]
+                    else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md"
+                ),
             )
             for rule_id in matched_rules
         ]
