@@ -40,6 +40,7 @@ class AwsType(CloudFormationLintRule):
             "AvailabilityZone": "W3010",
             "AvailabilityZones": "W3010",
             "IamIdentityPolicy": "E3510",
+            "IamPolicyStatementAction": "W3037",
             "IamPolicyVersion": "W2511",
             "IamResourcePolicy": "E3512",
             "IamResourceEcrPolicy": "E3513",
