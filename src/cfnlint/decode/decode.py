@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import logging
 from json.decoder import JSONDecodeError
 from typing import Callable, List, Optional, Tuple, Union

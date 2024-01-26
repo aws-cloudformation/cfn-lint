@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from test.unit.rules import BaseRuleTestCase
 from test.unit.rules.templates.test_limitsize_template import write_limit_test_templates
 
