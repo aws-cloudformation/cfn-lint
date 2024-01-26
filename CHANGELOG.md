@@ -1,3 +1,12 @@
+### v0.85.0
+###### Feature
+- Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3027) to validate rate periods (pull #[3017](https://github.com/aws-cloudformation/cfn-lint/pull/3017))
+- Add support new language extension foreach capabilities `&{parameter}` (pull #[3033](https://github.com/aws-cloudformation/cfn-lint/pull/3033))
+- Passthrough metadata into SAM translator (pull #[3030](https://github.com/aws-cloudformation/cfn-lint/pull/3030))
+- Switch to using path and resource names for directives (pull #[3035](https://github.com/aws-cloudformation/cfn-lint/pull/3035))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `156.0.0` (pull #[3029](https://github.com/aws-cloudformation/cfn-lint/pull/3029))
+
 ### v0.84.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `154.0.0` (pull #[3005](https://github.com/aws-cloudformation/cfn-lint/pull/3005))
