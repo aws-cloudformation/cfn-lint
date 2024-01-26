@@ -222,18 +222,6 @@ def create_dict_list_class(cls):
         def __copy__(self):
             return self
 
-        def items_safe(self, path=None, type_t=()):
-            """Get items while handling IFs"""
-            path = path or []
-            for i, v in enumerate(self):
-                if isinstance(v, dict):
-                    for items, p in v.items_safe(path[:] + [i]):
-                        if isinstance(items, type_t) or not type_t:
-                            yield items, p
-                else:
-                    if isinstance(v, type_t) or not type_t:
-                        yield v, path[:] + [i]
-
         def __getattr__(self, name):
             raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
 
