@@ -2,10 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules.resources.properties.CfnRegionSchema import BaseCfnRegionSchema
+
+from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
-class InstanceInstanceTypeEnum(BaseCfnRegionSchema):
+
+class InstanceInstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3628"
     shortdesc = "Validate instance types based on region"
     description = (
@@ -13,4 +15,7 @@ class InstanceInstanceTypeEnum(BaseCfnRegionSchema):
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]
-    schema_path = "aws_ec2_instance/instancetype_enum"
+
+    def __init__(self) -> None:
+        super().__init__(["aws_ec2_instance/instancetype_enum"])
+

@@ -2,10 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules.resources.properties.CfnSchema import BaseCfnSchema
+
+from __future__ import annotations
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class DbInstanceAuroraExclusive(BaseCfnSchema):
+class DbInstanceAuroraExclusive(CfnLintJsonSchema):
     id = "E3682"
     shortdesc = "Validate when using Aurora certain properies aren't required "
     description = (
@@ -15,4 +17,6 @@ class DbInstanceAuroraExclusive(BaseCfnSchema):
         "'MasterUserPassword', or 'StorageEncrypted'"
     )
     tags = ["resources"]
-    schema_path = "aws_rds_dbinstance/aurora_exclusive"
+
+    def __init__(self) -> None:
+        super().__init__(keywords=["aws_rds_dbinstance/aurora_exclusive"])
