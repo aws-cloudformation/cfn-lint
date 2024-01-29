@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "RuleGroupsNamespace schema for cloudformation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aps:CreateRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aps:DeleteRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Workspace"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "aps:ListRuleGroupsNamespaces",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aps:PutRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:TagResource",
+    "aps:UntagResource",
+    "aps:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The RuleGroupsNamespace ARN.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:rulegroupsnamespace/[a-zA-Z0-9-]+/[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+   "type": "string"
+  },
+  "Data": {
+   "description": "The RuleGroupsNamespace data.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The RuleGroupsNamespace name.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Workspace": {
+   "description": "Required to identify a specific APS Workspace associated with this RuleGroupsNamespace.",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Workspace",
+  "Data",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::RuleGroupsNamespace"
+}
