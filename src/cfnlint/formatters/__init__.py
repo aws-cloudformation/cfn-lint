@@ -326,9 +326,11 @@ class SARIFFormatter(BaseFormatter):
                 full_description=sarif.MultiformatMessageString(
                     text=rules[rule_id].description
                 ),
-                help_uri=rules[rule_id].source_url
-                if rules[rule_id]
-                else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md",
+                help_uri=(
+                    rules[rule_id].source_url
+                    if rules[rule_id]
+                    else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md"
+                ),
             )
             for rule_id in matched_rules
         ]
