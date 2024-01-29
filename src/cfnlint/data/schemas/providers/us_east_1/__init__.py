@@ -12,6 +12,7 @@ types = [
     "AWS::Shield::DRTAccess",
     "AWS::SSO::Assignment",
     "AWS::Glue::Partition",
+    "AWS::RDS::Integration",
     "AWS::EC2::TransitGatewayRouteTablePropagation",
     "AWS::SSM::ResourcePolicy",
     "AWS::Shield::ProactiveEngagement",

@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from cfnlint.data.schemas.other import outputs as schema_outputs
 from cfnlint.helpers import load_resource
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
