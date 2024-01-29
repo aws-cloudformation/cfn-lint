@@ -4,12 +4,16 @@ SPDX-License-Identifier: MIT-0
 """
 
 import regex as re
+from collections import deque
+from typing import Any, Dict
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
-class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRule):
-    """Check for RetentionPeriod"""
+class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
+    """Check Base Resource Configuration"""
 
     id = "I3013"
     shortdesc = (
@@ -24,11 +28,9 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources", "retentionperiod"]
 
-    def match(self, cfn):
-        """Check for RetentionPeriod"""
-        matches = []
-
-        retention_attributes_by_resource_type = {
+    def __init__(self) -> None:
+        super().__init__()
+        self._properties = {
             "AWS::Kinesis::Stream": [
                 {
                     "Attribute": "RetentionPeriodHours",
@@ -86,65 +88,36 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
             ],
         }
 
-        resources = cfn.get_resources()
-        for r_name, r_values in resources.items():
-            if r_values.get("Type") in retention_attributes_by_resource_type:
-                for attr_def in retention_attributes_by_resource_type[
-                    r_values.get("Type")
-                ]:
-                    property_sets = r_values.get_safe("Properties")
-                    for property_set, path in property_sets:
-                        error_path = ["Resources", r_name] + path
-                        if not property_set:
-                            message = (
-                                "The default retention period will delete the data"
-                                " after a pre-defined time. Set an explicit values to"
-                                " avoid data loss on resource :"
-                                f" {'/'.join(str(x) for x in error_path)}"
-                            )
-                            matches.append(RuleMatch(error_path, message))
-                        else:
-                            value = property_set.get(attr_def.get("Attribute"))
-                            if not value:
-                                message = (
-                                    "The default retention period will delete the data"
-                                    " after a pre-defined time. Set an explicit values"
-                                    " to avoid data loss on resource :"
-                                    f" {'/'.join(str(x) for x in error_path)}"
-                                )
-                                if attr_def.get("CheckAttribute"):
-                                    if self._validate_property(
-                                        property_set.get(
-                                            attr_def.get("CheckAttribute")
-                                        ),
-                                        attr_def.get("CheckAttributeRegex"),
-                                    ):
-                                        matches.append(RuleMatch(error_path, message))
-                                else:
-                                    matches.append(RuleMatch(error_path, message))
-                            if isinstance(value, dict):
-                                # pylint: disable=protected-access
-                                refs = cfn._search_deep_keys(
-                                    "Ref",
-                                    value,
-                                    error_path + [attr_def.get("Attribute")],
-                                )
-                                for ref in refs:
-                                    if ref[-1] == "AWS::NoValue":
-                                        message = (
-                                            "The default retention period will delete"
-                                            " the data after a pre-defined time. Set"
-                                            " an explicit values to avoid data loss on"
-                                            " resource :"
-                                            f" {'/'.join(str(x) for x in ref[0:-1])}"
-                                        )
-                                        matches.append(RuleMatch(ref[0:-1], message))
+    def _schema(self, resource_type: str):
+        required = []
+        for properties in self._properties.get(resource_type):
+            property = properties.get("Attribute")
+            if property:
+                required.append(property)
 
-        return matches
+        return {"required": required}
 
-    def _validate_property(self, value, regex) -> bool:
-        if isinstance(value, str):
-            if regex.match(value):
-                return True
-            return False
-        return True
+    # pylint: disable=unused-argument
+    def backupretentionperiod(
+        self,
+        validator: Validator,
+        resource_type: str,
+        instance: Any,
+        schema: Dict[str, Any],
+    ):
+        resource_type = (
+            validator.cfn.template.get(validator.context.path[0])
+            .get(validator.context.path[1])
+            .get("Type")
+        )
+        if not validator.is_type(resource_type, "string"):
+            return
+
+        validator = validator.evolve(schema=self._schema(resource_type=resource_type))
+        for err in validator.iter_errors(instance):
+            err.rule = self
+            err.message = (
+                "The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource. "
+                + err.message
+            )
+            yield err
