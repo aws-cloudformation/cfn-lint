@@ -2,10 +2,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules.resources.properties.CfnRegionSchema import BaseCfnRegionSchema
 
 
-class CacheClusterCacheNodeTypeEnum(BaseCfnRegionSchema):
+from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
+
+
+
+class CacheClusterCacheNodeTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3647"
     shortdesc = "Validate ElastiCache cluster cache node type"
     description = (
@@ -13,4 +16,6 @@ class CacheClusterCacheNodeTypeEnum(BaseCfnRegionSchema):
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]
-    schema_path = "aws_elasticache_cachecluster/cachenodetype_enum"
+
+    def __init__(self) -> None:
+        super().__init__(["aws_elasticache_cachecluster/cachenodetype_enum"])

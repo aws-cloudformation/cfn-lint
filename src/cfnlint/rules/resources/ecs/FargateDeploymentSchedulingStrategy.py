@@ -3,10 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules.resources.properties.CfnSchema import BaseCfnSchema
+from __future__ import annotations
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class FargateDeploymentSchedulingStrategy(BaseCfnSchema):
+class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
     id = "E3044"
     shortdesc = (
         "ECS service using FARGATE or EXTERNAL can only "
@@ -18,4 +19,6 @@ class FargateDeploymentSchedulingStrategy(BaseCfnSchema):
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-schedulingstrategy"
     tags = ["properties", "ecs", "service", "container", "fargate"]
-    schema_path = "aws_ecs_service/fargate"
+
+    def __init__(self) -> None:
+        super().__init__(keywords=["aws_ecs_service/fargate"])

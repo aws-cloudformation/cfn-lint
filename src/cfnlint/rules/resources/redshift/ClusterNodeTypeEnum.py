@@ -2,10 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules.resources.properties.CfnRegionSchema import BaseCfnRegionSchema
 
 
-class ClusterNodeTypeEnum(BaseCfnRegionSchema):
+from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
+
+
+class ClusterNodeTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3667"
     shortdesc = "Validate RedShift cluster node type"
     description = (
@@ -13,4 +15,6 @@ class ClusterNodeTypeEnum(BaseCfnRegionSchema):
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]
-    schema_path = "aws_redshift_cluster/nodetype_enum"
+
+    def __init__(self) -> None:
+        super().__init__(["aws_redshift_cluster/nodetype_enum"])
