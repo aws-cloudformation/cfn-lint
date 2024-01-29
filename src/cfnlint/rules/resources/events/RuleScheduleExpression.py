@@ -32,7 +32,10 @@ class RuleScheduleExpression(CloudFormationLintRule):
         items = rate_expression.split(" ")
 
         if len(items) != 2:
-            message = "Rate expression must contain 2 elements (Value Unit), rate contains {} elements"
+            message = (
+                "Rate expression must contain 2 elements "
+                "(Value Unit), rate contains {} elements"
+            )
             matches.append(RuleMatch(path, message.format(len(items))))
             return [RuleMatch(path, message.format(len(items)))]
 

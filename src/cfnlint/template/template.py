@@ -1004,15 +1004,15 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             start_mark = (0, 0)
             end_mark = (0, 0)
         if isinstance(obj, list):
-            o = list_node([], start_mark=start_mark, end_mark=end_mark)
+            o = list_node(deepcopy(obj), start_mark=start_mark, end_mark=end_mark)
         else:
-            o = dict_node({}, start_mark=start_mark, end_mark=end_mark)
+            if property_names:
+                o = dict_node({}, start_mark=start_mark, end_mark=end_mark)
+                for property_name in property_names:
+                    o[property_name] = deepcopy(obj.get(property_name))
+            else:
+                o = dict_node(deepcopy(obj), start_mark=start_mark, end_mark=end_mark)
 
-        if property_names:
-            for property_name in property_names:
-                o[property_name] = deepcopy(obj.get(property_name))
-        else:
-            o = deepcopy(obj)
         results = []
 
         scenarios = self.get_conditions_scenarios_from_object(o, region)
@@ -1032,7 +1032,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if len(obj) == 1:
                     if obj.get("Ref") == "AWS::NoValue":
                         return []
-                return [{"Scenario": None, "Object": obj}]
+                return [{"Scenario": None, "Object": self.get_value_from_scenario(o, {})}]
 
             for scenario in scenarios:
                 result_obj = self.get_value_from_scenario(o, scenario)

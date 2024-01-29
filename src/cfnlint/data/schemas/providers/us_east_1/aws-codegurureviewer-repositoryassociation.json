@@ -3,10 +3,10 @@
  "createOnlyProperties": [
   "/properties/Name",
   "/properties/Type",
-  "/properties/Owner",
-  "/properties/ConnectionArn",
   "/properties/Tags",
-  "/properties/BucketName"
+  "/properties/BucketName",
+  "/properties/Owner",
+  "/properties/ConnectionArn"
  ],
  "definitions": {
   "Tag": {
@@ -37,6 +37,7 @@
  "handlers": {
   "create": {
    "permissions": [
+    "codeguru-reviewer:DescribeRepositoryAssociation",
     "codeguru-reviewer:AssociateRepository",
     "codeguru-reviewer:TagResource",
     "iam:CreateServiceLinkedRole",
@@ -50,16 +51,19 @@
     "codestar-connections:ListTagsForResource",
     "codestar-connections:PassConnection",
     "codestar-connections:TagResource",
-    "codestar-connections:UseConnection"
+    "codestar-connections:UseConnection",
+    "s3:ListBucket"
    ]
   },
   "delete": {
    "permissions": [
+    "codeguru-reviewer:DescribeRepositoryAssociation",
     "codeguru-reviewer:DisassociateRepository",
     "codecommit:UntagResource",
     "events:DeleteRule",
     "events:RemoveTargets",
-    "codestar-connections:UntagResource"
+    "codestar-connections:UntagResource",
+    "codestar-connections:ListTagsForResource"
    ]
   },
   "list": {
