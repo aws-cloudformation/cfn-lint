@@ -2,6 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
+from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -17,6 +19,7 @@ class AwsType(CloudFormationLintRule):
     def __init__(self) -> None:
         super().__init__()
         self.types = {
+            "BackupRetentionPeriod": "I3013",
             "BackupBackupPlanLifecycle": "E3504",
             "CfnConditions": "E8001",
             "CfnInitCommand": "E3009",
@@ -50,11 +53,13 @@ class AwsType(CloudFormationLintRule):
         self.child_rules = dict.fromkeys(list(self.types.values()))
 
     # pylint: disable=unused-argument
-    def awsType(self, validator, uI, instance, schema):
-        rule = self.child_rules.get(self.types.get(uI, ""))
-        if not rule:
-            return
+    def awsType(self, validator, tS, instance, schema):
+        tS = ensure_list(tS)
+        for t in tS:
+            rule = self.child_rules.get(self.types.get(t, ""))
+            if not rule:
+                return
 
-        if hasattr(rule, uI.lower()) and callable(getattr(rule, uI.lower())):
-            validate = getattr(rule, uI.lower())
-            yield from validate(validator, uI, instance, schema)
+            if hasattr(rule, t.lower()) and callable(getattr(rule, t.lower())):
+                validate = getattr(rule, t.lower())
+                yield from validate(validator, t, instance, schema)

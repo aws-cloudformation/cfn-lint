@@ -39,10 +39,13 @@ class Permissions(CloudFormationLintRule):
                 enums = self.service_map[service]
                 if permission == "*":
                     pass
-                elif service.endswith("*"):
+                elif permission.endswith("*"):
                     wilcarded_permission = permission.split("*")[0]
                     if not any(wilcarded_permission in action for action in enums):
-                        yield ValidationError(f"{permission!r} is not one of {enums!r}")
+                        yield ValidationError(
+                            f"{permission!r} is not one of {enums!r}",
+                            rule=self,
+                        )
 
                 elif permission.startswith("*"):
                     wilcarded_permission = permission.split("*")[1]
@@ -50,12 +53,19 @@ class Permissions(CloudFormationLintRule):
                         wilcarded_permission in action
                         for action in self.service_map[service]
                     ):
-                        yield ValidationError(f"{permission!r} is not one of {enums!r}")
+                        yield ValidationError(
+                            f"{permission!r} is not one of {enums!r}",
+                            rule=self,
+                        )
                 elif permission not in self.service_map[service]:
-                    yield ValidationError(f"{permission!r} is not one of {enums!r}")
+                    yield ValidationError(
+                        f"{permission!r} is not one of {enums!r}",
+                        rule=self,
+                    )
             else:
                 yield ValidationError(
-                    f"{service!r} is not one of {list(self.service_map.keys)!r}"
+                    f"{service!r} is not one of {list(self.service_map.keys())!r}",
+                    rule=self,
                 )
 
     def load_service_map(self):
