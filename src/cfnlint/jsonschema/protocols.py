@@ -13,6 +13,7 @@ all copies or substantial portions of the Software.
 
 SPDX-License-Identifier: MIT
 """
+
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
@@ -64,8 +65,7 @@ class Validator(Protocol):
     def __init__(
         self,
         schema: Mapping | bool,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @classmethod
     def check_schema(cls, schema: Mapping | bool) -> None:
