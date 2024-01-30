@@ -32,6 +32,7 @@ class Configuration(BaseJsonSchema):
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
         self._schema = load_resource(schema_outputs, "configuration.json")
         self.cfnoutputs = self.validate
+        self.keywords = ["outputs"]
 
     @property
     def schema(self):
