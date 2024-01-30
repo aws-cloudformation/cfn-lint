@@ -3,16 +3,17 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
+
 import pytest
 
-from collections import deque
-from cfnlint.helpers import FUNCTIONS
 from cfnlint.context import ContextManager
-from cfnlint.template import Template
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (
+from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (  # noqa: E501
     RetentionPeriodOnResourceTypesWithAutoExpiringContent,
 )
+from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -54,11 +55,16 @@ def validator():
             {},
             [
                 ValidationError(
-                    "The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource. 'MessageRetentionPeriod' is a required property",
+                    (
+                        "The default retention period will delete the data after "
+                        "a pre-defined time. Set an explicit values to avoid data "
+                        "loss on resource. 'MessageRetentionPeriod' is a "
+                        "required property"
+                    ),
                     rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
                     schema_path=deque(["required"]),
                     validator="required",
-                    validator_value=['MessageRetentionPeriod'],
+                    validator_value=["MessageRetentionPeriod"],
                     instance={},
                 )
             ],
@@ -68,11 +74,16 @@ def validator():
             {"MessageRetentionPeriod": {"Ref": "AWS::NoValue"}},
             [
                 ValidationError(
-                    "The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource. 'MessageRetentionPeriod' is a required property",
+                    (
+                        "The default retention period will delete the data after "
+                        "a pre-defined time. Set an explicit values to avoid "
+                        "data loss on resource. 'MessageRetentionPeriod' is a "
+                        "required property"
+                    ),
                     rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
                     schema_path=deque(["required"]),
                     validator="required",
-                    validator_value=['MessageRetentionPeriod'],
+                    validator_value=["MessageRetentionPeriod"],
                     instance={},
                 )
             ],

@@ -562,6 +562,7 @@ cached: List[str] = [
     "aws-config-storedquery.json",
     "aws-acmpca-permission.json",
     "aws-ecs-primarytaskset.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-eks-fargateprofile.json",
     "aws-route53-dnssec.json",
@@ -945,5 +946,4 @@ cached: List[str] = [
     "aws-elasticloadbalancingv2-listener.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-globalaccelerator-accelerator.json",
-    "aws-eks-addon.json",
 ]
