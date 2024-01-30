@@ -652,6 +652,7 @@ cached: List[str] = [
     "aws-transfer-server.json",
     "aws-apigateway-domainname.json",
     "aws-ecs-primarytaskset.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-ec2-transitgatewayroutetable.json",
     "aws-route53-recordset.json",
     "aws-eks-accessentry.json",
@@ -995,6 +996,7 @@ cached: List[str] = [
     "aws-logs-loggroup.json",
     "aws-organizations-account.json",
     "aws-ecr-repository.json",
+    "aws-iot-fleetmetric.json",
     "aws-appconfig-extension.json",
     "aws-glue-registry.json",
     "aws-ec2-keypair.json",
@@ -1114,5 +1116,4 @@ cached: List[str] = [
     "aws-s3-accesspoint.json",
     "aws-batch-jobqueue.json",
     "aws-cloudformation-waitconditionhandle.json",
-    "aws-eks-addon.json",
 ]

@@ -16,5 +16,6 @@ class DomainClusterConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_elasticsearch_domain/elasticsearchclusterconfig_instancetype_enum"])
-
+        super().__init__(
+            ["aws_elasticsearch_domain/elasticsearchclusterconfig_instancetype_enum"]
+        )

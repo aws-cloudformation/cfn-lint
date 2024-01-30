@@ -6,10 +6,10 @@ SPDX-License-Identifier: MIT-0
 from collections import deque
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class BackupPlanLifecycleRule(CloudFormationLintRule):
+class BackupPlanLifecycleRule(CfnLintKeyword):
     """
     Check Backup Plan rules with lifecycle has minimum
     period between cold and delete
@@ -23,6 +23,9 @@ class BackupPlanLifecycleRule(CloudFormationLintRule):
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html"
     tags = ["properties", "backup", "plan", "lifecycle"]
+
+    def __init__(self) -> None:
+        super().__init__(["aws_backup_backupplan/lifecycle_resource_type"])
 
     def backupbackupplanlifecycle(self, validator, uI, instance, schema):
         delete_after_days = instance.get("DeleteAfterDays")

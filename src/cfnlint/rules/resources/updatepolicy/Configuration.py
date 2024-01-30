@@ -30,17 +30,8 @@ class Configuration(BaseJsonSchema):
         return self._schema
 
     # pylint: disable=unused-argument
-    def cfnresourceupdatepolicy(self, validator: Validator, _, instance: Any, schema):
-        validator = self.extend_validator(
-            validator,
-            self.schema,
-            context=validator.context.evolve(functions=FUNCTIONS),
+    def cfnresourceupdatepolicy(self, validator: Validator, uP, instance: Any, schema):
+        validator = validator.evolve(
+            context=validator.context.evolve(functions=FUNCTIONS)
         )
-        for err in validator.iter_errors(instance):
-            err.path.appendleft("UpdatePolicy")
-            if err.rule is None:
-                if err.validator in self.rule_set:
-                    err.rule = self.child_rules[self.rule_set[err.validator]]
-                elif not err.validator.startswith("fn") and err.validator != "ref":
-                    err.rule = self
-            yield err
+        yield from self.validate(validator, uP, instance, schema)
