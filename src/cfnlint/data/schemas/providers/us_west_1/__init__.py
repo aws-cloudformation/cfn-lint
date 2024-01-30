@@ -889,6 +889,7 @@ cached: List[str] = [
     "aws-apigateway-basepathmapping.json",
     "aws-wafregional-geomatchset.json",
     "aws-s3-accessgrantslocation.json",
+    "aws-guardduty-filter.json",
     "aws-ecs-service.json",
     "aws-servicecatalog-portfolioprincipalassociation.json",
     "aws-ram-resourceshare.json",
@@ -951,6 +952,7 @@ cached: List[str] = [
     "aws-ecs-primarytaskset.json",
     "aws-fms-resourceset.json",
     "aws-cognito-userpooldomain.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-eks-fargateprofile.json",
     "aws-route53-dnssec.json",
@@ -1706,5 +1708,4 @@ cached: List[str] = [
     "aws-memorydb-acl.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-globalaccelerator-accelerator.json",
-    "aws-eks-addon.json",
 ]

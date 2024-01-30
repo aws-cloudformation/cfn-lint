@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-
 class HealthCheckHealthCheckConfigTypeInclusive(CfnLintJsonSchema):
     id = "E3661"
     shortdesc = (
@@ -18,4 +17,6 @@ class HealthCheckHealthCheckConfigTypeInclusive(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_route53_healthcheck/healthcheckconfig_type_inclusive"])
+        super().__init__(
+            keywords=["aws_route53_healthcheck/healthcheckconfig_type_inclusive"]
+        )

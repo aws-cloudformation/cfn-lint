@@ -2,25 +2,25 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from __future__ import annotations
-import pathlib
-from typing import Any, Sequence
-from cfnlint.jsonschema._utils import Unset
 
-from cfnlint.helpers import load_plugins, load_resource
+from __future__ import annotations
+
+from typing import Any
+
 from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._validators import type
-from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
-from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.rules import CloudFormationLintRule
 
 
 class CfnLintJsonSchemaRegional(CfnLintJsonSchema):
-    
-    def _iter_errors(self, validator, keywords, instance, schema):
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return err.message
+
+    def iter_errors(self, validator, keywords, instance, schema):
         for region in validator.context.regions:
             region_validator = validator.evolve(
-                context=validator.context.evolve(regions=[region])
+                context=validator.context.evolve(regions=[region]),
+                schema=self.schema.get(region, True),
             )
-            yield from super()._iter_errors(region_validator, keywords, instance, self.schema.get(region, True))
+            for err in super()._iter_errors(region_validator, instance):
+                err.message = err.message + f" in {region!r}"
+                yield err
