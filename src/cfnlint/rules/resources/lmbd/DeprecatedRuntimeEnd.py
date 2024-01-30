@@ -8,10 +8,10 @@ from datetime import datetime
 from cfnlint.data import AdditionalSpecs
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class DeprecatedRuntimeEnd(CloudFormationLintRule):
+class DeprecatedRuntimeEnd(CfnLintKeyword):
     """Check if EOL Lambda Function Runtimes are used"""
 
     id = "E2531"
@@ -26,7 +26,7 @@ class DeprecatedRuntimeEnd(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(["aws_lambda_function/runtime"])
         self.child_rules = {
             "W2531": None,
         }
@@ -36,7 +36,7 @@ class DeprecatedRuntimeEnd(CloudFormationLintRule):
         )
 
     # pylint: disable=unused-argument
-    def lambdaruntime(self, validator, v, runtime, schema):
+    def awslambdafunctionruntime(self, validator, v, runtime, schema):
         runtime_data = self.deprecated_runtimes.get(runtime)
         if not runtime_data:
             return

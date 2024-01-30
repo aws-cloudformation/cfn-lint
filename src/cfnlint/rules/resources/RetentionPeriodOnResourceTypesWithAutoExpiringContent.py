@@ -3,13 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import regex as re
-from collections import deque
-from typing import Any, Dict
+from typing import Any, Dict, List
 
-from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
 class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
@@ -30,7 +27,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
 
     def __init__(self) -> None:
         super().__init__()
-        self._properties = {
+        self._properties: Dict[str, List[Dict[str, str]]] = {
             "AWS::Kinesis::Stream": [
                 {
                     "Attribute": "RetentionPeriodHours",
@@ -69,8 +66,6 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
                 {
                     "Attribute": "BackupRetentionPeriod",
                     "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod",
-                    "CheckAttribute": "Engine",
-                    "CheckAttributeRegex": re.compile("^((?!aurora).)*$"),
                 }
             ],
             "AWS::RDS::DBCluster": [
@@ -83,7 +78,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
 
     def _schema(self, resource_type: str):
         required = []
-        for properties in self._properties.get(resource_type):
+        for properties in self._properties.get(resource_type, []):
             property = properties.get("Attribute")
             if property:
                 required.append(property)
@@ -98,10 +93,12 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
         instance: Any,
         schema: Dict[str, Any],
     ):
+        if validator.cfn is None:
+            return
         resource_type = (
-            validator.cfn.template.get(validator.context.path[0])
-            .get(validator.context.path[1])
-            .get("Type")
+            validator.cfn.template.get(validator.context.path[0], {})
+            .get(validator.context.path[1], {})
+            .get("Type", None)
         )
         if not validator.is_type(resource_type, "string"):
             return
@@ -110,7 +107,8 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
         for err in validator.iter_errors(instance):
             err.rule = self
             err.message = (
-                "The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource. "
-                + err.message
+                "The default retention period will delete the data after a "
+                "pre-defined time. Set an explicit values to avoid data "
+                "loss on resource. " + err.message
             )
             yield err

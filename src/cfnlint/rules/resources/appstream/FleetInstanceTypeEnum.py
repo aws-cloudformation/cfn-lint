@@ -17,4 +17,3 @@ class FleetInstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(["aws_appstream_fleet/instancetype_enum"])
-

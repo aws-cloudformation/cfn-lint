@@ -553,6 +553,7 @@ cached: List[str] = [
     "aws-transfer-server.json",
     "aws-ecs-primarytaskset.json",
     "aws-fms-resourceset.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-eks-fargateprofile.json",
     "aws-route53-dnssec.json",
@@ -600,6 +601,7 @@ cached: List[str] = [
     "aws-sso-permissionset.json",
     "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
+    "aws-eks-podidentityassociation.json",
     "aws-glue-table.json",
     "aws-logs-metricfilter.json",
     "aws-lambda-function.json",
@@ -928,5 +930,4 @@ cached: List[str] = [
     "aws-elasticloadbalancingv2-listener.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-globalaccelerator-accelerator.json",
-    "aws-eks-addon.json",
 ]

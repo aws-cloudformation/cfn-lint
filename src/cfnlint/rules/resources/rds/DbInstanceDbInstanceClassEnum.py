@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import cfnlint.data.schemas.extensions.aws_rds_dbinstance
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 
 
 class DbInstanceDbInstanceClassEnum(CfnLintJsonSchemaRegional):
@@ -16,4 +18,10 @@ class DbInstanceDbInstanceClassEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_rds_dbinstance/dbinstanceclass_enum"])
+        super().__init__(
+            ["aws_rds_dbinstance/dbinstanceclass_enum"],
+            SchemaDetails(
+                cfnlint.data.schemas.extensions.aws_rds_dbinstance,
+                "dbinstanceclass_enum.json",
+            ),
+        )
