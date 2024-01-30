@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from __future__ import annotations
+
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
