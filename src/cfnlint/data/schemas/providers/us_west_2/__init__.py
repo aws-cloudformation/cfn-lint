@@ -1301,6 +1301,7 @@ cached: List[str] = [
     "aws-ecs-primarytaskset.json",
     "aws-fms-resourceset.json",
     "aws-cognito-userpooldomain.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-eks-fargateprofile.json",
     "aws-workspacesweb-networksettings.json",

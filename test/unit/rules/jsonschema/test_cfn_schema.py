@@ -24,11 +24,10 @@ class _Error(CfnLintJsonSchema):
     id = "EXXXX"
     shortdesc = "Rule to create errors"
     description = "Rule to create errors"
-    all_matches = True
 
     def __init__(self) -> None:
-        super().__init__()
-        self.cfn_schema = _schema
+        super().__init__([], None, True)
+        self._schema = _schema
 
 
 class _BestError(CfnLintJsonSchema):
@@ -37,8 +36,8 @@ class _BestError(CfnLintJsonSchema):
     description = "A longer description"
 
     def __init__(self) -> None:
-        super().__init__()
-        self.cfn_schema = _schema
+        super().__init__([], None, False)
+        self._schema = _schema
 
 
 @pytest.mark.parametrize(
@@ -67,6 +66,6 @@ def test_cfn_schema(name, rule, instance, expected_errs):
     context = Context("us-east-1")
     validator = CfnTemplateValidator(schema=_schema, context=context)
 
-    errs = list(rule.validate(validator, {}, instance, {}))
+    errs = list(rule.iter_errors(validator, {}, instance, {}))
     for i, expected_err in enumerate(expected_errs):
         assert errs[i].message == expected_err.message, name

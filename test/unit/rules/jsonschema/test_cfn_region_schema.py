@@ -16,11 +16,10 @@ class _Error(CfnLintJsonSchemaRegional):
     id = "EXXXX"
     shortdesc = "Rule to create errors"
     description = "Rule to create errors"
-    all_matches = True
 
     def __init__(self) -> None:
-        super().__init__()
-        self.cfn_schema = _schema
+        super().__init__([], None, True)
+        self._schema = _schema
 
 
 @pytest.mark.parametrize(
@@ -39,7 +38,7 @@ class _Error(CfnLintJsonSchemaRegional):
             "bar",
             ["us-east-1"],
             [
-                ValidationError("'bar' is not one of ['foo'] in us-east-1"),
+                ValidationError("'bar' is not one of ['foo'] in 'us-east-1'"),
             ],
         ),
     ],
@@ -48,7 +47,7 @@ def test_cfn_region_schema(name, rule, instance, regions, expected_errs):
     context = Context(regions)
     validator = CfnTemplateValidator(schema=_schema, context=context)
 
-    errs = list(rule.validate(validator, instance, regions))
+    errs = list(rule.iter_errors(validator, [], instance, {}))
     assert len(errs) == len(expected_errs), name
     for i, expected_err in enumerate(expected_errs):
         assert errs[i].message == expected_err.message, name

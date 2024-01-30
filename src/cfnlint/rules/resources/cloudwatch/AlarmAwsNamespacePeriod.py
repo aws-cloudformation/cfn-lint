@@ -4,9 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 
 from __future__ import annotations
-from typing import Sequence
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
 class AlarmAwsNamespacePeriod(CfnLintJsonSchema):

@@ -779,7 +779,6 @@ cached: List[str] = [
     "aws-apigateway-domainname.json",
     "aws-ecs-primarytaskset.json",
     "aws-cognito-userpooldomain.json",
-    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-s3-accessgrantsinstance.json",
     "aws-cognito-identitypoolroleattachment.json",
@@ -1299,5 +1298,4 @@ cached: List[str] = [
     "aws-connect-user.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-pinpoint-smstemplate.json",
-    "aws-eks-addon.json",
 ]

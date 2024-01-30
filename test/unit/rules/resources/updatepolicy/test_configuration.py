@@ -130,5 +130,5 @@ def validator():
     ],
 )
 def test_update_policy_configuration(name, instance, expected, rule, validator):
-    errors = list(rule.validate(validator, {}, instance, {}))
+    errors = list(rule.cfnresourceupdatepolicy(validator, {}, instance, {}))
     assert errors == expected, f"Test {name!r} got {errors!r}"

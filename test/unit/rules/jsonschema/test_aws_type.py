@@ -47,7 +47,5 @@ class TestAwsType(BaseRuleTestCase):
             list(self.rule.awsType(validator, "foobar", {}, {})),
             [],
         )
-        self.assertListEqual(
-            list(self.rule.awsType(validator, "bar", {}, {})),
-            [],
-        )
+        with self.assertRaises(ValueError):
+            list(self.rule.awsType(validator, "bar", {}, {}))

@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from __future__ import annotations
+
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
@@ -22,5 +23,6 @@ class TaskDefinitionEssentialContainer(CfnLintJsonSchema):
     tags = ["properties", "ecs", "task", "container", "fargate"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_ecs_taskdefinition/containerdefinitions_essential"])
-
+        super().__init__(
+            keywords=["aws_ecs_taskdefinition/containerdefinitions_essential"]
+        )
