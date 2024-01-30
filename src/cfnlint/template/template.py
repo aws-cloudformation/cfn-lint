@@ -1004,7 +1004,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if len(obj) == 1:
                     if obj.get("Ref") == "AWS::NoValue":
                         return []
-                return [{"Scenario": None, "Object": self.get_value_from_scenario(o, {})}]
+                return [
+                    {"Scenario": None, "Object": self.get_value_from_scenario(o, {})}
+                ]
 
             for scenario in scenarios:
                 result_obj = self.get_value_from_scenario(o, scenario)

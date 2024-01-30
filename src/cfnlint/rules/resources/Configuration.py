@@ -41,7 +41,9 @@ class Configuration(BaseJsonSchema):
 
     # pylint: disable=unused-argument
     def cfnresources(self, validator: Validator, _, instance: Any, schema):
-        validator = self.extend_validator(validator, self.schema, validator.context)
+        validator = self.extend_validator(
+            validator, self.schema, context=validator.context.evolve()
+        )
         for err in validator.iter_errors(instance):
             if err.rule is None:
                 if err.validator in self.rule_set:

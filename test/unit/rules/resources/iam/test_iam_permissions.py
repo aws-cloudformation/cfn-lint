@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.iam.Permissions import Permissions
 
 
