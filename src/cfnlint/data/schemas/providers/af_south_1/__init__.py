@@ -818,6 +818,7 @@ cached: List[str] = [
     "aws-apigateway-domainname.json",
     "aws-ecs-primarytaskset.json",
     "aws-fms-resourceset.json",
+    "aws-autoscaling-autoscalinggroup.json",
     "aws-wafv2-regexpatternset.json",
     "aws-eks-fargateprofile.json",
     "aws-route53-dnssec.json",
@@ -1117,6 +1118,7 @@ cached: List[str] = [
     "aws-sns-topicpolicy.json",
     "aws-networkfirewall-rulegroup.json",
     "aws-kms-key.json",
+    "aws-route53resolver-resolverdnssecconfig.json",
     "aws-route53resolver-firewallrulegroupassociation.json",
     "aws-route53resolver-resolverqueryloggingconfig.json",
     "aws-ec2-snapshotblockpublicaccess.json",
@@ -1429,5 +1431,4 @@ cached: List[str] = [
     "aws-redshift-eventsubscription.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-globalaccelerator-accelerator.json",
-    "aws-eks-addon.json",
 ]

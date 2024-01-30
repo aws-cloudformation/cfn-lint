@@ -4,23 +4,18 @@ SPDX-License-Identifier: MIT-0
 """
 
 import pathlib
-from typing import Any
 
 import regex as re
-from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._validators import type
-from cfnlint.jsonschema.exceptions import best_match
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+
+from cfnlint.helpers import load_plugins
 from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
-
-_pattern = re.compile("[\W_]+")
+_pattern = re.compile(r"[\W_]+")
 
 
 class CfnLint(BaseJsonSchema):
-    id = "E3017"
+    id = "E1101"
     shortdesc = "Validate an item against additional checks"
     description = "Use supplemental logic to validate properties against"
     tags = []
@@ -34,25 +29,30 @@ class CfnLint(BaseJsonSchema):
             "CfnLintKeyword",
             "cfnlint.rules.jsonschema.CfnLintKeyword",
         )
-        rules.extend(load_plugins(
-            str(root_dir),
-            "CfnLintJsonSchema",
-            "cfnlint.rules.jsonschema.CfnLintJsonSchema",
-        ))
+        rules.extend(
+            load_plugins(
+                str(root_dir),
+                "CfnLintJsonSchema",
+                "cfnlint.rules.jsonschema.CfnLintJsonSchema",
+            )
+        )
         for rule in rules:
-            self.child_rules[rule.id] = rule
+            self.child_rules[rule.id] = None
 
     # pylint: disable=unused-argument
     def cfnLint(self, validator, keywords, instance, schema):
         keywords = ensure_list(keywords)
-
         for keyword in keywords:
             for rule in self.child_rules.values():
-                for keyword in rule.keywords:
-                    if keyword == keyword:
-                        fn_name = self._pattern.sub('', keyword)
+                if rule is None:
+                    continue
+                if not rule.id:
+                    continue
+
+                for rule_keyword in rule.keywords:
+                    if rule_keyword == keyword:
+                        fn_name = _pattern.sub("", rule_keyword).lower()
                         fn = getattr(rule, fn_name)
                         if not fn:
-                            raise ValueError(f"{fn!r} not found in ${rule.id}")
-                        yield from fn(validator, keywords, instance, schema)
-
+                            raise ValueError(f"{fn_name!r} not found in {rule.id!r}")
+                        yield from fn(validator, keyword, instance, schema)

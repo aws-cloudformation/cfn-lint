@@ -24,10 +24,6 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.rule_set: Dict[str, str] = {}
         self.validators: Dict[str, V] = {}
 
-    @property
-    def schema(self):
-        return {}
-
     def json_schema_validate(self, validator, properties, path):
         matches = []
         for e in validator.iter_errors(properties):
@@ -82,6 +78,7 @@ class BaseJsonSchema(CloudFormationLintRule):
                     err.rule = self
             yield err
 
+    ### ToDo cache this and make it @property
     def _get_validators(self) -> Dict[str, V]:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
@@ -92,6 +89,7 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return validators
 
+    # ToDo Do we really need this?
     def extend_validator(
         self, validator: Validator, schema: Any, context: Context
     ) -> Validator:
@@ -99,6 +97,7 @@ class BaseJsonSchema(CloudFormationLintRule):
             schema=schema
         ).evolve(cfn=validator.cfn)
 
+    # ToDo Remove this we are only using this once
     def setup_validator(
         self, validator: Type[Validator], schema: Any, context: Context
     ) -> Validator:
