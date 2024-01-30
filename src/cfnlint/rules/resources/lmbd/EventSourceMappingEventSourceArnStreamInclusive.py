@@ -8,7 +8,6 @@ from __future__ import annotations
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-
 class EventSourceMappingEventSourceArnStreamInclusive(CfnLintJsonSchema):
     id = "E3633"
     shortdesc = (
@@ -21,4 +20,6 @@ class EventSourceMappingEventSourceArnStreamInclusive(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_lambda_eventsourcemapping/eventsourcearn_stream_inclusive"])
+        super().__init__(
+            keywords=["aws_lambda_eventsourcemapping/eventsourcearn_stream_inclusive"]
+        )
