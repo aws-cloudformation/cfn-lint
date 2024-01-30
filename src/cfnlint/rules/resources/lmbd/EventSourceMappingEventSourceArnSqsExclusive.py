@@ -3,11 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-
 from __future__ import annotations
 
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
-
 
 
 class EventSourceMappingEventSourceArnSqsExclusive(CfnLintJsonSchema):
@@ -21,5 +19,6 @@ class EventSourceMappingEventSourceArnSqsExclusive(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_lambda_eventsourcemapping/eventsourcearn_sqs_exclusive"])
-
+        super().__init__(
+            keywords=["aws_lambda_eventsourcemapping/eventsourcearn_sqs_exclusive"]
+        )
