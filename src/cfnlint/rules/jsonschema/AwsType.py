@@ -20,7 +20,6 @@ class AwsType(CloudFormationLintRule):
         super().__init__()
         self.types = {
             "BackupRetentionPeriod": "I3013",
-            "BackupBackupPlanLifecycle": "E3504",
             "CfnConditions": "E8001",
             "CfnInitCommand": "E3009",
             "CfnInitFiles": "E3009",
@@ -48,7 +47,6 @@ class AwsType(CloudFormationLintRule):
             "IamResourcePolicy": "E3512",
             "IamResourceEcrPolicy": "E3513",
             "IamRoleArn": "E3511",
-            "LambdaRuntime": "E2531",
         }
         self.child_rules = dict.fromkeys(list(self.types.values()))
 
@@ -61,5 +59,7 @@ class AwsType(CloudFormationLintRule):
                 return
 
             if hasattr(rule, t.lower()) and callable(getattr(rule, t.lower())):
-                validate = getattr(rule, t.lower())
-                yield from validate(validator, t, instance, schema)
+                fn = getattr(rule, t.lower())
+                yield from fn(validator, t, instance, schema)
+            else:
+                raise ValueError(f"{t.lower()!r} not found in ${rule.id!r}")

@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
-
 class DBInstanceClassEnum(CfnLintJsonSchemaRegional):
     id = "E3620"
     shortdesc = "Validate a DocDB DB Instance class"
@@ -18,4 +17,3 @@ class DBInstanceClassEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(["aws_docdb_dbinstance/dbinstanceclass_enum"])
-

@@ -16,4 +16,6 @@ class NodeNodeConfigurationInstanceTypeEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_managedblockchain_node/nodeconfiguration_instancetype_enum"])
+        super().__init__(
+            ["aws_managedblockchain_node/nodeconfiguration_instancetype_enum"]
+        )
