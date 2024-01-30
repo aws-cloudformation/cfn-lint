@@ -4,11 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 
 from __future__ import annotations
+
 from typing import Any
 
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
-
 
 
 class SecurityGroupProtocolsAndPortsInclusive(CfnLintJsonSchema):
@@ -21,8 +21,9 @@ class SecurityGroupProtocolsAndPortsInclusive(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_ec2_securitygroup/protocols_and_port_ranges_include"])
-
+        super().__init__(
+            keywords=["aws_ec2_securitygroup/protocols_and_port_ranges_include"]
+        )
 
     def message(self, instance: Any, err: ValidationError) -> str:
         if not isinstance(instance, dict):
