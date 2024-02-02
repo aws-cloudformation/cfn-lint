@@ -65,7 +65,7 @@ class FunctionFilter:
         # it will do by using {"type": "object"} with no properties
         # Adding these items to the schema
         # will allow us to continue to check the nested elements
-        if "awsType" not in standard_schema:
+        if "cfnLint" not in standard_schema:
             if (
                 "object" in ensure_list(standard_schema.get("type", []))
                 and "properties" not in standard_schema

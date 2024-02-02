@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import logging
 from collections import namedtuple
 from copy import deepcopy
-from typing import Any, Dict, Protocol, Set
+from typing import Protocol
 
 from cfnlint.decode.exceptions import TemplateAttributeError
 

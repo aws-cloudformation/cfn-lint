@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_rds_dbcluster
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class DbClusterServerlessExclusive(CfnLintJsonSchema):
@@ -19,4 +23,13 @@ class DbClusterServerlessExclusive(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_rds_dbcluster/serverless_exclusive"])
+        super().__init__(
+            keywords=["AWS::RDS::DBCluster/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_rds_dbcluster,
+                filename="serverless_exclusive.json",
+            ),
+        )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return "Additional properties are not allowed ('ScalingConfiguration')"

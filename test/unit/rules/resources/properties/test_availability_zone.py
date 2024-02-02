@@ -3,71 +3,113 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.jsonschema import CfnTemplateValidator
+import pytest
+
+from cfnlint.context import ContextManager
+from cfnlint.helpers import FUNCTIONS
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.properties.AvailabilityZone import (
     AvailabilityZone,  # pylint: disable=E0401
 )
+from cfnlint.template import Template
 
 
-class TestAvailabilityZone(BaseRuleTestCase):
-    """Test Password Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AvailabilityZone()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        self.rule = AvailabilityZone()
 
-    def test_availability_zones(self):
-        validator = CfnTemplateValidator({})
+@pytest.fixture(scope="module")
+def validator():
+    cfn = Template(
+        "",
+        {
+            "Resources": {
+                "MySqs": {
+                    "Type": "AWS::SQS::Queue",
+                }
+            }
+        },
+    )
+    context_manager = ContextManager(cfn)
+    context = context_manager.create_context_for_template(["us-east-1"]).evolve(
+        functions=FUNCTIONS
+    )
+    context.path = deque(["Resources", "MySqs", "Properties"])
+    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
-        # hard coded string
-        self.assertEqual(
-            len(list(self.rule.availabilityzones(validator, {}, ["us-east-1"], {}))), 1
-        )
 
-        # proper function
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.availabilityzones(
-                        validator, {}, {"Fn::GetAZs": "us-east-1"}, {}
-                    )
+@pytest.mark.parametrize(
+    "name,instance,path,expected",
+    [
+        (
+            "Valid ref",
+            {"Ref": "AZ"},
+            None,
+            [],
+        ),
+        (
+            "Valid list ref",
+            [{"Ref": "AZ"}],
+            None,
+            [],
+        ),
+        (
+            "Valid inside Ref",
+            "us-east-1a",
+            "Ref",
+            [],
+        ),
+        (
+            "Valid GetAZs",
+            ["us-east-1a", "us-east-1b"],
+            "Fn::GetAZs",
+            [],
+        ),
+        (
+            "Invalid type",
+            True,
+            deque(["Resources", "MySqs", "Properties"]),
+            [],
+        ),
+        (
+            "Invalid hardcoded string",
+            "us-east-1a",
+            deque(["Resources", "MySqs", "Properties"]),
+            [
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    rule=AvailabilityZone(),
                 )
-            ),
-            0,
+            ],
+        ),
+        (
+            "Invalid hardcoded array",
+            ["us-east-1a", "us-east-1b"],
+            deque(["Resources", "MySqs", "Properties"]),
+            [
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    rule=AvailabilityZone(),
+                ),
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1b'"),
+                    rule=AvailabilityZone(),
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, path, expected, rule, validator):
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            path=path,
         )
-
-        # not a string
-        self.assertEqual(
-            len(list(self.rule.availabilityzones(validator, {}, True, {}))), 0
-        )
-
-        # not a string
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.availabilityzones(
-                        validator, {}, [{"Ref": "Parameter"}], {}
-                    )
-                )
-            ),
-            0,
-        )
-
-        # exception
-        self.assertEqual(
-            len(list(self.rule.availabilityzones(validator, {}, ["all"], {}))), 0
-        )
-
-        # more than 1
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.availabilityzones(
-                        validator, {}, ["us-east-1", "us-west-2"], {}
-                    )
-                )
-            ),
-            2,
-        )
+    )
+    errors = list(rule.validate(validator, False, instance, {}))
+    # we use error counts in this one as the instance types are
+    # always changing so we aren't going to hold ourselves up by that
+    assert errors == expected, f"Test {name!r} got {errors!r}"

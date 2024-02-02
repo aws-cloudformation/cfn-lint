@@ -38,5 +38,5 @@ def validator():
     ],
 )
 def test_policy_version(name, instance, expected, rule, validator):
-    errors = list(rule.iampolicyversion(validator, {}, instance, {}))
+    errors = list(rule.validate(validator, {}, instance, {}))
     assert errors == expected, f"Test {name!r} got {errors!r}"
