@@ -55,5 +55,5 @@ def validator():
     ],
 )
 def test_lambda_runtime(instance, expected, rule, validator):
-    errs = list(rule.awslambdafunctionruntime(validator, "LambdaRuntime", instance, {}))
+    errs = list(rule.validate(validator, "LambdaRuntime", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"

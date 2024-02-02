@@ -45,7 +45,7 @@ class TestResourceEcrPolicy(TestCase):
         """
 
         errs = list(
-            self.rule.iamresourceecrpolicy(
+            self.rule.validate(
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )

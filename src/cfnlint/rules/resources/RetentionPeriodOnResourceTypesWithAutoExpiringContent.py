@@ -5,11 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Dict, List
 
-from cfnlint.jsonschema import Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+import cfnlint.data.schemas.extensions.aws_rds_dbinstance
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
+class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "I3013"
@@ -26,7 +27,22 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
     tags = ["resources", "retentionperiod"]
 
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(
+            [
+                "AWS::RDS::DBInstance/Properties",
+                "AWS::Kinesis::Stream/Properties",
+                "AWS::SQS::Queue/Properties",
+                "AWS::DocDB::DBCluster/Properties",
+                "AWS::Synthetics::Canary/Properties",
+                "AWS::Redshift::Cluster/Properties",
+                "AWS::RDS::DBInstance/Properties",
+                "AWS::RDS::DBCluster/Properties",
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,
+                filename="backupretentionperiod.json",
+            ),
+        )
         self._properties: Dict[str, List[Dict[str, str]]] = {
             "AWS::Kinesis::Stream": [
                 {
@@ -76,23 +92,14 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
             ],
         }
 
-    def _schema(self, resource_type: str):
-        required = []
-        for properties in self._properties.get(resource_type, []):
-            property = properties.get("Attribute")
-            if property:
-                required.append(property)
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return (
+            "The default retention period will delete the data after a "
+            "pre-defined time. Set an explicit values to avoid data "
+            "loss on resource. " + err.message
+        )
 
-        return {"required": required}
-
-    # pylint: disable=unused-argument
-    def backupretentionperiod(
-        self,
-        validator: Validator,
-        resource_type: str,
-        instance: Any,
-        schema: Dict[str, Any],
-    ):
+    def validate(self, validator, keywords, instance, schema):
         if validator.cfn is None:
             return
         resource_type = (
@@ -103,12 +110,13 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseJsonSchema):
         if not validator.is_type(resource_type, "string"):
             return
 
-        validator = validator.evolve(schema=self._schema(resource_type=resource_type))
-        for err in validator.iter_errors(instance):
-            err.rule = self
-            err.message = (
-                "The default retention period will delete the data after a "
-                "pre-defined time. Set an explicit values to avoid data "
-                "loss on resource. " + err.message
-            )
-            yield err
+        if resource_type != "AWS::RDS::DBInstance":
+            required = []
+            for properties in self._properties.get(resource_type, []):
+                property = properties.get("Attribute")
+                if property:
+                    required.append(property)
+
+            self._schema = {"required": required}
+
+        return super().validate(validator, keywords, instance, schema)
