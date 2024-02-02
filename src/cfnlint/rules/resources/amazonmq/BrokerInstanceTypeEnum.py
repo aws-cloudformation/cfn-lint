@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import cfnlint.data.schemas.extensions.aws_amazonmq_broker
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
@@ -16,4 +18,10 @@ class BrokerInstanceTypeEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_amazonmq_broker/instancetype_enum"])
+        super().__init__(
+            keywords=["AWS::AmazonMQ::Broker/Properties/HostInstanceType"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_amazonmq_broker,
+                filename="instancetype_enum.json",
+            ),
+        )

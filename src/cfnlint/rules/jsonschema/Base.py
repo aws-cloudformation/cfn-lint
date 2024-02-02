@@ -67,6 +67,10 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
+    @property
+    def schema(self) -> Any:
+        return {}
+
     # pylint: disable=unused-argument
     def validate(self, validator: Validator, _, instance: Any, schema):
         validator = self.extend_validator(validator, self.schema, validator.context)

@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_ecs_taskdefinition
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class TaskDefinitionEssentialContainer(CfnLintJsonSchema):
@@ -24,5 +28,12 @@ class TaskDefinitionEssentialContainer(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["aws_ecs_taskdefinition/containerdefinitions_essential"]
+            keywords=["AWS::ECS::TaskDefinition/Properties/ContainerDefinitions"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ecs_taskdefinition,
+                filename="containerdefinitions_essential.json",
+            ),
         )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return "At least one essential container is required"

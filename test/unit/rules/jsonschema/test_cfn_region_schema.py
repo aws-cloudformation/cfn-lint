@@ -47,7 +47,7 @@ def test_cfn_region_schema(name, rule, instance, regions, expected_errs):
     context = Context(regions)
     validator = CfnTemplateValidator(schema=_schema, context=context)
 
-    errs = list(rule.iter_errors(validator, [], instance, {}))
+    errs = list(rule.validate(validator, [], instance, {}))
     assert len(errs) == len(expected_errs), name
     for i, expected_err in enumerate(expected_errs):
         assert errs[i].message == expected_err.message, name
