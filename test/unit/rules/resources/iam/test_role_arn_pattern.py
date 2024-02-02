@@ -12,7 +12,7 @@ from cfnlint.rules.resources.iam.RoleArnPattern import RoleArnPattern
 def _message_errors(name, arn, errors, **kwargs):
     validator = CfnTemplateValidator().evolve(**kwargs)
 
-    i_errors = list(RoleArnPattern().iamrolearn(validator, {}, arn, {}))
+    i_errors = list(RoleArnPattern().validate(validator, {}, arn, {}))
 
     assert len(errors) == len(i_errors), (
         f"{name}: Expected exactly {len(errors)} error, "

@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import cfnlint.data.schemas.extensions.aws_elasticache_cachecluster
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
@@ -16,4 +18,10 @@ class CacheClusterCacheNodeTypeEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_elasticache_cachecluster/cachenodetype_enum"])
+        super().__init__(
+            keywords=["AWS::ElastiCache::CacheCluster/Properties/CacheNodeType"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_elasticache_cachecluster,
+                filename="cachenodetype_enum.json",
+            ),
+        )

@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import cfnlint.data.schemas.extensions.aws_gamelift_fleet
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
@@ -16,4 +18,10 @@ class FleetEc2InstanceTypeEnum(CfnLintJsonSchemaRegional):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_gamelift_fleet/ec2instancetype_enum"])
+        super().__init__(
+            keywords=["AWS::GameLift::Fleet/EC2InstanceType"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_gamelift_fleet,
+                filename="ec2instancetype_enum.json",
+            ),
+        )
