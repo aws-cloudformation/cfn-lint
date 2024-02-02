@@ -5,16 +5,14 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any, Sequence, Dict
+from collections import namedtuple
+from typing import Any, Sequence
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema._validators import type
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
-from cfnlint.rules.jsonschema.CfnLint import _pattern
-from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
-from collections import namedtuple
 
 SchemaDetails = namedtuple("SchemaDetails", ["module", "filename"])
 
@@ -29,6 +27,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
         super().__init__()
         self.keywords = keywords or []
         self.all_matches = all_matches
+        self._use_schema_arg = True
         self._schema: Any = {}
 
         if schema_details:
@@ -36,10 +35,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
                 schema_details.module,
                 filename=schema_details.filename,
             )
-
-        for keyword in self.keywords:
-            fn_name = _pattern.sub("", keyword)
-            setattr(self, fn_name, self.iter_errors)
+            self._use_schema_arg = False
 
         self.validators["type"] = type
 
@@ -57,17 +53,22 @@ class CfnLintJsonSchema(BaseJsonSchema):
             if err is not None:
                 err.message = self.message(instance, err)
                 err.rule = self
-                errs = [err]
+                yield err
+                return
 
-        yield from iter(errs)
+        for err in errs:
+            err.rule = self
+            yield err
 
-    def iter_errors(self, validator, keywords, instance, schema):
+    def validate(self, validator, keywords, instance, schema):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
+        if not self._use_schema_arg:
+            schema = self._schema
 
         cfn_validator = self.extend_validator(
             validator=validator,
-            schema=self.schema,
+            schema=schema,
             context=validator.context.evolve(functions=[]),
         )
 

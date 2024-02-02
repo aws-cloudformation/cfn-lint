@@ -2,9 +2,56 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/DomainId",
-  "/properties/SpaceName"
+  "/properties/SpaceName",
+  "/properties/SpaceSharingSettings",
+  "/properties/OwnershipSettings"
  ],
  "definitions": {
+  "AppType": {
+   "enum": [
+    "JupyterServer",
+    "KernelGateway",
+    "TensorBoard",
+    "RStudioServerPro",
+    "RSessionGateway",
+    "JupyterLab",
+    "CodeEditor"
+   ],
+   "type": "string"
+  },
+  "CodeRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryUrl": {
+     "description": "A CodeRepository (valid URL) to be used within Jupyter's Git extension.",
+     "maxLength": 256,
+     "pattern": "^https://([.\\-_a-zA-Z0-9]+/?){3,1016}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryUrl"
+   ],
+   "type": "object"
+  },
+  "CustomFileSystem": {
+   "additionalProperties": false,
+   "properties": {
+    "EFSFileSystem": {
+     "$ref": "#/definitions/EFSFileSystem"
+    }
+   },
+   "type": "object"
+  },
+  "CustomFileSystems": {
+   "items": {
+    "$ref": "#/definitions/CustomFileSystem"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
   "CustomImage": {
    "additionalProperties": false,
    "description": "A custom SageMaker image.",
@@ -30,6 +77,35 @@
    "required": [
     "AppImageConfigName",
     "ImageName"
+   ],
+   "type": "object"
+  },
+  "EFSFileSystem": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "maxLength": 21,
+     "minLength": 11,
+     "pattern": "^(fs-[0-9a-f]{8,})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId"
+   ],
+   "type": "object"
+  },
+  "EbsStorageSettings": {
+   "additionalProperties": false,
+   "description": "Properties related to the space's Amazon Elastic Block Store volume.",
+   "properties": {
+    "EbsVolumeSizeInGb": {
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
+     "description": "Size of the Amazon EBS volume in Gb"
+    }
+   },
+   "required": [
+    "EbsVolumeSizeInGb"
    ],
    "type": "object"
   },
@@ -62,6 +138,20 @@
      "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the KernelGateway app."
     }
    },
+   "type": "object"
+  },
+  "OwnershipSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "OwnerUserProfileName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OwnerUserProfileName"
+   ],
    "type": "object"
   },
   "ResourceSpec": {
@@ -129,7 +219,10 @@
       "ml.g5.48xlarge",
       "ml.p4d.24xlarge",
       "ml.p4de.24xlarge",
-      "ml.geospatial.interactive"
+      "ml.geospatial.interactive",
+      "ml.trn1.2xlarge",
+      "ml.trn1.32xlarge",
+      "ml.trn1n.32xlarge"
      ],
      "type": "string"
     },
@@ -148,10 +241,59 @@
    },
    "type": "object"
   },
+  "SpaceCodeEditorAppSettings": {
+   "additionalProperties": false,
+   "description": "The CodeEditor app settings.",
+   "properties": {
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    }
+   },
+   "type": "object"
+  },
+  "SpaceEbsVolumeSizeInGb": {
+   "maximum": 16384,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "SpaceJupyterLabAppSettings": {
+   "additionalProperties": false,
+   "description": "The JupyterServer app settings.",
+   "properties": {
+    "CodeRepositories": {
+     "description": "A list of CodeRepositories available for use with JupyterLab apps.",
+     "items": {
+      "$ref": "#/definitions/CodeRepository"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    }
+   },
+   "type": "object"
+  },
   "SpaceSettings": {
    "additionalProperties": false,
    "description": "A collection of settings that apply to spaces of Amazon SageMaker Studio. These settings are specified when the CreateSpace API is called.",
    "properties": {
+    "AppType": {
+     "$ref": "#/definitions/AppType"
+    },
+    "CodeEditorAppSettings": {
+     "$ref": "#/definitions/SpaceCodeEditorAppSettings",
+     "description": "The CodeEditor app settings."
+    },
+    "CustomFileSystems": {
+     "$ref": "#/definitions/CustomFileSystems"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/SpaceJupyterLabAppSettings",
+     "description": "The JupyterLab app settings."
+    },
     "JupyterServerAppSettings": {
      "$ref": "#/definitions/JupyterServerAppSettings",
      "description": "The Jupyter server's app settings."
@@ -159,6 +301,35 @@
     "KernelGatewayAppSettings": {
      "$ref": "#/definitions/KernelGatewayAppSettings",
      "description": "The kernel gateway app settings."
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/SpaceStorageSettings",
+     "description": "Default storage settings for a space."
+    }
+   },
+   "type": "object"
+  },
+  "SpaceSharingSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "SharingType": {
+     "enum": [
+      "Private",
+      "Shared"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SharingType"
+   ],
+   "type": "object"
+  },
+  "SpaceStorageSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "EbsStorageSettings": {
+     "$ref": "#/definitions/EbsStorageSettings"
     }
    },
    "type": "object"
@@ -226,10 +397,18 @@
    "minLength": 1,
    "type": "string"
   },
+  "OwnershipSettings": {
+   "$ref": "#/definitions/OwnershipSettings"
+  },
   "SpaceArn": {
    "description": "The space Amazon Resource Name (ARN).",
    "maxLength": 256,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:space/.*",
+   "type": "string"
+  },
+  "SpaceDisplayName": {
+   "maxLength": 64,
+   "pattern": "^(?!\\s*$).+",
    "type": "string"
   },
   "SpaceName": {
@@ -245,6 +424,9 @@
    "minItems": 0,
    "uniqueItems": false
   },
+  "SpaceSharingSettings": {
+   "$ref": "#/definitions/SpaceSharingSettings"
+  },
   "Tags": {
    "description": "A list of tags to apply to the space.",
    "items": {
@@ -254,10 +436,15 @@
    "minItems": 0,
    "type": "array",
    "uniqueItems": false
+  },
+  "Url": {
+   "maxLength": 1024,
+   "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/SpaceArn"
+  "/properties/SpaceArn",
+  "/properties/Url"
  ],
  "required": [
   "DomainId",

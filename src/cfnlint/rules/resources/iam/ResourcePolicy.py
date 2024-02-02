@@ -19,7 +19,14 @@ class ResourcePolicy(Policy):
     tags = ["resources", "iam"]
 
     def __init__(self):
-        super().__init__("resource", "policy_resource.json")
-
-        # remap validator to the correct function name
-        self.iamresourcepolicy = self.validator
+        super().__init__(
+            [
+                "AWS::KMS::Key/Properties/KeyPolicy",
+                "AWS::OpenSearchService::Domain/Properties/AccessPolicies",
+                "AWS::S3::BucketPolicy/Properties/PolicyDocument",
+                "AWS::SNS::TopicPolicy/Properties/PolicyDocument",
+                "AWS::SQS::QueuePolicy/Properties/PolicyDocument",
+            ],
+            "resource",
+            "policy_resource.json",
+        )
