@@ -24,10 +24,7 @@ class Value(CloudFormationLintRule):
             ),
         )({"type": "string"})
 
-        for err in validator.iter_errors(instance):
-            if not err.validator.startswith("fn"):
-                err.rule_override = self
-            yield err
+        yield from validator.iter_errors(instance)
 
     # pylint: disable=unused-argument
     def _type(self, validator, types, instance, schema):

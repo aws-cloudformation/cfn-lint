@@ -87,7 +87,7 @@ def validator():
 )
 def test_validate(name, instance, regions, err_count, rule, validator):
     validator = validator.evolve(context=validator.context.evolve(regions=regions))
-    errors = list(rule.awsrdsdbinstancedbinstanceclassenum(validator, "", instance, {}))
+    errors = list(rule.validate(validator, "", instance, {}))
 
     # we use error counts in this one as the instance types are
     # always changing so we aren't going to hold ourselves up by that
