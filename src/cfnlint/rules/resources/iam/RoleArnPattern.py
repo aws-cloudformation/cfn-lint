@@ -6,10 +6,10 @@ SPDX-License-Identifier: MIT-0
 import regex as re
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class RoleArnPattern(BaseJsonSchema):
+class RoleArnPattern(CfnLintKeyword):
     """Check role arn pattern"""
 
     id = "E3511"
@@ -20,8 +20,20 @@ class RoleArnPattern(BaseJsonSchema):
     )
     tags = ["parameters", "iam"]
 
+    def __init__(self) -> None:
+        super().__init__(
+            [
+                "AWS::Backup::BackupSelection/Properties/BackupSelection/IamRoleArn",
+                "AWS::Batch::ComputeEnvironment/Properties/ComputeResources/SpotIamFleetRole",
+                "AWS::Batch::ComputeEnvironment/Properties/ServiceRole",
+                "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/IamFleetRole",
+                "AWS::ECS::TaskDefinition/Properties/ExecutionRoleArn",
+                "AWS::S3::Bucket/Properties/ReplicationConfiguration/Role",
+            ]
+        )
+
     # pylint: disable=unused-argument
-    def iamrolearn(self, validator, aZ, arn, schema):
+    def validate(self, validator, aZ, arn, schema):
         if not validator.is_type(arn, "string"):
             return
 

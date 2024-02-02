@@ -25,7 +25,7 @@ class TestIdentityPolicies(TestCase):
         policy = {"Version": "2012-10-18"}
 
         errs = list(
-            self.rule.iamidentitypolicy(
+            self.rule.validate(
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
@@ -55,7 +55,7 @@ class TestIdentityPolicies(TestCase):
         }
 
         errs = list(
-            self.rule.iamidentitypolicy(
+            self.rule.validate(
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
@@ -103,7 +103,7 @@ class TestIdentityPolicies(TestCase):
         }
 
         errs = list(
-            self.rule.iamidentitypolicy(
+            self.rule.validate(
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
@@ -142,7 +142,7 @@ class TestIdentityPolicies(TestCase):
         """
 
         errs = list(
-            self.rule.iamidentitypolicy(
+            self.rule.validate(
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )

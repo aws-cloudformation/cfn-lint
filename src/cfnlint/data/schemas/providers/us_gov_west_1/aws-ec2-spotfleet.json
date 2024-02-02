@@ -259,9 +259,10 @@
     "AcceleratorManufacturers": {
      "items": {
       "enum": [
-       "nvidia",
-       "amd",
        "amazon-web-services",
+       "amd",
+       "habana",
+       "nvidia",
        "xilinx"
       ],
       "type": "string"
@@ -272,15 +273,18 @@
     "AcceleratorNames": {
      "items": {
       "enum": [
+       "a10g",
        "a100",
-       "v100",
+       "h100",
+       "inferentia",
+       "k520",
        "k80",
-       "t4",
        "m60",
        "radeon-pro-v520",
+       "t4",
+       "t4g",
        "vu9p",
-       "inferentia",
-       "k520"
+       "v100"
       ],
       "type": "string"
      },
@@ -383,6 +387,9 @@
      "type": "array",
      "uniqueItems": false
     },
+    "MaxSpotPriceAsPercentageOfOptimalOnDemandPrice": {
+     "type": "integer"
+    },
     "MemoryGiBPerVCpu": {
      "$ref": "#/definitions/MemoryGiBPerVCpuRequest"
     },
@@ -433,8 +440,8 @@
    "additionalProperties": false,
    "properties": {
     "AvailabilityZone": {
-     "awsType": [
-      "AvailabilityZone"
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchTemplateConfigs/Overrides/AvailabilityZone"
      ],
      "type": "string"
     },
@@ -666,8 +673,8 @@
      "type": "string"
     },
     "IamFleetRole": {
-     "awsType": [
-      "IamRoleArn"
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/IamFleetRole"
      ],
      "type": "string"
     },
@@ -839,8 +846,8 @@
    "additionalProperties": false,
    "properties": {
     "AvailabilityZone": {
-     "awsType": [
-      "AvailabilityZone"
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/Placement/AvailabilityZone"
      ],
      "type": "string"
     },
@@ -931,8 +938,11 @@
  "handlers": {
   "create": {
    "permissions": [
+    "iam:PassRole",
+    "ec2:CreateTags",
     "ec2:RequestSpotFleet",
-    "ec2:DescribeSpotFleetRequests"
+    "ec2:DescribeSpotFleetRequests",
+    "ec2:RunInstances"
    ]
   },
   "delete": {
@@ -979,5 +989,9 @@
   "LaunchSpecifications",
   "LaunchTemplateConfigs"
  ],
- "typeName": "AWS::EC2::SpotFleet"
+ "typeName": "AWS::EC2::SpotFleet",
+ "writeOnlyProperties": [
+  "/properties/SpotFleetRequestConfigData/TagSpecifications",
+  "/properties/SpotFleetRequestConfigData/LaunchSpecifications/*/NetworkInterfaces/*/Groups"
+ ]
 }
