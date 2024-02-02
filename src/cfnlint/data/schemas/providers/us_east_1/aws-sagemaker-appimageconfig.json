@@ -5,6 +5,79 @@
   "/properties/Tags"
  ],
  "definitions": {
+  "ContainerConfig": {
+   "additionalProperties": false,
+   "description": "The container configuration for a SageMaker image.",
+   "properties": {
+    "ContainerArguments": {
+     "description": "A list of arguments to apply to the container.",
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerArguments"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainerEntrypoint": {
+     "description": "The custom entry point to use on container.",
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerEntrypoint"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainerEnvironmentVariables": {
+     "description": "A list of variables to apply to the custom container.",
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerEnvironmentVariable"
+     },
+     "maxItems": 25,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "CustomImageContainerArguments": {
+   "description": "The container image arguments",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "CustomImageContainerEntrypoint": {
+   "description": "The container entry point",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "CustomImageContainerEnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "FileSystemConfig": {
    "additionalProperties": false,
    "description": "The Amazon Elastic File System (EFS) storage configuration for a SageMaker image.",
@@ -27,6 +100,17 @@
      "minLength": 1,
      "pattern": "^/.*",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "JupyterLabAppImageConfig": {
+   "additionalProperties": false,
+   "description": "The configuration for the file system and kernels in a SageMaker image running as a JupyterLab app.",
+   "properties": {
+    "ContainerConfig": {
+     "$ref": "#/definitions/ContainerConfig",
+     "description": "The container configuration for a SageMaker image."
     }
    },
    "type": "object"
@@ -106,7 +190,8 @@
   },
   "delete": {
    "permissions": [
-    "sagemaker:DeleteAppImageConfig"
+    "sagemaker:DeleteAppImageConfig",
+    "sagemaker:DescribeAppImageConfig"
    ]
   },
   "list": {
@@ -143,6 +228,10 @@
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
+  },
+  "JupyterLabAppImageConfig": {
+   "$ref": "#/definitions/JupyterLabAppImageConfig",
+   "description": "The JupyterLabAppImageConfig."
   },
   "KernelGatewayImageConfig": {
    "$ref": "#/definitions/KernelGatewayImageConfig",

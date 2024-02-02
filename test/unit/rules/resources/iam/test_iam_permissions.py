@@ -26,17 +26,17 @@ def validator():
         ("Valid string", "s3:GetObject", 0),
         ("Valid list", ["s3:GetObject"], 0),
         ("Invalid string", "s3:Foo", 1),
-        ("Invlid list", ["s3:Foo"], 1),
+        ("Invalid list", ["s3:Foo"], 1),
         ("Valid astrisk for permission", ["s3:*"], 0),
         ("Valid all astrisk", ["*"], 0),
         ("Valid string with ending astrisk", "s3:Get*", 0),
         ("Valid string with starting astrisk", "s3:*Object", 0),
-        ("Invlid list", ["s3:Foo"], 1),
+        ("Invalid list", ["s3:Foo"], 1),
         ("Invalid string with ending astrisk", "s3:Foo*", 1),
-        ("Invlid string with starting astrisk", "s3:*Foo", 1),
+        ("Invalid string with starting astrisk", "s3:*Foo", 1),
         ("Invalid service", "foo:Bar", 1),
     ],
 )
 def test_permissions(name, instance, err_count, rule, validator):
-    errors = list(rule.iampolicystatementaction(validator, {}, instance, {}))
+    errors = list(rule.validate(validator, {}, instance, {}))
     assert len(errors) == err_count, f"Test {name!r} got {errors!r}"

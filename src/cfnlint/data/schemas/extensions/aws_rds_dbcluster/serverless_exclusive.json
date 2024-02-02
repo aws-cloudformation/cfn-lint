@@ -5,24 +5,22 @@
  "if": {
   "properties": {
    "EngineMode": {
-    "pattern": "^((?!serverless).)*$"
+    "const": "serverless"
    }
-  }
+  },
+  "required": [
+   "EngineMode"
+  ],
+  "type": "object"
  },
  "then": {
   "not": {
    "properties": {
-    "ScalingConfiguration": {
-     "type": [
-      "string",
-      "object"
-     ]
-    }
+    "ScalingConfiguration": true
    },
    "required": [
     "ScalingConfiguration"
    ]
   }
- },
- "type": "object"
+ }
 }
