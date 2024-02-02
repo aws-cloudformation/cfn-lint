@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Url"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IAM::OIDCProvider",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateOpenIDConnectProvider",
+    "iam:TagOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteOpenIDConnectProvider"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:UpdateOpenIDConnectProviderThumbprint",
+    "iam:RemoveClientIDFromOpenIDConnectProvider",
+    "iam:AddClientIDToOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider",
+    "iam:TagOpenIDConnectProvider",
+    "iam:UntagOpenIDConnectProvider",
+    "iam:ListOpenIDConnectProviderTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the OIDC provider",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "ClientIdList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ThumbprintList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 40,
+    "minLength": 40,
+    "pattern": "[0-9A-Fa-f]{40}",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "Url": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ThumbprintList"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IAM::OIDCProvider"
+}

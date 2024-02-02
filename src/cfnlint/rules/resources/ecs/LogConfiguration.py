@@ -7,10 +7,11 @@ from __future__ import annotations
 
 from typing import Sequence
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+import cfnlint.data.schemas.extensions.aws_ecs_taskdefinition
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class TableBillingModeExclusive(CfnLintJsonSchema):
+class LogConfiguration(CfnLintJsonSchema):
     id = "E3046"
     shortdesc = "Validate ECS task logging configuration for awslogs"
     description = (
@@ -22,5 +23,12 @@ class TableBillingModeExclusive(CfnLintJsonSchema):
         self, keywords: Sequence[str] | None = None, all_matches: bool = False
     ) -> None:
         super().__init__(
-            keywords=["aws_ecs_taskdefinition/logging_configuration"], all_matches=True
+            keywords=[
+                "AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/LogConfiguration"
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ecs_taskdefinition,
+                filename="logging_configuration.json",
+            ),
+            all_matches=True,
         )

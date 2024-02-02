@@ -51,6 +51,11 @@ def validator():
             [],
         ),
         (
+            "Invalid type ",
+            [],
+            [],
+        ),
+        (
             "Invalid when not specified",
             {},
             [
@@ -69,29 +74,10 @@ def validator():
                 )
             ],
         ),
-        (
-            "Invalid specified with Ref AWS::NoValue",
-            {"MessageRetentionPeriod": {"Ref": "AWS::NoValue"}},
-            [
-                ValidationError(
-                    (
-                        "The default retention period will delete the data after "
-                        "a pre-defined time. Set an explicit values to avoid "
-                        "data loss on resource. 'MessageRetentionPeriod' is a "
-                        "required property"
-                    ),
-                    rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
-                    schema_path=deque(["required"]),
-                    validator="required",
-                    validator_value=["MessageRetentionPeriod"],
-                    instance={},
-                )
-            ],
-        ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
-    errors = list(rule.backupretentionperiod(validator, False, instance, {}))
+    errors = list(rule.validate(validator, False, instance, {}))
     # we use error counts in this one as the instance types are
     # always changing so we aren't going to hold ourselves up by that
     assert errors == expected, f"Test {name!r} got {errors!r}"

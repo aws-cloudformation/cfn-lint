@@ -19,7 +19,15 @@ class IdentityPolicy(Policy):
     tags = ["resources", "iam"]
 
     def __init__(self):
-        super().__init__("identity", "policy_identity.json")
-
-        # remap validator to the correct function name
-        self.iamidentitypolicy = self.validator
+        super().__init__(
+            [
+                "AWS::IAM::Group/Properties/Policies/PolicyDocument",
+                "AWS::IAM::ManagedPolicy/Properties/PolicyDocument",
+                "AWS::IAM::Policy/Properties/PolicyDocument",
+                "AWS::IAM::Role/Properties/Policies/PolicyDocument",
+                "AWS::IAM::User/Properties/Policies/PolicyDocument",
+                "AWS::SSO::PermissionSet/Properties/InlinePolicy",
+            ],
+            "identity",
+            "policy_identity.json",
+        )
