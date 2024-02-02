@@ -25,7 +25,11 @@ class BackupPlanLifecycleRule(CfnLintKeyword):
     tags = ["properties", "backup", "plan", "lifecycle"]
 
     def __init__(self) -> None:
-        super().__init__(["aws_backup_backupplan/lifecycle_resource_type"])
+        super().__init__(
+            [
+                "AWS::Backup::BackupPlan/Properties/BackupPlanResourceType/BackupRuleResourceType/Lifecycle"
+            ]
+        )
 
     def backupbackupplanlifecycle(self, validator, uI, instance, schema):
         delete_after_days = instance.get("DeleteAfterDays")

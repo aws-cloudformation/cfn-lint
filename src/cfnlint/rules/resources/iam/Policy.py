@@ -6,10 +6,11 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import json
+from typing import List
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import RefResolver
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
 # pylint: disable=unused-argument
@@ -21,11 +22,16 @@ def _scalar_or_array(validator, subschema, instance, schema):
         yield from validator.descend(instance, subschema)
 
 
-class Policy(BaseJsonSchema):
+class Policy(CfnLintJsonSchema):
     """Check IAM policies"""
 
-    def __init__(self, schema_name: str | None = None, schema_file: str | None = None):
-        super().__init__()
+    def __init__(
+        self,
+        keywords: List[str] | None = None,
+        schema_name: str | None = None,
+        schema_file: str | None = None,
+    ):
+        super().__init__(keywords)
 
         if schema_name and schema_file:
             policy_schema = load_resource(
@@ -43,7 +49,7 @@ class Policy(BaseJsonSchema):
             self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
 
     # pylint: disable=unused-argument
-    def validator(self, validator, policy_type, policy, schema):
+    def validate(self, validator, policy_type, policy, schema):
         # First time child rules are configured against the rule
         # so we can run this now
         if validator.is_type(policy, "string"):
@@ -71,6 +77,6 @@ class Policy(BaseJsonSchema):
             )
 
         for err in iam_validator.iter_errors(policy):
-            if not err.validator.startswith("fn_") and err.validator not in ["awsType"]:
+            if not err.validator.startswith("fn_") and err.validator not in ["cfnLint"]:
                 err.rule = self
             yield err

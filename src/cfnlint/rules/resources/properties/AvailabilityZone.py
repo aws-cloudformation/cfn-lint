@@ -5,10 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.jsonschema._utils import ensure_list
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class AvailabilityZone(CloudFormationLintRule):
+class AvailabilityZone(CfnLintKeyword):
     """Check Availibility Zone parameter checks"""
 
     id = "W3010"
@@ -19,32 +20,45 @@ class AvailabilityZone(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(
+            keywords=[
+                "AWS::AutoScaling::AutoScalingGroup/Properties/AvailabilityZones",
+                "AWS::DAX::Cluster/Properties/AvailabilityZones",
+                "AWS::DMS::ReplicationInstance/Properties/AvailabilityZone",
+                "AWS::EC2::Host/Properties/AvailabilityZone",
+                "AWS::EC2::Instance/Properties/AvailabilityZone",
+                "AWS::EC2::LaunchTemplate/LaunchTemplateData/Placement/AvailabilityZone",
+                "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/Placement/AvailabilityZone",
+                "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchTemplateConfigs/Overrides/AvailabilityZone",
+                "AWS::EC2::Subnet/Properties/AvailabilityZone",
+                "AWS::EC2::Volume/Properties/AvailabilityZone",
+                "AWS::ElasticLoadBalancing::LoadBalancer/Properties/AvailabilityZones",
+                "AWS::ElasticLoadBalancingV2::TargetGroup/Properties/Targets/AvailabilityZone",
+                "AWS::EMR::Cluster/Properties/Instances/Placement/AvailabilityZone",
+                "AWS::Glue::Connection/Properties/ConnectionInput/PhysicalConnectionRequirements/AvailabilityZone",
+                "AWS::OpsWorks::Instance/Properties/AvailabilityZone",
+                "AWS::RDS::DBCluster/Properties/AvailabilityZones",
+                "AWS::RDS::DBInstance/Properties/AvailabilityZone",
+            ]
+        )
         self.exceptions = ["all"]
 
-    # pylint: disable=unused-argument
-    def availabilityzone(self, validator, aZ, zone, schema):
-        if not validator.is_type(zone, "string"):
+    def validate(self, validator, keywords, zones, schema):
+        if not isinstance(zones, (str, list)):
             return
-
-        if zone in self.exceptions:
-            return
-
-        if any(fn in validator.context.path for fn in FUNCTIONS):
-            return
-
-        yield ValidationError(
-            f"Avoid hardcoding availability zones {zone!r}",
-            rule=self,
-        )
-
-    # pylint: disable=unused-argument
-    def availabilityzones(self, validator, aZ, zones, schema):
-        if not validator.is_type(zones, "array"):
-            return
-
-        if any(fn in validator.context.path for fn in FUNCTIONS):
-            return
+        zones = ensure_list(zones)
 
         for zone in zones:
-            yield from self.availabilityzone(validator, aZ, zone, schema)
+            if not validator.is_type(zone, "string"):
+                continue
+
+            if zone in self.exceptions:
+                continue
+
+            if any(fn in validator.context.path for fn in FUNCTIONS):
+                continue
+
+            yield ValidationError(
+                f"Avoid hardcoding availability zones {zone!r}",
+                rule=self,
+            )

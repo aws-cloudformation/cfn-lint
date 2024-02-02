@@ -65,7 +65,8 @@ class Validator(Protocol):
     def __init__(
         self,
         schema: Mapping | bool,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @classmethod
     def check_schema(cls, schema: Mapping | bool) -> None:

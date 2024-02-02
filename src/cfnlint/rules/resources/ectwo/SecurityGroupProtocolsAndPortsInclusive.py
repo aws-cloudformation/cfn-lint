@@ -7,8 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import cfnlint.data.schemas.extensions.aws_ec2_securitygroup
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class SecurityGroupProtocolsAndPortsInclusive(CfnLintJsonSchema):
@@ -22,14 +23,20 @@ class SecurityGroupProtocolsAndPortsInclusive(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["aws_ec2_securitygroup/protocols_and_port_ranges_include"]
+            keywords=[
+                "AWS::EC2::SecurityGroup/Properties/Ingress",
+                "AWS::EC2::SecurityGroup/Properties/Egress",
+                "AWS::EC2::SecurityGroupEgress/Properties",
+                "AWS::EC2::SecurityGroupIngress/Properties",
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ec2_securitygroup,
+                filename="protocols_and_port_ranges_include.json",
+            ),
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        if not isinstance(instance, dict):
-            return self.description
-
         return (
-            "['FromPort', 'ToPort'] is a required property when using "
+            "['FromPort', 'ToPort'] are required properties when using "
             f"'IpProtocol' value {instance.get('IpProtocol')!r}"
         )

@@ -7,8 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import cfnlint.data.schemas.extensions.aws_ec2_securitygroup
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class SecurityGroupAllToAndFromPorts(CfnLintJsonSchema):
@@ -18,10 +19,18 @@ class SecurityGroupAllToAndFromPorts(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_ec2_securitygroup/all_to_and_from_ports"])
+        super().__init__(
+            keywords=[
+                "AWS::EC2::SecurityGroup/Properties/Ingress",
+                "AWS::EC2::SecurityGroup/Properties/Egress",
+                "AWS::EC2::SecurityGroupEgress/Properties",
+                "AWS::EC2::SecurityGroupIngress/Properties",
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ec2_securitygroup,
+                filename="all_to_and_from_ports.json",
+            ),
+        )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        if not isinstance(instance, dict):
-            return self.description
-
         return "Both ['FromPort', 'ToPort'] must be -1 when one is -1"

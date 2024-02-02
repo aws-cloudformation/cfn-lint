@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_lambda_eventsourcemapping
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class EventSourceMappingEventSourceArnSqsExclusive(CfnLintJsonSchema):
@@ -20,5 +24,12 @@ class EventSourceMappingEventSourceArnSqsExclusive(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["aws_lambda_eventsourcemapping/eventsourcearn_sqs_exclusive"]
+            keywords=["AWS::Lambda::EventSourceMapping/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_lambda_eventsourcemapping,
+                filename="eventsourcearn_sqs_exclusive.json",
+            ),
         )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return "Additional properties are not allowed ('StartingPosition')"
