@@ -51,8 +51,4 @@ class CfnLint(BaseJsonSchema):
 
                 for rule_keyword in rule.keywords:
                     if rule_keyword == keyword:
-                        fn_name = _pattern.sub("", rule_keyword).lower()
-                        fn = getattr(rule, fn_name)
-                        if not fn:
-                            raise ValueError(f"{fn_name!r} not found in {rule.id!r}")
-                        yield from fn(validator, keyword, instance, schema)
+                        yield from rule.validate(validator, keyword, instance, schema)

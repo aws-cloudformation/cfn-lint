@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_ecs_service
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
@@ -22,4 +26,13 @@ class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
     tags = ["properties", "ecs", "service", "container", "fargate"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_ecs_service/fargate"])
+        super().__init__(
+            keywords=["AWS::ECS::Service/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_ecs_service,
+                filename="fargate.json",
+            ),
+        )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return err.message

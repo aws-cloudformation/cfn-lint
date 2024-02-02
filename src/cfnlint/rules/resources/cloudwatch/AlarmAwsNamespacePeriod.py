@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_cloudwatch_alarm
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class AlarmAwsNamespacePeriod(CfnLintJsonSchema):
@@ -17,4 +21,13 @@ class AlarmAwsNamespacePeriod(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_cloudwatch_alarm/aws_namespace_period"])
+        super().__init__(
+            keywords=["AWS::CloudWatch::Alarm/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_cloudwatch_alarm,
+                filename="aws_namespace_period.json",
+            ),
+        )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return err.message

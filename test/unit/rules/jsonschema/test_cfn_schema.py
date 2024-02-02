@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
+
 import pytest
 
 from cfnlint.context import Context
@@ -27,7 +29,6 @@ class _Error(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__([], None, True)
-        self._schema = _schema
 
 
 class _BestError(CfnLintJsonSchema):
@@ -37,7 +38,6 @@ class _BestError(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__([], None, False)
-        self._schema = _schema
 
 
 @pytest.mark.parametrize(
@@ -48,8 +48,20 @@ class _BestError(CfnLintJsonSchema):
             _Error(),
             {"a": [], "b": []},
             [
-                ValidationError("[] is not of type 'string'"),
-                ValidationError("[] is not of type 'object'"),
+                ValidationError(
+                    message="[] is not of type 'string'",
+                    rule=_Error(),
+                    validator="type",
+                    path=deque(["a"]),
+                    schema_path=deque(["properties", "a", "type"]),
+                ),
+                ValidationError(
+                    message="[] is not of type 'object'",
+                    rule=_Error(),
+                    validator="type",
+                    path=deque(["b"]),
+                    schema_path=deque(["properties", "b", "type"]),
+                ),
             ],
         ),
         (
@@ -57,15 +69,20 @@ class _BestError(CfnLintJsonSchema):
             _BestError(),
             {"a": [], "b": []},
             [
-                ValidationError(_BestError.shortdesc),
+                ValidationError(
+                    message="Rule that returns the best error",
+                    validator="type",
+                    path=deque(["a"]),
+                    rule=_BestError(),
+                    schema_path=deque(["properties", "a", "type"]),
+                ),
             ],
         ),
     ],
 )
 def test_cfn_schema(name, rule, instance, expected_errs):
-    context = Context("us-east-1")
+    context = Context(regions=["us-east-1"])
     validator = CfnTemplateValidator(schema=_schema, context=context)
 
-    errs = list(rule.iter_errors(validator, {}, instance, {}))
-    for i, expected_err in enumerate(expected_errs):
-        assert errs[i].message == expected_err.message, name
+    errs = list(rule.validate(validator, {}, instance, _schema))
+    assert errs == expected_errs

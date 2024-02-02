@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import cfnlint.data.schemas.extensions.aws_elasticsearch_domain
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
 
@@ -17,5 +19,11 @@ class DomainClusterConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            ["aws_elasticsearch_domain/elasticsearchclusterconfig_instancetype_enum"]
+            keywords=[
+                "AWS::Elasticsearch::Domain/Properties/ElasticsearchClusterConfig/InstanceType"
+            ],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_elasticsearch_domain,
+                filename="elasticsearchclusterconfig_instancetype_enum.json",
+            ),
         )

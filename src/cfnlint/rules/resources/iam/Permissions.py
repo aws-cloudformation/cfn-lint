@@ -7,10 +7,10 @@ from cfnlint.data import AdditionalSpecs
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class Permissions(CloudFormationLintRule):
+class Permissions(CfnLintKeyword):
     """Check IAM Permission configuration"""
 
     id = "W3037"
@@ -22,10 +22,12 @@ class Permissions(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(
+            ["AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"]
+        )
         self.service_map = self.load_service_map()
 
-    def iampolicystatementaction(self, validator, _, instance, schema):
+    def validate(self, validator, _, instance, schema):
         actions = ensure_list(instance)
 
         for action in actions:
