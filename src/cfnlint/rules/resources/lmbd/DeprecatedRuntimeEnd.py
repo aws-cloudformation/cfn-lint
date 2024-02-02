@@ -26,7 +26,7 @@ class DeprecatedRuntimeEnd(CfnLintKeyword):
 
     def __init__(self):
         """Init"""
-        super().__init__(["aws_lambda_function/runtime"])
+        super().__init__(["AWS::Lambda::Function/Properties/Runtime"])
         self.child_rules = {
             "W2531": None,
         }
@@ -36,7 +36,7 @@ class DeprecatedRuntimeEnd(CfnLintKeyword):
         )
 
     # pylint: disable=unused-argument
-    def awslambdafunctionruntime(self, validator, v, runtime, schema):
+    def validate(self, validator, v, runtime, schema):
         runtime_data = self.deprecated_runtimes.get(runtime)
         if not runtime_data:
             return

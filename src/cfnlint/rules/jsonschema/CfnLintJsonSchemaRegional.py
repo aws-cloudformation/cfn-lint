@@ -15,7 +15,7 @@ class CfnLintJsonSchemaRegional(CfnLintJsonSchema):
     def message(self, instance: Any, err: ValidationError) -> str:
         return err.message
 
-    def iter_errors(self, validator, keywords, instance, schema):
+    def validate(self, validator, keywords, instance, schema):
         for region in validator.context.regions:
             region_validator = validator.evolve(
                 context=validator.context.evolve(regions=[region]),

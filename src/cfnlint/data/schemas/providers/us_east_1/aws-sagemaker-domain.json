@@ -169,10 +169,41 @@
    },
    "type": "object"
   },
+  "DockerSettings": {
+   "additionalProperties": false,
+   "description": "A collection of settings that are required to start docker-proxy server.",
+   "properties": {
+    "EnableDockerAccess": {
+     "description": "The flag to enable/disable docker-proxy server",
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "VpcOnlyTrustedAccounts": {
+     "description": "A list of account id's that would be used to pull images from in VpcOnly mode",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 12,
+      "pattern": "^[0-9]$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
   "DomainSettings": {
    "additionalProperties": false,
    "description": "A collection of Domain settings.",
    "properties": {
+    "DockerSettings": {
+     "$ref": "#/definitions/DockerSettings"
+    },
     "RStudioServerProDomainSettings": {
      "$ref": "#/definitions/RStudioServerProDomainSettings"
     },

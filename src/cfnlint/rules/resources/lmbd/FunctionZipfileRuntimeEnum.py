@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from typing import Any
+
+import cfnlint.data.schemas.extensions.aws_lambda_function
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
 class FunctionZipfileRuntimeEnum(CfnLintJsonSchema):
@@ -18,4 +22,13 @@ class FunctionZipfileRuntimeEnum(CfnLintJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
-        super().__init__(keywords=["aws_lambda_function/zipfile_runtime_enum"])
+        super().__init__(
+            keywords=["AWS::Lambda::Function/Properties"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.extensions.aws_lambda_function,
+                filename="zipfile_runtime_enum.json",
+            ),
+        )
+
+    def message(self, instance: Any, err: ValidationError) -> str:
+        return err.message
