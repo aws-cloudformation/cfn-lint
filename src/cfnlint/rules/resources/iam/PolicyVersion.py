@@ -7,10 +7,10 @@ from datetime import date
 from typing import Any
 
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class PolicyVersion(CloudFormationLintRule):
+class PolicyVersion(CfnLintKeyword):
     """Check if IAM Policy Version is correct"""
 
     id = "W2511"
@@ -21,8 +21,11 @@ class PolicyVersion(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
     tags = ["properties", "iam"]
 
+    def __init__(self) -> None:
+        super().__init__(["AWS::IAM::Policy/Properties/PolicyDocument/Version"])
+
     # pylint: disable=unused-argument
-    def iampolicyversion(self, validator: Validator, _, instance: Any, schema):
+    def validate(self, validator: Validator, _, instance: Any, schema):
         if not isinstance(instance, (date, str)):
             return
 
