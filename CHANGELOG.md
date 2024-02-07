@@ -1,3 +1,10 @@
+### v1.2.5a1
+###### Features
+* Fix an issue when determining if it is supposed to be nested `json` @kddejong (pull #[3050](https://github.com/aws-cloudformation/cfn-lint/pull/3050))
+* Fix an issue where Resource `Type` validation was happening twice @kddejong (pull #[3050](https://github.com/aws-cloudformation/cfn-lint/pull/3050))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.4.a1...v1.2.5.a1
+
 ### v1.2.4a1
 ###### Features
 * Switch from `awsType` to `cfnLint` @kddejong
