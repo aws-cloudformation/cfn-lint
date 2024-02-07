@@ -92,7 +92,9 @@ class Properties(BaseJsonSchema):
                 if schema.json_schema:
                     if not schema.is_cached and region != REGION_PRIMARY:
                         region_validator = validator.evolve(
-                            context=validator.context.evolve(regions=[region])
+                            context=validator.context.evolve(
+                                regions=[region], path="Properties"
+                            )
                         )
                         for err in self._validate(
                             region_validator, t, properties, schema.json_schema
@@ -107,7 +109,9 @@ class Properties(BaseJsonSchema):
 
         if cached_regions:
             region_validator = validator.evolve(
-                context=validator.context.evolve(regions=cached_regions)
+                context=validator.context.evolve(
+                    regions=cached_regions, path="Properties"
+                )
             )
             for err in self._validate(
                 region_validator, t, properties, schema.json_schema

@@ -5,16 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 import pathlib
 
-import regex as re
-
 from cfnlint.helpers import load_plugins
 from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
-
-_pattern = re.compile(r"[\W_]+")
+from cfnlint.rules import CloudFormationLintRule
 
 
-class CfnLint(BaseJsonSchema):
+class CfnLint(CloudFormationLintRule):
     id = "E1101"
     shortdesc = "Validate an item against additional checks"
     description = "Use supplemental logic to validate properties against"
