@@ -52,8 +52,8 @@ class TestBaseJsonSchema(TestCase):
             "type": "string",
             "enum": ["foo"],
         }
-        validator = self.rule.setup_validator(
-            validator=StandardValidator,
+        validator = self.rule.extend_validator(
+            validator=StandardValidator({}),
             schema=schema,
             context=Context(),
         )
@@ -66,8 +66,8 @@ class TestBaseJsonSchema(TestCase):
             "pattern": "foo",
         }
         self.rule.child_rules["E3004"] = PatternRule()
-        validator = self.rule.setup_validator(
-            validator=StandardValidator,
+        validator = self.rule.extend_validator(
+            validator=StandardValidator({}),
             schema=schema,
             context=Context(),
         )
@@ -86,8 +86,8 @@ class TestBaseJsonSchema(TestCase):
             "enum": ["foo"],
         }
         self.rule.child_rules["E3003"] = EnumRule()
-        validator = self.rule.setup_validator(
-            validator=StandardValidator,
+        validator = self.rule.extend_validator(
+            validator=StandardValidator({}),
             schema=schema,
             context=Context(),
         )
