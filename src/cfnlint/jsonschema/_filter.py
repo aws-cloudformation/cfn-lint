@@ -66,9 +66,9 @@ class FunctionFilter:
         # Adding these items to the schema
         # will allow us to continue to check the nested elements
         if "cfnLint" not in standard_schema:
-            if (
-                "object" in ensure_list(standard_schema.get("type", []))
-                and "properties" not in standard_schema
+            if "object" in ensure_list(standard_schema.get("type", [])) and not any(
+                p not in standard_schema
+                for p in ["properties", "additionalProperties", "patternProperties"]
             ):
                 standard_schema["patternProperties"] = {
                     ".*": {"type": _all_types},
