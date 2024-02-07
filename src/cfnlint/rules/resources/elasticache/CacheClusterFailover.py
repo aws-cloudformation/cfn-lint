@@ -4,10 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.helpers import bool_compare
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import RuleMatch
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class CacheClusterFailover(CloudFormationLintRule):
+class CacheClusterFailover(CfnLintKeyword):
     """Check automatic failover on a cache cluster"""
 
     id = "E3026"
@@ -21,7 +22,11 @@ class CacheClusterFailover(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(
+            keywords=[
+                "AWS::ElastiCache::ReplicationGroup/Properties/CacheParameterGroupName"
+            ]
+        )
         self.resource_property_types.append("AWS::ElastiCache::ReplicationGroup")
 
     def is_cluster_enabled(self, properties):
@@ -145,21 +150,21 @@ class CacheClusterFailover(CloudFormationLintRule):
             )
         return results
 
+    def _check_ref(self, value, path, **kwargs):
+        cfn = kwargs["cfn"]
+        properties = kwargs["properties"]
+        if value in cfn.get_resources():
+            return self.test_cluster_settings(properties, path, value, path, cfn)
+        return []
+
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
-        matches = []
 
-        parameter_groups = properties.get_safe("CacheParameterGroupName", "", path)
-        for parameter_group in parameter_groups:
-            pg_value = parameter_group[0]
-            pg_path = parameter_group[1]
-            if isinstance(pg_value, dict):
-                for pg_key, pg_resource in pg_value.items():
-                    if pg_key == "Ref" and pg_resource in cfn.get_resources():
-                        matches.extend(
-                            self.test_cluster_settings(
-                                properties, path, pg_resource, pg_path, cfn
-                            )
-                        )
-
-        return matches
+        return cfn.check_value(
+            properties,
+            "CacheParameterGroupName",
+            path,
+            check_ref=self._check_ref,
+            properties=properties,
+            cfn=cfn,
+        )

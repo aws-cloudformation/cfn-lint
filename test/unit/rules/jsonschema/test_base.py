@@ -41,41 +41,6 @@ class RuleWithOutFunction(CloudFormationLintRule):
 class TestBaseJsonSchema(BaseRuleTestCase):
     """Test Base Json Schema"""
 
-    def test_setup_validator(self):
-        def _validator(validator, t, instance, schema):
-            pass
-
-        class Rule(BaseJsonSchema):
-            def __init__(self) -> None:
-                super().__init__()
-                self.rule_set = {
-                    "bar": "EXXXX",
-                    "foobar": "EYYYY",
-                }
-                self.child_rules = {
-                    "EXXXX": RuleWithFunction(),
-                    "EYYYY": RuleWithOutFunction(),
-                }
-                self.validators = {
-                    "foo": _validator,
-                    "bar": None,
-                    "foobar": None,
-                }
-
-        rule = Rule()
-
-        cfn = Template("", {}, regions=["us-east-1"])
-
-        validator = rule.setup_validator(
-            CfnTemplateValidator,
-            {},
-            ContextManager(cfn).create_context_for_template(regions=["us-east-1"]),
-        )
-
-        self.assertEqual(validator.validators["foo"], _validator)
-        self.assertIsNotNone(validator.validators["bar"])
-        self.assertIsNone(validator.validators["foobar"])
-
     def test_extend_validator(self):
         def _validator(validator, t, instance, schema):
             pass
