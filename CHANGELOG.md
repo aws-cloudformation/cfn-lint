@@ -1,3 +1,12 @@
+### v1.2.4a1
+###### Features
+* Switch from `awsType` to `cfnLint` @kddejong
+* Update rule to [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3037) for json schema based validation @kddejong
+* Update rule [E3025](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3025) to validate RDS instance class by license @kddejong
+* Remove need for `sub_node`
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.3.a1...v1.2.4.a1
+
 ### v1.2.3a1
 ###### Features
 - Add rule [E3019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3019) to validate primaryIdentifiers are unique (pull #[3023](https://github.com/aws-cloudformation/cfn-lint/pull/3023))
