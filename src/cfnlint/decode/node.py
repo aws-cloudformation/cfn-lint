@@ -6,21 +6,12 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from collections import namedtuple
 from copy import deepcopy
-from typing import Protocol
 
 from cfnlint.decode.exceptions import TemplateAttributeError
+from cfnlint.decode.mark import Mark
 
 LOGGER = logging.getLogger(__name__)
-
-
-class Mark(Protocol):
-    line: int
-    column: int
-
-
-_mark = namedtuple("_mark", ["line", "column"])
 
 
 def create_str_node_class(cls):
@@ -39,8 +30,8 @@ def create_str_node_class(cls):
             except TypeError:
                 cls.__init__(self)
 
-            self.start_mark = start_mark or _mark(0, 0)
-            self.end_mark = end_mark or _mark(0, 0)
+            self.start_mark = start_mark or Mark()
+            self.end_mark = end_mark or Mark()
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
@@ -77,9 +68,8 @@ def create_dict_node_class(cls):
                 cls.__init__(self, x)
             except TypeError:
                 cls.__init__(self)
-            self.start_mark = start_mark or _mark(0, 0)
-            self.end_mark = end_mark or _mark(0, 0)
-            self.condition_functions = ["Fn::If"]
+            self.start_mark = start_mark or Mark()
+            self.end_mark = end_mark or Mark()
 
         def __deepcopy__(self, memo):
             result = dict_node(self, self.start_mark, self.end_mark)
@@ -99,77 +89,6 @@ def create_dict_node_class(cls):
             if isinstance(default, dict):
                 default = dict_node(default, self.start_mark, self.end_mark)
             return super().get(key, default)
-
-        def get_safe(self, key, default=None, path=None, type_t=()):
-            """
-            Get values in format
-            """
-            path = path or []
-
-            if default == {}:
-                default = dict_node({}, self.start_mark, self.end_mark)
-            value = self.get(key, default)
-            if value is None and default is None:
-                # if default is None and value is None return empty list
-                return []
-
-            # if the value is the default make sure that the default
-            # value is of type_t when specified
-            if bool(type_t) and value == default and not isinstance(default, type_t):
-                raise ValueError('"default" type should be of "type_t"')
-
-            # when not a dict see if if the value is of the right type
-            results = []
-            if not isinstance(value, (dict)):
-                if isinstance(value, type_t) or not type_t:
-                    return [(value, (path[:] + [key]))]
-            else:
-                for sub_v, sub_path in value.items_safe(path + [key]):
-                    if isinstance(sub_v, type_t) or not type_t:
-                        results.append((sub_v, sub_path))
-
-            return results
-
-        def clean(self):
-            """Clean object to remove any Ref AWS::NoValue"""
-            result = dict_node({}, self.start_mark, self.end_mark)
-            for k, v in self.items():
-                if isinstance(v, dict) and len(v) == 1:
-                    if v.get("Ref") == "AWS::NoValue":
-                        continue
-                result[k] = v
-            return result
-
-        def items_safe(self, path=None, type_t=()):
-            """Get items while handling IFs"""
-            path = path or []
-            if len(self) == 1:
-                for k, v in self.items():
-                    if k == "Fn::If":
-                        if isinstance(v, list):
-                            if len(v) == 3:
-                                for i, if_v in enumerate(v[1:]):
-                                    if isinstance(if_v, dict):
-                                        # yield from
-                                        # if_v.items_safe(path[:] + [k, i - 1])
-                                        # Python 2.7 support
-                                        for items, p in if_v.items_safe(
-                                            path[:] + [k, i + 1]
-                                        ):
-                                            if isinstance(items, type_t) or not type_t:
-                                                yield items, p
-                                    elif isinstance(if_v, list):
-                                        if isinstance(if_v, type_t) or not type_t:
-                                            yield if_v, path[:] + [k, i + 1]
-                                    else:
-                                        if isinstance(if_v, type_t) or not type_t:
-                                            yield if_v, path[:] + [k, i + 1]
-                    elif not (k == "Ref" and v == "AWS::NoValue"):
-                        if isinstance(self, type_t) or not type_t:
-                            yield self.clean(), path[:]
-            else:
-                if isinstance(self, type_t) or not type_t:
-                    yield self.clean(), path[:]
 
         def __getattr__(self, name):
             raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
@@ -208,9 +127,8 @@ def create_dict_list_class(cls):
                 cls.__init__(self, x)
             except TypeError:
                 cls.__init__(self)
-            self.start_mark = start_mark or _mark(0, 0)
-            self.end_mark = end_mark or _mark(0, 0)
-            self.condition_functions = ["Fn::If"]
+            self.start_mark = start_mark or Mark()
+            self.end_mark = end_mark or Mark()
 
         def __deepcopy__(self, memo):
             result = list_node([], self.start_mark, self.end_mark)
@@ -236,7 +154,7 @@ list_node = create_dict_list_class(list)
 intrinsic_node = create_intrinsic_node_class(dict_node)
 
 
-def convert_dict(template, start_mark=(0, 0), end_mark=(0, 0)):
+def convert_dict(template, start_mark=Mark(), end_mark=Mark()):
     """Convert dict to template"""
     if isinstance(template, dict):
         if not isinstance(template, dict_node):
