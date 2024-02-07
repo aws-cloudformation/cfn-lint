@@ -140,8 +140,8 @@ class TestJsonSchema(BaseRuleTestCase):
 def build_node(instance: str | dict, loc: str, type=str_node):
     return type(
         instance,
-        Mark(f"{loc}-sm-line", f"{loc}-sm-column"),
-        Mark(f"{loc}-em-line", f"{loc}-em-column"),
+        Mark(f"{loc}-sm-line", f"{loc}-sm-column"),  # type: ignore
+        Mark(f"{loc}-em-line", f"{loc}-em-column"),  # type: ignore
     )
 
 

@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.decode.node import list_node
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -27,24 +26,27 @@ class AttributeMismatch(CloudFormationLintRule):
         """Get Key Schema attributes"""
         keys = set()
 
-        for properties, _ in key_schemas_sets:
-            for key in properties:
-                attribute_name = key.get_safe("AttributeName", type_t=str)
-                if attribute_name:
-                    keys.add(key.get("AttributeName"))
+        if not isinstance(key_schemas_sets, list):
+            return keys
+
+        for properties in key_schemas_sets:
+            attribute_name = properties.get("AttributeName")
+            if not isinstance(attribute_name, str):
+                continue
+            keys.add(attribute_name)
         return keys
 
     def _get_attribute_secondary(self, property_sets):
         """Get the key schemas from secondary indexes"""
         keys = set()
 
-        for properties, _ in property_sets:
-            for index in properties:
-                keys = keys.union(
-                    self._get_key_schema_attributes(
-                        index.get_safe("KeySchema", list_node([], None, None), [], list)
-                    )
-                )
+        if not isinstance(property_sets, list):
+            return keys
+
+        for properties in property_sets:
+            keys = keys.union(
+                self._get_key_schema_attributes(properties.get("KeySchema", []))
+            )
 
         return keys
 
@@ -64,23 +66,13 @@ class AttributeMismatch(CloudFormationLintRule):
                 self.logger.info("attribute definitions is not using just strings")
                 return matches
         keys = keys.union(
-            self._get_key_schema_attributes(
-                properties.get_safe("KeySchema", list_node([], None, None), [], list)
-            )
+            self._get_key_schema_attributes(properties.get("KeySchema", []))
         )
         keys = keys.union(
-            self._get_attribute_secondary(
-                properties.get_safe(
-                    "GlobalSecondaryIndexes", list_node([], None, None), path, list
-                )
-            )
+            self._get_attribute_secondary(properties.get("GlobalSecondaryIndexes", []))
         )
         keys = keys.union(
-            self._get_attribute_secondary(
-                properties.get_safe(
-                    "LocalSecondaryIndexes", list_node([], None, None), path, list
-                )
-            )
+            self._get_attribute_secondary(properties.get("LocalSecondaryIndexes", []))
         )
 
         if attributes != keys:
