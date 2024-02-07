@@ -536,7 +536,7 @@ def load_plugins(
         raise os_error
 
     for root, _, filenames in os.walk(directory, onerror=onerror):
-        for filename in fnmatch.filter(filenames, "[A-Za-z]*.py"):
+        for filename in fnmatch.filter(filenames, "[A-Za-z1-9]*.py"):
             mod = import_filename(filename.replace(".py", ""), root)
             if mod is not None:
                 result.extend(create_rules(mod, name, modules))
