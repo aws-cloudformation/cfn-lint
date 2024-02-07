@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import logging
-from typing import Any, Dict, Type
+from typing import Any, Dict
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import Validator
@@ -82,7 +82,6 @@ class BaseJsonSchema(CloudFormationLintRule):
                     err.rule = self
             yield err
 
-    ### ToDo cache this and make it @property
     def _get_validators(self) -> Dict[str, V]:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
@@ -97,14 +96,6 @@ class BaseJsonSchema(CloudFormationLintRule):
     def extend_validator(
         self, validator: Validator, schema: Any, context: Context
     ) -> Validator:
-        return validator.extend(validators=self._get_validators(), context=context)(
+        return validator.extend(validators=self._get_validators())(
             schema=schema
-        ).evolve(cfn=validator.cfn)
-
-    # ToDo Remove this we are only using this once
-    def setup_validator(
-        self, validator: Type[Validator], schema: Any, context: Context
-    ) -> Validator:
-        return validator({}).extend(validators=self._get_validators(), context=context)(
-            schema=schema
-        )
+        ).evolve(cfn=validator.cfn, context=context)
