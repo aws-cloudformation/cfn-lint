@@ -1,29 +1,21 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Ipv6CidrBlock"
+ ],
  "createOnlyProperties": [
-  "/properties/Ipv6Native",
-  "/properties/OutpostArn",
-  "/properties/AvailabilityZoneId",
   "/properties/VpcId",
   "/properties/AvailabilityZone",
-  "/properties/CidrBlock"
+  "/properties/AvailabilityZoneId",
+  "/properties/CidrBlock",
+  "/properties/OutpostArn",
+  "/properties/Ipv6Native",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
  ],
  "definitions": {
-  "PrivateDnsNameOptionsOnLaunch": {
-   "additionalProperties": false,
-   "properties": {
-    "EnableResourceNameDnsAAAARecord": {
-     "type": "boolean"
-    },
-    "EnableResourceNameDnsARecord": {
-     "type": "boolean"
-    },
-    "HostnameType": {
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -42,8 +34,46 @@
   }
  },
  "description": "Resource Type definition for AWS::EC2::Subnet",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeSubnets",
+    "ec2:CreateSubnet",
+    "ec2:CreateTags",
+    "ec2:ModifySubnetAttribute"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeSubnets",
+    "ec2:DeleteSubnet"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeSubnets",
+    "ec2:DescribeNetworkAcls"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeSubnets",
+    "ec2:DescribeNetworkAcls"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeSubnets",
+    "ec2:ModifySubnetAttribute",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:AssociateSubnetCidrBlock",
+    "ec2:DisassociateSubnetCidrBlock"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/SubnetId"
  ],
  "properties": {
   "AssignIpv6AddressOnCreation": {
@@ -64,8 +94,13 @@
   "EnableDns64": {
    "type": "boolean"
   },
-  "Id": {
+  "Ipv4IpamPoolId": {
+   "description": "The ID of an IPv4 IPAM pool you want to use for allocating this subnet's CIDR",
    "type": "string"
+  },
+  "Ipv4NetmaskLength": {
+   "description": "The netmask length of the IPv4 CIDR you want to allocate to this subnet from an Amazon VPC IP Address Manager (IPAM) pool",
+   "type": "integer"
   },
   "Ipv6CidrBlock": {
    "type": "string"
@@ -77,20 +112,45 @@
    "type": "array",
    "uniqueItems": false
   },
+  "Ipv6IpamPoolId": {
+   "description": "The ID of an IPv6 IPAM pool you want to use for allocating this subnet's CIDR",
+   "type": "string"
+  },
   "Ipv6Native": {
    "type": "boolean"
+  },
+  "Ipv6NetmaskLength": {
+   "description": "The netmask length of the IPv6 CIDR you want to allocate to this subnet from an Amazon VPC IP Address Manager (IPAM) pool",
+   "type": "integer"
   },
   "MapPublicIpOnLaunch": {
    "type": "boolean"
   },
   "NetworkAclAssociationId": {
+   "description": "The ID of the network ACL that is associated with the subnet's VPC",
    "type": "string"
   },
   "OutpostArn": {
    "type": "string"
   },
   "PrivateDnsNameOptionsOnLaunch": {
-   "$ref": "#/definitions/PrivateDnsNameOptionsOnLaunch"
+   "additionalProperties": false,
+   "properties": {
+    "EnableResourceNameDnsAAAARecord": {
+     "type": "boolean"
+    },
+    "EnableResourceNameDnsARecord": {
+     "type": "boolean"
+    },
+    "HostnameType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet",
+   "type": "string"
   },
   "Tags": {
    "items": {
@@ -105,12 +165,23 @@
  },
  "readOnlyProperties": [
   "/properties/NetworkAclAssociationId",
-  "/properties/Id",
-  "/properties/Ipv6CidrBlocks"
+  "/properties/SubnetId"
  ],
  "required": [
-  "VpcId",
-  "CidrBlock"
+  "VpcId"
  ],
- "typeName": "AWS::EC2::Subnet"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::Subnet",
+ "writeOnlyProperties": [
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ]
 }

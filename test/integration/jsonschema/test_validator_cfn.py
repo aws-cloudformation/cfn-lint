@@ -98,8 +98,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
             .get("Properties", {})
         )
 
-        context = cfn.context.create_context_for_template(["us-east-1"])
-        context.functions = FUNCTIONS
+        context = cfn.context.evolve(functions=FUNCTIONS)
         validator = CfnTemplateValidator(schema=schema, cfn=cfn, context=context)
         errs = list(validator.iter_errors(props))
 
