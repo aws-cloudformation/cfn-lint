@@ -3,27 +3,68 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.conditions.Exists import Exists  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import create_context_for_template
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.conditions.Exists import Exists
+from cfnlint.template import Template
 
 
-class TestExistsConditions(BaseRuleTestCase):
-    """Test if the referenced Conditions are defined"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = Exists()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestExistsConditions, self).setUp()
-        self.collection.register(Exists())
 
-    success_templates = [
-        "test/fixtures/templates/good/generic.yaml",
-    ]
+@pytest.fixture(scope="module")
+def validator():
+    cfn = Template(
+        "",
+        {
+            "Conditions": {
+                "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
+            },
+            "Resources": {
+                "MyRdsDbInstance": {
+                    "Type": "AWS::RDS::DBInstance",
+                }
+            },
+        },
+    )
+    context = (
+        create_context_for_template(cfn)
+        .evolve(
+            functions=[],
+            path="Resources",
+        )
+        .evolve(path="MyRdsDbInstance")
+        .evolve(path="Properties")
+    )
+    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/conditions.yaml", 2)
+@pytest.mark.parametrize(
+    "name,instance,errors",
+    [
+        ("Valid with string", "IsUsEast1", []),
+        ("No response when an incorrect  type", {}, []),
+        (
+            "Invalid with a condition that doesn't exist",
+            "IsUsWest2",
+            [
+                ValidationError(
+                    "'IsUsWest2' is not one of ['IsUsEast1']",
+                    rule=Exists(),
+                    validator="enum",
+                    schema_path=deque(["enum"]),
+                )
+            ],
+        ),
+    ],
+)
+def test_condition(name, instance, errors, rule, validator):
+    errs = list(rule.cfncondition(validator, {}, instance, {}))
+    assert errs == errors
