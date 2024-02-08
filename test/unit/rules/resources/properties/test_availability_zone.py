@@ -18,7 +18,8 @@ class TestPropertyAvailabilityZone(BaseRuleTestCase):
         super(TestPropertyAvailabilityZone, self).setUp()
         self.collection.register(AvailabilityZone())
         self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/az.yaml"
+            "test/fixtures/templates/good/resources/properties/az.yaml",
+            "test/fixtures/templates/good/resources/properties/az_cdk.yaml",
         ]
 
     def test_file_positive(self):
