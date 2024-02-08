@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectionName",
+  "/properties/ProviderType",
+  "/properties/HostArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Schema for AWS::CodeStarConnections::Connection resource which can be used to connect external source providers with AWS CodePipeline",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codestar-connections:CreateConnection",
+    "codestar-connections:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codestar-connections:DeleteConnection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codestar-connections:ListConnections",
+    "codestar-connections:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codestar-connections:GetConnection",
+    "codestar-connections:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codestar-connections:ListTagsForResource",
+    "codestar-connections:TagResource",
+    "codestar-connections:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectionArn"
+ ],
+ "properties": {
+  "ConnectionArn": {
+   "description": "The Amazon Resource Name (ARN) of the  connection. The ARN is used as the connection reference when the connection is shared between AWS services.",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "arn:aws(-[\\w]+)*:.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "ConnectionName": {
+   "description": "The name of the connection. Connection names must be unique in an AWS user account.",
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConnectionStatus": {
+   "description": "The current status of the connection.",
+   "type": "string"
+  },
+  "HostArn": {
+   "description": "The host arn configured to represent the infrastructure where your third-party provider is installed. You must specify either a ProviderType or a HostArn.",
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "arn:aws(-[\\w]+)*:.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "description": "The name of the external provider where your third-party code repository is configured. For Bitbucket, this is the account ID of the owner of the Bitbucket repository.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "ProviderType": {
+   "description": "The name of the external provider where your third-party code repository is configured. You must specify either a ProviderType or a HostArn.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Specifies the tags applied to a connection.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionArn",
+  "/properties/ConnectionStatus",
+  "/properties/OwnerAccountId"
+ ],
+ "required": [
+  "ConnectionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeStarConnections::Connection"
+}
