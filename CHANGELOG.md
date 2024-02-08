@@ -1,3 +1,9 @@
+### v0.85.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `158.0.0` (pull #[3039](https://github.com/aws-cloudformation/cfn-lint/pull/3039))
+###### Fixes
+- Fix an issue with using SAM and a GetAtt (pull #[3042](https://github.com/aws-cloudformation/cfn-lint/pull/3042))
+
 ### v0.85.0
 ###### Feature
 - Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3027) to validate rate periods (pull #[3017](https://github.com/aws-cloudformation/cfn-lint/pull/3017))
