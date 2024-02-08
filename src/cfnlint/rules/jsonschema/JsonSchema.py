@@ -67,7 +67,7 @@ class JsonSchema(BaseJsonSchema):
         cfn_validator = self.extend_validator(
             validator=CfnTemplateValidator({}).evolve(cfn=cfn),
             schema=self.schema,
-            context=cfn.context.create_context_for_template(cfn.regions),
+            context=cfn.context,
         )
 
         matches.extend(self.json_schema_validate(cfn_validator, cfn.template, []))
