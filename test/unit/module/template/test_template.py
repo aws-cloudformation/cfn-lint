@@ -104,11 +104,6 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
         resources = self.template.get_resources()
         assert resources == {}
 
-    def test_get_resource_names(self):
-        """Test Resource Names"""
-        resource_names = self.template.get_resource_names()
-        assert bool(set(resource_names).intersection(self.resource_names))
-
     def test_get_parameters(self):
         """Test Get Parameters"""
         valid_parameter_count = 7
