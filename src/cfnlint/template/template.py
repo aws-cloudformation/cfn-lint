@@ -13,7 +13,7 @@ import regex as re
 
 import cfnlint.conditions
 import cfnlint.helpers
-from cfnlint.context import ContextManager
+from cfnlint.context import create_context_for_template
 from cfnlint.decode.node import dict_node, list_node
 from cfnlint.graph import Graph
 from cfnlint.match import Match
@@ -69,7 +69,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         except Exception as err:  # pylint: disable=broad-except
             LOGGER.info("Encountered unknown error while building graph: %s", err)
 
-        self.context = ContextManager(self)
+        self.context = create_context_for_template(self)
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -220,16 +220,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             return {}
 
         return mappings
-
-    def get_resource_names(self):
-        LOGGER.debug("Get the names of all resources from template...")
-        results = []
-        resources = self.template.get("Resources", {})
-        if isinstance(resources, dict):
-            for resourcename, _ in resources.items():
-                results.append(resourcename)
-
-        return results
 
     def get_parameter_names(self):
         LOGGER.debug("Get names of all parameters from template...")
