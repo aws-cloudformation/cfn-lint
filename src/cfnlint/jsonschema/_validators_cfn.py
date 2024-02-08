@@ -648,6 +648,45 @@ class FnIf(_Fn):
             ],
         }
 
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        # validate this function will return the correct type
+        errs = list(_validate_fn_output_types(validator, s, instance, self.types))
+
+        key, value = self._key_value(instance)
+        errs.extend(
+            list(
+                self._fix_errors(
+                    self._validator(validator).descend(
+                        value, self.schema(validator, instance), path=key
+                    )
+                )
+            )
+        )
+
+        if errs:
+            yield from iter(errs)
+            return
+
+        found_errs = False
+        for err in validator.descend(value[0], {"awsType": "CfnCondition"}, 0):
+            err.path.appendleft(key)
+            yield err
+            found_errs = True
+
+        for err in validator.descend(value[1], s, 1):
+            err.path.appendleft(key)
+            yield err
+            found_errs = True
+        for err in validator.descend(value[2], s, 2):
+            err.path.appendleft(key)
+            yield err
+            found_errs = True
+
+        if not found_errs:
+            yield from self.resolve(validator, s, instance, schema)
+
     def resolve(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -1107,7 +1146,7 @@ class Condition(_Fn):
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
             "type": "string",
-            "enum": validator.context.conditions,
+            "awsType": "CfnCondition",
         }
 
 

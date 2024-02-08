@@ -8,7 +8,7 @@ from __future__ import annotations
 from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.context import ContextManager
+from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
@@ -70,7 +70,7 @@ class TestBaseJsonSchema(BaseRuleTestCase):
         validator = rule.extend_validator(
             validator,
             {},
-            ContextManager(cfn).create_context_for_template(regions=["us-east-1"]),
+            create_context_for_template(cfn),
         )
 
         self.assertEqual(validator.validators["foo"], _validator)
