@@ -1,1 +1,1 @@
-from cfnlint.context.context import Context, ContextManager
+from cfnlint.context.context import Context, create_context_for_template
