@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any
+
+from cfnlint.jsonschema import Validator
+from cfnlint.rules import CloudFormationLintRule
 
 
 class Exists(CloudFormationLintRule):
@@ -17,46 +20,11 @@ class Exists(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html"
     tags = ["conditions"]
 
-    def match(self, cfn):
-        matches = []
-        ref_conditions = {}
-
-        # Get all defined conditions
-        conditions = cfn.template.get("Conditions", {})
-
-        # Get all "If's" that reference a Condition
-        iftrees = cfn.search_deep_keys("Fn::If")
-        for iftree in iftrees:
-            if isinstance(iftree[-1], list):
-                if isinstance(iftree[-1][0], str):
-                    ref_conditions[iftree[-1][0]] = iftree
-
-        # Get resource's Conditions
-        for resource_name, resource_values in cfn.get_resources().items():
-            condition = resource_values.get("Condition")
-            if isinstance(condition, str):  # make sure its a string
-                path = ["Resources", resource_name, "Condition"]
-                ref_conditions[condition] = path
-
-        # Get conditions used by another condition
-        condtrees = cfn.search_deep_keys("Condition")
-
-        for condtree in condtrees:
-            if condtree[0] == "Conditions":
-                if isinstance(condtree[-1], (str)):
-                    path = ["Conditions", condtree[-1]]
-                    ref_conditions[condtree[-1]] = path
-
-        # Get Output Conditions
-        for _, output_values in cfn.get_outputs_valid().items():
-            if "Condition" in output_values:
-                path = ["Outputs", output_values["Condition"]]
-                ref_conditions[output_values["Condition"]] = path
-
-        # Check if all the conditions are defined
-        for ref_condition, ref_path in ref_conditions.items():
-            if ref_condition not in conditions:
-                message = "Condition {0} is not defined."
-                matches.append(RuleMatch(ref_path, message.format(ref_condition)))
-
-        return matches
+    def cfncondition(self, validator: Validator, conditions, instance: Any, schema):
+        if not validator.is_type(instance, "string"):
+            return
+        for err in validator.descend(
+            instance, {"enum": list(validator.context.conditions.keys())}
+        ):
+            err.rule = self
+            yield err

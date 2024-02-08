@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import ContextManager
+from cfnlint.context import create_context_for_template
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (  # noqa: E501
@@ -34,11 +34,12 @@ def validator():
             }
         },
     )
-    context_manager = ContextManager(cfn)
-    context = context_manager.create_context_for_template(["us-east-1"]).evolve(
-        functions=FUNCTIONS
+    context = (
+        create_context_for_template(cfn)
+        .evolve(functions=FUNCTIONS, path="Resources")
+        .evolve(path="MySqs")
+        .evolve(path="Properties")
     )
-    context.path = deque(["Resources", "MySqs", "Properties"])
     yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
 
