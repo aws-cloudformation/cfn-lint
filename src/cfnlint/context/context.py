@@ -38,7 +38,7 @@ class Transforms:
         return bool(lang_extensions_transform in self._transforms)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Context:
     """
     A `Context` keeps track of the current context that we are evaluating against
@@ -331,96 +331,97 @@ class Map:
         yield self.keys[top_key].value(secondary_key)
 
 
-@dataclass
-class ContextManager:
-    cfn: InitVar[Any]
-    parameters: Dict[str, Parameter] = field(init=False)
-    resources: Dict[str, Resource] = field(init=False)
-    transforms: Transforms = field(init=False)
-    conditions: Dict[str, Condition] = field(init=False)
-    mappings: Dict[str, Map] = field(init=False)
-
-    def __post_init__(self, cfn: Any) -> None:
-        self.parameters = {}
-        self.resources = {}
-        self.conditions = {}
-        self.mappings = {}
-
+def _init_parameters(parameters: Any) -> dict[str, Parameter]:
+    obj = {}
+    if not isinstance(parameters, dict):
+        raise ValueError("Parameters must be a object")
+    for k, v in parameters.items():
         try:
-            self._init_parameters(cfn.template.get("Parameters", {}))
-        except (ValueError, AttributeError):
-            pass
-        try:
-            self._init_resources(cfn.template.get("Resources", {}))
-        except (ValueError, AttributeError):
-            pass
-        self._init_transforms(cfn.template.get("Transform", []))
-        try:
-            self._init_conditions(cfn.template.get("Conditions", {}))
-        except (ValueError, AttributeError):
-            pass
-        try:
-            self._init_mappings(cfn.template.get("Mappings", {}))
-        except (ValueError, AttributeError):
+            obj[k] = Parameter(v)
+        except ValueError:
             pass
 
-    def _init_parameters(self, parameters: Any) -> None:
-        if not isinstance(parameters, dict):
-            raise ValueError("Parameters must be a object")
-        for k, v in parameters.items():
-            try:
-                self.parameters[k] = Parameter(v)
-            except ValueError:
-                pass
+    return obj
 
-    def _init_resources(self, resources: Any) -> None:
-        if not isinstance(resources, dict):
-            raise ValueError("Resource must be a object")
-        for k, v in resources.items():
-            try:
-                self.resources[k] = Resource(v)
-            except ValueError:
-                pass
 
-    def _init_transforms(self, transforms: Any) -> None:
-        if isinstance(transforms, (str, list)):
-            self.transforms = Transforms(transforms)
-            return
-        self.transforms = Transforms([])
+def _init_resources(resources: Any) -> dict[str, Resource]:
+    obj = {}
+    if not isinstance(resources, dict):
+        raise ValueError("Resource must be a object")
+    for k, v in resources.items():
+        try:
+            obj[k] = Resource(v)
+        except ValueError:
+            pass
+    return obj
 
-    def _init_conditions(self, conditions: Any) -> None:
-        if not isinstance(conditions, dict):
-            raise ValueError("Conditions must be a object")
-        for k, v in conditions.items():
-            try:
-                self.conditions[k] = Condition(v)
-            except ValueError:
-                pass
 
-    def _init_mappings(self, mappings: Any) -> None:
-        if not isinstance(mappings, dict):
-            raise ValueError("Mappings must be a object")
-        for k, v in mappings.items():
-            try:
-                self.mappings[k] = Map(v)
-            except ValueError:
-                pass
+def _init_transforms(transforms: Any) -> Transforms:
+    if isinstance(transforms, (str, list)):
+        return Transforms(transforms)
+    return Transforms([])
 
-    collection: Dict | List[str | Dict] = field(init=False)
-    output: Dict[str, Any] = field(init=False)
 
-    def create_context_for_template(self, regions: Sequence[str]) -> Context:
-        """
-        Create a context for a resource properties
-        """
+def _init_conditions(conditions: Any) -> dict[str, Condition]:
+    obj = {}
+    if not isinstance(conditions, dict):
+        raise ValueError("Conditions must be a object")
+    for k, v in conditions.items():
+        try:
+            obj[k] = Condition(v)
+        except ValueError:
+            pass
 
-        return Context(
-            parameters=self.parameters,
-            resources=self.resources,
-            conditions=self.conditions,
-            transforms=self.transforms,
-            mappings=self.mappings,
-            regions=regions,
-            path=deque([]),
-            functions=["Fn::Transform"],
-        )
+    return obj
+
+
+def _init_mappings(mappings: Any) -> dict[str, Map]:
+    obj = {}
+    if not isinstance(mappings, dict):
+        raise ValueError("Mappings must be a object")
+    for k, v in mappings.items():
+        try:
+            obj[k] = Map(v)
+        except ValueError:
+            pass
+
+    return obj
+
+
+def create_context_for_template(cfn):
+    parameters = {}
+    try:
+        parameters = _init_parameters(cfn.template.get("Parameters", {}))
+    except (ValueError, AttributeError):
+        pass
+
+    resources = {}
+    try:
+        resources = _init_resources(cfn.template.get("Resources", {}))
+    except (ValueError, AttributeError):
+        pass
+
+    transforms = _init_transforms(cfn.template.get("Transform", []))
+
+    conditions = {}
+    try:
+        conditions = _init_conditions(cfn.template.get("Conditions", {}))
+    except (ValueError, AttributeError):
+        pass
+
+    mappings = {}
+    try:
+        mappings = _init_mappings(cfn.template.get("Mappings", {}))
+    except (ValueError, AttributeError):
+        pass
+
+    return Context(
+        parameters=parameters,
+        resources=resources,
+        conditions=conditions,
+        transforms=transforms,
+        mappings=mappings,
+        regions=cfn.regions,
+        path=deque([]),
+        functions=["Fn::Transform"],
+    )
