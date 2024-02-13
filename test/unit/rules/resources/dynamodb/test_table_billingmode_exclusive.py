@@ -46,9 +46,9 @@ def validator():
                 ValidationError(
                     "Additional properties are not allowed ('ProvisionedThroughput'}",
                     rule=TableBillingModeExclusive(),
-                    path=deque([]),
-                    validator="not",
-                    schema_path=deque(["then", "not"]),
+                    path=deque(["ProvisionedThroughput"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "ProvisionedThroughput"]),
                 )
             ],
         ),

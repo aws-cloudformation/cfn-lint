@@ -3,11 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from typing import Any, Dict
+
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.languageExtensions import LanguageExtensions
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
-class ToJsonString(CloudFormationLintRule):
+class ToJsonString(BaseFn):
     """Check if ToJsonString values are correct"""
 
     id = "E1031"
@@ -15,6 +18,12 @@ class ToJsonString(CloudFormationLintRule):
     description = "Making sure Fn::ToJsonString is configured correctly"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html"
     tags = ["functions", "toJsonString"]
+
+    def __init__(self) -> None:
+        super().__init__(
+            "Fn::ToJsonString",
+            ("string",),
+        )
 
     def match(self, cfn):
         has_language_extensions_transform = cfn.has_language_extensions_transform()
@@ -46,3 +55,23 @@ class ToJsonString(CloudFormationLintRule):
                 intrinsic_function,
             )
         return matches
+
+    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
+        return {
+            "type": ["array", "object"],
+        }
+
+    def fn_tojsonstring(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        if not validator.context.transforms.has_language_extensions_transform():
+            yield ValidationError(
+                (
+                    f"{self.fn.name} is not supported without "
+                    "'AWS::LanguageExtensions' transform"
+                ),
+                validator=self.fn.py,
+            )
+            return
+
+        yield from super().validate(validator, s, instance, schema)
