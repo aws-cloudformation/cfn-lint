@@ -26,7 +26,6 @@ import regex as re
 
 import cfnlint.jsonschema._validators as validators_standard
 from cfnlint.context.context import Parameter
-from cfnlint.data.schemas.other import resources
 from cfnlint.helpers import (
     FUNCTIONS_SINGLE,
     REGEX_DYN_REF,
@@ -35,7 +34,6 @@ from cfnlint.helpers import (
     VALID_PARAMETER_TYPES,
     VALID_PARAMETER_TYPES_LIST,
     ToPy,
-    load_resource,
 )
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
@@ -90,18 +88,6 @@ def _validate_fn_output_types(
         else:
             reprs = ", ".join(repr(type) for type in tS)
             yield ValidationError(f"{instance!r} is not of type {reprs}")
-
-
-def tagging(validator: Validator, t: Any, instance: Any, schema: Any):
-    if not t.get("taggable"):
-        return
-    schema = load_resource(resources, "tagging.json")
-    for err in validator.descend(
-        instance,
-        schema,
-    ):
-        err.validator = "tagging"
-        yield err
 
 
 class _Fn:
@@ -351,7 +337,6 @@ class Ref(_Fn):
             supported_functions = []
         return validator.evolve(
             context=validator.context.evolve(
-                path=self.fn.name,
                 functions=supported_functions,
             ),
         )
@@ -416,7 +401,6 @@ class FnImportValue(_Fn):
     def _validator(self, validator: Validator) -> Validator:
         return validator.evolve(
             context=validator.context.evolve(
-                path=self.fn.name,
                 functions=self.functions,
                 resources={},
             ),
@@ -1214,26 +1198,5 @@ def cfn_type(
 
 cfn_validators: Dict[str, V] = {
     "additionalProperties": additionalProperties,
-    "ref": Ref().validate,
-    "fn_base64": FnBase64().validate,
-    "fn_cidr": FnCidr().validate,
-    "fn_if": FnIf().validate,
-    "fn_findinmap": FnFindInMap().validate,
-    "fn_foreach": FnForEach().validate,
-    "fn_getatt": FnGetAtt().validate,
-    "fn_getazs": FnGetAZs().validate,
-    "fn_importvalue": FnImportValue().validate,
-    "fn_join": FnJoin().validate,
     "fn_items": FnItems().validate,
-    "fn_length": FnLength().validate,
-    "fn_select": FnSelect().validate,
-    "fn_split": FnSplit().validate,
-    "fn_sub": FnSub().validate,
-    "fn_tojsonstring": FnToJsonString().validate,
-    "fn_equals": FnEquals().validate,
-    "fn_or": FnOr().validate,
-    "fn_and": FnAnd().validate,
-    "fn_not": FnNot().validate,
-    "condition": Condition().validate,
-    "tagging": tagging,
 }
