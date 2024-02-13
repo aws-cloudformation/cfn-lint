@@ -918,6 +918,118 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             ],
         )
 
+    def test_get_object_without_going_to_far(self):
+        # Validate that we don't go too deep in determining conditions to evaluate
+        template = convert_dict(
+            {
+                "Conditions": {
+                    "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                    "IsUsWest2": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+                },
+                "Resources": {
+                    "MyFoo": {
+                        "Type": "MyFoo",
+                        "Properties": {
+                            "Foo": {"Fn::If": ["IsUsEast1", "A", "1"]},
+                            "Bar": {
+                                "FooBar": {
+                                    "Fn::If": [
+                                        "IsUsWest2",
+                                        True,
+                                        False,
+                                    ]
+                                }
+                            },
+                        },
+                    }
+                },
+            }
+        )
+
+        template = Template("test.yaml", template)
+
+        results = template.get_object_without_conditions(
+            template.template.get("Resources").get("MyFoo").get("Properties")
+        )
+
+        self.maxDiff = None
+        # handles IFs for a list
+        self.assertEqual(
+            results,
+            [
+                {
+                    "Scenario": {"IsUsEast1": True},
+                    "Object": {
+                        "Foo": "A",
+                        "Bar": {
+                            "FooBar": {
+                                "Fn::If": [
+                                    "IsUsWest2",
+                                    True,
+                                    False,
+                                ]
+                            }
+                        },
+                    },
+                },
+                {
+                    "Scenario": {"IsUsEast1": False},
+                    "Object": {
+                        "Foo": "1",
+                        "Bar": {
+                            "FooBar": {
+                                "Fn::If": [
+                                    "IsUsWest2",
+                                    True,
+                                    False,
+                                ]
+                            }
+                        },
+                    },
+                },
+            ],
+        )
+
+    def test_get_object_with_root_f(self):
+        # Validate that we don't go too deep in determining conditions to evaluate
+        template = convert_dict(
+            {
+                "Conditions": {
+                    "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                },
+                "Resources": {
+                    "MyFoo": {
+                        "Type": "MyFoo",
+                        "Properties": {
+                            "Fn::If": ["IsUsEast1", {"Foo": "Bar"}, {"Bar": "Foo"}]
+                        },
+                    }
+                },
+            }
+        )
+
+        template = Template("test.yaml", template)
+
+        results = template.get_object_without_conditions(
+            template.template.get("Resources").get("MyFoo").get("Properties")
+        )
+
+        self.maxDiff = None
+        # handles IFs for a list
+        self.assertEqual(
+            results,
+            [
+                {
+                    "Scenario": {"IsUsEast1": True},
+                    "Object": {"Foo": "Bar"},
+                },
+                {
+                    "Scenario": {"IsUsEast1": False},
+                    "Object": {"Bar": "Foo"},
+                },
+            ],
+        )
+
     def test_get_object_without_conditions_for_bad_formats(self):
         """Test Getting condition names in an object/list"""
         template = convert_dict(

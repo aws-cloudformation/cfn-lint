@@ -6,6 +6,8 @@ SPDX-License-Identifier: MIT-0
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.functions.GetAz import GetAz
+from cfnlint.rules.functions.Ref import Ref
 from cfnlint.rules.outputs.Export import Export
 
 
@@ -17,7 +19,12 @@ def rule():
 
 @pytest.fixture(scope="module")
 def validator():
-    yield CfnTemplateValidator(schema={})
+    yield CfnTemplateValidator(schema={}).extend(
+        validators={
+            "fn_getazs": GetAz().fn_getazs,
+            "ref": Ref().ref,
+        }
+    )(schema={})
 
 
 @pytest.mark.parametrize(
