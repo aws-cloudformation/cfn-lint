@@ -199,7 +199,7 @@ def select(validator: Validator, instance: Any) -> ResolutionResult:
                 continue
             if len(obj) <= i:
                 continue
-            yield obj[i], obj_v, None
+            yield from obj_v.resolve_value(obj[i])
 
 
 def split(validator: Validator, instance: Any) -> ResolutionResult:
