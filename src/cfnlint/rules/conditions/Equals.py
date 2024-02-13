@@ -3,14 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any
+from typing import Any, Dict
 
 from cfnlint.jsonschema import ValidationResult, Validator
-from cfnlint.jsonschema._validators_cfn import FnEquals
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
-class Equals(CloudFormationLintRule):
+class Equals(BaseFn):
     """Check Equals Condition Function Logic"""
 
     id = "E8003"
@@ -20,7 +19,7 @@ class Equals(CloudFormationLintRule):
     tags = ["functions", "equals"]
 
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__("Fn::Equals", ("boolean",))
         self.child_rules = {
             "W8003": None,
         }
@@ -28,9 +27,34 @@ class Equals(CloudFormationLintRule):
     def fn_equals(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
-        yield from FnEquals().validate(validator, s, instance, schema)
+        errs = list(self.validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+            return
 
         if self.child_rules.get("W8003"):
             yield from self.child_rules["W8003"].equals_is_useful(
                 validator, s, instance.get("Fn::Equals", []), schema
             )
+
+    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "fn_items": {
+                "functions": [
+                    "Ref",
+                    "Fn::FindInMap",
+                    "Fn::Sub",
+                    "Fn::Join",
+                    "Fn::Select",
+                    "Fn::Split",
+                    "Fn::Length",
+                    "Fn::ToJsonString",
+                ],
+                "schema": {
+                    "type": ["string"],
+                },
+            },
+        }
