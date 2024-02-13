@@ -51,8 +51,15 @@ class FunctionFilter:
         """
         if validator.cfn is None:
             return schema, None
-        if not any(fn in ["Ref", "Fn::If"] for fn in validator.context.functions):
-            return schema, None
+
+        # If we are in an if we want to keep any !Ref AWS::NoValue
+        # Example: Typically we want to remove (!Ref AWS::NoValue)
+        # to count minItems, maxItems, required properties but if we
+        # are in an If we need to be more strict
+        if len(validator.context.path) > 0:
+            if validator.context.path[-1] in ["Fn::If"]:
+                return schema, None
+
         standard_schema = {}
         group_schema = {}
         for key, value in schema.items():
@@ -65,6 +72,8 @@ class FunctionFilter:
         # it will do by using {"type": "object"} with no properties
         # Adding these items to the schema
         # will allow us to continue to check the nested elements
+        # If we have the cfnLint keyword we assume that another check will
+        # take care of this for us
         if "cfnLint" not in standard_schema:
             if "object" in ensure_list(standard_schema.get("type", [])) and not any(
                 p not in standard_schema
@@ -85,7 +94,6 @@ class FunctionFilter:
         # dependencies, required, minProperties, maxProperties
         # need to have filtered properties to validate
         # because of Ref: AWS::NoValue
-
         standard_schema, group_schema = self._filter_schemas(schema, validator)
 
         if group_schema:
@@ -95,7 +103,7 @@ class FunctionFilter:
 
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
-                for k, v in instance.items():
+                for k, _ in instance.items():
                     if k in validator.context.functions:
                         k_py = ToPy(k)
                         k_schema = {
@@ -103,27 +111,6 @@ class FunctionFilter:
                         }
                         yield (instance, k_schema)
                         return
-                    if validator.is_type(k, "string") and k.startswith("Fn::ForEach::"):
-                        k_py = ToPy("Fn::ForEach")
-                        k_schema = {
-                            k_py.py: standard_schema,
-                        }
-                        yield ({k: v}, k_schema)
-                        return
-                else:
-                    yield (instance, standard_schema)
-                return
-            for k, v in instance.items():
-                # Fn::ForEach can be supported at the same level as more Fn::ForEach
-                # and other keys
-                if not validator.is_type(k, "string"):
-                    continue
-                if k.startswith("Fn::ForEach::"):
-                    k_py = ToPy("Fn::ForEach")
-                    k_schema = {
-                        k_py.py: standard_schema,
-                    }
-                    yield ({k: v}, k_schema)
 
         yield (instance, standard_schema)
 

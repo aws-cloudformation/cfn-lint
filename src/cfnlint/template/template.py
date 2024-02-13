@@ -914,8 +914,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
             return value
 
-        result = dict_node({}, obj.start_mark, obj.end_mark)
         if isinstance(obj, dict):
+            result = dict_node({}, obj.start_mark, obj.end_mark)
             if len(obj) == 1:
                 if obj.get("Fn::If"):
                     new_value = get_value(obj, scenario)
@@ -931,10 +931,17 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     new_value = get_value(value, scenario)
                     if new_value is not None:
                         result[key] = new_value
-        if isinstance(obj, (str, int, float, bool)):
-            return obj
+            return result
+        if isinstance(obj, list):
+            result = list_node({}, obj.start_mark, obj.end_mark)
+            for item in obj:
+                element = get_value(item, scenario)
+                if element is not None:
+                    result.append(element)
 
-        return result
+            return result
+
+        return obj
 
     def get_object_without_conditions(self, obj, property_names=None, region=None):
         """
@@ -992,7 +999,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         if isinstance(obj, list):
             if not scenarios:
-                return [{"Scenario": None, "Object": o}]
+                return [
+                    {"Scenario": None, "Object": self.get_value_from_scenario(o, {})}
+                ]
             for scenario in scenarios:
                 result_list = []
                 for o in obj:
