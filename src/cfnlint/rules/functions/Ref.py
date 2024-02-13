@@ -7,7 +7,6 @@ from typing import Any, Dict
 
 from cfnlint.helpers import VALID_PARAMETER_TYPES, VALID_PARAMETER_TYPES_LIST
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.jsonschema._validators_cfn import Ref as RefValidator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
@@ -24,7 +23,6 @@ class Ref(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Ref", all_types)
-        self._ref = RefValidator()
         self.keywords = {
             "Resources/AWS::AutoScaling::LaunchConfiguration/Properties/ImageId": "W2506",  # noqa: E501
             "Resources/AWS::Batch::ComputeEnvironment/Properties/ComputeResources/ImageId": "W2506",  # noqa: E501

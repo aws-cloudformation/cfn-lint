@@ -55,7 +55,7 @@ def validator():
             [
                 ValidationError(
                     (
-                        "'String' is not one of ['AWS::EC2::Image::Id' "
+                        "'String' is not one of ['AWS::EC2::Image::Id'"
                         ", 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>']"
                     ),
                     path=deque([]),
