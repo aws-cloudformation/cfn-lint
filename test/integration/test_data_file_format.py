@@ -8,10 +8,13 @@ import json
 import os
 from unittest import TestCase
 
+import pytest
+
 import cfnlint
 from cfnlint.helpers import format_json_string
 
 
+@pytest.mark.data
 class TestDataFileFormat(TestCase):
     """Test format of data files"""
 
