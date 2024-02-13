@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.data.schemas.other import template as schema_template
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
@@ -45,7 +44,6 @@ class JsonSchema(BaseJsonSchema):
             "fn_tojsonstring": "E1031",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self.validators["type"] = cfn_type
         self.config_definition = {"sections": {"default": "", "type": "string"}}
         self.configure()
         self.validators = {
