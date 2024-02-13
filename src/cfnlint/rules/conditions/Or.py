@@ -3,10 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule
+from typing import Any, Dict
+
+from cfnlint.jsonschema import Validator
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
-class Or(CloudFormationLintRule):
+class Or(BaseFn):
     """Check Or Condition Function Logic"""
 
     id = "E8006"
@@ -14,3 +17,26 @@ class Or(CloudFormationLintRule):
     description = "Check Fn::Or is a list of two elements"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-or"
     tags = ["functions", "or"]
+
+    def __init__(self) -> None:
+        super().__init__("Fn::Or", ("boolean",))
+        self.fn_or = self.validate
+
+    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
+        return {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 10,
+            "fn_items": {
+                "functions": [
+                    "Condition",
+                    "Fn::Equals",
+                    "Fn::Not",
+                    "Fn::And",
+                    "Fn::Or",
+                ],
+                "schema": {
+                    "type": ["boolean"],
+                },
+            },
+        }

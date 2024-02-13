@@ -36,6 +36,16 @@ def validator():
             [],
         ),
         (
+            {
+                "LogDriver": "awslogs",
+                "Options": {
+                    "awslogs-group": "foo",
+                    "awslogs-region": {"Ref": "AWS::Region"},
+                },
+            },
+            [],
+        ),
+        (
             [],  # wrong type
             [],
         ),

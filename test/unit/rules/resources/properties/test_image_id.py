@@ -3,42 +3,71 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.properties.ImageId import ImageId  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Context
+from cfnlint.context.context import Parameter
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.properties.ImageId import ImageId
 
 
-class TestPropertyVpcId(BaseRuleTestCase):
-    """Test Password Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = ImageId()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestPropertyVpcId, self).setUp()
-        self.collection.register(ImageId())
 
-    success_templates = [
-        "test/fixtures/templates/good/generic.yaml",
-        "test/fixtures/templates/good/properties_imageid.yaml",
-    ]
+@pytest.fixture(scope="module")
+def validator():
+    context = Context(
+        regions=["us-east-1"],
+        path=deque([]),
+        resources={},
+        parameters={
+            "MyImageId": Parameter(
+                {
+                    "Type": "AWS::EC2::Image::Id",
+                }
+            ),
+            "MyString": Parameter(
+                {
+                    "Type": "String",
+                }
+            ),
+        },
+    )
+    yield CfnTemplateValidator(context=context)
 
-    def test_file_positive(self):
-        """Success test"""
-        self.helper_file_positive()
 
-    def test_file_negative_nist_app(self):
-        """Failure test"""
-        self.helper_file_negative(
-            "test/fixtures/templates/quickstart/nist_application.yaml", 2
-        )
-
-    def test_file_negative_nist_mgmt(self):
-        """Failure test"""
-        self.helper_file_negative(
-            "test/fixtures/templates/quickstart/nist_vpc_management.yaml", 1
-        )
-
-    def test_file_negative(self):
-        """Failure test"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/properties_imageid.yaml", 1
-        )
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        (
+            "Valid Ref to a paraemter",
+            {"Ref": "MyImageId"},
+            [],
+        ),
+        (
+            "Invalid Ref to a parameter of the wrong type",
+            {"Ref": "MyString"},
+            [
+                ValidationError(
+                    (
+                        "'String' is not one of ['AWS::EC2::Image::Id'"
+                        ", 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>']"
+                    ),
+                    path=deque([]),
+                    schema_path=deque(["enum"]),
+                    validator="enum",
+                    rule=ImageId(),
+                    path_override=["Parameters", "MyString", "Type"],
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, expected, rule, validator):
+    errs = list(rule.validate(validator, {}, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"

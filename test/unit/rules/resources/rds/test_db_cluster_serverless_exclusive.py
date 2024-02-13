@@ -39,9 +39,9 @@ def validator():
                 ValidationError(
                     "Additional properties are not allowed ('ScalingConfiguration')",
                     rule=DbClusterServerlessExclusive(),
-                    path=deque([]),
-                    validator="not",
-                    schema_path=deque(["then", "not"]),
+                    path=deque(["ScalingConfiguration"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "ScalingConfiguration"]),
                 )
             ],
         ),
