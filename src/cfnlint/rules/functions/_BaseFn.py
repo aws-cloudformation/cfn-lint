@@ -77,7 +77,7 @@ class BaseFn(CloudFormationLintRule):
                     + list(x for x in validator.context.path if isinstance(x, str))[2:]
                 )
 
-        return ""
+        return "/".join(str(i) for i in validator.context.path)
 
     def resolve(
         self,
