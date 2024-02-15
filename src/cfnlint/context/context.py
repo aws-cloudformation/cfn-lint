@@ -8,7 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Tuple
+from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Set, Tuple
 
 from cfnlint.helpers import PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
@@ -74,6 +74,10 @@ class Context:
     conditions: Dict[str, "Condition"] = field(init=True, default_factory=dict)
     mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
 
+    pseudo_parameters: Set[str] = field(
+        init=True, default_factory=lambda: set(PSEUDOPARAMS)
+    )
+
     # Combiniation of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
     ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
@@ -112,8 +116,15 @@ class Context:
         return cls(**kwargs)
 
     def ref_value(self, instance: str) -> Iterator[Tuple[str | List[str], "Context"]]:
+        if instance in PSEUDOPARAMS and instance not in self.pseudo_parameters:
+            return
+
+        if instance in self.ref_values:
+            yield self.ref_values[instance], self
+            return
+
         # Non regionalized items first
-        if instance in _PSEUDOPARAMS_NON_REGION:
+        if instance in _PSEUDOPARAMS_NON_REGION and instance in self.pseudo_parameters:
             pseudo_value = _get_pseudo_value(instance)
             if pseudo_value is not None:
                 yield pseudo_value, self.evolve(ref_values={instance: pseudo_value})
@@ -126,12 +137,8 @@ class Context:
                 )
             return
 
-        if instance in self.ref_values:
-            yield self.ref_values[instance], self
-            return
-
         # Regionalized values second
-        if instance in PSEUDOPARAMS:
+        if instance in PSEUDOPARAMS and instance in self.pseudo_parameters:
             for region in self.regions:
                 # We can resolve all region based pseudo values
                 # as we are now deciding on a region.
@@ -146,10 +153,12 @@ class Context:
 
     @property
     def refs(self):
+        pseudo_params = list(self.pseudo_parameters)
+        pseudo_params.sort()
         return (
             list(self.parameters.keys())
             + list(self.resources.keys())
-            + PSEUDOPARAMS
+            + pseudo_params
             + list(self.ref_values.keys())
         )
 

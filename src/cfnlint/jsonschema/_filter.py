@@ -75,7 +75,7 @@ class FunctionFilter:
         # If we have the cfnLint keyword we assume that another check will
         # take care of this for us
         if "cfnLint" not in standard_schema:
-            if "object" in ensure_list(standard_schema.get("type", [])) and not any(
+            if "object" in ensure_list(standard_schema.get("type", [])) and all(
                 p not in standard_schema
                 for p in ["properties", "additionalProperties", "patternProperties"]
             ):
