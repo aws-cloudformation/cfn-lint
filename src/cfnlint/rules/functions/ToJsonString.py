@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Dict
 
+from cfnlint.helpers import PSEUDOPARAMS
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.languageExtensions import LanguageExtensions
 from cfnlint.rules.functions._BaseFn import BaseFn
@@ -23,6 +24,15 @@ class ToJsonString(BaseFn):
         super().__init__(
             "Fn::ToJsonString",
             ("string",),
+            (
+                "Fn::FindInMap",
+                "Fn::GetAtt",
+                "Fn::GetAZs",
+                "Fn::If",
+                "Fn::Select",
+                "Fn::Split",
+                "Ref",
+            ),
         )
 
     def match(self, cfn):
@@ -59,7 +69,19 @@ class ToJsonString(BaseFn):
     def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
         return {
             "type": ["array", "object"],
+            "minItems": 1,
+            "minProperties": 1,
         }
+
+    def validator(self, validator: Validator) -> Validator:
+        return validator.evolve(
+            context=validator.context.evolve(
+                functions=self.functions,
+                pseudo_parameters=set(
+                    [sp for sp in PSEUDOPARAMS if sp != "AWS::NotificationARNs"]
+                ),
+            ),
+        )
 
     def fn_tojsonstring(
         self, validator: Validator, s: Any, instance: Any, schema: Any

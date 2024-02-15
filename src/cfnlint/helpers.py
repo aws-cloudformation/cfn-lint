@@ -130,24 +130,26 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(
 )
 REGEX_SUB_PARAMETERS = re.compile(r"\${([^!].*?)}")
 
-FUNCTIONS = [
-    "Fn::Base64",
-    "Fn::GetAtt",
-    "Fn::GetAZs",
-    "Fn::ImportValue",
-    "Fn::Join",
-    "Fn::Split",
-    "Fn::FindInMap",
-    "Fn::Select",
-    "Ref",
-    "Fn::If",
-    "Fn::Contains",
-    "Fn::Sub",
-    "Fn::Cidr",
-    "Fn::Length",
-    "Fn::ToJsonString",
-    "Fn::ForEach::[a-zA-Z0-9]+",
-]
+FUNCTIONS = frozenset(
+    [
+        "Fn::Base64",
+        "Fn::GetAtt",
+        "Fn::GetAZs",
+        "Fn::ImportValue",
+        "Fn::Join",
+        "Fn::Split",
+        "Fn::FindInMap",
+        "Fn::Select",
+        "Ref",
+        "Fn::If",
+        "Fn::Contains",
+        "Fn::Sub",
+        "Fn::Cidr",
+        "Fn::Length",
+        "Fn::ToJsonString",
+        "Fn::ForEach::[a-zA-Z0-9]+",
+    ]
+)
 
 FUNCTIONS_LIST = frozenset(
     [
