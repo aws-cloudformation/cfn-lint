@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import json
+from collections import deque
 from typing import Any, Dict
 
 import regex as re
@@ -67,7 +68,7 @@ class Split(BaseFn):
         key, value = self.key_value(instance)
         if re.fullmatch(REGEX_DYN_REF, json.dumps(value[1])):
             yield ValidationError(
-                f"{self.fn.name} does not support dynamic references",
-                validator=self.fn.name,
-                path=[key, 1],
+                f"{key!r} does not support dynamic references",
+                validator=self.fn.py,
+                path=deque([key, 1]),
             )
