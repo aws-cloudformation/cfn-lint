@@ -7,10 +7,10 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Resource
+from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Sub import Sub
+from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -20,17 +20,22 @@ def rule():
 
 
 @pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        path=deque([]),
-        resources={
-            "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
-            "MySimpleAd": Resource({"Type": "AWS::DirectoryService::SimpleAD"}),
+def cfn():
+    return Template(
+        "",
+        {
+            "Resources": {
+                "MyResource": {"Type": "AWS::S3::Bucket"},
+                "MySimpleAd": {"Type": "AWS::DirectoryService::SimpleAD"},
+            },
         },
-        parameters={},
+        regions=["us-east-1"],
     )
-    yield CfnTemplateValidator(context=context)
+
+
+@pytest.fixture(scope="module")
+def context(cfn):
+    return create_context_for_template(cfn)
 
 
 @pytest.mark.parametrize(
@@ -88,11 +93,10 @@ def validator():
                 ValidationError(
                     (
                         "'bar' is not one of ["
-                        "'MyResource', 'MySimpleAd', 'AWS::NoValue', "
-                        "'AWS::AccountId', 'AWS::Partition', "
-                        "'AWS::Region', 'AWS::StackId', "
-                        "'AWS::StackName', 'AWS::URLSuffix', "
-                        "'AWS::NotificationARNs']"
+                        "'MyResource', 'MySimpleAd', 'AWS::AccountId', "
+                        "'AWS::NoValue', 'AWS::NotificationARNs', "
+                        "'AWS::Partition', 'AWS::Region', "
+                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
@@ -108,11 +112,10 @@ def validator():
                 ValidationError(
                     (
                         "'foo' is not one of ["
-                        "'MyResource', 'MySimpleAd', 'AWS::NoValue', "
-                        "'AWS::AccountId', 'AWS::Partition', "
-                        "'AWS::Region', 'AWS::StackId', "
-                        "'AWS::StackName', 'AWS::URLSuffix', "
-                        "'AWS::NotificationARNs']"
+                        "'MyResource', 'MySimpleAd', 'AWS::AccountId', "
+                        "'AWS::NoValue', 'AWS::NotificationARNs', "
+                        "'AWS::Partition', 'AWS::Region', "
+                        "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
@@ -237,6 +240,7 @@ def validator():
         ),
     ],
 )
-def test_validate(name, instance, schema, expected, rule, validator):
+def test_validate(name, instance, schema, expected, rule, context, cfn):
+    validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.fn_sub(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
