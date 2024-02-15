@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 
 from collections import deque
-from test.unit.rules import BaseRuleTestCase
 
 import pytest
 
@@ -12,20 +11,6 @@ from cfnlint.context import Context
 from cfnlint.context.context import Map
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.FindInMap import FindInMap
-
-
-class TestRulesFindInMap(BaseRuleTestCase):
-    """Test Rules Get Att"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestRulesFindInMap, self).setUp()
-        self.collection.register(FindInMap())
-        self.success_templates = [
-            "test/fixtures/templates/good/functions_findinmap.yaml",
-            "test/fixtures/templates/good/functions_findinmap_enhanced.yaml",
-            "test/fixtures/templates/good/functions_findinmap_default_value.yaml",
-        ]
 
 
 @pytest.fixture(scope="module")
