@@ -69,46 +69,6 @@ class GetAtt(BaseFn):
             paths = [None, None]
             value = value.split(".", 1)
 
-        for err in self.fix_errors(
-            validator.descend(
-                value[0],
-                {"enum": list(validator.context.resources.keys())},
-                key,
-            )
-        ):
-            err.path.append(paths[0])
-            yield err
-            return
-
-        if not (
-            validator.is_type(value[0], "string")
-            and validator.is_type(value[1], "string")
-        ):
-            return
-
-        if all(
-            not (bool(re.fullmatch(each, value[1])))
-            for each in validator.context.resources[value[0]].get_atts
-        ):
-            yield ValidationError(
-                (
-                    f"{value[1]!r} is not one of "
-                    f"{validator.context.resources[value[0]].get_atts!r}"
-                ),
-                validator=self.fn.py,
-                path=deque([self.fn.name, 1]),
-            )
-            return
-
-        # because of the complexities of schemas ($ref, anyOf, allOf, etc.)
-        # we will simplify the validator to just have a type check
-        # then we will provide a simple value to represent the type from the
-        # getAtt
-        evolved = validator.evolve(schema=s)  # type: ignore
-        evolved.validators = {  # type: ignore
-            "type": validator.validators.get("type"),  # type: ignore
-        }
-
         def iter_errors(type: str) -> ValidationResult:
             value: Any = None
             if type == "string":
@@ -132,18 +92,66 @@ class GetAtt(BaseFn):
                 err.path = deque([key])
                 yield err
 
-        types = ensure_list(
-            validator.context.resources[value[0]].get_atts[value[1]].type
-        )
+        for resource_name, resource_name_validator, _ in validator.resolve_value(
+            value[0]
+        ):
+            for err in self.fix_errors(
+                resource_name_validator.descend(
+                    resource_name,
+                    {"enum": list(validator.context.resources.keys())},
+                    key,
+                )
+            ):
+                err.path.append(paths[0])
+                if err.instance != value[0]:
+                    err.message = err.message + f" when {value[0]!r} is resolved"
+                yield err
+                break
+            else:
+                for attribute_name, _, _ in validator.resolve_value(value[1]):
+                    if all(
+                        not (bool(re.fullmatch(each, attribute_name)))
+                        for each in validator.context.resources[resource_name].get_atts
+                    ):
+                        err = ValidationError(
+                            (
+                                f"{attribute_name!r} is not one of "
+                                f"{validator.context.resources[resource_name].get_atts!r}"
+                            ),
+                            validator=self.fn.py,
+                            path=deque([self.fn.name, 1]),
+                        )
+                        if attribute_name != value[1]:
+                            err.message = (
+                                err.message + f" when {value[1]!r} is resolved"
+                            )
+                        yield err
+                        break
+                else:
+                    # because of the complexities of schemas ($ref, anyOf, allOf, etc.)
+                    # we will simplify the validator to just have a type check
+                    # then we will provide a simple value to represent the type from the
+                    # getAtt
+                    evolved = validator.evolve(schema=s)  # type: ignore
+                    evolved.validators = {  # type: ignore
+                        "type": validator.validators.get("type"),  # type: ignore
+                    }
 
-        # validate all possible types.  We will only alert when all types fail
-        type_err_ct = 0
-        all_errs = []
-        for type in types:
-            errs = list(iter_errors(type))
-            if errs:
-                type_err_ct += 1
-                all_errs.extend(errs)
+                    types = ensure_list(
+                        validator.context.resources[resource_name]
+                        .get_atts[attribute_name]
+                        .type
+                    )
 
-        if type_err_ct == len(types):
-            yield from errs
+                    # validate all possible types.
+                    # We will only alert when all types fail
+                    type_err_ct = 0
+                    all_errs = []
+                    for type in types:
+                        errs = list(iter_errors(type))
+                        if errs:
+                            type_err_ct += 1
+                            all_errs.extend(errs)
+
+                    if type_err_ct == len(types):
+                        yield from errs
