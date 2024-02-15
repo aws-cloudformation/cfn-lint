@@ -7,10 +7,11 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Resource
+from cfnlint.context import create_context_for_template
+from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.GetAtt import GetAtt
+from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -20,30 +21,40 @@ def rule():
 
 
 @pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        path=deque([]),
-        resources={
-            "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
+def cfn():
+    return Template(
+        "",
+        {
+            "Resources": {"MyBucket": {"Type": "AWS::S3::Bucket"}},
+            "Parameters": {
+                "MyResourceParameter": {"Type": "String", "Default": "MyBucket"},
+                "MyAttributeParameter": {"Type": "String", "AllowedValues": ["Arn"]},
+            },
         },
+        regions=["us-east-1"],
     )
-    yield CfnTemplateValidator(context=context)
+
+
+@pytest.fixture(scope="module")
+def context(cfn):
+    return create_context_for_template(cfn)
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,expected",
+    "name,instance,schema,context_evolve,expected",
     [
         (
             "Valid GetAtt with a good attribute",
-            {"Fn::GetAtt": ["MyResource", "Arn"]},
+            {"Fn::GetAtt": ["MyBucket", "Arn"]},
             {"type": "string"},
+            {},
             [],
         ),
         (
             "Invalid GetAtt with bad attribute",
-            {"Fn::GetAtt": ["MyResource", "foo"]},
+            {"Fn::GetAtt": ["MyBucket", "foo"]},
             {"type": "string"},
+            {},
             [
                 ValidationError(
                     (
@@ -60,9 +71,10 @@ def validator():
             "Invalid GetAtt with bad resource name",
             {"Fn::GetAtt": ["Foo", "bar"]},
             {"type": "string"},
+            {},
             [
                 ValidationError(
-                    "'Foo' is not one of ['MyResource']",
+                    "'Foo' is not one of ['MyBucket']",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",
@@ -73,6 +85,7 @@ def validator():
             "Invalid GetAtt with a bad type",
             {"Fn::GetAtt": {"foo": "bar"}},
             {"type": "string"},
+            {},
             [
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string', 'array'",
@@ -84,11 +97,12 @@ def validator():
         ),
         (
             "Invalid GetAtt with a bad response type",
-            {"Fn::GetAtt": "MyResource.Arn"},
+            {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": "array"},
+            {},
             [
                 ValidationError(
-                    "{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'array'",
+                    "{'Fn::GetAtt': 'MyBucket.Arn'} is not of type 'array'",
                     path=deque(["Fn::GetAtt"]),
                     schema_path=deque(["type"]),
                     validator="fn_getatt",
@@ -97,11 +111,12 @@ def validator():
         ),
         (
             "Invalid GetAtt with a bad response type and multiple types",
-            {"Fn::GetAtt": "MyResource.Arn"},
+            {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "object"]},
+            {},
             [
                 ValidationError(
-                    "{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'array', 'object'",
+                    "{'Fn::GetAtt': 'MyBucket.Arn'} is not of type 'array', 'object'",
                     path=deque(["Fn::GetAtt"]),
                     schema_path=deque(["type"]),
                     validator="fn_getatt",
@@ -110,12 +125,64 @@ def validator():
         ),
         (
             "Valid GetAtt with one good response type",
-            {"Fn::GetAtt": "MyResource.Arn"},
+            {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "string"]},
+            {},
             [],
+        ),
+        (
+            "Valid Ref in GetAtt for resource",
+            {"Fn::GetAtt": [{"Ref": "MyResourceParameter"}, "Arn"]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+        ),
+        (
+            "Valid Ref in GetAtt for attribute",
+            {"Fn::GetAtt": ["MyBucket", {"Ref": "MyAttributeParameter"}]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+        ),
+        (
+            "Invalid Ref in GetAtt for attribute",
+            {"Fn::GetAtt": ["MyBucket", {"Ref": "MyResourceParameter"}]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [
+                ValidationError(
+                    (
+                        "'MyBucket' is not one of ['Arn', 'DomainName', "
+                        "'DualStackDomainName', 'RegionalDomainName', "
+                        "'WebsiteURL'] when "
+                        "{'Ref': 'MyResourceParameter'} is resolved"
+                    ),
+                    path=deque(["Fn::GetAtt", 1]),
+                    validator="fn_getatt",
+                )
+            ],
+        ),
+        (
+            "Invalid Ref in GetAtt for attribute",
+            {"Fn::GetAtt": [{"Ref": "MyAttributeParameter"}, "Arn"]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [
+                ValidationError(
+                    (
+                        "'Arn' is not one of ['MyBucket'] when "
+                        "{'Ref': 'MyAttributeParameter'} is resolved"
+                    ),
+                    path=deque(["Fn::GetAtt", 0]),
+                    schema_path=deque(["enum"]),
+                    validator="fn_getatt",
+                )
+            ],
         ),
     ],
 )
-def test_validate(name, instance, schema, expected, rule, validator):
+def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
+    context = context.evolve(**context_evolve)
+    validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
