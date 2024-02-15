@@ -26,6 +26,7 @@ def validator():
         path=deque([]),
         resources={
             "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
+            "MySimpleAd": Resource({"Type": "AWS::DirectoryService::SimpleAD"}),
         },
         parameters={},
     )
@@ -74,6 +75,32 @@ def validator():
             [],
         ),
         (
+            "Valid Fn::Sub with a valid Ref and a string escape",
+            {"Fn::Sub": "${!Foo}=${AWS::Region}"},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid Fn::Sub with a valid Ref and a string escape",
+            {"Fn::Sub": "${!foo}=${bar}"},
+            {"type": "string"},
+            [
+                ValidationError(
+                    (
+                        "'bar' is not one of ["
+                        "'MyResource', 'MySimpleAd', 'AWS::NoValue', "
+                        "'AWS::AccountId', 'AWS::Partition', "
+                        "'AWS::Region', 'AWS::StackId', "
+                        "'AWS::StackName', 'AWS::URLSuffix', "
+                        "'AWS::NotificationARNs']"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque([]),
+                    validator="fn_sub",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::Sub with a invalid Ref",
             {"Fn::Sub": "${foo}"},
             {"type": "string"},
@@ -81,8 +108,9 @@ def validator():
                 ValidationError(
                     (
                         "'foo' is not one of ["
-                        "'MyResource', 'AWS::NoValue', 'AWS::AccountId', "
-                        "'AWS::Partition', 'AWS::Region', 'AWS::StackId', "
+                        "'MyResource', 'MySimpleAd', 'AWS::NoValue', "
+                        "'AWS::AccountId', 'AWS::Partition', "
+                        "'AWS::Region', 'AWS::StackId', "
                         "'AWS::StackName', 'AWS::URLSuffix', "
                         "'AWS::NotificationARNs']"
                     ),
@@ -103,6 +131,19 @@ def validator():
             {"Fn::Sub": "${!foo}"},
             {"type": "string"},
             [],
+        ),
+        (
+            "Invalid Fn::Sub with a too to many elements",
+            {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "['${foo}', {'foo': 'bar'}, {}] is too long (2)",
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque(["maxItems"]),
+                    validator="fn_sub",
+                ),
+            ],
         ),
         (
             "Invalid Fn::Sub with a bad object",
@@ -170,7 +211,24 @@ def validator():
             {"type": "string"},
             [
                 ValidationError(
-                    "'Foo.Bar' is not one of ['MyResource']",
+                    "'Foo.Bar' is not one of ['MyResource', 'MySimpleAd']",
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque([]),
+                    validator="fn_sub",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Sub with a GetAtt to an array of attributes",
+            {"Fn::Sub": "${MySimpleAd.DnsIpAddresses}"},
+            {"type": "string"},
+            [
+                ValidationError(
+                    (
+                        "'MySimpleAd.DnsIpAddresses' is not "
+                        "of type 'string', 'integer', "
+                        "'number', 'boolean'"
+                    ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
