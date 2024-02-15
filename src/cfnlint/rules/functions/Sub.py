@@ -71,8 +71,6 @@ class Sub(BaseFn):
     def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
         params = re.findall(REGEX_SUB_PARAMETERS, instance)
         for param in params:
-            if param.startswith("!"):
-                continue
             param = param.strip()
             valid_params = []
             if "." in param:
