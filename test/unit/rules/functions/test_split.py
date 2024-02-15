@@ -112,6 +112,18 @@ def validator():
             {"type": "array"},
             [],
         ),
+        (
+            "Invalid Fn::Split with a dynamic reference",
+            {"Fn::Split": ["foo", "{{resolve:ssm:Foo:1}}"]},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "'Fn::Split' does not support dynamic references",
+                    path=deque(["Fn::Split", 1]),
+                    validator="fn_split",
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):

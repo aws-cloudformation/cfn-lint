@@ -8,6 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Context
+from cfnlint.context.context import Condition, Parameter
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.If import If
 
@@ -24,7 +25,19 @@ def validator():
         regions=["us-east-1"],
         path=deque([]),
         resources={},
-        parameters={},
+        parameters={
+            "MyParameter": Parameter(
+                {
+                    "Type": "String",
+                    "Default": "foobar",
+                }
+            )
+        },
+        conditions={
+            "IsUsEast1": Condition(
+                {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
+            )
+        },
     )
     yield CfnTemplateValidator(context=context)
 
@@ -34,17 +47,17 @@ def validator():
     [
         (
             "Valid Fn::If",
-            {"Fn::If": ["condition", "foo", "bar"]},
+            {"Fn::If": ["IsUsEast1", "foo", "bar"]},
             {"type": "string"},
             [],
         ),
         (
             "Invalid Fn::If with to many arguments",
-            {"Fn::If": ["condition", "foo", "bar", "key"]},
+            {"Fn::If": ["IsUsEast1", "foo", "bar", "key"]},
             {"type": "string"},
             [
                 ValidationError(
-                    "['condition', 'foo', 'bar', 'key'] is too long (3)",
+                    "['IsUsEast1', 'foo', 'bar', 'key'] is too long (3)",
                     path=deque(["Fn::If"]),
                     schema_path=deque(["maxItems"]),
                     validator="fn_if",
@@ -53,7 +66,7 @@ def validator():
         ),
         (
             "Invalid Fn::If with bad first element",
-            {"Fn::If": ["condition", {"foo": "bar"}, "bar"]},
+            {"Fn::If": ["IsUsEast1", {"foo": "bar"}, "bar"]},
             {"type": "string"},
             [
                 ValidationError(
@@ -65,8 +78,8 @@ def validator():
             ],
         ),
         (
-            "Invalid Fn::If with bad first element",
-            {"Fn::If": ["condition", "foo", {"foo": "bar"}]},
+            "Invalid Fn::If with bad second element",
+            {"Fn::If": ["IsUsEast1", "foo", {"foo": "bar"}]},
             {"type": "string"},
             [
                 ValidationError(
@@ -74,6 +87,33 @@ def validator():
                     path=deque(["Fn::If", 2]),
                     schema_path=deque(["type"]),
                     validator="type",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::If a condition that doesn't exist",
+            {"Fn::If": ["foo", True, False]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    "'foo' is not one of ['IsUsEast1']",
+                    path=deque(["Fn::If", 0]),
+                    schema_path=deque(["enum"]),
+                    validator="fn_if",
+                    rule=If(),
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::If with a resolved value",
+            {"Fn::If": ["IsUsEast1", "foo", {"Ref": "MyParameter"}]},
+            {"enum": ["foo", "bar"]},
+            [
+                ValidationError(
+                    "{'Ref': 'MyParameter'} is not one of ['foo', 'bar']",
+                    path=deque(["Fn::If", 2]),
+                    schema_path=deque(["enum"]),
+                    validator="enum",
                 ),
             ],
         ),
