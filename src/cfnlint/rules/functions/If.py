@@ -56,29 +56,17 @@ class If(BaseFn):
             yield from iter(errs)
             return
 
-        found_errs = False
-        for err in validator.descend(value[0], {"awsType": "CfnCondition"}, 0):
+        for err in validator.descend(
+            value[0], {"enum": list(validator.context.conditions.keys())}, 0
+        ):
             err.path.appendleft(key)
+            err.rule = self
+            err.validator = self.fn.py
             yield err
-            found_errs = True
 
         for err in validator.descend(value[1], s, 1):
             err.path.appendleft(key)
             yield err
-            found_errs = True
         for err in validator.descend(value[2], s, 2):
             err.path.appendleft(key)
             yield err
-            found_errs = True
-
-        if not found_errs:
-            yield from self.resolve(validator, s, instance, schema)
-
-    def resolve(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
-    ) -> ValidationResult:
-        key, _ = self.key_value(instance)
-        for value, v, _ in validator.resolve_value(instance):
-            for err in v.descend(value, s, key):
-                err.path.extend(v.context.value_path)
-                yield err
