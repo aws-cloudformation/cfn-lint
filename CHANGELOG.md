@@ -1,3 +1,7 @@
+### v0.85.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `160.0.0` (pull #[3054](https://github.com/aws-cloudformation/cfn-lint/pull/3054))
+
 ### v0.85.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `158.0.0` (pull #[3039](https://github.com/aws-cloudformation/cfn-lint/pull/3039))
