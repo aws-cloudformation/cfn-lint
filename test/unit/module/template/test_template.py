@@ -7,9 +7,9 @@ import json
 import os
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
+
 from cfnlint.decode import cfn_yaml, convert_dict
-from cfnlint.decode import convert_dict
-from cfnlint.decode import cfn_yaml, convert_dict
+from cfnlint.schema.manager import ProviderSchemaManager
 from cfnlint.template import Template  # pylint: disable=E0401
 
 
@@ -1429,3 +1429,73 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
         template = Template("test.yaml", template)
         self.assertFalse(template.is_cdk_template())
+
+    def test_schemas_get_att(self):
+        """Validate getAtt when using a registry schema"""
+        schema_filename = "test/fixtures/registry/custom/"
+
+        filename = "test/fixtures/templates/good/schema_resource.yaml"
+        template = self.load_template(filename)
+        schema_manager = ProviderSchemaManager()
+        schema_manager.load_registry_schemas(schema_filename)
+        with patch("cfnlint.template.getatts.PROVIDER_SCHEMA_MANAGER", schema_manager):
+            self.template = Template(filename, template)
+            self.assertDictEqual(
+                {
+                    "oneOf": [
+                        {
+                            "type": "array",
+                            "items": [
+                                {"type": "string", "enum": ["MyReport"]},
+                                {"type": ["string", "object"]},
+                            ],
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "items": [
+                                            {"type": "string", "const": "MyReport"},
+                                            {"type": ["string", "object"]},
+                                        ]
+                                    },
+                                    "then": {
+                                        "if": {
+                                            "items": [
+                                                {"type": "string", "const": "MyReport"},
+                                                {"type": "string"},
+                                            ]
+                                        },
+                                        "then": {
+                                            "items": [
+                                                {"type": "string", "const": "MyReport"},
+                                                {
+                                                    "type": "string",
+                                                    "enum": ["TPSCode", "Authors"],
+                                                },
+                                            ]
+                                        },
+                                        "else": {
+                                            "items": [
+                                                {"type": "string", "const": "MyReport"},
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "Ref": {"type": "string"}
+                                                    },
+                                                    "required": ["Ref"],
+                                                    "additionalProperties": False,
+                                                },
+                                            ]
+                                        },
+                                    },
+                                    "else": {},
+                                }
+                            ],
+                        },
+                        {
+                            "type": "string",
+                            "enum": ["MyReport.TPSCode", "MyReport.Authors"],
+                        },
+                    ]
+                },
+                self.template.get_valid_getatts().json_schema("us-east-1"),
+            )
