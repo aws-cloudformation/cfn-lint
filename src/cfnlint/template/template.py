@@ -94,10 +94,18 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def has_language_extensions_transform(self):
         """Check if the template has language extensions transform declared"""
-        LOGGER.debug(
-            "Check if the template has language extensions transform declaration"
-        )
         lang_extensions_transform = "AWS::LanguageExtensions"
+        transform_declaration = self.transform_pre["Transform"]
+        transform_type = (
+            transform_declaration
+            if isinstance(transform_declaration, list)
+            else [transform_declaration]
+        )
+        return bool(lang_extensions_transform in transform_type)
+
+    def has_serverless_transform(self):
+        """Check if the template has SAM transform declared"""
+        lang_extensions_transform = "AWS::Serverless-2016-10-31"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
             transform_declaration

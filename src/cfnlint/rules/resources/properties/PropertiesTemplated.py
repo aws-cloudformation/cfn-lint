@@ -60,6 +60,9 @@ class PropertiesTemplated(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
+        if cfn.has_serverless_transform():
+            return []
+
         for key in self.templated_exceptions.get(resourcetype, []):
             matches.extend(
                 cfn.check_value(
