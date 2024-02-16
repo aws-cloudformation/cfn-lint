@@ -9,8 +9,8 @@ from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 from cfnlint.decode import cfn_yaml, convert_dict
-from cfnlint.template import Template  # pylint: disable=E0401
 from cfnlint.helpers import REGISTRY_SCHEMAS
+from cfnlint.template import Template  # pylint: disable=E0401
 
 
 class TestTemplate(BaseTestCase):

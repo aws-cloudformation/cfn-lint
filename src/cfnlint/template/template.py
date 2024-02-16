@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import List, Union, Dict, Any
+from typing import Any, Dict, List, Union
 
 import regex as re
 
@@ -57,6 +57,7 @@ class _SchemaPointer:
 
         return obj
 
+    # pylint: disable=too-many-return-statements
     def walk(self, obj: Dict, part: str) -> Any:
         """Walks one step in doc and returns the referenced part
 
@@ -102,8 +103,8 @@ class _SchemaPointer:
                         return self.walk(oneOf, part)
                     except KeyError:
                         pass
-                else:
-                    raise KeyError(f"No oneOf matches for {part}")
+
+                raise KeyError(f"No oneOf matches for {part}") from e
             raise e
 
 
@@ -333,6 +334,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             results[pseudoparam] = element
         return results
 
+    # pylint: disable=too-many-locals
     def get_valid_getatts(self):
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
         propertytypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
@@ -405,7 +407,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                             if value["Type"] == schema["typeName"]:
                                 results[name] = {}
                                 for ro_property in schema["readOnlyProperties"]:
-                                    item = resolve_pointer(schema, ro_property)
+                                    try:
+                                        item = resolve_pointer(schema, ro_property)
+                                    except KeyError:
+                                        continue
                                     item_type = item["type"]
                                     _type = None
                                     primitive_type = None
