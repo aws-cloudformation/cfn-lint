@@ -6,9 +6,11 @@ SPDX-License-Identifier: MIT-0
 import json
 import os
 from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
 
 from cfnlint.decode import cfn_yaml, convert_dict
 from cfnlint.template import Template  # pylint: disable=E0401
+from cfnlint.helpers import REGISTRY_SCHEMAS
 
 
 class TestTemplate(BaseTestCase):
@@ -1233,3 +1235,22 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             "I1001": ["myBucket1"],
         }
         self.assertDictEqual(directives, expected_result)
+
+    def test_schemas(self):
+        """Validate getAtt when using a registry schema"""
+        schema = self.load_template("test/fixtures/registry/custom/resource.json")
+
+        filename = "test/fixtures/templates/good/schema_resource.yaml"
+        template = self.load_template(filename)
+        self.template = Template(filename, template)
+
+        with patch("cfnlint.helpers.REGISTRY_SCHEMAS", [schema]):
+            self.assertDictEqual(
+                {
+                    "MyReport": {
+                        "TPSCode": {"PrimitiveType": "String"},
+                        "Authors": {"PrimitiveItemType": "String", "Type": "List"},
+                    }
+                },
+                self.template.get_valid_getatts(),
+            )
