@@ -102,7 +102,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             else [transform_declaration]
         )
         return bool(lang_extensions_transform in transform_type)
-    
 
     def has_serverless_transform(self):
         """Check if the template has SAM transform declared"""
