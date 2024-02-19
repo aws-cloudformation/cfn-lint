@@ -1,0 +1,155 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ChannelGroupName",
+   "/properties/ChannelName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelGroupName",
+  "/properties/ChannelName"
+ ],
+ "definitions": {
+  "IngestEndpoint": {
+   "additionalProperties": false,
+   "description": "<p>The ingest domain URL where the source stream should be sent.</p>",
+   "properties": {
+    "Id": {
+     "description": "<p>The system-generated unique identifier for the IngestEndpoint.</p>",
+     "type": "string"
+    },
+    "Url": {
+     "description": "<p>The ingest domain URL where the source stream should be sent.</p>",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "<p>Represents an entry point into AWS Elemental MediaPackage for an ABR video content stream sent from an upstream encoder such as AWS Elemental MediaLive. The channel continuously analyzes the content that it receives and prepares it to be distributed to consumers via one or more origin endpoints.</p>",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:CreateChannel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediapackagev2:GetChannel",
+    "mediapackagev2:DeleteChannel"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ChannelGroupName": {
+      "$ref": "resource-schema.json#/properties/ChannelGroupName"
+     }
+    },
+    "required": [
+     "ChannelGroupName"
+    ]
+   },
+   "permissions": [
+    "mediapackagev2:ListChannels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediapackagev2:GetChannel"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:UntagResource",
+    "mediapackagev2:ListTagsForResource",
+    "mediapackagev2:UpdateChannel"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "<p>The Amazon Resource Name (ARN) associated with the resource.</p>",
+   "type": "string"
+  },
+  "ChannelGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "<p>The date and time the channel was created.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "description": "<p>Enter any descriptive text that helps you to identify the channel.</p>",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IngestEndpoints": {
+   "description": "<p>The list of ingest endpoints.</p>",
+   "items": {
+    "$ref": "#/definitions/IngestEndpoint"
+   },
+   "type": "array"
+  },
+  "ModifiedAt": {
+   "description": "<p>The date and time the channel was modified.</p>",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/IngestEndpoints",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "ChannelGroupName",
+  "ChannelName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackageV2::Channel"
+}

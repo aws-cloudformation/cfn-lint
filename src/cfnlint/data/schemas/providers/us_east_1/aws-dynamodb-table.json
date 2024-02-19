@@ -255,6 +255,18 @@
    ],
    "type": "object"
   },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "type": "object"
+    }
+   },
+   "required": [
+    "PolicyDocument"
+   ],
+   "type": "object"
+  },
   "S3BucketSource": {
    "additionalProperties": false,
    "properties": {
@@ -294,6 +306,9 @@
   "StreamSpecification": {
    "additionalProperties": false,
    "properties": {
+    "ResourcePolicy": {
+     "$ref": "#/definitions/ResourcePolicy"
+    },
     "StreamViewType": {
      "enum": [
       "NEW_IMAGE",
@@ -361,6 +376,8 @@
     "dynamodb:ListTagsOfResource",
     "dynamodb:TagResource",
     "dynamodb:UpdateTable",
+    "dynamodb:GetResourcePolicy",
+    "dynamodb:PutResourcePolicy",
     "kinesis:DescribeStream",
     "kinesis:PutRecords",
     "iam:CreateServiceLinkedRole",
@@ -400,7 +417,8 @@
     "dynamodb:DescribeContinuousBackups",
     "dynamodb:DescribeContributorInsights",
     "dynamodb:DescribeKinesisStreamingDestination",
-    "dynamodb:ListTagsOfResource"
+    "dynamodb:ListTagsOfResource",
+    "dynamodb:GetResourcePolicy"
    ]
   },
   "update": {
@@ -420,6 +438,9 @@
     "dynamodb:DescribeContributorInsights",
     "dynamodb:EnableKinesisStreamingDestination",
     "dynamodb:DisableKinesisStreamingDestination",
+    "dynamodb:GetResourcePolicy",
+    "dynamodb:PutResourcePolicy",
+    "dynamodb:DeleteResourcePolicy",
     "kinesis:DescribeStream",
     "kinesis:PutRecords",
     "iam:CreateServiceLinkedRole",
@@ -497,6 +518,9 @@
   },
   "ProvisionedThroughput": {
    "$ref": "#/definitions/ProvisionedThroughput"
+  },
+  "ResourcePolicy": {
+   "$ref": "#/definitions/ResourcePolicy"
   },
   "SSESpecification": {
    "$ref": "#/definitions/SSESpecification"
