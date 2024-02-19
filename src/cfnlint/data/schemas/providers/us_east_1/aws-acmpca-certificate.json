@@ -12,13 +12,15 @@
  "definitions": {
   "ApiPassthrough": {
    "additionalProperties": false,
-   "description": "Structure that specifies fields to be overridden in a certificate at the time of issuance. These requires an API Passthrough template be used or they will be ignored.",
+   "description": "Contains X.509 certificate information to be placed in an issued certificate. An ``APIPassthrough`` or ``APICSRPassthrough`` template variant must be selected, or else this parameter is ignored. \n If conflicting or duplicate certificate information is supplied from other sources, AWS Private CA applies [order of operation rules](https://docs.aws.amazon.com/privateca/latest/userguide/UsingTemplates.html#template-order-of-operations) to determine what information is used.",
    "properties": {
     "Extensions": {
-     "$ref": "#/definitions/Extensions"
+     "$ref": "#/definitions/Extensions",
+     "description": "Specifies X.509 extension information for a certificate."
     },
     "Subject": {
-     "$ref": "#/definitions/Subject"
+     "$ref": "#/definitions/Subject",
+     "description": "Contains information about the certificate subject. The Subject field in the certificate identifies the entity that owns or controls the public key in the certificate. The entity can be a user, computer, device, or service. The Subject must contain an X.500 distinguished name (DN). A DN is a sequence of relative distinguished names (RDNs). The RDNs are separated by commas in the certificate."
     }
    },
    "type": "object"
@@ -34,12 +36,14 @@
   },
   "CustomAttribute": {
    "additionalProperties": false,
-   "description": "Structure that contains X.500 attribute type and value.",
+   "description": "Defines the X.500 relative distinguished name (RDN).",
    "properties": {
     "ObjectIdentifier": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Specifies the object identifier (OID) of the attribute type of the relative distinguished name (RDN)."
     },
     "Value": {
+     "description": "Specifies the attribute value of relative distinguished name (RDN).",
      "type": "string"
     }
    },
@@ -58,15 +62,18 @@
   },
   "CustomExtension": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 extension information for a certificate.",
+   "description": "Specifies the X.509 extension information for a certificate.\n Extensions present in ``CustomExtensions`` follow the ``ApiPassthrough`` [template rules](https://docs.aws.amazon.com/privateca/latest/userguide/UsingTemplates.html#template-order-of-operations).",
    "properties": {
     "Critical": {
+     "description": "Specifies the critical flag of the X.509 extension.",
      "type": "boolean"
     },
     "ObjectIdentifier": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Specifies the object identifier (OID) of the X.509 extension. For more information, see the [Global OID reference database.](https://docs.aws.amazon.com/https://oidref.com/2.5.29)"
     },
     "Value": {
+     "description": "Specifies the base64-encoded value of the X.509 extension.",
      "type": "string"
     }
    },
@@ -93,12 +100,14 @@
   },
   "EdiPartyName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 EdiPartyName information.",
+   "description": "Describes an Electronic Data Interchange (EDI) entity as described in as defined in [Subject Alternative Name](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc5280) in RFC 5280.",
    "properties": {
     "NameAssigner": {
+     "description": "Specifies the name assigner.",
      "type": "string"
     },
     "PartyName": {
+     "description": "Specifies the party name.",
      "type": "string"
     }
    },
@@ -110,12 +119,14 @@
   },
   "ExtendedKeyUsage": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 ExtendedKeyUsage information.",
+   "description": "Specifies additional purposes for which the certified public key may be used other than basic purposes indicated in the ``KeyUsage`` extension.",
    "properties": {
     "ExtendedKeyUsageObjectIdentifier": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Specifies a custom ``ExtendedKeyUsage`` with an object identifier (OID)."
     },
     "ExtendedKeyUsageType": {
+     "description": "Specifies a standard ``ExtendedKeyUsage`` as defined as in [RFC 5280](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.12).",
      "type": "string"
     }
    },
@@ -129,53 +140,66 @@
   },
   "Extensions": {
    "additionalProperties": false,
-   "description": "Structure that contains X.500 extensions for a Certificate.",
+   "description": "Contains X.509 extension information for a certificate.",
    "properties": {
     "CertificatePolicies": {
-     "$ref": "#/definitions/CertificatePolicyList"
+     "$ref": "#/definitions/CertificatePolicyList",
+     "description": "Contains a sequence of one or more policy information terms, each of which consists of an object identifier (OID) and optional qualifiers. For more information, see NIST's definition of [Object Identifier (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier).\n In an end-entity certificate, these terms indicate the policy under which the certificate was issued and the purposes for which it may be used. In a CA certificate, these terms limit the set of policies for certification paths that include this certificate."
     },
     "CustomExtensions": {
-     "$ref": "#/definitions/CustomExtensionList"
+     "$ref": "#/definitions/CustomExtensionList",
+     "description": "Contains a sequence of one or more X.509 extensions, each of which consists of an object identifier (OID), a base64-encoded value, and the critical flag. For more information, see the [Global OID reference database.](https://docs.aws.amazon.com/https://oidref.com/2.5.29)"
     },
     "ExtendedKeyUsage": {
-     "$ref": "#/definitions/ExtendedKeyUsageList"
+     "$ref": "#/definitions/ExtendedKeyUsageList",
+     "description": "Specifies additional purposes for which the certified public key may be used other than basic purposes indicated in the ``KeyUsage`` extension."
     },
     "KeyUsage": {
-     "$ref": "#/definitions/KeyUsage"
+     "$ref": "#/definitions/KeyUsage",
+     "description": "Defines one or more purposes for which the key contained in the certificate can be used. Default value for each option is false."
     },
     "SubjectAlternativeNames": {
-     "$ref": "#/definitions/GeneralNameList"
+     "$ref": "#/definitions/GeneralNameList",
+     "description": "The subject alternative name extension allows identities to be bound to the subject of the certificate. These identities may be included in addition to or in place of the identity in the subject field of the certificate."
     }
    },
    "type": "object"
   },
   "GeneralName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 GeneralName information. Assign one and ONLY one field.",
+   "description": "Describes an ASN.1 X.400 ``GeneralName`` as defined in [RFC 5280](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc5280). Only one of the following naming options should be provided. Providing more than one option results in an ``InvalidArgsException`` error.",
    "properties": {
     "DirectoryName": {
-     "$ref": "#/definitions/Subject"
+     "$ref": "#/definitions/Subject",
+     "description": "Contains information about the certificate subject. The certificate can be one issued by your private certificate authority (CA) or it can be your private CA certificate. The Subject field in the certificate identifies the entity that owns or controls the public key in the certificate. The entity can be a user, computer, device, or service. The Subject must contain an X.500 distinguished name (DN). A DN is a sequence of relative distinguished names (RDNs). The RDNs are separated by commas in the certificate. The DN must be unique for each entity, but your private CA can issue more than one certificate with the same DN to the same entity."
     },
     "DnsName": {
-     "$ref": "#/definitions/DnsName"
+     "$ref": "#/definitions/DnsName",
+     "description": "Represents ``GeneralName`` as a DNS name."
     },
     "EdiPartyName": {
-     "$ref": "#/definitions/EdiPartyName"
+     "$ref": "#/definitions/EdiPartyName",
+     "description": "Represents ``GeneralName`` as an ``EdiPartyName`` object."
     },
     "IpAddress": {
-     "$ref": "#/definitions/IpAddress"
+     "$ref": "#/definitions/IpAddress",
+     "description": "Represents ``GeneralName`` as an IPv4 or IPv6 address."
     },
     "OtherName": {
-     "$ref": "#/definitions/OtherName"
+     "$ref": "#/definitions/OtherName",
+     "description": "Represents ``GeneralName`` using an ``OtherName`` object."
     },
     "RegisteredId": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Represents ``GeneralName`` as an object identifier (OID)."
     },
     "Rfc822Name": {
-     "$ref": "#/definitions/Rfc822Name"
+     "$ref": "#/definitions/Rfc822Name",
+     "description": "Represents ``GeneralName`` as an [RFC 822](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc822) email address."
     },
     "UniformResourceIdentifier": {
-     "$ref": "#/definitions/UniformResourceIdentifier"
+     "$ref": "#/definitions/UniformResourceIdentifier",
+     "description": "Represents ``GeneralName`` as a URI."
     }
    },
    "type": "object"
@@ -192,42 +216,51 @@
   },
   "KeyUsage": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 KeyUsage information.",
+   "description": "Defines one or more purposes for which the key contained in the certificate can be used. Default value for each option is false.",
    "properties": {
     "CRLSign": {
      "default": false,
+     "description": "Key can be used to sign CRLs.",
      "type": "boolean"
     },
     "DataEncipherment": {
      "default": false,
+     "description": "Key can be used to decipher data.",
      "type": "boolean"
     },
     "DecipherOnly": {
      "default": false,
+     "description": "Key can be used only to decipher data.",
      "type": "boolean"
     },
     "DigitalSignature": {
      "default": false,
+     "description": "Key can be used for digital signing.",
      "type": "boolean"
     },
     "EncipherOnly": {
      "default": false,
+     "description": "Key can be used only to encipher data.",
      "type": "boolean"
     },
     "KeyAgreement": {
      "default": false,
+     "description": "Key can be used in a key-agreement protocol.",
      "type": "boolean"
     },
     "KeyCertSign": {
      "default": false,
+     "description": "Key can be used to sign certificates.",
      "type": "boolean"
     },
     "KeyEncipherment": {
      "default": false,
+     "description": "Key can be used to encipher data.",
      "type": "boolean"
     },
     "NonRepudiation": {
      "default": false,
+     "description": "Key can be used for non-repudiation.",
      "type": "boolean"
     }
    },
@@ -235,12 +268,14 @@
   },
   "OtherName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 OtherName information.",
+   "description": "Defines a custom ASN.1 X.400 ``GeneralName`` using an object identifier (OID) and value. The OID must satisfy the regular expression shown below. For more information, see NIST's definition of [Object Identifier (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier).",
    "properties": {
     "TypeId": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Specifies an OID."
     },
     "Value": {
+     "description": "Specifies an OID value.",
      "type": "string"
     }
    },
@@ -252,13 +287,15 @@
   },
   "PolicyInformation": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 Policy information.",
+   "description": "Defines the X.509 ``CertificatePolicies`` extension.",
    "properties": {
     "CertPolicyId": {
-     "$ref": "#/definitions/CustomObjectIdentifier"
+     "$ref": "#/definitions/CustomObjectIdentifier",
+     "description": "Specifies the object identifier (OID) of the certificate policy under which the certificate was issued. For more information, see NIST's definition of [Object Identifier (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier)."
     },
     "PolicyQualifiers": {
-     "$ref": "#/definitions/PolicyQualifierInfoList"
+     "$ref": "#/definitions/PolicyQualifierInfoList",
+     "description": "Modifies the given ``CertPolicyId`` with a qualifier. AWS Private CA supports the certification practice statement (CPS) qualifier."
     }
    },
    "required": [
@@ -268,13 +305,15 @@
   },
   "PolicyQualifierInfo": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 Policy qualifier information.",
+   "description": "Modifies the ``CertPolicyId`` of a ``PolicyInformation`` object with a qualifier. AWS Private CA supports the certification practice statement (CPS) qualifier.",
    "properties": {
     "PolicyQualifierId": {
+     "description": "Identifies the qualifier modifying a ``CertPolicyId``.",
      "type": "string"
     },
     "Qualifier": {
-     "$ref": "#/definitions/Qualifier"
+     "$ref": "#/definitions/Qualifier",
+     "description": "Defines the qualifier type. AWS Private CA supports the use of a URI for a CPS qualifier in this field."
     }
    },
    "required": [
@@ -291,9 +330,10 @@
   },
   "Qualifier": {
    "additionalProperties": false,
-   "description": "Structure that contains a X.509 policy qualifier.",
+   "description": "Defines a ``PolicyInformation`` qualifier. AWS Private CA supports the [certification practice statement (CPS) qualifier](https://docs.aws.amazon.com/https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.4) defined in RFC 5280.",
    "properties": {
     "CpsUri": {
+     "description": "Contains a pointer to a certification practice statement (CPS) published by the CA.",
      "type": "string"
     }
    },
@@ -308,51 +348,66 @@
   },
   "Subject": {
    "additionalProperties": false,
-   "description": "Structure that contains X.500 distinguished name information.",
+   "description": "Contains information about the certificate subject. The ``Subject`` field in the certificate identifies the entity that owns or controls the public key in the certificate. The entity can be a user, computer, device, or service. The ``Subject``must contain an X.500 distinguished name (DN). A DN is a sequence of relative distinguished names (RDNs). The RDNs are separated by commas in the certificate.",
    "properties": {
     "CommonName": {
+     "description": "For CA and end-entity certificates in a private PKI, the common name (CN) can be any string within the length limit.\n Note: In publicly trusted certificates, the common name must be a fully qualified domain name (FQDN) associated with the certificate subject.",
      "type": "string"
     },
     "Country": {
+     "description": "Two-digit code that specifies the country in which the certificate subject located.",
      "type": "string"
     },
     "CustomAttributes": {
-     "$ref": "#/definitions/CustomAttributeList"
+     "$ref": "#/definitions/CustomAttributeList",
+     "description": "Contains a sequence of one or more X.500 relative distinguished names (RDNs), each of which consists of an object identifier (OID) and a value. For more information, see NIST\u2019s definition of [Object Identifier (OID)](https://docs.aws.amazon.com/https://csrc.nist.gov/glossary/term/Object_Identifier).\n  Custom attributes cannot be used in combination with standard attributes."
     },
     "DistinguishedNameQualifier": {
+     "description": "Disambiguating information for the certificate subject.",
      "type": "string"
     },
     "GenerationQualifier": {
+     "description": "Typically a qualifier appended to the name of an individual. Examples include Jr. for junior, Sr. for senior, and III for third.",
      "type": "string"
     },
     "GivenName": {
+     "description": "First name.",
      "type": "string"
     },
     "Initials": {
+     "description": "Concatenation that typically contains the first letter of the *GivenName*, the first letter of the middle name if one exists, and the first letter of the *Surname*.",
      "type": "string"
     },
     "Locality": {
+     "description": "The locality (such as a city or town) in which the certificate subject is located.",
      "type": "string"
     },
     "Organization": {
+     "description": "Legal name of the organization with which the certificate subject is affiliated.",
      "type": "string"
     },
     "OrganizationalUnit": {
+     "description": "A subdivision or unit of the organization (such as sales or finance) with which the certificate subject is affiliated.",
      "type": "string"
     },
     "Pseudonym": {
+     "description": "Typically a shortened version of a longer *GivenName*. For example, Jonathan is often shortened to John. Elizabeth is often shortened to Beth, Liz, or Eliza.",
      "type": "string"
     },
     "SerialNumber": {
+     "description": "The certificate serial number.",
      "type": "string"
     },
     "State": {
+     "description": "State in which the subject of the certificate is located.",
      "type": "string"
     },
     "Surname": {
+     "description": "Family name. In the US and the UK, for example, the surname of an individual is ordered last. In Asian cultures the surname is typically ordered first.",
      "type": "string"
     },
     "Title": {
+     "description": "A title such as Mr. or Ms., which is pre-pended to the name to refer formally to the certificate subject.",
      "type": "string"
     }
    },
@@ -364,12 +419,14 @@
   },
   "Validity": {
    "additionalProperties": false,
-   "description": "Validity for a certificate.",
+   "description": "Length of time for which the certificate issued by your private certificate authority (CA), or by the private CA itself, is valid in days, months, or years. You can issue a certificate by calling the ``IssueCertificate`` operation.",
    "properties": {
     "Type": {
+     "description": "Specifies whether the ``Value`` parameter represents days, months, or years.",
      "type": "string"
     },
     "Value": {
+     "description": "A long integer interpreted according to the value of ``Type``, below.",
      "type": "number"
     }
    },
@@ -380,7 +437,7 @@
    "type": "object"
   }
  },
- "description": "A certificate issued via a private certificate authority",
+ "description": "The ``AWS::ACMPCA::Certificate`` resource is used to issue a certificate using your private certificate authority. For more information, see the [IssueCertificate](https://docs.aws.amazon.com/privateca/latest/APIReference/API_IssueCertificate.html) action.",
  "handlers": {
   "create": {
    "permissions": [
@@ -409,40 +466,40 @@
  "properties": {
   "ApiPassthrough": {
    "$ref": "#/definitions/ApiPassthrough",
-   "description": "These are fields to be overridden in a certificate at the time of issuance. These requires an API_Passthrough template be used or they will be ignored."
+   "description": "Specifies X.509 certificate information to be included in the issued certificate. An ``APIPassthrough`` or ``APICSRPassthrough`` template variant must be selected, or else this parameter is ignored."
   },
   "Arn": {
    "$ref": "#/definitions/Arn",
-   "description": "The ARN of the issued certificate."
+   "description": ""
   },
   "Certificate": {
-   "description": "The issued certificate in base 64 PEM-encoded format.",
+   "description": "",
    "type": "string"
   },
   "CertificateAuthorityArn": {
    "$ref": "#/definitions/Arn",
-   "description": "The Amazon Resource Name (ARN) for the private CA to issue the certificate."
+   "description": "The Amazon Resource Name (ARN) for the private CA issues the certificate."
   },
   "CertificateSigningRequest": {
-   "description": "The certificate signing request (CSR) for the Certificate.",
+   "description": "The certificate signing request (CSR) for the certificate.",
    "minLength": 1,
    "type": "string"
   },
   "SigningAlgorithm": {
-   "description": "The name of the algorithm that will be used to sign the Certificate.",
+   "description": "The name of the algorithm that will be used to sign the certificate to be issued. \n This parameter should not be confused with the ``SigningAlgorithm`` parameter used to sign a CSR in the ``CreateCertificateAuthority`` action.\n  The specified signing algorithm family (RSA or ECDSA) must match the algorithm family of the CA's secret key.",
    "type": "string"
   },
   "TemplateArn": {
    "$ref": "#/definitions/Arn",
-   "description": "Specifies a custom configuration template to use when issuing a certificate. If this parameter is not provided, ACM Private CA defaults to the EndEntityCertificate/V1 template."
+   "description": "Specifies a custom configuration template to use when issuing a certificate. If this parameter is not provided, PCAshort defaults to the ``EndEntityCertificate/V1`` template. For more information about PCAshort templates, see [Using Templates](https://docs.aws.amazon.com/privateca/latest/userguide/UsingTemplates.html)."
   },
   "Validity": {
    "$ref": "#/definitions/Validity",
-   "description": "The time before which the Certificate will be valid."
+   "description": "The period of time during which the certificate will be valid."
   },
   "ValidityNotBefore": {
    "$ref": "#/definitions/Validity",
-   "description": "The time after which the Certificate will be valid."
+   "description": "Information describing the start of the validity period of the certificate. This parameter sets the \u201cNot Before\" date for the certificate.\n By default, when issuing a certificate, PCAshort sets the \"Not Before\" date to the issuance time minus 60 minutes. This compensates for clock inconsistencies across computer systems. The ``ValidityNotBefore`` parameter can be used to customize the \u201cNot Before\u201d value. \n Unlike the ``Validity`` parameter, the ``ValidityNotBefore`` parameter is optional.\n The ``ValidityNotBefore`` value is expressed as an explicit date and time, using the ``Validity`` type value ``ABSOLUTE``."
   }
  },
  "readOnlyProperties": [

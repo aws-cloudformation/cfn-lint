@@ -35,6 +35,47 @@
    ],
    "type": "object"
   },
+  "Application": {
+   "additionalProperties": false,
+   "description": "LoRaWAN application configuration, which can be used to perform geolocation.",
+   "properties": {
+    "DestinationName": {
+     "description": "The name of the position data destination that describes the AWS IoT rule that processes the device's position data for use by AWS IoT Core for LoRaWAN.",
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9-_]+",
+     "type": "string"
+    },
+    "FPort": {
+     "description": "The Fport value.",
+     "maximum": 223,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "description": "Application type, which can be specified to obtain real-time position information of your LoRaWAN device.",
+     "enum": [
+      "SemtechGeolocation"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FPorts": {
+   "additionalProperties": false,
+   "properties": {
+    "Applications": {
+     "description": "A list of optional LoRaWAN application information, which can be used for geolocation.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Application"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "LoRaWANDevice": {
    "additionalProperties": false,
    "oneOf": [
@@ -73,6 +114,9 @@
     "DeviceProfileId": {
      "maxLength": 256,
      "type": "string"
+    },
+    "FPorts": {
+     "$ref": "#/definitions/FPorts"
     },
     "OtaaV10x": {
      "$ref": "#/definitions/OtaaV10x"

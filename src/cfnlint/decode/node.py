@@ -37,16 +37,10 @@ def create_str_node_class(cls):
         def __new__(self, x, start_mark, end_mark):
             return cls.__new__(self, x)
 
-        def __getattr__(self, name):
-            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
-
         def __deepcopy__(self, memo):
             result = str_node(self, self.start_mark, self.end_mark)
             memo[id(self)] = result
             return result
-
-        def __copy__(self):
-            return self
 
     node_class.__name__ = f"{cls.__name__}_node"
     return node_class
@@ -79,9 +73,6 @@ def create_dict_node_class(cls):
 
             return result
 
-        def __copy__(self):
-            return self
-
         def get(self, key, default=None):
             """Override the default get"""
             if not isinstance(key, str):
@@ -89,9 +80,6 @@ def create_dict_node_class(cls):
             if isinstance(default, dict):
                 default = dict_node(default, self.start_mark, self.end_mark)
             return super().get(key, default)
-
-        def __getattr__(self, name):
-            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
 
     node_class.__name__ = f"{cls.__name__}_node"
     return node_class
@@ -138,12 +126,6 @@ def create_dict_list_class(cls):
 
             return result
 
-        def __copy__(self):
-            return self
-
-        def __getattr__(self, name):
-            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
-
     node_class.__name__ = f"{cls.__name__}_node"
     return node_class
 
@@ -152,26 +134,3 @@ str_node = create_str_node_class(str)
 dict_node = create_dict_node_class(dict)
 list_node = create_dict_list_class(list)
 intrinsic_node = create_intrinsic_node_class(dict_node)
-
-
-def convert_dict(template, start_mark=Mark(), end_mark=Mark()):
-    """Convert dict to template"""
-    if isinstance(template, dict):
-        if not isinstance(template, dict_node):
-            template = dict_node(template, start_mark, end_mark)
-        for k, v in template.copy().items():
-            k_start_mark = start_mark
-            k_end_mark = end_mark
-            if isinstance(k, str_node):
-                k_start_mark = k.start_mark
-                k_end_mark = k.end_mark
-            new_k = str_node(k, k_start_mark, k_end_mark)
-            del template[k]
-            template[new_k] = convert_dict(v, k_start_mark, k_end_mark)
-    elif isinstance(template, list):
-        if not isinstance(template, list_node):
-            template = list_node(template, start_mark, end_mark)
-        for i, v in enumerate(template):
-            template[i] = convert_dict(v, start_mark, end_mark)
-
-    return template
