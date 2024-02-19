@@ -159,9 +159,36 @@
    ],
    "type": "object"
   },
+  "GitBranchFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "GitConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "PullRequest": {
+     "items": {
+      "$ref": "#/definitions/GitPullRequestFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
     "Push": {
      "items": {
       "$ref": "#/definitions/GitPushFilter"
@@ -178,9 +205,54 @@
    ],
    "type": "object"
   },
+  "GitFilePathFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitPullRequestFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "Events": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
   "GitPushFilter": {
    "additionalProperties": false,
    "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    },
     "Tags": {
      "$ref": "#/definitions/GitTagFilterCriteria"
     }
@@ -345,6 +417,9 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "ExecutionMode": {
+   "type": "string"
   },
   "Id": {
    "type": "string"

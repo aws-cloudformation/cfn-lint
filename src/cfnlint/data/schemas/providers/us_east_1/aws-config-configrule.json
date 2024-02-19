@@ -231,6 +231,9 @@
    "description": "Source of events for the AWS Config rule"
   }
  },
+ "propertyTransform": {
+  "/properties/Source": "$count(Source.SourceDetails[MessageType=\"ConfigurationItemChangeNotification\"]) > 0  and $count(Source.SourceDetails[MessageType=\"OversizedConfigurationItemChangeNotification\"]) = 0 ? $ ~> | $.Source | {\"SourceDetails\" : [SourceDetails, {\"EventSource\": \"aws.config\",\"MessageType\": \"OversizedConfigurationItemChangeNotification\"}]} | : $"
+ },
  "readOnlyProperties": [
   "/properties/ConfigRuleId",
   "/properties/Compliance/Type",
