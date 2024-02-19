@@ -2,11 +2,53 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/DetectorId",
-  "/properties/MemberId",
-  "/properties/Email"
+  "/properties/MemberId"
  ],
  "description": "Resource Type definition for AWS::GuardDuty::Member",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateMembers",
+    "guardduty:GetMembers"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:GetMembers",
+    "guardduty:DisassociateMembers",
+    "guardduty:DeleteMembers"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DetectorId": {
+      "type": "string"
+     }
+    }
+   },
+   "permissions": [
+    "guardduty:ListMembers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetMembers"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:GetMembers",
+    "guardduty:CreateMembers",
+    "guardduty:DisassociateMembers",
+    "guardduty:StartMonitoringMembers",
+    "guardduty:StopMonitoringMembers",
+    "guardduty:InviteMembers"
+   ]
+  }
+ },
  "primaryIdentifier": [
+  "/properties/DetectorId",
   "/properties/MemberId"
  ],
  "properties": {
@@ -37,13 +79,19 @@
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/MemberId"
- ],
  "required": [
-  "MemberId",
-  "Email",
-  "DetectorId"
+  "Email"
  ],
- "typeName": "AWS::GuardDuty::Member"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-guardduty",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::GuardDuty::Member",
+ "writeOnlyProperties": [
+  "/properties/DisableEmailNotification",
+  "/properties/Message"
+ ]
 }
