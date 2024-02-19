@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigRuleName"
+ ],
+ "definitions": {
+  "CustomPolicyDetails": {
+   "additionalProperties": false,
+   "description": "Custom policy details when rule is custom owned",
+   "properties": {
+    "EnableDebugLogDelivery": {
+     "description": "Logging toggle for custom policy rule",
+     "type": "boolean"
+    },
+    "PolicyRuntime": {
+     "description": "Runtime system for custom policy rule",
+     "type": "string"
+    },
+    "PolicyText": {
+     "description": "Policy definition containing logic for custom policy rule",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EvaluationModeConfiguration": {
+   "additionalProperties": false,
+   "description": "Evaluation mode for the AWS Config rule",
+   "properties": {
+    "Mode": {
+     "description": "Mode of evaluation of AWS Config rule",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Scope": {
+   "additionalProperties": false,
+   "description": "Scope to constrain which resources can trigger the rule",
+   "properties": {
+    "ComplianceResourceId": {
+     "description": "ID of the only one resource which we want to trigger the rule",
+     "type": "string"
+    },
+    "ComplianceResourceTypes": {
+     "description": "Resource types of resources which we want to trigger the rule",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TagKey": {
+     "description": "Tag key applied only to resources which we want to trigger the rule",
+     "type": "string"
+    },
+    "TagValue": {
+     "description": "Tag value applied only to resources which we want to trigger the rule",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "description": "Source of events for the config rule",
+   "properties": {
+    "CustomPolicyDetails": {
+     "$ref": "#/definitions/CustomPolicyDetails",
+     "description": "Custom policy details when rule is custom owned"
+    },
+    "Owner": {
+     "description": "Owner of the config rule",
+     "enum": [
+      "CUSTOM_LAMBDA",
+      "AWS",
+      "CUSTOM_POLICY"
+     ],
+     "type": "string"
+    },
+    "SourceDetails": {
+     "description": "List of message types that can trigger the rule",
+     "items": {
+      "$ref": "#/definitions/SourceDetail",
+      "description": "Source and message type that can trigger the rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceIdentifier": {
+     "description": "Identifier for the source of events",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "SourceDetail": {
+   "additionalProperties": false,
+   "description": "Source and message type that can trigger the rule",
+   "properties": {
+    "EventSource": {
+     "description": "Source of event that can trigger the rule",
+     "enum": [
+      "aws.config"
+     ],
+     "type": "string"
+    },
+    "MaximumExecutionFrequency": {
+     "description": "Frequency at which the rule has to be evaluated",
+     "enum": [
+      "One_Hour",
+      "Three_Hours",
+      "Six_Hours",
+      "Twelve_Hours",
+      "TwentyFour_Hours"
+     ],
+     "type": "string"
+    },
+    "MessageType": {
+     "description": "Notification type that can trigger the rule",
+     "enum": [
+      "ConfigurationItemChangeNotification",
+      "ConfigurationSnapshotDeliveryCompleted",
+      "ScheduledNotification",
+      "OversizedConfigurationItemChangeNotification"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventSource",
+    "MessageType"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Schema for AWS Config ConfigRule",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutConfigRule",
+    "config:DescribeConfigRules"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteConfigRule",
+    "config:DescribeConfigRules"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeConfigRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeConfigRules",
+    "config:DescribeComplianceByConfigRule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutConfigRule",
+    "config:DescribeConfigRules"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigRuleName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "ARN generated for the AWS Config rule ",
+   "type": "string"
+  },
+  "Compliance": {
+   "additionalProperties": false,
+   "description": "Compliance details of the Config rule",
+   "properties": {
+    "Type": {
+     "description": "Compliance type determined by the Config rule",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigRuleId": {
+   "description": "ID of the config rule",
+   "type": "string"
+  },
+  "ConfigRuleName": {
+   "description": "Name for the AWS Config rule",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description provided for the AWS Config rule",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationModes": {
+   "description": "List of EvaluationModeConfiguration objects",
+   "items": {
+    "$ref": "#/definitions/EvaluationModeConfiguration",
+    "description": "Mode of evaluation of AWS Config rule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "InputParameters": {
+   "description": "JSON string passed the Lambda function",
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "MaximumExecutionFrequency": {
+   "description": "Maximum frequency at which the rule has to be evaluated",
+   "type": "string"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope",
+   "description": "Scope to constrain which resources can trigger the AWS Config rule"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source",
+   "description": "Source of events for the AWS Config rule"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigRuleId",
+  "/properties/Compliance/Type",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Source"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Config::ConfigRule",
+ "writeOnlyProperties": [
+  "/properties/Source/CustomPolicyDetails/PolicyText"
+ ]
+}

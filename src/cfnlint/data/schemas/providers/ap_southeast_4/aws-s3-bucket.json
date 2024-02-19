@@ -1,0 +1,1688 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName",
+  "/properties/ObjectLockEnabled"
+ ],
+ "definitions": {
+  "AbortIncompleteMultipartUpload": {
+   "additionalProperties": false,
+   "description": "Specifies the days since the initiation of an incomplete multipart upload that Amazon S3 will wait before permanently removing all parts of the upload.",
+   "properties": {
+    "DaysAfterInitiation": {
+     "description": "Specifies the number of days after which Amazon S3 aborts an incomplete multipart upload.",
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ],
+   "type": "object"
+  },
+  "AccelerateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccelerationStatus": {
+     "description": "Configures the transfer acceleration state for an Amazon S3 bucket.",
+     "enum": [
+      "Enabled",
+      "Suspended"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccelerationStatus"
+   ],
+   "type": "object"
+  },
+  "AccessControlTranslation": {
+   "additionalProperties": false,
+   "description": "Specify this only in a cross-account scenario (where source and destination bucket owners are not the same), and you want to change replica ownership to the AWS account that owns the destination bucket. If this is not specified in the replication configuration, the replicas are owned by same AWS account that owns the source object.",
+   "properties": {
+    "Owner": {
+     "const": "Destination",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "AnalyticsConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies the configuration and any analyses for the analytics filter of an Amazon S3 bucket.",
+   "properties": {
+    "Id": {
+     "description": "The ID that identifies the analytics configuration.",
+     "type": "string"
+    },
+    "Prefix": {
+     "description": "The prefix that an object must have to be included in the analytics results.",
+     "type": "string"
+    },
+    "StorageClassAnalysis": {
+     "$ref": "#/definitions/StorageClassAnalysis"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "StorageClassAnalysis",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "description": "the Amazon Resource Name (ARN) of the specified bucket.",
+   "type": "string"
+  },
+  "BucketEncryption": {
+   "additionalProperties": false,
+   "description": "Specifies default encryption for a bucket using server-side encryption with either Amazon S3-managed keys (SSE-S3) or AWS KMS-managed keys (SSE-KMS).",
+   "properties": {
+    "ServerSideEncryptionConfiguration": {
+     "description": "Specifies the default server-side-encryption configuration.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerSideEncryptionRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ServerSideEncryptionConfiguration"
+   ],
+   "type": "object"
+  },
+  "CorsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CorsRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CorsRule",
+      "maxLength": 100
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CorsRules"
+   ],
+   "type": "object"
+  },
+  "CorsRule": {
+   "additionalProperties": false,
+   "description": "A set of origins and methods (cross-origin access that you want to allow). You can add up to 100 rules to the configuration.",
+   "properties": {
+    "AllowedHeaders": {
+     "description": "Headers that are specified in the Access-Control-Request-Headers header.",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AllowedMethods": {
+     "description": "An HTTP method that you allow the origin to execute.",
+     "insertionOrder": true,
+     "items": {
+      "enum": [
+       "GET",
+       "PUT",
+       "HEAD",
+       "POST",
+       "DELETE"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AllowedOrigins": {
+     "description": "One or more origins you want customers to be able to access the bucket from.",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ExposedHeaders": {
+     "description": "One or more headers in the response that you want customers to be able to access from their applications (for example, from a JavaScript XMLHttpRequest object).",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Id": {
+     "description": "A unique identifier for this rule.",
+     "maxLength": 255,
+     "type": "string"
+    },
+    "MaxAge": {
+     "description": "The time in seconds that your browser is to cache the preflight response for the specified resource.",
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AllowedMethods",
+    "AllowedOrigins"
+   ],
+   "type": "object"
+  },
+  "DataExport": {
+   "additionalProperties": false,
+   "description": "Specifies how data related to the storage class analysis for an Amazon S3 bucket should be exported.",
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "OutputSchemaVersion": {
+     "const": "V_1",
+     "description": "The version of the output schema to use when exporting data.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputSchemaVersion"
+   ],
+   "type": "object"
+  },
+  "DefaultRetention": {
+   "additionalProperties": false,
+   "description": "The default retention period that you want to apply to new objects placed in the specified bucket.",
+   "properties": {
+    "Days": {
+     "type": "integer"
+    },
+    "Mode": {
+     "enum": [
+      "COMPLIANCE",
+      "GOVERNANCE"
+     ],
+     "type": "string"
+    },
+    "Years": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "DeleteMarkerReplication": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Destination": {
+   "additionalProperties": false,
+   "description": "Specifies information about where to publish analysis or configuration results for an Amazon S3 bucket and S3 Replication Time Control (S3 RTC).",
+   "properties": {
+    "BucketAccountId": {
+     "description": "The account ID that owns the destination S3 bucket. ",
+     "type": "string"
+    },
+    "BucketArn": {
+     "description": "The Amazon Resource Name (ARN) of the bucket to which data is exported.",
+     "type": "string"
+    },
+    "Format": {
+     "description": "Specifies the file format used when exporting data to Amazon S3.",
+     "enum": [
+      "CSV",
+      "ORC",
+      "Parquet"
+     ],
+     "type": "string"
+    },
+    "Prefix": {
+     "description": "The prefix to use when exporting data. The prefix is prepended to all results.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketArn",
+    "Format"
+   ],
+   "type": "object"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies encryption-related information for an Amazon S3 bucket that is a destination for replicated objects.",
+   "properties": {
+    "ReplicaKmsKeyID": {
+     "description": "Specifies the ID (Key ARN or Alias ARN) of the customer managed customer master key (CMK) stored in AWS Key Management Service (KMS) for the destination bucket.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReplicaKmsKeyID"
+   ],
+   "type": "object"
+  },
+  "EventBridgeConfiguration": {
+   "additionalProperties": false,
+   "description": "Describes the Amazon EventBridge notification configuration for an Amazon S3 bucket.",
+   "properties": {
+    "EventBridgeEnabled": {
+     "default": "true",
+     "description": "Specifies whether to send notifications to Amazon EventBridge when events occur in an Amazon S3 bucket.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "EventBridgeEnabled"
+   ],
+   "type": "object"
+  },
+  "FilterRule": {
+   "additionalProperties": false,
+   "description": "Specifies the Amazon S3 object key name to filter on and whether to filter on the suffix or prefix of the key name.",
+   "properties": {
+    "Name": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "IntelligentTieringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "description": "The ID used to identify the S3 Intelligent-Tiering configuration.",
+     "type": "string"
+    },
+    "Prefix": {
+     "description": "An object key name prefix that identifies the subset of objects to which the rule applies.",
+     "type": "string"
+    },
+    "Status": {
+     "description": "Specifies the status of the configuration.",
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    },
+    "TagFilters": {
+     "description": "A container for a key-value pair.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Tierings": {
+     "description": "Specifies a list of S3 Intelligent-Tiering storage class tiers in the configuration. At least one tier must be defined in the list. At most, you can specify two tiers in the list, one for each available AccessTier: ARCHIVE_ACCESS and DEEP_ARCHIVE_ACCESS.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Tiering"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Id",
+    "Status",
+    "Tierings"
+   ],
+   "type": "object"
+  },
+  "InventoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "Enabled": {
+     "description": "Specifies whether the inventory is enabled or disabled.",
+     "type": "boolean"
+    },
+    "Id": {
+     "description": "The ID used to identify the inventory configuration.",
+     "type": "string"
+    },
+    "IncludedObjectVersions": {
+     "description": "Object versions to include in the inventory list.",
+     "enum": [
+      "All",
+      "Current"
+     ],
+     "type": "string"
+    },
+    "OptionalFields": {
+     "description": "Contains the optional fields that are included in the inventory results.",
+     "insertionOrder": true,
+     "items": {
+      "enum": [
+       "Size",
+       "LastModifiedDate",
+       "StorageClass",
+       "ETag",
+       "IsMultipartUploaded",
+       "ReplicationStatus",
+       "EncryptionStatus",
+       "ObjectLockRetainUntilDate",
+       "ObjectLockMode",
+       "ObjectLockLegalHoldStatus",
+       "IntelligentTieringAccessTier",
+       "BucketKeyStatus",
+       "ChecksumAlgorithm",
+       "ObjectAccessControlList",
+       "ObjectOwner",
+       "ChecksumAlgorithm"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Prefix": {
+     "description": "The prefix that is prepended to all inventory results.",
+     "type": "string"
+    },
+    "ScheduleFrequency": {
+     "description": "Specifies the schedule for generating inventory results.",
+     "enum": [
+      "Daily",
+      "Weekly"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "Enabled",
+    "Id",
+    "IncludedObjectVersions",
+    "ScheduleFrequency"
+   ],
+   "type": "object"
+  },
+  "LambdaConfiguration": {
+   "additionalProperties": false,
+   "description": "Describes the AWS Lambda functions to invoke and the events for which to invoke them.",
+   "properties": {
+    "Event": {
+     "description": "The Amazon S3 bucket event for which to invoke the AWS Lambda function.",
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter",
+     "description": "The filtering rules that determine which objects invoke the AWS Lambda function."
+    },
+    "Function": {
+     "description": "The Amazon Resource Name (ARN) of the AWS Lambda function that Amazon S3 invokes when the specified event type occurs.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Function",
+    "Event"
+   ],
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "description": "A lifecycle rule for individual objects in an Amazon S3 bucket.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationBucketName": {
+     "description": "The name of an Amazon S3 bucket where Amazon S3 store server access log files. You can store log files in any bucket that you own. By default, logs are stored in the bucket where the LoggingConfiguration property is defined.",
+     "type": "string"
+    },
+    "LogFilePrefix": {
+     "type": "string"
+    },
+    "TargetObjectKeyFormat": {
+     "$ref": "#/definitions/TargetObjectKeyFormat"
+    }
+   },
+   "type": "object"
+  },
+  "Metrics": {
+   "additionalProperties": false,
+   "properties": {
+    "EventThreshold": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    },
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "MetricsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessPointArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "NoncurrentVersionExpiration": {
+   "additionalProperties": false,
+   "description": "Container for the expiration rule that describes when noncurrent objects are expired. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 expire noncurrent object versions at a specific period in the object's lifetime",
+   "properties": {
+    "NewerNoncurrentVersions": {
+     "description": "Specified the number of newer noncurrent and current versions that must exists before performing the associated action",
+     "type": "integer"
+    },
+    "NoncurrentDays": {
+     "description": "Specified the number of days an object is noncurrent before Amazon S3 can perform the associated action",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "NoncurrentDays"
+   ],
+   "type": "object"
+  },
+  "NoncurrentVersionTransition": {
+   "additionalProperties": false,
+   "description": "Container for the transition rule that describes when noncurrent objects transition to the STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER_IR, GLACIER, or DEEP_ARCHIVE storage class. If your bucket is versioning-enabled (or versioning is suspended), you can set this action to request that Amazon S3 transition noncurrent object versions to the STANDARD_IA, ONEZONE_IA, INTELLIGENT_TIERING, GLACIER_IR, GLACIER, or DEEP_ARCHIVE storage class at a specific period in the object's lifetime.",
+   "properties": {
+    "NewerNoncurrentVersions": {
+     "description": "Specified the number of newer noncurrent and current versions that must exists before performing the associated action",
+     "type": "integer"
+    },
+    "StorageClass": {
+     "description": "The class of storage used to store the object.",
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "Glacier",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    },
+    "TransitionInDays": {
+     "description": "Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action.",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StorageClass",
+    "TransitionInDays"
+   ],
+   "type": "object"
+  },
+  "NotificationConfiguration": {
+   "additionalProperties": false,
+   "description": "Describes the notification configuration for an Amazon S3 bucket.",
+   "properties": {
+    "EventBridgeConfiguration": {
+     "$ref": "#/definitions/EventBridgeConfiguration"
+    },
+    "LambdaConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LambdaConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "QueueConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/QueueConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TopicConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TopicConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NotificationFilter": {
+   "additionalProperties": false,
+   "description": "Specifies object key name filtering rules.",
+   "properties": {
+    "S3Key": {
+     "$ref": "#/definitions/S3KeyFilter"
+    }
+   },
+   "required": [
+    "S3Key"
+   ],
+   "type": "object"
+  },
+  "ObjectLockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectLockEnabled": {
+     "const": "Enabled",
+     "type": "string"
+    },
+    "Rule": {
+     "$ref": "#/definitions/ObjectLockRule"
+    }
+   },
+   "type": "object"
+  },
+  "ObjectLockRule": {
+   "additionalProperties": false,
+   "description": "The Object Lock rule in place for the specified object.",
+   "properties": {
+    "DefaultRetention": {
+     "$ref": "#/definitions/DefaultRetention"
+    }
+   },
+   "type": "object"
+  },
+  "OwnershipControls": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OwnershipControlsRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "OwnershipControlsRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectOwnership": {
+     "description": "Specifies an object ownership rule.",
+     "enum": [
+      "ObjectWriter",
+      "BucketOwnerPreferred",
+      "BucketOwnerEnforced"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PartitionedPrefix": {
+   "additionalProperties": false,
+   "description": "This format appends a time based prefix to the given log file prefix for delivering server access log file.",
+   "properties": {
+    "PartitionDateSource": {
+     "description": "Date Source for creating a partitioned prefix. This can be event time or delivery time.",
+     "enum": [
+      "EventTime",
+      "DeliveryTime"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PublicAccessBlockConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration that defines how Amazon S3 handles public access.",
+   "properties": {
+    "BlockPublicAcls": {
+     "description": "Specifies whether Amazon S3 should block public access control lists (ACLs) for this bucket and objects in this bucket. Setting this element to TRUE causes the following behavior:\n- PUT Bucket acl and PUT Object acl calls fail if the specified ACL is public.\n - PUT Object calls fail if the request includes a public ACL.\nEnabling this setting doesn't affect existing policies or ACLs.",
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "description": "Specifies whether Amazon S3 should block public bucket policies for this bucket. Setting this element to TRUE causes Amazon S3 to reject calls to PUT Bucket policy if the specified bucket policy allows public access.\nEnabling this setting doesn't affect existing bucket policies.",
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "description": "Specifies whether Amazon S3 should ignore public ACLs for this bucket and objects in this bucket. Setting this element to TRUE causes Amazon S3 to ignore all public ACLs on this bucket and objects in this bucket.\nEnabling this setting doesn't affect the persistence of any existing ACLs and doesn't prevent new public ACLs from being set.",
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "description": "Specifies whether Amazon S3 should restrict public bucket policies for this bucket. Setting this element to TRUE restricts access to this bucket to only AWS services and authorized users within this account if the bucket has a public policy.\nEnabling this setting doesn't affect previously stored bucket policies, except that public and cross-account access within any public bucket policy, including non-public delegation to specific accounts, is blocked.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "QueueConfiguration": {
+   "additionalProperties": false,
+   "description": "The Amazon Simple Queue Service queues to publish messages to and the events for which to publish messages.",
+   "properties": {
+    "Event": {
+     "description": "The Amazon S3 bucket event about which you want to publish messages to Amazon SQS.",
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter",
+     "description": "The filtering rules that determine which objects trigger notifications."
+    },
+    "Queue": {
+     "description": "The Amazon Resource Name (ARN) of the Amazon SQS queue to which Amazon S3 publishes a message when it detects events of the specified type.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Event",
+    "Queue"
+   ],
+   "type": "object"
+  },
+  "RedirectAllRequestsTo": {
+   "additionalProperties": false,
+   "dependentExcluded": {
+    "RedirectAllRequestsTo": [
+     "ErrorDocument",
+     "IndexDocument",
+     "RoutingRules"
+    ]
+   },
+   "description": "Specifies the redirect behavior of all requests to a website endpoint of an Amazon S3 bucket.",
+   "properties": {
+    "HostName": {
+     "description": "Name of the host where requests are redirected.",
+     "type": "string"
+    },
+    "Protocol": {
+     "description": "Protocol to use when redirecting requests. The default is the protocol that is used in the original request.",
+     "enum": [
+      "http",
+      "https"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostName"
+   ],
+   "type": "object"
+  },
+  "RedirectRule": {
+   "additionalProperties": false,
+   "description": "Specifies how requests are redirected. In the event of an error, you can specify a different error code to return.",
+   "properties": {
+    "HostName": {
+     "description": "The host name to use in the redirect request.",
+     "type": "string"
+    },
+    "HttpRedirectCode": {
+     "description": "The HTTP redirect code to use on the response. Not required if one of the siblings is present.",
+     "type": "string"
+    },
+    "Protocol": {
+     "description": "Protocol to use when redirecting requests. The default is the protocol that is used in the original request.",
+     "enum": [
+      "http",
+      "https"
+     ],
+     "type": "string"
+    },
+    "ReplaceKeyPrefixWith": {
+     "description": "The object key prefix to use in the redirect request.",
+     "type": "string"
+    },
+    "ReplaceKeyWith": {
+     "description": "The specific object key to use in the redirect request.d",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ReplicaModifications": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "description": "Specifies whether Amazon S3 replicates modifications on replicas.",
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "description": "A container for replication rules. You can add up to 1,000 rules. The maximum size of a replication configuration is 2 MB.",
+   "properties": {
+    "Role": {
+     "cfnLint": [
+      "AWS::S3::Bucket/Properties/ReplicationConfiguration/Role"
+     ],
+     "description": "The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role that Amazon S3 assumes when replicating objects.",
+     "type": "string"
+    },
+    "Rules": {
+     "description": "A container for one or more replication rules.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ReplicationRule",
+      "maxLength": 1000,
+      "minLength": 1
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Role",
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "ReplicationDestination": {
+   "additionalProperties": false,
+   "description": "Specifies which Amazon S3 bucket to store replicated objects in and their storage class.",
+   "properties": {
+    "AccessControlTranslation": {
+     "$ref": "#/definitions/AccessControlTranslation"
+    },
+    "Account": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    },
+    "Metrics": {
+     "$ref": "#/definitions/Metrics"
+    },
+    "ReplicationTime": {
+     "$ref": "#/definitions/ReplicationTime"
+    },
+    "StorageClass": {
+     "description": "The storage class to use when replicating objects, such as S3 Standard or reduced redundancy.",
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "REDUCED_REDUNDANCY",
+      "STANDARD",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "ReplicationRule": {
+   "additionalProperties": false,
+   "description": "Specifies which Amazon S3 objects to replicate and where to store the replicas.",
+   "properties": {
+    "DeleteMarkerReplication": {
+     "$ref": "#/definitions/DeleteMarkerReplication"
+    },
+    "Destination": {
+     "$ref": "#/definitions/ReplicationDestination"
+    },
+    "Filter": {
+     "$ref": "#/definitions/ReplicationRuleFilter"
+    },
+    "Id": {
+     "description": "A unique identifier for the rule.",
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Prefix": {
+     "description": "An object key name prefix that identifies the object or objects to which the rule applies.",
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Priority": {
+     "type": "integer"
+    },
+    "SourceSelectionCriteria": {
+     "$ref": "#/definitions/SourceSelectionCriteria"
+    },
+    "Status": {
+     "description": "Specifies whether the rule is enabled.",
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ReplicationRuleAndOperator": {
+   "additionalProperties": false,
+   "properties": {
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ReplicationRuleFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "And": {
+     "$ref": "#/definitions/ReplicationRuleAndOperator"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilter": {
+     "$ref": "#/definitions/TagFilter"
+    }
+   },
+   "type": "object"
+  },
+  "ReplicationTime": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    },
+    "Time": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    }
+   },
+   "required": [
+    "Status",
+    "Time"
+   ],
+   "type": "object"
+  },
+  "ReplicationTimeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Minutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "RoutingRule": {
+   "additionalProperties": false,
+   "description": "Specifies the redirect behavior and when a redirect is applied.",
+   "properties": {
+    "RedirectRule": {
+     "$ref": "#/definitions/RedirectRule",
+     "description": "Container for redirect information. You can redirect requests to another host, to another page, or with another protocol. In the event of an error, you can specify a different error code to return."
+    },
+    "RoutingRuleCondition": {
+     "$ref": "#/definitions/RoutingRuleCondition"
+    }
+   },
+   "required": [
+    "RedirectRule"
+   ],
+   "type": "object"
+  },
+  "RoutingRuleCondition": {
+   "additionalProperties": false,
+   "description": "A container for describing a condition that must be met for the specified redirect to apply.You must specify at least one of HttpErrorCodeReturnedEquals and KeyPrefixEquals",
+   "properties": {
+    "HttpErrorCodeReturnedEquals": {
+     "description": "The HTTP error code when the redirect is applied. ",
+     "type": "string"
+    },
+    "KeyPrefixEquals": {
+     "description": "The object key name prefix when the redirect is applied.",
+     "type": "string"
+    }
+   },
+   "requiredOr": [
+    "HttpErrorCodeReturnedEquals",
+    "KeyPrefixEquals"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "description": "You must specify at least one of the following properties: AbortIncompleteMultipartUpload, ExpirationDate, ExpirationInDays, NoncurrentVersionExpirationInDays, NoncurrentVersionTransition, NoncurrentVersionTransitions, Transition, or Transitions.",
+   "properties": {
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    },
+    "ExpirationDate": {
+     "$ref": "#/definitions/iso8601UTC"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "ExpiredObjectDeleteMarker": {
+     "type": "boolean"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "NoncurrentVersionExpiration": {
+     "$ref": "#/definitions/NoncurrentVersionExpiration"
+    },
+    "NoncurrentVersionExpirationInDays": {
+     "type": "integer"
+    },
+    "NoncurrentVersionTransition": {
+     "$ref": "#/definitions/NoncurrentVersionTransition"
+    },
+    "NoncurrentVersionTransitions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/NoncurrentVersionTransition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ObjectSizeGreaterThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "ObjectSizeLessThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Transition": {
+     "$ref": "#/definitions/Transition"
+    },
+    "Transitions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Transition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "S3KeyFilter": {
+   "additionalProperties": false,
+   "description": "A container for object key name prefix and suffix filtering rules.",
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FilterRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionByDefault": {
+   "additionalProperties": false,
+   "description": "Specifies the default server-side encryption to apply to new objects in the bucket. If a PUT Object request doesn't specify any server-side encryption, this default encryption will be applied.",
+   "properties": {
+    "KMSMasterKeyID": {
+     "description": "\"KMSMasterKeyID\" can only be used when you set the value of SSEAlgorithm as aws:kms or aws:kms:dsse.",
+     "type": "string"
+    },
+    "SSEAlgorithm": {
+     "enum": [
+      "aws:kms",
+      "AES256",
+      "aws:kms:dsse"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEAlgorithm"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionRule": {
+   "additionalProperties": false,
+   "description": "Specifies the default server-side encryption configuration.",
+   "properties": {
+    "BucketKeyEnabled": {
+     "description": "Specifies whether Amazon S3 should use an S3 Bucket Key with server-side encryption using KMS (SSE-KMS) for new objects in the bucket. Existing objects are not affected. Setting the BucketKeyEnabled element to true causes Amazon S3 to use an S3 Bucket Key. By default, S3 Bucket Key is not enabled.",
+     "type": "boolean"
+    },
+    "ServerSideEncryptionByDefault": {
+     "$ref": "#/definitions/ServerSideEncryptionByDefault"
+    }
+   },
+   "type": "object"
+  },
+  "SourceSelectionCriteria": {
+   "additionalProperties": false,
+   "description": "A container that describes additional filters for identifying the source objects that you want to replicate.",
+   "properties": {
+    "ReplicaModifications": {
+     "$ref": "#/definitions/ReplicaModifications",
+     "description": "A filter that you can specify for selection for modifications on replicas."
+    },
+    "SseKmsEncryptedObjects": {
+     "$ref": "#/definitions/SseKmsEncryptedObjects",
+     "description": "A container for filter information for the selection of Amazon S3 objects encrypted with AWS KMS."
+    }
+   },
+   "type": "object"
+  },
+  "SseKmsEncryptedObjects": {
+   "additionalProperties": false,
+   "description": "A container for filter information for the selection of S3 objects encrypted with AWS KMS.",
+   "properties": {
+    "Status": {
+     "description": "Specifies whether Amazon S3 replicates objects created with server-side encryption using a customer master key (CMK) stored in AWS Key Management Service.",
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "StorageClassAnalysis": {
+   "additionalProperties": false,
+   "description": "Specifies data related to access patterns to be collected and made available to analyze the tradeoffs between different storage classes for an Amazon S3 bucket.",
+   "properties": {
+    "DataExport": {
+     "$ref": "#/definitions/DataExport"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagFilter": {
+   "additionalProperties": false,
+   "description": "Tags to use to identify a subset of objects for an Amazon S3 bucket.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetObjectKeyFormat": {
+   "description": "Describes the key format for server access log file in the target bucket. You can choose between SimplePrefix and PartitionedPrefix.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SimplePrefix": {
+       "additionalProperties": false,
+       "description": "This format defaults the prefix to the given log file prefix for delivering server access log file.",
+       "type": "object"
+      }
+     },
+     "required": [
+      "SimplePrefix"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PartitionedPrefix": {
+       "$ref": "#/definitions/PartitionedPrefix"
+      }
+     },
+     "required": [
+      "PartitionedPrefix"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "Tiering": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessTier": {
+     "description": "S3 Intelligent-Tiering access tier. See Storage class for automatically optimizing frequently and infrequently accessed objects for a list of access tiers in the S3 Intelligent-Tiering storage class.",
+     "enum": [
+      "ARCHIVE_ACCESS",
+      "DEEP_ARCHIVE_ACCESS"
+     ],
+     "type": "string"
+    },
+    "Days": {
+     "description": "The number of consecutive days of no access after which an object will be eligible to be transitioned to the corresponding tier. The minimum number of days specified for Archive Access tier must be at least 90 days and Deep Archive Access tier must be at least 180 days. The maximum can be up to 2 years (730 days).",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AccessTier",
+    "Days"
+   ],
+   "type": "object"
+  },
+  "TopicConfiguration": {
+   "additionalProperties": false,
+   "description": "The topic to which notifications are sent and the events for which notifications are generated.",
+   "properties": {
+    "Event": {
+     "description": "The Amazon S3 bucket event about which to send notifications.",
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter",
+     "description": "The filtering rules that determine for which objects to send notifications."
+    },
+    "Topic": {
+     "description": "The Amazon Resource Name (ARN) of the Amazon SNS topic to which Amazon S3 publishes a message when it detects events of the specified type.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Event",
+    "Topic"
+   ],
+   "type": "object"
+  },
+  "Transition": {
+   "additionalProperties": false,
+   "description": "You must specify at least one of \"TransitionDate\" and \"TransitionInDays\"",
+   "properties": {
+    "StorageClass": {
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "Glacier",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    },
+    "TransitionDate": {
+     "$ref": "#/definitions/iso8601UTC"
+    },
+    "TransitionInDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StorageClass"
+   ],
+   "type": "object"
+  },
+  "VersioningConfiguration": {
+   "additionalProperties": false,
+   "description": "Describes the versioning state of an Amazon S3 bucket.",
+   "properties": {
+    "Status": {
+     "default": "Suspended",
+     "description": "The versioning state of the bucket.",
+     "enum": [
+      "Enabled",
+      "Suspended"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "WebsiteConfiguration": {
+   "additionalProperties": false,
+   "description": "Specifies website configuration parameters for an Amazon S3 bucket.",
+   "properties": {
+    "ErrorDocument": {
+     "description": "The name of the error document for the website.",
+     "type": "string"
+    },
+    "IndexDocument": {
+     "description": "The name of the index document for the website.",
+     "type": "string"
+    },
+    "RedirectAllRequestsTo": {
+     "$ref": "#/definitions/RedirectAllRequestsTo"
+    },
+    "RoutingRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/RoutingRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "description": "The date value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ssZ)",
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::S3::Bucket",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:CreateBucket",
+    "s3:PutBucketTagging",
+    "s3:PutAnalyticsConfiguration",
+    "s3:PutEncryptionConfiguration",
+    "s3:PutBucketCORS",
+    "s3:PutInventoryConfiguration",
+    "s3:PutLifecycleConfiguration",
+    "s3:PutMetricsConfiguration",
+    "s3:PutBucketNotification",
+    "s3:PutBucketReplication",
+    "s3:PutBucketWebsite",
+    "s3:PutAccelerateConfiguration",
+    "s3:PutBucketPublicAccessBlock",
+    "s3:PutReplicationConfiguration",
+    "s3:PutObjectAcl",
+    "s3:PutBucketObjectLockConfiguration",
+    "s3:GetBucketAcl",
+    "s3:ListBucket",
+    "iam:PassRole",
+    "s3:DeleteObject",
+    "s3:PutBucketLogging",
+    "s3:PutBucketVersioning",
+    "s3:PutObjectLockConfiguration",
+    "s3:PutBucketOwnershipControls",
+    "s3:PutIntelligentTieringConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:DeleteBucket",
+    "s3:ListBucket"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3:ListAllMyBuckets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3:GetAccelerateConfiguration",
+    "s3:GetLifecycleConfiguration",
+    "s3:GetBucketPublicAccessBlock",
+    "s3:GetAnalyticsConfiguration",
+    "s3:GetBucketCORS",
+    "s3:GetEncryptionConfiguration",
+    "s3:GetInventoryConfiguration",
+    "s3:GetBucketLogging",
+    "s3:GetMetricsConfiguration",
+    "s3:GetBucketNotification",
+    "s3:GetBucketVersioning",
+    "s3:GetReplicationConfiguration",
+    "S3:GetBucketWebsite",
+    "s3:GetBucketPublicAccessBlock",
+    "s3:GetBucketObjectLockConfiguration",
+    "s3:GetBucketTagging",
+    "s3:GetBucketOwnershipControls",
+    "s3:GetIntelligentTieringConfiguration",
+    "s3:ListBucket"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:PutBucketAcl",
+    "s3:PutBucketTagging",
+    "s3:PutAnalyticsConfiguration",
+    "s3:PutEncryptionConfiguration",
+    "s3:PutBucketCORS",
+    "s3:PutInventoryConfiguration",
+    "s3:PutLifecycleConfiguration",
+    "s3:PutMetricsConfiguration",
+    "s3:PutBucketNotification",
+    "s3:PutBucketReplication",
+    "s3:PutBucketWebsite",
+    "s3:PutAccelerateConfiguration",
+    "s3:PutBucketPublicAccessBlock",
+    "s3:PutReplicationConfiguration",
+    "s3:PutBucketOwnershipControls",
+    "s3:PutIntelligentTieringConfiguration",
+    "s3:DeleteBucketWebsite",
+    "s3:PutBucketLogging",
+    "s3:PutBucketVersioning",
+    "s3:PutObjectLockConfiguration",
+    "s3:PutBucketObjectLockConfiguration",
+    "s3:DeleteBucketAnalyticsConfiguration",
+    "s3:DeleteBucketCors",
+    "s3:DeleteBucketMetricsConfiguration",
+    "s3:DeleteBucketEncryption",
+    "s3:DeleteBucketLifecycle",
+    "s3:DeleteBucketReplication",
+    "iam:PassRole",
+    "s3:ListBucket"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BucketName"
+ ],
+ "properties": {
+  "AccelerateConfiguration": {
+   "$ref": "#/definitions/AccelerateConfiguration",
+   "description": "Configuration for the transfer acceleration state."
+  },
+  "AccessControl": {
+   "description": "A canned access control list (ACL) that grants predefined permissions to the bucket.",
+   "enum": [
+    "AuthenticatedRead",
+    "AwsExecRead",
+    "BucketOwnerFullControl",
+    "BucketOwnerRead",
+    "LogDeliveryWrite",
+    "Private",
+    "PublicRead",
+    "PublicReadWrite"
+   ],
+   "type": "string"
+  },
+  "AnalyticsConfigurations": {
+   "description": "The configuration and any analyses for the analytics filter of an Amazon S3 bucket.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AnalyticsConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The Amazon Resource Name (ARN) of the specified bucket.",
+   "examples": [
+    "arn:aws:s3:::mybucket"
+   ]
+  },
+  "BucketEncryption": {
+   "$ref": "#/definitions/BucketEncryption"
+  },
+  "BucketName": {
+   "description": "A name for the bucket. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the bucket name.",
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$",
+   "type": "string"
+  },
+  "CorsConfiguration": {
+   "$ref": "#/definitions/CorsConfiguration",
+   "description": "Rules that define cross-origin resource sharing of objects in this bucket."
+  },
+  "DomainName": {
+   "description": "The IPv4 DNS name of the specified bucket.",
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "DualStackDomainName": {
+   "description": "The IPv6 DNS name of the specified bucket. For more information about dual-stack endpoints, see [Using Amazon S3 Dual-Stack Endpoints](https://docs.aws.amazon.com/AmazonS3/latest/dev/dual-stack-endpoints.html).",
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.dualstack.us-east-2.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "IntelligentTieringConfigurations": {
+   "description": "Specifies the S3 Intelligent-Tiering configuration for an Amazon S3 bucket.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/IntelligentTieringConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "InventoryConfigurations": {
+   "description": "The inventory configuration for an Amazon S3 bucket.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/InventoryConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration",
+   "description": "Rules that define how Amazon S3 manages objects during their lifetime."
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration",
+   "description": "Settings that define where logs are stored."
+  },
+  "MetricsConfigurations": {
+   "description": "Settings that define a metrics configuration for the CloudWatch request metrics from the bucket.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricsConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration",
+   "description": "Configuration that defines how Amazon S3 handles bucket notifications."
+  },
+  "ObjectLockConfiguration": {
+   "$ref": "#/definitions/ObjectLockConfiguration",
+   "description": "Places an Object Lock configuration on the specified bucket."
+  },
+  "ObjectLockEnabled": {
+   "description": "Indicates whether this bucket has an Object Lock configuration enabled.",
+   "type": "boolean"
+  },
+  "OwnershipControls": {
+   "$ref": "#/definitions/OwnershipControls",
+   "description": "Specifies the container element for object ownership rules."
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "RegionalDomainName": {
+   "description": "Returns the regional domain name of the specified bucket.",
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.us-east-2.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration",
+   "description": "Configuration for replicating objects in an S3 bucket."
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this S3 bucket.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VersioningConfiguration": {
+   "$ref": "#/definitions/VersioningConfiguration"
+  },
+  "WebsiteConfiguration": {
+   "$ref": "#/definitions/WebsiteConfiguration"
+  },
+  "WebsiteURL": {
+   "description": "The Amazon S3 website endpoint for the specified bucket.",
+   "examples": [
+    "Example (IPv4): http://mystack-mybucket-kdwwxmddtr2g.s3-website-us-east-2.amazonaws.com/",
+    "Example (IPv6): http://mystack-mybucket-kdwwxmddtr2g.s3.dualstack.us-east-2.amazonaws.com/"
+   ],
+   "format": "uri",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainName",
+  "/properties/DualStackDomainName",
+  "/properties/RegionalDomainName",
+  "/properties/WebsiteURL"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::Bucket",
+ "writeOnlyProperties": [
+  "/properties/AccessControl",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionExpirationInDays",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionTransition",
+  "/properties/LifecycleConfiguration/Rules/*/Transition",
+  "/properties/ReplicationConfiguration/Rules/*/Prefix",
+  "/properties/LifecycleConfiguration/Rules/*/ExpiredObjectDeleteMarker"
+ ]
+}
