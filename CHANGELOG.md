@@ -1,3 +1,12 @@
+### v1.2.5a2
+## What's Changed
+* Set Application location when its a string by @kddejong in (pull #[3060](https://github.com/aws-cloudformation/cfn-lint/pull/3060))
+* Add getatt support for registry schemas by @kddejong in (pull #[3061](https://github.com/aws-cloudformation/cfn-lint/pull/3061))
+* Remove some extra unneeded code by @kddejong in (pull #[3062](https://github.com/aws-cloudformation/cfn-lint/pull/3062))
+* Remove rule W1011 (pull #[3055](https://github.com/aws-cloudformation/cfn-lint/pull/3055))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a1...v1.2.5.a2
+
 ### v1.2.5a1
 ###### Features
 * Fix an issue when determining if it is supposed to be nested `json` @kddejong (pull #[3050](https://github.com/aws-cloudformation/cfn-lint/pull/3050))
