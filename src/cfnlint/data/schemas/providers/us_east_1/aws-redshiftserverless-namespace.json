@@ -16,6 +16,12 @@
   "Namespace": {
    "additionalProperties": false,
    "properties": {
+    "AdminPasswordSecretArn": {
+     "type": "string"
+    },
+    "AdminPasswordSecretKmsKeyId": {
+     "type": "string"
+    },
     "AdminUsername": {
      "type": "string"
     },
@@ -109,18 +115,31 @@
     "kms:Encrypt",
     "kms:Decrypt",
     "kms:DescribeKey",
+    "kms:GenerateDataKeyPair",
+    "kms:GenerateDataKey",
     "kms:CreateGrant",
     "kms:ListGrants",
     "kms:RevokeGrant",
+    "kms:RetireGrant",
     "redshift-serverless:CreateNamespace",
-    "redshift-serverless:GetNamespace"
+    "redshift-serverless:GetNamespace",
+    "redshift:GetResourcePolicy",
+    "redshift:PutResourcePolicy",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:TagResource",
+    "secretsmanager:RotateSecret",
+    "secretsmanager:DescribeSecret"
    ]
   },
   "delete": {
    "permissions": [
     "iam:PassRole",
     "redshift-serverless:DeleteNamespace",
-    "redshift-serverless:GetNamespace"
+    "redshift-serverless:GetNamespace",
+    "kms:RetireGrant",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:DeleteSecret",
+    "redshift:DeleteResourcePolicy"
    ]
   },
   "list": {
@@ -132,7 +151,8 @@
   "read": {
    "permissions": [
     "iam:PassRole",
-    "redshift-serverless:GetNamespace"
+    "redshift-serverless:GetNamespace",
+    "redshift:GetResourcePolicy"
    ]
   },
   "update": {
@@ -148,8 +168,20 @@
     "kms:CreateGrant",
     "kms:ListGrants",
     "kms:RevokeGrant",
+    "kms:RetireGrant",
+    "kms:GenerateDataKeyPair",
+    "kms:GenerateDataKey",
     "redshift-serverless:UpdateNamespace",
-    "redshift-serverless:GetNamespace"
+    "redshift-serverless:GetNamespace",
+    "redshift:GetResourcePolicy",
+    "redshift:PutResourcePolicy",
+    "redshift:DeleteResourcePolicy",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:TagResource",
+    "secretsmanager:RotateSecret",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:UpdateSecret",
+    "secretsmanager:DeleteSecret"
    ]
   }
  },
@@ -157,8 +189,12 @@
   "/properties/NamespaceName"
  ],
  "properties": {
+  "AdminPasswordSecretKmsKeyId": {
+   "description": "The ID of the AWS Key Management Service (KMS) key used to encrypt and store the namespace's admin credentials secret. You can only use this parameter if manageAdminPassword is true.",
+   "type": "string"
+  },
   "AdminUserPassword": {
-   "description": "The password associated with the admin user for the namespace that is being created. Password must be at least 8 characters in length, should be any printable ASCII character. Must contain at least one lowercase letter, one uppercase letter and one decimal digit.",
+   "description": "The password associated with the admin user for the namespace that is being created. Password must be at least 8 characters in length, should be any printable ASCII character. Must contain at least one lowercase letter, one uppercase letter and one decimal digit. You can't use adminUserPassword if manageAdminPassword is true.",
    "maxLength": 64,
    "minLength": 8,
    "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\x00-\\x20\\x22\\x27\\x2f\\x40\\x5c\\x7f-\\uffff]+",
@@ -213,14 +249,27 @@
    "minItems": 0,
    "type": "array"
   },
+  "ManageAdminPassword": {
+   "description": "If true, Amazon Redshift uses AWS Secrets Manager to manage the namespace's admin credentials. You can't use adminUserPassword if manageAdminPassword is true. If manageAdminPassword is false or not set, Amazon Redshift uses adminUserPassword for the admin user account's password.",
+   "type": "boolean"
+  },
   "Namespace": {
-   "$ref": "#/definitions/Namespace"
+   "$ref": "#/definitions/Namespace",
+   "description": "Definition of Namespace resource."
   },
   "NamespaceName": {
    "description": "A unique identifier for the namespace. You use this identifier to refer to the namespace for any subsequent namespace operations such as deleting or modifying. All alphabetical characters must be lower case. Namespace name should be unique for all namespaces within an AWS account.",
    "maxLength": 64,
    "minLength": 3,
    "pattern": "^[a-z0-9-]+$",
+   "type": "string"
+  },
+  "NamespaceResourcePolicy": {
+   "description": "The resource policy document that will be attached to the namespace.",
+   "type": "object"
+  },
+  "RedshiftIdcApplicationArn": {
+   "description": "The ARN for the Redshift application that integrates with IAM Identity Center.",
    "type": "string"
   },
   "Tags": {
@@ -262,6 +311,8 @@
   "/properties/FinalSnapshotRetentionPeriod",
   "/properties/Tags",
   "/properties/Tags/*/Key",
-  "/properties/Tags/*/Value"
+  "/properties/Tags/*/Value",
+  "/properties/ManageAdminPassword",
+  "/properties/RedshiftIdcApplicationArn"
  ]
 }
