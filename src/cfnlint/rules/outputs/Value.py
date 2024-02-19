@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -25,7 +24,3 @@ class Value(CloudFormationLintRule):
         )({"type": "string"})
 
         yield from validator.iter_errors(instance)
-
-    # pylint: disable=unused-argument
-    def _type(self, validator, types, instance, schema):
-        yield from cfn_type(validator, types, instance, schema, False)

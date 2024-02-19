@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ClientToken",
+  "/properties/PreserveClientIp",
+  "/properties/SecurityGroupIds"
+ ],
+ "definitions": {
+  "SecurityGroupId": {
+   "description": "A key-value pair to associate with a resource.",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::InstanceConnectEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateInstanceConnectEndpoint",
+    "ec2:DescribeInstanceConnectEndpoints",
+    "ec2:CreateTags",
+    "ec2:CreateNetworkInterface",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteInstanceConnectEndpoint",
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeInstanceConnectEndpoints",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ClientToken": {
+   "description": "The client token of the instance connect endpoint.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The id of the instance connect endpoint",
+   "type": "string"
+  },
+  "PreserveClientIp": {
+   "description": "If true, the address of the loki client is preserved when connecting to the end resource",
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "description": "The security group IDs of the instance connect endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetId": {
+   "description": "The subnet id of the instance connect endpoint",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags of the instance connect endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::InstanceConnectEndpoint",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}
