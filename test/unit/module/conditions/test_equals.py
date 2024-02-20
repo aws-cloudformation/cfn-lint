@@ -5,8 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from unittest import TestCase
 
+from cfnlint.conditions._equals import Equal
 from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.equals import Equal
 
 
 class TestEquals(TestCase):

@@ -63,7 +63,10 @@ class Length(BaseFn):
                     "'AWS::LanguageExtensions' transform"
                 ),
                 validator=self.fn.py,
+                rule=self,
             )
             return
 
-        yield from super().validate(validator, s, instance, schema)
+        for err in super().validate(validator, s, instance, schema):
+            err.rule = self
+            yield err
