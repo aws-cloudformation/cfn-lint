@@ -313,6 +313,7 @@ _standard_validators: Dict[str, V] = {
     "const": _validators.const,
     "contains": _validators.contains,
     "dependencies": _validators.dependencies,
+    "dependentRequired": _validators.dependentRequired,
     "dependentExcluded": _validators.dependentExcluded,
     "enum": _validators.enum,
     "exclusiveMaximum": _validators.exclusiveMaximum,

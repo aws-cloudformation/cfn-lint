@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import jsonpatch
 
-from cfnlint.schema.getatts import AttributeDict, GetAtts
+from cfnlint.schema._getatts import AttributeDict, GetAtts
 
 # Can't use a dataclass because its hard to parse in json
 # with optional fields without addtional help

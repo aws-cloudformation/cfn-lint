@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
 from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
 
-from cfnlint.conditions.equals import Equal
+from cfnlint.conditions._equals import Equal
 from cfnlint.helpers import FUNCTION_CONDITIONS
 
 # we leave the type hinting here
