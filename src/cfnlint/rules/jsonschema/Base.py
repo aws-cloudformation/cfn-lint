@@ -7,8 +7,7 @@ import logging
 from typing import Any, Dict
 
 from cfnlint.context import Context
-from cfnlint.jsonschema import Validator
-from cfnlint.jsonschema._typing import V
+from cfnlint.jsonschema import V, Validator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 LOGGER = logging.getLogger("cfnlint.rules.jsonschema")

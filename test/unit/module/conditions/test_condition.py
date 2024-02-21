@@ -5,13 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 from unittest import TestCase
 
-from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.condition import (
+from cfnlint.conditions._condition import (
     ConditionAnd,
     ConditionNot,
     ConditionOr,
     ConditionUnnammed,
 )
+from cfnlint.conditions._utils import get_hash
 
 
 class TestCondition(TestCase):

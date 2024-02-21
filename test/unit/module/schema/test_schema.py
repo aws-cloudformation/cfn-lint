@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 from unittest import TestCase
 
-from cfnlint.schema.schema import Schema
+from cfnlint.schema._schema import Schema
 
 LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
