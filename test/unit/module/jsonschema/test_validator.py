@@ -3,8 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import unittest
 from collections import deque
+from unittest.mock import patch
+
+import pytest
 
 from cfnlint.jsonschema.exceptions import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
@@ -16,654 +18,1095 @@ def fail(validator, errors, instance, schema):
         yield ValidationError(**each)
 
 
-class TestCfnValidator(unittest.TestCase):
-    def setUp(self):
-        self.meta_schema = {"$id": "some://meta/schema"}
-        self.validators = {"fail": fail}
-        self.validator = CfnTemplateValidator({}).extend(
-            validators=self.validators,
-        )({})
+@pytest.fixture
+def validator():
+    validators = {"fail": fail}
+    validator = CfnTemplateValidator({}).extend(
+        validators=validators,
+    )({})
+    return validator
 
-    def test_iter_errors_successful(self):
-        schema = {"fail": []}
-        validator = self.validator.evolve(schema=schema)
 
-        errors = list(validator.iter_errors("hello"))
-        self.assertEqual(errors, [])
+def _eq(self, other):
+    return self.message == other.message
 
-    def test_iter_errors_one_error(self):
-        schema = {"fail": [{"message": "Whoops!"}]}
-        validator = self.validator.evolve(schema=schema)
 
-        expected_error = ValidationError(
-            "Whoops!",
-            instance="goodbye",
-            schema=schema,
-            validator="fail",
-            validator_value=[{"message": "Whoops!"}],
-            schema_path=deque(["fail"]),
-        )
+def _lt(self, other):
+    return hash(self.message) < hash(other.message)
 
-        errors = list(validator.iter_errors("goodbye"))
-        self.assertEqual(len(errors), 1)
-        self.assertEqual(errors[0]._contents(), expected_error._contents())
 
-    def test_iter_errors_multiple_errors(self):
-        schema = {
-            "fail": [
-                {"message": "First"},
-                {"message": "Second!", "validator": "asdf"},
-                {"message": "Third"},
+@pytest.mark.parametrize(
+    "name,schema,instance,expected",
+    [
+        ("Success", {"fail": []}, "hello", []),
+        (
+            "One Error",
+            {"fail": [{"message": "Whoops!"}]},
+            "goodbye",
+            [
+                ValidationError(
+                    "Whoops!",
+                    instance="goodbye",
+                    schema={"fail": [{"message": "Whoops!"}]},
+                    validator="fail",
+                    validator_value=[{"message": "Whoops!"}],
+                    schema_path=deque(["fail"]),
+                )
             ],
-        }
-        validator = self.validator.evolve(schema=schema)
-
-        errors = list(validator.iter_errors("goodbye"))
-        self.assertEqual(len(errors), 3)
-
-
-class TestValidationErrorMessages(unittest.TestCase):
-    def message_for(self, instance, schema, **kwargs):
-        cls = kwargs.pop("cls", CfnTemplateValidator)
-        validator = cls(schema=schema).evolve(**kwargs)
-        errors = list(validator.iter_errors(instance))
-        self.assertTrue(errors, msg=f"No errors were raised for {instance!r}")
-        self.assertEqual(
-            len(errors),
-            1,
-            msg=f"Expected exactly one error, found {errors!r}",
-        )
-        return errors[0].message
-
-    def test_single_type_failure(self):
-        message = self.message_for(instance=[], schema={"type": "string"})
-        self.assertEqual(message, "[] is not of type 'string'")
-
-    def test_single_type_list_failure(self):
-        message = self.message_for(instance=[], schema={"type": ["string"]})
-        self.assertEqual(message, "[] is not of type 'string'")
-
-    def test_multiple_type_failure(self):
-        types = "string", "object"
-        message = self.message_for(instance=[], schema={"type": list(types)})
-        self.assertEqual(message, "[] is not of type 'string', 'object'")
-
-    def test_minimum(self):
-        message = self.message_for(instance=1, schema={"minimum": 2})
-        self.assertEqual(message, "1 is less than the minimum of 2")
-
-    def test_minimum_when_string(self):
-        message = self.message_for(instance="1", schema={"minimum": 2})
-        self.assertEqual(message, "'1' is less than the minimum of 2")
-
-    def test_maximum(self):
-        message = self.message_for(instance=1, schema={"maximum": 0})
-        self.assertEqual(message, "1 is greater than the maximum of 0")
-
-    def test_maximum_when_string(self):
-        message = self.message_for(instance="1", schema={"maximum": 0})
-        self.assertEqual(message, "'1' is greater than the maximum of 0")
-
-    def test_dependencies_list(self):
-        depend, on = "bar", "foo"
-        schema = {"dependencies": {depend: [on]}}
-        message = self.message_for(
-            instance={"bar": 2},
-            schema=schema,
-            cls=CfnTemplateValidator,
-        )
-        self.assertEqual(message, "'foo' is a dependency of 'bar'")
-
-    def test_dependencies_object(self):
-        schema = {"dependencies": {"foo": {"required": ["bar"]}}}
-        message = self.message_for(
-            instance={"foo": True},
-            schema=schema,
-            cls=CfnTemplateValidator,
-        )
-        self.assertEqual(message, "'bar' is a required property")
-
-    def test_additionalProperties_single_failure(self):
-        schema = {"additionalProperties": False}
-        message = self.message_for(instance={"foo": 2}, schema=schema)
-        self.assertIn("('foo' was unexpected)", message)
-
-    def test_additionalProperties_obj(self):
-        schema = {"additionalProperties": {"type": "string"}}
-        message = self.message_for(instance={"foo": []}, schema=schema)
-        self.assertIn("[] is not of type 'string'", message)
-
-    def test_additionalProperties_w_patternProperties(self):
-        schema = {"additionalProperties": False, "patternProperties": {"^bar$": False}}
-        message = self.message_for(instance={"foo": []}, schema=schema)
-        self.assertIn("'foo' does not match any of the regexes: '^bar$'", message)
-
-    def test_const(self):
-        schema = {"const": 12}
-        message = self.message_for(
-            instance={"foo": "bar"},
-            schema=schema,
-        )
-        self.assertIn("12 was expected", message)
-
-    def test_enum(self):
-        schema = {"enum": ["bar"]}
-        message = self.message_for(
-            instance="foo",
-            schema=schema,
-        )
-        self.assertIn("'foo' is not one of ['bar']", message)
-
-    def test_enum_int(self):
-        schema = {"enum": [0]}
-        message = self.message_for(
-            instance=1,
-            schema=schema,
-        )
-        self.assertIn("1 is not one of [0]", message)
-
-    def test_invalid_format_default_message(self):
-        schema = {"format": "date-time"}
-        message = self.message_for(
-            instance="bla",
-            schema=schema,
-        )
-
-        self.assertIn(repr("bla"), message)
-        self.assertIn(repr("date-time"), message)
-        self.assertIn("is not a", message)
-
-    def test_False_schema(self):
-        message = self.message_for(
-            instance="something",
-            schema=False,
-        )
-        self.assertEqual(message, "False schema does not allow 'something'")
-
-    def test_if_then(self):
-        message = self.message_for(
-            instance="a",
-            schema={"if": {"type": "string"}, "then": False, "else": True},
-        )
-        self.assertEqual(message, "False schema does not allow 'a'")
-
-    def test_if_else(self):
-        message = self.message_for(
-            instance=[],
-            schema={"if": {"type": "string"}, "then": True, "else": False},
-        )
-        self.assertEqual(message, "False schema does not allow []")
-
-    def test_items(self):
-        message = self.message_for(
-            instance=[[]],
-            schema={"items": {"type": "string"}},
-        )
-        self.assertEqual(message, "[] is not of type 'string'")
-
-    def test_items_list(self):
-        message = self.message_for(
-            instance=[[]],
-            schema={"items": [{"type": "string"}]},
-        )
-        self.assertEqual(message, "[] is not of type 'string'")
-
-    def test_multipleOf(self):
-        message = self.message_for(
-            instance=3,
-            schema={"multipleOf": 2},
-        )
-        self.assertEqual(message, "3 is not a multiple of 2")
-
-    def test_multipleOf_string(self):
-        message = self.message_for(
-            instance="3",
-            schema={"multipleOf": 2},
-        )
-        self.assertEqual(message, "'3' is not a multiple of 2")
-
-    def test_multipleOf_string_with_number(self):
-        message = self.message_for(
-            instance="3",
-            schema={"multipleOf": 2.0},
-        )
-        self.assertEqual(message, "'3' is not a multiple of 2.0")
-
-    def test_minItems(self):
-        message = self.message_for(instance=[], schema={"minItems": 2})
-        self.assertEqual(message, "[] is too short (2)")
-
-    def test_maxItems(self):
-        message = self.message_for(instance=[1, 2, 3], schema={"maxItems": 2})
-        self.assertEqual(message, "[1, 2, 3] is too long (2)")
-
-    def test_minLength(self):
-        message = self.message_for(
-            instance="",
-            schema={"minLength": 2},
-        )
-        self.assertEqual(message, "'' is shorter than 2")
-
-    def test_maxLength(self):
-        message = self.message_for(
-            instance="abc",
-            schema={"maxLength": 2},
-        )
-        self.assertEqual(message, "'abc' is longer than 2")
-
-    def test_not(self):
-        message = self.message_for(
-            instance=False,
-            schema={"not": True},
-        )
-        self.assertEqual(message, "False should not be valid under True")
-
-    def test_pattern(self):
-        message = self.message_for(
-            instance="bbb",
-            schema={"pattern": "^a*$"},
-        )
-        self.assertEqual(message, "'bbb' does not match '^a*$'")
-
-    def test_does_not_contain(self):
-        message = self.message_for(
-            instance=[],
-            schema={"contains": {"type": "string"}},
-        )
-        self.assertEqual(
-            message,
-            "[] does not contain items matching the given schema",
-        )
-
-    def test_exclusiveMinimum(self):
-        message = self.message_for(
-            instance=3,
-            schema={"exclusiveMinimum": 5},
-        )
-        self.assertEqual(
-            message,
-            "3 is less than or equal to the minimum of 5",
-        )
-
-    def test_exclusiveMaximum(self):
-        message = self.message_for(instance=3, schema={"exclusiveMaximum": 2})
-        self.assertEqual(
-            message,
-            "3 is greater than or equal to the maximum of 2",
-        )
-
-    def test_required_missing(self):
-        message = self.message_for(instance={}, schema={"required": ["foo"]})
-        self.assertEqual(message, "'foo' is a required property")
-
-    def test_minProperties(self):
-        message = self.message_for(instance={}, schema={"minProperties": 2})
-        self.assertEqual(message, "{} does not have enough properties")
-
-    def test_maxProperties(self):
-        message = self.message_for(
-            instance={"a": {}, "b": {}, "c": {}},
-            schema={"maxProperties": 2},
-        )
-        self.assertEqual(
-            message,
-            "{'a': {}, 'b': {}, 'c': {}} has too many properties",
-        )
-
-    def test_patternProperties(self):
-        message = self.message_for(
-            instance={"foo": "bar"},
-            schema={"patternProperties": {"^foo$": False}},
-        )
-        self.assertEqual(
-            message,
-            "False schema does not allow 'bar'",
-        )
-
-    def test_properties(self):
-        message = self.message_for(
-            instance={"foo": "bar"},
-            schema={"properties": {"foo": False}},
-        )
-        self.assertEqual(
-            message,
-            "False schema does not allow 'bar'",
-        )
-
-    def test_propertyNames(self):
-        message = self.message_for(
-            instance={"foo": "bar"},
-            schema={"propertyNames": {"pattern": "^bar$"}},
-        )
-        self.assertEqual(
-            message,
-            "'foo' does not match '^bar$'",
-        )
-
-    def test_oneOf_matches_none(self):
-        message = self.message_for(instance={}, schema={"oneOf": [False]})
-        self.assertEqual(
-            message,
-            "{} is not valid under any of the given schemas",
-        )
-
-    def test_oneOf_matches_too_many(self):
-        message = self.message_for(instance={}, schema={"oneOf": [True, True]})
-        self.assertEqual(message, "{} is valid under each of True, True")
-
-    def test_allOf_matches_oneFalse(self):
-        message = self.message_for(instance={}, schema={"allOf": [True, False]})
-        self.assertEqual(message, "False schema does not allow {}")
-
-    def test_anyOf_matches_none(self):
-        message = self.message_for(instance={}, schema={"anyOf": [False, False]})
-        self.assertEqual(message, "{} is not valid under any of the given schemas")
-
-    def test_uniqueItems(self):
-        message = self.message_for(
-            instance=[1, 2, "1"],
-            schema={"uniqueItems": True},
-        )
-        self.assertEqual(
-            message,
-            "[1, 2, '1'] has non-unique elements",
-        )
-
-    def test_required_or(self):
-        message = self.message_for(
-            instance={"foo": "foo"},
-            schema={"requiredOr": ["bar"]},
-        )
-        self.assertEqual(
-            message,
-            "At least one of ['bar'] is a required property",
-        )
-
-    def test_required_xor(self):
-        messages = self.message_for(
-            instance={},
-            schema={"requiredXor": ["foo", "bar"]},
-        )
-        self.assertIn(
-            "Only one of ['foo', 'bar'] is a required property",
-            messages,
-        )
-
-    def test_unique_keys(self):
-        messages = self.message_for(
-            instance=[
-                {
-                    "Name": "foo",
-                },
-                {
-                    "Name": "foo",
-                },
+        ),
+        (
+            "Multiple Errors",
+            {
+                "fail": [
+                    {"message": "First"},
+                    {"message": "Second!", "validator": "asdf"},
+                    {"message": "Third"},
+                ]
+            },
+            "goodbye",
+            [
+                ValidationError(
+                    "First",
+                    instance="goodbye",
+                    schema={"message": "First"},
+                    validator="fail",
+                    validator_value=[{"message": "Whoops!"}],
+                    schema_path=deque(["fail"]),
+                ),
+                ValidationError(
+                    "Second!",
+                    instance="goodbye",
+                    schema={"message": "Second!", "validator": "asdf"},
+                    validator="asdf",
+                    validator_value=[{"message": "Whoops!"}],
+                    schema_path=deque(["fail"]),
+                ),
+                ValidationError(
+                    "Third",
+                    instance="goodbye",
+                    schema={"message": "Third"},
+                    validator="fail",
+                    validator_value=[{"message": "Whoops!"}],
+                    schema_path=deque(["fail"]),
+                ),
             ],
-            schema={"uniqueKeys": ["Name"]},
-        )
-        self.assertIn(
-            (
-                "[{'Name': 'foo'}, {'Name': 'foo'}] has non-unique "
-                "elements for keys ['Name']"
-            ),
-            messages,
-        )
+        ),
+    ],
+)
+def test_validator(name, schema, instance, expected, validator):
+    validator = validator.evolve(schema=schema)
+    errs = list(validator.iter_errors(instance))
+    assert errs == expected, f"{name!r} returned {errs!r}"
 
 
-class TestValidationTwoErrorMessages(unittest.TestCase):
-    def message_for(self, instance, schema, **kwargs):
-        cls = kwargs.pop("cls", CfnTemplateValidator)
-        validator = cls(schema=schema).evolve(**kwargs)
-        errors = list(validator.iter_errors(instance))
-        self.assertTrue(errors, msg=f"No errors were raised for {instance!r}")
-        self.assertEqual(
-            len(errors),
+@pytest.mark.parametrize(
+    "name,schema,instance,expected",
+    [
+        (
+            "Valid type single",
+            {"type": "string"},
+            "foo",
+            [],
+        ),
+        (
+            "Valid type single array",
+            {"type": ["string"]},
+            "foo",
+            [],
+        ),
+        (
+            "Valid type many in array",
+            {"type": ["string", "object"]},
+            "foo",
+            [],
+        ),
+        (
+            "Single type failure",
+            {"type": "string"},
+            [],
+            [ValidationError("[] is not of type 'string'")],
+        ),
+        (
+            "Multiple type failure",
+            {"type": ["string", "object"]},
+            [],
+            [
+                ValidationError(
+                    "[] is not of type 'string', 'object'",
+                )
+            ],
+        ),
+        (
+            "Multiple type failure",
+            {"type": "string"},
+            [],
+            [ValidationError("[] is not of type 'string'")],
+        ),
+        (
+            "valid minimum",
+            {"minimum": 2},
             2,
-            msg=f"Expected exactly two errors, found {errors!r}",
-        )
-        return [errors[0].message, errors[1].message]
-
-    def test_additionalProperties_multiple_failure(self):
-        schema = {"additionalProperties": False}
-        messages = self.message_for(instance={"foo": 1, "bar": 2}, schema=schema)
-        self.assertIn(
-            "Additional properties are not allowed ('foo' was unexpected)", messages
-        )
-        self.assertIn(
-            "Additional properties are not allowed ('bar' was unexpected)", messages
-        )
-
-    def test_allOf_matches_two_false(self):
-        messages = self.message_for(instance={}, schema={"allOf": [True, False, False]})
-        self.assertIn("False schema does not allow {}", messages[0])
-        self.assertIn("False schema does not allow {}", messages[1])
-
-    def test_required_xor(self):
-        messages = self.message_for(
-            instance={"foo": "foo", "bar": "bar"},
-            schema={"requiredXor": ["foo", "bar"]},
-        )
-        self.assertIn(
-            "Only one of ['foo', 'bar'] is a required property",
-            messages,
-        )
-
-    def test_dependent_exclude(self):
-        messages = self.message_for(
-            instance={"foo": "foo", "bar": "bar"},
-            schema={"dependentExcluded": {"foo": ["bar"], "bar": ["foo"]}},
-        )
-        self.assertIn(
-            "'bar' should not be included with 'foo'",
-            messages,
-        )
-        self.assertIn(
-            "'foo' should not be included with 'bar'",
-            messages,
-        )
-
-
-class TestNoErrorMessage(unittest.TestCase):
-    def no_error(self, instance, schema, **kwargs):
-        cls = kwargs.pop("cls", CfnTemplateValidator)
-        validator = cls(schema=schema).evolve(**kwargs)
-        errors = list(validator.iter_errors(instance))
-        self.assertFalse(errors, msg=f"Errors were raised for {instance!r}: {errors!r}")
-
-    def test_single_type(self):
-        self.no_error(instance="1", schema={"type": "string"})
-
-    def test_single_type_with_list(self):
-        self.no_error(instance="1", schema={"type": ["string"]})
-
-    def test_multiple_type(self):
-        types = "string", "object"
-        self.no_error(instance="1", schema={"type": list(types)})
-
-    def test_minimum(self):
-        self.no_error(instance=1, schema={"minimum": 0})
-
-    def test_minimum_when_string(self):
-        self.no_error(instance="1", schema={"minimum": 0})
-
-    def test_minimum_when_wrong_type(self):
-        self.no_error(instance="a", schema={"minimum": 0})
-
-    def test_minimum_when_wrong_type_bool(self):
-        self.no_error(instance=True, schema={"minimum": 0})
-
-    def test_maximum(self):
-        self.no_error(instance=0, schema={"maximum": 1})
-
-    def test_maximum_when_string(self):
-        self.no_error(instance="0", schema={"maximum": 1})
-
-    def test_maximum_when_wrong_type(self):
-        self.no_error(instance="a", schema={"maximum": 1})
-
-    def test_maximum_when_wrong_type_bool(self):
-        self.no_error(instance=True, schema={"maximum": 1})
-
-    def test_additionalProperties_wrong_type(self):
-        self.no_error(instance=[], schema={"additionalProperties": False})
-
-    def test_dependencies_not_found(self):
-        self.no_error(instance={"bar": True}, schema={"dependencies": {"foo": ["bar"]}})
-
-    def test_dependencies_wrong_type(self):
-        self.no_error(instance=[], schema={"dependencies": {"foo": ["bar"]}})
-
-    def test_enum(self):
-        self.no_error(instance=1, schema={"enum": ["1"]})
-
-    def test_items_wrong_type(self):
-        self.no_error(instance={}, schema={"items": {"type": "string"}})
-
-    def test_multipleOf_when_string(self):
-        self.no_error(
-            instance="6",
-            schema={"multipleOf": 2},
-        )
-
-    def test_multipleOf_when_number(self):
-        self.no_error(
-            instance=6.0,
-            schema={"multipleOf": 2.0},
-        )
-
-    def test_multipleOf_wrong_type(self):
-        self.no_error(
-            instance="a",
-            schema={"multipleOf": 2},
-        )
-
-    def test_multipleOf_wrong_type_bool(self):
-        self.no_error(
-            instance=True,
-            schema={"multipleOf": 2},
-        )
-
-    def test_minItems_when_string(self):
-        self.no_error(instance=[1, 2, 3], schema={"minItems": 2})
-
-    def test_maxItems(self):
-        self.no_error(
-            instance=[
-                1,
+            [],
+        ),
+        (
+            "valid minimum with string",
+            {"minimum": 2},
+            "2",
+            [],
+        ),
+        (
+            "valid minimum with wrong type as string",
+            {"minimum": 2},
+            "a",
+            [],
+        ),
+        (
+            "valid minimum with wrong type",
+            {"minimum": 2},
+            {},
+            [],
+        ),
+        (
+            "valid minimum with wrong type boolean",
+            {"minimum": 2},
+            True,
+            [],
+        ),
+        (
+            "minimum",
+            {"minimum": 2},
+            1,
+            [ValidationError("1 is less than the minimum of 2")],
+        ),
+        (
+            "minimum with string",
+            {"minimum": 2},
+            "1",
+            [
+                ValidationError(
+                    "'1' is less than the minimum of 2",
+                )
             ],
-            schema={"maxItems": 2},
-        )
-
-    def test_minLength(self):
-        self.no_error(
-            instance="abc",
-            schema={"minLength": 2},
-        )
-
-    def test_maxLength(self):
-        self.no_error(
-            instance="a",
-            schema={"maxLength": 2},
-        )
-
-    def test_pattern(self):
-        self.no_error(
-            instance="aaa",
-            schema={"pattern": "^a*$"},
-        )
-
-    def test_contains(self):
-        self.no_error(
-            instance=["a"],
-            schema={"contains": {"type": "string"}},
-        )
-
-    def test_contains_wrong_type(self):
-        self.no_error(instance={}, schema={"contains": {"type": "string"}})
-
-    def test_exclusiveMinimum(self):
-        self.no_error(
-            instance=6,
-            schema={"exclusiveMinimum": 5},
-        )
-
-    def test_exclusiveMinimum_string(self):
-        self.no_error(instance="6", schema={"exclusiveMinimum": 5})
-
-    def test_exclusiveMinimum_wrong_type(self):
-        self.no_error(instance="a", schema={"exclusiveMinimum": 5})
-
-    def test_exclusiveMinimum_wrong_type_bool(self):
-        self.no_error(instance=True, schema={"exclusiveMinimum": 5})
-
-    def test_exclusiveMaximum(self):
-        self.no_error(instance=1, schema={"exclusiveMaximum": 2})
-
-    def test_exclusiveMaximum_string(self):
-        self.no_error(instance="1", schema={"exclusiveMaximum": 2})
-
-    def test_exclusiveMaximum_wrong_type(self):
-        self.no_error(instance="a", schema={"exclusiveMaximum": 2})
-
-    def test_exclusiveMaximum_wrong_type_bool(self):
-        self.no_error(instance=True, schema={"exclusiveMaximum": 2})
-
-    def test_required(self):
-        self.no_error(instance={"foo": "bar"}, schema={"required": ["foo"]})
-
-    def test_minProperties(self):
-        self.no_error(instance={"a": {}, "b": {}}, schema={"minProperties": 1})
-
-    def test_minProperties_wrong_type(self):
-        self.no_error(instance=[], schema={"minProperties": 1})
-
-    def test_maxProperties(self):
-        self.no_error(
-            instance={"a": {}, "b": {}},
-            schema={"maxProperties": 2},
-        )
-
-    def test_maxProperties_with_no_value(self):
-        self.no_error(
-            instance={"a": {}, "b": {"Ref": "AWS::NoValue"}},
-            schema={"maxProperties": 2},
-        )
-
-    def test_maxProperties_wrong_type(self):
-        self.no_error(instance=[], schema={"maxProperties": 1})
-
-    def test_patternProperties_wrong_type(self):
-        self.no_error(
-            instance=[],
-            schema={"patternProperties": {"^foo$": False}},
-        )
-
-    def test_properties_wrong_type(self):
-        self.no_error(
-            instance=[],
-            schema={"properties": {"foo": False}},
-        )
-
-    def test_propertyNames_wrong_type(self):
-        self.no_error(
-            instance=[],
-            schema={"propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}},
-        )
-
-    def test_oneOf_matches_one(self):
-        self.no_error(instance={}, schema={"oneOf": [True]})
-
-    def test_oneOf_matches_just_one(self):
-        self.no_error(instance={}, schema={"oneOf": [True, False]})
-
-    def test_allOf_matches_all(self):
-        self.no_error(instance={}, schema={"allOf": [True, True]})
-
-    def test_anyOf_matches_all(self):
-        self.no_error(instance={}, schema={"anyOf": [True, True]})
-
-    def test_uniqueItems_wrong_type(self):
-        self.no_error(
-            instance={},
-            schema={"uniqueItems": True},
-        )
+        ),
+        (
+            "valid maximum",
+            {"maximum": 2},
+            "2",
+            [],
+        ),
+        (
+            "valid maximum with string",
+            {"minimum": 2},
+            "2",
+            [],
+        ),
+        (
+            "valid maximum with wrong type",
+            {"maximum": 2},
+            {},
+            [],
+        ),
+        (
+            "valid maximum with wrong type boolean",
+            {"maximum": 2},
+            True,
+            [],
+        ),
+        (
+            "valid maximum with wrong type as string",
+            {"maximum": 2},
+            "a",
+            [],
+        ),
+        (
+            "maximum",
+            {"maximum": 0},
+            1,
+            [ValidationError("1 is greater than the maximum of 0")],
+        ),
+        (
+            "maximum with string",
+            {"maximum": 0},
+            "1",
+            [
+                ValidationError(
+                    "'1' is greater than the maximum of 0",
+                )
+            ],
+        ),
+        (
+            "valid dependencies wrong type",
+            {"dependencies": {"bar": ["foo"]}},
+            [],
+            [],
+        ),
+        (
+            "dependencies list",
+            {"dependencies": {"bar": ["foo"]}},
+            {"bar": 2},
+            [
+                ValidationError(
+                    "'foo' is a dependency of 'bar'",
+                )
+            ],
+        ),
+        (
+            "valid dependencies when property not included",
+            {"dependencies": {"bar": ["foo"]}},
+            {"foo": 2},
+            [],
+        ),
+        (
+            "dependencies object",
+            {"dependencies": {"foo": {"required": ["bar"]}}},
+            {"foo": 2},
+            [
+                ValidationError(
+                    "'bar' is a required property",
+                )
+            ],
+        ),
+        (
+            "valid additionalProperties",
+            {"additionalProperties": True},
+            {"foo": "bar"},
+            [],
+        ),
+        (
+            "valid additionalProperties with wrong type",
+            {"additionalProperties": False},
+            [],
+            [],
+        ),
+        (
+            "additionalProperties false",
+            {"additionalProperties": False},
+            {"foo": 2},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('foo' was unexpected)",
+                )
+            ],
+        ),
+        (
+            "additionalProperties false",
+            {"additionalProperties": False, "properties": {"foooooo": True}},
+            {"foooooa": 2},
+            [
+                ValidationError(
+                    (
+                        "Additional properties are not allowed ('foooooa' "
+                        "was unexpected. Did you mean 'foooooo'?)"
+                    ),
+                )
+            ],
+        ),
+        (
+            "additionalProperties object",
+            {"additionalProperties": {"type": "string"}},
+            {"foo": []},
+            [
+                ValidationError(
+                    "[] is not of type 'string'",
+                )
+            ],
+        ),
+        (
+            "additionalProperties with patternProperties",
+            {"additionalProperties": False, "patternProperties": {"^bar$": False}},
+            {"foo": []},
+            [
+                ValidationError(
+                    "'foo' does not match any of the regexes: '^bar$'",
+                )
+            ],
+        ),
+        (
+            "additionalProperties with multiple properties",
+            {"additionalProperties": False},
+            {"foo": [], "bar": []},
+            [
+                ValidationError(
+                    "Additional properties are not allowed ('foo' was unexpected)",
+                ),
+                ValidationError(
+                    "Additional properties are not allowed ('bar' was unexpected)",
+                ),
+            ],
+        ),
+        (
+            "valid const",
+            {"const": 12},
+            12,
+            [],
+        ),
+        (
+            "const",
+            {"const": 12},
+            {"foo": "bar"},
+            [
+                ValidationError(
+                    "12 was expected",
+                )
+            ],
+        ),
+        (
+            "valid enum",
+            {"enum": ["bar"]},
+            "bar",
+            [],
+        ),
+        (
+            "enum",
+            {"enum": ["bar"]},
+            "foo",
+            [
+                ValidationError(
+                    "'foo' is not one of ['bar']",
+                    validator="enum",
+                    schema_path=deque(["enum"]),
+                )
+            ],
+        ),
+        (
+            "valid enum int",
+            {"enum": [0]},
+            "0",
+            [],
+        ),
+        (
+            "enum int",
+            {"enum": [0]},
+            1,
+            [ValidationError("1 is not one of [0]")],
+        ),
+        (
+            "format default message",
+            {"format": "date-time"},
+            "bla",
+            [
+                ValidationError(
+                    "'bla' is not a 'date-time'",
+                )
+            ],
+        ),
+        (
+            "a false schema",
+            False,
+            "foo",
+            [ValidationError("False schema does not allow 'foo'")],
+        ),
+        (
+            "valid if",
+            {"if": {"type": "string"}, "then": True, "else": False},
+            "",
+            [],
+        ),
+        (
+            "if then with false",
+            {"if": {"type": "string"}, "then": False, "else": True},
+            "a",
+            [
+                ValidationError(
+                    "False schema does not allow 'a'",
+                )
+            ],
+        ),
+        (
+            "valid else",
+            {"if": {"type": "string"}, "then": False, "else": True},
+            [],
+            [],
+        ),
+        (
+            "if then else with false",
+            {"if": {"type": "string"}, "then": True, "else": False},
+            [],
+            [
+                ValidationError(
+                    "False schema does not allow []",
+                )
+            ],
+        ),
+        (
+            "valid items",
+            {"items": {"type": "string"}},
+            ["foo"],
+            [],
+        ),
+        (
+            "valid items with wrong type",
+            {"items": {"type": "string"}},
+            {},
+            [],
+        ),
+        (
+            "items object",
+            {"items": {"type": "string"}},
+            [[]],
+            [
+                ValidationError(
+                    "[] is not of type 'string'",
+                )
+            ],
+        ),
+        (
+            "items list",
+            {"items": [{"type": "string"}]},
+            [[]],
+            [
+                ValidationError(
+                    "[] is not of type 'string'",
+                )
+            ],
+        ),
+        (
+            "valid multipleOf",
+            {"multipleOf": 2},
+            2,
+            [],
+        ),
+        (
+            "valid multipleOf with string",
+            {"multipleOf": 2},
+            "2",
+            [],
+        ),
+        (
+            "valid multipleOf with wrong type",
+            {"multipleOf": 2},
+            [],
+            [],
+        ),
+        (
+            "valid multipleOf with wrong type string",
+            {"multipleOf": 2},
+            "A",
+            [],
+        ),
+        (
+            "multipleOf",
+            {"multipleOf": 2},
+            3,
+            [
+                ValidationError(
+                    "3 is not a multiple of 2",
+                )
+            ],
+        ),
+        (
+            "multipleOf with string",
+            {"multipleOf": 2},
+            "3",
+            [
+                ValidationError(
+                    "'3' is not a multiple of 2",
+                )
+            ],
+        ),
+        (
+            "multipleOf with number",
+            {"multipleOf": 2.0},
+            "3",
+            [
+                ValidationError(
+                    "'3' is not a multiple of 2.0",
+                )
+            ],
+        ),
+        (
+            "valid minItems",
+            {"minItems": 1},
+            ["foo"],
+            [],
+        ),
+        (
+            "valid minItems with wrong type",
+            {"minItems": 1},
+            {},
+            [],
+        ),
+        (
+            "minItems",
+            {"minItems": 2},
+            [],
+            [
+                ValidationError(
+                    "[] is too short (2)",
+                )
+            ],
+        ),
+        (
+            "valid maxItems",
+            {"maxItems": 1},
+            ["foo"],
+            [],
+        ),
+        (
+            "valid maxItems with wrong type",
+            {"maxItems": 1},
+            {},
+            [],
+        ),
+        (
+            "maxItems",
+            {"maxItems": 0},
+            ["foo"],
+            [
+                ValidationError(
+                    "['foo'] is too long (0)",
+                )
+            ],
+        ),
+        (
+            "valid minLength",
+            {"minLength": 1},
+            "foo",
+            [],
+        ),
+        (
+            "valid minLength with wrong type",
+            {"minLength": 1},
+            1,
+            [],
+        ),
+        (
+            "minLength",
+            {"minLength": 2},
+            "",
+            [
+                ValidationError(
+                    "'' is shorter than 2",
+                )
+            ],
+        ),
+        (
+            "valid maxLength",
+            {"maxLength": 3},
+            "foo",
+            [],
+        ),
+        (
+            "valid maxLength with wrong type",
+            {"maxLength": 1},
+            1,
+            [],
+        ),
+        (
+            "maxLength",
+            {"maxLength": 0},
+            "foo",
+            [
+                ValidationError(
+                    "'foo' is longer than 0",
+                )
+            ],
+        ),
+        (
+            "valid not",
+            {"not": False},
+            True,
+            [],
+        ),
+        (
+            "not",
+            {"not": True},
+            False,
+            [
+                ValidationError(
+                    "False should not be valid under True",
+                )
+            ],
+        ),
+        (
+            "valid pattern",
+            {"pattern": "^foo$"},
+            "foo",
+            [],
+        ),
+        (
+            "valid pattern with wrong type",
+            {"pattern": "^foo$"},
+            {},
+            [],
+        ),
+        (
+            "pattern",
+            {"pattern": "^a*$"},
+            "bbb",
+            [
+                ValidationError(
+                    "'bbb' does not match '^a*$'",
+                )
+            ],
+        ),
+        (
+            "valid contains",
+            {"contains": {"type": "string"}},
+            ["foo"],
+            [],
+        ),
+        (
+            "valid contains with wrong type",
+            {"contains": {"type": "string"}},
+            {},
+            [],
+        ),
+        (
+            "contains",
+            {"contains": {"type": "string"}},
+            [],
+            [
+                ValidationError(
+                    "[] does not contain items matching the given schema",
+                )
+            ],
+        ),
+        (
+            "valid exclusiveMinimum",
+            {"exclusiveMinimum": 4},
+            5,
+            [],
+        ),
+        (
+            "valid exclusiveMinimum with wrong type",
+            {"exclusiveMinimum": 4},
+            {},
+            [],
+        ),
+        (
+            "valid exclusiveMinimum with non number string",
+            {"exclusiveMinimum": 4},
+            "foo",
+            [],
+        ),
+        (
+            "exclusiveMinimum",
+            {"exclusiveMinimum": 5},
+            5,
+            [
+                ValidationError(
+                    "5 is less than or equal to the minimum of 5",
+                )
+            ],
+        ),
+        (
+            "exclusiveMinimum with string",
+            {"exclusiveMinimum": 5},
+            "5",
+            [
+                ValidationError(
+                    "'5' is less than or equal to the minimum of 5",
+                )
+            ],
+        ),
+        (
+            "valid exclusiveMaximum",
+            {"exclusiveMaximum": 5},
+            4,
+            [],
+        ),
+        (
+            "valid exclusiveMaximum with wrong type",
+            {"exclusiveMaximum": 5},
+            {},
+            [],
+        ),
+        (
+            "valid exclusiveMaximum with wrong string type",
+            {"exclusiveMaximum": 5},
+            "foo",
+            [],
+        ),
+        (
+            "exclusiveMaximum with string",
+            {"exclusiveMaximum": 5},
+            "5",
+            [
+                ValidationError(
+                    "'5' is greater than or equal to the maximum of 5",
+                )
+            ],
+        ),
+        (
+            "valid required",
+            {"required": ["foo"]},
+            {"foo": False},
+            [],
+        ),
+        (
+            "valid required wrong type",
+            {"required": ["foo"]},
+            [],
+            [],
+        ),
+        (
+            "required",
+            {"required": ["foo"]},
+            {},
+            [
+                ValidationError(
+                    "'foo' is a required property",
+                )
+            ],
+        ),
+        (
+            "valid minProperties",
+            {"minProperties": 1},
+            {"foo": False},
+            [],
+        ),
+        (
+            "valid minProperties with wrong type",
+            {"minProperties": 1},
+            [],
+            [],
+        ),
+        (
+            "minProperties",
+            {"minProperties": 1},
+            {},
+            [
+                ValidationError(
+                    "{} does not have enough properties",
+                )
+            ],
+        ),
+        (
+            "valid maxProperties",
+            {"maxProperties": 1},
+            {"foo": False},
+            [],
+        ),
+        (
+            "valid maxProperties with wrong type",
+            {"maxProperties": 1},
+            [],
+            [],
+        ),
+        (
+            "maxProperties",
+            {"maxProperties": 1},
+            {"foo": {}, "bar": {}},
+            [
+                ValidationError(
+                    "{'foo': {}, 'bar': {}} has too many properties",
+                )
+            ],
+        ),
+        (
+            "valid patternProperties",
+            {"patternProperties": {"^foo$": True}},
+            {"foo": {}},
+            [],
+        ),
+        (
+            "valid patternProperties with wrong type",
+            {"patternProperties": {"^foo$": True}},
+            [],
+            [],
+        ),
+        (
+            "patternProperties",
+            {"patternProperties": {"^foo$": False}},
+            {"foo": "bar"},
+            [
+                ValidationError(
+                    "False schema does not allow 'bar'",
+                )
+            ],
+        ),
+        (
+            "valid properties",
+            {"properties": {"foo": True}},
+            {"foo": "bar"},
+            [],
+        ),
+        (
+            "valid properties with wrong type",
+            {"properties": {"foo": True}},
+            [],
+            [],
+        ),
+        (
+            "properties",
+            {"properties": {"foo": False}},
+            {"foo": "bar"},
+            [
+                ValidationError(
+                    "False schema does not allow 'bar'",
+                )
+            ],
+        ),
+        (
+            "valid propertyNames",
+            {"propertyNames": {"pattern": "^bar$"}},
+            {"bar": "foo"},
+            [],
+        ),
+        (
+            "valid propertyNames with wrong type",
+            {"propertyNames": {"pattern": "^bar$"}},
+            [],
+            [],
+        ),
+        (
+            "propertyNames",
+            {"propertyNames": {"pattern": "^bar$"}},
+            {"foo": "bar"},
+            [
+                ValidationError(
+                    "'foo' does not match '^bar$'",
+                )
+            ],
+        ),
+        (
+            "valid oneOf matches none",
+            {"oneOf": [True]},
+            False,
+            [],
+        ),
+        (
+            "oneOf matches none",
+            {"oneOf": [False]},
+            {},
+            [
+                ValidationError(
+                    "{} is not valid under any of the given schemas",
+                )
+            ],
+        ),
+        (
+            "oneOf matches too many",
+            {"oneOf": [True, True]},
+            {},
+            [
+                ValidationError(
+                    "{} is valid under each of True, True",
+                )
+            ],
+        ),
+        (
+            "valid allOf",
+            {"allOf": [True, True]},
+            False,
+            [],
+        ),
+        (
+            "allOf matches one False",
+            {"allOf": [True, False]},
+            {},
+            [
+                ValidationError(
+                    "False schema does not allow {}",
+                )
+            ],
+        ),
+        (
+            "allOf matches multiple False",
+            {"allOf": [True, False, False]},
+            {},
+            [
+                ValidationError(
+                    "False schema does not allow {}",
+                ),
+                ValidationError(
+                    "False schema does not allow {}",
+                ),
+            ],
+        ),
+        (
+            "valid anyOf matches more than one",
+            {"anyOf": [True, True]},
+            False,
+            [],
+        ),
+        (
+            "anyOf matches none",
+            {"anyOf": [False, False]},
+            {},
+            [
+                ValidationError(
+                    "{} is not valid under any of the given schemas",
+                )
+            ],
+        ),
+        (
+            "valid uniqueItems",
+            {"uniqueItems": True},
+            [1, 2, "3"],
+            [],
+        ),
+        (
+            "uniqueItems",
+            {"uniqueItems": True},
+            [1, 2, "1"],
+            [
+                ValidationError(
+                    "[1, 2, '1'] has non-unique elements",
+                )
+            ],
+        ),
+        (
+            "valid requiredOr",
+            {"requiredOr": ["foo", "bar"]},
+            {"foo": {}},
+            [],
+        ),
+        (
+            "valid requiredOr with wrong type",
+            {"requiredOr": ["foo", "bar"]},
+            [],
+            [],
+        ),
+        (
+            "valid requiredOr with both items",
+            {"requiredOr": ["foo", "bar"]},
+            {"foo": {}, "bar": {}},
+            [],
+        ),
+        (
+            "requiredOr",
+            {"requiredOr": ["bar"]},
+            {},
+            [
+                ValidationError(
+                    "At least one of ['bar'] is a required property",
+                )
+            ],
+        ),
+        (
+            "valid requiredXor",
+            {"requiredXor": ["foo", "bar"]},
+            {"foo": {}},
+            [],
+        ),
+        (
+            "valid requiredXor with wrong type",
+            {"requiredXor": ["foo", "bar"]},
+            [],
+            [],
+        ),
+        (
+            "requiredXor",
+            {"requiredXor": ["foo", "bar"]},
+            {},
+            [
+                ValidationError(
+                    "Only one of ['foo', 'bar'] is a required property",
+                )
+            ],
+        ),
+        (
+            "requiredXor with multiple errors",
+            {"requiredXor": ["foo", "bar"]},
+            {"foo": "foo", "bar": "bar"},
+            [
+                ValidationError(
+                    "Only one of ['foo', 'bar'] is a required property",
+                ),
+                ValidationError(
+                    "Only one of ['foo', 'bar'] is a required property",
+                ),
+            ],
+        ),
+        (
+            "valid uniqueKeys",
+            {"uniqueKeys": ["Name"]},
+            [{"Name": "foo"}, {"Name": "bar"}],
+            [],
+        ),
+        (
+            "valid uniqueKeys with wrong types",
+            {"uniqueKeys": ["Name"]},
+            {"Name": "foo"},
+            [],
+        ),
+        (
+            "valid uniqueKeys with wrong type in array",
+            {"uniqueKeys": ["Name"]},
+            [{"Name": "foo"}, []],
+            [],
+        ),
+        (
+            "uniqueKeys",
+            {"uniqueKeys": ["Name"]},
+            [
+                {
+                    "Name": "foo",
+                },
+                {
+                    "Name": "foo",
+                },
+            ],
+            [
+                ValidationError(
+                    "[{'Name': 'foo'}, {'Name': 'foo'}] has non-unique "
+                    "elements for keys ['Name']",
+                )
+            ],
+        ),
+        (
+            "valid dependentExcluded when wrong type",
+            {"dependentExcluded": {"foo": ["bar"]}},
+            [],
+            [],
+        ),
+        (
+            "valid dependentExcluded when not specified",
+            {"dependentExcluded": {"foo": ["bar"]}},
+            {"bar": "bar"},
+            [],
+        ),
+        (
+            "dependentExcluded",
+            {"dependentExcluded": {"foo": ["bar"], "bar": ["foo"]}},
+            {"foo": "foo", "bar": "bar"},
+            [
+                ValidationError("'bar' should not be included with 'foo'"),
+                ValidationError("'foo' should not be included with 'bar'"),
+            ],
+        ),
+        (
+            "dependentRequired",
+            {"dependentRequired": {"foo": ["bar"]}},
+            {"foo": "foo"},
+            [
+                ValidationError("'bar' is a dependency of 'foo'"),
+            ],
+        ),
+        (
+            "dependentRequired with multiple properties",
+            {"dependentRequired": {"foo": ["a", "b"]}},
+            {"foo": "foo"},
+            [
+                ValidationError("'a' is a dependency of 'foo'"),
+                ValidationError("'b' is a dependency of 'foo'"),
+            ],
+        ),
+        (
+            "valid dependentRequired when property not included",
+            {"dependentRequired": {"foo": ["a", "b"]}},
+            {"bar": "bar"},
+            [],
+        ),
+        (
+            "valid dependentRequired",
+            {"dependentRequired": {"foo": ["bar"]}},
+            {"foo": "foo", "bar": "bar"},
+            [],
+        ),
+        (
+            "valid dependentRequired with wrong type",
+            {"dependentRequired": {"foo": ["bar"]}},
+            [],
+            [],
+        ),
+    ],
+)
+@patch.object(ValidationError, "__eq__", spec=True, new=_eq)
+@patch.object(ValidationError, "__lt__", spec=True, new=_lt)
+def test_messages(name, schema, instance, expected, validator):
+    validator = validator.evolve(schema=schema)
+    errs = list(validator.iter_errors(instance))
+    assert sorted(errs) == sorted(expected), f"{name!r} returned {errs!r}"
