@@ -13,9 +13,9 @@ from sympy.assumptions.cnf import EncodedCNF
 from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 from sympy.logic.inference import satisfiable
 
+from cfnlint.conditions._condition import ConditionNamed
+from cfnlint.conditions._equals import Equal
 from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.condition import ConditionNamed
-from cfnlint.conditions.equals import Equal
 
 LOGGER = logging.getLogger(__name__)
 

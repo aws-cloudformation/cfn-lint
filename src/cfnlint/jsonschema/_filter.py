@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from dataclasses import dataclass, field, fields
 from typing import Any, Sequence, Tuple
 
-from cfnlint.helpers import ToPy
+from cfnlint.helpers import REGEX_DYN_REF, ToPy
 from cfnlint.jsonschema._utils import ensure_list
 
 _all_types = ["array", "boolean", "integer", "number", "object", "string"]
@@ -91,6 +91,14 @@ class FunctionFilter:
         return standard_schema, group_schema
 
     def filter(self, validator: Any, instance: Any, schema: Any):
+        # Lets validate dynamic references when appropriate
+        if validator.is_type(instance, "string"):
+            if validator.context:
+                if validator.context.dynamic_references:
+                    if REGEX_DYN_REF.findall(instance):
+                        yield (instance, {"dynamicReference": schema})
+                        return
+
         # dependencies, required, minProperties, maxProperties
         # need to have filtered properties to validate
         # because of Ref: AWS::NoValue
