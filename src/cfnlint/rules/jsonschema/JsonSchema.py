@@ -27,6 +27,7 @@ class JsonSchema(BaseJsonSchema):
         self.rule_set = {
             "awsType": "E1100",
             "cfnLint": "E1101",
+            "dynamicReference": "E1050",
             "ref": "E1020",
             "fn_base64": "E1021",
             "fn_cidr": "E1024",
