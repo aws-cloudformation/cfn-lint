@@ -27,10 +27,10 @@ from cfnlint.helpers import (
     load_resource,
     url_has_newer_version,
 )
-from cfnlint.schema.exceptions import ResourceNotFoundError
-from cfnlint.schema.getatts import AttributeDict
+from cfnlint.schema._exceptions import ResourceNotFoundError
+from cfnlint.schema._getatts import AttributeDict
+from cfnlint.schema._schema import Schema
 from cfnlint.schema.patch import SchemaPatch
-from cfnlint.schema.schema import Schema
 
 LOGGER = logging.getLogger(__name__)
 
