@@ -23,7 +23,6 @@ from typing import Any, Dict, Sequence
 
 import regex as re
 
-from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import ValidationResult
 from cfnlint.jsonschema._utils import (
@@ -281,7 +280,10 @@ def maxItems(
 def maxLength(
     validator: Validator, mL: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:  # pylint: disable=arguments-renamed
-    if validator.is_type(instance, "string") and len(instance) > mL:
+    if not validator.is_type(instance, "string"):
+        return
+
+    if len(instance) > mL:
         yield ValidationError(f"{instance!r} is longer than {mL}")
 
 
@@ -321,7 +323,10 @@ def minItems(
 def minLength(
     validator: Validator, mL: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:  # pylint: disable=arguments-renamed
-    if validator.is_type(instance, "string") and len(instance) < mL:
+    if not validator.is_type(instance, "string"):
+        return
+
+    if len(instance) < mL:
         yield ValidationError(f"{instance!r} is shorter than {mL}")
 
 
@@ -413,12 +418,11 @@ def oneOf(
 def pattern(
     validator: Validator, patrn: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    if validator.is_type(instance, "string"):
-        # skip any dynamic reference strings
-        if REGEX_DYN_REF.findall(instance):
-            return
-        if not re.search(patrn, instance):
-            yield ValidationError(f"{instance!r} does not match {patrn!r}")
+    if not validator.is_type(instance, "string"):
+        return
+
+    if not re.search(patrn, instance):
+        yield ValidationError(f"{instance!r} does not match {patrn!r}")
 
 
 def patternProperties(

@@ -123,7 +123,7 @@ REGEX_IPV6 = re.compile(
     r"^(((?=.*(::))(?!.*\3.+\3))\3?|[\dA-F]{1,4}:)([\dA-F]{1,4}(\3|:\b)|\2){5}(([\dA-F]{1,4}(\3|:\b|$)|\2){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})\Z",
     re.I | re.S,
 )
-REGEX_DYN_REF = re.compile(r"^.*{{resolve:.+}}.*$")
+REGEX_DYN_REF = re.compile(r"^.*{{\s*(resolve:.+)\s*}}.*$")
 REGEX_DYN_REF_SSM = re.compile(r"^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$")
 REGEX_DYN_REF_SSM_SECURE = re.compile(
     r"^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$"
