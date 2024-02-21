@@ -11,7 +11,7 @@ import subprocess
 import cfnlint
 import cfnlint.data.AdditionalSpecs
 from cfnlint.helpers import get_url_content
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 

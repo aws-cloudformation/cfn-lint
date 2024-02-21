@@ -5,12 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, Set
 
 from cfnlint.jsonschema._utils import equal
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
-from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
-from cfnlint.schema.exceptions import ResourceNotFoundError
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
 
 @dataclass
@@ -40,7 +39,7 @@ class PrimaryIdentifiers(CloudFormationLintRule):
 
     def _validate_resource_type_uniqueness(self, cfn, resource_type, ids):
         matches = []
-        seens: List[_Seen] = []
+        seens = []
         for resource_name, resource_attributes in cfn.get_resources(
             resource_type
         ).items():
