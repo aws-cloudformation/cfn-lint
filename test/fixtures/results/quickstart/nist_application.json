@@ -368,20 +368,19 @@
                 "Fn::Join",
                 1,
                 9,
-                "Ref",
-                "pDBPassword"
+                "Ref"
             ],
             "Start": {
                 "ColumnNumber": 21,
                 "LineNumber": 343
             }
         },
-        "Message": "As the resource \"metadata\" section contains reference to a \"NoEcho\" parameter pDBPassword, CloudFormation will display the parameter value in plaintext",
+        "Message": "Don't use 'NoEcho' parameter 'pDBPassword' in resource metadata",
         "Rule": {
-            "Description": "Check if there is a NoEcho enabled parameter referenced within a resources Metadata section",
-            "Id": "W4002",
-            "ShortDescription": "Check for NoEcho References",
-            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-properties"
+            "Description": "Using the NoEcho attribute does not mask any information stored in the following: Metadata, Outputs, Resource Metadata",
+            "Id": "W2010",
+            "ShortDescription": "NoEcho parameters are not masked when used in Metadata and Outputs",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html"
         }
     },
     {
@@ -1601,6 +1600,33 @@
             "Id": "W3005",
             "ShortDescription": "Check obsolete DependsOn configuration for Resources",
             "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 1016
+            },
+            "Path": [
+                "Resources",
+                "rRDSInstanceMySQL",
+                "Properties",
+                "MasterUserPassword"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 1016
+            }
+        },
+        "Message": "Use dynamic references over parameters for secrets",
+        "Rule": {
+            "Description": "Instead of REFing a parameter for a secret use a dynamic reference. Solutions like SSM parameter store and secrets manager provide better security of sercrets",
+            "Id": "W1011",
+            "ShortDescription": "Instead of REFing a parameter for a secret use a dynamic reference",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/security-best-practices.html#creds"
         }
     },
     {
