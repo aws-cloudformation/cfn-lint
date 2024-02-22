@@ -31,7 +31,7 @@ class TestLint(TestCase):
             config=ManualArgs(regions=["us-east-1", "us-west-2", "eu-west-1"]),
         )
         self.assertEqual(
-            ["W4002", "W4002"],
+            ["W2010", "W2010"],
             [match.rule.id for match in matches],
             f"Got matches: {matches!r}",
         )
@@ -121,7 +121,7 @@ class TestV0Usage(TestCase):
     def test_noecho_yaml_template(self):
         filename = "test/fixtures/templates/bad/noecho.yaml"
         matches = self.helper_lint_string_from_file(filename)
-        self.assertEqual(["W4002", "W4002"], [match.rule.id for match in matches])
+        self.assertEqual(["W2010", "W2010"], [match.rule.id for match in matches])
 
     def test_noecho_yaml_template_warnings_ignored(self):
         filename = "test/fixtures/templates/bad/noecho.yaml"
