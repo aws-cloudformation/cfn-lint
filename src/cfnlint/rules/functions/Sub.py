@@ -8,10 +8,8 @@ from typing import Any, Dict
 
 import regex as re
 
-from cfnlint.context.context import Parameter
 from cfnlint.helpers import REGEX_SUB_PARAMETERS
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules.functions._BaseFn import BaseFn
 
 
@@ -31,6 +29,19 @@ class Sub(BaseFn):
             "W1019": None,
             "W1020": None,
         }
+        self._functions = [
+            "Fn::Base64",
+            "Fn::FindInMap",
+            "Fn::GetAZs",
+            "Fn::GetAtt",
+            "Fn::If",
+            "Fn::ImportValue",
+            "Fn::Join",
+            "Fn::Select",
+            "Fn::Sub",
+            "Ref",
+            "Fn::ToJsonString",
+        ]
 
     def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
         return {
@@ -42,19 +53,7 @@ class Sub(BaseFn):
                     "schema": {"type": "string"},
                 },
                 {
-                    "functions": [
-                        "Fn::Base64",
-                        "Fn::FindInMap",
-                        "Fn::GetAZs",
-                        "Fn::GetAtt",
-                        "Fn::If",
-                        "Fn::ImportValue",
-                        "Fn::Join",
-                        "Fn::Select",
-                        "Fn::Sub",
-                        "Ref",
-                        "Fn::ToJsonString",
-                    ],
+                    "functions": self._functions,
                     "schema": {
                         "type": ["object"],
                         "patternProperties": {
@@ -68,45 +67,36 @@ class Sub(BaseFn):
             ],
         }
 
+    def _clean_error(
+        self, err: ValidationError, instance: Any, param: Any
+    ) -> ValidationError:
+        err.message = err.message.replace(f"{instance!r}", f"{param!r}")
+        err.instance = param
+        err.path = deque([self.fn.name])
+        err.schema_path = deque([])
+        err.validator = self.fn.py
+        return err
+
     def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
         params = re.findall(REGEX_SUB_PARAMETERS, instance)
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                functions=self._functions,
+            )
+        )
         for param in params:
             param = param.strip()
-            valid_params = []
             if "." in param:
-                [name, attr] = param.split(".", 1)
-                if name in validator.context.resources:
-                    if attr in validator.context.resources[name].get_atts:
-                        tS = ensure_list(
-                            validator.context.resources[name].get_atts[attr].type
-                        )
-                        if not any(type in tS for type in self.sub_parameter_types):
-                            reprs = ", ".join(
-                                repr(type) for type in self.sub_parameter_types
-                            )
-                            yield ValidationError(
-                                message=f"{param!r} is not of type {reprs}",
-                                validator=self.fn.py,
-                                path=deque([self.fn.name]),
-                            )
-                            continue
-                    valid_params = [
-                        f"{name}.{attr}"
-                        for attr in list(
-                            validator.context.resources[name].get_atts.keys()
-                        )
-                    ]
-                else:
-                    valid_params = list(validator.context.resources.keys())
+                for err in validator.descend(
+                    {"Fn::GetAtt": param},
+                    {"type": ["string", "integer", "number", "boolean"]},
+                ):
+                    yield self._clean_error(err, {"Fn::GetAtt": param}, param)
             else:
-                valid_params = validator.context.refs
-
-            if param not in valid_params:
-                yield ValidationError(
-                    message=f"{param!r} is not one of {valid_params!r}",
-                    validator=self.fn.py,
-                    path=deque([self.fn.name]),
-                )
+                for err in validator.descend(
+                    {"Ref": param}, {"type": ["string", "integer", "number", "boolean"]}
+                ):
+                    yield self._clean_error(err, {"Ref": param}, param)
 
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
@@ -121,11 +111,7 @@ class Sub(BaseFn):
                 return
 
             validator_string = validator.evolve(
-                context=validator.context.evolve(
-                    ref_values=dict.fromkeys(
-                        list(value[1].keys()), Parameter({"Type": "String"})
-                    ),
-                )
+                context=validator.context.evolve(ref_values=value[1])
             )
             value = value[0]
         elif validator.is_type(value, "string"):
