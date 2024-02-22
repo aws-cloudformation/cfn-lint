@@ -10,7 +10,7 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Set, Tuple
 
-from cfnlint.helpers import PSEUDOPARAMS, REGION_PRIMARY
+from cfnlint.helpers import BOOLEAN_STRINGS_TRUE, PSEUDOPARAMS, REGION_PRIMARY
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
 
 _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
@@ -234,6 +234,7 @@ class Parameter(_Ref):
         self.allowed_values = []
         self.min_value = None
         self.max_value = None
+        self.no_echo = False
 
         t = parameter.get("Type")
         if not isinstance(t, str):
@@ -255,8 +256,11 @@ class Parameter(_Ref):
         else:
             self.default = parameter.get("Default")
             self.allowed_values = parameter.get("AllowedValues")
-            self.min_value = parameter.get("MinValue")
-            self.max_value = parameter.get("MaxValue")
+
+        self.min_value = parameter.get("MinValue")
+        self.max_value = parameter.get("MaxValue")
+        if parameter.get("NoEcho") in list(BOOLEAN_STRINGS_TRUE) + [True]:
+            self.no_echo = True
 
     def ref(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         if self.allowed_values:
