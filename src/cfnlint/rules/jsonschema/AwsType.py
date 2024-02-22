@@ -21,6 +21,7 @@ class AwsType(CloudFormationLintRule):
         self.types = {
             "CfnConditions": "E8001",
             "CfnCondition": "E8002",
+            "CfnDynamicReferenceSecret": "E1051",
             "CfnInitCommand": "E3009",
             "CfnInitFiles": "E3009",
             "CfnInitGroups": "E3009",
@@ -35,6 +36,7 @@ class AwsType(CloudFormationLintRule):
             "CfnParameters": "E2001",
             "CfnResources": "E3001",
             "CfnResourceDeletionPolicy": "E3035",
+            "CfnResourceMetadata": "E3028",
             "CfnResourceType": "E3011",
             "CfnResourceProperties": "E3002",
             "CfnResourceUpdatePolicy": "E3016",
