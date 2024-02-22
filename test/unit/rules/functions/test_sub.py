@@ -9,6 +9,8 @@ import pytest
 
 from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.functions.GetAtt import GetAtt
+from cfnlint.rules.functions.Ref import Ref
 from cfnlint.rules.functions.Sub import Sub
 from cfnlint.template import Template
 
@@ -86,7 +88,7 @@ def context(cfn):
             [],
         ),
         (
-            "Valid Fn::Sub with a valid Ref and a string escape",
+            "Valid Fn::Sub with a valid Ref and a string escape with parameter",
             {"Fn::Sub": "${!foo}=${bar}"},
             {"type": "string"},
             [
@@ -124,7 +126,7 @@ def context(cfn):
             ],
         ),
         (
-            "Valid Fn::Sub with a Ref to parameter",
+            "Valid Fn::Sub with a Ref to a sub parameter",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}]},
             {"type": "string"},
             [],
@@ -181,6 +183,15 @@ def context(cfn):
                     ),
                     validator="fn_sub",
                 ),
+                ValidationError(
+                    (
+                        "'foo' is not of type 'string', 'integer', "
+                        "'number', 'boolean' when 'Ref' is resolved"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque([]),
+                    validator="fn_sub",
+                ),
             ],
         ),
         (
@@ -196,11 +207,11 @@ def context(cfn):
             [
                 ValidationError(
                     (
-                        "'MyResource.Foo' is not one of ['MyResource.Arn', "
-                        "'MyResource.DomainName', "
-                        "'MyResource.DualStackDomainName', "
-                        "'MyResource.RegionalDomainName', "
-                        "'MyResource.WebsiteURL']"
+                        "'Foo' is not one of ['Arn', "
+                        "'DomainName', "
+                        "'DualStackDomainName', "
+                        "'RegionalDomainName', "
+                        "'WebsiteURL']"
                     ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
@@ -214,7 +225,7 @@ def context(cfn):
             {"type": "string"},
             [
                 ValidationError(
-                    "'Foo.Bar' is not one of ['MyResource', 'MySimpleAd']",
+                    "'Foo' is not one of ['MyResource', 'MySimpleAd']",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -229,9 +240,9 @@ def context(cfn):
                 ValidationError(
                     (
                         "'MySimpleAd.DnsIpAddresses' is not "
-                        "of type 'string', 'integer', "
-                        "'number', 'boolean'"
+                        "of type 'string', 'integer', 'number', 'boolean'"
                     ),
+                    instance="MySimpleAd.DnsIpAddresses",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -241,6 +252,11 @@ def context(cfn):
     ],
 )
 def test_validate(name, instance, schema, expected, rule, context, cfn):
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "ref": Ref().ref,
+            "fn_getatt": GetAtt().fn_getatt,
+        }
+    )(context=context, cfn=cfn)
     errs = list(rule.fn_sub(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
