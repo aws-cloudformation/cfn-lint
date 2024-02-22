@@ -31,9 +31,22 @@ class Ref(BaseFn):
             "Resources/AWS::EC2::LaunchTemplate/Properties/LaunchTemplateData/ImageId": "W2506",  # noqa: E501
             "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/ImageId": "W2506",  # noqa: E501
             "Resources/AWS::ImageBuilder::Image/Properties/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::NimbleStudio::StreamingImage/Properties/Ec2ImageId": "W2506",  # noqa: E501
+            "Resources/AWS::DirectoryService::MicrosoftAD/Properties/Password": "W1011",  # noqa: E501
+            "Resources/AWS::DirectoryService::SimpleAD/Properties/Password": "W1011",  # noqa: E501
+            "Resources/AWS::ElastiCache::ReplicationGroup/Properties/AuthToken": "W1011",  # noqa: E501
+            "Resources/AWS::IAM::User/Properties/LoginProfile/Password": "W1011",  # noqa: E501
+            "Resources/AWS::KinesisFirehose::DeliveryStream/Properties/RedshiftDestinationConfiguration/Password": "W1011",  # noqa: E501
+            "Resources/AWS::OpsWorks::App/Properties/AppSource/Password": "W1011",  # noqa: E501
+            "Resources/AWS::OpsWorks::Stack/Properties/RdsDbInstances/DbPassword": "W1011",  # noqa: E501
+            "Resources/AWS::OpsWorks::Stack/Properties/CustomCookbooksSource/Password": "W1011",  # noqa: E501
+            "Resources/AWS::RDS::DBCluster/Properties/MasterUserPassword": "W1011",  # noqa: E501
+            "Resources/AWS::RDS::DBInstance/Properties/MasterUserPassword": "W1011",  # noqa: E501
+            "Resources/AWS::Redshift::Cluster/Properties/MasterUserPassword": "W1011",  # noqa: E501
         }
-        self.child_rules = dict.fromkeys(list(self.keywords.values()))
+        self._all_refs = [
+            "W2010",
+        ]
+        self.child_rules = dict.fromkeys(list(self.keywords.values()) + self._all_refs)
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
@@ -89,13 +102,14 @@ class Ref(BaseFn):
                 yield ValidationError(f"{instance!r} is not of type {reprs}")
                 return
 
-        keyword = self.get_keyword(validator)
-        for rule in self.child_rules.values():
-            if rule is None:
-                continue
-            if not rule.id:
-                continue
+        for rule_id in self._all_refs:
+            rule = self.child_rules.get(rule_id)
+            if rule:
+                yield from rule.validate(validator, {}, instance, schema)
 
-            for rule_keyword in self.keywords:
-                if rule_keyword == keyword:
-                    yield from rule.validate(validator, keyword, instance, schema)
+        keyword = self.get_keyword(validator)
+        rule_id = self.keywords.get(keyword)
+        if rule_id:
+            rule = self.child_rules.get(rule_id)
+            if rule:
+                yield from rule.validate(validator, keyword, instance, schema)
