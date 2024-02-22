@@ -126,8 +126,8 @@ class GetAtt(BaseFn):
                                 err.message + f" when {value[1]!r} is resolved"
                             )
                         yield err
-                        break
-                else:
+                        continue
+
                     # because of the complexities of schemas ($ref, anyOf, allOf, etc.)
                     # we will simplify the validator to just have a type check
                     # then we will provide a simple value to represent the type from the
