@@ -7,15 +7,15 @@ import pytest
 
 from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.functions.DynamicReferenceSecureString import (
-    DynamicReferenceSecureString,
+from cfnlint.rules.functions.DynamicReferenceSecretsManagerPath import (
+    DynamicReferenceSecretsManagerPath,
 )
 from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = DynamicReferenceSecureString()
+    rule = DynamicReferenceSecretsManagerPath()
     yield rule
 
 
@@ -23,14 +23,7 @@ def rule():
 def cfn():
     return Template(
         "",
-        {
-            "Resources": {
-                "MyResource": {
-                    "Type": "AWS::IAM::User",
-                    "Properties": {"LoginProfile": {"Password": "Foo"}},
-                }
-            }
-        },
+        {},
         regions=["us-east-1"],
     )
 
@@ -44,22 +37,22 @@ def context(cfn):
     "name,instance,path,expected",
     [
         (
-            "Valid SSM Secure Parameter",
-            "{{resolve:ssm-secure:Parameter}}",
+            "Valid secrets manager",
+            "{{resolve:secretsmanager:Parameter}}",
             ["Resources", "MyResource", "Properties", "LoginProfile", "Password"],
             [],
         ),
         (
             "Invalid SSM secure location",
-            "{{resolve:ssm-secure:Parameter}}",
+            "{{resolve:secretsmanager:Parameter}}",
             ["Outputs", "MyOutput", "Value"],
             [
                 ValidationError(
                     (
-                        "Dynamic reference '{{resolve:ssm-secure:Parameter}}' "
-                        "to SSM secure strings can only be used in resource properties"
+                        "Dynamic reference '{{resolve:secretsmanager:Parameter}}' "
+                        "to secrets manager can only be used in resource properties"
                     ),
-                    rule=DynamicReferenceSecureString(),
+                    rule=DynamicReferenceSecretsManagerPath(),
                 )
             ],
         ),
