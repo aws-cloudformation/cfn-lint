@@ -40,6 +40,20 @@ def validator():
         ),
         (
             {
+                "DeleteAfterDays": "foo",
+                "MoveToColdStorageAfterDays": 10,
+            },
+            [],
+        ),
+        (
+            {
+                "DeleteAfterDays": 100,
+                "MoveToColdStorageAfterDays": "foo",
+            },
+            [],
+        ),
+        (
+            {
                 "DeleteAfterDays": 10,
                 "MoveToColdStorageAfterDays": 30,
             },
