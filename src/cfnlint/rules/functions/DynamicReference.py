@@ -8,7 +8,7 @@ from typing import Any
 
 from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 _all = {
     "items": [
@@ -62,14 +62,9 @@ _secrets_manager_arn = {
 }
 
 
-class DynamicReference(CloudFormationLintRule):
-    """
-    Check if Dynamic Reference Secure Strings are
-    only used in the correct locations
-    """
-
+class DynamicReference(BaseFn):
     id = "E1050"
-    shortdesc = "Check dynamic references secure strings are in supported locations"
+    shortdesc = "Validate the structure of a dynamic reference"
     description = (
         "Dynamic References Secure Strings are only supported for a small set of"
         " resource properties.  Validate that they are being used in the correct"
@@ -78,6 +73,13 @@ class DynamicReference(CloudFormationLintRule):
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html"
     tags = ["functions", "dynamic reference"]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.child_rules = {
+            "E1051": None,
+            "E1027": None,
+        }
 
     def _clean_errors(self, err: ValidationError) -> ValidationError:
         err.rule = self
@@ -91,6 +93,10 @@ class DynamicReference(CloudFormationLintRule):
         if not validator.is_type(instance, "string"):
             return
 
+        # SSM parameters can be used in Resources and Outputs and Parameters
+        # SSM secrets are only used in a small number of locations
+        # Secrets manager can be used only in resource properties
+
         for v in REGEX_DYN_REF.findall(instance):
             parts = v.split(":")
 
@@ -101,14 +107,24 @@ class DynamicReference(CloudFormationLintRule):
                 found = True
 
             if found:
-                return
+                continue
 
-            if parts[1] in ["ssm", "ssm-secure"]:
+            if parts[1] == "ssm":
                 evolved = validator.evolve(schema=_ssm)
-            elif parts[2] == "arn":
-                evolved = validator.evolve(schema=_secrets_manager_arn)
+            elif parts[1] == "ssm-secure":
+                evolved = validator.evolve(schema=_ssm)
+                rule = self.child_rules["E1027"]
+                if rule:
+                    yield from rule.validate(validator, {}, v, schema)
             else:
-                evolved = validator.evolve(schema=_secrets_manager)
+                if parts[2] == "arn":
+                    evolved = validator.evolve(schema=_secrets_manager_arn)
+                else:  # this is secrets manager
+                    evolved = validator.evolve(schema=_secrets_manager)
+                rule = self.child_rules["E1051"]
+                if rule:
+                    yield from rule.validate(validator, {}, v, schema)
 
             for err in evolved.iter_errors(parts):
                 yield self._clean_errors(err)
+                found = True
