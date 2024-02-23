@@ -11,6 +11,12 @@ from cfnlint.rules.functions.DynamicReference import DynamicReference
 from cfnlint.template import Template
 
 
+class _TestRule:
+    def validate(self, validator, s, instance, schema):
+        return
+        yield
+
+
 @pytest.fixture(scope="module")
 def rule():
     rule = DynamicReference()
@@ -32,30 +38,76 @@ def context(cfn):
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,expected",
+    "name,instance,schema,child_rules,expected",
     [
         (
             "Valid SSM Parameter",
             "{{resolve:ssm:Parameter}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
+            [],
+        ),
+        (
+            "Valid SSM Parameter with no rules",
+            "{{resolve:ssm:Parameter}}",
+            {"type": "test"},
+            {
+                "E1051": None,
+                "E1027": None,
+            },
+            [],
+        ),
+        (
+            "Valid SSM secure Parameter",
+            "{{resolve:ssm-secure:Parameter}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
+            [],
+        ),
+        (
+            "Valid SSM secure string with no rules",
+            "{{resolve:ssm-secure:Parameter}}",
+            {"type": "test"},
+            {
+                "E1051": None,
+                "E1027": None,
+            },
             [],
         ),
         (
             "Valid SSM Parameter with integer",
             "{{resolve:ssm:Parameter:1}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [],
         ),
         (
             "Valid when item isn't a string",
             {},
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [],
         ),
         (
             "Basic error when wrong length",
             "{{resolve:ssm}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [
                 ValidationError(
                     "['resolve', 'ssm'] is too short (3)",
@@ -68,6 +120,10 @@ def context(cfn):
             "Invalid SSM Parameter with string version",
             "{{resolve:ssm:Parameter:a}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [
                 ValidationError(
                     "'a' does not match '\\\\d+'",
@@ -80,23 +136,46 @@ def context(cfn):
             "Valid secret manager",
             "{{resolve:secretsmanager:Secret}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
+            [],
+        ),
+        (
+            "Valid secret manager with no child rules",
+            "{{resolve:secretsmanager:Secret}}",
+            {"type": "test"},
+            {
+                "E1051": None,
+                "E1027": None,
+            },
             [],
         ),
         (
             "Valid secret manager with secretstring",
             "{{resolve:secretsmanager:Secret:SecretString}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [],
         ),
         (
             "Valid secret manager from another account",
             "{{resolve:secretsmanager:arn:aws:secretsmanager:us-west-2:123456789012:secret:MySecret-a1b2c3:SecretString:password}}",
             {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
             [],
         ),
     ],
 )
-def test_validate(name, instance, schema, expected, rule, context, cfn):
+def test_validate(name, instance, schema, child_rules, expected, rule, context, cfn):
+    rule.child_rules = child_rules
     validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.dynamicReference(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
