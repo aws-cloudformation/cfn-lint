@@ -78,9 +78,6 @@ class Context:
         init=True, default_factory=lambda: set(PSEUDOPARAMS)
     )
 
-    # can we use dynamic references
-    dynamic_references: bool = field(init=True, default=False)
-
     # Combiniation of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
     ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
