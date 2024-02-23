@@ -50,6 +50,11 @@ def validator():
             [],
         ),
         (
+            "Valid Ref to a Pseudo-Parameter",
+            {"Ref": "AWS::Region"},
+            [],
+        ),
+        (
             "Invalid Ref to a parameter of the wrong type",
             {"Ref": "MyString"},
             [
