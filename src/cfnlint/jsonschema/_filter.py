@@ -93,11 +93,9 @@ class FunctionFilter:
     def filter(self, validator: Any, instance: Any, schema: Any):
         # Lets validate dynamic references when appropriate
         if validator.is_type(instance, "string"):
-            if validator.context:
-                if validator.context.dynamic_references:
-                    if REGEX_DYN_REF.findall(instance):
-                        yield (instance, {"dynamicReference": schema})
-                        return
+            if REGEX_DYN_REF.findall(instance):
+                yield (instance, {"dynamicReference": schema})
+                return
 
         # dependencies, required, minProperties, maxProperties
         # need to have filtered properties to validate
