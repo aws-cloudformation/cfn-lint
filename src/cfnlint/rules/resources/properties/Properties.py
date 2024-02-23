@@ -68,7 +68,6 @@ class Properties(BaseJsonSchema):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=FUNCTIONS,
-                dynamic_references=True,
             )
         )
 
