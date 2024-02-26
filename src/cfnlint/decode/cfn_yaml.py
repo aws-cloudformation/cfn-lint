@@ -88,6 +88,19 @@ class NodeConstructor(SafeConstructor):
             key = self.construct_object(key_node, False)
             value = self.construct_object(value_node, False)
 
+            if key is None:
+                raise CfnParseError(
+                    self.filename,
+                    [
+                        build_match(
+                            filename=self.filename,
+                            message=f"Null key {key_node.value!r} not supported (line {key_node.start_mark.line + 1})",
+                            line_number=key_node.start_mark.line,
+                            column_number=key_node.start_mark.column,
+                            key=key_node.value,
+                        ),
+                    ],
+                )
             for key_dup in mapping:
                 if key_dup == key:
                     if not matches:
