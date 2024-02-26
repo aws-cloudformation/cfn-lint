@@ -7,6 +7,7 @@ import unittest
 from collections import namedtuple
 from typing import List
 
+from cfnlint.context import Context
 from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
@@ -34,7 +35,8 @@ _T = namedtuple("_T", ["name", "instance", "schema", "errors", "cfn_response"])
 class Base(unittest.TestCase):
     def message_errors(self, name, instance, errors, schema, **kwargs):
         cfn_validator = CfnTemplateValidator({}).extend(validators={"type": cfn_type})
-        cls = kwargs.pop("cls", cfn_validator(schema=schema))
+        context = Context(regions=["us-east-1"], strict_types=False)
+        cls = kwargs.pop("cls", cfn_validator(schema=schema, context=context))
         validator = cls.evolve(**kwargs)
         i_errors = list(validator.iter_errors(instance))
         self.assertEqual(
