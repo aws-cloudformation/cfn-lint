@@ -35,9 +35,21 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
+        if self.config.get("strict") or validator.context.strict_types:
+            validator = validator.evolve(
+                context=validator.context.evolve(strict_types=True)
+            )
+        else:
+            validator = validator.evolve(
+                context=validator.context.evolve(strict_types=False)
+            )
+
         types = ensure_list(types)
         for err in cfn_type(
-            validator, types, instance, schema, self.config.get("strict")
+            validator,
+            types,
+            instance,
+            schema,
         ):
             for t in ["object", "array", "boolean", "integer", "number", "string"]:
                 if validator.is_type(instance, t):
