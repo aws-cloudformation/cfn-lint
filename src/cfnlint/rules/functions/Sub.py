@@ -89,18 +89,19 @@ class Sub(BaseFn):
             if "." in param:
                 for err in validator.descend(
                     {"Fn::GetAtt": param},
-                    {"type": ["string", "integer", "number", "boolean"]},
+                    {"type": ["string"]},
                 ):
                     yield self._clean_error(err, {"Fn::GetAtt": param}, param)
             else:
-                for err in validator.descend(
-                    {"Ref": param}, {"type": ["string", "integer", "number", "boolean"]}
-                ):
+                for err in validator.descend({"Ref": param}, {"type": ["string"]}):
                     yield self._clean_error(err, {"Ref": param}, param)
 
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
+        validator = validator.evolve(
+            context=validator.context.evolve(strict_types=True)
+        )
         yield from super().validate(validator, s, instance, schema)
 
         _, value = self.key_value(instance)
