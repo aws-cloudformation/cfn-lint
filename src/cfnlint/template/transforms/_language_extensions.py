@@ -502,8 +502,7 @@ class _ForEachCollection:
                     )
             except _ResolveError:
                 if self._fn.hash in collection_cache:
-                    for item in collection_cache[self._fn.hash]:
-                        yield item
+                    yield from iter(collection_cache[self._fn.hash])
                 else:
                     collection_cache[self._fn.hash] = []
                     for _ in range(0, 2):
@@ -543,5 +542,4 @@ class _ForEach:
 
     def items(self, cfn: Any) -> Iterable[Tuple[str, str]]:
         items = self._collection.values(cfn, self._collection_cache)
-        for item in items:
-            yield item
+        yield from iter(items)

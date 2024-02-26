@@ -181,12 +181,10 @@ def get_matches(filenames: str, args: cfnlint.config.ConfigMixIn) -> Iterator[Ma
                 args.registry_schemas,
                 args.mandatory_checks,
             )
-            for match in matches:
-                yield match
+            yield from iter(matches)
         else:
             if errors:
-                for match in errors:
-                    yield match
+                yield from iter(errors)
         LOGGER.debug("Completed linting of file: %s", str(filename))
 
 
