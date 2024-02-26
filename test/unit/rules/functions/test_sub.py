@@ -184,10 +184,7 @@ def context(cfn):
                     validator="fn_sub",
                 ),
                 ValidationError(
-                    (
-                        "'foo' is not of type 'string', 'integer', "
-                        "'number', 'boolean' when 'Ref' is resolved"
-                    ),
+                    ("'foo' is not of type 'string' " "when 'Ref' is resolved"),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
                     validator="fn_sub",
@@ -238,10 +235,7 @@ def context(cfn):
             {"type": "string"},
             [
                 ValidationError(
-                    (
-                        "'MySimpleAd.DnsIpAddresses' is not "
-                        "of type 'string', 'integer', 'number', 'boolean'"
-                    ),
+                    ("'MySimpleAd.DnsIpAddresses' is not " "of type 'string'"),
                     instance="MySimpleAd.DnsIpAddresses",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),

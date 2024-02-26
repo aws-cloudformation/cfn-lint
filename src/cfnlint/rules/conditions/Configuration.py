@@ -47,6 +47,7 @@ class Configuration(BaseJsonSchema):
             context=validator.context.evolve(
                 functions=FUNCTION_CONDITIONS + ["Condition"],
                 resources={},
+                strict_types=False,
             ),
         )
 
