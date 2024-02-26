@@ -118,9 +118,7 @@ def _raw_type_strict(validator: Validator, tS: Any, instance: Any) -> bool:
 
 
 # pylint: disable=unused-argument
-def cfn_type(
-    validator: Validator, tS: Any, instance: Any, schema: Any, strict: bool = False
-):
+def cfn_type(validator: Validator, tS: Any, instance: Any, schema: Any):
     """
     When evaluating a type in CloudFormation we have to account
     for the intrinsic functions that the values can represent
@@ -129,7 +127,7 @@ def cfn_type(
     that we do our best to evaluate if that function represents the
     type we are looking for
     """
-    if strict:
+    if validator.context.strict_types:
         raw_type_fn = _raw_type_strict
     else:
         raw_type_fn = _raw_type
@@ -142,4 +140,5 @@ def cfn_type(
 cfn_validators: Dict[str, V] = {
     "additionalProperties": additionalProperties,
     "fn_items": FnItems().validate,
+    "type": cfn_type,
 }

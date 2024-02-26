@@ -74,6 +74,8 @@ class Context:
     conditions: Dict[str, "Condition"] = field(init=True, default_factory=dict)
     mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
 
+    strict_types: bool = field(init=True, default=True)
+
     pseudo_parameters: Set[str] = field(
         init=True, default_factory=lambda: set(PSEUDOPARAMS)
     )
@@ -262,17 +264,24 @@ class Parameter(_Ref):
     def ref(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         if self.allowed_values:
             for i, allowed_value in enumerate(self.allowed_values):
-                yield allowed_value, deque(["AllowedValues", i])
+                if isinstance(allowed_value, list):
+                    yield [str(x) for x in allowed_value], deque(["AllowedValues", i])
+                else:
+                    yield str(allowed_value), deque(["AllowedValues", i])
+            # assume default is an allowed value so we skip it
             return
-        # assume default is an allowed value so we skip it
+
         if self.default is not None:
-            yield self.default, deque(["Default"])
+            if isinstance(self.default, list):
+                yield [str(x) for x in self.default], deque(["Default"])
+            else:
+                yield str(self.default), deque(["Default"])
 
         if self.min_value is not None:
-            yield self.min_value, deque(["MinValue"])
+            yield str(self.min_value), deque(["MinValue"])
 
         if self.max_value is not None:
-            yield self.max_value, deque(["MaxValue"])
+            yield str(self.max_value), deque(["MaxValue"])
 
 
 @dataclass
