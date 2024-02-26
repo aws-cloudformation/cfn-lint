@@ -5,6 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Dict
 
+from cfnlint.jsonschema import ValidationResult
+from cfnlint.jsonschema.protocols import Validator
 from cfnlint.rules.functions._BaseFn import BaseFn
 
 
@@ -19,7 +21,6 @@ class Join(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Fn::Join", ("string",))
-        self.fn_join = self.validate
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
@@ -62,3 +63,11 @@ class Join(BaseFn):
                 },
             ],
         }
+
+    def fn_join(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        validator = validator.evolve(
+            context=validator.context.evolve(strict_types=True)
+        )
+        yield from super().validate(validator, s, instance, schema)
