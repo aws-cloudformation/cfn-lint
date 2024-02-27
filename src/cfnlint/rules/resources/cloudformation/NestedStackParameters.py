@@ -30,7 +30,7 @@ class NestedStackParameters(CloudFormationLintRule):
     def __get_template_parameters(self, filename):
         try:
             (tmp, matches) = decode(filename)
-        except:  # ruff: noqa: E722
+        except:  # noqa: E722
             return None
         if matches:
             return None
