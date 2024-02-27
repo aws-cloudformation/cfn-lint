@@ -1,3 +1,11 @@
+### v0.85.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `162.0.0` (pull #[3069](https://github.com/aws-cloudformation/cfn-lint/pull/3069))
+###### Fixes
+- Raise error if any key in a mapping is null (pull #[3073](https://github.com/aws-cloudformation/cfn-lint/pull/3073))
+- Add getatt support for registry schemas (pull #[3061](https://github.com/aws-cloudformation/cfn-lint/pull/3061))
+- Set Application location when its a string in SAM transform (pull #[3060](https://github.com/aws-cloudformation/cfn-lint/pull/3060))
+
 ### v0.85.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `160.0.0` (pull #[3054](https://github.com/aws-cloudformation/cfn-lint/pull/3054))
