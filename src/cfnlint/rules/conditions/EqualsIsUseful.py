@@ -51,5 +51,5 @@ class EqualsIsUseful(CloudFormationLintRule):
                 yield ValidationError(
                     f"{instance!r} will always return {True!r} or {False!r}"
                 )
-        except:  # ruff: noqa: E722
+        except:  # noqa: E722
             pass

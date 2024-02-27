@@ -303,7 +303,7 @@ def maximum(
     if validator.is_type(t_instance, "string"):
         try:
             t_instance = float(t_instance)
-        except:  # ruff: noqa: E722
+        except:  # noqa: E722
             return
     if not validator.is_type(t_instance, "number"):
         return
