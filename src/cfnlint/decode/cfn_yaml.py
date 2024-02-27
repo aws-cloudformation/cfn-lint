@@ -94,7 +94,10 @@ class NodeConstructor(SafeConstructor):
                     [
                         build_match(
                             filename=self.filename,
-                            message=f"Null key {key_node.value!r} not supported (line {key_node.start_mark.line + 1})",
+                            message=(
+                                f"Null key {key_node.value!r} not supported "
+                                f"(line {key_node.start_mark.line + 1})"
+                            ),
                             line_number=key_node.start_mark.line,
                             column_number=key_node.start_mark.column,
                             key=key_node.value,
