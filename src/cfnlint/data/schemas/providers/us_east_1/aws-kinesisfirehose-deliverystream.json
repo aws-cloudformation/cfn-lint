@@ -475,6 +475,11 @@
      ],
      "type": "string"
     },
+    "CustomTimeZone": {
+     "maxLength": 50,
+     "minLength": 0,
+     "type": "string"
+    },
     "DataFormatConversionConfiguration": {
      "$ref": "#/definitions/DataFormatConversionConfiguration"
     },
@@ -487,6 +492,12 @@
     "ErrorOutputPrefix": {
      "maxLength": 1024,
      "minLength": 0,
+     "type": "string"
+    },
+    "FileExtension": {
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "^$|\\.[0-9a-z!\\-_.*'()]+",
      "type": "string"
     },
     "Prefix": {
@@ -715,6 +726,7 @@
      "type": "boolean"
     },
     "ColumnToJsonKeyMappings": {
+     "additionalProperties": false,
      "patternProperties": {
       "[a-zA-Z0-9]+": {
        "type": "string"
@@ -831,6 +843,7 @@
      "enum": [
       "RecordDeAggregation",
       "Decompression",
+      "CloudWatchLogProcessing",
       "Lambda",
       "MetadataExtraction",
       "AppendDelimiterToRecord"
@@ -1241,6 +1254,7 @@
    "type": "object"
   },
   "Tag": {
+   "additionalProperties": false,
    "properties": {
     "Key": {
      "maxLength": 128,
