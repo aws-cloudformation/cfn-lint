@@ -1,0 +1,209 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/Scheme"
+ ],
+ "definitions": {
+  "LoadBalancerAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationId": {
+     "type": "string"
+    },
+    "IPv6Address": {
+     "type": "string"
+    },
+    "PrivateIPv4Address": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::LoadBalancer",
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:CreateLoadBalancer",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:ModifyLoadBalancerAttributes",
+    "elasticloadbalancing:AddTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DeleteLoadBalancer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeLoadBalancerAttributes",
+    "elasticloadbalancing:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticloadbalancing:ModifyLoadBalancerAttributes",
+    "elasticloadbalancing:SetSubnets",
+    "elasticloadbalancing:SetIpAddressType",
+    "elasticloadbalancing:SetSecurityGroups",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RemoveTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LoadBalancerArn"
+ ],
+ "properties": {
+  "CanonicalHostedZoneID": {
+   "description": "The ID of the Amazon Route 53 hosted zone associated with the load balancer.",
+   "type": "string"
+  },
+  "DNSName": {
+   "description": "The public DNS name of the load balancer.",
+   "type": "string"
+  },
+  "EnforceSecurityGroupInboundRulesOnPrivateLinkTraffic": {
+   "description": "Indicates whether to evaluate inbound security group rules for traffic sent to a Network Load Balancer through PrivateLink",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "description": "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 (for IPv4 addresses) and dualstack (for IPv4 and IPv6 addresses).",
+   "type": "string"
+  },
+  "LoadBalancerArn": {
+   "description": "The Amazon Resource Name (ARN) of the load balancer.",
+   "type": "string"
+  },
+  "LoadBalancerAttributes": {
+   "arrayType": "AttributeList",
+   "description": "The load balancer attributes.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoadBalancerAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LoadBalancerFullName": {
+   "description": "The full name of the load balancer.",
+   "type": "string"
+  },
+  "LoadBalancerName": {
+   "description": "The name of the load balancer.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the load balancer.",
+   "type": "string"
+  },
+  "Scheme": {
+   "description": "The nodes of an Internet-facing load balancer have public IP addresses. The DNS name of an Internet-facing load balancer is publicly resolvable to the public IP addresses of the nodes. Therefore, Internet-facing load balancers can route requests from clients over the internet. The nodes of an internal load balancer have only private IP addresses. The DNS name of an internal load balancer is publicly resolvable to the private IP addresses of the nodes. Therefore, internal load balancers can route requests only from clients with access to the VPC for the load balancer. The default is an Internet-facing load balancer.",
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "description": "The IDs of the security groups for the load balancer.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetMappings": {
+   "description": "The IDs of the public subnets. You can specify only one subnet per Availability Zone. You must specify either subnets or subnet mappings, but not both.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Subnets": {
+   "description": "The IDs of the public subnets. You can specify only one subnet per Availability Zone. You must specify either subnets or subnet mappings, but not both. To specify an Elastic IP address, specify subnet mappings instead of subnets.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "description": "The tags to assign to the load balancer.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "description": "The type of load balancer. The default is application.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerName",
+  "/properties/LoadBalancerFullName",
+  "/properties/CanonicalHostedZoneID",
+  "/properties/LoadBalancerArn",
+  "/properties/DNSName"
+ ],
+ "requiredXor": [
+  "SubnetMappings",
+  "Subnets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+}
