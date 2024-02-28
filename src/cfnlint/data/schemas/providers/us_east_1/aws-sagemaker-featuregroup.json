@@ -4,7 +4,9 @@
   "/properties/FeatureGroupName",
   "/properties/RecordIdentifierFeatureName",
   "/properties/EventTimeFeatureName",
-  "/properties/OnlineStoreConfig",
+  "/properties/OnlineStoreConfig/SecurityConfig",
+  "/properties/OnlineStoreConfig/EnableOnlineStore",
+  "/properties/OnlineStoreConfig/StorageType",
   "/properties/OfflineStoreConfig",
   "/properties/RoleArn",
   "/properties/Description",
@@ -150,6 +152,34 @@
     "Provisioned"
    ],
    "type": "string"
+  },
+  "TtlDuration": {
+   "additionalProperties": false,
+   "description": "TTL configuration of the feature group",
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/Unit"
+    },
+    "Value": {
+     "$ref": "#/definitions/Value"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "description": "Unit of ttl configuration",
+   "enum": [
+    "Seconds",
+    "Minutes",
+    "Hours",
+    "Days",
+    "Weeks"
+   ],
+   "type": "string"
+  },
+  "Value": {
+   "description": "Value of ttl configuration",
+   "type": "integer"
   }
  },
  "description": "Resource Type definition for AWS::SageMaker::FeatureGroup",
@@ -270,6 +300,9 @@
     },
     "StorageType": {
      "$ref": "#/definitions/StorageType"
+    },
+    "TtlDuration": {
+     "$ref": "#/definitions/TtlDuration"
     }
    },
    "type": "object"
