@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName",
+  "/properties/VpcEndpointType",
+  "/properties/VpcId"
+ ],
+ "description": "Resource Type definition for AWS::EC2::VPCEndpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints"
+   ],
+   "timeoutInMinutes": 210
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVpcEndpoints",
+    "ec2:DescribeVpcEndpoints"
+   ],
+   "timeoutInMinutes": 210
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeVpcEndpoints"
+   ],
+   "timeoutInMinutes": 210
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreationTimestamp": {
+   "type": "string"
+  },
+  "DnsEntries": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PolicyDocument": {
+   "description": "A policy to attach to the endpoint that controls access to the service.",
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "PrivateDnsEnabled": {
+   "description": "Indicate whether to associate a private hosted zone with the specified VPC.",
+   "type": "boolean"
+  },
+  "RouteTableIds": {
+   "description": "One or more route table IDs.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SecurityGroupIds": {
+   "description": "The ID of one or more security groups to associate with the endpoint network interface.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceName": {
+   "description": "The service name.",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "description": "The ID of one or more subnets in which to create an endpoint network interface.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcEndpointType": {
+   "enum": [
+    "Interface",
+    "Gateway",
+    "GatewayLoadBalancer"
+   ],
+   "type": "string"
+  },
+  "VpcId": {
+   "description": "The ID of the VPC in which the endpoint will be used.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds",
+  "/properties/CreationTimestamp",
+  "/properties/DnsEntries",
+  "/properties/Id"
+ ],
+ "required": [
+  "VpcId",
+  "ServiceName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::VPCEndpoint"
+}
