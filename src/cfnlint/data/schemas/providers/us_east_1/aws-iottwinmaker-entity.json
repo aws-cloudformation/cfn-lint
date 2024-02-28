@@ -246,55 +246,60 @@
    "format": "date-time",
    "type": "string"
   },
+  "Definition": {
+   "additionalProperties": false,
+   "description": "An object that specifies information about a property definition.",
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/PropertyDefinitionConfiguration",
+     "description": "An object that specifies information about a property configuration."
+    },
+    "DataType": {
+     "$ref": "#/definitions/DataType",
+     "description": "An object that contains information about the data type."
+    },
+    "DefaultValue": {
+     "$ref": "#/definitions/DataValue",
+     "description": "An object that contains the default value."
+    },
+    "IsExternalId": {
+     "description": "A Boolean value that specifies whether the property ID comes from an external data store.",
+     "type": "boolean"
+    },
+    "IsFinal": {
+     "description": "A Boolean value that specifies whether the property definition can be updated.",
+     "type": "boolean"
+    },
+    "IsImported": {
+     "description": "A Boolean value that specifies whether the property definition is imported from an external data store.",
+     "type": "boolean"
+    },
+    "IsInherited": {
+     "description": "A Boolean value that specifies whether the property definition is inherited from a parent entity.",
+     "type": "boolean"
+    },
+    "IsRequiredInEntity": {
+     "description": "A Boolean value that specifies whether the property is required.",
+     "type": "boolean"
+    },
+    "IsStoredExternally": {
+     "description": "A Boolean value that specifies whether the property is stored externally.",
+     "type": "boolean"
+    },
+    "IsTimeSeries": {
+     "description": "A Boolean value that specifies whether the property consists of time series data.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "Property": {
    "additionalProperties": false,
+   "description": "An object that specifies information about a property.",
    "properties": {
     "Definition": {
-     "additionalProperties": false,
-     "description": "An object that specifies information about a property.",
-     "properties": {
-      "Configuration": {
-       "$ref": "#/definitions/PropertyDefinitionConfiguration",
-       "description": "An object that specifies information about a property."
-      },
-      "DataType": {
-       "$ref": "#/definitions/DataType",
-       "description": "An object that contains information about the data type."
-      },
-      "DefaultValue": {
-       "$ref": "#/definitions/DataValue",
-       "description": "An object that contains the default value."
-      },
-      "IsExternalId": {
-       "description": "A Boolean value that specifies whether the property ID comes from an external data store.",
-       "type": "boolean"
-      },
-      "IsFinal": {
-       "description": "A Boolean value that specifies whether the property definition can be updated.",
-       "type": "boolean"
-      },
-      "IsImported": {
-       "description": "A Boolean value that specifies whether the property definition is imported from an external data store.",
-       "type": "boolean"
-      },
-      "IsInherited": {
-       "description": "A Boolean value that specifies whether the property definition is inherited from a parent entity.",
-       "type": "boolean"
-      },
-      "IsRequiredInEntity": {
-       "description": "A Boolean value that specifies whether the property is required.",
-       "type": "boolean"
-      },
-      "IsStoredExternally": {
-       "description": "A Boolean value that specifies whether the property is stored externally.",
-       "type": "boolean"
-      },
-      "IsTimeSeries": {
-       "description": "A Boolean value that specifies whether the property consists of time series data.",
-       "type": "boolean"
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/Definition",
+     "description": "The definition of the property."
     },
     "Value": {
      "$ref": "#/definitions/DataValue",
@@ -305,7 +310,7 @@
   },
   "PropertyDefinitionConfiguration": {
    "additionalProperties": false,
-   "description": "An object that specifies information about a property.",
+   "description": "An object that specifies information about a property configuration.",
    "patternProperties": {
     "[a-zA-Z_\\-0-9]+": {
      "maxLength": 256,

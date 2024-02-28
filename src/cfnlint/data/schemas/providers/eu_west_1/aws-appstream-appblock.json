@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DisplayName",
+  "/properties/Description",
+  "/properties/SourceS3Location",
+  "/properties/SetupScriptDetails",
+  "/properties/PackagingType",
+  "/properties/PostSetupScriptDetails"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  },
+  "PackagingType": {
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "ScriptDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutableParameters": {
+     "type": "string"
+    },
+    "ExecutablePath": {
+     "type": "string"
+    },
+    "ScriptS3Location": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "TimeoutInSeconds": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScriptS3Location",
+    "ExecutablePath",
+    "TimeoutInSeconds"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Key": {
+       "type": "string"
+      },
+      "Value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Key",
+      "Value"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TagKey": {
+       "type": "string"
+      },
+      "TagValue": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "TagKey",
+      "TagValue"
+     ],
+     "type": "object"
+    }
+   ]
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Tags/TagKey",
+  "/properties/Tags/TagValue"
+ ],
+ "description": "Resource Type definition for AWS::AppStream::AppBlock",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:CreateAppBlock",
+    "appstream:TagResource",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "s3:GetBucketOwnershipControls"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DeleteAppBlock"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:DescribeAppBlocks"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PackagingType": {
+   "$ref": "#/definitions/PackagingType"
+  },
+  "PostSetupScriptDetails": {
+   "$ref": "#/definitions/ScriptDetails"
+  },
+  "SetupScriptDetails": {
+   "$ref": "#/definitions/ScriptDetails"
+  },
+  "SourceS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "Name",
+  "SourceS3Location"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppStream::AppBlock",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}
