@@ -115,6 +115,18 @@
     }
    },
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "description": "Create a task set in the specified cluster and service. This is used when a service uses the EXTERNAL deployment controller type. For more information, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-types.htmlin the Amazon Elastic Container Service Developer Guide.",
@@ -122,7 +134,8 @@
   "create": {
    "permissions": [
     "ecs:CreateTaskSet",
-    "ecs:DescribeTaskSets"
+    "ecs:DescribeTaskSets",
+    "ecs:TagResource"
    ]
   },
   "delete": {
@@ -138,8 +151,10 @@
   },
   "update": {
    "permissions": [
-    "ecs:UpdateTaskSet",
-    "ecs:DescribeTaskSets"
+    "ecs:DescribeTaskSets",
+    "ecs:TagResource",
+    "ecs:UntagResource",
+    "ecs:UpdateTaskSet"
    ]
   }
  },
@@ -197,6 +212,12 @@
    },
    "type": "array"
   },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
   "TaskDefinition": {
    "description": "The short name or full Amazon Resource Name (ARN) of the task definition for the tasks in the task set to use.",
    "type": "string"
@@ -213,9 +234,9 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecs.git",
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::ECS::TaskSet"
 }
