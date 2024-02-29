@@ -125,3 +125,76 @@ markers = [
 testpaths = [
     "test",
 ]
+
+[tool.coverage.run]
+branch = true
+source = [
+  "src/cfnlint"
+]
+
+[tool.coverage.report]
+fail_under = 93
+skip_empty = true
+skip_covered = true
+show_missing = true
+sort = "Cover"
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:"
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+files = [
+  "src/cfnlint/**/*.py"
+]
+exclude = [
+  "src/cfnlint/data/"
+]
+
+# Per-module options:
+[[tool.mypy.overrides]]
+module = "networkx.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pydot.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pygraphviz.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "importlib_resources.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "samtranslator.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "sarif_om.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "jschema_to_python.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "junit_xml.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "jsonpatch.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "urllib2.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "json.*"
+ignore_missing_imports = true
