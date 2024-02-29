@@ -214,7 +214,7 @@ class PrettyFormatter(BaseFormatter):
             match.message,
         )
 
-    def print_matches(self, matches, rules=None, config=None):
+    def print_matches(self, matches, rules, config):
         results = self._format_matches(matches)
 
         # ruff: noqa: E501
