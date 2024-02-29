@@ -39,8 +39,9 @@ class TestFormatters(BaseTestCase):
     def setUp(self) -> None:
         super().setUp()
         self.rules = Rules.create_from_directory(cfnlint.config._DEFAULT_RULESDIR)
-        self.config = ConfigMixIn()
         self.filename = str(Path("test/fixtures/templates/bad/formatters.yaml"))
+        self.config = ConfigMixIn(cli_args=["--", self.filename])
+
         self.results = [
             Match(
                 6,
