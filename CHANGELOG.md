@@ -1,3 +1,12 @@
+### v1.2.5a3
+## What's Changed
+* Increased validation of dynamic references by @kddejong in (pull #[3064](https://github.com/aws-cloudformation/cfn-lint/pull/3064))
+* Increased GetAtt and Sub typing support by @kddejong in (pull #[3075](https://github.com/aws-cloudformation/cfn-lint/pull/3075))
+* Add requiredXor for CloudFront distribution cache behavior by @kddejong in (pull #[3078](https://github.com/aws-cloudformation/cfn-lint/pull/3078))
+* Update specs to 2024/02/28 (pull #[3081](https://github.com/aws-cloudformation/cfn-lint/pull/3081))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a2...v1.2.5.a3
+
 ### v1.2.5a2
 ## What's Changed
 * Set Application location when its a string by @kddejong in (pull #[3060](https://github.com/aws-cloudformation/cfn-lint/pull/3060))
