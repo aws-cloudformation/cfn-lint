@@ -1254,3 +1254,58 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                 },
                 self.template.get_valid_getatts(),
             )
+
+    def test_is_cdk_bad_type(self):
+        template = {
+            "Resources": {
+                "CDK": {
+                    "Type": ["AWS::CDK::Metadata"],
+                    "Properties": {
+                        "AssumeRolePolicyDocument": {
+                            "Version": "2012-10-17",
+                        }
+                    },
+                }
+            },
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())
+
+    def test_is_cdk_bad_resources(self):
+        template = {
+            "Resources": [
+                {
+                    "CDK": {
+                        "Type": ["AWS::CDK::Metadata"],
+                        "Properties": {
+                            "AssumeRolePolicyDocument": {
+                                "Version": "2012-10-17",
+                            }
+                        },
+                    }
+                }
+            ],
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())
+
+    def test_is_cdk_bad_resource_props(self):
+        template = {
+            "Resources": {
+                "CDK": [
+                    {
+                        "Type": ["AWS::CDK::Metadata"],
+                        "Properties": {
+                            "AssumeRolePolicyDocument": {
+                                "Version": "2012-10-17",
+                            }
+                        },
+                    }
+                ]
+            },
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())
