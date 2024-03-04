@@ -264,6 +264,9 @@ class _FnFindInMapDefaultValue(_ForEachValue):
                 raise _ValueError(
                     "Fn::FindInMap parameter only supports 'DefaultValue'", value
                 )
+            if isinstance(v, list):
+                self._value = [_ForEachValue.create(a) for a in v]
+                return
             self._value = _ForEachValue.create(v)
 
     def value(
@@ -272,6 +275,8 @@ class _FnFindInMapDefaultValue(_ForEachValue):
         if params is None:
             params = {}
 
+        if isinstance(self._value, list):
+            return [v.value(cfn, params, only_params) for v in self._value]
         return self._value.value(cfn, params, only_params)
 
 
