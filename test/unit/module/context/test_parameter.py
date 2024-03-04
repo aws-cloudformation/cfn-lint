@@ -52,6 +52,15 @@ from cfnlint.context.context import Parameter
             [(["10", "20"], deque(["Default"]))],
         ),
         (
+            "Valid parameter with a List of numbers for allowed values",
+            {
+                "Type": "List<Number>",
+                "AllowedValues": ["10,20"],
+            },
+            "List<Number>",
+            [(["10", "20"], deque(["AllowedValues", 0]))],
+        ),
+        (
             "Valid parameter with a SSM Parameter",
             {
                 "Type": "AWS::SSM::Parameter::Value<String>",
@@ -76,3 +85,36 @@ def test_parameter(name, instance, expected_type, expected_ref):
     assert expected_ref == list(
         parameter.ref(context)
     ), f"{name!r} test got {list(parameter.ref(context))}"
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        ("Valid string parameter", {"Type": "string"}, False),
+        (
+            "Valid string parameter with no echo string",
+            {"Type": "string", "NoEcho": "true"},
+            True,
+        ),
+        (
+            "Valid string parameter with no echo boolean",
+            {"Type": "string", "NoEcho": True},
+            True,
+        ),
+    ],
+)
+def test_no_echo(name, instance, expected):
+    parameter = Parameter(instance)
+
+    assert expected == parameter.no_echo, f"{name} failed got {parameter.no_echo}"
+
+
+@pytest.mark.parametrize(
+    "name,instance",
+    [
+        ("Invalid Type", {"Type": {}}),
+    ],
+)
+def test_errors(name, instance):
+    with pytest.raises(ValueError):
+        Parameter(instance)
