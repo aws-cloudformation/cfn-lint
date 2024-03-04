@@ -124,7 +124,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             else [transform_declaration]
         )
         return bool(lang_extensions_transform in transform_type)
-    
+
     def is_cdk_template(self) -> bool:
         """Check if the template was created by CDK"""
         resources = self.template.get("Resources")

@@ -12,13 +12,13 @@ Resources:
         - Topic: !Sub arn:aws:sns:us-east-1:123456789012:TestTopic
           Event: s3:ReducedRedundancyLostObject
 
-  SampleBadBucketPolicy: 
+  SampleBadBucketPolicy:
     Type: AWS::S3::BucketPolicy
-    Properties: 
+    Properties:
       Bucket: !Ref S3BadBucket
-      PolicyDocument: 
-        Statement: 
-          - Action: 
+      PolicyDocument:
+        Statement:
+          - Action:
               - s3:GetObject
             Effect: Allow
             Resource: !Sub arn:aws:s3:::${S3BadBucket}
@@ -61,7 +61,7 @@ Resources:
           - Effect: Allow
             Action:
               - sns:Publish
-            Resource: 
+            Resource:
               - !Sub arn:${AWS::Partition}:sns:us-east-1:${AWS::AccountId}:TestTopic
               - !Sub arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:TestTopic
       Roles:
@@ -76,7 +76,7 @@ Resources:
           - Effect: Allow
             Action:
               - sns:Publish
-            Resource: 
+            Resource:
               - !Sub arn:${AWS::Partition}:sns:${AWS::Partition}:${AWS::AccountId}:TestTopic
       Roles:
         - !Ref SampleRole
