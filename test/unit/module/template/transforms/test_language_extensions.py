@@ -169,9 +169,11 @@ class TestFindInMap(TestCase):
                         "Default": "Production",
                     },
                     "Key": {"Type": "String", "AllowedValues": ["Names"]},
+                    "List": {"Type": "CommaDelimitedList", "Default": "foo,bar"},
                 },
                 "Mappings": {
                     "Bucket": {"Production": {"Names": ["foo", "bar"]}},
+                    "AnotherBucket": {"Production": {"Names": ["a", "b"]}},
                 },
             }
         )
@@ -207,6 +209,30 @@ class TestFindInMap(TestCase):
             {
                 "Fn::FindInMap": [
                     {"Ref": "MapName"},
+                    {"Ref": "MapName"},
+                    {"Ref": "MapName"},
+                    {"DefaultValue": ["one", "two"]},
+                ]
+            }
+        )
+        self.assertListEqual(fe.value(self.cfn), ["one", "two"])
+
+        fe = _ForEachValue.create(
+            {
+                "Fn::FindInMap": [
+                    {"Ref": "MapName"},
+                    {"Ref": "MapName"},
+                    {"Ref": "MapName"},
+                    {"DefaultValue": {"Ref": "List"}},
+                ]
+            }
+        )
+        self.assertListEqual(fe.value(self.cfn), ["foo", "bar"])
+
+        fe = _ForEachValue.create(
+            {
+                "Fn::FindInMap": [
+                    {"Ref": "MapName"},
                     {"Ref": "Environment"},
                     {"Ref": "Key"},
                 ]
@@ -220,6 +246,15 @@ class TestFindInMap(TestCase):
 
         with self.assertRaises(_ValueError):
             _ForEachValueFnFindInMap("", ["foo"])
+
+        with self.assertRaises(_TypeError):
+            _ForEachValueFnFindInMap("", ["", "", "", []])
+
+        with self.assertRaises(_ValueError):
+            _ForEachValueFnFindInMap("", ["", "", "", {"Default": "Bad"}])
+
+        with self.assertRaises(_ValueError):
+            _ForEachValueFnFindInMap("", ["", "", "", {"Foo": "Bar", "Bar": "Foo"}])
 
     def test_find_in_map_values_with_default(self):
         map = _ForEachValueFnFindInMap(
