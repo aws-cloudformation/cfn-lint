@@ -46,9 +46,9 @@ class AvailabilityZone(CfnLintKeyword):
     def validate(self, validator, keywords, zones, schema):
         if not isinstance(zones, (str, list)):
             return
-        
+
         # Skip rule if CDK
-        if validator.template.is_cdk_template():
+        if validator.cfn.is_cdk_template():
             return
 
         zones = ensure_list(zones)
