@@ -855,23 +855,7 @@
   "AWS::Backup::BackupPlan.BackupPlanResourceType": "CACHED",
   "AWS::Backup::BackupPlan.BackupRuleResourceType": "CACHED",
   "AWS::Backup::BackupPlan.CopyActionResourceType": "CACHED",
-  "AWS::Backup::BackupPlan.LifecycleResourceType": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html",
-   "Properties": {
-    "DeleteAfterDays": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html#cfn-backup-backupplan-lifecycleresourcetype-deleteafterdays",
-     "PrimitiveType": "Long",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MoveToColdStorageAfterDays": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html#cfn-backup-backupplan-lifecycleresourcetype-movetocoldstorageafterdays",
-     "PrimitiveType": "Long",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Backup::BackupPlan.LifecycleResourceType": "CACHED",
   "AWS::Backup::BackupSelection.BackupSelectionResourceType": "CACHED",
   "AWS::Backup::BackupSelection.ConditionParameter": "CACHED",
   "AWS::Backup::BackupSelection.ConditionResourceType": "CACHED",
@@ -3589,7 +3573,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "162.0.0",
+ "ResourceSpecificationVersion": "163.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4636,37 +4620,7 @@
   "AWS::Config::OrganizationConfigRule": "CACHED",
   "AWS::Config::StoredQuery": "CACHED",
   "AWS::ControlTower::EnabledBaseline": "CACHED",
-  "AWS::ControlTower::EnabledControl": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-controltower-enabledcontrol.html",
-   "Properties": {
-    "ControlIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-controltower-enabledcontrol.html#cfn-controltower-enabledcontrol-controlidentifier",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::ControlTower::EnabledControl.ControlIdentifier"
-     }
-    },
-    "Parameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-controltower-enabledcontrol.html#cfn-controltower-enabledcontrol-parameters",
-     "DuplicatesAllowed": true,
-     "ItemType": "EnabledControlParameter",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TargetIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-controltower-enabledcontrol.html#cfn-controltower-enabledcontrol-targetidentifier",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::ControlTower::EnabledControl.TargetIdentifier"
-     }
-    }
-   }
-  },
+  "AWS::ControlTower::EnabledControl": "CACHED",
   "AWS::ControlTower::LandingZone": "CACHED",
   "AWS::DLM::LifecyclePolicy": "CACHED",
   "AWS::DMS::ReplicationConfig": "CACHED",
@@ -4848,7 +4802,40 @@
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
   "AWS::EC2::NetworkInterface": "CACHED",
-  "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
+  "AWS::EC2::NetworkInterfaceAttachment": {
+   "Attributes": {
+    "AttachmentId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html",
+   "Properties": {
+    "DeleteOnTermination": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deleteontermination",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DeviceIndex": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deviceindex",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "InstanceId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-instanceid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "NetworkInterfaceId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-networkinterfaceid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
   "AWS::EC2::PlacementGroup": "CACHED",
@@ -5062,7 +5049,83 @@
   "AWS::ECS::PrimaryTaskSet": "CACHED",
   "AWS::ECS::Service": "CACHED",
   "AWS::ECS::TaskDefinition": "CACHED",
-  "AWS::ECS::TaskSet": "CACHED",
+  "AWS::ECS::TaskSet": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html",
+   "Properties": {
+    "Cluster": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-cluster",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ExternalId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-externalid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "LaunchType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-launchtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::ECS::TaskSet.LaunchType"
+     }
+    },
+    "LoadBalancers": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-loadbalancers",
+     "DuplicatesAllowed": true,
+     "ItemType": "LoadBalancer",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "NetworkConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-networkconfiguration",
+     "Required": false,
+     "Type": "NetworkConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "PlatformVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-platformversion",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Scale": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-scale",
+     "Required": false,
+     "Type": "Scale",
+     "UpdateType": "Mutable"
+    },
+    "Service": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-service",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ServiceRegistries": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-serviceregistries",
+     "DuplicatesAllowed": true,
+     "ItemType": "ServiceRegistry",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "TaskDefinition": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskset.html#cfn-ecs-taskset-taskdefinition",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EFS::AccessPoint": "CACHED",
   "AWS::EFS::FileSystem": "CACHED",
   "AWS::EFS::MountTarget": "CACHED",
@@ -6732,7 +6795,9 @@
   "AWS::KinesisFirehose::DeliveryStream.EncryptionConfiguration.NoEncryptionConfig": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.BucketARN": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.CompressionFormat": "CACHED",
+  "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.CustomTimeZone": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.ErrorOutputPrefix": "CACHED",
+  "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.FileExtension": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.Prefix": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.RoleARN": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.ExtendedS3DestinationConfiguration.S3BackupMode": "CACHED",
