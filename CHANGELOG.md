@@ -1,3 +1,9 @@
+### v0.86.0
+###### Feature
+- Disable and configure certain rules when template is from CDK (pull #[2971](https://github.com/aws-cloudformation/cfn-lint/pull/2971))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `163.0.0` (pull #[3076](https://github.com/aws-cloudformation/cfn-lint/pull/3076))
+
 ### v0.85.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `162.0.0` (pull #[3069](https://github.com/aws-cloudformation/cfn-lint/pull/3069))
