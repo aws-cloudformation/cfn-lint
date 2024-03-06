@@ -81,12 +81,12 @@ def test_deletion_policy(name, instance, path, expected):
 
     rule = UpdateReplacePolicy()
     errors = list(
-        rule.updatereplacepolicy(
+        rule.cfnresourceupdatereplacepolicy(
             validator=validator,
             uRp="deletionpolicy",
             instance=instance,
             schema={
-                "awsType": "updatereplacepolicy",
+                "awsType": "cfnresourceupdatereplacepolicy",
             },
         )
     )

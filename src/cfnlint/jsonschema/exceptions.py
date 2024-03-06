@@ -111,7 +111,6 @@ class _Error(Exception):
             and self.context == __value.context
             and self.cause == __value.cause
             and self.validator == __value.validator
-            and self.parent == __value.parent
             and self.path_override == __value.path_override
         )
 
