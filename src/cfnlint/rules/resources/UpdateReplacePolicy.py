@@ -18,7 +18,9 @@ class UpdateReplacePolicy(CloudFormationLintRule):
     tags = ["resources", "updatereplacepolicy"]
 
     # pylint: disable=unused-argument, arguments-renamed
-    def updatereplacepolicy(self, validator: Validator, uRp: str, instance, schema):
+    def cfnresourceupdatereplacepolicy(
+        self, validator: Validator, uRp: str, instance, schema
+    ):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=[

@@ -8,12 +8,14 @@ from cfnlint.helpers import load_resource
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
-class InterfaceConfiguration(BaseJsonSchema):
+class CfnLint(BaseJsonSchema):
     """Check if Metadata Interface Configuration are configured correctly"""
 
-    id = "E4001"
-    shortdesc = "Metadata Interface have appropriate properties"
-    description = "Metadata Interface properties are properly configured"
+    id = "W4005"
+    shortdesc = "Validate cfnlint configuration in the Metadata"
+    description = (
+        "Metadata cfn-lint configuration has many values and we want to validate that"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html"
     tags = ["metadata"]
 
@@ -21,8 +23,8 @@ class InterfaceConfiguration(BaseJsonSchema):
         super().__init__()
         self.rule_set = {}
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self._schema = load_resource(schema_metadata, "interface.json")
-        self.cfnmetadatainterface = self.validate
+        self._schema = load_resource(schema_metadata, "cfn_lint.json")
+        self.cfnmetadatacfnlint = self.validate
 
     @property
     def schema(self):
