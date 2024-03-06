@@ -30,7 +30,7 @@ class AwsType(CloudFormationLintRule):
             "CfnInitSources": "E3009",
             "CfnInitUsers": "E3009",
             "CfnMetadata": "E4002",
-            "CfnMetadataCfnLint": "",
+            "CfnMetadataCfnLint": "W4005",
             "CfnMetadataInterface": "E4001",
             "CfnMappings": "E7001",
             "CfnOutputs": "E6001",
