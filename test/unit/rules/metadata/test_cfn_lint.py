@@ -8,14 +8,13 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Context
-from cfnlint.context.context import Parameter
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.metadata.InterfaceConfiguration import InterfaceConfiguration
+from cfnlint.rules.metadata.CfnLint import CfnLint
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = InterfaceConfiguration()
+    rule = CfnLint()
     yield rule
 
 
@@ -25,10 +24,7 @@ def validator():
         regions=["us-east-1"],
         path=deque([]),
         resources={},
-        parameters={
-            "Foo": Parameter({"Type": "String"}),
-            "Bar": Parameter({"Type": "String"}),
-        },
+        parameters={},
     )
     yield CfnTemplateValidator(context=context)
 
@@ -37,31 +33,23 @@ def validator():
     "name,instance,expected",
     [
         (
-            "Valid Interface",
-            {
-                "ParameterGroups": [
-                    {
-                        "Label": "A Group",
-                        "Parameters": [
-                            "Foo",
-                            "Bar",
-                        ],
-                    }
-                ],
-                "ParameterLabels": {"Foo": {"default": "a parameter"}},
-            },
+            "Valid cfn-lint config",
+            {"config": {"ignore_checks": ["E3002"]}},
             [],
         ),
         (
             "Extra properties",
-            {"Foo": "Bar"},
+            {"config": {"ignore_bad_key": ["E3002"]}},
             [
                 ValidationError(
-                    ("Additional properties are not allowed " "('Foo' was unexpected)"),
+                    (
+                        "Additional properties are not allowed "
+                        "('ignore_bad_key' was unexpected)"
+                    ),
                     validator="additionalProperties",
-                    schema_path=deque(["additionalProperties"]),
-                    rule=InterfaceConfiguration(),
-                    path=deque(["Foo"]),
+                    schema_path=deque(["properties", "config", "additionalProperties"]),
+                    rule=CfnLint(),
+                    path=deque(["config", "ignore_bad_key"]),
                 )
             ],
         ),
