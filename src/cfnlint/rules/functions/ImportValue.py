@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.jsonschema import Validator
+from typing import Any, Iterator
+
+from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
 
 
@@ -30,7 +32,9 @@ class ImportValue(BaseFn):
                 "Ref",
             ),
         )
-        self.fn_importvalue = self.validate
+        self.child_rules = {
+            "W6001": None,
+        }
 
     def validator(self, validator: Validator) -> Validator:
         return validator.evolve(
@@ -39,3 +43,16 @@ class ImportValue(BaseFn):
                 resources={},
             ),
         )
+
+    def fn_importvalue(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+
+        for rule in self.child_rules.values():
+            if rule is None:
+                continue
+
+            yield from rule.validate(validator, s, instance, schema)
