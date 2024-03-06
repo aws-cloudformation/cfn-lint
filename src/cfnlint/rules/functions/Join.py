@@ -21,6 +21,9 @@ class Join(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Fn::Join", ("string",))
+        self.child_rules = {
+            "I1022": None,
+        }
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
@@ -70,4 +73,12 @@ class Join(BaseFn):
         validator = validator.evolve(
             context=validator.context.evolve(strict_types=True)
         )
-        yield from super().validate(validator, s, instance, schema)
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+
+        for rule in self.child_rules.values():
+            if rule is None:
+                continue
+
+            yield from rule.validate(validator, s, instance, schema)
