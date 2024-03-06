@@ -469,7 +469,9 @@ def propertyNames(
         return
 
     for property in instance:
-        yield from validator.descend(instance=property, schema=propertyNames)
+        yield from validator.descend(
+            instance=property, schema=propertyNames, path=property
+        )
 
 
 def ref(
