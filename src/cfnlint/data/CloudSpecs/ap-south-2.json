@@ -873,6 +873,8 @@
   "AWS::Batch::JobDefinition.AuthorizationConfig": "CACHED",
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
+  "AWS::Batch::JobDefinition.EcsProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EcsTaskProperties": "CACHED",
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
@@ -901,6 +903,8 @@
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.RuntimePlatform": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerDependency": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -3525,6 +3529,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::RuleGroup.Label": "CACHED",
@@ -3532,7 +3537,49 @@
   "AWS::WAFv2::RuleGroup.LabelSummary": "CACHED",
   "AWS::WAFv2::RuleGroup.NotStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.OrStatement": "CACHED",
-  "AWS::WAFv2::RuleGroup.RateBasedStatement": "CACHED",
+  "AWS::WAFv2::RuleGroup.RateBasedStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html",
+   "Properties": {
+    "AggregateKeyType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-aggregatekeytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::RuleGroup.RateBasedStatement.AggregateKeyType"
+     }
+    },
+    "CustomKeys": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-customkeys",
+     "DuplicatesAllowed": true,
+     "ItemType": "RateBasedStatementCustomKey",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ForwardedIPConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-forwardedipconfig",
+     "Required": false,
+     "Type": "ForwardedIPConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Limit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-limit",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::RuleGroup.RateBasedStatement.Limit"
+     }
+    },
+    "ScopeDownStatement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-scopedownstatement",
+     "Required": false,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::RuleGroup.RateBasedStatementCustomKey": "CACHED",
   "AWS::WAFv2::RuleGroup.RateLimitCookie": "CACHED",
   "AWS::WAFv2::RuleGroup.RateLimitHeader": "CACHED",
@@ -3583,6 +3630,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody": "CACHED",
   "AWS::WAFv2::WebACL.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Label": "CACHED",
@@ -3592,7 +3640,49 @@
   "AWS::WAFv2::WebACL.NotStatement": "CACHED",
   "AWS::WAFv2::WebACL.OrStatement": "CACHED",
   "AWS::WAFv2::WebACL.OverrideAction": "CACHED",
-  "AWS::WAFv2::WebACL.RateBasedStatement": "CACHED",
+  "AWS::WAFv2::WebACL.RateBasedStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html",
+   "Properties": {
+    "AggregateKeyType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-aggregatekeytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.RateBasedStatement.AggregateKeyType"
+     }
+    },
+    "CustomKeys": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-customkeys",
+     "DuplicatesAllowed": true,
+     "ItemType": "RateBasedStatementCustomKey",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ForwardedIPConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-forwardedipconfig",
+     "Required": false,
+     "Type": "ForwardedIPConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Limit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-limit",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.RateBasedStatement.Limit"
+     }
+    },
+    "ScopeDownStatement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-scopedownstatement",
+     "Required": false,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::WebACL.RateBasedStatementCustomKey": "CACHED",
   "AWS::WAFv2::WebACL.RateLimitCookie": "CACHED",
   "AWS::WAFv2::WebACL.RateLimitHeader": "CACHED",
@@ -3626,7 +3716,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "163.0.0",
+ "ResourceSpecificationVersion": "164.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4482,6 +4572,7 @@
   "AWS::CloudFormation::HookTypeConfig": "CACHED",
   "AWS::CloudFormation::HookVersion": "CACHED",
   "AWS::CloudFormation::Macro": "CACHED",
+  "AWS::CloudFormation::PublicTypeVersion": "CACHED",
   "AWS::CloudFormation::ResourceDefaultVersion": "CACHED",
   "AWS::CloudFormation::ResourceVersion": "CACHED",
   "AWS::CloudFormation::Stack": "CACHED",
@@ -4725,173 +4816,7 @@
     }
    }
   },
-  "AWS::DocDB::DBCluster": {
-   "Attributes": {
-    "ClusterResourceId": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint": {
-     "PrimitiveType": "String"
-    },
-    "Port": {
-     "PrimitiveType": "String"
-    },
-    "ReadEndpoint": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html",
-   "Properties": {
-    "AvailabilityZones": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-availabilityzones",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "BackupRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-backupretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::DocDB::DBCluster.BackupRetentionPeriod"
-     }
-    },
-    "CopyTagsToSnapshot": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-copytagstosnapshot",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-dbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DBClusterParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-dbclusterparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBSubnetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-dbsubnetgroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DeletionProtection": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-deletionprotection",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableCloudwatchLogsExports": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-enablecloudwatchlogsexports",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "EngineVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-engineversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "DocumentDBEngineVersion"
-     }
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "MasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-masteruserpassword",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-masterusername",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Port": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-port",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredBackupWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-preferredbackupwindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredMaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-preferredmaintenancewindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RestoreToTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-restoretotime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RestoreType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-restoretype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-snapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SourceDBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-sourcedbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageEncrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-storageencrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-tags",
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "UseLatestRestorableTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-uselatestrestorabletime",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "VpcSecurityGroupIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdb-dbcluster.html#cfn-docdb-dbcluster-vpcsecuritygroupids",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::DocDB::DBCluster": "CACHED",
   "AWS::DocDB::DBClusterParameterGroup": "CACHED",
   "AWS::DocDB::DBInstance": "CACHED",
   "AWS::DocDB::DBSubnetGroup": "CACHED",
@@ -6131,6 +6056,10 @@
   "AWS::CloudFormation::HookVersion.LoggingConfig.LogRoleArn": "CACHED",
   "AWS::CloudFormation::HookVersion.SchemaHandlerPackage": "CACHED",
   "AWS::CloudFormation::HookVersion.TypeName": "CACHED",
+  "AWS::CloudFormation::PublicTypeVersion.Arn": "CACHED",
+  "AWS::CloudFormation::PublicTypeVersion.PublicVersionNumber": "CACHED",
+  "AWS::CloudFormation::PublicTypeVersion.Type": "CACHED",
+  "AWS::CloudFormation::PublicTypeVersion.TypeName": "CACHED",
   "AWS::CloudFormation::ResourceDefaultVersion.TypeName": "CACHED",
   "AWS::CloudFormation::ResourceDefaultVersion.TypeVersionArn": "CACHED",
   "AWS::CloudFormation::ResourceDefaultVersion.VersionId": "CACHED",
@@ -7239,7 +7168,14 @@
     "db.t4g.medium",
     "db.t4g.micro",
     "db.t4g.small",
-    "db.t4g.xlarge"
+    "db.t4g.xlarge",
+    "db.x2iedn.16xlarge",
+    "db.x2iedn.24xlarge",
+    "db.x2iedn.2xlarge",
+    "db.x2iedn.32xlarge",
+    "db.x2iedn.4xlarge",
+    "db.x2iedn.8xlarge",
+    "db.x2iedn.xlarge"
    ]
   },
   "AWS::RDS::DBInstance.DBInstanceIdentifier": "CACHED",
@@ -7675,6 +7611,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.OversizeHandling": "CACHED",
@@ -7721,6 +7658,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.OversizeHandling": "CACHED",

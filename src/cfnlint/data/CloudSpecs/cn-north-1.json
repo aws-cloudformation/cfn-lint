@@ -632,6 +632,8 @@
   "AWS::Batch::JobDefinition.AuthorizationConfig": "CACHED",
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
+  "AWS::Batch::JobDefinition.EcsProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EcsTaskProperties": "CACHED",
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
@@ -660,6 +662,8 @@
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.RuntimePlatform": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerDependency": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -1152,8 +1156,145 @@
   "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::PrefixList.Entry": "CACHED",
-  "AWS::EC2::SecurityGroup.Egress": "CACHED",
-  "AWS::EC2::SecurityGroup.Ingress": "CACHED",
+  "AWS::EC2::SecurityGroup.Egress": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html",
+   "Properties": {
+    "CidrIp": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-cidrip",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "CidrIpv6": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-cidripv6",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EC2::SecurityGroup.Description"
+     }
+    },
+    "DestinationPrefixListId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-destinationprefixlistid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DestinationSecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-destinationsecuritygroupid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "FromPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-fromport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IpProtocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-ipprotocol",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SourceSecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-sourcesecuritygroupid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ToPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-egress.html#cfn-ec2-securitygroup-egress-toport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::EC2::SecurityGroup.Ingress": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html",
+   "Properties": {
+    "CidrIp": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-cidrip",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "CidrIpv6": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-cidripv6",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EC2::SecurityGroup.Description"
+     }
+    },
+    "FromPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-fromport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IpProtocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-ipprotocol",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SourcePrefixListId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-sourceprefixlistid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SourceSecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-sourcesecuritygroupid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
+     }
+    },
+    "SourceSecurityGroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-sourcesecuritygroupname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SourceSecurityGroupOwnerId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-sourcesecuritygroupownerid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ToPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-securitygroup-ingress.html#cfn-ec2-securitygroup-ingress-toport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::SpotFleet.AcceleratorCountRequest": "CACHED",
   "AWS::EC2::SpotFleet.AcceleratorTotalMemoryMiBRequest": "CACHED",
   "AWS::EC2::SpotFleet.BaselineEbsBandwidthMbpsRequest": "CACHED",
@@ -1950,6 +2091,7 @@
   "AWS::IoT::BillingGroup.BillingGroupProperties": "CACHED",
   "AWS::IoT::CACertificate.RegistrationConfig": "CACHED",
   "AWS::IoT::DomainConfiguration.AuthorizerConfig": "CACHED",
+  "AWS::IoT::DomainConfiguration.ServerCertificateConfig": "CACHED",
   "AWS::IoT::DomainConfiguration.ServerCertificateSummary": "CACHED",
   "AWS::IoT::DomainConfiguration.TlsConfig": "CACHED",
   "AWS::IoT::FleetMetric.AggregationType": "CACHED",
@@ -2136,6 +2278,7 @@
   "AWS::IoTSiteWise::AssetModel.ExpressionVariable": "CACHED",
   "AWS::IoTSiteWise::AssetModel.Metric": "CACHED",
   "AWS::IoTSiteWise::AssetModel.MetricWindow": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.PropertyPathDefinition": "CACHED",
   "AWS::IoTSiteWise::AssetModel.PropertyType": "CACHED",
   "AWS::IoTSiteWise::AssetModel.Transform": "CACHED",
   "AWS::IoTSiteWise::AssetModel.TumblingWindow": "CACHED",
@@ -2400,6 +2543,50 @@
   "AWS::MWAA::Environment.NetworkConfiguration": "CACHED",
   "AWS::Neptune::DBCluster.DBClusterRole": "CACHED",
   "AWS::Neptune::DBCluster.ServerlessScalingConfiguration": "CACHED",
+  "AWS::NetworkFirewall::Firewall.SubnetMapping": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.ActionDefinition": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.CustomAction": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.Dimension": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.FirewallPolicy": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.IPSet": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.PolicyVariables": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.PublishMetricAction": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulEngineOptions": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulRuleGroupOverride": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulRuleGroupReference": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatelessRuleGroupReference": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.LogDestinationConfig": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.LoggingConfiguration": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.ActionDefinition": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Address": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.CustomAction": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Dimension": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.IPSet": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.IPSetReference": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.MatchAttributes": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.PortRange": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.PortSet": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.PublishMetricAction": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.ReferenceSets": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleDefinition": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleGroup": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleOption": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleVariables": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RulesSource": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RulesSourceList": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatefulRule": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatefulRuleOptions": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatelessRule": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatelessRulesAndCustomActions": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.TCPFlagField": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.Address": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.CheckCertificateRevocationStatus": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.PortRange": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificate": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificateConfiguration": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificateScope": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.TLSInspectionConfiguration": "CACHED",
   "AWS::OpenSearchService::Domain.AdvancedSecurityOptionsInput": "CACHED",
   "AWS::OpenSearchService::Domain.ClusterConfig": "CACHED",
   "AWS::OpenSearchService::Domain.CognitoOptions": "CACHED",
@@ -4737,6 +4924,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::RuleGroup.Label": "CACHED",
@@ -4795,6 +4983,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody": "CACHED",
   "AWS::WAFv2::WebACL.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Label": "CACHED",
@@ -4838,7 +5027,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "163.0.0",
+ "ResourceSpecificationVersion": "164.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -5413,7 +5602,70 @@
   "AWS::EC2::PrefixList": "CACHED",
   "AWS::EC2::Route": "CACHED",
   "AWS::EC2::RouteTable": "CACHED",
-  "AWS::EC2::SecurityGroup": "CACHED",
+  "AWS::EC2::SecurityGroup": {
+   "Attributes": {
+    "GroupId": {
+     "PrimitiveType": "String"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "VpcId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html",
+   "Properties": {
+    "GroupDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-groupdescription",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::SecurityGroup.Description"
+     }
+    },
+    "GroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-groupname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SecurityGroupEgress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-securitygroupegress",
+     "DuplicatesAllowed": true,
+     "ItemType": "Egress",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecurityGroupIngress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-securitygroupingress",
+     "DuplicatesAllowed": true,
+     "ItemType": "Ingress",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-securitygroup.html#cfn-ec2-securitygroup-vpcid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPC.Id"
+     }
+    }
+   }
+  },
   "AWS::EC2::SecurityGroupEgress": "CACHED",
   "AWS::EC2::SecurityGroupIngress": "CACHED",
   "AWS::EC2::SnapshotBlockPublicAccess": "CACHED",
@@ -5440,7 +5692,76 @@
   "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
   "AWS::EC2::TransitGatewayVpcAttachment": "CACHED",
   "AWS::EC2::VPC": "CACHED",
-  "AWS::EC2::VPCCidrBlock": "CACHED",
+  "AWS::EC2::VPCCidrBlock": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html",
+   "Properties": {
+    "AmazonProvidedIpv6CidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-amazonprovidedipv6cidrblock",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "CidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-cidrblock",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AwsCidrIp"
+     }
+    },
+    "Ipv4IpamPoolId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv4ipampoolid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv4NetmaskLength": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv4netmasklength",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv6CidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv6cidrblock",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv6IpamPoolId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv6ipampoolid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv6NetmaskLength": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv6netmasklength",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv6Pool": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-ipv6pool",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpccidrblock.html#cfn-ec2-vpccidrblock-vpcid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPC.Id"
+     }
+    }
+   }
+  },
   "AWS::EC2::VPCDHCPOptionsAssociation": "CACHED",
   "AWS::EC2::VPCEndpoint": "CACHED",
   "AWS::EC2::VPCEndpointConnectionNotification": "CACHED",
@@ -6217,50 +6538,7 @@
    }
   },
   "AWS::GuardDuty::Master": "CACHED",
-  "AWS::GuardDuty::Member": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html",
-   "Properties": {
-    "DetectorId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-detectorid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "DisableEmailNotification": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-disableemailnotification",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Email": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-email",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "MemberId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-memberid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Message": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-message",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Status": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-status",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GuardDuty::Member.Status"
-     }
-    }
-   }
-  },
+  "AWS::GuardDuty::Member": "CACHED",
   "AWS::GuardDuty::ThreatIntelSet": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-threatintelset.html",
    "Properties": {
@@ -6346,99 +6624,7 @@
   "AWS::IoT::CertificateProvider": "CACHED",
   "AWS::IoT::CustomMetric": "CACHED",
   "AWS::IoT::Dimension": "CACHED",
-  "AWS::IoT::DomainConfiguration": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "DomainType": {
-     "PrimitiveType": "String"
-    },
-    "ServerCertificates": {
-     "ItemType": "ServerCertificateSummary",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html",
-   "Properties": {
-    "AuthorizerConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-authorizerconfig",
-     "Required": false,
-     "Type": "AuthorizerConfig",
-     "UpdateType": "Mutable"
-    },
-    "DomainConfigurationName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainconfigurationname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainConfigurationName"
-     }
-    },
-    "DomainConfigurationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainconfigurationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainConfigurationStatus"
-     }
-    },
-    "DomainName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-domainname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.DomainName"
-     }
-    },
-    "ServerCertificateArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-servercertificatearns",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ServerCertificateArns"
-     }
-    },
-    "ServiceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-servicetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ServiceType"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TlsConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-tlsconfig",
-     "Required": false,
-     "Type": "TlsConfig",
-     "UpdateType": "Mutable"
-    },
-    "ValidationCertificateArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-domainconfiguration.html#cfn-iot-domainconfiguration-validationcertificatearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IoT::DomainConfiguration.ValidationCertificateArn"
-     }
-    }
-   }
-  },
+  "AWS::IoT::DomainConfiguration": "CACHED",
   "AWS::IoT::FleetMetric": "CACHED",
   "AWS::IoT::JobTemplate": "CACHED",
   "AWS::IoT::Logging": "CACHED",
@@ -6607,6 +6793,11 @@
   "AWS::MSK::VpcConnection": "CACHED",
   "AWS::MWAA::Environment": "CACHED",
   "AWS::Neptune::DBCluster": "CACHED",
+  "AWS::NetworkFirewall::Firewall": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration": "CACHED",
   "AWS::Oam::Link": "CACHED",
   "AWS::Oam::Sink": "CACHED",
   "AWS::OpenSearchService::Domain": "CACHED",
@@ -8238,15 +8429,32 @@
   "AWS::IoTEvents::Input.Attribute.JsonPath": "CACHED",
   "AWS::IoTEvents::Input.InputDescription": "CACHED",
   "AWS::IoTEvents::Input.InputName": "CACHED",
+  "AWS::IoTSiteWise::Asset.AssetExternalId": "CACHED",
+  "AWS::IoTSiteWise::Asset.AssetHierarchy.ExternalId": "CACHED",
+  "AWS::IoTSiteWise::Asset.AssetHierarchy.Id": "CACHED",
   "AWS::IoTSiteWise::Asset.AssetHierarchy.LogicalId": "CACHED",
+  "AWS::IoTSiteWise::Asset.AssetProperty.ExternalId": "CACHED",
+  "AWS::IoTSiteWise::Asset.AssetProperty.Id": "CACHED",
   "AWS::IoTSiteWise::Asset.AssetProperty.LogicalId": "CACHED",
   "AWS::IoTSiteWise::Asset.AssetProperty.NotificationState": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelCompositeModel.ExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelCompositeModel.Id": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelCompositeModel.ParentAssetModelCompositeModelExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelHierarchy.ExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelHierarchy.Id": "CACHED",
   "AWS::IoTSiteWise::AssetModel.AssetModelHierarchy.LogicalId": "CACHED",
   "AWS::IoTSiteWise::AssetModel.AssetModelProperty.DataType": "CACHED",
   "AWS::IoTSiteWise::AssetModel.AssetModelProperty.DataTypeSpec": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelProperty.ExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.AssetModelProperty.Id": "CACHED",
   "AWS::IoTSiteWise::AssetModel.AssetModelProperty.LogicalId": "CACHED",
   "AWS::IoTSiteWise::AssetModel.PropertyType.TypeName": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.VariableValue.HierarchyExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.VariableValue.HierarchyId": "CACHED",
   "AWS::IoTSiteWise::AssetModel.VariableValue.HierarchyLogicalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.VariableValue.PropertyExternalId": "CACHED",
+  "AWS::IoTSiteWise::AssetModel.VariableValue.PropertyId": "CACHED",
   "AWS::IoTSiteWise::AssetModel.VariableValue.PropertyLogicalId": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.ComponentTypeId": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.Description": "CACHED",
@@ -8584,6 +8792,55 @@
   "AWS::Neptune::DBCluster.DBClusterIdentifier": "CACHED",
   "AWS::Neptune::DBCluster.ServerlessScalingConfiguration.MaxCapacity": "CACHED",
   "AWS::Neptune::DBCluster.ServerlessScalingConfiguration.MinCapacity": "CACHED",
+  "AWS::NetworkFirewall::Firewall.Description": "CACHED",
+  "AWS::NetworkFirewall::Firewall.FirewallName": "CACHED",
+  "AWS::NetworkFirewall::Firewall.FirewallPolicyArn": "CACHED",
+  "AWS::NetworkFirewall::Firewall.VpcId": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.CustomAction.ActionName": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.Description": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.Dimension.Value": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.FirewallPolicy.TLSInspectionConfigurationArn": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.FirewallPolicyName": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulEngineOptions.RuleOrder": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulEngineOptions.StreamExceptionPolicy": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulRuleGroupOverride.Action": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulRuleGroupReference.Priority": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatefulRuleGroupReference.ResourceArn": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatelessRuleGroupReference.Priority": "CACHED",
+  "AWS::NetworkFirewall::FirewallPolicy.StatelessRuleGroupReference.ResourceArn": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.FirewallArn": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.FirewallName": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.LogDestinationConfig.LogDestinationType": "CACHED",
+  "AWS::NetworkFirewall::LoggingConfiguration.LogDestinationConfig.LogType": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Address.AddressDefinition": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.CustomAction.ActionName": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Description": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Dimension.Value": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.Destination": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.DestinationPort": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.Direction": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.Protocol": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.Source": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Header.SourcePort": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleGroupName": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleOption.Keyword": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RuleOption.Settings": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RulesSource.RulesString": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RulesSourceList.GeneratedRulesType": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.RulesSourceList.TargetTypes": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatefulRule.Action": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatefulRuleOptions.RuleOrder": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.StatelessRule.Priority": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.TCPFlagField.Flags": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.TCPFlagField.Masks": "CACHED",
+  "AWS::NetworkFirewall::RuleGroup.Type": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.Address.AddressDefinition": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.CheckCertificateRevocationStatus.RevokedStatusAction": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.CheckCertificateRevocationStatus.UnknownStatusAction": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.Description": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificate.ResourceArn": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.ServerCertificateConfiguration.CertificateAuthorityArn": "CACHED",
+  "AWS::NetworkFirewall::TLSInspectionConfiguration.TLSInspectionConfigurationName": "CACHED",
   "AWS::Oam::Link.LabelTemplate": "CACHED",
   "AWS::Oam::Link.ResourceTypes": "CACHED",
   "AWS::Oam::Link.SinkIdentifier": "CACHED",
@@ -11115,6 +11372,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.OversizeHandling": "CACHED",
@@ -11161,6 +11419,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.OversizeHandling": "CACHED",
