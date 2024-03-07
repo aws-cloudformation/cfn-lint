@@ -1111,6 +1111,8 @@
   "AWS::Batch::JobDefinition.AuthorizationConfig": "CACHED",
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
+  "AWS::Batch::JobDefinition.EcsProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EcsTaskProperties": "CACHED",
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
@@ -1139,6 +1141,8 @@
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.RuntimePlatform": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerDependency": "CACHED",
+  "AWS::Batch::JobDefinition.TaskContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -1735,6 +1739,8 @@
   "AWS::EC2::NetworkInterface.Ipv4PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.Ipv6PrefixSpecification": "CACHED",
   "AWS::EC2::NetworkInterface.PrivateIpAddressSpecification": "CACHED",
+  "AWS::EC2::NetworkInterfaceAttachment.EnaSrdSpecification": "CACHED",
+  "AWS::EC2::NetworkInterfaceAttachment.EnaSrdUdpSpecification": "CACHED",
   "AWS::EC2::PrefixList.Entry": "CACHED",
   "AWS::EC2::SecurityGroup.Egress": "CACHED",
   "AWS::EC2::SecurityGroup.Ingress": "CACHED",
@@ -4074,6 +4080,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::RuleGroup.Label": "CACHED",
@@ -4081,7 +4088,49 @@
   "AWS::WAFv2::RuleGroup.LabelSummary": "CACHED",
   "AWS::WAFv2::RuleGroup.NotStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.OrStatement": "CACHED",
-  "AWS::WAFv2::RuleGroup.RateBasedStatement": "CACHED",
+  "AWS::WAFv2::RuleGroup.RateBasedStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html",
+   "Properties": {
+    "AggregateKeyType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-aggregatekeytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::RuleGroup.RateBasedStatement.AggregateKeyType"
+     }
+    },
+    "CustomKeys": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-customkeys",
+     "DuplicatesAllowed": true,
+     "ItemType": "RateBasedStatementCustomKey",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ForwardedIPConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-forwardedipconfig",
+     "Required": false,
+     "Type": "ForwardedIPConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Limit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-limit",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::RuleGroup.RateBasedStatement.Limit"
+     }
+    },
+    "ScopeDownStatement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ratebasedstatement.html#cfn-wafv2-rulegroup-ratebasedstatement-scopedownstatement",
+     "Required": false,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::RuleGroup.RateBasedStatementCustomKey": "CACHED",
   "AWS::WAFv2::RuleGroup.RateLimitCookie": "CACHED",
   "AWS::WAFv2::RuleGroup.RateLimitHeader": "CACHED",
@@ -4132,6 +4181,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody": "CACHED",
   "AWS::WAFv2::WebACL.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Label": "CACHED",
@@ -4141,7 +4191,49 @@
   "AWS::WAFv2::WebACL.NotStatement": "CACHED",
   "AWS::WAFv2::WebACL.OrStatement": "CACHED",
   "AWS::WAFv2::WebACL.OverrideAction": "CACHED",
-  "AWS::WAFv2::WebACL.RateBasedStatement": "CACHED",
+  "AWS::WAFv2::WebACL.RateBasedStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html",
+   "Properties": {
+    "AggregateKeyType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-aggregatekeytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.RateBasedStatement.AggregateKeyType"
+     }
+    },
+    "CustomKeys": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-customkeys",
+     "DuplicatesAllowed": true,
+     "ItemType": "RateBasedStatementCustomKey",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ForwardedIPConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-forwardedipconfig",
+     "Required": false,
+     "Type": "ForwardedIPConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Limit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-limit",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.RateBasedStatement.Limit"
+     }
+    },
+    "ScopeDownStatement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ratebasedstatement.html#cfn-wafv2-webacl-ratebasedstatement-scopedownstatement",
+     "Required": false,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::WebACL.RateBasedStatementCustomKey": "CACHED",
   "AWS::WAFv2::WebACL.RateLimitCookie": "CACHED",
   "AWS::WAFv2::WebACL.RateLimitHeader": "CACHED",
@@ -4176,7 +4268,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "163.0.0",
+ "ResourceSpecificationVersion": "164.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5834,40 +5926,7 @@
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
   "AWS::EC2::NetworkInterface": "CACHED",
-  "AWS::EC2::NetworkInterfaceAttachment": {
-   "Attributes": {
-    "AttachmentId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html",
-   "Properties": {
-    "DeleteOnTermination": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deleteontermination",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeviceIndex": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-deviceindex",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "InstanceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-instanceid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "NetworkInterfaceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfaceattachment.html#cfn-ec2-networkinterfaceattachment-networkinterfaceid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::PlacementGroup": "CACHED",
   "AWS::EC2::PrefixList": "CACHED",
@@ -9546,6 +9605,7 @@
   "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::RuleGroup.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::RuleGroup.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::RuleGroup.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::RuleGroup.JsonBody.OversizeHandling": "CACHED",
@@ -9592,6 +9652,7 @@
   "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration.Position": "CACHED",
   "AWS::WAFv2::WebACL.IPSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.ImmunityTimeProperty.ImmunityTime": "CACHED",
+  "AWS::WAFv2::WebACL.JA3Fingerprint.FallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.InvalidFallbackBehavior": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.MatchScope": "CACHED",
   "AWS::WAFv2::WebACL.JsonBody.OversizeHandling": "CACHED",
