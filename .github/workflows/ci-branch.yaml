@@ -25,6 +25,14 @@ jobs:
       - name: Run Tox
         run: |
           tox -e py -- -m "data or not data"
+      - uses: codecov/codecov-action@v4.1.0
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml # optional
+          name: py${{ matrix.python }}-${{ matrix.os }}
+          flags: unittests # optional
+          fail_ci_if_error: true # optional (default = false)
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
