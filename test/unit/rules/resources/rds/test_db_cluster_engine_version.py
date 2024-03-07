@@ -38,6 +38,27 @@ def validator():
             [],
         ),
         (
+            {
+                "Engine": "MySqL",
+                "EngineVersion": "5.7.37",
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": {"Ref": "Engine"},
+                "EngineVersion": {"Ref": "EngineVersion"},
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "MySqL",
+                "EngineVersion": {"Ref": "EngineVersion"},
+            },
+            [],
+        ),
+        (
             {"Engine": "foo"},
             [
                 ValidationError(

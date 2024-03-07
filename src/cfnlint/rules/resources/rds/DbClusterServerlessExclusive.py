@@ -33,12 +33,3 @@ class DbClusterServerlessExclusive(CfnLintJsonSchema):
 
     def message(self, instance: Any, err: ValidationError) -> str:
         return "Additional properties are not allowed ('ScalingConfiguration')"
-
-    def validate(self, validator, keywords, instance, schema):
-        if not validator.is_type(instance, "object"):
-            return
-
-        if validator.is_type(instance.get("Engine"), "string"):
-            instance["Engine"] = instance["Engine"].lower()
-
-        yield from super().validate(validator, keywords, instance, schema)

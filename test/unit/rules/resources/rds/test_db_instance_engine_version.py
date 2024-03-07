@@ -38,6 +38,21 @@ def validator():
             [],
         ),
         (
+            {"Engine": {"Ref": "Engine"}},
+            [],
+        ),
+        (
+            {"Engine": {"Ref": "Engine"}, "EngineVeresion": {"Ref": "EngineVersion"}},
+            [],
+        ),
+        (
+            {
+                "Engine": "MySqL",  # API converts it appropriately
+                "EngineVeresion": {"Ref": "EngineVersion"},
+            },
+            [],
+        ),
+        (
             {"Engine": "foo"},
             [
                 ValidationError(
