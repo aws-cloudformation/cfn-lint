@@ -35,7 +35,29 @@ def validator():
         ),
         (
             {
+                "Engine": "Auora",
+            },
+            [],
+        ),
+        (
+            {
                 "Engine": "aurora",
+                "DeletionProtection": True,
+            },
+            [
+                ValidationError(
+                    "Additional properties are not allowed (['DeletionProtection'])",
+                    rule=DbInstanceAuroraExclusive(),
+                    path=deque([]),
+                    instance={"Engine": "aurora", "DeletionProtection": True},
+                    validator="not",
+                    schema_path=deque(["then", "not"]),
+                )
+            ],
+        ),
+        (
+            {
+                "Engine": "Aurora",
                 "DeletionProtection": True,
             },
             [
