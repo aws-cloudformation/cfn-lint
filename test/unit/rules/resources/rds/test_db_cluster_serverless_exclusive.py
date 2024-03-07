@@ -34,6 +34,12 @@ def validator():
             [],
         ),
         (
+            {
+                "EngineMode": "Serverless",
+            },
+            [],
+        ),
+        (
             {"EngineMode": "serverless", "ScalingConfiguration": "foo"},
             [
                 ValidationError(
