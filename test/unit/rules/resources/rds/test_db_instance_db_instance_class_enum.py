@@ -32,6 +32,12 @@ def validator():
             0,
         ),
         (
+            "Valid version",
+            {"DBInstanceClass": "db.x2iedn.8xlarge", "Engine": "MySql"},
+            ["us-east-1"],
+            0,
+        ),
+        (
             "No error ref value",
             {
                 "DBInstanceClass": "notanappropriatetype",
@@ -72,6 +78,16 @@ def validator():
             {
                 "DBInstanceClass": "db.x1e.xlarge",
                 "Engine": "oracle-se2",
+                "LicenseModel": "license-included",
+            },
+            ["us-east-1"],
+            1,
+        ),
+        (
+            "Bad value on license included and uppser case Engine",
+            {
+                "DBInstanceClass": "db.x1e.xlarge",
+                "Engine": "Oracle-SE2",
                 "LicenseModel": "license-included",
             },
             ["us-east-1"],
