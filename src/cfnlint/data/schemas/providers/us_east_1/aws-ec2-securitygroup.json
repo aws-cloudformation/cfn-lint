@@ -1,4 +1,5 @@
 {
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/GroupDescription",
@@ -32,6 +33,9 @@
      "type": "integer"
     },
     "IpProtocol": {
+     "type": "string"
+    },
+    "SourceSecurityGroupId": {
      "type": "string"
     },
     "ToPort": {
@@ -123,27 +127,75 @@
    "VpcId"
   ]
  },
+ "deprecatedProperties": [
+  "/properties/SecurityGroupEgress/*/SourceSecurityGroupId"
+ ],
  "description": "Resource Type definition for AWS::EC2::SecurityGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateSecurityGroup",
+    "ec2:DescribeSecurityGroups",
+    "ec2:RevokeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupIngress",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteSecurityGroup",
+    "ec2:DescribeInstances"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:RevokeSecurityGroupEgress",
+    "ec2:RevokeSecurityGroupIngress",
+    "ec2:DescribeSecurityGroups",
+    "ec2:AuthorizeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupIngress",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
  "properties": {
   "GroupDescription": {
+   "description": "A description for the security group.",
    "maxLength": 255,
    "minLength": 0,
    "pattern": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
    "type": "string"
   },
   "GroupId": {
+   "description": "The group ID of the specified security group.",
    "type": "string"
   },
   "GroupName": {
+   "description": "The name of the security group.",
    "type": "string"
   },
   "Id": {
+   "description": "The group name or group ID depending on whether the SG is created in default or specific VPC",
    "type": "string"
   },
   "SecurityGroupEgress": {
+   "description": "[VPC only] The outbound rules associated with the security group. There is a short interruption during which you cannot connect to the security group.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Egress"
    },
@@ -151,6 +203,8 @@
    "uniqueItems": false
   },
   "SecurityGroupIngress": {
+   "description": "The inbound rules associated with the security group. There is a short interruption during which you cannot connect to the security group.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Ingress"
    },
@@ -158,6 +212,8 @@
    "uniqueItems": false
   },
   "Tags": {
+   "description": "Any tags assigned to the security group.",
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -165,6 +221,7 @@
    "uniqueItems": false
   },
   "VpcId": {
+   "description": "The ID of the VPC for the security group.",
    "type": "string"
   }
  },
@@ -175,5 +232,15 @@
  "required": [
   "GroupDescription"
  ],
- "typeName": "AWS::EC2::SecurityGroup"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::SecurityGroup",
+ "writeOnlyProperties": [
+  "/properties/SecurityGroupIngress/*/SourceSecurityGroupName"
+ ]
 }

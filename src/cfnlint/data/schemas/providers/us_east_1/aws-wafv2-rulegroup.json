@@ -162,7 +162,7 @@
   },
   "Cookies": {
    "additionalProperties": false,
-   "description": "Includes headers of a web request.",
+   "description": "Includes cookies of a web request.",
    "properties": {
     "MatchPattern": {
      "$ref": "#/definitions/CookieMatchPattern"
@@ -307,6 +307,15 @@
    "pattern": "^[0-9A-Za-z_-]{1,128}$",
    "type": "string"
   },
+  "EvaluationWindowSec": {
+   "enum": [
+    60,
+    120,
+    300,
+    600
+   ],
+   "type": "integer"
+  },
   "FieldToMatch": {
    "additionalProperties": false,
    "description": "Field of the request to match.",
@@ -323,6 +332,9 @@
     },
     "Headers": {
      "$ref": "#/definitions/Headers"
+    },
+    "JA3Fingerprint": {
+     "$ref": "#/definitions/JA3Fingerprint"
     },
     "JsonBody": {
      "$ref": "#/definitions/JsonBody"
@@ -518,6 +530,23 @@
    ],
    "type": "object"
   },
+  "JA3Fingerprint": {
+   "additionalProperties": false,
+   "description": "Includes the JA3 fingerprint of a web request.",
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
   "JsonBody": {
    "additionalProperties": false,
    "description": "Inspect the request body as JSON. The request body immediately follows the request headers.",
@@ -700,6 +729,9 @@
      },
      "maxItems": 5,
      "type": "array"
+    },
+    "EvaluationWindowSec": {
+     "$ref": "#/definitions/EvaluationWindowSec"
     },
     "ForwardedIPConfig": {
      "$ref": "#/definitions/ForwardedIPConfiguration"
