@@ -1,0 +1,41 @@
+{
+ "if": {
+  "properties": {
+   "Engine": {
+    "enum": [
+     "aurora-mysql",
+     "aurora-postgresql"
+    ],
+    "type": "string"
+   }
+  },
+  "required": [
+   "Engine"
+  ]
+ },
+ "then": {
+  "properties": {
+   "AllocatedStorage": false,
+   "AutoMinorVersionUpgrade": false,
+   "DBClusterInstanceClass": false,
+   "Iops": false,
+   "MonitoringInterval": false,
+   "MonitoringRoleArn": false,
+   "PerformanceInsightsEnabled": false,
+   "PerformanceInsightsKmsKeyId": false,
+   "PerformanceInsightsRetentionPeriod": false,
+   "PubliclyAccessible": false,
+   "StorageType": {
+    "if": {
+     "type": "string"
+    },
+    "then": {
+     "enum": [
+      "aurora",
+      "aurora-iopt1"
+     ]
+    }
+   }
+  }
+ }
+}
