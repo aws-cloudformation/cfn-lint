@@ -3,55 +3,112 @@
  "createOnlyProperties": [
   "/properties/Ipv6Pool",
   "/properties/VpcId",
-  "/properties/Ipv4IpamPoolId",
   "/properties/AmazonProvidedIpv6CidrBlock",
   "/properties/Ipv6CidrBlock",
-  "/properties/Ipv6NetmaskLength",
+  "/properties/CidrBlock",
+  "/properties/Ipv4IpamPoolId",
   "/properties/Ipv4NetmaskLength",
   "/properties/Ipv6IpamPoolId",
-  "/properties/CidrBlock"
+  "/properties/Ipv6NetmaskLength"
  ],
  "description": "Resource Type definition for AWS::EC2::VPCCidrBlock",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateVpcCidrBlock",
+    "ec2:DescribeVpcs",
+    "ec2:AllocateIpamPoolCidr"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVpcs",
+    "ec2:DisassociateVpcCidrBlock"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "VpcId": {
+      "description": "The ID of the VPC.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VpcId"
+    ]
+   },
+   "permissions": [
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Id",
+  "/properties/VpcId"
  ],
  "properties": {
   "AmazonProvidedIpv6CidrBlock": {
+   "description": "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IPv6 addresses, or the size of the CIDR block.",
    "type": "boolean"
   },
   "CidrBlock": {
+   "description": "An IPv4 CIDR block to associate with the VPC.",
    "type": "string"
   },
   "Id": {
+   "description": "The Id of the VPC associated CIDR Block.",
    "type": "string"
   },
   "Ipv4IpamPoolId": {
+   "description": "The ID of the IPv4 IPAM pool to Associate a CIDR from to a VPC.",
    "type": "string"
   },
   "Ipv4NetmaskLength": {
+   "description": "The netmask length of the IPv4 CIDR you would like to associate from an Amazon VPC IP Address Manager (IPAM) pool.",
    "type": "integer"
   },
   "Ipv6CidrBlock": {
+   "description": "An IPv6 CIDR block from the IPv6 address pool.",
    "type": "string"
   },
   "Ipv6IpamPoolId": {
+   "description": "The ID of the IPv6 IPAM pool to Associate a CIDR from to a VPC.",
    "type": "string"
   },
   "Ipv6NetmaskLength": {
+   "description": "The netmask length of the IPv6 CIDR you would like to associate from an Amazon VPC IP Address Manager (IPAM) pool.",
    "type": "integer"
   },
   "Ipv6Pool": {
+   "description": "The ID of an IPv6 address pool from which to allocate the IPv6 CIDR block.",
    "type": "string"
   },
   "VpcId": {
+   "description": "The ID of the VPC.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
   "/properties/Id"
  ],
+ "replacementStrategy": "delete_then_create",
  "required": [
   "VpcId"
  ],
- "typeName": "AWS::EC2::VPCCidrBlock"
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::VPCCidrBlock",
+ "writeOnlyProperties": [
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ]
 }
