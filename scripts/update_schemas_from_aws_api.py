@@ -80,7 +80,7 @@ def write_db_cluster(results):
                         "Engine": {
                             "const": engine,
                         },
-                        "EngineVersion": {"type": "string"},
+                        "EngineVersion": {"type": ["string", "number"]},
                     },
                     "required": ["Engine", "EngineVersion"],
                 },
@@ -150,7 +150,7 @@ def write_db_instance(results):
                             "const": engine,
                         },
                         "EngineVersion": {
-                            "type": "string",
+                            "type": ["string", "number"],
                         },
                     },
                     "required": ["Engine", "EngineVersion"],

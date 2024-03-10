@@ -147,6 +147,7 @@ def get_rds_pricing():
         "19": ["oracle-se2"],
         "20": ["oracle-se2"],
         "21": ["aurora-postgresql"],
+        "28": ["db2-ae", "db2-se"],
     }
 
     license_map = {
@@ -164,6 +165,8 @@ def get_rds_pricing():
             product = products.get("product", {})
             if product:
                 if product.get("productFamily") in ["Database Instance"]:
+                    if product.get("attributes").get("locationType") == "AWS Outposts":
+                        continue
                     # Get overall instance types
                     if not results.get(
                         region_map[product.get("attributes").get("location")]
@@ -184,14 +187,34 @@ def get_rds_pricing():
                     license_name = license_map.get(
                         product.get("attributes").get("licenseModel")
                     )
+                    deployment_option = product.get("attributes").get(
+                        "deploymentOption"
+                    )
+
+                    if deployment_option not in [
+                        "Single-AZ",
+                        "Multi-AZ",
+                        "Multi-AZ (readable standbys)",
+                    ]:
+                        continue
+
                     instance_type = product.get("attributes").get("instanceType")
                     for product_name in product_names:
                         if not rds_details.get(product_region):
                             rds_details[product_region] = {}
-                        if not rds_details.get(product_region).get(license_name):
-                            rds_details[product_region][license_name] = {}
+                        if not rds_details.get(product_region).get(deployment_option):
+                            rds_details[product_region][deployment_option] = {}
                         if (
                             not rds_details.get(product_region)
+                            .get(deployment_option)
+                            .get(license_name)
+                        ):
+                            rds_details[product_region][deployment_option][
+                                license_name
+                            ] = {}
+                        if (
+                            not rds_details.get(product_region)
+                            .get(deployment_option)
                             .get(license_name)
                             .get(product_name)
                         ):
@@ -200,68 +223,99 @@ def get_rds_pricing():
                                 and product_name
                                 in ["aurora-mysql", "aurora-postgresql"]
                             ):
-                                rds_details[product_region][license_name][
-                                    product_name
-                                ] = set(["db.serverless"])
+                                rds_details[product_region][deployment_option][
+                                    license_name
+                                ][product_name] = set(["db.serverless"])
                             else:
-                                rds_details[product_region][license_name][
-                                    product_name
-                                ] = set()
-
-                        rds_details[product_region][license_name][product_name].add(
-                            instance_type
-                        )
+                                rds_details[product_region][deployment_option][
+                                    license_name
+                                ][product_name] = set()
+                        rds_details[product_region][deployment_option][license_name][
+                            product_name
+                        ].add(instance_type)
     specs = {}
+    cluster_specs = {}
     for product_region, product_values in rds_details.items():
         if product_region not in specs:
             specs[product_region] = {"allOf": []}
-        for license_name, license_values in product_values.items():
-            for product_name, instance_types in license_values.items():
-                if license_name == "general-public-license":
-                    specs[product_region]["allOf"].append(
-                        {
-                            "if": {
-                                "properties": {
-                                    "Engine": {
-                                        "const": product_name,
+        if product_region not in cluster_specs:
+            cluster_specs[product_region] = {"allOf": []}
+        for deployment_option, deployment_values in product_values.items():
+            if deployment_option in ["Single-AZ", "Multi-AZ"]:
+                for license_name, license_values in deployment_values.items():
+                    for product_name, instance_types in license_values.items():
+                        if license_name == "general-public-license":
+                            specs[product_region]["allOf"].append(
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "Engine": {
+                                                "const": product_name,
+                                            },
+                                            "LicenseModel": False,
+                                            "DBInstanceClass": {"type": "string"},
+                                        },
+                                        "required": ["Engine", "DBInstanceClass"],
                                     },
-                                    "LicenseModel": False,
-                                    "DBInstanceClass": {"type": "string"},
-                                },
-                                "required": ["Engine", "DBInstanceClass"],
-                            },
-                            "then": {
-                                "properties": {
-                                    "DBInstanceClass": {
-                                        "enum": list(sorted(instance_types)),
+                                    "then": {
+                                        "properties": {
+                                            "DBInstanceClass": {
+                                                "enum": list(sorted(instance_types)),
+                                            },
+                                        }
                                     },
                                 }
-                            },
-                        }
-                    )
-                specs[product_region]["allOf"].append(
-                    {
-                        "if": {
-                            "properties": {
-                                "Engine": {
-                                    "const": product_name,
+                            )
+                        specs[product_region]["allOf"].append(
+                            {
+                                "if": {
+                                    "properties": {
+                                        "Engine": {
+                                            "const": product_name,
+                                        },
+                                        "LicenseModel": {
+                                            "const": license_name,
+                                        },
+                                        "DBInstanceClass": {"type": "string"},
+                                    },
+                                    "required": [
+                                        "Engine",
+                                        "LicenseModel",
+                                        "DBInstanceClass",
+                                    ],
                                 },
-                                "LicenseModel": {
-                                    "const": license_name,
-                                },
-                                "DBInstanceClass": {"type": "string"},
-                            },
-                            "required": ["Engine", "LicenseModel", "DBInstanceClass"],
-                        },
-                        "then": {
-                            "properties": {
-                                "DBInstanceClass": {
-                                    "enum": list(sorted(instance_types)),
+                                "then": {
+                                    "properties": {
+                                        "DBInstanceClass": {
+                                            "enum": list(sorted(instance_types)),
+                                        },
+                                    }
                                 },
                             }
-                        },
-                    }
-                )
+                        )
+            else:
+                for license_name, license_values in deployment_values.items():
+                    for product_name, instance_types in license_values.items():
+                        cluster_specs[product_region]["allOf"].append(
+                            {
+                                "if": {
+                                    "properties": {
+                                        "Engine": {
+                                            "const": product_name,
+                                        },
+                                        "DBClusterInstanceClass": {"type": "string"},
+                                    },
+                                    "required": ["Engine", "DBClusterInstanceClass"],
+                                },
+                                "then": {
+                                    "properties": {
+                                        "DBClusterInstanceClass": {
+                                            "enum": list(sorted(instance_types)),
+                                        },
+                                    }
+                                },
+                            }
+                        )
 
     LOGGER.info("Updating RDS Spec files")
     filename = (
@@ -270,6 +324,13 @@ def get_rds_pricing():
     )
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(specs, f, indent=1, sort_keys=True, separators=(",", ": "))
+
+    filename = (
+        "src/cfnlint/data/schemas/extensions/"
+        "aws_rds_dbcluster/dbclusterinstanceclass_enum.json"
+    )
+    with open(filename, "w+", encoding="utf-8") as f:
+        json.dump(cluster_specs, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 def get_results(service, product_families, default=None):

@@ -142,6 +142,66 @@
    },
    "type": "object"
   },
+  "EcsProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "TaskProperties": {
+     "items": {
+      "$ref": "#/definitions/EcsTaskProperties"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "TaskProperties"
+   ],
+   "type": "object"
+  },
+  "EcsTaskProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Containers": {
+     "items": {
+      "$ref": "#/definitions/TaskContainerProperties"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "EphemeralStorage": {
+     "$ref": "#/definitions/EphemeralStorage"
+    },
+    "ExecutionRoleArn": {
+     "type": "string"
+    },
+    "IpcMode": {
+     "type": "string"
+    },
+    "NetworkConfiguration": {
+     "$ref": "#/definitions/NetworkConfiguration"
+    },
+    "PidMode": {
+     "type": "string"
+    },
+    "PlatformVersion": {
+     "type": "string"
+    },
+    "RuntimePlatform": {
+     "$ref": "#/definitions/RuntimePlatform"
+    },
+    "TaskRoleArn": {
+     "type": "string"
+    },
+    "Volumes": {
+     "items": {
+      "$ref": "#/definitions/Volumes"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
   "EfsVolumeConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -518,6 +578,16 @@
     "Container": {
      "$ref": "#/definitions/ContainerProperties"
     },
+    "EcsProperties": {
+     "$ref": "#/definitions/EcsProperties"
+    },
+    "InstanceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "TargetNodes": {
      "type": "string"
     }
@@ -543,11 +613,21 @@
     "HostNetwork": {
      "type": "boolean"
     },
+    "InitContainers": {
+     "items": {
+      "$ref": "#/definitions/EksContainer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "Metadata": {
      "$ref": "#/definitions/Metadata"
     },
     "ServiceAccountName": {
      "type": "string"
+    },
+    "ShareProcessNamespace": {
+     "type": "boolean"
     },
     "Volumes": {
      "items": {
@@ -624,6 +704,107 @@
    "required": [
     "ValueFrom",
     "Name"
+   ],
+   "type": "object"
+  },
+  "TaskContainerDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "type": "string"
+    },
+    "ContainerName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition",
+    "ContainerName"
+   ],
+   "type": "object"
+  },
+  "TaskContainerProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DependsOn": {
+     "items": {
+      "$ref": "#/definitions/TaskContainerDependency"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Environment": {
+     "items": {
+      "$ref": "#/definitions/Environment"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Essential": {
+     "type": "boolean"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "LinuxParameters": {
+     "$ref": "#/definitions/LinuxParameters"
+    },
+    "LogConfiguration": {
+     "$ref": "#/definitions/LogConfiguration"
+    },
+    "MountPoints": {
+     "items": {
+      "$ref": "#/definitions/MountPoints"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Privileged": {
+     "type": "boolean"
+    },
+    "ReadonlyRootFilesystem": {
+     "type": "boolean"
+    },
+    "RepositoryCredentials": {
+     "$ref": "#/definitions/RepositoryCredentials"
+    },
+    "ResourceRequirements": {
+     "items": {
+      "$ref": "#/definitions/ResourceRequirement"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Secrets": {
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ulimits": {
+     "items": {
+      "$ref": "#/definitions/Ulimit"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "User": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Image"
    ],
    "type": "object"
   },
@@ -711,6 +892,9 @@
  "properties": {
   "ContainerProperties": {
    "$ref": "#/definitions/ContainerProperties"
+  },
+  "EcsProperties": {
+   "$ref": "#/definitions/EcsProperties"
   },
   "EksProperties": {
    "$ref": "#/definitions/EksProperties"
