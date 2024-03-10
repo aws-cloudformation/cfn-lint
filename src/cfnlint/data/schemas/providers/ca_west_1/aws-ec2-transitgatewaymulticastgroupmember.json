@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayMulticastDomainId",
+  "/properties/GroupIpAddress",
+  "/properties/NetworkInterfaceId"
+ ],
+ "description": "The AWS::EC2::TransitGatewayMulticastGroupMember registers and deregisters members and sources (network interfaces) with the transit gateway multicast group",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:RegisterTransitGatewayMulticastGroupMembers",
+    "ec2:SearchTransitGatewayMulticastGroups"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeregisterTransitGatewayMulticastGroupMembers",
+    "ec2:SearchTransitGatewayMulticastGroups"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:SearchTransitGatewayMulticastGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:SearchTransitGatewayMulticastGroups"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayMulticastDomainId",
+  "/properties/GroupIpAddress",
+  "/properties/NetworkInterfaceId"
+ ],
+ "properties": {
+  "GroupIpAddress": {
+   "description": "The IP address assigned to the transit gateway multicast group.",
+   "type": "string"
+  },
+  "GroupMember": {
+   "description": "Indicates that the resource is a transit gateway multicast group member.",
+   "type": "boolean"
+  },
+  "GroupSource": {
+   "description": "Indicates that the resource is a transit gateway multicast group member.",
+   "type": "boolean"
+  },
+  "MemberType": {
+   "description": "The member type (for example, static).",
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "description": "The ID of the transit gateway attachment.",
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "The ID of the resource.",
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "The type of resource, for example a VPC attachment.",
+   "type": "string"
+  },
+  "SourceType": {
+   "description": "The source type.",
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet.",
+   "type": "string"
+  },
+  "TransitGatewayAttachmentId": {
+   "description": "The ID of the transit gateway attachment.",
+   "type": "string"
+  },
+  "TransitGatewayMulticastDomainId": {
+   "description": "The ID of the transit gateway multicast domain.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ResourceId",
+  "/properties/ResourceType",
+  "/properties/GroupSource",
+  "/properties/GroupMember",
+  "/properties/MemberType",
+  "/properties/SourceType",
+  "/properties/TransitGatewayAttachmentId"
+ ],
+ "required": [
+  "GroupIpAddress",
+  "NetworkInterfaceId",
+  "TransitGatewayMulticastDomainId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgatewaymulticastdomain/aws-ec2-transitgatewaymulticastgroupsource",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::TransitGatewayMulticastGroupMember"
+}
