@@ -163,6 +163,22 @@
      },
      "type": "array"
     },
+    "NetWeaverPrometheusExporter": {
+     "$ref": "#/definitions/NetWeaverPrometheusExporter",
+     "description": "The NetWeaver Prometheus Exporter settings."
+    },
+    "Processes": {
+     "description": "A list of processes to monitor for the component. Only Windows EC2 instances can have a processes section.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Process"
+     },
+     "type": "array"
+    },
+    "SQLServerPrometheusExporter": {
+     "$ref": "#/definitions/SQLServerPrometheusExporter",
+     "description": "The SQL Prometheus Exporter settings."
+    },
     "WindowsEvents": {
      "description": "A list of Windows Events to log.",
      "insertionOrder": true,
@@ -379,6 +395,80 @@
    ],
    "type": "object"
   },
+  "NetWeaverPrometheusExporter": {
+   "additionalProperties": false,
+   "description": "The NetWeaver Prometheus Exporter Settings.",
+   "properties": {
+    "InstanceNumbers": {
+     "description": "SAP instance numbers for ASCS, ERS, and App Servers.",
+     "items": {
+      "maxLength": 2,
+      "minLength": 1,
+      "pattern": "\\b([0-9]|[0-9][0-9])\\b",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PrometheusPort": {
+     "description": "Prometheus exporter port.",
+     "type": "string"
+    },
+    "SAPSID": {
+     "description": "SAP NetWeaver SID.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SAPSID",
+    "InstanceNumbers"
+   ],
+   "type": "object"
+  },
+  "Process": {
+   "additionalProperties": false,
+   "description": "A process to be monitored for the component.",
+   "properties": {
+    "AlarmMetrics": {
+     "description": "A list of metrics to monitor for the component.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AlarmMetric"
+     },
+     "type": "array"
+    },
+    "ProcessName": {
+     "description": "The name of the process to be monitored for the component.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_,-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProcessName",
+    "AlarmMetrics"
+   ],
+   "type": "object"
+  },
+  "SQLServerPrometheusExporter": {
+   "additionalProperties": false,
+   "description": "The SQL prometheus exporter settings.",
+   "properties": {
+    "PrometheusPort": {
+     "description": "Prometheus exporter port.",
+     "type": "string"
+    },
+    "SQLSecretName": {
+     "description": "Secret name which managers SQL exporter connection. e.g. {\"data_source_name\": \"sqlserver://<USERNAME>:<PASSWORD>@localhost:1433\"}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrometheusPort",
+    "SQLSecretName"
+   ],
+   "type": "object"
+  },
   "SubComponentConfigurationDetails": {
    "additionalProperties": false,
    "description": "The configuration settings of sub components.",
@@ -396,6 +486,14 @@
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Log"
+     },
+     "type": "array"
+    },
+    "Processes": {
+     "description": "A list of processes to monitor for the component. Only Windows EC2 instances can have a processes section.",
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Process"
      },
      "type": "array"
     },
@@ -537,6 +635,10 @@
    "description": "The ARN of the ApplicationInsights application.",
    "type": "string"
   },
+  "AttachMissingPermission": {
+   "description": "If set to true, the managed policies for SSM and CW will be attached to the instance roles if they are missing",
+   "type": "boolean"
+  },
   "AutoConfigurationEnabled": {
    "description": "If set to true, application will be configured with recommended monitoring configuration.",
    "type": "boolean"
@@ -621,6 +723,7 @@
   "/properties/LogPatternSets",
   "/properties/CustomComponents",
   "/properties/GroupingType",
-  "/properties/OpsItemSNSTopicArn"
+  "/properties/OpsItemSNSTopicArn",
+  "/properties/AttachMissingPermission"
  ]
 }

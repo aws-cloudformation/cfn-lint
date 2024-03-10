@@ -26,27 +26,34 @@
   },
   "ColumnWildcard": {
    "additionalProperties": false,
+   "description": "A wildcard object, consisting of an optional list of excluded column names or indexes.",
    "properties": {
     "ExcludedColumnNames": {
-     "$ref": "#/definitions/ColumnNames"
+     "$ref": "#/definitions/ColumnNames",
+     "description": "Excludes column names. Any column with this name will be excluded."
     }
    },
    "type": "object"
   },
   "DataCellsFilterResource": {
    "additionalProperties": false,
+   "description": "A structure that describes certain columns on certain rows.",
    "properties": {
     "DatabaseName": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "A database in the GLUDC."
     },
     "Name": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name given by the user to the data filter cell."
     },
     "TableCatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The ID of the catalog to which the table belongs."
     },
     "TableName": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the table."
     }
    },
    "required": [
@@ -59,9 +66,11 @@
   },
   "DataLakePrincipal": {
    "additionalProperties": false,
+   "description": "The LFlong principal.",
    "properties": {
     "DataLakePrincipalIdentifier": {
-     "$ref": "#/definitions/DataLakePrincipalString"
+     "$ref": "#/definitions/DataLakePrincipalString",
+     "description": "An identifier for the LFlong principal."
     }
    },
    "type": "object"
@@ -80,12 +89,15 @@
   },
   "DataLocationResource": {
    "additionalProperties": false,
+   "description": "A structure for a data location object where permissions are granted or revoked.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the GLUDC where the location is registered with LFlong."
     },
     "ResourceArn": {
-     "$ref": "#/definitions/ResourceArnString"
+     "$ref": "#/definitions/ResourceArnString",
+     "description": "The Amazon Resource Name (ARN) that uniquely identifies the data location resource."
     }
    },
    "required": [
@@ -96,12 +108,15 @@
   },
   "DatabaseResource": {
    "additionalProperties": false,
+   "description": "A structure for the database object.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the Data Catalog. By default, it is the account ID of the caller."
     },
     "Name": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the database resource. Unique to the Data Catalog."
     }
    },
    "required": [
@@ -125,12 +140,15 @@
   },
   "LFTag": {
    "additionalProperties": false,
+   "description": "The LF-tag key and values attached to a resource.",
    "properties": {
     "TagKey": {
-     "$ref": "#/definitions/LFTagKey"
+     "$ref": "#/definitions/LFTagKey",
+     "description": "The key-name for the LF-tag."
     },
     "TagValues": {
-     "$ref": "#/definitions/TagValueList"
+     "$ref": "#/definitions/TagValueList",
+     "description": "A list of possible values of the corresponding ``TagKey`` of an LF-tag key-value pair."
     }
    },
    "type": "object"
@@ -142,15 +160,19 @@
   },
   "LFTagKeyResource": {
    "additionalProperties": false,
+   "description": "A structure containing an LF-tag key and values for a resource.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the GLUDC where the location is registered with GLUDC."
     },
     "TagKey": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The key-name for the LF-tag."
     },
     "TagValues": {
-     "$ref": "#/definitions/TagValueList"
+     "$ref": "#/definitions/TagValueList",
+     "description": "A list of possible values for the corresponding ``TagKey`` of an LF-tag key-value pair."
     }
    },
    "required": [
@@ -162,6 +184,7 @@
   },
   "LFTagPair": {
    "additionalProperties": false,
+   "description": "",
    "properties": {
     "CatalogId": {
      "$ref": "#/definitions/CatalogIdString"
@@ -181,15 +204,19 @@
   },
   "LFTagPolicyResource": {
    "additionalProperties": false,
+   "description": "A list of LF-tag conditions that define a resource's LF-tag policy.\n A structure that allows an admin to grant user permissions on certain conditions. For example, granting a role access to all columns that do not have the LF-tag 'PII' in tables that have the LF-tag 'Prod'.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the GLUDC. The GLUDC is the persistent metadata store. It contains database definitions, table definitions, and other control information to manage your LFlong environment."
     },
     "Expression": {
-     "$ref": "#/definitions/Expression"
+     "$ref": "#/definitions/Expression",
+     "description": "A list of LF-tag conditions that apply to the resource's LF-tag policy."
     },
     "ResourceType": {
-     "$ref": "#/definitions/ResourceType"
+     "$ref": "#/definitions/ResourceType",
+     "description": "The resource type for which the LF-tag policy applies."
     }
    },
    "required": [
@@ -251,6 +278,7 @@
   },
   "PrincipalPermissions": {
    "additionalProperties": false,
+   "description": "",
    "properties": {
     "DataLakePrincipal": {
      "$ref": "#/definitions/DataLakePrincipal"
@@ -270,6 +298,7 @@
   },
   "PrincipalResourcePair": {
    "additionalProperties": false,
+   "description": "",
    "properties": {
     "Principal": {
      "$ref": "#/definitions/DataLakePrincipal"
@@ -286,30 +315,39 @@
   },
   "Resource": {
    "additionalProperties": false,
+   "description": "A structure for the resource.",
    "properties": {
     "Catalog": {
-     "$ref": "#/definitions/CatalogResource"
+     "$ref": "#/definitions/CatalogResource",
+     "description": "The identifier for the Data Catalog. By default, the account ID. The Data Catalog is the persistent metadata store. It contains database definitions, table definitions, and other control information to manage your LFlong environment."
     },
     "DataCellsFilter": {
-     "$ref": "#/definitions/DataCellsFilterResource"
+     "$ref": "#/definitions/DataCellsFilterResource",
+     "description": "A data cell filter."
     },
     "DataLocation": {
-     "$ref": "#/definitions/DataLocationResource"
+     "$ref": "#/definitions/DataLocationResource",
+     "description": "The location of an Amazon S3 path where permissions are granted or revoked."
     },
     "Database": {
-     "$ref": "#/definitions/DatabaseResource"
+     "$ref": "#/definitions/DatabaseResource",
+     "description": "The database for the resource. Unique to the Data Catalog. A database is a set of associated table definitions organized into a logical group. You can Grant and Revoke database permissions to a principal."
     },
     "LFTag": {
-     "$ref": "#/definitions/LFTagKeyResource"
+     "$ref": "#/definitions/LFTagKeyResource",
+     "description": "The LF-tag key and values attached to a resource."
     },
     "LFTagPolicy": {
-     "$ref": "#/definitions/LFTagPolicyResource"
+     "$ref": "#/definitions/LFTagPolicyResource",
+     "description": "A list of LF-tag conditions that define a resource's LF-tag policy."
     },
     "Table": {
-     "$ref": "#/definitions/TableResource"
+     "$ref": "#/definitions/TableResource",
+     "description": "The table for the resource. A table is a metadata definition that represents your data. You can Grant and Revoke table privileges to a principal."
     },
     "TableWithColumns": {
-     "$ref": "#/definitions/TableWithColumnsResource"
+     "$ref": "#/definitions/TableWithColumnsResource",
+     "description": "The table with columns for the resource. A principal with permissions to this resource can select metadata from the columns of a table in the Data Catalog and the underlying data in Amazon S3."
     }
    },
    "type": "object"
@@ -326,18 +364,23 @@
   },
   "TableResource": {
    "additionalProperties": false,
+   "description": "A structure for the table object. A table is a metadata definition that represents your data. You can Grant and Revoke table privileges to a principal.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the Data Catalog. By default, it is the account ID of the caller."
     },
     "DatabaseName": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the database for the table. Unique to a Data Catalog. A database is a set of associated table definitions organized into a logical group. You can Grant and Revoke database privileges to a principal."
     },
     "Name": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the table."
     },
     "TableWildcard": {
-     "$ref": "#/definitions/TableWildcard"
+     "$ref": "#/definitions/TableWildcard",
+     "description": "A wildcard object representing every table under a database.\n At least one of ``TableResource$Name`` or ``TableResource$TableWildcard`` is required."
     }
    },
    "required": [
@@ -352,21 +395,27 @@
   },
   "TableWithColumnsResource": {
    "additionalProperties": false,
+   "description": "A structure for a table with columns object. This object is only used when granting a SELECT permission.\n This object must take a value for at least one of ``ColumnsNames``, ``ColumnsIndexes``, or ``ColumnsWildcard``.",
    "properties": {
     "CatalogId": {
-     "$ref": "#/definitions/CatalogIdString"
+     "$ref": "#/definitions/CatalogIdString",
+     "description": "The identifier for the GLUDC where the location is registered with LFlong."
     },
     "ColumnNames": {
-     "$ref": "#/definitions/ColumnNames"
+     "$ref": "#/definitions/ColumnNames",
+     "description": "The list of column names for the table. At least one of ``ColumnNames`` or ``ColumnWildcard`` is required."
     },
     "ColumnWildcard": {
-     "$ref": "#/definitions/ColumnWildcard"
+     "$ref": "#/definitions/ColumnWildcard",
+     "description": "A wildcard specified by a ``ColumnWildcard`` object. At least one of ``ColumnNames`` or ``ColumnWildcard`` is required."
     },
     "DatabaseName": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the database for the table with columns resource. Unique to the Data Catalog. A database is a set of associated table definitions organized into a logical group. You can Grant and Revoke database privileges to a principal."
     },
     "Name": {
-     "$ref": "#/definitions/NameString"
+     "$ref": "#/definitions/NameString",
+     "description": "The name of the table resource. A table is a metadata definition that represents your data. You can Grant and Revoke table privileges to a principal."
     }
    },
    "required": [
@@ -386,7 +435,7 @@
    "type": "array"
   }
  },
- "description": "A resource schema representing a Lake Formation Permission.",
+ "description": "The ``AWS::LakeFormation::PrincipalPermissions`` resource represents the permissions that a principal has on a GLUDC resource (such as GLUlong databases or GLUlong tables). When you create a ``PrincipalPermissions`` resource, the permissions are granted via the LFlong ``GrantPermissions`` API operation. When you delete a ``PrincipalPermissions`` resource, the permissions on principal-resource pair are revoked via the LFlong ``RevokePermissions`` API operation.",
  "handlers": {
   "create": {
    "permissions": [
@@ -418,24 +467,31 @@
  ],
  "properties": {
   "Catalog": {
-   "$ref": "#/definitions/CatalogIdString"
+   "$ref": "#/definitions/CatalogIdString",
+   "description": "The identifier for the GLUDC. By default, the account ID. The GLUDC is the persistent metadata store. It contains database definitions, table definitions, and other control information to manage your Lake Formation environment."
   },
   "Permissions": {
-   "$ref": "#/definitions/PermissionList"
+   "$ref": "#/definitions/PermissionList",
+   "description": "The permissions granted or revoked."
   },
   "PermissionsWithGrantOption": {
-   "$ref": "#/definitions/PermissionList"
+   "$ref": "#/definitions/PermissionList",
+   "description": "Indicates the ability to grant permissions (as a subset of permissions granted)."
   },
   "Principal": {
-   "$ref": "#/definitions/DataLakePrincipal"
+   "$ref": "#/definitions/DataLakePrincipal",
+   "description": "The principal to be granted a permission."
   },
   "PrincipalIdentifier": {
+   "description": "",
    "type": "string"
   },
   "Resource": {
-   "$ref": "#/definitions/Resource"
+   "$ref": "#/definitions/Resource",
+   "description": "The resource to be granted or revoked permissions."
   },
   "ResourceIdentifier": {
+   "description": "",
    "type": "string"
   }
  },

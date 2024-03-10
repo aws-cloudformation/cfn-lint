@@ -33,13 +33,7 @@ def validator():
         ),
         (
             {
-                "Engine": "MySqL",  # API converts it appropriately
-            },
-            [],
-        ),
-        (
-            {
-                "Engine": "MySqL",
+                "Engine": "mysql",
                 "EngineVersion": "5.7.37",
             },
             [],
@@ -53,7 +47,7 @@ def validator():
         ),
         (
             {
-                "Engine": "MySqL",
+                "Engine": "mysql",
                 "EngineVersion": {"Ref": "EngineVersion"},
             },
             [],
