@@ -46,12 +46,14 @@ def validator():
             },
             [
                 ValidationError(
-                    "Additional properties are not allowed (['DeletionProtection'])",
+                    (
+                        "Additional properties are not allowed 'DeletionProtection' "
+                        "when creating an Aurora instance"
+                    ),
                     rule=DbInstanceAuroraExclusive(),
-                    path=deque([]),
-                    instance={"Engine": "aurora", "DeletionProtection": True},
-                    validator="not",
-                    schema_path=deque(["then", "not"]),
+                    path=deque(["DeletionProtection"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "DeletionProtection"]),
                 )
             ],
         ),
@@ -62,12 +64,14 @@ def validator():
             },
             [
                 ValidationError(
-                    "Additional properties are not allowed (['DeletionProtection'])",
+                    (
+                        "Additional properties are not allowed 'DeletionProtection' "
+                        "when creating an Aurora instance"
+                    ),
                     rule=DbInstanceAuroraExclusive(),
-                    path=deque([]),
-                    instance={"Engine": "aurora", "DeletionProtection": True},
-                    validator="not",
-                    schema_path=deque(["then", "not"]),
+                    path=deque(["DeletionProtection"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "DeletionProtection"]),
                 )
             ],
         ),
@@ -81,19 +85,25 @@ def validator():
                 ValidationError(
                     (
                         "Additional properties are not "
-                        "allowed (['DeletionProtection', "
-                        "'CopyTagsToSnapshot'])"
+                        "allowed 'CopyTagsToSnapshot' "
+                        "when creating an Aurora instance"
                     ),
                     rule=DbInstanceAuroraExclusive(),
-                    path=deque([]),
-                    instance={
-                        "Engine": "aurora",
-                        "DeletionProtection": True,
-                        "CopyTagsToSnapshot": True,
-                    },
-                    validator="not",
-                    schema_path=deque(["then", "not"]),
-                )
+                    path=deque(["CopyTagsToSnapshot"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "CopyTagsToSnapshot"]),
+                ),
+                ValidationError(
+                    (
+                        "Additional properties are not "
+                        "allowed 'DeletionProtection' "
+                        "when creating an Aurora instance"
+                    ),
+                    rule=DbInstanceAuroraExclusive(),
+                    path=deque(["DeletionProtection"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "DeletionProtection"]),
+                ),
             ],
         ),
         (
@@ -104,5 +114,8 @@ def validator():
 )
 def test_backup_lifecycle(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
-
+    for err in errs:
+        print(err.validator)
+        print(err.schema_path)
+        print(err.path)
     assert errs == expected, f"Expected {expected} got {errs}"

@@ -5,10 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
-
 import cfnlint.data.schemas.extensions.aws_rds_dbinstance
-from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -30,24 +27,8 @@ class DbInstanceAuroraExclusive(CfnLintJsonSchema):
                 module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,
                 filename="aurora_exclusive.json",
             ),
+            all_matches=True,
         )
-
-    def message(self, instance: Any, err: ValidationError) -> str:
-        keys = [
-            "AllocatedStorage",
-            "BackupRetentionPeriod",
-            "CopyTagsToSnapshot",
-            "DeletionProtection",
-            "EnableIAMDatabaseAuthentication",
-            "MasterUserPassword",
-            "StorageEncrypted",
-        ]
-        extra = []
-        for property in instance.keys():
-            if property in keys:
-                extra.append(property)
-
-        return f"Additional properties are not allowed ({extra!r})"
 
     def validate(self, validator, keywords, instance, schema):
         if not validator.is_type(instance, "object"):
@@ -56,4 +37,11 @@ class DbInstanceAuroraExclusive(CfnLintJsonSchema):
         if validator.is_type(instance.get("Engine"), "string"):
             instance["Engine"] = instance["Engine"].lower()
 
-        yield from super().validate(validator, keywords, instance, schema)
+        for err in super().validate(validator, keywords, instance, schema):
+            if err.schema is False:
+                err.message = (
+                    "Additional properties are not allowed "
+                    f"{err.path[0]!r} when creating an Aurora instance"
+                )
+
+            yield err

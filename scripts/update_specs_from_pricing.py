@@ -413,7 +413,7 @@ def main():
     write_output(
         "aws_elasticsearch_domain",
         "elasticsearchclusterconfig_instancetype_enum",
-        get_results("AmazonES", ["Elastic Search Instance"]),
+        get_results("AmazonES", ["Amazon OpenSearch Service Instance"]),
     )
     write_output(
         "aws_emr_cluster",
