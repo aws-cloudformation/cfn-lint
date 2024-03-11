@@ -1048,6 +1048,7 @@ cached: List[str] = [
     "aws-cloudfront-responseheaderspolicy.json",
     "aws-securityhub-automationrule.json",
     "aws-msk-clusterpolicy.json",
+    "aws-guardduty-master.json",
     "aws-kms-alias.json",
     "aws-xray-samplingrule.json",
     "aws-route53resolver-resolverrule.json",

@@ -101,6 +101,9 @@ def get_dax_pricing():
                     results[region_map[product.get("attributes").get("location")]].add(
                         product.get("attributes").get("usagetype").split(":")[1]
                     )
+
+    for k, v in results.items():
+        results[k] = sorted(v)
     return results
 
 
@@ -125,6 +128,9 @@ def get_mq_pricing():
                     results[region_map[product.get("attributes").get("location")]].add(
                         remap.get(usage_type, usage_type)
                     )
+
+    for k, v in results.items():
+        results[k] = sorted(v)
     return results
 
 
@@ -358,9 +364,14 @@ def get_results(service, product_families, default=None):
                         results[
                             region_map[product.get("attributes").get("location")]
                         ] = default
-                    results[region_map[product.get("attributes").get("location")]].add(
-                        product.get("attributes").get("instanceType")
-                    )
+
+                    if product.get("attributes").get("instanceType"):
+                        results[
+                            region_map[product.get("attributes").get("location")]
+                        ].add(product.get("attributes").get("instanceType"))
+
+    for k, v in results.items():
+        results[k] = sorted(v)
     return results
 
 

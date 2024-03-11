@@ -2195,7 +2195,6 @@ cached: List[str] = [
     "aws-mediapackage-packaginggroup.json",
     "aws-wafregional-sqlinjectionmatchset.json",
     "aws-lambda-version.json",
-    "aws-ec2-dhcpoptions.json",
     "aws-ec2-ipampool.json",
     "aws-kinesis-streamconsumer.json",
     "aws-iam-servicelinkedrole.json",

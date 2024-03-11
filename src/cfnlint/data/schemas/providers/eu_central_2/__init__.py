@@ -684,6 +684,7 @@ cached: List[str] = [
     "aws-ec2-volumeattachment.json",
     "aws-glue-securityconfiguration.json",
     "aws-networkfirewall-tlsinspectionconfiguration.json",
+    "aws-applicationinsights-application.json",
     "aws-ecs-clustercapacityproviderassociations.json",
     "aws-appconfig-configurationprofile.json",
     "aws-route53resolver-firewallrulegroup.json",
