@@ -1,3 +1,12 @@
+### v1.2.5a4
+## What's Changed
+* New rules for RDS DBCluster E3692,E3694,E3694 by @kddejong in (pull #[3094](https://github.com/aws-cloudformation/cfn-lint/pull/3094))
+* New rule E3689 to validate DBCluster monitoring config by @kddejong in (pull #[3089](https://github.com/aws-cloudformation/cfn-lint/pull/3089))
+* New rule W4005 to validate cfn-lint config in metadata @kddejong in (pull #[3088](https://github.com/aws-cloudformation/cfn-lint/pull/3088))
+* Update specs to 2024/03/11 (pull #[3094](https://github.com/aws-cloudformation/cfn-lint/pull/3094))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a3...v1.2.5.a4
+
 ### v1.2.5a3
 ## What's Changed
 * Increased validation of dynamic references by @kddejong in (pull #[3064](https://github.com/aws-cloudformation/cfn-lint/pull/3064))
