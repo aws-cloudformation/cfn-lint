@@ -3,9 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import hashlib
 import logging
-import random
-import string
 from typing import Any, Dict, List
 
 from cfnlint.context import Context
@@ -59,16 +58,15 @@ class BaseJsonSchema(CloudFormationLintRule):
             e_rule = rs_rule
 
         if e.context:
-
-            parent_id = "".join(
-                random.choices(string.ascii_lowercase + string.digits, k=5)  # nosec
-            )
-            e.message = f"{e.message} (id {parent_id!r})"
+            parent_id = hashlib.shake_128(
+                f"{e.message} + {'/'.join(e.path)}".encode("utf-8")
+            ).hexdigest(4)
+            e.message = f"{e.message} (id: {parent_id!r})"
             for err in e.context:
                 err.path.extend(e.path)
                 err.message = (
-                    f"{err.message} (parent {parent_id!r}. "
-                    "Schema group {err.schema_path[0]!r})"
+                    f"{err.message} (parent: {parent_id!r}. "
+                    f"Schema group {err.schema_path[0]!r})"
                 )
                 matches.extend(self._convert_validation_errors_to_matches(path, err))
 
