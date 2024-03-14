@@ -9,10 +9,8 @@
    "properties": {
     "ActionCondition": {
      "additionalProperties": false,
-     "description": "A single action condition.",
      "properties": {
       "Action": {
-       "description": "Logic to apply to the filtering conditions. You can specify that, in order to satisfy the filter, a log must match all conditions or must match at least one condition.",
        "enum": [
         "ALLOW",
         "BLOCK",
@@ -31,10 +29,8 @@
     },
     "LabelNameCondition": {
      "additionalProperties": false,
-     "description": "A single label name condition.",
      "properties": {
       "LabelName": {
-       "description": "The label name that a log record must contain in order to meet the condition. This must be a fully qualified label name. Fully qualified labels have a prefix, optional namespaces, and label name. The prefix identifies the rule group or web ACL context of the rule that added the label. ",
        "type": "string"
       }
      },
@@ -48,22 +44,17 @@
   },
   "FieldToMatch": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Method": {
-     "description": "Inspect the HTTP method. The method indicates the type of operation that the request is asking the origin to perform. ",
      "type": "object"
     },
     "QueryString": {
-     "description": "Inspect the query string. This is the part of a URL that appears after a ? character, if any. ",
      "type": "object"
     },
     "SingleHeader": {
      "additionalProperties": false,
-     "description": "Inspect a single header. Provide the name of the header to inspect, for example, User-Agent or Referer. This setting isn't case sensitive.",
      "properties": {
       "Name": {
-       "description": "The name of the query header to inspect.",
        "type": "string"
       }
      },
@@ -73,7 +64,6 @@
      "type": "object"
     },
     "UriPath": {
-     "description": "Inspect the request URI path. This is the part of a web request that identifies a resource, for example, /images/daily-ad.jpg. ",
      "type": "object"
     }
    },
@@ -83,7 +73,6 @@
    "additionalProperties": false,
    "properties": {
     "Behavior": {
-     "description": "How to handle logs that satisfy the filter's conditions and requirement. ",
      "enum": [
       "KEEP",
       "DROP"
@@ -91,7 +80,6 @@
      "type": "string"
     },
     "Conditions": {
-     "description": "Match conditions for the filter.",
      "items": {
       "$ref": "#/definitions/Condition"
      },
@@ -99,7 +87,6 @@
      "type": "array"
     },
     "Requirement": {
-     "description": "Logic to apply to the filtering conditions. You can specify that, in order to satisfy the filter, a log must match all conditions or must match at least one condition.",
      "enum": [
       "MEETS_ALL",
       "MEETS_ANY"
@@ -115,7 +102,6 @@
    "type": "object"
   }
  },
- "description": "A WAFv2 Logging Configuration Resource Provider",
  "handlers": {
   "create": {
    "permissions": [
@@ -170,7 +156,6 @@
  ],
  "properties": {
   "LogDestinationConfigs": {
-   "description": "The Amazon Resource Names (ARNs) of the logging destinations that you want to associate with the web ACL.",
    "items": {
     "type": "string"
    },
@@ -178,10 +163,8 @@
   },
   "LoggingFilter": {
    "additionalProperties": false,
-   "description": "Filtering that specifies which web requests are kept in the logs and which are dropped. You can filter on the rule action and on the web request labels that were applied by matching rules during web ACL evaluation.",
    "properties": {
     "DefaultBehavior": {
-     "description": "Default handling for logs that don't match any of the specified filtering conditions.",
      "enum": [
       "KEEP",
       "DROP"
@@ -189,7 +172,6 @@
      "type": "string"
     },
     "Filters": {
-     "description": "The filters that you want to apply to the logs.",
      "items": {
       "$ref": "#/definitions/Filter"
      },
@@ -204,11 +186,9 @@
    "type": "object"
   },
   "ManagedByFirewallManager": {
-   "description": "Indicates whether the logging configuration was created by AWS Firewall Manager, as part of an AWS WAF policy configuration. If true, only Firewall Manager can modify or delete the configuration.",
    "type": "boolean"
   },
   "RedactedFields": {
-   "description": "The parts of the request that you want to keep out of the logs. For example, if you redact the HEADER field, the HEADER field in the firehose will be xxx.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/FieldToMatch"
@@ -216,7 +196,6 @@
    "type": "array"
   },
   "ResourceArn": {
-   "description": "The Amazon Resource Name (ARN) of the web ACL that you want to associate with LogDestinationConfigs.",
    "type": "string"
   }
  },

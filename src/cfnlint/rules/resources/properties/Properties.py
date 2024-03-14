@@ -52,16 +52,9 @@ class Properties(BaseJsonSchema):
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
-    # pylint: disable=unused-argument
-    def _validate(self, validator: Validator, _, instance: Any, schema):
-        validator = self.extend_validator(validator, schema, validator.context)
-        for err in validator.iter_errors(instance):
-            if err.rule is None:
-                if err.validator in self.rule_set:
-                    err.rule = self.child_rules[self.rule_set[err.validator]]
-                elif (not err.validator.startswith("fn")) and err.validator != "ref":
-                    err.rule = self
-            yield err
+    def validate(self, validator: Validator, _, instance: Any, schema):
+        validator = self.extend_validator(validator, schema, validator.context.evolve())
+        yield from self._validate(validator, instance)
 
     # pylint: disable=unused-argument
     def cfnresourceproperties(self, validator: Validator, _, instance: Any, schema):
@@ -97,7 +90,7 @@ class Properties(BaseJsonSchema):
                                 regions=[region], path="Properties"
                             )
                         )
-                        for err in self._validate(
+                        for err in self.validate(
                             region_validator, t, properties, schema.json_schema
                         ):
                             err.path.appendleft("Properties")
@@ -114,7 +107,7 @@ class Properties(BaseJsonSchema):
                     regions=cached_regions, path="Properties"
                 )
             )
-            for err in self._validate(
+            for err in self.validate(
                 region_validator, t, properties, schema.json_schema
             ):
                 err.path.appendleft("Properties")

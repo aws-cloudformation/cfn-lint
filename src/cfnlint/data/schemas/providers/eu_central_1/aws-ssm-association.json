@@ -1,0 +1,272 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "InstanceAssociationOutputLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3OutputLocation"
+    }
+   },
+   "type": "object"
+  },
+  "ParameterValues": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "S3BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "relationshipRef": {
+    "propertyPath": "/properties/BucketName",
+    "typeName": "AWS::S3::Bucket"
+   },
+   "type": "string"
+  },
+  "S3KeyPrefix": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "S3OutputLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputS3BucketName": {
+     "$ref": "#/definitions/S3BucketName"
+    },
+    "OutputS3KeyPrefix": {
+     "$ref": "#/definitions/S3KeyPrefix"
+    },
+    "OutputS3Region": {
+     "$ref": "#/definitions/S3Region"
+    }
+   },
+   "type": "object"
+  },
+  "S3Region": {
+   "maxLength": 20,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Target": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]{1,128}$|resource-groups:Name",
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "anyOf": [
+       {
+        "relationshipRef": {
+         "propertyPath": "/properties/Id",
+         "typeName": "AWS::EC2::Instance"
+        }
+       }
+      ],
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Key",
+    "Values"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeInstanceStatus",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "ssm:CreateAssociation",
+    "ssm:DescribeAssociation",
+    "ssm:GetCalendarState"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeleteAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:ListAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:DescribeAssociation",
+    "resource-groups:GetGroupQuery",
+    "resource-groups:ListGroups",
+    "resource-groups:ListGroupResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "ssm:UpdateAssociation",
+    "ssm:GetCalendarState"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "ApplyOnlyAtCronInterval": {
+   "type": "boolean"
+  },
+  "AssociationId": {
+   "examples": [
+    "88df7b09-95e8-48c4-a3cb-08c2c20d5110",
+    "203dd0ec-0055-4bf0-a872-707f72ef06aa"
+   ],
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "AssociationName": {
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "AutomationTargetParameterName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CalendarNames": {
+   "examples": [
+    [
+     "calendar1",
+     "calendar2"
+    ],
+    [
+     "calendar3"
+    ]
+   ],
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ComplianceSeverity": {
+   "enum": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "UNSPECIFIED"
+   ],
+   "type": "string"
+  },
+  "DocumentVersion": {
+   "pattern": "([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)",
+   "type": "string"
+  },
+  "InstanceId": {
+   "examples": [
+    "i-0e60836d21cf313c4",
+    "mi-0532c22e49636ee13"
+   ],
+   "pattern": "(^i-(\\w{8}|\\w{17})$)|(^mi-\\w{17}$)",
+   "type": "string"
+  },
+  "MaxConcurrency": {
+   "examples": [
+    "1%",
+    "10%",
+    "50%",
+    "1"
+   ],
+   "pattern": "^([1-9][0-9]{0,6}|[1-9][0-9]%|[1-9]%|100%)$",
+   "type": "string"
+  },
+  "MaxErrors": {
+   "examples": [
+    "1%",
+    "10%",
+    "50%",
+    "1"
+   ],
+   "pattern": "^([1-9][0-9]{0,6}|[0]|[1-9][0-9]%|[0-9]%|100%)$",
+   "type": "string"
+  },
+  "Name": {
+   "examples": [
+    "AWS-GatherSoftwareInventory",
+    "MyCustomSSMDocument"
+   ],
+   "pattern": "^[a-zA-Z0-9_\\-.:/]{3,200}$",
+   "type": "string"
+  },
+  "OutputLocation": {
+   "$ref": "#/definitions/InstanceAssociationOutputLocation"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,255}": {
+     "$ref": "#/definitions/ParameterValues"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduleExpression": {
+   "examples": [
+    "cron(0 0 */1 * * ? *)",
+    "cron(0 16 ? * TUE *)",
+    "rate(30 minutes)",
+    "rate(7 days)"
+   ],
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ScheduleOffset": {
+   "maximum": 6,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SyncCompliance": {
+   "enum": [
+    "AUTO",
+    "MANUAL"
+   ],
+   "type": "string"
+  },
+  "Targets": {
+   "items": {
+    "$ref": "#/definitions/Target"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "WaitForSuccessTimeoutSeconds": {
+   "maximum": 172800,
+   "minimum": 15,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSM::Association",
+ "writeOnlyProperties": [
+  "/properties/WaitForSuccessTimeoutSeconds"
+ ]
+}

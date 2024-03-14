@@ -5,23 +5,19 @@
  ],
  "definitions": {
   "Arn": {
-   "description": "Subscription ARN",
    "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
    "type": "string"
   },
   "ResourceTag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name for the tag.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:).*$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -62,7 +58,6 @@
    "type": "object"
   }
  },
- "description": "AWS Cost Anomaly Detection leverages advanced Machine Learning technologies to identify anomalous spend and root causes, so you can quickly take action. Create subscription to be notified",
  "handlers": {
   "create": {
    "permissions": [
@@ -96,13 +91,11 @@
  ],
  "properties": {
   "AccountId": {
-   "description": "The accountId",
    "maxLength": 1024,
    "minLength": 0,
    "type": "string"
   },
   "Frequency": {
-   "description": "The frequency at which anomaly reports are sent over email. ",
    "enum": [
     "DAILY",
     "IMMEDIATE",
@@ -111,7 +104,6 @@
    "type": "string"
   },
   "MonitorArnList": {
-   "description": "A list of cost anomaly monitors.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Arn"
@@ -119,7 +111,6 @@
    "type": "array"
   },
   "ResourceTags": {
-   "description": "Tags to assign to subscription.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/ResourceTag"
@@ -129,7 +120,6 @@
    "type": "array"
   },
   "Subscribers": {
-   "description": "A list of subscriber",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Subscriber"
@@ -140,19 +130,16 @@
    "$ref": "#/definitions/Arn"
   },
   "SubscriptionName": {
-   "description": "The name of the subscription.",
    "maxLength": 1024,
    "minLength": 0,
    "pattern": "[\\S\\s]*",
    "type": "string"
   },
   "Threshold": {
-   "description": "The dollar value that triggers a notification if the threshold is exceeded. ",
    "minimum": 0,
    "type": "number"
   },
   "ThresholdExpression": {
-   "description": "An Expression object in JSON String format used to specify the anomalies that you want to generate alerts for.",
    "type": "string"
   }
  },

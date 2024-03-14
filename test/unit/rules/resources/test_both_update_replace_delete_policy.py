@@ -66,33 +66,7 @@ def validator():
                     rule=UpdateReplacePolicyDeletionPolicy(),
                     schema_path=deque(["anyOf"]),
                     validator="anyOf",
-                    context=[
-                        ValidationError(
-                            "'Delete' was expected",
-                            validator="const",
-                            schema_path=deque(
-                                [0, "properties", "DeletionPolicy", "const"]
-                            ),
-                            path=deque(["DeletionPolicy"]),
-                        ),
-                        ValidationError(
-                            "False schema does not allow 'Retain'",
-                            schema_path=deque([1, "properties", "DeletionPolicy"]),
-                            path=deque(["DeletionPolicy"]),
-                            validator=None,
-                        ),
-                        ValidationError(
-                            "'UpdateReplacePolicy' is a required property",
-                            validator="required",
-                            schema_path=deque([2, "required"]),
-                        ),
-                        ValidationError(
-                            "False schema does not allow 'Retain'",
-                            schema_path=deque([3, "properties", "DeletionPolicy"]),
-                            path=deque(["DeletionPolicy"]),
-                            validator=None,
-                        ),
-                    ],
+                    context=[],
                 )
             ],
         ),
@@ -110,33 +84,7 @@ def validator():
                     rule=UpdateReplacePolicyDeletionPolicy(),
                     schema_path=deque(["anyOf"]),
                     validator="anyOf",
-                    context=[
-                        ValidationError(
-                            "False schema does not allow 'Retain'",
-                            schema_path=deque([0, "properties", "UpdateReplacePolicy"]),
-                            path=deque(["UpdateReplacePolicy"]),
-                            validator=None,
-                        ),
-                        ValidationError(
-                            "'Delete' was expected",
-                            validator="const",
-                            schema_path=deque(
-                                [1, "properties", "UpdateReplacePolicy", "const"]
-                            ),
-                            path=deque(["UpdateReplacePolicy"]),
-                        ),
-                        ValidationError(
-                            "'DeletionPolicy' is a required property",
-                            validator="required",
-                            schema_path=deque([2, "required"]),
-                        ),
-                        ValidationError(
-                            "False schema does not allow 'Retain'",
-                            schema_path=deque([3, "properties", "UpdateReplacePolicy"]),
-                            path=deque(["UpdateReplacePolicy"]),
-                            validator=None,
-                        ),
-                    ],
+                    context=[],
                 )
             ],
         ),

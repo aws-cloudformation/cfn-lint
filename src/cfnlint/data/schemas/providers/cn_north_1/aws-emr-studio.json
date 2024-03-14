@@ -14,23 +14,19 @@
    "type": "string"
   },
   "SubnetId": {
-   "description": "Identifier of a subnet",
    "pattern": "^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\\Z",
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "An arbitrary set of tags (key-value pairs) for this EMR Studio.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "pattern": "[a-zA-Z+-=._:/]+$",
@@ -52,7 +48,6 @@
    "uniqueItems": true
   }
  },
- "description": "Resource schema for AWS::EMR::Studio",
  "documentationUrl": "https://docs.aws.amazon.com/emr/latest/APIReference/API_CreateStudio.html",
  "handlers": {
   "create": {
@@ -97,11 +92,9 @@
  ],
  "properties": {
   "Arn": {
-   "$ref": "#/definitions/Arn",
-   "description": "The Amazon Resource Name (ARN) of the EMR Studio."
+   "$ref": "#/definitions/Arn"
   },
   "AuthMode": {
-   "description": "Specifies whether the Studio authenticates users using single sign-on (SSO) or IAM. Amazon EMR Studio currently only supports SSO authentication.",
    "enum": [
     "SSO",
     "IAM"
@@ -109,57 +102,48 @@
    "type": "string"
   },
   "DefaultS3Location": {
-   "description": "The default Amazon S3 location to back up EMR Studio Workspaces and notebook files. A Studio user can select an alternative Amazon S3 location when creating a Workspace.",
    "maxLength": 10280,
    "minLength": 6,
    "pattern": "^s3://.*",
    "type": "string"
   },
   "Description": {
-   "description": "A detailed description of the Studio.",
    "maxLength": 256,
    "minLength": 0,
    "type": "string"
   },
   "EngineSecurityGroupId": {
-   "description": "The ID of the Amazon EMR Studio Engine security group. The Engine security group allows inbound network traffic from the Workspace security group, and it must be in the same VPC specified by VpcId.",
    "maxLength": 256,
    "minLength": 4,
    "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   },
   "IdpAuthUrl": {
-   "description": "Your identity provider's authentication endpoint. Amazon EMR Studio redirects federated users to this endpoint for authentication when logging in to a Studio with the Studio URL.",
    "maxLength": 4096,
    "pattern": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$",
    "type": "string"
   },
   "IdpRelayStateParameterName": {
-   "description": "The name of relay state parameter for external Identity Provider.",
    "maxLength": 256,
    "minLength": 0,
    "type": "string"
   },
   "Name": {
-   "description": "A descriptive name for the Amazon EMR Studio.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9_-]+",
    "type": "string"
   },
   "ServiceRole": {
-   "$ref": "#/definitions/Arn",
-   "description": "The IAM role that will be assumed by the Amazon EMR Studio. The service role provides a way for Amazon EMR Studio to interoperate with other AWS services."
+   "$ref": "#/definitions/Arn"
   },
   "StudioId": {
-   "description": "The ID of the EMR Studio.",
    "maxLength": 256,
    "minLength": 4,
    "pattern": "^es-[0-9A-Z]+",
    "type": "string"
   },
   "SubnetIds": {
-   "description": "A list of up to 5 subnet IDs to associate with the Studio. The subnets must belong to the VPC specified by VpcId. Studio users can create a Workspace in any of the specified subnets.",
    "items": {
     "$ref": "#/definitions/SubnetId"
    },
@@ -167,26 +151,21 @@
    "type": "array"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags",
-   "description": "A list of tags to associate with the Studio. Tags are user-defined key-value pairs that consist of a required key string with a maximum of 128 characters, and an optional value string with a maximum of 256 characters."
+   "$ref": "#/definitions/Tags"
   },
   "Url": {
-   "description": "The unique Studio access URL.",
    "maxLength": 4096,
    "pattern": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$",
    "type": "string"
   },
   "UserRole": {
-   "$ref": "#/definitions/Arn",
-   "description": "The IAM user role that will be assumed by users and groups logged in to a Studio. The permissions attached to this IAM role can be scoped down for each user or group using session policies."
+   "$ref": "#/definitions/Arn"
   },
   "VpcId": {
-   "description": "The ID of the Amazon Virtual Private Cloud (Amazon VPC) to associate with the Studio.",
    "pattern": "^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$",
    "type": "string"
   },
   "WorkspaceSecurityGroupId": {
-   "description": "The ID of the Amazon EMR Studio Workspace security group. The Workspace security group allows outbound network traffic to resources in the Engine security group, and it must be in the same VPC specified by VpcId.",
    "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   }

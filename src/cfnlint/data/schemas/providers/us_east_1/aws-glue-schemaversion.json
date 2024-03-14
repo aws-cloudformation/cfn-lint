@@ -7,21 +7,17 @@
  "definitions": {
   "Schema": {
    "additionalProperties": false,
-   "description": "Identifier for the schema where the schema version will be created.",
    "properties": {
     "RegistryName": {
-     "description": "Name of the registry to identify where the Schema is located.",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
     },
     "SchemaArn": {
-     "description": "Amazon Resource Name for the Schema. This attribute can be used to uniquely represent the Schema.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):glue:.*",
      "type": "string"
     },
     "SchemaName": {
-     "description": "Name of the schema. This parameter requires RegistryName to be provided.",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
@@ -30,7 +26,6 @@
    "type": "object"
   }
  },
- "description": "This resource represents an individual schema version of a schema defined in Glue Schema Registry.",
  "handlers": {
   "create": {
    "permissions": [
@@ -74,13 +69,11 @@
    "$ref": "#/definitions/Schema"
   },
   "SchemaDefinition": {
-   "description": "Complete definition of the schema in plain-text.",
    "maxLength": 170000,
    "minLength": 1,
    "type": "string"
   },
   "VersionId": {
-   "description": "Represents the version ID associated with the schema version.",
    "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
    "type": "string"
   }

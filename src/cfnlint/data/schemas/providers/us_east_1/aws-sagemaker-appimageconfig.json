@@ -7,10 +7,8 @@
  "definitions": {
   "ContainerConfig": {
    "additionalProperties": false,
-   "description": "The container configuration for a SageMaker image.",
    "properties": {
     "ContainerArguments": {
-     "description": "A list of arguments to apply to the container.",
      "items": {
       "$ref": "#/definitions/CustomImageContainerArguments"
      },
@@ -20,7 +18,6 @@
      "uniqueItems": false
     },
     "ContainerEntrypoint": {
-     "description": "The custom entry point to use on container.",
      "items": {
       "$ref": "#/definitions/CustomImageContainerEntrypoint"
      },
@@ -30,7 +27,6 @@
      "uniqueItems": false
     },
     "ContainerEnvironmentVariables": {
-     "description": "A list of variables to apply to the custom container.",
      "items": {
       "$ref": "#/definitions/CustomImageContainerEnvironmentVariable"
      },
@@ -43,14 +39,12 @@
    "type": "object"
   },
   "CustomImageContainerArguments": {
-   "description": "The container image arguments",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^(?!\\s*$).+",
    "type": "string"
   },
   "CustomImageContainerEntrypoint": {
-   "description": "The container entry point",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^(?!\\s*$).+",
@@ -80,22 +74,18 @@
   },
   "FileSystemConfig": {
    "additionalProperties": false,
-   "description": "The Amazon Elastic File System (EFS) storage configuration for a SageMaker image.",
    "properties": {
     "DefaultGid": {
-     "description": "The default POSIX group ID (GID). If not specified, defaults to 100.",
      "maximum": 65535,
      "minimum": 0,
      "type": "integer"
     },
     "DefaultUid": {
-     "description": "The default POSIX user ID (UID). If not specified, defaults to 1000.",
      "maximum": 65535,
      "minimum": 0,
      "type": "integer"
     },
     "MountPath": {
-     "description": "The path within the image to mount the user's EFS home directory. The directory should be empty. If not specified, defaults to /home/sagemaker-user.",
      "maxLength": 1024,
      "minLength": 1,
      "pattern": "^/.*",
@@ -106,25 +96,20 @@
   },
   "JupyterLabAppImageConfig": {
    "additionalProperties": false,
-   "description": "The configuration for the kernels in a SageMaker image running as a JupyterLab app.",
    "properties": {
     "ContainerConfig": {
-     "$ref": "#/definitions/ContainerConfig",
-     "description": "The container configuration for a SageMaker image."
+     "$ref": "#/definitions/ContainerConfig"
     }
    },
    "type": "object"
   },
   "KernelGatewayImageConfig": {
    "additionalProperties": false,
-   "description": "The configuration for the file system and kernels in a SageMaker image running as a KernelGateway app.",
    "properties": {
     "FileSystemConfig": {
-     "$ref": "#/definitions/FileSystemConfig",
-     "description": "The Amazon Elastic File System (EFS) storage configuration for a SageMaker image."
+     "$ref": "#/definitions/FileSystemConfig"
     },
     "KernelSpecs": {
-     "description": "The specification of the Jupyter kernels in the image.",
      "items": {
       "$ref": "#/definitions/KernelSpec"
      },
@@ -142,13 +127,11 @@
    "additionalProperties": false,
    "properties": {
     "DisplayName": {
-     "description": "The display name of the kernel.",
      "maxLength": 1024,
      "minLength": 1,
      "type": "string"
     },
     "Name": {
-     "description": "The name of the kernel.",
      "maxLength": 1024,
      "minLength": 1,
      "type": "string"
@@ -180,7 +163,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::AppImageConfig",
  "handlers": {
   "create": {
    "permissions": [
@@ -216,29 +198,24 @@
  ],
  "properties": {
   "AppImageConfigArn": {
-   "description": "The Amazon Resource Name (ARN) of the AppImageConfig.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:app-image-config/.*",
    "type": "string"
   },
   "AppImageConfigName": {
-   "description": "The Name of the AppImageConfig.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
   "JupyterLabAppImageConfig": {
-   "$ref": "#/definitions/JupyterLabAppImageConfig",
-   "description": "The JupyterLabAppImageConfig."
+   "$ref": "#/definitions/JupyterLabAppImageConfig"
   },
   "KernelGatewayImageConfig": {
-   "$ref": "#/definitions/KernelGatewayImageConfig",
-   "description": "The KernelGatewayImageConfig."
+   "$ref": "#/definitions/KernelGatewayImageConfig"
   },
   "Tags": {
-   "description": "A list of tags to apply to the AppImageConfig.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

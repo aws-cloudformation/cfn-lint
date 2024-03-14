@@ -6,10 +6,8 @@
  "definitions": {
   "Attribute": {
    "additionalProperties": false,
-   "description": "The attributes from the JSON payload that are made available by the input. Inputs are derived from messages sent to the AWS IoT Events system using `BatchPutMessage`. Each such message contains a JSON payload, and those attributes (and their paired values) specified here are available for use in the `condition` expressions used by detectors that monitor this input.",
    "properties": {
     "JsonPath": {
-     "description": "An expression that specifies an attribute-value pair in a JSON structure. Use this to specify an attribute from the JSON payload that is made available by the input. Inputs are derived from messages sent to AWS IoT Events (`BatchPutMessage`). Each such message contains a JSON payload. The attribute (and its paired value) specified here are available for use in the `condition` expressions used by detectors.\n\n_Syntax_: `<field-name>.<field-name>...`",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^((`[a-zA-Z0-9_\\- ]+`)|([a-zA-Z0-9_\\-]+))(\\.((`[a-zA-Z0-9_\\- ]+`)|([a-zA-Z0-9_\\-]+)))*$",
@@ -23,10 +21,8 @@
   },
   "InputDefinition": {
    "additionalProperties": false,
-   "description": "The definition of the input.",
    "properties": {
     "Attributes": {
-     "description": "The attributes from the JSON payload that are made available by the input. Inputs are derived from messages sent to the AWS IoT Events system using `BatchPutMessage`. Each such message contains a JSON payload, and those attributes (and their paired values) specified here are available for use in the `condition` expressions used by detectors that monitor this input.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Attribute"
@@ -44,14 +40,11 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Tags to be applied to Input.",
    "properties": {
     "Key": {
-     "description": "Key of the Tag.",
      "type": "string"
     },
     "Value": {
-     "description": "Value of the Tag.",
      "type": "string"
     }
    },
@@ -62,7 +55,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::IoTEvents::Input resource creates an input. To monitor your devices and processes, they must have a way to get telemetry data into AWS IoT Events. This is done by sending messages as *inputs* to AWS IoT Events. For more information, see [How to Use AWS IoT Events](https://docs.aws.amazon.com/iotevents/latest/developerguide/how-to-use-iotevents.html) in the *AWS IoT Events Developer Guide*.",
  "handlers": {
   "create": {
    "permissions": [
@@ -107,20 +99,17 @@
    "$ref": "#/definitions/InputDefinition"
   },
   "InputDescription": {
-   "description": "A brief description of the input.",
    "maxLength": 1024,
    "minLength": 1,
    "type": "string"
   },
   "InputName": {
-   "description": "The name of the input.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.\n\nFor more information, see [Tag](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

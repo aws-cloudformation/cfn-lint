@@ -6,10 +6,8 @@
  "definitions": {
   "AgentlessDialerConfig": {
    "additionalProperties": false,
-   "description": "Agentless Dialer config",
    "properties": {
     "DialingCapacity": {
-     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
      "maximum": 1,
      "minimum": 0.01,
      "type": "number"
@@ -20,10 +18,8 @@
   },
   "AnswerMachineDetectionConfig": {
    "additionalProperties": false,
-   "description": "The configuration used for answering machine detection during outbound calls",
    "properties": {
     "EnableAnswerMachineDetection": {
-     "description": "Flag to decided whether outbound calls should have answering machine detection enabled or not",
      "type": "boolean"
     }
    },
@@ -34,7 +30,6 @@
   },
   "DialerConfig": {
    "additionalProperties": false,
-   "description": "The possible types of dialer config parameters",
    "oneOf": [
     {
      "required": [
@@ -67,25 +62,21 @@
   },
   "OutboundCallConfig": {
    "additionalProperties": false,
-   "description": "The configuration used for outbound calls.",
    "properties": {
     "AnswerMachineDetectionConfig": {
      "$ref": "#/definitions/AnswerMachineDetectionConfig"
     },
     "ConnectContactFlowArn": {
-     "description": "The identifier of the contact flow for the outbound call.",
      "maxLength": 500,
      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
      "type": "string"
     },
     "ConnectQueueArn": {
-     "description": "The queue for the call. If you specify a queue, the phone displayed for caller ID is the phone number specified in the queue. If you do not specify a queue, the queue defined in the contact flow is used. If you do not specify a queue, you must specify a source phone number.",
      "maxLength": 500,
      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
      "type": "string"
     },
     "ConnectSourcePhoneNumber": {
-     "description": "The phone number associated with the Amazon Connect instance, in E.164 format. If you do not specify a source phone number, you must specify a queue.",
      "maxLength": 100,
      "type": "string"
     }
@@ -97,16 +88,13 @@
   },
   "PredictiveDialerConfig": {
    "additionalProperties": false,
-   "description": "Predictive Dialer config",
    "properties": {
     "BandwidthAllocation": {
-     "description": "The bandwidth allocation of a queue resource.",
      "maximum": 1,
      "minimum": 0,
      "type": "number"
     },
     "DialingCapacity": {
-     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
      "maximum": 1,
      "minimum": 0.01,
      "type": "number"
@@ -119,16 +107,13 @@
   },
   "ProgressiveDialerConfig": {
    "additionalProperties": false,
-   "description": "Progressive Dialer config",
    "properties": {
     "BandwidthAllocation": {
-     "description": "The bandwidth allocation of a queue resource.",
      "maximum": 1,
      "minimum": 0,
      "type": "number"
     },
     "DialingCapacity": {
-     "description": "Allocates dialing capacity for this campaign between multiple active campaigns.",
      "maximum": 1,
      "minimum": 0.01,
      "type": "number"
@@ -141,17 +126,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that's 1 to 256 characters in length.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
@@ -164,7 +146,6 @@
    "type": "object"
   }
  },
- "description": "Definition of AWS::ConnectCampaigns::Campaign Resource Type",
  "handlers": {
   "create": {
    "permissions": [
@@ -207,14 +188,12 @@
  ],
  "properties": {
   "Arn": {
-   "description": "Amazon Connect Campaign Arn",
    "maxLength": 256,
    "minLength": 0,
    "pattern": "^arn:aws[-a-z0-9]*:connect-campaigns:[-a-z0-9]*:[0-9]{12}:campaign/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "ConnectInstanceArn": {
-   "description": "Amazon Connect Instance Arn",
    "maxLength": 256,
    "minLength": 0,
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
@@ -224,7 +203,6 @@
    "$ref": "#/definitions/DialerConfig"
   },
   "Name": {
-   "description": "Amazon Connect Campaign Name",
    "maxLength": 127,
    "minLength": 1,
    "type": "string"
@@ -233,7 +211,6 @@
    "$ref": "#/definitions/OutboundCallConfig"
   },
   "Tags": {
-   "description": "One or more tags.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

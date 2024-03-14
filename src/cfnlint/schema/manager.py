@@ -191,6 +191,23 @@ class ProviderSchemaManager:
             ]
             pool.starmap(self._update_provider_schema, provider_pool_tuple)
 
+    def _remove_descriptions(self, spec: Any) -> Any:
+        if isinstance(spec, dict):
+            r: Dict[Any, Any] = {}
+            for k, v in spec.items():
+                if k != "description":
+                    r[k] = self._remove_descriptions(v)
+
+            return r
+        elif isinstance(spec, list):
+            m: List[Any] = []
+            for v in spec:
+                m.append(self._remove_descriptions(v))
+
+            return m
+        else:
+            return spec
+
     def _update_provider_schema(self, region: str, force: bool = False) -> None:
         """Update the provider schemas from the AWS websites
 
@@ -239,6 +256,7 @@ class ProviderSchemaManager:
                     spec = json.load(fh)
                     all_types.append(spec["typeName"])
                     try:
+                        spec = self._remove_descriptions(spec)
                         spec = self._patch_provider_schema(spec, filename, "all")
                         spec = self._patch_provider_schema(
                             spec, filename, region=reg.py

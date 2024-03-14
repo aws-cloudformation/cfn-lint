@@ -7,7 +7,6 @@
  "definitions": {
   "AclConfiguration": {
    "additionalProperties": false,
-   "description": "Indicates that an Amazon S3 canned ACL should be set to control ownership of stored query results",
    "properties": {
     "S3AclOption": {
      "$ref": "#/definitions/S3AclOption"
@@ -19,18 +18,15 @@
    "type": "object"
   },
   "AdditionalConfiguration": {
-   "description": "Additional Configuration that are passed to Athena Spark Calculations running in this workgroup",
    "type": "string"
   },
   "BytesScannedCutoffPerQuery": {
-   "description": "The upper data usage limit (cutoff) for the amount of bytes a single query in a workgroup is allowed to scan.",
    "format": "int64",
    "minimum": 10000000,
    "type": "integer"
   },
   "CustomerContentEncryptionConfiguration": {
    "additionalProperties": false,
-   "description": "Indicates the KMS key for encrypting notebook content.",
    "properties": {
     "KmsKey": {
      "$ref": "#/definitions/KmsKey"
@@ -42,12 +38,10 @@
    "type": "object"
   },
   "EffectiveEngineVersion": {
-   "description": "Read only. The engine version on which the query runs. If the user requests a valid engine version other than Auto, the effective engine version is the same as the engine version that the user requested. If the user requests Auto, the effective engine version is chosen by Athena. When a request to update the engine version is made by a CreateWorkGroup or UpdateWorkGroup operation, the EffectiveEngineVersion field is ignored.",
    "type": "string"
   },
   "EncryptionConfiguration": {
    "additionalProperties": false,
-   "description": "If query results are encrypted in Amazon S3, indicates the encryption option used (for example, SSE-KMS or CSE-KMS) and key information.",
    "properties": {
     "EncryptionOption": {
      "$ref": "#/definitions/EncryptionOption"
@@ -62,7 +56,6 @@
    "type": "object"
   },
   "EncryptionOption": {
-   "description": "Indicates whether Amazon S3 server-side encryption with Amazon S3-managed keys (SSE-S3), server-side encryption with KMS-managed keys (SSE-KMS), or client-side encryption with KMS-managed keys (CSE-KMS) is used.",
    "enum": [
     "SSE_S3",
     "SSE_KMS",
@@ -71,12 +64,10 @@
    "type": "string"
   },
   "EnforceWorkGroupConfiguration": {
-   "description": "If set to \"true\", the settings for the workgroup override client-side settings. If set to \"false\", client-side settings are used",
    "type": "boolean"
   },
   "EngineVersion": {
    "additionalProperties": false,
-   "description": "The Athena engine version for running queries.",
    "properties": {
     "EffectiveEngineVersion": {
      "$ref": "#/definitions/EffectiveEngineVersion"
@@ -88,30 +79,24 @@
    "type": "object"
   },
   "ExecutionRole": {
-   "description": "Execution Role ARN required to run Athena Spark Calculations",
    "type": "string"
   },
   "ExpectedBucketOwner": {
-   "description": "The AWS account ID of the owner of S3 bucket where query results are stored",
    "type": "string"
   },
   "KmsKey": {
-   "description": "For SSE-KMS and CSE-KMS, this is the KMS key ARN or ID. ",
    "type": "string"
   },
   "OutputLocation": {
-   "description": "The location in Amazon S3 where your query results are stored, such as s3://path/to/query/bucket/. To run the query, you must specify the query results location using one of the ways: either for individual queries using either this setting (client-side), or in the workgroup, using WorkGroupConfiguration",
    "type": "string"
   },
   "PublishCloudWatchMetricsEnabled": {
-   "description": "Indicates that the Amazon CloudWatch metrics are enabled for the workgroup.",
    "type": "boolean"
   },
   "RemoveAclConfiguration": {
    "type": "boolean"
   },
   "RemoveBytesScannedCutoffPerQuery": {
-   "description": "Indicates that the data usage control limit per query is removed.",
    "type": "boolean"
   },
   "RemoveCustomerContentEncryptionConfiguration": {
@@ -127,12 +112,10 @@
    "type": "boolean"
   },
   "RequesterPaysEnabled": {
-   "description": "If set to true, allows members assigned to a workgroup to reference Amazon S3 Requester Pays buckets in queries. If set to false, workgroup members cannot query data from Requester Pays buckets, and queries that retrieve data from Requester Pays buckets cause an error. ",
    "type": "boolean"
   },
   "ResultConfiguration": {
    "additionalProperties": false,
-   "description": "The location in Amazon S3 where query results are stored and the encryption option, if any, used for query results. These are known as \"client-side settings\". If workgroup settings override client-side settings, then the query uses the workgroup settings.\n",
    "properties": {
     "AclConfiguration": {
      "$ref": "#/definitions/AclConfiguration"
@@ -151,7 +134,6 @@
   },
   "ResultConfigurationUpdates": {
    "additionalProperties": false,
-   "description": "The result configuration information about the queries in this workgroup that will be updated. Includes the updated results location and an updated option for encrypting query results. ",
    "properties": {
     "AclConfiguration": {
      "$ref": "#/definitions/AclConfiguration"
@@ -181,14 +163,12 @@
    "type": "object"
   },
   "S3AclOption": {
-   "description": "The Amazon S3 canned ACL that Athena should specify when storing query results. Currently the only supported canned ACL is BUCKET_OWNER_FULL_CONTROL",
    "enum": [
     "BUCKET_OWNER_FULL_CONTROL"
    ],
    "type": "string"
   },
   "SelectedEngineVersion": {
-   "description": "The engine version requested by the user. Possible values are determined by the output of ListEngineVersions, including Auto. The default is Auto.",
    "type": "string"
   },
   "Tag": {
@@ -253,7 +233,6 @@
   },
   "WorkGroupConfigurationUpdates": {
    "additionalProperties": false,
-   "description": "The configuration information that will be updated for this workgroup, which includes the location in Amazon S3 where query results are stored, the encryption option, if any, used for query results, whether the Amazon CloudWatch Metrics are enabled for the workgroup, whether the workgroup settings override the client-side settings, and the data usage limit for the amount of bytes scanned per query, if it is specified. ",
    "properties": {
     "AdditionalConfiguration": {
      "$ref": "#/definitions/AdditionalConfiguration"
@@ -295,7 +274,6 @@
  "deprecatedProperties": [
   "/properties/WorkGroupConfigurationUpdates"
  ],
- "description": "Resource schema for AWS::Athena::WorkGroup",
  "handlers": {
   "create": {
    "permissions": [
@@ -354,26 +332,21 @@
  ],
  "properties": {
   "CreationTime": {
-   "description": "The date and time the workgroup was created.",
    "type": "string"
   },
   "Description": {
-   "description": "The workgroup description.",
    "maxLength": 1024,
    "minLength": 0,
    "type": "string"
   },
   "Name": {
-   "description": "The workGroup name.",
    "pattern": "[a-zA-Z0-9._-]{1,128}",
    "type": "string"
   },
   "RecursiveDeleteOption": {
-   "description": "The option to delete the workgroup and its contents even if the workgroup contains any named queries.",
    "type": "boolean"
   },
   "State": {
-   "description": "The state of the workgroup: ENABLED or DISABLED.",
    "enum": [
     "ENABLED",
     "DISABLED"
@@ -381,16 +354,13 @@
    "type": "string"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags",
-   "description": "One or more tags, separated by commas, that you want to attach to the workgroup as you create it"
+   "$ref": "#/definitions/Tags"
   },
   "WorkGroupConfiguration": {
-   "$ref": "#/definitions/WorkGroupConfiguration",
-   "description": "The workgroup configuration"
+   "$ref": "#/definitions/WorkGroupConfiguration"
   },
   "WorkGroupConfigurationUpdates": {
-   "$ref": "#/definitions/WorkGroupConfigurationUpdates",
-   "description": "The workgroup configuration update object"
+   "$ref": "#/definitions/WorkGroupConfigurationUpdates"
   }
  },
  "readOnlyProperties": [
