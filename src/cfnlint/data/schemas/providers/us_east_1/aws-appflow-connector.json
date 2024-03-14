@@ -6,21 +6,17 @@
  "definitions": {
   "ConnectorProvisioningConfig": {
    "additionalProperties": false,
-   "description": "Contains information about the configuration of the connector being registered.",
    "properties": {
     "Lambda": {
-     "$ref": "#/definitions/LambdaConnectorProvisioningConfig",
-     "description": "Contains information about the configuration of the lambda which is being registered as the connector."
+     "$ref": "#/definitions/LambdaConnectorProvisioningConfig"
     }
    },
    "type": "object"
   },
   "LambdaConnectorProvisioningConfig": {
    "additionalProperties": false,
-   "description": "Contains information about the configuration of the lambda which is being registered as the connector.",
    "properties": {
     "LambdaArn": {
-     "description": "Lambda ARN of the connector being registered.",
      "maxLength": 512,
      "pattern": "arn:*:.*:.*:[0-9]+:.*",
      "type": "string"
@@ -32,7 +28,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::AppFlow::Connector",
  "handlers": {
   "create": {
    "permissions": [
@@ -67,30 +62,25 @@
  ],
  "properties": {
   "ConnectorArn": {
-   "description": " The arn of the connector. The arn is unique for each ConnectorRegistration in your AWS account.",
    "maxLength": 512,
    "pattern": "arn:*:appflow:.*:[0-9]+:.*",
    "type": "string"
   },
   "ConnectorLabel": {
-   "description": " The name of the connector. The name is unique for each ConnectorRegistration in your AWS account.",
    "maxLength": 512,
    "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
    "type": "string"
   },
   "ConnectorProvisioningConfig": {
-   "$ref": "#/definitions/ConnectorProvisioningConfig",
-   "description": "Contains information about the configuration of the connector being registered."
+   "$ref": "#/definitions/ConnectorProvisioningConfig"
   },
   "ConnectorProvisioningType": {
-   "description": "The provisioning type of the connector. Currently the only supported value is LAMBDA. ",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
    "type": "string"
   },
   "Description": {
-   "description": "A description about the connector that's being registered.",
    "maxLength": 2048,
    "pattern": "[\\s\\w/!@#+=.-]*",
    "type": "string"

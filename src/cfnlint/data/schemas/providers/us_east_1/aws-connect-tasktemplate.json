@@ -2,13 +2,11 @@
  "additionalProperties": false,
  "definitions": {
   "ClientToken": {
-   "description": "the client token string in uuid format",
    "pattern": "^$|[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$",
    "type": "string"
   },
   "DefaultFieldValue": {
    "additionalProperties": false,
-   "description": "the default value for the task template's field",
    "properties": {
     "DefaultValue": {
      "$ref": "#/definitions/FieldValue"
@@ -25,10 +23,8 @@
   },
   "Field": {
    "additionalProperties": false,
-   "description": "A task template field object.",
    "properties": {
     "Description": {
-     "description": "The description of the task template's field",
      "maxLength": 255,
      "minLength": 0,
      "type": "string"
@@ -37,7 +33,6 @@
      "$ref": "#/definitions/FieldIdentifier"
     },
     "SingleSelectOptions": {
-     "description": "list of field options to be used with single select",
      "items": {
       "$ref": "#/definitions/FieldOption"
      },
@@ -56,10 +51,8 @@
   },
   "FieldIdentifier": {
    "additionalProperties": false,
-   "description": "the identifier (name) for the task template field",
    "properties": {
     "Name": {
-     "description": "The name of the task template field",
      "maxLength": 100,
      "minLength": 1,
      "type": "string"
@@ -71,14 +64,12 @@
    "type": "object"
   },
   "FieldOption": {
-   "description": "Single select field identifier",
    "maxLength": 100,
    "minLength": 1,
    "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9_.,\\s-]*[A-Za-z0-9_.,-])?$",
    "type": "string"
   },
   "FieldType": {
-   "description": "The type of the task template's field",
    "enum": [
     "NAME",
     "DESCRIPTION",
@@ -96,14 +87,12 @@
    "type": "string"
   },
   "FieldValue": {
-   "description": "the default value for the task template's field",
    "maxLength": 4096,
    "minLength": 1,
    "type": "string"
   },
   "InvisibleFieldInfo": {
    "additionalProperties": false,
-   "description": "Invisible field info",
    "properties": {
     "Id": {
      "$ref": "#/definitions/FieldIdentifier"
@@ -115,7 +104,6 @@
    "type": "object"
   },
   "InvisibleTaskTemplateFields": {
-   "description": "The list of the task template's invisible fields",
    "items": {
     "$ref": "#/definitions/InvisibleFieldInfo"
    },
@@ -124,7 +112,6 @@
   },
   "ReadOnlyFieldInfo": {
    "additionalProperties": false,
-   "description": "ReadOnly field info",
    "properties": {
     "Id": {
      "$ref": "#/definitions/FieldIdentifier"
@@ -136,7 +123,6 @@
    "type": "object"
   },
   "ReadOnlyTaskTemplateFields": {
-   "description": "The list of the task template's read only fields",
    "items": {
     "$ref": "#/definitions/ReadOnlyFieldInfo"
    },
@@ -145,7 +131,6 @@
   },
   "RequiredFieldInfo": {
    "additionalProperties": false,
-   "description": "Required field info",
    "properties": {
     "Id": {
      "$ref": "#/definitions/FieldIdentifier"
@@ -157,7 +142,6 @@
    "type": "object"
   },
   "RequiredTaskTemplateFields": {
-   "description": "The list of the task template's required fields",
    "items": {
     "$ref": "#/definitions/RequiredFieldInfo"
    },
@@ -165,7 +149,6 @@
    "type": "array"
   },
   "Status": {
-   "description": "The status of the task template",
    "enum": [
     "ACTIVE",
     "INACTIVE"
@@ -174,17 +157,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. . You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "type": "string"
     }
@@ -196,7 +176,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Connect::TaskTemplate.",
  "handlers": {
   "create": {
    "permissions": [
@@ -244,7 +223,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The identifier (arn) of the task template.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/task-template/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
    "type": "string"
   },
@@ -253,7 +231,6 @@
   },
   "Constraints": {
    "additionalProperties": false,
-   "description": "The constraints for the task template",
    "properties": {
     "InvisibleFields": {
      "$ref": "#/definitions/InvisibleTaskTemplateFields"
@@ -268,12 +245,10 @@
    "type": "object"
   },
   "ContactFlowArn": {
-   "description": "The identifier of the contact flow.",
    "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Defaults": {
-   "description": "",
    "items": {
     "$ref": "#/definitions/DefaultFieldValue"
    },
@@ -281,13 +256,11 @@
    "type": "array"
   },
   "Description": {
-   "description": "The description of the task template.",
    "maxLength": 255,
    "minLength": 0,
    "type": "string"
   },
   "Fields": {
-   "description": "The list of task template's fields",
    "items": {
     "$ref": "#/definitions/Field"
    },
@@ -295,12 +268,10 @@
    "type": "array"
   },
   "InstanceArn": {
-   "description": "The identifier (arn) of the instance.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the task template.",
    "maxLength": 100,
    "minLength": 1,
    "type": "string"
@@ -309,7 +280,6 @@
    "$ref": "#/definitions/Status"
   },
   "Tags": {
-   "description": "One or more tags.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

@@ -2,18 +2,15 @@
  "additionalProperties": false,
  "definitions": {
   "Arn": {
-   "description": "The ARN of the ReplicationSet.",
    "maxLength": 1000,
    "pattern": "^arn:aws(-(cn|us-gov|iso(-b)?))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
    "type": "string"
   },
   "DeletionProtected": {
-   "description": "Configures the ReplicationSet deletion protection.",
    "type": "boolean"
   },
   "RegionConfiguration": {
    "additionalProperties": false,
-   "description": "The ReplicationSet regional configuration.",
    "properties": {
     "SseKmsKeyId": {
      "$ref": "#/definitions/Arn"
@@ -35,13 +32,11 @@
    "uniqueItems": true
   },
   "RegionName": {
-   "description": "The AWS region name.",
    "maxLength": 20,
    "type": "string"
   },
   "ReplicationRegion": {
    "additionalProperties": false,
-   "description": "The ReplicationSet regional configuration.",
    "properties": {
     "RegionConfiguration": {
      "$ref": "#/definitions/RegionConfiguration"
@@ -54,7 +49,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to tag a resource.",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -75,7 +69,6 @@
    "type": "object"
   }
  },
- "description": "Resource type definition for AWS::SSMIncidents::ReplicationSet",
  "handlers": {
   "create": {
    "permissions": [
@@ -123,20 +116,17 @@
  "properties": {
   "Arn": {
    "$ref": "#/definitions/Arn",
-   "additionalProperties": false,
-   "description": "The ARN of the ReplicationSet."
+   "additionalProperties": false
   },
   "DeletionProtected": {
    "$ref": "#/definitions/DeletionProtected",
    "default": false
   },
   "Regions": {
-   "$ref": "#/definitions/RegionList",
-   "description": "The ReplicationSet configuration."
+   "$ref": "#/definitions/RegionList"
   },
   "Tags": {
    "default": [],
-   "description": "The tags to apply to the replication set.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

@@ -9,14 +9,11 @@
  "definitions": {
   "DatasetImportJob": {
    "additionalProperties": false,
-   "description": "Initial DatasetImportJob for the created dataset",
    "properties": {
     "DataSource": {
      "additionalProperties": false,
-     "description": "The Amazon S3 bucket that contains the training data to import.",
      "properties": {
       "DataLocation": {
-       "description": "The path to the Amazon S3 bucket where the data that you want to upload to your dataset is stored.",
        "maxLength": 256,
        "pattern": "(s3|http|https)://.+",
        "type": "string"
@@ -25,26 +22,22 @@
      "type": "object"
     },
     "DatasetArn": {
-     "description": "The ARN of the dataset that receives the imported data",
      "maxLength": 256,
      "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
      "type": "string"
     },
     "DatasetImportJobArn": {
-     "description": "The ARN of the dataset import job",
      "maxLength": 256,
      "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
      "type": "string"
     },
     "JobName": {
-     "description": "The name for the dataset import job.",
      "maxLength": 63,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
      "type": "string"
     },
     "RoleArn": {
-     "description": "The ARN of the IAM role that has permissions to read from the Amazon S3 data source.",
      "maxLength": 256,
      "pattern": "arn:([a-z\\d-]+):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
      "type": "string"
@@ -53,7 +46,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::Personalize::Dataset.",
  "handlers": {
   "create": {
    "permissions": [
@@ -96,13 +88,11 @@
  ],
  "properties": {
   "DatasetArn": {
-   "description": "The ARN of the dataset",
    "maxLength": 256,
    "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
    "type": "string"
   },
   "DatasetGroupArn": {
-   "description": "The Amazon Resource Name (ARN) of the dataset group to add the dataset to",
    "maxLength": 256,
    "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
    "type": "string"
@@ -111,7 +101,6 @@
    "$ref": "#/definitions/DatasetImportJob"
   },
   "DatasetType": {
-   "description": "The type of dataset",
    "enum": [
     "Interactions",
     "Items",
@@ -121,14 +110,12 @@
    "type": "string"
   },
   "Name": {
-   "description": "The name for the dataset",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
    "type": "string"
   },
   "SchemaArn": {
-   "description": "The ARN of the schema to associate with the dataset. The schema defines the dataset fields.",
    "maxLength": 256,
    "pattern": "arn:([a-z\\d-]+):personalize:.*:.*:.+",
    "type": "string"

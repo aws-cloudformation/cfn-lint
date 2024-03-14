@@ -10,7 +10,6 @@
    "additionalProperties": false,
    "properties": {
     "Source": {
-     "description": "The source of the events.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^aws\\.partner\\/.*$",
@@ -26,14 +25,12 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
-     "description": "A key to identify the metadata.",
      "maxLength": 255,
      "minLength": 1,
      "pattern": ".*\\S.*",
      "type": "string"
     },
     "Value": {
-     "description": "Corresponding metadata value for the key.",
      "maxLength": 255,
      "minLength": 1,
      "pattern": ".*\\S.*",
@@ -50,14 +47,12 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
-     "description": "A key to identify the tag.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "Corresponding tag value for the key.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -70,7 +65,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::AppIntegrations::EventIntegration",
  "handlers": {
   "create": {
    "permissions": [
@@ -108,38 +102,32 @@
  ],
  "properties": {
   "Description": {
-   "description": "The event integration description.",
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
   },
   "EventBridgeBus": {
-   "description": "The Amazon Eventbridge bus for the event integration.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
    "type": "string"
   },
   "EventFilter": {
-   "$ref": "#/definitions/EventFilter",
-   "description": "The EventFilter (source) associated with the event integration."
+   "$ref": "#/definitions/EventFilter"
   },
   "EventIntegrationArn": {
-   "description": "The Amazon Resource Name (ARN) of the event integration.",
    "maxLength": 2048,
    "minLength": 1,
    "pattern": "^arn:aws[-a-z]*:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the event integration.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
    "type": "string"
   },
   "Tags": {
-   "description": "The tags (keys and values) associated with the event integration.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

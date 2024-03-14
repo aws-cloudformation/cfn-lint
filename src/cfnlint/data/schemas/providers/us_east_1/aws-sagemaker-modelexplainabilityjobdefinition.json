@@ -16,10 +16,8 @@
  "definitions": {
   "BatchTransformInput": {
    "additionalProperties": false,
-   "description": "The batch transform input for a monitoring job.",
    "properties": {
     "DataCapturedDestinationS3Uri": {
-     "description": "A URI that identifies the Amazon S3 storage location where Batch Transform Job captures data.",
      "maxLength": 512,
      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
@@ -28,28 +26,23 @@
      "$ref": "#/definitions/DatasetFormat"
     },
     "FeaturesAttribute": {
-     "description": "JSONpath to locate features in JSONlines dataset",
      "maxLength": 256,
      "type": "string"
     },
     "InferenceAttribute": {
-     "description": "Index or JSONpath to locate predicted label(s)",
      "maxLength": 256,
      "type": "string"
     },
     "LocalPath": {
-     "description": "Path to the filesystem where the endpoint data is available to the container.",
      "maxLength": 256,
      "pattern": ".*",
      "type": "string"
     },
     "ProbabilityAttribute": {
-     "description": "Index or JSONpath to locate probabilities",
      "maxLength": 256,
      "type": "string"
     },
     "S3DataDistributionType": {
-     "description": "Whether input data distributed in Amazon S3 is fully replicated or sharded by an S3 key. Defauts to FullyReplicated",
      "enum": [
       "FullyReplicated",
       "ShardedByS3Key"
@@ -57,7 +50,6 @@
      "type": "string"
     },
     "S3InputMode": {
-     "description": "Whether the Pipe or File is used as the input mode for transfering data for the monitoring job. Pipe mode is recommended for large datasets. File mode is useful for small files that fit in memory. Defaults to File.",
      "enum": [
       "Pipe",
       "File"
@@ -74,26 +66,21 @@
   },
   "ClusterConfig": {
    "additionalProperties": false,
-   "description": "Configuration for the cluster used to run model monitoring jobs.",
    "properties": {
     "InstanceCount": {
-     "description": "The number of ML compute instances to use in the model monitoring job. For distributed processing jobs, specify a value greater than 1. The default value is 1.",
      "maximum": 100,
      "minimum": 1,
      "type": "integer"
     },
     "InstanceType": {
-     "description": "The ML compute instance type for the processing job.",
      "type": "string"
     },
     "VolumeKmsKeyId": {
-     "description": "The AWS Key Management Service (AWS KMS) key that Amazon SageMaker uses to encrypt data on the storage volume attached to the ML compute instance(s) that run the model monitoring job.",
      "maximum": 2048,
      "minimum": 1,
      "type": "string"
     },
     "VolumeSizeInGB": {
-     "description": "The size of the ML storage volume, in gigabytes, that you want to provision. You must specify sufficient ML storage for your scenario.",
      "maximum": 16384,
      "minimum": 1,
      "type": "integer"
@@ -108,27 +95,22 @@
   },
   "ConstraintsResource": {
    "additionalProperties": false,
-   "description": "The baseline constraints resource for a monitoring job.",
    "properties": {
     "S3Uri": {
-     "$ref": "#/definitions/S3Uri",
-     "description": "The Amazon S3 URI for baseline constraint file in Amazon S3 that the current monitoring job should validated against."
+     "$ref": "#/definitions/S3Uri"
     }
    },
    "type": "object"
   },
   "Csv": {
-   "description": "The CSV format",
    "properties": {
     "Header": {
-     "description": "A boolean flag indicating if given CSV has header",
      "type": "boolean"
     }
    },
    "type": "object"
   },
   "DatasetFormat": {
-   "description": "The dataset format of the data to monitor",
    "properties": {
     "Csv": {
      "$ref": "#/definitions/Csv"
@@ -144,34 +126,28 @@
   },
   "EndpointInput": {
    "additionalProperties": false,
-   "description": "The endpoint for a monitoring job.",
    "properties": {
     "EndpointName": {
      "$ref": "#/definitions/EndpointName"
     },
     "FeaturesAttribute": {
-     "description": "JSONpath to locate features in JSONlines dataset",
      "maxLength": 256,
      "type": "string"
     },
     "InferenceAttribute": {
-     "description": "Index or JSONpath to locate predicted label(s)",
      "maxLength": 256,
      "type": "string"
     },
     "LocalPath": {
-     "description": "Path to the filesystem where the endpoint data is available to the container.",
      "maxLength": 256,
      "pattern": ".*",
      "type": "string"
     },
     "ProbabilityAttribute": {
-     "description": "Index or JSONpath to locate probabilities",
      "maxLength": 256,
      "type": "string"
     },
     "S3DataDistributionType": {
-     "description": "Whether input data distributed in Amazon S3 is fully replicated or sharded by an S3 key. Defauts to FullyReplicated",
      "enum": [
       "FullyReplicated",
       "ShardedByS3Key"
@@ -179,7 +155,6 @@
      "type": "string"
     },
     "S3InputMode": {
-     "description": "Whether the Pipe or File is used as the input mode for transfering data for the monitoring job. Pipe mode is recommended for large datasets. File mode is useful for small files that fit in memory. Defaults to File.",
      "enum": [
       "Pipe",
       "File"
@@ -194,22 +169,18 @@
    "type": "object"
   },
   "EndpointName": {
-   "description": "The name of the endpoint used to run the monitoring job.",
    "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
    "type": "string"
   },
   "JobDefinitionName": {
-   "description": "The name of the job definition.",
    "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "Json": {
-   "description": "The Json format",
    "properties": {
     "Line": {
-     "description": "A boolean flag indicating if it is JSON line format",
      "type": "boolean"
     }
    },
@@ -217,15 +188,12 @@
   },
   "ModelExplainabilityAppSpecification": {
    "additionalProperties": false,
-   "description": "Container image configuration object for the monitoring job.",
    "properties": {
     "ConfigUri": {
-     "$ref": "#/definitions/S3Uri",
-     "description": "The S3 URI to an analysis configuration file"
+     "$ref": "#/definitions/S3Uri"
     },
     "Environment": {
      "additionalProperties": false,
-     "description": "Sets the environment variables in the Docker container",
      "patternProperties": {
       "[\\S\\s]*": {
        "maxLength": 256,
@@ -240,7 +208,6 @@
      "type": "object"
     },
     "ImageUri": {
-     "description": "The container image to be run by the monitoring job.",
      "maxLength": 255,
      "pattern": ".*",
      "type": "string"
@@ -254,7 +221,6 @@
   },
   "ModelExplainabilityBaselineConfig": {
    "additionalProperties": false,
-   "description": "Baseline configuration used to validate that the data conforms to the specified constraints and statistics.",
    "properties": {
     "BaseliningJobName": {
      "$ref": "#/definitions/ProcessingJobName"
@@ -267,7 +233,6 @@
   },
   "ModelExplainabilityJobInput": {
    "additionalProperties": false,
-   "description": "The inputs for a monitoring job.",
    "properties": {
     "BatchTransformInput": {
      "$ref": "#/definitions/BatchTransformInput"
@@ -280,7 +245,6 @@
   },
   "MonitoringOutput": {
    "additionalProperties": false,
-   "description": "The output object for a monitoring job.",
    "properties": {
     "S3Output": {
      "$ref": "#/definitions/S3Output"
@@ -293,16 +257,13 @@
   },
   "MonitoringOutputConfig": {
    "additionalProperties": false,
-   "description": "The output configuration for monitoring jobs.",
    "properties": {
     "KmsKeyId": {
-     "description": "The AWS Key Management Service (AWS KMS) key that Amazon SageMaker uses to encrypt the model artifacts at rest using Amazon S3 server-side encryption.",
      "maxLength": 2048,
      "pattern": ".*",
      "type": "string"
     },
     "MonitoringOutputs": {
-     "description": "Monitoring outputs for monitoring jobs. This is where the output of the periodic monitoring jobs is uploaded.",
      "items": {
       "$ref": "#/definitions/MonitoringOutput"
      },
@@ -318,7 +279,6 @@
   },
   "MonitoringResources": {
    "additionalProperties": false,
-   "description": "Identifies the resources to deploy for a monitoring job.",
    "properties": {
     "ClusterConfig": {
      "$ref": "#/definitions/ClusterConfig"
@@ -330,7 +290,6 @@
    "type": "object"
   },
   "MonitoringTimeOffsetString": {
-   "description": "The time offsets in ISO duration format",
    "maxLength": 15,
    "minLength": 1,
    "pattern": "^.?P.*",
@@ -338,14 +297,11 @@
   },
   "NetworkConfig": {
    "additionalProperties": false,
-   "description": "Networking options for a job, such as network traffic encryption between containers, whether to allow inbound and outbound network calls to and from containers, and the VPC subnets and security groups to use for VPC-enabled jobs.",
    "properties": {
     "EnableInterContainerTrafficEncryption": {
-     "description": "Whether to encrypt all communications between distributed processing jobs. Choose True to encrypt communications. Encryption provides greater security for distributed processing jobs, but the processing might take longer.",
      "type": "boolean"
     },
     "EnableNetworkIsolation": {
-     "description": "Whether to allow inbound and outbound network calls to and from the containers used for the processing job.",
      "type": "boolean"
     },
     "VpcConfig": {
@@ -355,11 +311,9 @@
    "type": "object"
   },
   "Parquet": {
-   "description": "A flag indicating if the dataset format is Parquet",
    "type": "boolean"
   },
   "ProcessingJobName": {
-   "description": "The name of a processing job",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
@@ -367,16 +321,13 @@
   },
   "S3Output": {
    "additionalProperties": false,
-   "description": "Information about where and how to store the results of a monitoring job.",
    "properties": {
     "LocalPath": {
-     "description": "The local path to the Amazon S3 storage location where Amazon SageMaker saves the results of a monitoring job. LocalPath is an absolute path for the output data.",
      "maxLength": 256,
      "pattern": ".*",
      "type": "string"
     },
     "S3UploadMode": {
-     "description": "Whether to upload the results of the monitoring job continuously or after the job completes.",
      "enum": [
       "Continuous",
       "EndOfJob"
@@ -384,7 +335,6 @@
      "type": "string"
     },
     "S3Uri": {
-     "description": "A URI that identifies the Amazon S3 storage location where Amazon SageMaker saves the results of a monitoring job.",
      "maxLength": 512,
      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
@@ -397,17 +347,14 @@
    "type": "object"
   },
   "S3Uri": {
-   "description": "The Amazon S3 URI.",
    "maxLength": 1024,
    "pattern": "^(https|s3)://([^/]+)/?(.*)$",
    "type": "string"
   },
   "StoppingCondition": {
    "additionalProperties": false,
-   "description": "Specifies a time limit for how long the monitoring job is allowed to run.",
    "properties": {
     "MaxRuntimeInSeconds": {
-     "description": "The maximum runtime allowed in seconds.",
      "maximum": 86400,
      "minimum": 1,
      "type": "integer"
@@ -420,17 +367,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
@@ -444,10 +388,8 @@
   },
   "VpcConfig": {
    "additionalProperties": false,
-   "description": "Specifies a VPC that your training jobs and hosted models have access to. Control access to and from your training and model containers by configuring the VPC.",
    "properties": {
     "SecurityGroupIds": {
-     "description": "The VPC security group IDs, in the form sg-xxxxxxxx. Specify the security groups for the VPC that is specified in the Subnets field.",
      "items": {
       "maxLength": 32,
       "pattern": "[-0-9a-zA-Z]+",
@@ -458,7 +400,6 @@
      "type": "array"
     },
     "Subnets": {
-     "description": "The ID of the subnets in the VPC to which you want to connect to your monitoring jobs.",
      "items": {
       "maxLength": 32,
       "pattern": "[-0-9a-zA-Z]+",
@@ -476,7 +417,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::ModelExplainabilityJobDefinition",
  "handlers": {
   "create": {
    "permissions": [
@@ -508,14 +448,12 @@
  ],
  "properties": {
   "CreationTime": {
-   "description": "The time at which the job definition was created.",
    "type": "string"
   },
   "EndpointName": {
    "$ref": "#/definitions/EndpointName"
   },
   "JobDefinitionArn": {
-   "description": "The Amazon Resource Name (ARN) of job definition.",
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
@@ -542,7 +480,6 @@
    "$ref": "#/definitions/NetworkConfig"
   },
   "RoleArn": {
-   "description": "The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume to perform tasks on your behalf.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
@@ -552,7 +489,6 @@
    "$ref": "#/definitions/StoppingCondition"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

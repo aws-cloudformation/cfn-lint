@@ -10,10 +10,8 @@
  "definitions": {
   "ProvisionedConcurrencyConfiguration": {
    "additionalProperties": false,
-   "description": "A provisioned concurrency configuration for a function's version.",
    "properties": {
     "ProvisionedConcurrentExecutions": {
-     "description": "The amount of provisioned concurrency to allocate for the version.",
      "type": "integer"
     }
    },
@@ -24,17 +22,14 @@
   },
   "RuntimePolicy": {
    "additionalProperties": false,
-   "description": "Runtime Management Config of a function.",
    "properties": {
     "RuntimeVersionArn": {
-     "description": "The ARN of the runtime the function is configured to use. If the runtime update mode is manual, the ARN is returned, otherwise null is returned.",
      "maxLength": 2048,
      "minLength": 26,
      "pattern": "^arn:(aws[a-zA-Z-]*):lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}::runtime:.+$",
      "type": "string"
     },
     "UpdateRuntimeOn": {
-     "description": "The runtime update mode.",
      "type": "string"
     }
    },
@@ -44,7 +39,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Lambda::Version",
  "handlers": {
   "create": {
    "permissions": [
@@ -67,7 +61,6 @@
    "handlerSchema": {
     "properties": {
      "FunctionName": {
-      "description": "The name of the Lambda function, version, or alias.",
       "maxLength": 140,
       "minLength": 1,
       "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
@@ -98,36 +91,29 @@
  ],
  "properties": {
   "CodeSha256": {
-   "description": "Only publish a version if the hash value matches the value that's specified. Use this option to avoid publishing a version if the function code has changed since you last updated it. Updates are not supported for this property.",
    "type": "string"
   },
   "Description": {
-   "description": "A description for the version to override the description in the function configuration. Updates are not supported for this property.",
    "maxLength": 256,
    "minLength": 0,
    "type": "string"
   },
   "FunctionArn": {
-   "description": "The ARN of the version.",
    "type": "string"
   },
   "FunctionName": {
-   "description": "The name of the Lambda function.",
    "maxLength": 140,
    "minLength": 1,
    "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
    "type": "string"
   },
   "ProvisionedConcurrencyConfig": {
-   "$ref": "#/definitions/ProvisionedConcurrencyConfiguration",
-   "description": "Specifies a provisioned concurrency configuration for a function's version. Updates are not supported for this property."
+   "$ref": "#/definitions/ProvisionedConcurrencyConfiguration"
   },
   "RuntimePolicy": {
-   "$ref": "#/definitions/RuntimePolicy",
-   "description": "Specifies the runtime management configuration of a function. Displays runtimeVersionArn only for Manual."
+   "$ref": "#/definitions/RuntimePolicy"
   },
   "Version": {
-   "description": "The version number.",
    "type": "string"
   }
  },

@@ -7,7 +7,6 @@
  "definitions": {
   "PartitionKey": {
    "additionalProperties": false,
-   "description": "An attribute used in partitioning data in a table. There are two types of partition keys: dimension keys and measure keys. A dimension key partitions data on a dimension name, while a measure key partitions data on the measure name.",
    "properties": {
     "EnforcementInRecord": {
      "$ref": "#/definitions/PartitionKeyEnforcementLevel"
@@ -25,7 +24,6 @@
    "type": "object"
   },
   "PartitionKeyEnforcementLevel": {
-   "description": "The level of enforcement for the specification of a dimension key in ingested records. Options are REQUIRED (dimension key must be specified) and OPTIONAL (dimension key does not have to be specified).",
    "enum": [
     "REQUIRED",
     "OPTIONAL"
@@ -33,7 +31,6 @@
    "type": "string"
   },
   "PartitionKeyList": {
-   "description": "A list of partition keys defining the attributes used to partition the table data. The order of the list determines the partition hierarchy. The name and type of each partition key as well as the partition key order cannot be changed after the table is created. However, the enforcement level of each partition key can be changed.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/PartitionKey"
@@ -42,7 +39,6 @@
    "type": "array"
   },
   "PartitionKeyType": {
-   "description": "The type of the partition key. Options are DIMENSION (dimension key) and MEASURE (measure key).",
    "enum": [
     "DIMENSION",
     "MEASURE"
@@ -50,14 +46,12 @@
    "type": "string"
   },
   "SchemaName": {
-   "description": "The name of the attribute used for a dimension key.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "You can use the Resource Tags property to apply tags to resources, which can help you identify and categorize those resources.",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -73,7 +67,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::Timestream::Table resource creates a Timestream Table.",
  "handlers": {
   "create": {
    "permissions": [
@@ -132,40 +125,31 @@
    "type": "string"
   },
   "DatabaseName": {
-   "description": "The name for the database which the table to be created belongs to.",
    "pattern": "^[a-zA-Z0-9_.-]{3,256}$",
    "type": "string"
   },
   "MagneticStoreWriteProperties": {
    "additionalProperties": false,
-   "description": "The properties that determine whether magnetic store writes are enabled.",
    "properties": {
     "EnableMagneticStoreWrites": {
-     "description": "Boolean flag indicating whether magnetic store writes are enabled.",
      "type": "boolean"
     },
     "MagneticStoreRejectedDataLocation": {
      "additionalProperties": false,
-     "description": "Location to store information about records that were asynchronously rejected during magnetic store writes.",
      "properties": {
       "S3Configuration": {
        "additionalProperties": false,
-       "description": "S3 configuration for location to store rejections from magnetic store writes",
        "properties": {
         "BucketName": {
-         "description": "The bucket name used to store the data.",
          "type": "string"
         },
         "EncryptionOption": {
-         "description": "Either SSE_KMS or SSE_S3.",
          "type": "string"
         },
         "KmsKeyId": {
-         "description": "Must be provided if SSE_KMS is specified as the encryption option",
          "type": "string"
         },
         "ObjectKeyPrefix": {
-         "description": "String used to prefix all data in the bucket.",
          "type": "string"
         }
        },
@@ -185,19 +169,15 @@
    "type": "object"
   },
   "Name": {
-   "description": "The table name exposed as a read-only attribute.",
    "type": "string"
   },
   "RetentionProperties": {
    "additionalProperties": false,
-   "description": "The retention duration of the memory store and the magnetic store.",
    "properties": {
     "MagneticStoreRetentionPeriodInDays": {
-     "description": "The duration for which data must be stored in the magnetic store.",
      "type": "string"
     },
     "MemoryStoreRetentionPeriodInHours": {
-     "description": "The duration for which data must be stored in the memory store.",
      "type": "string"
     }
    },
@@ -205,7 +185,6 @@
   },
   "Schema": {
    "additionalProperties": false,
-   "description": "A Schema specifies the expected data model of the table.",
    "properties": {
     "CompositePartitionKey": {
      "$ref": "#/definitions/PartitionKeyList"
@@ -214,12 +193,10 @@
    "type": "object"
   },
   "TableName": {
-   "description": "The name for the table. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the table name.",
    "pattern": "^[a-zA-Z0-9_.-]{3,256}$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
