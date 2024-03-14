@@ -10,7 +10,6 @@
  "definitions": {
   "AutoScalingSetting": {
    "additionalProperties": false,
-   "description": "Represents configuration for auto scaling.",
    "properties": {
     "AutoScalingDisabled": {
      "default": false,
@@ -32,7 +31,6 @@
   },
   "AutoScalingSpecification": {
    "additionalProperties": false,
-   "description": "Represents the read and write settings used for AutoScaling.",
    "properties": {
     "ReadCapacityAutoScaling": {
      "$ref": "#/definitions/AutoScalingSetting"
@@ -97,7 +95,6 @@
   },
   "EncryptionSpecification": {
    "additionalProperties": false,
-   "description": "Represents the settings used to enable server-side encryption",
    "properties": {
     "EncryptionType": {
      "$ref": "#/definitions/EncryptionType"
@@ -113,7 +110,6 @@
   },
   "EncryptionType": {
    "default": "AWS_OWNED_KMS_KEY",
-   "description": "Server-side encryption type",
    "enum": [
     "AWS_OWNED_KMS_KEY",
     "CUSTOMER_MANAGED_KMS_KEY"
@@ -121,12 +117,10 @@
    "type": "string"
   },
   "KmsKeyIdentifier": {
-   "description": "The AWS KMS customer master key (CMK) that should be used for the AWS KMS encryption. To specify a CMK, use its key ID, Amazon Resource Name (ARN), alias name, or alias ARN. ",
    "type": "string"
   },
   "Mode": {
    "default": "ON_DEMAND",
-   "description": "Capacity mode for the specified table",
    "enum": [
     "PROVISIONED",
     "ON_DEMAND"
@@ -135,7 +129,6 @@
   },
   "ProvisionedThroughput": {
    "additionalProperties": false,
-   "description": "Throughput for the specified table, which consists of values for ReadCapacityUnits and WriteCapacityUnits",
    "properties": {
     "ReadCapacityUnits": {
      "minimum": 1,
@@ -154,7 +147,6 @@
   },
   "ReplicaSpecification": {
    "additionalProperties": false,
-   "description": "Represents replica specifications.",
    "properties": {
     "ReadCapacityAutoScaling": {
      "$ref": "#/definitions/AutoScalingSetting"
@@ -175,7 +167,6 @@
   },
   "ScalingPolicy": {
    "additionalProperties": false,
-   "description": "Represents scaling policy.",
    "properties": {
     "TargetTrackingScalingPolicyConfiguration": {
      "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration"
@@ -185,7 +176,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to apply to the resource",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -206,7 +196,6 @@
   },
   "TargetTrackingScalingPolicyConfiguration": {
    "additionalProperties": false,
-   "description": "Represents configuration for target tracking scaling policy.",
    "properties": {
     "DisableScaleIn": {
      "default": "false",
@@ -230,7 +219,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::Cassandra::Table",
  "handlers": {
   "create": {
    "permissions": [
@@ -340,11 +328,9 @@
    "$ref": "#/definitions/BillingMode"
   },
   "ClientSideTimestampsEnabled": {
-   "description": "Indicates whether client side timestamps are enabled (true) or disabled (false) on the table. False by default, once it is enabled it cannot be disabled again.",
    "type": "boolean"
   },
   "ClusteringKeyColumns": {
-   "description": "Clustering key columns of the table",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/ClusteringKeyColumn"
@@ -353,7 +339,6 @@
    "uniqueItems": true
   },
   "DefaultTimeToLive": {
-   "description": "Default TTL (Time To Live) in seconds, where zero is disabled. If the value is greater than zero, TTL is enabled for the entire table and an expiration timestamp is added to each column.",
    "minimum": 0,
    "type": "integer"
   },
@@ -361,12 +346,10 @@
    "$ref": "#/definitions/EncryptionSpecification"
   },
   "KeyspaceName": {
-   "description": "Name for Cassandra keyspace",
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
    "type": "string"
   },
   "PartitionKeyColumns": {
-   "description": "Partition key columns of the table",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Column"
@@ -376,11 +359,9 @@
    "uniqueItems": true
   },
   "PointInTimeRecoveryEnabled": {
-   "description": "Indicates whether point in time recovery is enabled (true) or disabled (false) on the table",
    "type": "boolean"
   },
   "RegularColumns": {
-   "description": "Non-key columns of the table",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Column"
@@ -398,12 +379,10 @@
    "uniqueItems": true
   },
   "TableName": {
-   "description": "Name for Cassandra table",
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource",
    "items": {
     "$ref": "#/definitions/Tag"
    },

@@ -14,27 +14,22 @@
   },
   "FederationParameters": {
    "additionalProperties": false,
-   "description": "Additional parameters to identify Federation mode",
    "properties": {
     "ApplicationCallBackURL": {
-     "description": "SAML metadata URL to link with the Environment",
      "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
      "type": "string"
     },
     "AttributeMap": {
-     "description": "Attribute map for SAML configuration",
      "insertionOrder": false,
      "items": {
       "additionalProperties": false,
       "properties": {
        "Key": {
-        "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
         "maxLength": 128,
         "minLength": 1,
         "type": "string"
        },
        "Value": {
-        "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
         "maxLength": 256,
         "minLength": 0,
         "type": "string"
@@ -46,25 +41,21 @@
      "uniqueItems": false
     },
     "FederationProviderName": {
-     "description": "Federation provider name to link with the Environment",
      "maxLength": 32,
      "minLength": 1,
      "pattern": "[^_\\p{Z}][\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}][^_\\p{Z}]+",
      "type": "string"
     },
     "FederationURN": {
-     "description": "SAML metadata URL to link with the Environment",
      "type": "string"
     },
     "SamlMetadataDocument": {
-     "description": "SAML metadata document to link the federation provider to the Environment",
      "maxLength": 10000000,
      "minLength": 1000,
      "pattern": ".*",
      "type": "string"
     },
     "SamlMetadataURL": {
-     "description": "SAML metadata URL to link with the Environment",
      "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
      "type": "string"
     }
@@ -73,24 +64,20 @@
   },
   "SuperuserParameters": {
    "additionalProperties": false,
-   "description": "Parameters of the first Superuser for the FinSpace Environment",
    "properties": {
     "EmailAddress": {
-     "description": "Email address",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+[.]+[A-Za-z]+",
      "type": "string"
     },
     "FirstName": {
-     "description": "First name",
      "maxLength": 50,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9]{1,50}$",
      "type": "string"
     },
     "LastName": {
-     "description": "Last name",
      "maxLength": 50,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9]{1,50}$",
@@ -101,16 +88,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A list of all tags for a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -126,7 +110,6 @@
  "deprecatedProperties": [
   "/properties/DataBundles"
  ],
- "description": "An example resource schema demonstrating some basic constructs and validation rules.",
  "handlers": {
   "create": {
    "permissions": [
@@ -163,12 +146,10 @@
  ],
  "properties": {
   "AwsAccountId": {
-   "description": "AWS account ID associated with the Environment",
    "pattern": "^[a-zA-Z0-9]{1,26}$",
    "type": "string"
   },
   "DataBundles": {
-   "description": "ARNs of FinSpace Data Bundles to install",
    "items": {
     "$ref": "#/definitions/DataBundleArn"
    },
@@ -176,32 +157,26 @@
    "uniqueItems": false
   },
   "DedicatedServiceAccountId": {
-   "description": "ID for FinSpace created account used to store Environment artifacts",
    "pattern": "^[a-zA-Z0-9]{1,26}$",
    "type": "string"
   },
   "Description": {
-   "description": "Description of the Environment",
    "pattern": "^[a-zA-Z0-9. ]{1,1000}$",
    "type": "string"
   },
   "EnvironmentArn": {
-   "description": "ARN of the Environment",
    "pattern": "^arn:aws:finspace:[A-Za-z0-9_/.-]{0,63}:\\d+:environment/[0-9A-Za-z_-]{1,128}$",
    "type": "string"
   },
   "EnvironmentId": {
-   "description": "Unique identifier for representing FinSpace Environment",
    "pattern": "^[a-zA-Z0-9]{1,26}$",
    "type": "string"
   },
   "EnvironmentUrl": {
-   "description": "URL used to login to the Environment",
    "pattern": "^[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
    "type": "string"
   },
   "FederationMode": {
-   "description": "Federation mode used with the Environment",
    "enum": [
     "LOCAL",
     "FEDERATED"
@@ -212,22 +187,18 @@
    "$ref": "#/definitions/FederationParameters"
   },
   "KmsKeyId": {
-   "description": "KMS key used to encrypt customer data within FinSpace Environment infrastructure",
    "pattern": "^[a-zA-Z-0-9-:\\/]{1,1000}$",
    "type": "string"
   },
   "Name": {
-   "description": "Name of the Environment",
    "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]{1,255}$",
    "type": "string"
   },
   "SageMakerStudioDomainUrl": {
-   "description": "SageMaker Studio Domain URL associated with the Environment",
    "pattern": "^[a-zA-Z-0-9-:\\/.]{1,1000}$",
    "type": "string"
   },
   "Status": {
-   "description": "State of the Environment",
    "enum": [
     "CREATE_REQUESTED",
     "CREATING",
@@ -246,7 +217,6 @@
    "$ref": "#/definitions/SuperuserParameters"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

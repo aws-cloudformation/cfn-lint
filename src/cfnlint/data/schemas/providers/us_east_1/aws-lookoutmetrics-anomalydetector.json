@@ -8,8 +8,7 @@
    "additionalProperties": false,
    "properties": {
     "AnomalyDetectorFrequency": {
-     "$ref": "#/definitions/AnomalyDetectorFrequency",
-     "description": "Frequency of anomaly detection"
+     "$ref": "#/definitions/AnomalyDetectorFrequency"
     }
    },
    "required": [
@@ -18,7 +17,6 @@
    "type": "object"
   },
   "AnomalyDetectorFrequency": {
-   "description": "Frequency of anomaly detection",
    "enum": [
     "PT5M",
     "PT10M",
@@ -68,7 +66,6 @@
    "type": "object"
   },
   "ColumnName": {
-   "description": "Name of a column in the data.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
@@ -152,7 +149,6 @@
    "additionalProperties": false,
    "properties": {
     "AggregationFunction": {
-     "description": "Operator used to aggregate metric values",
      "enum": [
       "AVG",
       "SUM"
@@ -179,7 +175,6 @@
    "additionalProperties": false,
    "properties": {
     "DimensionList": {
-     "description": "Dimensions for this MetricSet.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/ColumnName"
@@ -188,7 +183,6 @@
      "type": "array"
     },
     "MetricList": {
-     "description": "Metrics captured by this MetricSet.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Metric"
@@ -197,13 +191,11 @@
      "type": "array"
     },
     "MetricSetDescription": {
-     "description": "A description for the MetricSet.",
      "maxLength": 256,
      "pattern": ".*\\S.*",
      "type": "string"
     },
     "MetricSetFrequency": {
-     "description": "A frequency period to aggregate the data",
      "enum": [
       "PT5M",
       "PT10M",
@@ -213,7 +205,6 @@
      "type": "string"
     },
     "MetricSetName": {
-     "description": "The name of the MetricSet.",
      "maxLength": 63,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
@@ -223,7 +214,6 @@
      "$ref": "#/definitions/MetricSource"
     },
     "Offset": {
-     "description": "Offset, in seconds, between the frequency interval and the time at which the metrics are available.",
      "maximum": 432000,
      "minimum": 0,
      "type": "integer"
@@ -425,7 +415,6 @@
    "additionalProperties": false,
    "properties": {
     "ColumnFormat": {
-     "description": "A timestamp format for the timestamps in the dataset",
      "maxLength": 63,
      "pattern": ".*\\S.*",
      "type": "string"
@@ -453,7 +442,6 @@
    "type": "object"
   }
  },
- "description": "An Amazon Lookout for Metrics Detector",
  "handlers": {
   "create": {
    "permissions": [
@@ -498,17 +486,14 @@
  ],
  "properties": {
   "AnomalyDetectorConfig": {
-   "$ref": "#/definitions/AnomalyDetectorConfig",
-   "description": "Configuration options for the AnomalyDetector"
+   "$ref": "#/definitions/AnomalyDetectorConfig"
   },
   "AnomalyDetectorDescription": {
-   "description": "A description for the AnomalyDetector.",
    "maxLength": 256,
    "pattern": ".*\\S.*",
    "type": "string"
   },
   "AnomalyDetectorName": {
-   "description": "Name for the Amazon Lookout for Metrics Anomaly Detector",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
@@ -518,14 +503,12 @@
    "$ref": "#/definitions/Arn"
   },
   "KmsKeyArn": {
-   "description": "KMS key used to encrypt the AnomalyDetector data",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:aws.*:kms:.*:[0-9]{12}:key/.*",
    "type": "string"
   },
   "MetricSetList": {
-   "description": "List of metric sets for anomaly detection",
    "items": {
     "$ref": "#/definitions/MetricSet"
    },

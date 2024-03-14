@@ -10,7 +10,6 @@
  ],
  "definitions": {
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the specified capacity reservation",
    "type": "string"
   },
   "CapacityAssignment": {
@@ -27,7 +26,6 @@
   },
   "CapacityAssignmentConfiguration": {
    "additionalProperties": false,
-   "description": "Assignment configuration to assign workgroups to a reservation",
    "properties": {
     "CapacityAssignments": {
      "$ref": "#/definitions/CapacityAssignments"
@@ -39,7 +37,6 @@
    "type": "object"
   },
   "CapacityAssignments": {
-   "description": "List of capacity assignments",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/CapacityAssignment"
@@ -89,7 +86,6 @@
    "type": "array"
   }
  },
- "description": "Resource schema for AWS::Athena::CapacityReservation",
  "handlers": {
   "create": {
    "permissions": [
@@ -139,7 +135,6 @@
  ],
  "properties": {
   "AllocatedDpus": {
-   "description": "The number of DPUs Athena has provisioned and allocated for the reservation",
    "format": "int64",
    "minimum": 0,
    "type": "integer"
@@ -151,24 +146,19 @@
    "$ref": "#/definitions/CapacityAssignmentConfiguration"
   },
   "CreationTime": {
-   "description": "The date and time the reservation was created.",
    "type": "string"
   },
   "LastSuccessfulAllocationTime": {
-   "description": "The timestamp when the last successful allocated was made",
    "type": "string"
   },
   "Name": {
-   "description": "The reservation name.",
    "pattern": "[a-zA-Z0-9._-]{1,128}",
    "type": "string"
   },
   "Status": {
-   "$ref": "#/definitions/CapacityReservationStatus",
-   "description": "The status of the reservation."
+   "$ref": "#/definitions/CapacityReservationStatus"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -177,7 +167,6 @@
    "uniqueItems": true
   },
   "TargetDpus": {
-   "description": "The number of DPUs to request to be allocated to the reservation.",
    "format": "int64",
    "minimum": 1,
    "type": "integer"

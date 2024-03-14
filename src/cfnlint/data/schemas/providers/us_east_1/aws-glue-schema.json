@@ -9,15 +9,12 @@
  "definitions": {
   "Registry": {
    "additionalProperties": false,
-   "description": "Identifier for the registry which the schema is part of.",
    "properties": {
     "Arn": {
-     "description": "Amazon Resource Name for the Registry.",
      "pattern": "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*",
      "type": "string"
     },
     "Name": {
-     "description": "Name of the registry in which the schema will be created.",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
@@ -27,14 +24,11 @@
   },
   "SchemaVersion": {
    "additionalProperties": false,
-   "description": "Specify checkpoint version for update. This is only required to update the Compatibility.",
    "properties": {
     "IsLatest": {
-     "description": "Indicates if the latest version needs to be updated.",
      "type": "boolean"
     },
     "VersionNumber": {
-     "description": "Indicates the version number in the schema to update.",
      "maximum": 100000,
      "minimum": 1,
      "type": "integer"
@@ -46,13 +40,11 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
-     "description": "A key to identify the tag.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "Corresponding tag value for the key.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -65,7 +57,6 @@
    "type": "object"
   }
  },
- "description": "This resource represents a schema of Glue Schema Registry.",
  "handlers": {
   "create": {
    "permissions": [
@@ -106,7 +97,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "Amazon Resource Name for the Schema.",
    "pattern": "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*",
    "type": "string"
   },
@@ -114,7 +104,6 @@
    "$ref": "#/definitions/SchemaVersion"
   },
   "Compatibility": {
-   "description": "Compatibility setting for the schema.",
    "enum": [
     "NONE",
     "DISABLED",
@@ -128,7 +117,6 @@
    "type": "string"
   },
   "DataFormat": {
-   "description": "Data format name to use for the schema. Accepted values: 'AVRO', 'JSON', 'PROTOBUF'",
    "enum": [
     "AVRO",
     "JSON",
@@ -137,18 +125,15 @@
    "type": "string"
   },
   "Description": {
-   "description": "A description of the schema. If description is not provided, there will not be any default value for this.",
    "maxLength": 1000,
    "minLength": 0,
    "type": "string"
   },
   "InitialSchemaVersionId": {
-   "description": "Represents the version ID associated with the initial schema version.",
    "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
    "type": "string"
   },
   "Name": {
-   "description": "Name of the schema.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
@@ -157,13 +142,11 @@
    "$ref": "#/definitions/Registry"
   },
   "SchemaDefinition": {
-   "description": "Definition for the initial schema version in plain-text.",
    "maxLength": 170000,
    "minLength": 1,
    "type": "string"
   },
   "Tags": {
-   "description": "List of tags to tag the schema",
    "items": {
     "$ref": "#/definitions/Tag"
    },

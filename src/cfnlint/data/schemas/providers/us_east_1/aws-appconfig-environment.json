@@ -6,16 +6,13 @@
  "definitions": {
   "Monitor": {
    "additionalProperties": false,
-   "description": "Amazon CloudWatch alarm to monitor during the deployment process.",
    "properties": {
     "AlarmArn": {
-     "description": "Amazon Resource Name (ARN) of the Amazon CloudWatch alarm.",
      "maxLength": 2048,
      "minLength": 1,
      "type": "string"
     },
     "AlarmRoleArn": {
-     "description": "ARN of an AWS Identity and Access Management (IAM) role for AWS AppConfig to monitor AlarmArn.",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^((arn):(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):(iam)::\\d{12}:role[/].*)$",
@@ -29,17 +26,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Metadata to assign to the environment. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
    "properties": {
     "Key": {
-     "description": "The key-value string map. The valid character set is [a-zA-Z1-9+-=._:/]. The tag key can be up to 128 characters and must not start with aws:.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:.)[a-zA-Z1-9+=._:/-]*$",
      "type": "string"
     },
     "Value": {
-     "description": "The tag value can be up to 256 characters.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -52,7 +46,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::AppConfig::Environment",
  "handlers": {
   "create": {
    "permissions": [
@@ -105,23 +98,19 @@
  ],
  "properties": {
   "ApplicationId": {
-   "description": "The application ID.",
    "pattern": "[a-z0-9]{4,7}",
    "type": "string"
   },
   "Description": {
-   "description": "A description of the environment.",
    "maxLength": 1024,
    "minLength": 0,
    "type": "string"
   },
   "EnvironmentId": {
-   "description": "The environment ID.",
    "pattern": "[a-z0-9]{4,7}",
    "type": "string"
   },
   "Monitors": {
-   "description": "Amazon CloudWatch alarms to monitor during the deployment process.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Monitor"
@@ -131,13 +120,11 @@
    "type": "array"
   },
   "Name": {
-   "description": "A name for the environment.",
    "maxLength": 64,
    "minLength": 1,
    "type": "string"
   },
   "Tags": {
-   "description": "Metadata to assign to the environment. Tags help organize and categorize your AWS AppConfig resources. Each tag consists of a key and an optional value, both of which you define.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

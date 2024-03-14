@@ -101,7 +101,6 @@
    "type": "string"
   },
   "TableFormat": {
-   "description": "Format for the offline store feature group. Iceberg is the optimal format for feature groups shared between offline and online stores.",
    "enum": [
     "Iceberg",
     "Glue"
@@ -110,7 +109,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
      "type": "string"
@@ -129,11 +127,9 @@
    "additionalProperties": false,
    "properties": {
     "ProvisionedReadCapacityUnits": {
-     "description": "For provisioned feature groups with online store enabled, this indicates the read throughput you are billed for and can consume without throttling.",
      "type": "integer"
     },
     "ProvisionedWriteCapacityUnits": {
-     "description": "For provisioned feature groups, this indicates the write throughput you are billed for and can consume without throttling.",
      "type": "integer"
     },
     "ThroughputMode": {
@@ -146,7 +142,6 @@
    "type": "object"
   },
   "ThroughputMode": {
-   "description": "Throughput mode configuration of the feature group",
    "enum": [
     "OnDemand",
     "Provisioned"
@@ -155,7 +150,6 @@
   },
   "TtlDuration": {
    "additionalProperties": false,
-   "description": "TTL configuration of the feature group",
    "properties": {
     "Unit": {
      "$ref": "#/definitions/Unit"
@@ -167,7 +161,6 @@
    "type": "object"
   },
   "Unit": {
-   "description": "Unit of ttl configuration",
    "enum": [
     "Seconds",
     "Minutes",
@@ -178,11 +171,9 @@
    "type": "string"
   },
   "Value": {
-   "description": "Value of ttl configuration",
    "type": "integer"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::FeatureGroup",
  "handlers": {
   "create": {
    "permissions": [
@@ -231,23 +222,19 @@
  ],
  "properties": {
   "CreationTime": {
-   "description": "A timestamp of FeatureGroup creation time.",
    "type": "string"
   },
   "Description": {
-   "description": "Description about the FeatureGroup.",
    "maxLength": 128,
    "type": "string"
   },
   "EventTimeFeatureName": {
-   "description": "The Event Time Feature Name.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
    "type": "string"
   },
   "FeatureDefinitions": {
-   "description": "An Array of Feature Definition",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/FeatureDefinition"
@@ -258,14 +245,12 @@
    "uniqueItems": false
   },
   "FeatureGroupName": {
-   "description": "The Name of the FeatureGroup.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
    "type": "string"
   },
   "FeatureGroupStatus": {
-   "description": "The status of the feature group.",
    "type": "string"
   },
   "OfflineStoreConfig": {
@@ -308,21 +293,18 @@
    "type": "object"
   },
   "RecordIdentifierFeatureName": {
-   "description": "The Record Identifier Feature Name.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
    "type": "string"
   },
   "RoleArn": {
-   "description": "Role Arn",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pair to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

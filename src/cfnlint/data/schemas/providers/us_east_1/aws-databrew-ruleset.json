@@ -7,16 +7,13 @@
  "definitions": {
   "ColumnSelector": {
    "additionalProperties": false,
-   "description": "Selector of a column from a dataset for profile job configuration. One selector includes either a column name or a regular expression",
    "properties": {
     "Name": {
-     "description": "The name of a column from a dataset",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
     },
     "Regex": {
-     "description": "A regular expression for selecting a column from a dataset",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
@@ -25,11 +22,9 @@
    "type": "object"
   },
   "Disabled": {
-   "description": "Boolean value to disable/enable a rule",
    "type": "boolean"
   },
   "Expression": {
-   "description": "Expression with rule conditions",
    "maxLength": 1024,
    "minLength": 4,
    "pattern": "^[><0-9A-Za-z_.,:)(!= ]+$",
@@ -37,7 +32,6 @@
   },
   "Rule": {
    "additionalProperties": false,
-   "description": "Data quality rule for a target resource (dataset)",
    "properties": {
     "CheckExpression": {
      "$ref": "#/definitions/Expression"
@@ -54,7 +48,6 @@
      "$ref": "#/definitions/Disabled"
     },
     "Name": {
-     "description": "Name of the rule",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
@@ -74,16 +67,13 @@
   },
   "SubstitutionValue": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate expression's substitution variable names with their values",
    "properties": {
     "Value": {
-     "description": "Value or column name",
      "maxLength": 1024,
      "minLength": 0,
      "type": "string"
     },
     "ValueReference": {
-     "description": "Variable name",
      "maxLength": 128,
      "minLength": 2,
      "pattern": "^:[A-Za-z0-9_]+$",
@@ -98,7 +88,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -136,7 +125,6 @@
    "type": "object"
   },
   "ThresholdType": {
-   "description": "Threshold type for a rule",
    "enum": [
     "GREATER_THAN_OR_EQUAL",
     "LESS_THAN_OR_EQUAL",
@@ -146,7 +134,6 @@
    "type": "string"
   },
   "ThresholdUnit": {
-   "description": "Threshold unit for a rule",
    "enum": [
     "COUNT",
     "PERCENTAGE"
@@ -154,7 +141,6 @@
    "type": "string"
   },
   "ThresholdValue": {
-   "description": "Threshold value for a rule",
    "type": "number"
   },
   "ValuesMap": {
@@ -165,7 +151,6 @@
    "type": "array"
   }
  },
- "description": "Resource schema for AWS::DataBrew::Ruleset.",
  "handlers": {
   "create": {
    "permissions": [
@@ -205,18 +190,15 @@
  ],
  "properties": {
   "Description": {
-   "description": "Description of the Ruleset",
    "maxLength": 1024,
    "type": "string"
   },
   "Name": {
-   "description": "Name of the Ruleset",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "Rules": {
-   "description": "List of the data quality rules in the ruleset",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Rule"
@@ -233,7 +215,6 @@
    "uniqueItems": false
   },
   "TargetArn": {
-   "description": "Arn of the target resource (dataset) to apply the ruleset to",
    "maxLength": 2048,
    "minLength": 20,
    "type": "string"

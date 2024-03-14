@@ -10,10 +10,8 @@
  "definitions": {
   "CustomizedMetricSpecification": {
    "additionalProperties": false,
-   "description": "Represents a CloudWatch metric of your choosing for a target tracking scaling policy to use with Application Auto Scaling.",
    "properties": {
     "Dimensions": {
-     "description": "The dimensions of the metric.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/MetricDimension"
@@ -22,11 +20,9 @@
      "uniqueItems": false
     },
     "MetricName": {
-     "description": "The name of the metric. To get the exact metric name, namespace, and dimensions, inspect the Metric object that is returned by a call to ListMetrics.",
      "type": "string"
     },
     "Metrics": {
-     "description": "The metrics to include in the target tracking scaling policy, as a metric data query. This can include both raw metric and metric math expressions.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/TargetTrackingMetricDataQuery"
@@ -35,15 +31,12 @@
      "uniqueItems": false
     },
     "Namespace": {
-     "description": "The namespace of the metric.",
      "type": "string"
     },
     "Statistic": {
-     "description": "The statistic of the metric.",
      "type": "string"
     },
     "Unit": {
-     "description": "The unit of the metric. For a complete list of the units that CloudWatch supports, see the MetricDatum data type in the Amazon CloudWatch API Reference.",
      "type": "string"
     }
    },
@@ -51,14 +44,11 @@
   },
   "MetricDimension": {
    "additionalProperties": false,
-   "description": "Describes the dimension names and values associated with a metric.",
    "properties": {
     "Name": {
-     "description": "The name of the dimension.",
      "type": "string"
     },
     "Value": {
-     "description": "The value of the dimension.",
      "type": "string"
     }
    },
@@ -70,10 +60,8 @@
   },
   "PredefinedMetricSpecification": {
    "additionalProperties": false,
-   "description": "Represents a predefined metric for a target tracking scaling policy to use with Application Auto Scaling.",
    "properties": {
     "PredefinedMetricType": {
-     "description": "The metric type. The ALBRequestCountPerTarget metric type applies only to Spot Fleets and ECS services.",
      "enum": [
       "DynamoDBReadCapacityUtilization",
       "DynamoDBWriteCapacityUtilization",
@@ -103,7 +91,6 @@
      "type": "string"
     },
     "ResourceLabel": {
-     "description": "Identifies the resource associated with the metric type. You can't specify a resource label unless the metric type is ALBRequestCountPerTarget and there is a target group attached to the Spot Fleet or ECS service.",
      "type": "string"
     }
    },
@@ -114,18 +101,14 @@
   },
   "StepAdjustment": {
    "additionalProperties": false,
-   "description": "Represents a step adjustment for a StepScalingPolicyConfiguration. Describes an adjustment based on the difference between the value of the aggregated CloudWatch metric and the breach threshold that you've defined for the alarm.",
    "properties": {
     "MetricIntervalLowerBound": {
-     "description": "The lower bound for the difference between the alarm threshold and the CloudWatch metric. If the metric value is above the breach threshold, the lower bound is inclusive (the metric must be greater than or equal to the threshold plus the lower bound). Otherwise, it is exclusive (the metric must be greater than the threshold plus the lower bound). A null value indicates negative infinity.",
      "type": "number"
     },
     "MetricIntervalUpperBound": {
-     "description": "The upper bound for the difference between the alarm threshold and the CloudWatch metric. If the metric value is above the breach threshold, the upper bound is exclusive (the metric must be less than the threshold plus the upper bound). Otherwise, it is inclusive (the metric must be less than or equal to the threshold plus the upper bound). A null value indicates positive infinity.",
      "type": "number"
     },
     "ScalingAdjustment": {
-     "description": "The amount by which to scale, based on the specified adjustment type. A positive value adds to the current capacity while a negative number removes from the current capacity. For exact capacity, you must specify a positive value.",
      "type": "integer"
     }
    },
@@ -136,26 +119,20 @@
   },
   "StepScalingPolicyConfiguration": {
    "additionalProperties": false,
-   "description": "A step scaling policy.",
    "properties": {
     "AdjustmentType": {
-     "description": "Specifies how the ScalingAdjustment value in a StepAdjustment is interpreted.",
      "type": "string"
     },
     "Cooldown": {
-     "description": "The amount of time, in seconds, to wait for a previous scaling activity to take effect.",
      "type": "integer"
     },
     "MetricAggregationType": {
-     "description": "The aggregation type for the CloudWatch metrics. Valid values are Minimum, Maximum, and Average. If the aggregation type is null, the value is treated as Average",
      "type": "string"
     },
     "MinAdjustmentMagnitude": {
-     "description": "The minimum value to scale by when the adjustment type is PercentChangeInCapacity.",
      "type": "integer"
     },
     "StepAdjustments": {
-     "description": "A set of adjustments that enable you to scale based on the size of the alarm breach.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/StepAdjustment"
@@ -168,10 +145,8 @@
   },
   "TargetTrackingMetric": {
    "additionalProperties": false,
-   "description": "Represents a specific metric.",
    "properties": {
     "Dimensions": {
-     "description": "The dimensions for the metric.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/TargetTrackingMetricDimension"
@@ -180,11 +155,9 @@
      "uniqueItems": false
     },
     "MetricName": {
-     "description": "The name of the metric.",
      "type": "string"
     },
     "Namespace": {
-     "description": "The namespace of the metric.",
      "type": "string"
     }
    },
@@ -192,26 +165,20 @@
   },
   "TargetTrackingMetricDataQuery": {
    "additionalProperties": false,
-   "description": "The metric data to return. Also defines whether this call is returning data for one metric only, or whether it is performing a math expression on the values of returned metric statistics to create a new time series. A time series is a series of data points, each of which is associated with a timestamp.",
    "properties": {
     "Expression": {
-     "description": "The math expression to perform on the returned data, if this object is performing a math expression.",
      "type": "string"
     },
     "Id": {
-     "description": "A short name that identifies the object's results in the response.",
      "type": "string"
     },
     "Label": {
-     "description": "A human-readable label for this metric or expression. This is especially useful if this is a math expression, so that you know what the value represents.",
      "type": "string"
     },
     "MetricStat": {
-     "$ref": "#/definitions/TargetTrackingMetricStat",
-     "description": "Information about the metric data to return."
+     "$ref": "#/definitions/TargetTrackingMetricStat"
     },
     "ReturnData": {
-     "description": "Indicates whether to return the timestamps and raw data values of this metric.",
      "type": "boolean"
     }
    },
@@ -219,14 +186,11 @@
   },
   "TargetTrackingMetricDimension": {
    "additionalProperties": false,
-   "description": "Describes the dimension of a metric.",
    "properties": {
     "Name": {
-     "description": "The name of the dimension.",
      "type": "string"
     },
     "Value": {
-     "description": "The value of the dimension.",
      "type": "string"
     }
    },
@@ -234,18 +198,14 @@
   },
   "TargetTrackingMetricStat": {
    "additionalProperties": false,
-   "description": "This structure defines the CloudWatch metric to return, along with the statistic, period, and unit.",
    "properties": {
     "Metric": {
-     "$ref": "#/definitions/TargetTrackingMetric",
-     "description": "The CloudWatch metric to return, including the metric name, namespace, and dimensions. "
+     "$ref": "#/definitions/TargetTrackingMetric"
     },
     "Stat": {
-     "description": "The statistic to return. It can include any CloudWatch statistic or extended statistic.",
      "type": "string"
     },
     "Unit": {
-     "description": "The unit to use for the returned data points.",
      "type": "string"
     }
    },
@@ -253,30 +213,23 @@
   },
   "TargetTrackingScalingPolicyConfiguration": {
    "additionalProperties": false,
-   "description": "A target tracking scaling policy.",
    "properties": {
     "CustomizedMetricSpecification": {
-     "$ref": "#/definitions/CustomizedMetricSpecification",
-     "description": "A customized metric. You can specify either a predefined metric or a customized metric."
+     "$ref": "#/definitions/CustomizedMetricSpecification"
     },
     "DisableScaleIn": {
-     "description": "Indicates whether scale in by the target tracking scaling policy is disabled. If the value is true, scale in is disabled and the target tracking scaling policy won't remove capacity from the scalable target. Otherwise, scale in is enabled and the target tracking scaling policy can remove capacity from the scalable target. The default value is false.",
      "type": "boolean"
     },
     "PredefinedMetricSpecification": {
-     "$ref": "#/definitions/PredefinedMetricSpecification",
-     "description": "A predefined metric. You can specify either a predefined metric or a customized metric."
+     "$ref": "#/definitions/PredefinedMetricSpecification"
     },
     "ScaleInCooldown": {
-     "description": "The amount of time, in seconds, after a scale-in activity completes before another scale-in activity can start.",
      "type": "integer"
     },
     "ScaleOutCooldown": {
-     "description": "The amount of time, in seconds, to wait for a previous scale-out activity to take effect.",
      "type": "integer"
     },
     "TargetValue": {
-     "description": "The target value for the metric. Although this property accepts numbers of type Double, it won't accept values that are either too small or too large. Values must be in the range of -2^360 to 2^360. The value must be a valid number based on the choice of metric. For example, if the metric is CPU utilization, then the target value is a percent value that represents how much of the CPU can be used before scaling out.",
      "type": "number"
     }
    },
@@ -292,7 +245,6 @@
    "ServiceNamespace"
   ]
  },
- "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalingPolicy",
  "handlers": {
   "create": {
    "permissions": [
@@ -310,7 +262,6 @@
    "handlerSchema": {
     "properties": {
      "ServiceNamespace": {
-      "description": "The name of the service",
       "type": "string"
      }
     },
@@ -340,15 +291,12 @@
  ],
  "properties": {
   "Arn": {
-   "description": "ARN is a read only property for the resource.",
    "type": "string"
   },
   "PolicyName": {
-   "description": "The name of the scaling policy.\n\nUpdates to the name of a target tracking scaling policy are not supported, unless you also update the metric used for scaling. To change only a target tracking scaling policy's name, first delete the policy by removing the existing AWS::ApplicationAutoScaling::ScalingPolicy resource from the template and updating the stack. Then, recreate the resource with the same settings and a different name.",
    "type": "string"
   },
   "PolicyType": {
-   "description": "The scaling policy type.\n\nThe following policy types are supported:\n\nTargetTrackingScaling Not supported for Amazon EMR\n\nStepScaling Not supported for DynamoDB, Amazon Comprehend, Lambda, Amazon Keyspaces, Amazon MSK, Amazon ElastiCache, or Neptune.",
    "enum": [
     "StepScaling",
     "TargetTrackingScaling"
@@ -356,28 +304,22 @@
    "type": "string"
   },
   "ResourceId": {
-   "description": "The identifier of the resource associated with the scaling policy. This string consists of the resource type and unique identifier.",
    "type": "string"
   },
   "ScalableDimension": {
-   "description": "The scalable dimension. This string consists of the service namespace, resource type, and scaling property.",
    "type": "string"
   },
   "ScalingTargetId": {
-   "description": "The CloudFormation-generated ID of an Application Auto Scaling scalable target. For more information about the ID, see the Return Value section of the AWS::ApplicationAutoScaling::ScalableTarget resource.",
    "type": "string"
   },
   "ServiceNamespace": {
-   "description": "The namespace of the AWS service that provides the resource, or a custom-resource.",
    "type": "string"
   },
   "StepScalingPolicyConfiguration": {
-   "$ref": "#/definitions/StepScalingPolicyConfiguration",
-   "description": "A step scaling policy."
+   "$ref": "#/definitions/StepScalingPolicyConfiguration"
   },
   "TargetTrackingScalingPolicyConfiguration": {
-   "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration",
-   "description": "A target tracking scaling policy."
+   "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration"
   }
  },
  "readOnlyProperties": [

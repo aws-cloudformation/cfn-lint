@@ -9,14 +9,11 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "Specifies a tag. For more information, see [Add tags to a resource](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_Tags.html#cloudformation-add-tag-specifications).",
    "properties": {
     "Key": {
-     "description": "The tag key.",
      "type": "string"
     },
     "Value": {
-     "description": "The tag value.",
      "type": "string"
     }
    },
@@ -27,7 +24,6 @@
    "type": "object"
   }
  },
- "description": "Specifies an Elastic IP (EIP) address and can, optionally, associate it with an Amazon EC2 instance.\n You can allocate an Elastic IP address from an address pool owned by AWS or from an address pool created from a public IPv4 address range that you have brought to AWS for use with your AWS resources using bring your own IP addresses (BYOIP). For more information, see [Bring Your Own IP Addresses (BYOIP)](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-byoip.html) in the *Amazon EC2 User Guide*.\n For more information, see [Elastic IP Addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) in the *Amazon EC2 User Guide*.",
  "handlers": {
   "create": {
    "permissions": [
@@ -71,11 +67,9 @@
  ],
  "properties": {
   "AllocationId": {
-   "description": "",
    "type": "string"
   },
   "Domain": {
-   "description": "The network (``vpc``).\n If you define an Elastic IP address and associate it with a VPC that is defined in the same template, you must declare a dependency on the VPC-gateway attachment by using the [DependsOn Attribute](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html) on this resource.",
    "enum": [
     "vpc",
     "standard"
@@ -83,23 +77,18 @@
    "type": "string"
   },
   "InstanceId": {
-   "description": "The ID of the instance.\n  Updates to the ``InstanceId`` property may require *some interruptions*. Updates on an EIP reassociates the address on its associated resource.",
    "type": "string"
   },
   "NetworkBorderGroup": {
-   "description": "A unique set of Availability Zones, Local Zones, or Wavelength Zones from which AWS advertises IP addresses. Use this parameter to limit the IP address to this location. IP addresses cannot move between network border groups.\n Use [DescribeAvailabilityZones](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAvailabilityZones.html) to view the network border groups.",
    "type": "string"
   },
   "PublicIp": {
-   "description": "",
    "type": "string"
   },
   "PublicIpv4Pool": {
-   "description": "The ID of an address pool that you own. Use this parameter to let Amazon EC2 select an address from the address pool.\n  Updates to the ``PublicIpv4Pool`` property may require *some interruptions*. Updates on an EIP reassociates the address on its associated resource.",
    "type": "string"
   },
   "Tags": {
-   "description": "Any tags assigned to the Elastic IP address.\n  Updates to the ``Tags`` property may require *some interruptions*. Updates on an EIP reassociates the address on its associated resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -108,7 +97,6 @@
    "uniqueItems": false
   },
   "TransferAddress": {
-   "description": "The Elastic IP address you are accepting for transfer. You can only accept one transferred address. For more information on Elastic IP address transfers, see [Transfer Elastic IP addresses](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-eips.html#transfer-EIPs-intro) in the *Amazon Virtual Private Cloud User Guide*.",
    "type": "string"
   }
  },
