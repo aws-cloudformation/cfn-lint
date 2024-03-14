@@ -42,7 +42,6 @@
    "type": "object"
   },
   "ApiVersion": {
-   "description": "The API version that the connector will use.",
    "maxLength": 256,
    "pattern": "\\S+",
    "type": "string"
@@ -58,7 +57,6 @@
    "type": "string"
   },
   "ConnectorOperator": {
-   "description": "Operation to be performed on provided source fields",
    "properties": {
     "Amplitude": {
      "$ref": "#/definitions/AmplitudeConnectorOperator"
@@ -115,7 +113,6 @@
    "type": "object"
   },
   "ConnectorProfileName": {
-   "description": "Name of connector profile",
    "maxLength": 256,
    "pattern": "[\\w/!@#+=.-]+",
    "type": "string"
@@ -160,7 +157,6 @@
      "$ref": "#/definitions/ErrorHandlingConfig"
     },
     "IdFieldNames": {
-     "description": "List of fields used as ID when performing a write operation.",
      "items": {
       "type": "string"
      },
@@ -215,10 +211,8 @@
   },
   "CustomProperties": {
    "additionalProperties": false,
-   "description": "A map for properties for custom connector.",
    "patternProperties": {
     "^[\\w]{1,2048}$": {
-     "description": "A string containing the value for the property",
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "\\S+",
@@ -269,12 +263,10 @@
    "type": "object"
   },
   "DatetimeTypeFieldName": {
-   "description": "Name of the datetime/timestamp data type field to be used for importing incremental records from the source",
    "maxLength": 256,
    "type": "string"
   },
   "DestinationConnectorProperties": {
-   "description": "Destination connector details",
    "properties": {
     "CustomConnector": {
      "$ref": "#/definitions/CustomConnectorDestinationProperties"
@@ -314,23 +306,18 @@
   },
   "DestinationFlowConfig": {
    "additionalProperties": false,
-   "description": "Configurations of destination connector.",
    "properties": {
     "ApiVersion": {
-     "$ref": "#/definitions/ApiVersion",
-     "description": "The API version that the destination connector uses."
+     "$ref": "#/definitions/ApiVersion"
     },
     "ConnectorProfileName": {
-     "$ref": "#/definitions/ConnectorProfileName",
-     "description": "Name of destination connector profile"
+     "$ref": "#/definitions/ConnectorProfileName"
     },
     "ConnectorType": {
-     "$ref": "#/definitions/ConnectorType",
-     "description": "Destination connector type"
+     "$ref": "#/definitions/ConnectorType"
     },
     "DestinationConnectorProperties": {
-     "$ref": "#/definitions/DestinationConnectorProperties",
-     "description": "Destination connector details"
+     "$ref": "#/definitions/DestinationConnectorProperties"
     }
    },
    "required": [
@@ -424,23 +411,19 @@
   },
   "GlueDataCatalog": {
    "additionalProperties": false,
-   "description": "Trigger settings of the flow.",
    "properties": {
     "DatabaseName": {
-     "description": "A string containing the value for the tag",
      "maxLength": 255,
      "minLength": 0,
      "type": "string"
     },
     "RoleArn": {
-     "description": "A string containing the value for the tag",
      "maxLength": 512,
      "minLength": 0,
      "pattern": "arn:aws:iam:.*:[0-9]+:.*",
      "type": "string"
     },
     "TablePrefix": {
-     "description": "A string containing the value for the tag",
      "maxLength": 128,
      "minLength": 0,
      "type": "string"
@@ -485,7 +468,6 @@
    "type": "boolean"
   },
   "IncrementalPullConfig": {
-   "description": "Configuration for scheduled incremental data pull",
    "properties": {
     "DatetimeTypeFieldName": {
      "$ref": "#/definitions/DatetimeTypeFieldName"
@@ -584,11 +566,9 @@
   },
   "MetadataCatalogConfig": {
    "additionalProperties": false,
-   "description": "Configurations of metadata catalog of the flow.",
    "properties": {
     "GlueDataCatalog": {
-     "$ref": "#/definitions/GlueDataCatalog",
-     "description": "Configurations of glue data catalog of the flow."
+     "$ref": "#/definitions/GlueDataCatalog"
     }
    },
    "type": "object"
@@ -878,7 +858,6 @@
      "$ref": "#/definitions/ErrorHandlingConfig"
     },
     "IdFieldNames": {
-     "description": "List of fields used as ID when performing a write operation.",
      "items": {
       "type": "string"
      },
@@ -911,7 +890,6 @@
   },
   "SAPODataPaginationConfig": {
    "additionalProperties": false,
-   "description": "SAP Source connector page size",
    "properties": {
     "maxPageSize": {
      "$ref": "#/definitions/SAPODataMaxPageSize"
@@ -924,7 +902,6 @@
   },
   "SAPODataParallelismConfig": {
    "additionalProperties": false,
-   "description": "SAP Source connector parallelism factor",
    "properties": {
     "maxParallelism": {
      "$ref": "#/definitions/SAPODataMaxParallelism"
@@ -989,7 +966,6 @@
      "$ref": "#/definitions/ErrorHandlingConfig"
     },
     "IdFieldNames": {
-     "description": "List of fields used as ID when performing a write operation.",
      "items": {
       "type": "string"
      },
@@ -1030,7 +1006,6 @@
   },
   "ScheduledTriggerProperties": {
    "additionalProperties": false,
-   "description": "Details required for scheduled trigger type",
    "properties": {
     "DataPullMode": {
      "enum": [
@@ -1197,7 +1172,6 @@
    "type": "object"
   },
   "SourceConnectorProperties": {
-   "description": "Source connector details required to query a connector",
    "properties": {
     "Amplitude": {
      "$ref": "#/definitions/AmplitudeSourceProperties"
@@ -1255,27 +1229,21 @@
   },
   "SourceFlowConfig": {
    "additionalProperties": false,
-   "description": "Configurations of Source connector of the flow.",
    "properties": {
     "ApiVersion": {
-     "$ref": "#/definitions/ApiVersion",
-     "description": "The API version that the destination connector uses."
+     "$ref": "#/definitions/ApiVersion"
     },
     "ConnectorProfileName": {
-     "$ref": "#/definitions/ConnectorProfileName",
-     "description": "Name of source connector profile"
+     "$ref": "#/definitions/ConnectorProfileName"
     },
     "ConnectorType": {
-     "$ref": "#/definitions/ConnectorType",
-     "description": "Type of source connector"
+     "$ref": "#/definitions/ConnectorType"
     },
     "IncrementalPullConfig": {
-     "$ref": "#/definitions/IncrementalPullConfig",
-     "description": "Configuration for scheduled incremental data pull"
+     "$ref": "#/definitions/IncrementalPullConfig"
     },
     "SourceConnectorProperties": {
-     "$ref": "#/definitions/SourceConnectorProperties",
-     "description": "Source connector details required to query a connector"
+     "$ref": "#/definitions/SourceConnectorProperties"
     }
    },
    "required": [
@@ -1307,16 +1275,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A label for tagging AppFlow resources",
    "properties": {
     "Key": {
-     "description": "A string used to identify this tag",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "A string containing the value for the tag",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -1335,31 +1300,26 @@
    "additionalProperties": false,
    "properties": {
     "ConnectorOperator": {
-     "$ref": "#/definitions/ConnectorOperator",
-     "description": "Operation to be performed on provided source fields"
+     "$ref": "#/definitions/ConnectorOperator"
     },
     "DestinationField": {
-     "description": "A field value on which source field should be validated",
      "maxLength": 256,
      "type": "string"
     },
     "SourceFields": {
-     "description": "Source fields on which particular task will be applied",
      "items": {
       "type": "string"
      },
      "type": "array"
     },
     "TaskProperties": {
-     "description": "A Map used to store task related info",
      "items": {
       "$ref": "#/definitions/TaskPropertiesObject"
      },
      "type": "array"
     },
     "TaskType": {
-     "$ref": "#/definitions/TaskType",
-     "description": "Type of task"
+     "$ref": "#/definitions/TaskType"
     }
    },
    "required": [
@@ -1370,7 +1330,6 @@
   },
   "TaskPropertiesObject": {
    "additionalProperties": false,
-   "description": "An object used to store task related info",
    "properties": {
     "Key": {
      "$ref": "#/definitions/OperatorPropertiesKeys"
@@ -1435,15 +1394,12 @@
   },
   "TriggerConfig": {
    "additionalProperties": false,
-   "description": "Trigger settings of the flow.",
    "properties": {
     "TriggerProperties": {
-     "$ref": "#/definitions/ScheduledTriggerProperties",
-     "description": "Details required based on the type of trigger"
+     "$ref": "#/definitions/ScheduledTriggerProperties"
     },
     "TriggerType": {
-     "$ref": "#/definitions/TriggerType",
-     "description": "Trigger type of the flow"
+     "$ref": "#/definitions/TriggerType"
     }
    },
    "required": [
@@ -1586,7 +1542,6 @@
      "$ref": "#/definitions/ErrorHandlingConfig"
     },
     "IdFieldNames": {
-     "description": "List of fields used as ID when performing a write operation.",
      "items": {
       "type": "string"
      },
@@ -1617,7 +1572,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::AppFlow::Flow.",
  "handlers": {
   "create": {
    "permissions": [
@@ -1679,33 +1633,28 @@
  ],
  "properties": {
   "Description": {
-   "description": "Description of the flow.",
    "maxLength": 2048,
    "pattern": "[\\w!@#\\-.?,\\s]*",
    "type": "string"
   },
   "DestinationFlowConfigList": {
-   "description": "List of Destination connectors of the flow.",
    "items": {
     "$ref": "#/definitions/DestinationFlowConfig"
    },
    "type": "array"
   },
   "FlowArn": {
-   "description": "ARN identifier of the flow.",
    "maxLength": 512,
    "pattern": "arn:aws:appflow:.*:[0-9]+:.*",
    "type": "string"
   },
   "FlowName": {
-   "description": "Name of the flow.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
    "type": "string"
   },
   "FlowStatus": {
-   "description": "Flow activation status for Scheduled- and Event-triggered flows",
    "enum": [
     "Active",
     "Suspended",
@@ -1714,37 +1663,31 @@
    "type": "string"
   },
   "KMSArn": {
-   "description": "The ARN of the AWS Key Management Service (AWS KMS) key that's used to encrypt your function's environment variables. If it's not provided, AWS Lambda uses a default service key.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:aws:kms:.*:[0-9]+:.*",
    "type": "string"
   },
   "MetadataCatalogConfig": {
-   "$ref": "#/definitions/MetadataCatalogConfig",
-   "description": "Configurations of metadata catalog of the flow."
+   "$ref": "#/definitions/MetadataCatalogConfig"
   },
   "SourceFlowConfig": {
-   "$ref": "#/definitions/SourceFlowConfig",
-   "description": "Configurations of Source connector of the flow."
+   "$ref": "#/definitions/SourceFlowConfig"
   },
   "Tags": {
-   "description": "List of Tags.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
    "type": "array"
   },
   "Tasks": {
-   "description": "List of tasks for the flow.",
    "items": {
     "$ref": "#/definitions/Task"
    },
    "type": "array"
   },
   "TriggerConfig": {
-   "$ref": "#/definitions/TriggerConfig",
-   "description": "Trigger settings of the flow."
+   "$ref": "#/definitions/TriggerConfig"
   }
  },
  "readOnlyProperties": [

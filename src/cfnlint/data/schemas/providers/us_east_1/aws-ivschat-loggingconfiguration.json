@@ -3,10 +3,8 @@
  "definitions": {
   "CloudWatchLogsDestinationConfiguration": {
    "additionalProperties": false,
-   "description": "CloudWatch destination configuration for IVS Chat logging.",
    "properties": {
     "LogGroupName": {
-     "description": "Name of the Amazon CloudWatch Logs log group where chat activity will be logged.",
      "maxLength": 512,
      "minLength": 1,
      "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
@@ -20,7 +18,6 @@
   },
   "DestinationConfiguration": {
    "additionalProperties": false,
-   "description": "Destination configuration for IVS Chat logging.",
    "properties": {
     "CloudWatchLogs": {
      "$ref": "#/definitions/CloudWatchLogsDestinationConfiguration"
@@ -37,10 +34,8 @@
   },
   "FirehoseDestinationConfiguration": {
    "additionalProperties": false,
-   "description": "Kinesis Firehose destination configuration for IVS Chat logging.",
    "properties": {
     "DeliveryStreamName": {
-     "description": "Name of the Amazon Kinesis Firehose delivery stream where chat activity will be logged.",
      "maxLength": 64,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9_.-]+$",
@@ -54,10 +49,8 @@
   },
   "S3DestinationConfiguration": {
    "additionalProperties": false,
-   "description": "S3 destination configuration for IVS Chat logging.",
    "properties": {
     "BucketName": {
-     "description": "Name of the Amazon S3 bucket where chat activity will be logged.",
      "maxLength": 63,
      "minLength": 3,
      "pattern": "^[a-z0-9-.]+$",
@@ -71,16 +64,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -93,7 +83,6 @@
    "type": "object"
   }
  },
- "description": "Resource type definition for AWS::IVSChat::LoggingConfiguration.",
  "handlers": {
   "create": {
    "permissions": [
@@ -159,7 +148,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "LoggingConfiguration ARN is automatically generated on creation and assigned as the unique identifier.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^arn:aws:ivschat:[a-z0-9-]+:[0-9]+:logging-configuration/[a-zA-Z0-9-]+$",
@@ -169,21 +157,18 @@
    "$ref": "#/definitions/DestinationConfiguration"
   },
   "Id": {
-   "description": "The system-generated ID of the logging configuration.",
    "maxLength": 12,
    "minLength": 12,
    "pattern": "^[a-zA-Z0-9]+$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the logging configuration. The value does not need to be unique.",
    "maxLength": 128,
    "minLength": 0,
    "pattern": "^[a-zA-Z0-9-_]*$",
    "type": "string"
   },
   "State": {
-   "description": "The state of the logging configuration. When the state is ACTIVE, the configuration is ready to log chat content.",
    "enum": [
     "CREATING",
     "CREATE_FAILED",
@@ -196,7 +181,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

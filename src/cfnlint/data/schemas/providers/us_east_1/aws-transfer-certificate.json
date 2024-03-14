@@ -8,16 +8,13 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -30,7 +27,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Transfer::Certificate",
  "handlers": {
   "create": {
    "permissions": [
@@ -66,72 +62,60 @@
  ],
  "properties": {
   "ActiveDate": {
-   "description": "Specifies the active date for the certificate.",
    "type": "string"
   },
   "Arn": {
-   "description": "Specifies the unique Amazon Resource Name (ARN) for the agreement.",
    "maxLength": 1600,
    "minLength": 20,
    "pattern": "arn:.*",
    "type": "string"
   },
   "Certificate": {
-   "description": "Specifies the certificate body to be imported.",
    "maxLength": 16384,
    "minLength": 1,
    "pattern": "^[\t\n\r -\u00ff]*",
    "type": "string"
   },
   "CertificateChain": {
-   "description": "Specifies the certificate chain to be imported.",
    "maxLength": 2097152,
    "minLength": 1,
    "pattern": "^[\t\n\r -\u00ff]*",
    "type": "string"
   },
   "CertificateId": {
-   "description": "A unique identifier for the certificate.",
    "maxLength": 22,
    "minLength": 22,
    "pattern": "^cert-([0-9a-f]{17})$",
    "type": "string"
   },
   "Description": {
-   "description": "A textual description for the certificate.",
    "maxLength": 200,
    "minLength": 1,
    "pattern": "^[\\w\\- ]*$",
    "type": "string"
   },
   "InactiveDate": {
-   "description": "Specifies the inactive date for the certificate.",
    "type": "string"
   },
   "NotAfterDate": {
-   "description": "Specifies the not after date for the certificate.",
    "type": "string"
   },
   "NotBeforeDate": {
-   "description": "Specifies the not before date for the certificate.",
    "type": "string"
   },
   "PrivateKey": {
-   "description": "Specifies the private key for the certificate.",
    "maxLength": 16384,
    "minLength": 1,
    "pattern": "^[\t\n\r -\u00ff]*",
    "type": "string"
   },
   "Serial": {
-   "description": "Specifies Certificate's serial.",
    "maxLength": 48,
    "minLength": 0,
    "pattern": "^[\\p{XDigit}{2}:?]*",
    "type": "string"
   },
   "Status": {
-   "description": "A status description for the certificate.",
    "enum": [
     "ACTIVE",
     "PENDING",
@@ -140,7 +124,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "Key-value pairs that can be used to group and search for certificates. Tags are metadata attached to certificates for any purpose.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -150,7 +133,6 @@
    "uniqueItems": true
   },
   "Type": {
-   "description": "Describing the type of certificate. With or without a private key.",
    "enum": [
     "CERTIFICATE",
     "CERTIFICATE_WITH_PRIVATE_KEY"
@@ -158,7 +140,6 @@
    "type": "string"
   },
   "Usage": {
-   "description": "Specifies the usage type for the certificate.",
    "enum": [
     "SIGNING",
     "ENCRYPTION"

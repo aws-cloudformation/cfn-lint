@@ -9,11 +9,9 @@
    "additionalProperties": false,
    "properties": {
     "CdnIdentifierSecret": {
-     "description": "The Amazon Resource Name (ARN) for the secret in AWS Secrets Manager that is used for CDN authorization.",
      "type": "string"
     },
     "SecretsRoleArn": {
-     "description": "The Amazon Resource Name (ARN) for the IAM role that allows MediaPackage to communicate with AWS Secrets Manager.",
      "type": "string"
     }
    },
@@ -27,7 +25,6 @@
    "additionalProperties": false,
    "properties": {
     "LogGroupName": {
-     "description": "Sets a custom AWS CloudWatch log group name for egress logs. If a log group name isn't specified, the default name is used: /aws/MediaPackage/VodEgressAccessLogs.",
      "maxLength": 512,
      "minLength": 1,
      "pattern": "\\A\\/aws\\/MediaPackage\\/[0-9a-zA-Z-_\\/\\.#]+\\Z",
@@ -53,7 +50,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::MediaPackage::PackagingGroup",
  "handlers": {
   "create": {
    "permissions": [
@@ -97,30 +93,24 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The ARN of the PackagingGroup.",
    "type": "string"
   },
   "Authorization": {
-   "$ref": "#/definitions/Authorization",
-   "description": "CDN Authorization"
+   "$ref": "#/definitions/Authorization"
   },
   "DomainName": {
-   "description": "The fully qualified domain name for Assets in the PackagingGroup.",
    "type": "string"
   },
   "EgressAccessLogs": {
-   "$ref": "#/definitions/LogConfiguration",
-   "description": "The configuration parameters for egress access logging."
+   "$ref": "#/definitions/LogConfiguration"
   },
   "Id": {
-   "description": "The ID of the PackagingGroup.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "\\A[0-9a-zA-Z-_]+\\Z",
    "type": "string"
   },
   "Tags": {
-   "description": "A collection of tags associated with a resource",
    "items": {
     "$ref": "#/definitions/Tag"
    },

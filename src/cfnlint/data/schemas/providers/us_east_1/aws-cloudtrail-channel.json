@@ -5,14 +5,12 @@
  ],
  "definitions": {
   "ChannelArn": {
-   "description": "The Amazon Resource Name (ARN) of a channel.",
    "maxLength": 256,
    "minLength": 3,
    "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
    "type": "string"
   },
   "ChannelName": {
-   "description": "The name of the channel.",
    "maxLength": 128,
    "minLength": 3,
    "pattern": "(^[a-zA-Z0-9._\\-]+$)",
@@ -20,17 +18,14 @@
   },
   "Destination": {
    "additionalProperties": false,
-   "description": "The resource that receives events arriving from a channel.",
    "properties": {
     "Location": {
-     "description": "The ARN of a resource that receives events from a channel.",
      "maxLength": 1024,
      "minLength": 3,
      "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
      "type": "string"
     },
     "Type": {
-     "description": "The type of destination for events arriving from a channel.",
      "enum": [
       "EVENT_DATA_STORE"
      ],
@@ -45,16 +40,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -76,7 +68,6 @@
    "type": "string"
   }
  },
- "description": "A channel receives events from a specific source (such as an on-premises storage solution or application, or a partner event data source), and delivers the events to one or more event data stores. You use channels to ingest events into CloudTrail from sources outside AWS.",
  "handlers": {
   "create": {
    "permissions": [
@@ -117,7 +108,6 @@
    "$ref": "#/definitions/ChannelArn"
   },
   "Destinations": {
-   "description": "One or more resources to which events arriving through a channel are logged and stored.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Destination"
@@ -130,14 +120,12 @@
    "$ref": "#/definitions/ChannelName"
   },
   "Source": {
-   "description": "The ARN of an on-premises storage solution or application, or a partner event source.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "(.*)",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

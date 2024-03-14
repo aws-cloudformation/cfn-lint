@@ -6,17 +6,14 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with 'aws:'. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
@@ -29,7 +26,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::MemoryDB::User",
  "handlers": {
   "create": {
    "permissions": [
@@ -72,11 +68,9 @@
  ],
  "properties": {
   "AccessString": {
-   "description": "Access permissions string used for this user account.",
    "type": "string"
   },
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the user account.",
    "type": "string"
   },
   "AuthenticationMode": {
@@ -84,7 +78,6 @@
    "properties": {
     "Passwords": {
      "$comment": "List of passwords.",
-     "description": "Passwords used for this user account. You can create up to two passwords for each user.",
      "insertionOrder": true,
      "items": {
       "type": "string"
@@ -95,7 +88,6 @@
      "uniqueItems": true
     },
     "Type": {
-     "description": "Type of authentication strategy for this user.",
      "enum": [
       "password",
       "iam"
@@ -106,11 +98,9 @@
    "type": "object"
   },
   "Status": {
-   "description": "Indicates the user status. Can be \"active\", \"modifying\" or \"deleting\".",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this user.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -120,7 +110,6 @@
    "uniqueItems": true
   },
   "UserName": {
-   "description": "The name of the user.",
    "pattern": "[a-z][a-z0-9\\\\-]*",
    "type": "string"
   }

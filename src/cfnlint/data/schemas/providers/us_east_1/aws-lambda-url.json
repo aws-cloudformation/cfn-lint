@@ -49,24 +49,19 @@
    "additionalProperties": false,
    "properties": {
     "AllowCredentials": {
-     "description": "Specifies whether credentials are included in the CORS request.",
      "type": "boolean"
     },
     "AllowHeaders": {
-     "$ref": "#/definitions/AllowHeaders",
-     "description": "Represents a collection of allowed headers."
+     "$ref": "#/definitions/AllowHeaders"
     },
     "AllowMethods": {
-     "$ref": "#/definitions/AllowMethods",
-     "description": "Represents a collection of allowed HTTP methods."
+     "$ref": "#/definitions/AllowMethods"
     },
     "AllowOrigins": {
-     "$ref": "#/definitions/AllowOrigins",
-     "description": "Represents a collection of allowed origins."
+     "$ref": "#/definitions/AllowOrigins"
     },
     "ExposeHeaders": {
-     "$ref": "#/definitions/ExposeHeaders",
-     "description": "Represents a collection of exposed headers."
+     "$ref": "#/definitions/ExposeHeaders"
     },
     "MaxAge": {
      "maximum": 86400,
@@ -88,7 +83,6 @@
    "type": "array"
   }
  },
- "description": "Resource Type definition for AWS::Lambda::Url",
  "handlers": {
   "create": {
    "permissions": [
@@ -104,7 +98,6 @@
    "handlerSchema": {
     "properties": {
      "TargetFunctionArn": {
-      "description": "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
       "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
       "type": "string"
      }
@@ -133,7 +126,6 @@
  ],
  "properties": {
   "AuthType": {
-   "description": "Can be either AWS_IAM if the requests are authorized via IAM, or NONE if no authorization is configured on the Function URL.",
    "enum": [
     "AWS_IAM",
     "NONE"
@@ -144,16 +136,13 @@
    "$ref": "#/definitions/Cors"
   },
   "FunctionArn": {
-   "description": "The full Amazon Resource Name (ARN) of the function associated with the Function URL.",
    "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
    "type": "string"
   },
   "FunctionUrl": {
-   "description": "The generated url for this resource.",
    "type": "string"
   },
   "InvokeMode": {
-   "description": "The invocation mode for the function\u2019s URL. Set to BUFFERED if you want to buffer responses before returning them to the client. Set to RESPONSE_STREAM if you want to stream responses, allowing faster time to first byte and larger response payload sizes. If not set, defaults to BUFFERED.",
    "enum": [
     "BUFFERED",
     "RESPONSE_STREAM"
@@ -161,14 +150,12 @@
    "type": "string"
   },
   "Qualifier": {
-   "description": "The alias qualifier for the target function. If TargetFunctionArn is unqualified then Qualifier must be passed.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "((?!^[0-9]+$)([a-zA-Z0-9-_]+))",
    "type": "string"
   },
   "TargetFunctionArn": {
-   "description": "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
    "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
    "type": "string"
   }

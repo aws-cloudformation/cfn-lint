@@ -14,21 +14,17 @@
  "definitions": {
   "EnvironmentParameter": {
    "additionalProperties": false,
-   "description": "The parameter details of an environment.",
    "properties": {
     "Name": {
-     "description": "The name of an environment parameter.",
      "type": "string"
     },
     "Value": {
-     "description": "The value of an environment parameter.",
      "type": "string"
     }
    },
    "type": "object"
   },
   "EnvironmentStatus": {
-   "description": "The status of the Amazon DataZone environment.",
    "enum": [
     "ACTIVE",
     "CREATING",
@@ -47,7 +43,6 @@
    "type": "string"
   }
  },
- "description": "Definition of AWS::DataZone::Environment Resource Type",
  "handlers": {
   "create": {
    "permissions": [
@@ -100,56 +95,45 @@
  ],
  "properties": {
   "AwsAccountId": {
-   "description": "The AWS account in which the Amazon DataZone environment is created.",
    "pattern": "^\\d{12}$",
    "type": "string"
   },
   "AwsAccountRegion": {
-   "description": "The AWS region in which the Amazon DataZone environment is created.",
    "pattern": "^[a-z]{2}-[a-z]{4,10}-\\d$",
    "type": "string"
   },
   "CreatedAt": {
-   "description": "The timestamp of when the environment was created.",
    "format": "date-time",
    "type": "string"
   },
   "CreatedBy": {
-   "description": "The Amazon DataZone user who created the environment.",
    "type": "string"
   },
   "Description": {
-   "description": "The description of the Amazon DataZone environment.",
    "maxLength": 2048,
    "type": "string"
   },
   "DomainId": {
-   "description": "The identifier of the Amazon DataZone domain in which the environment is created.",
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "DomainIdentifier": {
-   "description": "The identifier of the Amazon DataZone domain in which the environment would be created.",
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentBlueprintId": {
-   "description": "The ID of the blueprint with which the Amazon DataZone environment was created.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentProfileId": {
-   "description": "The ID of the environment profile with which the Amazon DataZone environment was created.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentProfileIdentifier": {
-   "description": "The ID of the environment profile with which the Amazon DataZone environment would be created.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "GlossaryTerms": {
-   "description": "The glossary terms that can be used in the Amazon DataZone environment.",
    "insertionOrder": false,
    "items": {
     "pattern": "^[a-zA-Z0-9_-]{1,36}$",
@@ -160,42 +144,34 @@
    "type": "array"
   },
   "Id": {
-   "description": "The ID of the Amazon DataZone environment.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the environment.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[\\w -]+$",
    "type": "string"
   },
   "ProjectId": {
-   "description": "The ID of the Amazon DataZone project in which the environment is created.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "ProjectIdentifier": {
-   "description": "The ID of the Amazon DataZone project in which the environment would be created.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "Provider": {
-   "description": "The provider of the Amazon DataZone environment.",
    "type": "string"
   },
   "Status": {
-   "$ref": "#/definitions/EnvironmentStatus",
-   "description": "The status of the Amazon DataZone environment."
+   "$ref": "#/definitions/EnvironmentStatus"
   },
   "UpdatedAt": {
-   "description": "The timestamp of when the environment was updated.",
    "format": "date-time",
    "type": "string"
   },
   "UserParameters": {
-   "description": "The user parameters of the Amazon DataZone environment.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/EnvironmentParameter"

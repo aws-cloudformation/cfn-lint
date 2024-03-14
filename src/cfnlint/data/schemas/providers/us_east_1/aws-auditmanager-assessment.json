@@ -7,7 +7,6 @@
  "definitions": {
   "AWSAccount": {
    "additionalProperties": false,
-   "description": "The AWS account associated with the assessment.",
    "properties": {
     "EmailAddress": {
      "$ref": "#/definitions/EmailAddress"
@@ -23,7 +22,6 @@
   },
   "AWSService": {
    "additionalProperties": false,
-   "description": "An AWS service such as Amazon S3, AWS CloudTrail, and so on.",
    "properties": {
     "ServiceName": {
      "$ref": "#/definitions/AWSServiceName"
@@ -32,43 +30,36 @@
    "type": "object"
   },
   "AWSServiceName": {
-   "description": "The name of the AWS service.",
    "type": "string"
   },
   "AccountId": {
-   "description": "The identifier for the specified AWS account.",
    "maxLength": 12,
    "minLength": 12,
    "pattern": "^[0-9]{12}$",
    "type": "string"
   },
   "AccountName": {
-   "description": "The name of the specified AWS account.",
    "maxLength": 50,
    "minLength": 1,
    "pattern": "^[\\u0020-\\u007E]+$",
    "type": "string"
   },
   "AssessmentArn": {
-   "description": "The Amazon Resource Name (ARN) of the assessment.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:.*:auditmanager:.*",
    "type": "string"
   },
   "AssessmentDescription": {
-   "description": "The description of the specified assessment.",
    "type": "string"
   },
   "AssessmentName": {
-   "description": "The name of the related assessment.",
    "maxLength": 127,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9-_\\.]+$",
    "type": "string"
   },
   "AssessmentReportDestinationType": {
-   "description": "The destination type, such as Amazon S3.",
    "enum": [
     "S3"
    ],
@@ -76,7 +67,6 @@
   },
   "AssessmentReportsDestination": {
    "additionalProperties": false,
-   "description": "The destination in which evidence reports are stored for the specified assessment.",
    "properties": {
     "Destination": {
      "$ref": "#/definitions/S3Url"
@@ -88,7 +78,6 @@
    "type": "object"
   },
   "AssessmentStatus": {
-   "description": "The status of the specified assessment. ",
    "enum": [
     "ACTIVE",
     "INACTIVE"
@@ -96,14 +85,12 @@
    "type": "string"
   },
   "ControlSetId": {
-   "description": "The identifier for the specified control set.",
    "maxLength": 300,
    "minLength": 1,
    "pattern": "^[\\w\\W\\s\\S]*$",
    "type": "string"
   },
   "CreatedBy": {
-   "description": "The IAM user or role that performed the action.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:.*:*:.*",
@@ -111,7 +98,6 @@
   },
   "Delegation": {
    "additionalProperties": false,
-   "description": "The assignment of a control set to a delegate for review.",
    "properties": {
     "AssessmentId": {
      "$ref": "#/definitions/UUID"
@@ -150,13 +136,11 @@
    "type": "object"
   },
   "DelegationComment": {
-   "description": "The comment related to the delegation.",
    "maxLength": 350,
    "pattern": "^[\\w\\W\\s\\S]*$",
    "type": "string"
   },
   "DelegationStatus": {
-   "description": "The status of the delegation.",
    "enum": [
     "IN_PROGRESS",
     "UNDER_REVIEW",
@@ -165,21 +149,18 @@
    "type": "string"
   },
   "EmailAddress": {
-   "description": "The unique identifier for the email account.",
    "maxLength": 320,
    "minLength": 1,
    "pattern": "^.*@.*$",
    "type": "string"
   },
   "FrameworkId": {
-   "description": "The identifier for the specified framework.",
    "maxLength": 36,
    "minLength": 32,
    "pattern": "^([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|.*\\S.*)$",
    "type": "string"
   },
   "IamArn": {
-   "description": "The Amazon Resource Name (ARN) of the IAM user or role.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:.*:iam:.*",
@@ -187,7 +168,6 @@
   },
   "Role": {
    "additionalProperties": false,
-   "description": "The wrapper that contains AWS Audit Manager role information, such as the role type and IAM ARN.",
    "properties": {
     "RoleArn": {
      "$ref": "#/definitions/IamArn"
@@ -199,7 +179,6 @@
    "type": "object"
   },
   "RoleType": {
-   "description": " The IAM role type.",
    "enum": [
     "PROCESS_OWNER",
     "RESOURCE_OWNER"
@@ -207,22 +186,18 @@
    "type": "string"
   },
   "S3Url": {
-   "description": "The URL of the specified Amazon S3 bucket.",
    "type": "string"
   },
   "Scope": {
    "additionalProperties": false,
-   "description": "The wrapper that contains the AWS accounts and AWS services in scope for the assessment.",
    "properties": {
     "AwsAccounts": {
-     "description": "The AWS accounts included in scope.",
      "items": {
       "$ref": "#/definitions/AWSAccount"
      },
      "type": "array"
     },
     "AwsServices": {
-     "description": "The AWS services included in scope.",
      "items": {
       "$ref": "#/definitions/AWSService"
      },
@@ -233,16 +208,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -255,7 +227,6 @@
    "type": "object"
   },
   "Timestamp": {
-   "description": "The sequence of characters that identifies when the event occurred.",
    "type": "number"
   },
   "UUID": {
@@ -265,7 +236,6 @@
    "type": "string"
   }
  },
- "description": "An entity that defines the scope of audit evidence collected by AWS Audit Manager.",
  "handlers": {
   "create": {
    "permissions": [
@@ -320,7 +290,6 @@
    "$ref": "#/definitions/Timestamp"
   },
   "Delegations": {
-   "description": "The list of delegations.",
    "items": {
     "$ref": "#/definitions/Delegation"
    },
@@ -336,7 +305,6 @@
    "$ref": "#/definitions/AssessmentName"
   },
   "Roles": {
-   "description": "The list of roles for the specified assessment.",
    "items": {
     "$ref": "#/definitions/Role"
    },
@@ -349,7 +317,6 @@
    "$ref": "#/definitions/AssessmentStatus"
   },
   "Tags": {
-   "description": "The tags associated with the assessment.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

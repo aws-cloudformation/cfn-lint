@@ -6,10 +6,8 @@
  "definitions": {
   "Container": {
    "additionalProperties": false,
-   "description": "Describes the settings of a container that will be launched, or that is launched, to an Amazon Lightsail container service.",
    "properties": {
     "Command": {
-     "description": "The launch command for the container.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -18,11 +16,9 @@
      "uniqueItems": true
     },
     "ContainerName": {
-     "description": "The name of the container.",
      "type": "string"
     },
     "Environment": {
-     "description": "The environment variables of the container.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EnvironmentVariable"
@@ -31,11 +27,9 @@
      "uniqueItems": true
     },
     "Image": {
-     "description": "The name of the image used for the container.",
      "type": "string"
     },
     "Ports": {
-     "description": "The open firewall ports of the container.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/PortInfo"
@@ -48,10 +42,8 @@
   },
   "ContainerServiceDeployment": {
    "additionalProperties": false,
-   "description": "Describes a container deployment configuration of an Amazon Lightsail container service.",
    "properties": {
     "Containers": {
-     "description": "An object that describes the configuration for the containers of the deployment.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Container"
@@ -60,8 +52,7 @@
      "uniqueItems": true
     },
     "PublicEndpoint": {
-     "$ref": "#/definitions/PublicEndpoint",
-     "description": "An object that describes the endpoint of the deployment."
+     "$ref": "#/definitions/PublicEndpoint"
     }
    },
    "type": "object"
@@ -80,30 +71,23 @@
   },
   "HealthCheckConfig": {
    "additionalProperties": false,
-   "description": "Describes the health check configuration of an Amazon Lightsail container service.",
    "properties": {
     "HealthyThreshold": {
-     "description": "The number of consecutive health checks successes required before moving the container to the Healthy state. The default value is 2.",
      "type": "integer"
     },
     "IntervalSeconds": {
-     "description": "The approximate interval, in seconds, between health checks of an individual container. You can specify between 5 and 300 seconds. The default value is 5.",
      "type": "integer"
     },
     "Path": {
-     "description": "The path on the container on which to perform the health check. The default value is /.",
      "type": "string"
     },
     "SuccessCodes": {
-     "description": "The HTTP codes to use when checking for a successful response from a container. You can specify values between 200 and 499. You can specify multiple values (for example, 200,202) or a range of values (for example, 200-299).",
      "type": "string"
     },
     "TimeoutSeconds": {
-     "description": "The amount of time, in seconds, during which no response means a failed health check. You can specify between 2 and 60 seconds. The default value is 2.",
      "type": "integer"
     },
     "UnhealthyThreshold": {
-     "description": "The number of consecutive health check failures required before moving the container to the Unhealthy state. The default value is 2.",
      "type": "integer"
     }
    },
@@ -123,18 +107,14 @@
   },
   "PrivateRegistryAccess": {
    "additionalProperties": false,
-   "description": "An object to describe the configuration for the container service to access private container image repositories, such as Amazon Elastic Container Registry (Amazon ECR) private repositories.",
    "properties": {
     "EcrImagePullerRole": {
      "additionalProperties": false,
-     "description": "An object to describe a request to activate or deactivate the role that you can use to grant an Amazon Lightsail container service access to Amazon Elastic Container Registry (Amazon ECR) private repositories.",
      "properties": {
       "IsActive": {
-       "description": "A Boolean value that indicates whether to activate the role.",
        "type": "boolean"
       },
       "PrincipalArn": {
-       "description": "The Amazon Resource Name (ARN) of the role, if it is activated.",
        "type": "string"
       }
      },
@@ -145,13 +125,11 @@
   },
   "PublicDomainName": {
    "additionalProperties": false,
-   "description": "The public domain name to use with the container service, such as example.com and www.example.com.",
    "properties": {
     "CertificateName": {
      "type": "string"
     },
     "DomainNames": {
-     "description": "An object that describes the configuration for the containers of the deployment.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -164,35 +142,28 @@
   },
   "PublicEndpoint": {
    "additionalProperties": false,
-   "description": "Describes the settings of a public endpoint for an Amazon Lightsail container service.",
    "properties": {
     "ContainerName": {
-     "description": "The name of the container for the endpoint.",
      "type": "string"
     },
     "ContainerPort": {
-     "description": "The port of the container to which traffic is forwarded to.",
      "type": "integer"
     },
     "HealthCheckConfig": {
-     "$ref": "#/definitions/HealthCheckConfig",
-     "description": "An object that describes the health check configuration of the container."
+     "$ref": "#/definitions/HealthCheckConfig"
     }
    },
    "type": "object"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -204,7 +175,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Lightsail::Container",
  "handlers": {
   "create": {
    "permissions": [
@@ -251,27 +221,21 @@
    "type": "string"
   },
   "ContainerServiceDeployment": {
-   "$ref": "#/definitions/ContainerServiceDeployment",
-   "description": "Describes a container deployment configuration of an Amazon Lightsail container service."
+   "$ref": "#/definitions/ContainerServiceDeployment"
   },
   "IsDisabled": {
-   "description": "A Boolean value to indicate whether the container service is disabled.",
    "type": "boolean"
   },
   "Power": {
-   "description": "The power specification for the container service.",
    "type": "string"
   },
   "PrincipalArn": {
-   "description": "The principal ARN of the container service.",
    "type": "string"
   },
   "PrivateRegistryAccess": {
-   "$ref": "#/definitions/PrivateRegistryAccess",
-   "description": "A Boolean value to indicate whether the container service has access to private container image repositories, such as Amazon Elastic Container Registry (Amazon ECR) private repositories."
+   "$ref": "#/definitions/PrivateRegistryAccess"
   },
   "PublicDomainNames": {
-   "description": "The public domain names to use with the container service, such as example.com and www.example.com.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/PublicDomainName"
@@ -280,20 +244,17 @@
    "uniqueItems": true
   },
   "Scale": {
-   "description": "The scale specification for the container service.",
    "maximum": 20,
    "minimum": 1,
    "type": "integer"
   },
   "ServiceName": {
-   "description": "The name for the container service.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-z0-9]{1,2}|[a-z0-9][a-z0-9-]+[a-z0-9]$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -302,7 +263,6 @@
    "uniqueItems": true
   },
   "Url": {
-   "description": "The publicly accessible URL of the container service.",
    "type": "string"
   }
  },
