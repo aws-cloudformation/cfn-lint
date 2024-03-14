@@ -5,7 +5,6 @@
  ],
  "definitions": {
   "AccountAccessType": {
-   "description": "These enums represent valid account access types. Specifically these enums determine whether the workspace can access AWS resources in the AWS account only, or whether it can also access resources in other accounts in the same organization. If the value CURRENT_ACCOUNT is used, a workspace role ARN must be provided. If the value is ORGANIZATION, a list of organizational units must be provided.",
    "enum": [
     "CURRENT_ACCOUNT",
     "ORGANIZATION"
@@ -14,40 +13,33 @@
   },
   "AssertionAttributes": {
    "additionalProperties": false,
-   "description": "Maps Grafana friendly names to the IdPs SAML attributes.",
    "properties": {
     "Email": {
-     "description": "Name of the attribute within the SAML assert to use as the users email in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Groups": {
-     "description": "Name of the attribute within the SAML assert to use as the users groups in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Login": {
-     "description": "Name of the attribute within the SAML assert to use as the users login handle in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Name": {
-     "description": "Name of the attribute within the SAML assert to use as the users name in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Org": {
-     "description": "Name of the attribute within the SAML assert to use as the users organizations in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Role": {
-     "description": "Name of the attribute within the SAML assert to use as the users roles in Grafana.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
@@ -56,7 +48,6 @@
    "type": "object"
   },
   "AuthenticationProviderTypes": {
-   "description": "Valid workspace authentication providers.",
    "enum": [
     "AWS_SSO",
     "SAML"
@@ -64,7 +55,6 @@
    "type": "string"
   },
   "DataSourceType": {
-   "description": "These enums represent valid AWS data sources that can be queried via the Grafana workspace. These data sources are primarily used to help customers visualize which data sources have been added to a service managed workspace IAM role.",
    "enum": [
     "AMAZON_OPENSEARCH_SERVICE",
     "CLOUDWATCH",
@@ -79,16 +69,13 @@
   },
   "IdpMetadata": {
    "additionalProperties": false,
-   "description": "IdP Metadata used to configure SAML authentication in Grafana.",
    "properties": {
     "Url": {
-     "description": "URL that vends the IdPs metadata.",
      "maxLength": 2048,
      "minLength": 1,
      "type": "string"
     },
     "Xml": {
-     "description": "XML blob of the IdPs metadata.",
      "type": "string"
     }
    },
@@ -96,13 +83,10 @@
   },
   "NetworkAccessControl": {
    "additionalProperties": false,
-   "description": "The configuration settings for Network Access Control.",
    "properties": {
     "PrefixListIds": {
-     "description": "The list of prefix list IDs. A prefix list is a list of CIDR ranges of IP addresses. The IP addresses specified are allowed to access your workspace. If the list is not included in the configuration then no IP addresses will be allowed to access the workspace.",
      "insertionOrder": false,
      "items": {
-      "description": "Prefix List Ids",
       "minLength": 1,
       "type": "string"
      },
@@ -112,10 +96,8 @@
      "uniqueItems": true
     },
     "VpceIds": {
-     "description": "The list of Amazon VPC endpoint IDs for the workspace. If a NetworkAccessConfiguration is specified then only VPC endpoints specified here will be allowed to access the workspace.",
      "insertionOrder": false,
      "items": {
-      "description": "VPCE Ids",
       "minLength": 1,
       "type": "string"
      },
@@ -128,14 +110,12 @@
    "type": "object"
   },
   "NotificationDestinationType": {
-   "description": "These enums represent valid AWS notification destinations that the Grafana workspace has permission to use. These notification destinations are primarily used to help customers visualize which destinations have been added to a service managed IAM role.",
    "enum": [
     "SNS"
    ],
    "type": "string"
   },
   "PermissionType": {
-   "description": "These enums represent valid permission types to use when creating or configuring a Grafana workspace. The SERVICE_MANAGED permission type means the Managed Grafana service will create a workspace IAM role on your behalf. The CUSTOMER_MANAGED permission type means that the customer is expected to provide an IAM role that the Grafana workspace can use to query data sources.",
    "enum": [
     "CUSTOMER_MANAGED",
     "SERVICE_MANAGED"
@@ -144,13 +124,10 @@
   },
   "RoleValues": {
    "additionalProperties": false,
-   "description": "Maps SAML roles to the Grafana Editor and Admin roles.",
    "properties": {
     "Admin": {
-     "description": "List of SAML roles which will be mapped into the Grafana Admin role.",
      "insertionOrder": false,
      "items": {
-      "description": "A single SAML role.",
       "maxLength": 256,
       "minLength": 1,
       "type": "string"
@@ -158,10 +135,8 @@
      "type": "array"
     },
     "Editor": {
-     "description": "List of SAML roles which will be mapped into the Grafana Editor role.",
      "insertionOrder": false,
      "items": {
-      "description": "A single SAML role.",
       "maxLength": 256,
       "minLength": 1,
       "type": "string"
@@ -173,13 +148,10 @@
   },
   "SamlConfiguration": {
    "additionalProperties": false,
-   "description": "SAML configuration data associated with an AMG workspace.",
    "properties": {
     "AllowedOrganizations": {
-     "description": "List of SAML organizations allowed to access Grafana.",
      "insertionOrder": false,
      "items": {
-      "description": "A single SAML organization.",
       "maxLength": 256,
       "minLength": 1,
       "type": "string"
@@ -193,7 +165,6 @@
      "$ref": "#/definitions/IdpMetadata"
     },
     "LoginValidityDuration": {
-     "description": "The maximum lifetime an authenticated user can be logged in (in minutes) before being required to re-authenticate.",
      "type": "number"
     },
     "RoleValues": {
@@ -206,7 +177,6 @@
    "type": "object"
   },
   "SamlConfigurationStatus": {
-   "description": "Valid SAML configuration statuses.",
    "enum": [
     "CONFIGURED",
     "NOT_CONFIGURED"
@@ -215,13 +185,10 @@
   },
   "VpcConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration settings for an Amazon VPC that contains data sources for your Grafana workspace to connect to.",
    "properties": {
     "SecurityGroupIds": {
-     "description": "The list of Amazon EC2 security group IDs attached to the Amazon VPC for your Grafana workspace to connect.",
      "insertionOrder": false,
      "items": {
-      "description": "VPC Security Group Id",
       "maxLength": 255,
       "minLength": 1,
       "type": "string"
@@ -232,10 +199,8 @@
      "uniqueItems": true
     },
     "SubnetIds": {
-     "description": "The list of Amazon EC2 subnet IDs created in the Amazon VPC for your Grafana workspace to connect.",
      "insertionOrder": false,
      "items": {
-      "description": "VPC Subnet Id",
       "maxLength": 255,
       "minLength": 1,
       "type": "string"
@@ -253,7 +218,6 @@
    "type": "object"
   },
   "WorkspaceStatus": {
-   "description": "These enums represent the status of a workspace.",
    "enum": [
     "ACTIVE",
     "CREATING",
@@ -272,7 +236,6 @@
    "type": "string"
   }
  },
- "description": "Definition of AWS::Grafana::Workspace Resource Type",
  "handlers": {
   "create": {
    "permissions": [
@@ -348,7 +311,6 @@
    "$ref": "#/definitions/AccountAccessType"
   },
   "AuthenticationProviders": {
-   "description": "List of authentication providers to enable.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/AuthenticationProviderTypes"
@@ -358,17 +320,14 @@
    "uniqueItems": true
   },
   "ClientToken": {
-   "description": "A unique, case-sensitive, user-provided identifier to ensure the idempotency of the request.",
    "pattern": "^[!-~]{1,64}$",
    "type": "string"
   },
   "CreationTimestamp": {
-   "description": "Timestamp when the workspace was created.",
    "format": "date-time",
    "type": "string"
   },
   "DataSources": {
-   "description": "List of data sources on the service managed IAM role.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/DataSourceType"
@@ -376,35 +335,29 @@
    "type": "array"
   },
   "Description": {
-   "description": "Description of a workspace.",
    "maxLength": 2048,
    "minLength": 0,
    "type": "string"
   },
   "Endpoint": {
-   "description": "Endpoint for the Grafana workspace.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
   },
   "GrafanaVersion": {
-   "description": "The version of Grafana to support in your workspace.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "Id": {
-   "description": "The id that uniquely identifies a Grafana workspace.",
    "pattern": "^g-[0-9a-f]{10}$",
    "type": "string"
   },
   "ModificationTimestamp": {
-   "description": "Timestamp when the workspace was last modified",
    "format": "date-time",
    "type": "string"
   },
   "Name": {
-   "description": "The user friendly name of a workspace.",
    "pattern": "^[a-zA-Z0-9-._~]{1,255}$",
    "type": "string"
   },
@@ -412,7 +365,6 @@
    "$ref": "#/definitions/NetworkAccessControl"
   },
   "NotificationDestinations": {
-   "description": "List of notification destinations on the customers service managed IAM role that the Grafana workspace can query.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/NotificationDestinationType"
@@ -420,16 +372,13 @@
    "type": "array"
   },
   "OrganizationRoleName": {
-   "description": "The name of an IAM role that already exists to use with AWS Organizations to access AWS data sources and notification channels in other accounts in an organization.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
   },
   "OrganizationalUnits": {
-   "description": "List of Organizational Units containing AWS accounts the Grafana workspace can pull data from.",
    "insertionOrder": false,
    "items": {
-    "description": "Id of an organizational unit.",
     "type": "string"
    },
    "type": "array"
@@ -438,11 +387,9 @@
    "$ref": "#/definitions/PermissionType"
   },
   "PluginAdminEnabled": {
-   "description": "Allow workspace admins to install plugins",
    "type": "boolean"
   },
   "RoleArn": {
-   "description": "IAM Role that will be used to grant the Grafana workspace access to a customers AWS resources.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
@@ -454,11 +401,9 @@
    "$ref": "#/definitions/SamlConfigurationStatus"
   },
   "SsoClientId": {
-   "description": "The client ID of the AWS SSO Managed Application.",
    "type": "string"
   },
   "StackSetName": {
-   "description": "The name of the AWS CloudFormation stack set to use to generate IAM roles to be used for this workspace.",
    "type": "string"
   },
   "Status": {

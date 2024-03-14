@@ -23,7 +23,6 @@
    "additionalProperties": false,
    "properties": {
     "RepositoryUrl": {
-     "description": "A CodeRepository (valid URL) to be used within Jupyter's Git extension.",
      "maxLength": 256,
      "pattern": "^https://([.\\-_a-zA-Z0-9]+/?){3,1016}$",
      "type": "string"
@@ -54,22 +53,18 @@
   },
   "CustomImage": {
    "additionalProperties": false,
-   "description": "A custom SageMaker image.",
    "properties": {
     "AppImageConfigName": {
-     "description": "The Name of the AppImageConfig.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
      "type": "string"
     },
     "ImageName": {
-     "description": "The name of the CustomImage. Must be unique to your account.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$",
      "type": "string"
     },
     "ImageVersionNumber": {
-     "description": "The version number of the CustomImage.",
      "minimum": 0,
      "type": "integer"
     }
@@ -97,11 +92,9 @@
   },
   "EbsStorageSettings": {
    "additionalProperties": false,
-   "description": "Properties related to the space's Amazon Elastic Block Store volume.",
    "properties": {
     "EbsVolumeSizeInGb": {
-     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
-     "description": "Size of the Amazon EBS volume in Gb"
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb"
     }
    },
    "required": [
@@ -111,7 +104,6 @@
   },
   "JupyterServerAppSettings": {
    "additionalProperties": false,
-   "description": "The JupyterServer app settings.",
    "properties": {
     "DefaultResourceSpec": {
      "$ref": "#/definitions/ResourceSpec"
@@ -121,10 +113,8 @@
   },
   "KernelGatewayAppSettings": {
    "additionalProperties": false,
-   "description": "The kernel gateway app settings.",
    "properties": {
     "CustomImages": {
-     "description": "A list of custom SageMaker images that are configured to run as a KernelGateway app.",
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
@@ -134,8 +124,7 @@
      "uniqueItems": false
     },
     "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec",
-     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the KernelGateway app."
+     "$ref": "#/definitions/ResourceSpec"
     }
    },
    "type": "object"
@@ -158,7 +147,6 @@
    "additionalProperties": false,
    "properties": {
     "InstanceType": {
-     "description": "The instance type that the image version runs on.",
      "enum": [
       "system",
       "ml.t3.micro",
@@ -227,13 +215,11 @@
      "type": "string"
     },
     "SageMakerImageArn": {
-     "description": "The ARN of the SageMaker image that the image version belongs to.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$",
      "type": "string"
     },
     "SageMakerImageVersionArn": {
-     "description": "The ARN of the image version created on the instance.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
      "type": "string"
@@ -243,7 +229,6 @@
   },
   "SpaceCodeEditorAppSettings": {
    "additionalProperties": false,
-   "description": "The CodeEditor app settings.",
    "properties": {
     "DefaultResourceSpec": {
      "$ref": "#/definitions/ResourceSpec"
@@ -258,10 +243,8 @@
   },
   "SpaceJupyterLabAppSettings": {
    "additionalProperties": false,
-   "description": "The JupyterServer app settings.",
    "properties": {
     "CodeRepositories": {
-     "description": "A list of CodeRepositories available for use with JupyterLab apps.",
      "items": {
       "$ref": "#/definitions/CodeRepository"
      },
@@ -278,33 +261,27 @@
   },
   "SpaceSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that apply to spaces of Amazon SageMaker Studio. These settings are specified when the CreateSpace API is called.",
    "properties": {
     "AppType": {
      "$ref": "#/definitions/AppType"
     },
     "CodeEditorAppSettings": {
-     "$ref": "#/definitions/SpaceCodeEditorAppSettings",
-     "description": "The CodeEditor app settings."
+     "$ref": "#/definitions/SpaceCodeEditorAppSettings"
     },
     "CustomFileSystems": {
      "$ref": "#/definitions/CustomFileSystems"
     },
     "JupyterLabAppSettings": {
-     "$ref": "#/definitions/SpaceJupyterLabAppSettings",
-     "description": "The JupyterLab app settings."
+     "$ref": "#/definitions/SpaceJupyterLabAppSettings"
     },
     "JupyterServerAppSettings": {
-     "$ref": "#/definitions/JupyterServerAppSettings",
-     "description": "The Jupyter server's app settings."
+     "$ref": "#/definitions/JupyterServerAppSettings"
     },
     "KernelGatewayAppSettings": {
-     "$ref": "#/definitions/KernelGatewayAppSettings",
-     "description": "The kernel gateway app settings."
+     "$ref": "#/definitions/KernelGatewayAppSettings"
     },
     "SpaceStorageSettings": {
-     "$ref": "#/definitions/SpaceStorageSettings",
-     "description": "Default storage settings for a space."
+     "$ref": "#/definitions/SpaceStorageSettings"
     }
    },
    "type": "object"
@@ -355,7 +332,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::Space",
  "handlers": {
   "create": {
    "permissions": [
@@ -392,7 +368,6 @@
  ],
  "properties": {
   "DomainId": {
-   "description": "The ID of the associated Domain.",
    "maxLength": 63,
    "minLength": 1,
    "type": "string"
@@ -401,7 +376,6 @@
    "$ref": "#/definitions/OwnershipSettings"
   },
   "SpaceArn": {
-   "description": "The space Amazon Resource Name (ARN).",
    "maxLength": 256,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:space/.*",
    "type": "string"
@@ -412,14 +386,12 @@
    "type": "string"
   },
   "SpaceName": {
-   "description": "A name for the Space.",
    "maxLength": 63,
    "minLength": 1,
    "type": "string"
   },
   "SpaceSettings": {
    "$ref": "#/definitions/SpaceSettings",
-   "description": "A collection of settings.",
    "maxItems": 50,
    "minItems": 0,
    "uniqueItems": false
@@ -428,7 +400,6 @@
    "$ref": "#/definitions/SpaceSharingSettings"
   },
   "Tags": {
-   "description": "A list of tags to apply to the space.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

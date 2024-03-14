@@ -9,7 +9,6 @@
  "definitions": {
   "NFS": {
    "additionalProperties": false,
-   "description": "NFS protocol configuration for FSx ONTAP file system.",
    "properties": {
     "MountOptions": {
      "$ref": "#/definitions/NfsMountOptions"
@@ -22,10 +21,8 @@
   },
   "NfsMountOptions": {
    "additionalProperties": false,
-   "description": "The NFS mount options that DataSync can use to mount your NFS share.",
    "properties": {
     "Version": {
-     "description": "The specific NFS version that you want DataSync to use to mount your NFS share.",
      "enum": [
       "AUTOMATIC",
       "NFS3",
@@ -39,7 +36,6 @@
   },
   "Protocol": {
    "additionalProperties": false,
-   "description": "Configuration settings for NFS or SMB protocol.",
    "properties": {
     "NFS": {
      "$ref": "#/definitions/NFS"
@@ -52,10 +48,8 @@
   },
   "SMB": {
    "additionalProperties": false,
-   "description": "SMB protocol configuration for FSx ONTAP file system.",
    "properties": {
     "Domain": {
-     "description": "The name of the Windows domain that the SMB server belongs to.",
      "maxLength": 253,
      "pattern": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$",
      "type": "string"
@@ -64,13 +58,11 @@
      "$ref": "#/definitions/SmbMountOptions"
     },
     "Password": {
-     "description": "The password of the user who can mount the share and has the permissions to access files and folders in the SMB share.",
      "maxLength": 104,
      "pattern": "^.{0,104}$",
      "type": "string"
     },
     "User": {
-     "description": "The user who can mount the share, has the permissions to access files and folders in the SMB share.",
      "maxLength": 104,
      "pattern": "^[^\\x5B\\x5D\\\\/:;|=,+*?]{1,104}$",
      "type": "string"
@@ -85,10 +77,8 @@
   },
   "SmbMountOptions": {
    "additionalProperties": false,
-   "description": "The mount options used by DataSync to access the SMB server.",
    "properties": {
     "Version": {
-     "description": "The specific SMB version that you want DataSync to use to mount your SMB share.",
      "enum": [
       "AUTOMATIC",
       "SMB2",
@@ -101,17 +91,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
@@ -125,7 +112,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::DataSync::LocationFSxONTAP.",
  "handlers": {
   "create": {
    "permissions": [
@@ -170,19 +156,16 @@
  ],
  "properties": {
   "FsxFilesystemArn": {
-   "description": "The Amazon Resource Name (ARN) for the FSx ONAP file system.",
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]+:[0-9]{12}:file-system/fs-[0-9a-f]+$",
    "type": "string"
   },
   "LocationArn": {
-   "description": "The Amazon Resource Name (ARN) of the Amazon FSx ONTAP file system location that is created.",
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
    "type": "string"
   },
   "LocationUri": {
-   "description": "The URL of the FSx ONTAP file system that was described.",
    "maxLength": 4360,
    "pattern": "^(efs|nfs|s3|smb|hdfs|fsx[a-z0-9-]+)://[a-zA-Z0-9.:/\\-]+$",
    "type": "string"
@@ -191,7 +174,6 @@
    "$ref": "#/definitions/Protocol"
   },
   "SecurityGroupArns": {
-   "description": "The ARNs of the security groups that are to use to configure the FSx ONTAP file system.",
    "insertionOrder": false,
    "items": {
     "maxLength": 128,
@@ -203,19 +185,16 @@
    "type": "array"
   },
   "StorageVirtualMachineArn": {
-   "description": "The Amazon Resource Name (ARN) for the FSx ONTAP SVM.",
    "maxLength": 162,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]+:[0-9]{12}:storage-virtual-machine/fs-[0-9a-f]+/svm-[0-9a-f]{17,}$",
    "type": "string"
   },
   "Subdirectory": {
-   "description": "A subdirectory in the location's path.",
    "maxLength": 4096,
    "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

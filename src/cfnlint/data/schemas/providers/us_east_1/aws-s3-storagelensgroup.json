@@ -6,7 +6,6 @@
  "definitions": {
   "And": {
    "additionalProperties": false,
-   "description": "The Storage Lens group will include objects that match all of the specified filter values.",
    "minProperties": 2,
    "properties": {
     "MatchAnyPrefix": {
@@ -30,7 +29,6 @@
   },
   "Filter": {
    "additionalProperties": false,
-   "description": "Sets the Storage Lens Group filter.",
    "properties": {
     "And": {
      "$ref": "#/definitions/And"
@@ -57,7 +55,6 @@
    "type": "object"
   },
   "MatchAnyPrefix": {
-   "description": "Filter to match any of the specified prefixes.",
    "insertionOrder": false,
    "items": {
     "maxLength": 1024,
@@ -67,7 +64,6 @@
    "uniqueItems": true
   },
   "MatchAnySuffix": {
-   "description": "Filter to match any of the specified suffixes.",
    "insertionOrder": false,
    "items": {
     "maxLength": 1024,
@@ -77,7 +73,6 @@
    "uniqueItems": true
   },
   "MatchAnyTag": {
-   "description": "Filter to match any of the specified object tags.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -87,15 +82,12 @@
   },
   "MatchObjectAge": {
    "additionalProperties": false,
-   "description": "Filter to match all of the specified values for the minimum and maximum object age.",
    "properties": {
     "DaysGreaterThan": {
-     "description": "Minimum object age to which the rule applies.",
      "minimum": 1,
      "type": "integer"
     },
     "DaysLessThan": {
-     "description": "Maximum object age to which the rule applies.",
      "minimum": 1,
      "type": "integer"
     }
@@ -104,16 +96,13 @@
   },
   "MatchObjectSize": {
    "additionalProperties": false,
-   "description": "Filter to match all of the specified values for the minimum and maximum object size.",
    "properties": {
     "BytesGreaterThan": {
-     "description": "Minimum object size to which the rule applies.",
      "format": "int64",
      "minimum": 1,
      "type": "integer"
     },
     "BytesLessThan": {
-     "description": "Maximum object size to which the rule applies.",
      "format": "int64",
      "minimum": 1,
      "type": "integer"
@@ -122,7 +111,6 @@
    "type": "object"
   },
   "Name": {
-   "description": "The name that identifies the Amazon S3 Storage Lens Group.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9\\-_]+$",
@@ -130,7 +118,6 @@
   },
   "Or": {
    "additionalProperties": false,
-   "description": "The Storage Lens group will include objects that match any of the specified filter values.",
    "minProperties": 2,
    "properties": {
     "MatchAnyPrefix": {
@@ -173,7 +160,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::S3::StorageLensGroup resource is an Amazon S3 resource type that you can use to create Storage Lens Group.",
  "handlers": {
   "create": {
    "permissions": [
@@ -220,11 +206,9 @@
    "$ref": "#/definitions/Name"
   },
   "StorageLensGroupArn": {
-   "description": "The ARN for the Amazon S3 Storage Lens Group.",
    "type": "string"
   },
   "Tags": {
-   "description": "A set of tags (key-value pairs) for this Amazon S3 Storage Lens Group.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Tag"

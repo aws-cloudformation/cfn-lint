@@ -8,11 +8,9 @@
  "definitions": {
   "FileConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration for what files should be pulled from the source.",
    "properties": {
     "Filters": {
      "additionalProperties": false,
-     "description": "Restrictions for what files should be pulled from the source.",
      "patternProperties": {
       "^[A-Za-z]": {
        "items": {
@@ -28,7 +26,6 @@
      "type": "object"
     },
     "Folders": {
-     "description": "Identifiers for the source folders to pull all files from recursively.",
      "items": {
       "maxLength": 200,
       "minLength": 1,
@@ -47,7 +44,6 @@
   },
   "ObjectConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration for what data should be pulled from the source.",
    "patternProperties": {
     "^.+$": {
      "additionalProperties": false,
@@ -72,21 +68,18 @@
    "additionalProperties": false,
    "properties": {
     "FirstExecutionFrom": {
-     "description": "The start date for objects to import in the first flow run. Epoch or ISO timestamp format is supported.",
      "maxLength": 255,
      "minLength": 1,
      "pattern": ".*\\S.*",
      "type": "string"
     },
     "Object": {
-     "description": "The name of the object to pull from the data source.",
      "maxLength": 255,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
      "type": "string"
     },
     "ScheduleExpression": {
-     "description": "How often the data should be pulled from data source.",
      "maxLength": 255,
      "minLength": 1,
      "pattern": ".*\\S.*",
@@ -100,17 +93,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A label for tagging DataIntegration resources",
    "properties": {
     "Key": {
-     "description": "A key to identify the tag.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "Corresponding tag value for the key.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -123,7 +113,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::AppIntegrations::DataIntegration",
  "handlers": {
   "create": {
    "permissions": [
@@ -199,60 +188,50 @@
  ],
  "properties": {
   "DataIntegrationArn": {
-   "description": "The Amazon Resource Name (ARN) of the data integration.",
    "maxLength": 2048,
    "minLength": 1,
    "pattern": "^arn:aws[-a-z]*:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
    "type": "string"
   },
   "Description": {
-   "description": "The data integration description.",
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
   },
   "FileConfiguration": {
-   "$ref": "#/definitions/FileConfiguration",
-   "description": "The configuration for what files should be pulled from the source."
+   "$ref": "#/definitions/FileConfiguration"
   },
   "Id": {
-   "description": "The unique identifer of the data integration.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
    "type": "string"
   },
   "KmsKey": {
-   "description": "The KMS key of the data integration.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": ".*\\S.*",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the data integration.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
    "type": "string"
   },
   "ObjectConfiguration": {
-   "$ref": "#/definitions/ObjectConfiguration",
-   "description": "The configuration for what data should be pulled from the source."
+   "$ref": "#/definitions/ObjectConfiguration"
   },
   "ScheduleConfig": {
-   "$ref": "#/definitions/ScheduleConfig",
-   "description": "The name of the data and how often it should be pulled from the source."
+   "$ref": "#/definitions/ScheduleConfig"
   },
   "SourceURI": {
-   "description": "The URI of the data source.",
    "maxLength": 1000,
    "minLength": 1,
    "pattern": "^(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+$)|(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+[\\w/!@#+=.-]+[\\w/!@#+=.,-]+$)",
    "type": "string"
   },
   "Tags": {
-   "description": "The tags (keys and values) associated with the data integration.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

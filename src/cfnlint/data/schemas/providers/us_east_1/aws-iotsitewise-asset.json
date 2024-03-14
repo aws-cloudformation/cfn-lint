@@ -3,28 +3,23 @@
  "definitions": {
   "AssetHierarchy": {
    "additionalProperties": false,
-   "description": "A hierarchy specifies allowed parent/child asset relationships.",
    "properties": {
     "ChildAssetId": {
-     "description": "The ID of the child asset to be associated.",
      "type": "string"
     },
     "ExternalId": {
-     "description": "String-friendly customer provided external ID",
      "maxLength": 128,
      "minLength": 2,
      "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
      "type": "string"
     },
     "Id": {
-     "description": "Customer provided actual UUID for property",
      "maxLength": 36,
      "minLength": 36,
      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
      "type": "string"
     },
     "LogicalId": {
-     "description": "The LogicalID of a hierarchy in the parent asset's model.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[^\\u0000-\\u001F\\u007F]+",
@@ -38,35 +33,29 @@
   },
   "AssetProperty": {
    "additionalProperties": false,
-   "description": "The asset property's definition, alias, unit, and notification state.",
    "properties": {
     "Alias": {
-     "description": "The property alias that identifies the property.",
      "type": "string"
     },
     "ExternalId": {
-     "description": "String-friendly customer provided external ID",
      "maxLength": 128,
      "minLength": 2,
      "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
      "type": "string"
     },
     "Id": {
-     "description": "Customer provided actual UUID for property",
      "maxLength": 36,
      "minLength": 36,
      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
      "type": "string"
     },
     "LogicalId": {
-     "description": "Customer provided ID for property.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[^\\u0000-\\u001F\\u007F]+",
      "type": "string"
     },
     "NotificationState": {
-     "description": "The MQTT notification state (ENABLED or DISABLED) for this asset property.",
      "enum": [
       "ENABLED",
       "DISABLED"
@@ -74,7 +63,6 @@
      "type": "string"
     },
     "Unit": {
-     "description": "The unit of measure (such as Newtons or RPM) of the asset property. If you don't specify a value for this parameter, the service uses the value of the assetModelProperty in the asset model.",
      "type": "string"
     }
    },
@@ -97,7 +85,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::IoTSiteWise::Asset",
  "handlers": {
   "create": {
    "permissions": [
@@ -168,15 +155,12 @@
  ],
  "properties": {
   "AssetArn": {
-   "description": "The ARN of the asset",
    "type": "string"
   },
   "AssetDescription": {
-   "description": "A description for the asset",
    "type": "string"
   },
   "AssetExternalId": {
-   "description": "The External ID of the asset",
    "maxLength": 128,
    "minLength": 2,
    "pattern": "[a-zA-Z0-9_][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9_]+",
@@ -190,18 +174,15 @@
    "type": "array"
   },
   "AssetId": {
-   "description": "The ID of the asset",
    "maxLength": 36,
    "minLength": 36,
    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
    "type": "string"
   },
   "AssetModelId": {
-   "description": "The ID of the asset model from which to create the asset.",
    "type": "string"
   },
   "AssetName": {
-   "description": "A unique, friendly name for the asset.",
    "type": "string"
   },
   "AssetProperties": {
@@ -212,7 +193,6 @@
    "type": "array"
   },
   "Tags": {
-   "description": "A list of key-value pairs that contain metadata for the asset.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

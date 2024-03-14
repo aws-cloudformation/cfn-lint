@@ -9,34 +9,29 @@
    "additionalProperties": false,
    "properties": {
     "ComponentName": {
-     "description": "The name of the component.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\-0-9]+",
      "type": "string"
     },
     "ComponentTypeId": {
-     "description": "The ID of the component type.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\-0-9]+",
      "type": "string"
     },
     "DefinedIn": {
-     "description": "The name of the property definition set in the component.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Description": {
-     "description": "The description of the component.",
      "maxLength": 512,
      "minLength": 0,
      "type": "string"
     },
     "Properties": {
      "additionalProperties": false,
-     "description": "An object that maps strings to the properties to set in the component type. Each string in the mapping must be unique to this object.",
      "patternProperties": {
       "[a-zA-Z_\\-0-9]+": {
        "$ref": "#/definitions/Property"
@@ -46,7 +41,6 @@
     },
     "PropertyGroups": {
      "additionalProperties": false,
-     "description": "An object that maps strings to the property groups to set in the component type. Each string in the mapping must be unique to this object.",
      "patternProperties": {
       "[a-zA-Z_\\-0-9]+": {
        "$ref": "#/definitions/PropertyGroup"
@@ -55,8 +49,7 @@
      "type": "object"
     },
     "Status": {
-     "$ref": "#/definitions/Status",
-     "description": "The current status of the entity."
+     "$ref": "#/definitions/Status"
     }
    },
    "type": "object"
@@ -65,35 +58,30 @@
    "additionalProperties": false,
    "properties": {
     "ComponentName": {
-     "description": "The name of the component.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\-0-9]+",
      "type": "string"
     },
     "ComponentPath": {
-     "description": "The path of the component.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\-0-9/]+",
      "type": "string"
     },
     "ComponentTypeId": {
-     "description": "The ID of the component type.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\-0-9]+",
      "type": "string"
     },
     "Description": {
-     "description": "The description of the component.",
      "maxLength": 512,
      "minLength": 0,
      "type": "string"
     },
     "Properties": {
      "additionalProperties": false,
-     "description": "An object that maps strings to the properties to set in the component type. Each string in the mapping must be unique to this object.",
      "patternProperties": {
       "[a-zA-Z_\\-0-9]+": {
        "$ref": "#/definitions/Property"
@@ -103,7 +91,6 @@
     },
     "PropertyGroups": {
      "additionalProperties": false,
-     "description": "An object that maps strings to the property groups to set in the component type. Each string in the mapping must be unique to this object.",
      "patternProperties": {
       "[a-zA-Z_\\-0-9]+": {
        "$ref": "#/definitions/PropertyGroup"
@@ -112,18 +99,15 @@
      "type": "object"
     },
     "Status": {
-     "$ref": "#/definitions/Status",
-     "description": "The current status of the component."
+     "$ref": "#/definitions/Status"
     }
    },
    "type": "object"
   },
   "DataType": {
    "additionalProperties": false,
-   "description": "An object that specifies the data type of a property.",
    "properties": {
     "AllowedValues": {
-     "description": "The allowed values for this data type.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/DataValue"
@@ -134,15 +118,12 @@
      "uniqueItems": false
     },
     "NestedType": {
-     "$ref": "#/definitions/DataType",
-     "description": "The nested type in the data type."
+     "$ref": "#/definitions/DataType"
     },
     "Relationship": {
-     "$ref": "#/definitions/Relationship",
-     "description": "A relationship that associates a component with another component."
+     "$ref": "#/definitions/Relationship"
     },
     "Type": {
-     "description": "The underlying type of the data type.",
      "enum": [
       "RELATIONSHIP",
       "STRING",
@@ -156,7 +137,6 @@
      "type": "string"
     },
     "UnitOfMeasure": {
-     "description": "The unit of measure used in this data type.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": ".*",
@@ -167,29 +147,23 @@
   },
   "DataValue": {
    "additionalProperties": false,
-   "description": "An object that specifies a value for a property.",
    "properties": {
     "BooleanValue": {
-     "description": "A Boolean value.",
      "type": "boolean"
     },
     "DoubleValue": {
-     "description": "A double value.",
      "type": "number"
     },
     "Expression": {
-     "description": "An expression that produces the value.",
      "maxLength": 316,
      "minLength": 1,
      "pattern": "(^\\$\\{Parameters\\.[a-zA-z]+([a-zA-z_0-9]*)}$)",
      "type": "string"
     },
     "IntegerValue": {
-     "description": "An integer value.",
      "type": "integer"
     },
     "ListValue": {
-     "description": "A list of multiple values.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/DataValue"
@@ -200,12 +174,10 @@
      "uniqueItems": false
     },
     "LongValue": {
-     "description": "A long value.",
      "type": "number"
     },
     "MapValue": {
      "additionalProperties": false,
-     "description": "An object that maps strings to multiple DataValue objects.",
      "patternProperties": {
       "[a-zA-Z_\\-0-9]+": {
        "$ref": "#/definitions/DataValue"
@@ -215,7 +187,6 @@
     },
     "RelationshipValue": {
      "additionalProperties": false,
-     "description": "A value that relates a component to another component.",
      "properties": {
       "TargetComponentName": {
        "maxLength": 256,
@@ -233,7 +204,6 @@
      "type": "object"
     },
     "StringValue": {
-     "description": "A string value.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": ".*",
@@ -248,46 +218,35 @@
   },
   "Definition": {
    "additionalProperties": false,
-   "description": "An object that specifies information about a property definition.",
    "properties": {
     "Configuration": {
-     "$ref": "#/definitions/PropertyDefinitionConfiguration",
-     "description": "An object that specifies information about a property configuration."
+     "$ref": "#/definitions/PropertyDefinitionConfiguration"
     },
     "DataType": {
-     "$ref": "#/definitions/DataType",
-     "description": "An object that contains information about the data type."
+     "$ref": "#/definitions/DataType"
     },
     "DefaultValue": {
-     "$ref": "#/definitions/DataValue",
-     "description": "An object that contains the default value."
+     "$ref": "#/definitions/DataValue"
     },
     "IsExternalId": {
-     "description": "A Boolean value that specifies whether the property ID comes from an external data store.",
      "type": "boolean"
     },
     "IsFinal": {
-     "description": "A Boolean value that specifies whether the property definition can be updated.",
      "type": "boolean"
     },
     "IsImported": {
-     "description": "A Boolean value that specifies whether the property definition is imported from an external data store.",
      "type": "boolean"
     },
     "IsInherited": {
-     "description": "A Boolean value that specifies whether the property definition is inherited from a parent entity.",
      "type": "boolean"
     },
     "IsRequiredInEntity": {
-     "description": "A Boolean value that specifies whether the property is required.",
      "type": "boolean"
     },
     "IsStoredExternally": {
-     "description": "A Boolean value that specifies whether the property is stored externally.",
      "type": "boolean"
     },
     "IsTimeSeries": {
-     "description": "A Boolean value that specifies whether the property consists of time series data.",
      "type": "boolean"
     }
    },
@@ -295,22 +254,18 @@
   },
   "Property": {
    "additionalProperties": false,
-   "description": "An object that specifies information about a property.",
    "properties": {
     "Definition": {
-     "$ref": "#/definitions/Definition",
-     "description": "The definition of the property."
+     "$ref": "#/definitions/Definition"
     },
     "Value": {
-     "$ref": "#/definitions/DataValue",
-     "description": "The value of the property."
+     "$ref": "#/definitions/DataValue"
     }
    },
    "type": "object"
   },
   "PropertyDefinitionConfiguration": {
    "additionalProperties": false,
-   "description": "An object that specifies information about a property configuration.",
    "patternProperties": {
     "[a-zA-Z_\\-0-9]+": {
      "maxLength": 256,
@@ -323,17 +278,14 @@
   },
   "PropertyGroup": {
    "additionalProperties": false,
-   "description": "An object that specifies information about a property group.",
    "properties": {
     "GroupType": {
-     "description": "The type of property group.",
      "enum": [
       "TABULAR"
      ],
      "type": "string"
     },
     "PropertyNames": {
-     "description": "The list of property names in the property group.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/PropertyName"
@@ -352,17 +304,14 @@
   },
   "Relationship": {
    "additionalProperties": false,
-   "description": "The type of the relationship.",
    "properties": {
     "RelationshipType": {
-     "description": "The type of the relationship.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": ".*",
      "type": "string"
     },
     "TargetComponentTypeId": {
-     "description": "The ID of the target component type associated with this relationship.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "[a-zA-Z_\\.\\-0-9:]+",
@@ -378,12 +327,10 @@
      "anyOf": [
       {
        "additionalProperties": false,
-       "description": "Empty Error object.",
        "type": "object"
       },
       {
        "additionalProperties": false,
-       "description": "Error object with Message and Code.",
        "properties": {
         "Code": {
          "enum": [
@@ -417,7 +364,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::IoTTwinMaker::Entity",
  "handlers": {
   "create": {
    "permissions": [
@@ -488,7 +434,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The ARN of the entity.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
@@ -496,7 +441,6 @@
   },
   "Components": {
    "additionalProperties": false,
-   "description": "A map that sets information about a component type.",
    "patternProperties": {
     "[a-zA-Z_\\-0-9]+": {
      "$ref": "#/definitions/Component"
@@ -506,7 +450,6 @@
   },
   "CompositeComponents": {
    "additionalProperties": false,
-   "description": "A map that sets information about a composite component.",
    "patternProperties": {
     "[a-zA-Z_\\-0-9/]+": {
      "$ref": "#/definitions/CompositeComponent"
@@ -515,47 +458,39 @@
    "type": "object"
   },
   "CreationDateTime": {
-   "$ref": "#/definitions/DateTimeFormat",
-   "description": "The date and time when the entity was created."
+   "$ref": "#/definitions/DateTimeFormat"
   },
   "Description": {
-   "description": "The description of the entity.",
    "maxLength": 512,
    "minLength": 0,
    "type": "string"
   },
   "EntityId": {
-   "description": "The ID of the entity.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|^[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
    "type": "string"
   },
   "EntityName": {
-   "description": "The name of the entity.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z_0-9-.][a-zA-Z_0-9-. ]*[a-zA-Z0-9]+",
    "type": "string"
   },
   "HasChildEntities": {
-   "description": "A Boolean value that specifies whether the entity has child entities or not.",
    "type": "boolean"
   },
   "ParentEntityId": {
-   "description": "The ID of the parent entity.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "\\$ROOT|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|^[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
    "type": "string"
   },
   "Status": {
-   "$ref": "#/definitions/Status",
-   "description": "The current status of the entity."
+   "$ref": "#/definitions/Status"
   },
   "Tags": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "patternProperties": {
     "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
      "maxLength": 256,
@@ -566,11 +501,9 @@
    "type": "object"
   },
   "UpdateDateTime": {
-   "$ref": "#/definitions/DateTimeFormat",
-   "description": "The last date and time when the entity was updated."
+   "$ref": "#/definitions/DateTimeFormat"
   },
   "WorkspaceId": {
-   "description": "The ID of the workspace.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",

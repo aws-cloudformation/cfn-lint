@@ -6,13 +6,11 @@
  "definitions": {
   "Action": {
    "additionalProperties": false,
-   "description": "The action of the policy detail.",
    "properties": {
     "IncludeResources": {
      "$ref": "#/definitions/IncludeResources"
     },
     "Type": {
-     "description": "The action type of the policy detail.",
      "enum": [
       "DELETE",
       "DEPRECATE",
@@ -28,18 +26,14 @@
   },
   "AmiExclusionRules": {
    "additionalProperties": false,
-   "description": "The AMI exclusion rules for the policy detail.",
    "properties": {
     "IsPublic": {
-     "description": "Use to apply lifecycle policy actions on whether the AMI is public.",
      "type": "boolean"
     },
     "LastLaunched": {
-     "$ref": "#/definitions/LastLaunched",
-     "description": "Use to apply lifecycle policy actions on AMIs launched before a certain time."
+     "$ref": "#/definitions/LastLaunched"
     },
     "Regions": {
-     "description": "Use to apply lifecycle policy actions on AMIs distributed to a set of regions.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -47,7 +41,6 @@
      "type": "array"
     },
     "SharedAccounts": {
-     "description": "Use to apply lifecycle policy actions on AMIs shared with a set of regions.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -56,7 +49,6 @@
     },
     "TagMap": {
      "additionalProperties": false,
-     "description": "The AMIs to select by tag.",
      "patternProperties": {
       ".{1,}": {
        "type": "string"
@@ -69,14 +61,12 @@
   },
   "ExclusionRules": {
    "additionalProperties": false,
-   "description": "The exclusion rules to apply of the policy detail.",
    "properties": {
     "Amis": {
      "$ref": "#/definitions/AmiExclusionRules"
     },
     "TagMap": {
      "additionalProperties": false,
-     "description": "The Image Builder tags to filter on.",
      "patternProperties": {
       ".{1,}": {
        "type": "string"
@@ -89,14 +79,11 @@
   },
   "Filter": {
    "additionalProperties": false,
-   "description": "The filters to apply of the policy detail.",
    "properties": {
     "RetainAtLeast": {
-     "description": "The minimum number of Image Builder resources to retain.",
      "type": "integer"
     },
     "Type": {
-     "description": "The filter type.",
      "enum": [
       "AGE",
       "COUNT"
@@ -104,11 +91,9 @@
      "type": "string"
     },
     "Unit": {
-     "$ref": "#/definitions/TimeUnit",
-     "description": "The value's time unit."
+     "$ref": "#/definitions/TimeUnit"
     },
     "Value": {
-     "description": "The filter value.",
      "type": "integer"
     }
    },
@@ -120,18 +105,14 @@
   },
   "IncludeResources": {
    "additionalProperties": false,
-   "description": "The included resources of the policy detail.",
    "properties": {
     "Amis": {
-     "description": "Use to configure lifecycle actions on AMIs.",
      "type": "boolean"
     },
     "Containers": {
-     "description": "Use to configure lifecycle actions on containers.",
      "type": "boolean"
     },
     "Snapshots": {
-     "description": "Use to configure lifecycle actions on snapshots.",
      "type": "boolean"
     }
    },
@@ -139,14 +120,11 @@
   },
   "LastLaunched": {
    "additionalProperties": false,
-   "description": "The last launched time of a resource.",
    "properties": {
     "Unit": {
-     "$ref": "#/definitions/TimeUnit",
-     "description": "The value's time unit."
+     "$ref": "#/definitions/TimeUnit"
     },
     "Value": {
-     "description": "The last launched value.",
      "type": "integer"
     }
    },
@@ -158,7 +136,6 @@
   },
   "PolicyDetail": {
    "additionalProperties": false,
-   "description": "The policy detail of the lifecycle policy.",
    "properties": {
     "Action": {
      "$ref": "#/definitions/Action"
@@ -178,14 +155,11 @@
   },
   "RecipeSelection": {
    "additionalProperties": false,
-   "description": "The recipe to apply the lifecycle policy for.",
    "properties": {
     "Name": {
-     "description": "The recipe name.",
      "type": "string"
     },
     "SemanticVersion": {
-     "description": "The recipe version.",
      "type": "string"
     }
    },
@@ -197,10 +171,8 @@
   },
   "ResourceSelection": {
    "additionalProperties": false,
-   "description": "The resource selection for the lifecycle policy.",
    "properties": {
     "Recipes": {
-     "description": "The recipes to select.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/RecipeSelection"
@@ -209,7 +181,6 @@
     },
     "TagMap": {
      "additionalProperties": false,
-     "description": "The Image Builder resources to select by tag.",
      "patternProperties": {
       ".{1,}": {
        "type": "string"
@@ -221,7 +192,6 @@
    "type": "object"
   },
   "TimeUnit": {
-   "description": "A time unit.",
    "enum": [
     "DAYS",
     "WEEKS",
@@ -231,7 +201,6 @@
    "type": "string"
   }
  },
- "description": "Resource schema for AWS::ImageBuilder::LifecyclePolicy",
  "handlers": {
   "create": {
    "permissions": [
@@ -271,23 +240,18 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the lifecycle policy.",
    "type": "string"
   },
   "Description": {
-   "description": "The description of the lifecycle policy.",
    "type": "string"
   },
   "ExecutionRole": {
-   "description": "The execution role of the lifecycle policy.",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the lifecycle policy.",
    "type": "string"
   },
   "PolicyDetails": {
-   "description": "The policy details of the lifecycle policy.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/PolicyDetail"
@@ -295,11 +259,9 @@
    "type": "array"
   },
   "ResourceSelection": {
-   "$ref": "#/definitions/ResourceSelection",
-   "description": "The resource selection of the lifecycle policy."
+   "$ref": "#/definitions/ResourceSelection"
   },
   "ResourceType": {
-   "description": "The resource type of the lifecycle policy.",
    "enum": [
     "AMI_IMAGE",
     "CONTAINER_IMAGE"
@@ -307,7 +269,6 @@
    "type": "string"
   },
   "Status": {
-   "description": "The status of the lifecycle policy.",
    "enum": [
     "DISABLED",
     "ENABLED"
@@ -316,7 +277,6 @@
   },
   "Tags": {
    "additionalProperties": false,
-   "description": "The tags associated with the lifecycle policy.",
    "patternProperties": {
     ".{1,}": {
      "type": "string"

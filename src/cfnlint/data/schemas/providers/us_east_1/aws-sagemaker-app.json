@@ -13,7 +13,6 @@
    "additionalProperties": false,
    "properties": {
     "InstanceType": {
-     "description": "The instance type that the image version runs on.",
      "enum": [
       "system",
       "ml.t3.micro",
@@ -82,14 +81,12 @@
      "type": "string"
     },
     "SageMakerImageArn": {
-     "description": "The ARN of the SageMaker image that the image version belongs to.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$",
      "type": "string"
     },
     "SageMakerImageVersionArn": {
-     "description": "The ARN of the image version created on the instance.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
@@ -119,7 +116,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::App",
  "handlers": {
   "create": {
    "permissions": [
@@ -153,21 +149,18 @@
  ],
  "properties": {
   "AppArn": {
-   "description": "The Amazon Resource Name (ARN) of the app.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:app/.*",
    "type": "string"
   },
   "AppName": {
-   "description": "The name of the app.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
   "AppType": {
-   "description": "The type of app.",
    "enum": [
     "JupyterServer",
     "KernelGateway",
@@ -178,17 +171,14 @@
    "type": "string"
   },
   "DomainId": {
-   "description": "The domain ID.",
    "maxLength": 63,
    "minLength": 1,
    "type": "string"
   },
   "ResourceSpec": {
-   "$ref": "#/definitions/ResourceSpec",
-   "description": "The instance type and the Amazon Resource Name (ARN) of the SageMaker image created on the instance."
+   "$ref": "#/definitions/ResourceSpec"
   },
   "Tags": {
-   "description": "A list of tags to apply to the app.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -198,7 +188,6 @@
    "uniqueItems": false
   },
   "UserProfileName": {
-   "description": "The user profile name.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",

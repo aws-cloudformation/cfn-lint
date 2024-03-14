@@ -41,10 +41,8 @@
   },
   "ObjectTypeField": {
    "additionalProperties": false,
-   "description": "Represents a field in a ProfileObjectType.",
    "properties": {
     "ContentType": {
-     "description": "The content type of the field. Used for determining equality when searching.",
      "enum": [
       "STRING",
       "NUMBER",
@@ -55,13 +53,11 @@
      "type": "string"
     },
     "Source": {
-     "description": "A field of a ProfileObject. For example: _source.FirstName, where \"_source\" is a ProfileObjectType of a Zendesk user and \"FirstName\" is a field in that ObjectType.",
      "maxLength": 1000,
      "minLength": 1,
      "type": "string"
     },
     "Target": {
-     "description": "The location of the data in the standard ProfileObject model. For example: _profile.Address.PostalCode.",
      "maxLength": 1000,
      "minLength": 1,
      "type": "string"
@@ -71,10 +67,8 @@
   },
   "ObjectTypeKey": {
    "additionalProperties": false,
-   "description": "An object that defines the Key element of a ProfileObject. A Key is a special element that can be used to search for a customer profile.",
    "properties": {
     "FieldNames": {
-     "description": "The reference for the key name of the fields map. ",
      "items": {
       "maxLength": 64,
       "minLength": 1,
@@ -84,7 +78,6 @@
      "type": "array"
     },
     "StandardIdentifiers": {
-     "description": "The types of keys that a ProfileObject can have. Each ProfileObject can have only 1 UNIQUE key but multiple PROFILE keys. PROFILE means that this key can be used to tie an object to a PROFILE. UNIQUE means that it can be used to uniquely identify an object. If a key a is marked as SECONDARY, it will be used to search for profiles after all other PROFILE keys have been searched. A LOOKUP_ONLY key is only used to match a profile but is not persisted to be used for searching of the profile. A NEW_ONLY key is only used if the profile does not already exist before the object is ingested, otherwise it is only used for matching objects to profiles.",
      "items": {
       "enum": [
        "PROFILE",
@@ -125,7 +118,6 @@
    "type": "object"
   }
  },
- "description": "An ObjectType resource of Amazon Connect Customer Profiles",
  "handlers": {
   "create": {
    "permissions": [
@@ -174,40 +166,33 @@
  ],
  "properties": {
   "AllowProfileCreation": {
-   "description": "Indicates whether a profile should be created when data is received.",
    "type": "boolean"
   },
   "CreatedAt": {
-   "description": "The time of this integration got created.",
    "type": "string"
   },
   "Description": {
-   "description": "Description of the profile object type.",
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
   },
   "DomainName": {
-   "description": "The unique name of the domain.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_-]+$",
    "type": "string"
   },
   "EncryptionKey": {
-   "description": "The default encryption key",
    "maxLength": 255,
    "minLength": 0,
    "type": "string"
   },
   "ExpirationDays": {
-   "description": "The default number of days until the data within the domain expires.",
    "maximum": 1098,
    "minimum": 1,
    "type": "integer"
   },
   "Fields": {
-   "description": "A list of the name and ObjectType field.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/FieldMap"
@@ -215,7 +200,6 @@
    "type": "array"
   },
   "Keys": {
-   "description": "A list of unique keys that can be used to map data to the profile.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/KeyMap"
@@ -223,24 +207,20 @@
    "type": "array"
   },
   "LastUpdatedAt": {
-   "description": "The time of this integration got last updated at.",
    "type": "string"
   },
   "ObjectTypeName": {
-   "description": "The name of the profile object type.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
    "type": "string"
   },
   "SourceLastUpdatedTimestampFormat": {
-   "description": "The format of your sourceLastUpdatedTimestamp that was previously set up.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "Tags": {
-   "description": "The tags (keys and values) associated with the integration.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -249,7 +229,6 @@
    "type": "array"
   },
   "TemplateId": {
-   "description": "A unique identifier for the object template.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_-]+$",

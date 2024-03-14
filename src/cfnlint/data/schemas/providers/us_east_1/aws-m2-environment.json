@@ -13,15 +13,12 @@
  "definitions": {
   "EfsStorageConfiguration": {
    "additionalProperties": false,
-   "description": "Defines the storage configuration for an Amazon EFS file system.",
    "properties": {
     "FileSystemId": {
-     "description": "The file system identifier.",
      "pattern": "^\\S{1,200}$",
      "type": "string"
     },
     "MountPoint": {
-     "description": "The mount point for the file system.",
      "pattern": "^\\S{1,200}$",
      "type": "string"
     }
@@ -33,7 +30,6 @@
    "type": "object"
   },
   "EngineType": {
-   "description": "The target platform for the environment.",
    "enum": [
     "microfocus",
     "bluage"
@@ -42,15 +38,12 @@
   },
   "FsxStorageConfiguration": {
    "additionalProperties": false,
-   "description": "Defines the storage configuration for an Amazon FSx file system.",
    "properties": {
     "FileSystemId": {
-     "description": "The file system identifier.",
      "pattern": "^\\S{1,200}$",
      "type": "string"
     },
     "MountPoint": {
-     "description": "The mount point for the file system.",
      "pattern": "^\\S{1,200}$",
      "type": "string"
     }
@@ -63,7 +56,6 @@
   },
   "HighAvailabilityConfig": {
    "additionalProperties": false,
-   "description": "Defines the details of a high availability configuration.",
    "properties": {
     "DesiredCapacity": {
      "maximum": 100,
@@ -77,7 +69,6 @@
    "type": "object"
   },
   "StorageConfiguration": {
-   "description": "Defines the storage configuration for an environment.",
    "oneOf": [
     {
      "additionalProperties": false,
@@ -106,7 +97,6 @@
   },
   "TagMap": {
    "additionalProperties": false,
-   "description": "Defines tags associated to an environment.",
    "maxProperties": 200,
    "minProperties": 0,
    "patternProperties": {
@@ -119,7 +109,6 @@
    "type": "object"
   }
  },
- "description": "Represents a runtime environment that can run migrated mainframe applications.",
  "handlers": {
   "create": {
    "permissions": [
@@ -177,7 +166,6 @@
  ],
  "properties": {
   "Description": {
-   "description": "The description of the environment.",
    "maxLength": 500,
    "minLength": 0,
    "type": "string"
@@ -186,17 +174,14 @@
    "$ref": "#/definitions/EngineType"
   },
   "EngineVersion": {
-   "description": "The version of the runtime engine for the environment.",
    "pattern": "^\\S{1,10}$",
    "type": "string"
   },
   "EnvironmentArn": {
-   "description": "The Amazon Resource Name (ARN) of the runtime environment.",
    "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
    "type": "string"
   },
   "EnvironmentId": {
-   "description": "The unique identifier of the environment.",
    "pattern": "^\\S{1,80}$",
    "type": "string"
   },
@@ -204,31 +189,25 @@
    "$ref": "#/definitions/HighAvailabilityConfig"
   },
   "InstanceType": {
-   "description": "The type of instance underlying the environment.",
    "pattern": "^\\S{1,20}$",
    "type": "string"
   },
   "KmsKeyId": {
-   "description": "The ID or the Amazon Resource Name (ARN) of the customer managed KMS Key used for encrypting environment-related resources.",
    "maxLength": 2048,
    "type": "string"
   },
   "Name": {
-   "description": "The name of the environment.",
    "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
    "type": "string"
   },
   "PreferredMaintenanceWindow": {
-   "description": "Configures a desired maintenance window for the environment. If you do not provide a value, a random system-generated value will be assigned.",
    "pattern": "^\\S{1,50}$",
    "type": "string"
   },
   "PubliclyAccessible": {
-   "description": "Specifies whether the environment is publicly accessible.",
    "type": "boolean"
   },
   "SecurityGroupIds": {
-   "description": "The list of security groups for the VPC associated with this environment.",
    "insertionOrder": false,
    "items": {
     "pattern": "^\\S{1,50}$",
@@ -237,7 +216,6 @@
    "type": "array"
   },
   "StorageConfigurations": {
-   "description": "The storage configurations defined for the runtime environment.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/StorageConfiguration"
@@ -245,7 +223,6 @@
    "type": "array"
   },
   "SubnetIds": {
-   "description": "The unique identifiers of the subnets assigned to this runtime environment.",
    "insertionOrder": false,
    "items": {
     "pattern": "^\\S{1,50}$",
@@ -254,8 +231,7 @@
    "type": "array"
   },
   "Tags": {
-   "$ref": "#/definitions/TagMap",
-   "description": "Tags associated to this environment."
+   "$ref": "#/definitions/TagMap"
   }
  },
  "readOnlyProperties": [

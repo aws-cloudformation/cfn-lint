@@ -3,18 +3,14 @@
  "definitions": {
   "BridgeFlowSource": {
    "additionalProperties": false,
-   "description": "The source of the bridge. A flow source originates in MediaConnect as an existing cloud flow.",
    "properties": {
     "FlowArn": {
-     "description": "The ARN of the cloud flow used as a source of this bridge.",
      "type": "string"
     },
     "FlowVpcInterfaceAttachment": {
-     "$ref": "#/definitions/VpcInterfaceAttachment",
-     "description": "The name of the VPC interface attachment to use for this source."
+     "$ref": "#/definitions/VpcInterfaceAttachment"
     },
     "Name": {
-     "description": "The name of the flow source.",
      "type": "string"
     }
    },
@@ -26,30 +22,23 @@
   },
   "BridgeNetworkOutput": {
    "additionalProperties": false,
-   "description": "The output of the bridge. A network output is delivered to your premises.",
    "properties": {
     "IpAddress": {
-     "description": "The network output IP Address.",
      "type": "string"
     },
     "Name": {
-     "description": "The network output name.",
      "type": "string"
     },
     "NetworkName": {
-     "description": "The network output's gateway network name.",
      "type": "string"
     },
     "Port": {
-     "description": "The network output port.",
      "type": "integer"
     },
     "Protocol": {
-     "$ref": "#/definitions/ProtocolEnum",
-     "description": "The network output protocol."
+     "$ref": "#/definitions/ProtocolEnum"
     },
     "Ttl": {
-     "description": "The network output TTL.",
      "type": "integer"
     }
    },
@@ -65,27 +54,21 @@
   },
   "BridgeNetworkSource": {
    "additionalProperties": false,
-   "description": "The source of the bridge. A network source originates at your premises.",
    "properties": {
     "MulticastIp": {
-     "description": "The network source multicast IP.",
      "type": "string"
     },
     "Name": {
-     "description": "The name of the network source.",
      "type": "string"
     },
     "NetworkName": {
-     "description": "The network source's gateway network name.",
      "type": "string"
     },
     "Port": {
-     "description": "The network source port.",
      "type": "integer"
     },
     "Protocol": {
-     "$ref": "#/definitions/ProtocolEnum",
-     "description": "The network source protocol."
+     "$ref": "#/definitions/ProtocolEnum"
     }
    },
    "required": [
@@ -99,7 +82,6 @@
   },
   "BridgeOutput": {
    "additionalProperties": false,
-   "description": "The output of the bridge.",
    "properties": {
     "NetworkOutput": {
      "$ref": "#/definitions/BridgeNetworkOutput"
@@ -109,7 +91,6 @@
   },
   "BridgeSource": {
    "additionalProperties": false,
-   "description": "The bridge's source.",
    "properties": {
     "FlowSource": {
      "$ref": "#/definitions/BridgeFlowSource"
@@ -140,7 +121,6 @@
    "additionalProperties": false,
    "properties": {
     "MaxBitrate": {
-     "description": "The maximum expected bitrate of the egress bridge.",
      "type": "integer"
     }
    },
@@ -151,15 +131,12 @@
   },
   "FailoverConfig": {
    "additionalProperties": false,
-   "description": "The settings for source failover.",
    "properties": {
     "FailoverMode": {
-     "$ref": "#/definitions/FailoverModeEnum",
-     "description": "The type of failover you choose for this flow. FAILOVER allows switching between different streams."
+     "$ref": "#/definitions/FailoverModeEnum"
     },
     "SourcePriority": {
-     "$ref": "#/definitions/SourcePriority",
-     "description": "The priority you want to assign to a source. You can have a primary stream and a backup stream or two equally prioritized streams."
+     "$ref": "#/definitions/SourcePriority"
     },
     "State": {
      "$ref": "#/definitions/FailoverConfigStateEnum"
@@ -187,11 +164,9 @@
    "additionalProperties": false,
    "properties": {
     "MaxBitrate": {
-     "description": "The maximum expected bitrate of the ingress bridge.",
      "type": "integer"
     },
     "MaxOutputs": {
-     "description": "The maximum number of outputs on the ingress bridge.",
      "type": "integer"
     }
    },
@@ -211,10 +186,8 @@
   },
   "SourcePriority": {
    "additionalProperties": false,
-   "description": "The priority you want to assign to a source. You can have a primary stream and a backup stream or two equally prioritized streams.",
    "properties": {
     "PrimarySource": {
-     "description": "The name of the source you choose as the primary source for this flow.",
      "type": "string"
     }
    },
@@ -222,17 +195,14 @@
   },
   "VpcInterfaceAttachment": {
    "additionalProperties": false,
-   "description": "The settings for attaching a VPC interface to an resource.",
    "properties": {
     "VpcInterfaceName": {
-     "description": "The name of the VPC interface to use for this resource.",
      "type": "string"
     }
    },
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::MediaConnect::Bridge",
  "handlers": {
   "create": {
    "permissions": [
@@ -268,7 +238,6 @@
  ],
  "properties": {
   "BridgeArn": {
-   "description": "The Amazon Resource Number (ARN) of the bridge.",
    "type": "string"
   },
   "BridgeState": {
@@ -283,11 +252,9 @@
    "type": "object"
   },
   "Name": {
-   "description": "The name of the bridge.",
    "type": "string"
   },
   "Outputs": {
-   "description": "The outputs on this bridge.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/BridgeOutput"
@@ -297,14 +264,12 @@
    "type": "array"
   },
   "PlacementArn": {
-   "description": "The placement Amazon Resource Number (ARN) of the bridge.",
    "type": "string"
   },
   "SourceFailoverConfig": {
    "$ref": "#/definitions/FailoverConfig"
   },
   "Sources": {
-   "description": "The sources on this bridge.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/BridgeSource"
