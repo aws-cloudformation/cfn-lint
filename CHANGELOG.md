@@ -1,3 +1,11 @@
+### v1.2.5a5
+## What's Changed
+* Show all errors in a validation schema by @kddejong in (pull #[3097](https://github.com/aws-cloudformation/cfn-lint/pull/3097))
+* Remove `description` from schemas (pull #[3094](https://github.com/aws-cloudformation/cfn-lint/pull/3094))
+* Update specs to 2024/03/14 (pull #[3094](https://github.com/aws-cloudformation/cfn-lint/pull/3094))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a4...v1.2.5.a5
+
 ### v1.2.5a4
 ## What's Changed
 * New rules for RDS DBCluster E3692,E3694,E3694 by @kddejong in (pull #[3094](https://github.com/aws-cloudformation/cfn-lint/pull/3094))
