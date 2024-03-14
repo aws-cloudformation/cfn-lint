@@ -2,23 +2,19 @@
  "additionalProperties": false,
  "definitions": {
   "SftpConnectorTrustedHostKey": {
-   "description": "The public host key for the external server to which you are connecting.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Creates a key-value pair for a specific resource.",
    "properties": {
     "Key": {
-     "description": "The name assigned to the tag that you create.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "Contains one or more values that you assigned to the key name you create.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -31,7 +27,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Transfer::Connector",
  "handlers": {
   "create": {
    "permissions": [
@@ -69,14 +64,12 @@
  ],
  "properties": {
   "AccessRole": {
-   "description": "Specifies the access role for the connector.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:.*role/.*",
    "type": "string"
   },
   "Arn": {
-   "description": "Specifies the unique Amazon Resource Name (ARN) for the connector.",
    "maxLength": 1600,
    "minLength": 20,
    "pattern": "arn:.*",
@@ -84,16 +77,13 @@
   },
   "As2Config": {
    "additionalProperties": false,
-   "description": "Configuration for an AS2 connector.",
    "properties": {
     "BasicAuthSecretId": {
-     "description": "ARN or name of the secret in AWS Secrets Manager which contains the credentials for Basic authentication. If empty, Basic authentication is disabled for the AS2 connector",
      "maxLength": 2048,
      "minLength": 0,
      "type": "string"
     },
     "Compression": {
-     "description": "Compression setting for this AS2 connector configuration.",
      "enum": [
       "ZLIB",
       "DISABLED"
@@ -101,7 +91,6 @@
      "type": "string"
     },
     "EncryptionAlgorithm": {
-     "description": "Encryption algorithm for this AS2 connector configuration.",
      "enum": [
       "AES128_CBC",
       "AES192_CBC",
@@ -111,14 +100,12 @@
      "type": "string"
     },
     "LocalProfileId": {
-     "description": "A unique identifier for the local profile.",
      "maxLength": 19,
      "minLength": 19,
      "pattern": "^p-([0-9a-f]{17})$",
      "type": "string"
     },
     "MdnResponse": {
-     "description": "MDN Response setting for this AS2 connector configuration.",
      "enum": [
       "SYNC",
       "NONE"
@@ -126,7 +113,6 @@
      "type": "string"
     },
     "MdnSigningAlgorithm": {
-     "description": "MDN Signing algorithm for this AS2 connector configuration.",
      "enum": [
       "SHA256",
       "SHA384",
@@ -138,21 +124,18 @@
      "type": "string"
     },
     "MessageSubject": {
-     "description": "The message subject for this AS2 connector configuration.",
      "maxLength": 1024,
      "minLength": 1,
      "pattern": "^[\\p{Print}\\p{Blank}]+",
      "type": "string"
     },
     "PartnerProfileId": {
-     "description": "A unique identifier for the partner profile.",
      "maxLength": 19,
      "minLength": 19,
      "pattern": "^p-([0-9a-f]{17})$",
      "type": "string"
     },
     "SigningAlgorithm": {
-     "description": "Signing algorithm for this AS2 connector configuration.",
      "enum": [
       "SHA256",
       "SHA384",
@@ -166,14 +149,12 @@
    "type": "object"
   },
   "ConnectorId": {
-   "description": "A unique identifier for the connector.",
    "maxLength": 19,
    "minLength": 19,
    "pattern": "^c-([0-9a-f]{17})$",
    "type": "string"
   },
   "LoggingRole": {
-   "description": "Specifies the logging role for the connector.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "arn:.*role/.*",
@@ -181,10 +162,8 @@
   },
   "SftpConfig": {
    "additionalProperties": false,
-   "description": "Configuration for an SFTP connector.",
    "properties": {
     "TrustedHostKeys": {
-     "description": "List of public host keys, for the external server to which you are connecting.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/SftpConnectorTrustedHostKey"
@@ -194,7 +173,6 @@
      "uniqueItems": false
     },
     "UserSecretId": {
-     "description": "ARN or name of the secret in AWS Secrets Manager which contains the SFTP user's private keys or passwords.",
      "maxLength": 2048,
      "minLength": 1,
      "type": "string"
@@ -203,7 +181,6 @@
    "type": "object"
   },
   "Tags": {
-   "description": "Key-value pairs that can be used to group and search for connectors. Tags are metadata attached to connectors for any purpose.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -213,7 +190,6 @@
    "uniqueItems": true
   },
   "Url": {
-   "description": "URL for Connector",
    "maxLength": 255,
    "type": "string"
   }

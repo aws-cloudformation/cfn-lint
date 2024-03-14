@@ -23,7 +23,7 @@ import itertools
 from collections import deque
 from pprint import pformat
 from textwrap import dedent, indent
-from typing import TYPE_CHECKING, ClassVar, List, Union
+from typing import TYPE_CHECKING, ClassVar, Deque, Tuple, Union
 
 import attr
 
@@ -57,7 +57,7 @@ class _Error(Exception):
         type_checker=_unset,
         extra_args=None,
         rule: Union[CloudFormationLintRule, None] = None,
-        path_override: Union[List, None] = None,
+        path_override: Deque | Tuple = (),
     ):
         super().__init__(
             message,
@@ -84,7 +84,7 @@ class _Error(Exception):
         self._type_checker = type_checker
         self.extra_args = extra_args or {}
         self.rule = rule
-        self.path_override = path_override
+        self.path_override = deque(path_override)
 
         for error in context:
             error.parent = self

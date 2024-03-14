@@ -8,52 +8,43 @@
  ],
  "definitions": {
   "AirflowArn": {
-   "description": "",
    "maxLength": 1224,
    "minLength": 1,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:airflow:[a-z0-9\\-]+:\\d{12}:environment/\\w+",
    "type": "string"
   },
   "AirflowVersion": {
-   "description": "Version of airflow to deploy to the environment.",
    "maxLength": 32,
    "pattern": "^[0-9a-z.]+$",
    "type": "string"
   },
   "CeleryExecutorQueue": {
-   "description": "The celery executor queue associated with the environment.",
    "maxLength": 1224,
    "type": "string"
   },
   "CloudWatchLogGroupArn": {
-   "description": "",
    "maxLength": 1224,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:logs:[a-z0-9\\-]+:\\d{12}:log-group:\\w+",
    "type": "string"
   },
   "ConfigKey": {
-   "description": "",
    "maxLength": 64,
    "pattern": "^[a-z]+([a-z._]*[a-z]+)?$",
    "type": "string"
   },
   "ConfigValue": {
-   "description": "",
    "maxLength": 256,
    "pattern": ".*",
    "type": "string"
   },
   "CreatedAt": {
-   "description": "When the environment resource was created.",
    "type": "string"
   },
   "DatabaseVpcEndpointService": {
-   "description": "The database VPC endpoint service name.",
    "maxLength": 1224,
    "type": "string"
   },
   "EndpointManagement": {
-   "description": "Defines whether the VPC endpoints configured for the environment are created, and managed, by the customer or by Amazon MWAA.",
    "enum": [
     "CUSTOMER",
     "SERVICE"
@@ -61,27 +52,23 @@
    "type": "string"
   },
   "EnvironmentArn": {
-   "description": "ARN for the MWAA environment.",
    "maxLength": 1224,
    "minLength": 1,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:airflow:[a-z0-9\\-]+:\\d{12}:environment/\\w+",
    "type": "string"
   },
   "EnvironmentClass": {
-   "description": "Templated configuration for airflow processes and backing infrastructure.",
    "maxLength": 1024,
    "minLength": 1,
    "type": "string"
   },
   "EnvironmentName": {
-   "description": "Customer-defined identifier for the environment, unique per customer region.",
    "maxLength": 80,
    "minLength": 1,
    "pattern": "^[a-zA-Z][0-9a-zA-Z\\-_]*$",
    "type": "string"
   },
   "EnvironmentStatus": {
-   "description": "The status of the environment.",
    "enum": [
     "CREATING",
     "CREATE_FAILED",
@@ -96,31 +83,26 @@
    "type": "string"
   },
   "ErrorCode": {
-   "description": "The error code associated with an error.",
    "type": "string"
   },
   "ErrorMessage": {
-   "description": "Error message describing a failed operation.",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": "^.+$",
    "type": "string"
   },
   "ExecutionRoleArn": {
-   "description": "IAM role to be used by tasks.",
    "maxLength": 1224,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "KmsKey": {
-   "description": "The identifier of the AWS Key Management Service (AWS KMS) customer master key (CMK) to use for MWAA data encryption.\n\n    You can specify the CMK using any of the following:\n\n    Key ID. For example, key/1234abcd-12ab-34cd-56ef-1234567890ab.\n\n    Key alias. For example, alias/ExampleAlias.\n\n    Key ARN. For example, arn:aws:kms:us-east-1:012345678910:key/abcd1234-a123-456a-a12b-a123b4cd56ef.\n\n    Alias ARN. For example, arn:aws:kms:us-east-1:012345678910:alias/ExampleAlias.\n\n    AWS authenticates the CMK asynchronously. Therefore, if you specify an ID, alias, or ARN that is not valid, the action can appear to complete, but eventually fails.",
    "maxLength": 1224,
    "pattern": "^(((arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?key\\/)?[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|(arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?alias/.+)$",
    "type": "string"
   },
   "LastUpdate": {
    "additionalProperties": false,
-   "description": "Details about the last update performed on the environment.",
    "properties": {
     "CreatedAt": {
      "$ref": "#/definitions/UpdateCreatedAt"
@@ -136,7 +118,6 @@
   },
   "LoggingConfiguration": {
    "additionalProperties": false,
-   "description": "Logging configuration for the environment.",
    "properties": {
     "DagProcessingLogs": {
      "$ref": "#/definitions/ModuleLoggingConfiguration"
@@ -158,7 +139,6 @@
   },
   "LoggingConfigurationInput": {
    "additionalProperties": false,
-   "description": "Configures logging for the environment.",
    "properties": {
     "DagProcessingLogs": {
      "$ref": "#/definitions/ModuleLoggingConfigurationInput"
@@ -179,11 +159,9 @@
    "type": "object"
   },
   "LoggingEnabled": {
-   "description": "",
    "type": "boolean"
   },
   "LoggingLevel": {
-   "description": "",
    "enum": [
     "CRITICAL",
     "ERROR",
@@ -194,18 +172,15 @@
    "type": "string"
   },
   "MaxWorkers": {
-   "description": "Maximum worker compute units.",
    "minimum": 1,
    "type": "integer"
   },
   "MinWorkers": {
-   "description": "Minimum worker compute units.",
    "minimum": 1,
    "type": "integer"
   },
   "ModuleLoggingConfiguration": {
    "additionalProperties": false,
-   "description": "Logging configuration for a specific airflow component.",
    "properties": {
     "CloudWatchLogGroupArn": {
      "$ref": "#/definitions/CloudWatchLogGroupArn"
@@ -221,7 +196,6 @@
   },
   "ModuleLoggingConfigurationInput": {
    "additionalProperties": false,
-   "description": "Configures airflow component logging for the environment.",
    "properties": {
     "Enabled": {
      "$ref": "#/definitions/LoggingEnabled"
@@ -234,10 +208,8 @@
   },
   "NetworkConfiguration": {
    "additionalProperties": false,
-   "description": "Configures the network resources of the environment.",
    "properties": {
     "SecurityGroupIds": {
-     "description": "A list of security groups to use for the environment.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/SecurityGroupId"
@@ -247,7 +219,6 @@
      "type": "array"
     },
     "SubnetIds": {
-     "description": "A list of subnets to use for the environment. These must be private subnets, in the same VPC, in two different availability zones.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/SubnetId"
@@ -260,54 +231,45 @@
    "type": "object"
   },
   "RelativePath": {
-   "description": "Represents an S3 prefix relative to the root of an S3 bucket.",
    "maxLength": 1024,
    "pattern": ".*",
    "type": "string"
   },
   "S3BucketArn": {
-   "description": "ARN for the AWS S3 bucket to use as the source of DAGs and plugins for the environment.",
    "maxLength": 1224,
    "minLength": 1,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:s3:::[a-z0-9.\\-]+$",
    "type": "string"
   },
   "S3ObjectVersion": {
-   "description": "Represents an version ID for an S3 object.",
    "maxLength": 1024,
    "type": "string"
   },
   "Schedulers": {
-   "description": "Scheduler compute units.",
    "minimum": 1,
    "type": "integer"
   },
   "SecurityGroupId": {
-   "description": "",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   },
   "ServiceRoleArn": {
-   "description": "IAM role to be used by MWAA to perform AWS API calls on behalf of the customer.",
    "maxLength": 1224,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "SubnetId": {
-   "description": "",
    "maxLength": 1024,
    "pattern": "^subnet-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   },
   "UpdateCreatedAt": {
-   "description": "When the update request was created.",
    "type": "string"
   },
   "UpdateError": {
    "additionalProperties": false,
-   "description": "The error associated with an update request.",
    "properties": {
     "ErrorCode": {
      "$ref": "#/definitions/ErrorCode"
@@ -319,7 +281,6 @@
    "type": "object"
   },
   "UpdateStatus": {
-   "description": "",
    "enum": [
     "SUCCESS",
     "PENDING",
@@ -328,7 +289,6 @@
    "type": "string"
   },
   "WebserverAccessMode": {
-   "description": "Choice for mode of webserver access including over public internet or via private VPC endpoint.",
    "enum": [
     "PRIVATE_ONLY",
     "PUBLIC_ONLY"
@@ -336,25 +296,21 @@
    "type": "string"
   },
   "WebserverUrl": {
-   "description": "Url endpoint for the environment's Airflow UI.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^https://.+$",
    "type": "string"
   },
   "WebserverVpcEndpointService": {
-   "description": "The webserver VPC endpoint service name, applicable if private webserver access mode selected.",
    "maxLength": 1224,
    "type": "string"
   },
   "WeeklyMaintenanceWindowStart": {
-   "description": "Start time for the weekly maintenance window.",
    "maxLength": 9,
    "pattern": "(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\\d|2[0-3]):(00|30)",
    "type": "string"
   }
  },
- "description": "Resource schema for AWS::MWAA::Environment",
  "handlers": {
   "create": {
    "permissions": [
@@ -391,7 +347,6 @@
  ],
  "properties": {
   "AirflowConfigurationOptions": {
-   "description": "Key/value pairs representing Airflow configuration variables.\n    Keys are prefixed by their section:\n\n    [core]\n    dags_folder={AIRFLOW_HOME}/dags\n\n    Would be represented as\n\n    \"core.dags_folder\": \"{AIRFLOW_HOME}/dags\"",
    "type": "object"
   },
   "AirflowVersion": {
@@ -461,7 +416,6 @@
    "$ref": "#/definitions/RelativePath"
   },
   "Tags": {
-   "description": "A map of tags for the environment.",
    "type": "object"
   },
   "WebserverAccessMode": {

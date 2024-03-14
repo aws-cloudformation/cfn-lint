@@ -11,14 +11,11 @@
  "definitions": {
   "CodeEditorAppSettings": {
    "additionalProperties": false,
-   "description": "The CodeEditor app settings.",
    "properties": {
     "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec",
-     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the CodeEditor app."
+     "$ref": "#/definitions/ResourceSpec"
     },
     "LifecycleConfigArns": {
-     "description": "A list of LifecycleConfigArns available for use with CodeEditor apps.",
      "items": {
       "$ref": "#/definitions/StudioLifecycleConfigArn"
      },
@@ -34,7 +31,6 @@
    "additionalProperties": false,
    "properties": {
     "RepositoryUrl": {
-     "description": "A CodeRepository (valid URL) to be used within Jupyter's Git extension.",
      "maxLength": 256,
      "pattern": "^https://([.\\-_a-zA-Z0-9]+/?){3,1016}$",
      "type": "string"
@@ -56,22 +52,18 @@
   },
   "CustomImage": {
    "additionalProperties": false,
-   "description": "A custom SageMaker image.",
    "properties": {
     "AppImageConfigName": {
-     "description": "The Name of the AppImageConfig.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
      "type": "string"
     },
     "ImageName": {
-     "description": "The name of the CustomImage. Must be unique to your account.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$",
      "type": "string"
     },
     "ImageVersionNumber": {
-     "description": "The version number of the CustomImage.",
      "minimum": 0,
      "type": "integer"
     }
@@ -104,15 +96,12 @@
   },
   "DefaultEbsStorageSettings": {
    "additionalProperties": false,
-   "description": "Properties related to the Amazon Elastic Block Store volume. Must be provided if storage type is Amazon EBS and must not be provided if storage type is not Amazon EBS",
    "properties": {
     "DefaultEbsVolumeSizeInGb": {
-     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
-     "description": "Default size of the Amazon EBS volume in Gb"
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb"
     },
     "MaximumEbsVolumeSizeInGb": {
-     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb",
-     "description": "Maximum size of the Amazon EBS volume in Gb. Must be greater than or equal to the DefaultEbsVolumeSizeInGb."
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb"
     }
    },
    "required": [
@@ -123,25 +112,20 @@
   },
   "DefaultSpaceSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that apply to spaces of Amazon SageMaker Studio. These settings are specified when the Create/Update Domain API is called.",
    "properties": {
     "ExecutionRole": {
-     "description": "The execution role for the space.",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
     },
     "JupyterServerAppSettings": {
-     "$ref": "#/definitions/JupyterServerAppSettings",
-     "description": "The Jupyter server's app settings."
+     "$ref": "#/definitions/JupyterServerAppSettings"
     },
     "KernelGatewayAppSettings": {
-     "$ref": "#/definitions/KernelGatewayAppSettings",
-     "description": "The kernel gateway app settings."
+     "$ref": "#/definitions/KernelGatewayAppSettings"
     },
     "SecurityGroups": {
-     "description": "The security groups for the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
      "insertionOrder": false,
      "items": {
       "maxLength": 32,
@@ -161,7 +145,6 @@
   },
   "DefaultSpaceStorageSettings": {
    "additionalProperties": false,
-   "description": "Default storage settings for a space.",
    "properties": {
     "DefaultEbsStorageSettings": {
      "$ref": "#/definitions/DefaultEbsStorageSettings"
@@ -171,10 +154,8 @@
   },
   "DockerSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that are required to start docker-proxy server.",
    "properties": {
     "EnableDockerAccess": {
-     "description": "The flag to enable/disable docker-proxy server",
      "enum": [
       "ENABLED",
       "DISABLED"
@@ -182,7 +163,6 @@
      "type": "string"
     },
     "VpcOnlyTrustedAccounts": {
-     "description": "A list of account id's that would be used to pull images from in VpcOnly mode",
      "insertionOrder": false,
      "items": {
       "maxLength": 12,
@@ -199,7 +179,6 @@
   },
   "DomainSettings": {
    "additionalProperties": false,
-   "description": "A collection of Domain settings.",
    "properties": {
     "DockerSettings": {
      "$ref": "#/definitions/DockerSettings"
@@ -208,7 +187,6 @@
      "$ref": "#/definitions/RStudioServerProDomainSettings"
     },
     "SecurityGroupIds": {
-     "description": "The security groups for the Amazon Virtual Private Cloud that the Domain uses for communication between Domain-level apps and user apps.",
      "insertionOrder": false,
      "items": {
       "maxLength": 32,
@@ -246,10 +224,8 @@
   },
   "JupyterLabAppSettings": {
    "additionalProperties": false,
-   "description": "The JupyterLab app settings.",
    "properties": {
     "CodeRepositories": {
-     "description": "A list of CodeRepositories available for use with JupyterLab apps.",
      "items": {
       "$ref": "#/definitions/CodeRepository"
      },
@@ -259,7 +235,6 @@
      "uniqueItems": false
     },
     "CustomImages": {
-     "description": "A list of custom images for use for JupyterLab apps.",
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
@@ -269,11 +244,9 @@
      "uniqueItems": false
     },
     "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec",
-     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the JupyterLab app."
+     "$ref": "#/definitions/ResourceSpec"
     },
     "LifecycleConfigArns": {
-     "description": "A list of LifecycleConfigArns available for use with JupyterLab apps.",
      "items": {
       "$ref": "#/definitions/StudioLifecycleConfigArn"
      },
@@ -287,7 +260,6 @@
   },
   "JupyterServerAppSettings": {
    "additionalProperties": false,
-   "description": "The JupyterServer app settings.",
    "properties": {
     "DefaultResourceSpec": {
      "$ref": "#/definitions/ResourceSpec"
@@ -297,10 +269,8 @@
   },
   "KernelGatewayAppSettings": {
    "additionalProperties": false,
-   "description": "The kernel gateway app settings.",
    "properties": {
     "CustomImages": {
-     "description": "A list of custom SageMaker images that are configured to run as a KernelGateway app.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/CustomImage"
@@ -311,18 +281,15 @@
      "uniqueItems": false
     },
     "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec",
-     "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the KernelGateway app."
+     "$ref": "#/definitions/ResourceSpec"
     }
    },
    "type": "object"
   },
   "RSessionAppSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that apply to an RSessionGateway app.",
    "properties": {
     "CustomImages": {
-     "description": "A list of custom SageMaker images that are configured to run as a KernelGateway app.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/CustomImage"
@@ -340,10 +307,8 @@
   },
   "RStudioServerProAppSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that configure user interaction with the RStudioServerPro app.",
    "properties": {
     "AccessStatus": {
-     "description": "Indicates whether the current user has access to the RStudioServerPro app.",
      "enum": [
       "ENABLED",
       "DISABLED"
@@ -351,7 +316,6 @@
      "type": "string"
     },
     "UserGroup": {
-     "description": "The level of permissions that the user has within the RStudioServerPro app. This value defaults to User. The Admin value allows the user access to the RStudio Administrative Dashboard.",
      "enum": [
       "R_STUDIO_ADMIN",
       "R_STUDIO_USER"
@@ -363,25 +327,21 @@
   },
   "RStudioServerProDomainSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that update the current configuration for the RStudioServerPro Domain-level app.",
    "properties": {
     "DefaultResourceSpec": {
      "$ref": "#/definitions/ResourceSpec"
     },
     "DomainExecutionRoleArn": {
-     "description": "The ARN of the execution role for the RStudioServerPro Domain-level app.",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
     },
     "RStudioConnectUrl": {
-     "description": "A URL pointing to an RStudio Connect server.",
      "pattern": "^(https:|http:|www\\.)\\S*",
      "type": "string"
     },
     "RStudioPackageManagerUrl": {
-     "description": "A URL pointing to an RStudio Package Manager server.",
      "pattern": "^(https:|http:|www\\.)\\S*",
      "type": "string"
     }
@@ -395,7 +355,6 @@
    "additionalProperties": false,
    "properties": {
     "InstanceType": {
-     "description": "The instance type that the image version runs on.",
      "enum": [
       "system",
       "ml.t3.micro",
@@ -464,19 +423,16 @@
      "type": "string"
     },
     "LifecycleConfigArn": {
-     "description": "The Amazon Resource Name (ARN) of the Lifecycle Configuration to attach to the Resource.",
      "maxLength": 256,
      "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
      "type": "string"
     },
     "SageMakerImageArn": {
-     "description": "The Amazon Resource Name (ARN) of the SageMaker image that the image version belongs to.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$",
      "type": "string"
     },
     "SageMakerImageVersionArn": {
-     "description": "The Amazon Resource Name (ARN) of the image version created on the instance.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
      "type": "string"
@@ -486,10 +442,8 @@
   },
   "SharingSettings": {
    "additionalProperties": false,
-   "description": "Specifies options when sharing an Amazon SageMaker Studio notebook. These settings are specified as part of DefaultUserSettings when the CreateDomain API is called, and as part of UserSettings when the CreateUserProfile API is called.",
    "properties": {
     "NotebookOutputOption": {
-     "description": "Whether to include the notebook cell output when sharing the notebook. The default is Disabled.",
      "enum": [
       "Allowed",
       "Disabled"
@@ -497,13 +451,11 @@
      "type": "string"
     },
     "S3KmsKeyId": {
-     "description": "When NotebookOutputOption is Allowed, the AWS Key Management Service (KMS) encryption key ID used to encrypt the notebook cell output in the Amazon S3 bucket.",
      "maxLength": 2048,
      "pattern": ".*",
      "type": "string"
     },
     "S3OutputPath": {
-     "description": "When NotebookOutputOption is Allowed, the Amazon S3 bucket used to store the shared notebook snapshots.",
      "maxLength": 1024,
      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
      "type": "string"
@@ -517,7 +469,6 @@
    "type": "integer"
   },
   "StudioLifecycleConfigArn": {
-   "description": "The Amazon Resource Name (ARN) of the Lifecycle Configuration to attach to the Resource.",
    "maxLength": 256,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
    "type": "string"
@@ -544,7 +495,6 @@
   },
   "UserSettings": {
    "additionalProperties": false,
-   "description": "A collection of settings that apply to users of Amazon SageMaker Studio. These settings are specified when the CreateUserProfile API is called, and as DefaultUserSettings when the CreateDomain API is called.",
    "properties": {
     "CodeEditorAppSettings": {
      "$ref": "#/definitions/CodeEditorAppSettings"
@@ -562,12 +512,10 @@
      "$ref": "#/definitions/CustomPosixUserConfig"
     },
     "DefaultLandingUri": {
-     "description": "Defines which Amazon SageMaker application users are directed to by default.",
      "maxLength": 1023,
      "type": "string"
     },
     "ExecutionRole": {
-     "description": "The execution role for the user.",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
@@ -577,12 +525,10 @@
      "$ref": "#/definitions/JupyterLabAppSettings"
     },
     "JupyterServerAppSettings": {
-     "$ref": "#/definitions/JupyterServerAppSettings",
-     "description": "The Jupyter server's app settings."
+     "$ref": "#/definitions/JupyterServerAppSettings"
     },
     "KernelGatewayAppSettings": {
-     "$ref": "#/definitions/KernelGatewayAppSettings",
-     "description": "The kernel gateway app settings."
+     "$ref": "#/definitions/KernelGatewayAppSettings"
     },
     "RSessionAppSettings": {
      "$ref": "#/definitions/RSessionAppSettings"
@@ -591,7 +537,6 @@
      "$ref": "#/definitions/RStudioServerProAppSettings"
     },
     "SecurityGroups": {
-     "description": "The security groups for the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
      "insertionOrder": false,
      "items": {
       "maxLength": 32,
@@ -604,14 +549,12 @@
      "uniqueItems": false
     },
     "SharingSettings": {
-     "$ref": "#/definitions/SharingSettings",
-     "description": "The sharing settings."
+     "$ref": "#/definitions/SharingSettings"
     },
     "SpaceStorageSettings": {
      "$ref": "#/definitions/DefaultSpaceStorageSettings"
     },
     "StudioWebPortal": {
-     "description": "Indicates whether the Studio experience is available to users. If not, users cannot access Studio.",
      "enum": [
       "ENABLED",
       "DISABLED"
@@ -625,7 +568,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::Domain",
  "handlers": {
   "create": {
    "permissions": [
@@ -676,7 +618,6 @@
  ],
  "properties": {
   "AppNetworkAccessType": {
-   "description": "Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.",
    "enum": [
     "PublicInternetOnly",
     "VpcOnly"
@@ -684,7 +625,6 @@
    "type": "string"
   },
   "AppSecurityGroupManagement": {
-   "description": "The entity that creates and manages the required security groups for inter-app communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn is provided.",
    "enum": [
     "Service",
     "Customer"
@@ -692,7 +632,6 @@
    "type": "string"
   },
   "AuthMode": {
-   "description": "The mode of authentication that members use to access the domain.",
    "enum": [
     "SSO",
     "IAM"
@@ -700,27 +639,22 @@
    "type": "string"
   },
   "DefaultSpaceSettings": {
-   "$ref": "#/definitions/DefaultSpaceSettings",
-   "description": "The default space settings."
+   "$ref": "#/definitions/DefaultSpaceSettings"
   },
   "DefaultUserSettings": {
-   "$ref": "#/definitions/UserSettings",
-   "description": "The default user settings."
+   "$ref": "#/definitions/UserSettings"
   },
   "DomainArn": {
-   "description": "The Amazon Resource Name (ARN) of the created domain.",
    "maxLength": 256,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:domain/.*",
    "type": "string"
   },
   "DomainId": {
-   "description": "The domain name.",
    "maxLength": 63,
    "pattern": "^d-(-*[a-z0-9])+",
    "type": "string"
   },
   "DomainName": {
-   "description": "A name for the domain.",
    "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
@@ -729,34 +663,28 @@
    "$ref": "#/definitions/DomainSettings"
   },
   "HomeEfsFileSystemId": {
-   "description": "The ID of the Amazon Elastic File System (EFS) managed by this Domain.",
    "maxLength": 32,
    "type": "string"
   },
   "KmsKeyId": {
-   "description": "SageMaker uses AWS KMS to encrypt the EFS volume attached to the domain with an AWS managed customer master key (CMK) by default.",
    "maxLength": 2048,
    "pattern": ".*",
    "type": "string"
   },
   "SecurityGroupIdForDomainBoundary": {
-   "description": "The ID of the security group that authorizes traffic between the RSessionGateway apps and the RStudioServerPro app.",
    "maxLength": 32,
    "pattern": "[-0-9a-zA-Z]+",
    "type": "string"
   },
   "SingleSignOnApplicationArn": {
-   "description": "The ARN of the application managed by SageMaker in IAM Identity Center. This value is only returned for domains created after October 1, 2023.",
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::[0-9]+:application/[a-zA-Z0-9-_.]+/apl-[a-zA-Z0-9]+$",
    "type": "string"
   },
   "SingleSignOnManagedApplicationInstanceId": {
-   "description": "The SSO managed application instance ID.",
    "maxLength": 256,
    "type": "string"
   },
   "SubnetIds": {
-   "description": "The VPC subnets that Studio uses for communication.",
    "insertionOrder": false,
    "items": {
     "maxLength": 32,
@@ -769,7 +697,6 @@
    "uniqueItems": false
   },
   "Tags": {
-   "description": "A list of tags to apply to the user profile.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -780,12 +707,10 @@
    "uniqueItems": false
   },
   "Url": {
-   "description": "The URL to the created domain.",
    "maxLength": 1024,
    "type": "string"
   },
   "VpcId": {
-   "description": "The ID of the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
    "maxLength": 32,
    "pattern": "[-0-9a-zA-Z]+",
    "type": "string"

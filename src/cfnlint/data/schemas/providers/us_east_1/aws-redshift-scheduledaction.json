@@ -6,7 +6,6 @@
  "definitions": {
   "PauseClusterMessage": {
    "additionalProperties": false,
-   "description": "Describes a pause cluster operation. For example, a scheduled action to run the `PauseCluster` API operation.",
    "properties": {
     "ClusterIdentifier": {
      "type": "string"
@@ -19,7 +18,6 @@
   },
   "ResizeClusterMessage": {
    "additionalProperties": false,
-   "description": "Describes a resize cluster operation. For example, a scheduled action to run the `ResizeCluster` API operation.",
    "properties": {
     "Classic": {
      "type": "boolean"
@@ -44,7 +42,6 @@
   },
   "ResumeClusterMessage": {
    "additionalProperties": false,
-   "description": "Describes a resume cluster operation. For example, a scheduled action to run the `ResumeCluster` API operation.",
    "properties": {
     "ClusterIdentifier": {
      "type": "string"
@@ -88,7 +85,6 @@
    "type": "string"
   }
  },
- "description": "The `AWS::Redshift::ScheduledAction` resource creates an Amazon Redshift Scheduled Action.",
  "handlers": {
   "create": {
    "permissions": [
@@ -137,19 +133,15 @@
  ],
  "properties": {
   "Enable": {
-   "description": "If true, the schedule is enabled. If false, the scheduled action does not trigger.",
    "type": "boolean"
   },
   "EndTime": {
-   "$ref": "#/definitions/timestamp",
-   "description": "The end time in UTC of the scheduled action. After this time, the scheduled action does not trigger."
+   "$ref": "#/definitions/timestamp"
   },
   "IamRole": {
-   "description": "The IAM role to assume to run the target action.",
    "type": "string"
   },
   "NextInvocations": {
-   "description": "List of times when the scheduled action will run.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/timestamp"
@@ -157,25 +149,20 @@
    "type": "array"
   },
   "Schedule": {
-   "description": "The schedule in `at( )` or `cron( )` format.",
    "type": "string"
   },
   "ScheduledActionDescription": {
-   "description": "The description of the scheduled action.",
    "pattern": "^(?=^[\\x09\\x0a\\x0d\\x20-\\xff]*$).{1,255}$",
    "type": "string"
   },
   "ScheduledActionName": {
-   "description": "The name of the scheduled action. The name must be unique within an account.",
    "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,60}$",
    "type": "string"
   },
   "StartTime": {
-   "$ref": "#/definitions/timestamp",
-   "description": "The start time in UTC of the scheduled action. Before this time, the scheduled action does not trigger."
+   "$ref": "#/definitions/timestamp"
   },
   "State": {
-   "description": "The state of the scheduled action.",
    "enum": [
     "ACTIVE",
     "DISABLED"
@@ -183,8 +170,7 @@
    "type": "string"
   },
   "TargetAction": {
-   "$ref": "#/definitions/ScheduledActionType",
-   "description": "A JSON format string of the Amazon Redshift API operation with input parameters."
+   "$ref": "#/definitions/ScheduledActionType"
   }
  },
  "readOnlyProperties": [

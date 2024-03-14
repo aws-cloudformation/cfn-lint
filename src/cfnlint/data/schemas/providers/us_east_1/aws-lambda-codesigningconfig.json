@@ -3,10 +3,8 @@
  "definitions": {
   "AllowedPublishers": {
    "additionalProperties": false,
-   "description": "When the CodeSigningConfig is later on attached to a function, the function code will be expected to be signed by profiles from this list",
    "properties": {
     "SigningProfileVersionArns": {
-     "description": "List of Signing profile version Arns",
      "items": {
       "maxLength": 1024,
       "minLength": 12,
@@ -25,11 +23,9 @@
   },
   "CodeSigningPolicies": {
    "additionalProperties": false,
-   "description": "Policies to control how to act if a signature is invalid",
    "properties": {
     "UntrustedArtifactOnDeployment": {
      "default": "Warn",
-     "description": "Indicates how Lambda operations involve updating the code artifact will operate. Default to Warn if not provided",
      "enum": [
       "Warn",
       "Enforce"
@@ -43,7 +39,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Lambda::CodeSigningConfig.",
  "handlers": {
   "create": {
    "permissions": [
@@ -76,25 +71,20 @@
  ],
  "properties": {
   "AllowedPublishers": {
-   "$ref": "#/definitions/AllowedPublishers",
-   "description": "When the CodeSigningConfig is later on attached to a function, the function code will be expected to be signed by profiles from this list"
+   "$ref": "#/definitions/AllowedPublishers"
   },
   "CodeSigningConfigArn": {
-   "description": "A unique Arn for CodeSigningConfig resource",
    "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}",
    "type": "string"
   },
   "CodeSigningConfigId": {
-   "description": "A unique identifier for CodeSigningConfig resource",
    "pattern": "csc-[a-zA-Z0-9-_\\.]{17}",
    "type": "string"
   },
   "CodeSigningPolicies": {
-   "$ref": "#/definitions/CodeSigningPolicies",
-   "description": "Policies to control how to act if a signature is invalid"
+   "$ref": "#/definitions/CodeSigningPolicies"
   },
   "Description": {
-   "description": "A description of the CodeSigningConfig",
    "maxLength": 256,
    "minLength": 0,
    "type": "string"

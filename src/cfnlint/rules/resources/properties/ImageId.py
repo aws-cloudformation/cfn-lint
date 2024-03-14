@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from typing import Any
 
 from cfnlint.jsonschema import Validator
@@ -36,5 +37,5 @@ class ImageId(CloudFormationLintRule):
             },
         ):
             err.rule = self
-            err.path_override = ["Parameters", value, "Type"]
+            err.path_override = deque(["Parameters", value, "Type"])
             yield err

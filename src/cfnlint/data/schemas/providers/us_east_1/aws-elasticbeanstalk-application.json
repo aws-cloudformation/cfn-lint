@@ -8,12 +8,10 @@
    "additionalProperties": false,
    "properties": {
     "ServiceRole": {
-     "description": "The ARN of an IAM service role that Elastic Beanstalk has permission to assume. The ServiceRole property is required the first time that you provide a ResourceLifecycleConfig for the application. After you provide it once, Elastic Beanstalk persists the Service Role with the application, and you don't need to specify it again. You can, however, specify it in subsequent updates to change the Service Role to another value.",
      "type": "string"
     },
     "VersionLifecycleConfig": {
-     "$ref": "#/definitions/ApplicationVersionLifecycleConfig",
-     "description": "Defines lifecycle settings for application versions."
+     "$ref": "#/definitions/ApplicationVersionLifecycleConfig"
     }
    },
    "type": "object"
@@ -22,12 +20,10 @@
    "additionalProperties": false,
    "properties": {
     "MaxAgeRule": {
-     "$ref": "#/definitions/MaxAgeRule",
-     "description": "Specify a max age rule to restrict the length of time that application versions are retained for an application."
+     "$ref": "#/definitions/MaxAgeRule"
     },
     "MaxCountRule": {
-     "$ref": "#/definitions/MaxCountRule",
-     "description": "Specify a max count rule to restrict the number of application versions that are retained for an application."
+     "$ref": "#/definitions/MaxCountRule"
     }
    },
    "type": "object"
@@ -36,15 +32,12 @@
    "additionalProperties": false,
    "properties": {
     "DeleteSourceFromS3": {
-     "description": "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
      "type": "boolean"
     },
     "Enabled": {
-     "description": "Specify true to apply the rule, or false to disable it.",
      "type": "boolean"
     },
     "MaxAgeInDays": {
-     "description": "Specify the number of days to retain an application versions.",
      "type": "integer"
     }
    },
@@ -54,22 +47,18 @@
    "additionalProperties": false,
    "properties": {
     "DeleteSourceFromS3": {
-     "description": "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
      "type": "boolean"
     },
     "Enabled": {
-     "description": "Specify true to apply the rule, or false to disable it.",
      "type": "boolean"
     },
     "MaxCount": {
-     "description": "Specify the maximum number of application versions to retain.",
      "type": "integer"
     }
    },
    "type": "object"
   }
  },
- "description": "The AWS::ElasticBeanstalk::Application resource specifies an Elastic Beanstalk application.",
  "handlers": {
   "create": {
    "permissions": [
@@ -103,16 +92,13 @@
  ],
  "properties": {
   "ApplicationName": {
-   "description": "A name for the Elastic Beanstalk application. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the application name.",
    "type": "string"
   },
   "Description": {
-   "description": "Your description of the application.",
    "type": "string"
   },
   "ResourceLifecycleConfig": {
-   "$ref": "#/definitions/ApplicationResourceLifecycleConfig",
-   "description": "Specifies an application resource lifecycle configuration to prevent your application from accumulating too many versions."
+   "$ref": "#/definitions/ApplicationResourceLifecycleConfig"
   }
  },
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticbeanstalk.git",

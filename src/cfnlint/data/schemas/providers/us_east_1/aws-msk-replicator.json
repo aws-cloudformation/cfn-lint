@@ -9,15 +9,14 @@
   "/properties/ReplicatorName",
   "/properties/Description",
   "/properties/KafkaClusters",
-  "/properties/ServiceExecutionRoleArn"
+  "/properties/ServiceExecutionRoleArn",
+  "/properties/ReplicationInfoList/*/TopicReplication/StartingPosition/Type"
  ],
  "definitions": {
   "AmazonMskCluster": {
    "additionalProperties": false,
-   "description": "Details of an Amazon MSK cluster.",
    "properties": {
     "MskClusterArn": {
-     "description": "The ARN of an Amazon MSK cluster.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
      "type": "string"
     }
@@ -29,10 +28,8 @@
   },
   "ConsumerGroupReplication": {
    "additionalProperties": false,
-   "description": "Configuration relating to consumer group replication.",
    "properties": {
     "ConsumerGroupsToExclude": {
-     "description": "List of regular expression patterns indicating the consumer groups that should not be replicated.",
      "insertionOrder": false,
      "items": {
       "maxLength": 256,
@@ -44,7 +41,6 @@
      "uniqueItems": true
     },
     "ConsumerGroupsToReplicate": {
-     "description": "List of regular expression patterns indicating the consumer groups to copy.",
      "insertionOrder": false,
      "items": {
       "maxLength": 256,
@@ -56,11 +52,9 @@
      "uniqueItems": true
     },
     "DetectAndCopyNewConsumerGroups": {
-     "description": "Whether to periodically check for new consumer groups.",
      "type": "boolean"
     },
     "SynchroniseConsumerGroupOffsets": {
-     "description": "Whether to periodically write the translated offsets to __consumer_offsets topic in target cluster.",
      "type": "boolean"
     }
    },
@@ -71,15 +65,12 @@
   },
   "KafkaCluster": {
    "additionalProperties": false,
-   "description": "Details of a Kafka cluster for replication.",
    "properties": {
     "AmazonMskCluster": {
-     "$ref": "#/definitions/AmazonMskCluster",
-     "description": "Details of an Amazon MSK cluster. Exactly one of AmazonMskCluster is required."
+     "$ref": "#/definitions/AmazonMskCluster"
     },
     "VpcConfig": {
-     "$ref": "#/definitions/KafkaClusterClientVpcConfig",
-     "description": "Details of an Amazon VPC which has network connectivity to the Apache Kafka cluster."
+     "$ref": "#/definitions/KafkaClusterClientVpcConfig"
     }
    },
    "required": [
@@ -90,10 +81,8 @@
   },
   "KafkaClusterClientVpcConfig": {
    "additionalProperties": false,
-   "description": "Details of an Amazon VPC which has network connectivity to the Kafka cluster.",
    "properties": {
     "SecurityGroupIds": {
-     "description": "The AWS security groups to associate with the elastic network interfaces in order to specify what the replicator has access to. If a security group is not specified, the default security group associated with the VPC is used.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -104,7 +93,6 @@
      "uniqueItems": true
     },
     "SubnetIds": {
-     "description": "The list of subnets to connect to in the virtual private cloud (VPC). AWS creates elastic network interfaces inside these subnets.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -122,19 +110,15 @@
   },
   "ReplicationInfo": {
    "additionalProperties": false,
-   "description": "Specifies configuration for replication between a source and target Kafka cluster.",
    "properties": {
     "ConsumerGroupReplication": {
-     "$ref": "#/definitions/ConsumerGroupReplication",
-     "description": "Configuration relating to consumer group replication."
+     "$ref": "#/definitions/ConsumerGroupReplication"
     },
     "SourceKafkaClusterArn": {
-     "description": "Amazon Resource Name of the source Kafka cluster.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
      "type": "string"
     },
     "TargetCompressionType": {
-     "description": "The type of compression to use writing records to target Kafka cluster.",
      "enum": [
       "NONE",
       "GZIP",
@@ -145,13 +129,11 @@
      "type": "string"
     },
     "TargetKafkaClusterArn": {
-     "description": "Amazon Resource Name of the target Kafka cluster.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
      "type": "string"
     },
     "TopicReplication": {
-     "$ref": "#/definitions/TopicReplication",
-     "description": "Configuration relating to topic replication."
+     "$ref": "#/definitions/TopicReplication"
     }
    },
    "required": [
@@ -162,6 +144,23 @@
     "TargetCompressionType"
    ],
    "type": "object"
+  },
+  "ReplicationStartingPosition": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ReplicationStartingPositionType"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ReplicationStartingPositionType": {
+   "enum": [
+    "LATEST",
+    "EARLIEST"
+   ],
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
@@ -186,19 +185,18 @@
    "additionalProperties": false,
    "properties": {
     "CopyAccessControlListsForTopics": {
-     "description": "Whether to periodically configure remote topic ACLs to match their corresponding upstream topics.",
      "type": "boolean"
     },
     "CopyTopicConfigurations": {
-     "description": "Whether to periodically configure remote topics to match their corresponding upstream topics.",
      "type": "boolean"
     },
     "DetectAndCopyNewTopics": {
-     "description": "Whether to periodically check for new topics and partitions.",
      "type": "boolean"
     },
+    "StartingPosition": {
+     "$ref": "#/definitions/ReplicationStartingPosition"
+    },
     "TopicsToExclude": {
-     "description": "List of regular expression patterns indicating the topics that should not be replicated.",
      "insertionOrder": false,
      "items": {
       "maxLength": 249,
@@ -210,7 +208,6 @@
      "uniqueItems": true
     },
     "TopicsToReplicate": {
-     "description": "List of regular expression patterns indicating the topics to copy.",
      "insertionOrder": false,
      "items": {
       "maxLength": 249,
@@ -228,7 +225,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::MSK::Replicator",
  "handlers": {
   "create": {
    "permissions": [
@@ -281,16 +277,13 @@
  ],
  "properties": {
   "CurrentVersion": {
-   "description": "The current version of the MSK replicator.",
    "type": "string"
   },
   "Description": {
-   "description": "A summary description of the replicator.",
    "maxLength": 1024,
    "type": "string"
   },
   "KafkaClusters": {
-   "description": "Specifies a list of Kafka clusters which are targets of the replicator.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/KafkaCluster"
@@ -301,7 +294,6 @@
    "uniqueItems": true
   },
   "ReplicationInfoList": {
-   "description": "A list of replication configurations, where each configuration targets a given source cluster to target cluster replication flow.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/ReplicationInfo"
@@ -312,24 +304,20 @@
    "uniqueItems": true
   },
   "ReplicatorArn": {
-   "description": "Amazon Resource Name for the created replicator.",
    "pattern": "arn:(aws|aws-us-gov|aws-cn):kafka:.*",
    "type": "string"
   },
   "ReplicatorName": {
-   "description": "The name of the replicator.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^[0-9A-Za-z][0-9A-Za-z-]{0,}$",
    "type": "string"
   },
   "ServiceExecutionRoleArn": {
-   "description": "The Amazon Resource Name (ARN) of the IAM role used by the replicator to access external resources.",
    "pattern": "arn:(aws|aws-us-gov|aws-cn):iam:.*",
    "type": "string"
   },
   "Tags": {
-   "description": "A collection of tags associated with a resource",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

@@ -6,10 +6,8 @@
  "definitions": {
   "DeploymentPreference": {
    "additionalProperties": false,
-   "description": "The settings to enable gradual state machine deployments.",
    "properties": {
     "Alarms": {
-     "description": "A list of CloudWatch alarm names that will be monitored during the deployment. The deployment will fail and rollback if any alarms go into ALARM state.",
      "insertionOrder": false,
      "items": {
       "maxLength": 256,
@@ -22,13 +20,11 @@
      "uniqueItems": true
     },
     "Interval": {
-     "description": "The time in minutes between each traffic shifting increment.",
      "maximum": 2100,
      "minimum": 1,
      "type": "integer"
     },
     "Percentage": {
-     "description": "The percentage of traffic to shift to the new version in each increment.",
      "maximum": 99,
      "minimum": 1,
      "type": "integer"
@@ -39,7 +35,6 @@
      "type": "string"
     },
     "Type": {
-     "description": "The type of deployment to perform.",
      "enum": [
       "LINEAR",
       "ALL_AT_ONCE",
@@ -55,7 +50,6 @@
    "type": "object"
   },
   "RoutingConfiguration": {
-   "description": "The routing configuration of the alias. One or two versions can be mapped to an alias to split StartExecution requests of the same state machine.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/RoutingConfigurationVersion"
@@ -69,13 +63,11 @@
    "additionalProperties": false,
    "properties": {
     "StateMachineVersionArn": {
-     "description": "The Amazon Resource Name (ARN) that identifies one or two state machine versions defined in the routing configuration.",
      "maxLength": 2048,
      "minLength": 1,
      "type": "string"
     },
     "Weight": {
-     "description": "The percentage of traffic you want to route to the state machine version. The sum of the weights in the routing configuration must be equal to 100.",
      "maximum": 100,
      "minimum": 0,
      "type": "integer"
@@ -88,7 +80,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for StateMachineAlias",
  "handlers": {
   "create": {
    "permissions": [
@@ -147,7 +138,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The ARN of the alias.",
    "maxLength": 2048,
    "minLength": 1,
    "type": "string"
@@ -156,13 +146,11 @@
    "$ref": "#/definitions/DeploymentPreference"
   },
   "Description": {
-   "description": "An optional description of the alias.",
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
   },
   "Name": {
-   "description": "The alias name.",
    "maxLength": 80,
    "minLength": 1,
    "type": "string"

@@ -10,10 +10,8 @@
  "definitions": {
   "CaptureContentTypeHeader": {
    "additionalProperties": false,
-   "description": "Configuration specifying how to treat different headers. If no headers are specified SageMaker will by default base64 encode when capturing the data.",
    "properties": {
     "CsvContentTypes": {
-     "description": "The list of all content type headers that SageMaker will treat as CSV and capture accordingly.",
      "items": {
       "maxLength": 256,
       "minLength": 1,
@@ -25,7 +23,6 @@
      "type": "array"
     },
     "JsonContentTypes": {
-     "description": "The list of all content type headers that SageMaker will treat as JSON and capture accordingly.",
      "items": {
       "maxLength": 256,
       "minLength": 1,
@@ -41,19 +38,16 @@
   },
   "DataStorageConfig": {
    "additionalProperties": false,
-   "description": "The Amazon S3 location and configuration for storing inference request and response data.",
    "properties": {
     "ContentType": {
      "$ref": "#/definitions/CaptureContentTypeHeader"
     },
     "Destination": {
-     "description": "The Amazon S3 bucket where the inference request and response data is stored.",
      "maxLength": 512,
      "pattern": "^(https|s3)://([^/])/?(.*)$",
      "type": "string"
     },
     "KmsKey": {
-     "description": "The AWS Key Management Service key that Amazon SageMaker uses to encrypt captured data at rest using Amazon S3 server-side encryption.",
      "maxLength": 2048,
      "pattern": ".*",
      "type": "string"
@@ -66,10 +60,8 @@
   },
   "EndpointMetadata": {
    "additionalProperties": false,
-   "description": "The metadata of the endpoint on which the inference experiment ran.",
    "properties": {
     "EndpointConfigName": {
-     "description": "The name of the endpoint configuration.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
      "type": "string"
@@ -78,7 +70,6 @@
      "$ref": "#/definitions/EndpointName"
     },
     "EndpointStatus": {
-     "description": "The status of the endpoint. For possible values of the status of an endpoint.",
      "enum": [
       "Creating",
       "Updating",
@@ -99,21 +90,17 @@
    "type": "object"
   },
   "EndpointName": {
-   "description": "The name of the endpoint used to run the inference experiment.",
    "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
    "type": "string"
   },
   "InferenceExperimentSchedule": {
    "additionalProperties": false,
-   "description": "The duration for which you want the inference experiment to run.",
    "properties": {
     "EndTime": {
-     "description": "The timestamp at which the inference experiment ended or will end.",
      "type": "string"
     },
     "StartTime": {
-     "description": "The timestamp at which the inference experiment started or will start.",
      "type": "string"
     }
    },
@@ -121,10 +108,8 @@
   },
   "ModelInfrastructureConfig": {
    "additionalProperties": false,
-   "description": "The configuration for the infrastructure that the model will be deployed to.",
    "properties": {
     "InfrastructureType": {
-     "description": "The type of the inference experiment that you want to run.",
      "enum": [
       "RealTimeInference"
      ],
@@ -142,19 +127,16 @@
   },
   "ModelVariantConfig": {
    "additionalProperties": false,
-   "description": "Contains information about the deployment options of a model.",
    "properties": {
     "InfrastructureConfig": {
      "$ref": "#/definitions/ModelInfrastructureConfig"
     },
     "ModelName": {
-     "description": "The name of the Amazon SageMaker Model entity.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
      "type": "string"
     },
     "VariantName": {
-     "description": "The name of the variant.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
      "type": "string"
@@ -169,14 +151,11 @@
   },
   "RealTimeInferenceConfig": {
    "additionalProperties": false,
-   "description": "The infrastructure configuration for deploying the model to a real-time inference endpoint.",
    "properties": {
     "InstanceCount": {
-     "description": "The number of instances of the type specified by InstanceType.",
      "type": "integer"
     },
     "InstanceType": {
-     "description": "The instance type the model is deployed to.",
      "type": "string"
     }
    },
@@ -188,10 +167,8 @@
   },
   "ShadowModeConfig": {
    "additionalProperties": false,
-   "description": "The configuration of ShadowMode inference experiment type. Use this field to specify a production variant which takes all the inference requests, and a shadow variant to which Amazon SageMaker replicates a percentage of the inference requests. For the shadow variant also specify the percentage of requests that Amazon SageMaker replicates.",
    "properties": {
     "ShadowModelVariants": {
-     "description": "List of shadow variant configurations.",
      "items": {
       "$ref": "#/definitions/ShadowModelVariantConfig"
      },
@@ -200,7 +177,6 @@
      "type": "array"
     },
     "SourceModelVariantName": {
-     "description": "The name of the production variant, which takes all the inference requests.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
      "type": "string"
@@ -214,15 +190,12 @@
   },
   "ShadowModelVariantConfig": {
    "additionalProperties": false,
-   "description": "The name and sampling percentage of a shadow variant.",
    "properties": {
     "SamplingPercentage": {
-     "description": "The percentage of inference requests that Amazon SageMaker replicates from the production variant to the shadow variant.",
      "maximum": 100,
      "type": "integer"
     },
     "ShadowModelVariantName": {
-     "description": "The name of the shadow variant.",
      "maxLength": 63,
      "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
      "type": "string"
@@ -236,17 +209,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
@@ -259,7 +229,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::InferenceExperiment",
  "handlers": {
   "create": {
    "permissions": [
@@ -306,28 +275,24 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the inference experiment.",
    "maxLength": 256,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:inference-experiment/[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "CreationTime": {
-   "description": "The timestamp at which you created the inference experiment.",
    "type": "string"
   },
   "DataStorageConfig": {
    "$ref": "#/definitions/DataStorageConfig"
   },
   "Description": {
-   "description": "The description of the inference experiment.",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": ".*",
    "type": "string"
   },
   "DesiredState": {
-   "description": "The desired state of the experiment after starting or stopping operation.",
    "enum": [
     "Running",
     "Completed",
@@ -342,17 +307,14 @@
    "$ref": "#/definitions/EndpointName"
   },
   "KmsKey": {
-   "description": "The AWS Key Management Service (AWS KMS) key that Amazon SageMaker uses to encrypt data on the storage volume attached to the ML compute instance that hosts the endpoint.",
    "maxLength": 2048,
    "pattern": ".*",
    "type": "string"
   },
   "LastModifiedTime": {
-   "description": "The timestamp at which you last modified the inference experiment.",
    "type": "string"
   },
   "ModelVariants": {
-   "description": "An array of ModelVariantConfig objects. Each ModelVariantConfig object in the array describes the infrastructure configuration for the corresponding variant.",
    "items": {
     "$ref": "#/definitions/ModelVariantConfig"
    },
@@ -360,13 +322,11 @@
    "type": "array"
   },
   "Name": {
-   "description": "The name for the inference experiment.",
    "maxLength": 120,
    "minLength": 1,
    "type": "string"
   },
   "RoleArn": {
-   "description": "The Amazon Resource Name (ARN) of an IAM role that Amazon SageMaker can assume to access model artifacts and container images, and manage Amazon SageMaker Inference endpoints for model deployment.",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
@@ -379,7 +339,6 @@
    "$ref": "#/definitions/ShadowModeConfig"
   },
   "Status": {
-   "description": "The status of the inference experiment.",
    "enum": [
     "Creating",
     "Created",
@@ -393,14 +352,12 @@
    "type": "string"
   },
   "StatusReason": {
-   "description": "The error message or client-specified reason from the StopInferenceExperiment API, that explains the status of the inference experiment.",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": ".*",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -408,7 +365,6 @@
    "type": "array"
   },
   "Type": {
-   "description": "The type of the inference experiment that you want to run.",
    "enum": [
     "ShadowMode"
    ],

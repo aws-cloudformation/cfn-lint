@@ -6,17 +6,14 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key for the tag. May not be null.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
      "type": "string"
     },
     "Value": {
-     "description": "The tag's value. May be null.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
@@ -30,7 +27,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::MemoryDB::SubnetGroup resource creates an Amazon MemoryDB Subnet Group.",
  "handlers": {
   "create": {
    "permissions": [
@@ -72,20 +68,16 @@
  ],
  "properties": {
   "ARN": {
-   "description": "The Amazon Resource Name (ARN) of the subnet group.",
    "type": "string"
   },
   "Description": {
-   "description": "An optional description of the subnet group.",
    "type": "string"
   },
   "SubnetGroupName": {
-   "description": "The name of the subnet group. This value must be unique as it also serves as the subnet group identifier.",
    "pattern": "[a-z][a-z0-9\\-]*",
    "type": "string"
   },
   "SubnetIds": {
-   "description": "A list of VPC subnet IDs for the subnet group.",
    "insertionOrder": false,
    "items": {
     "type": "string"
@@ -94,7 +86,6 @@
    "uniqueItems": true
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this subnet group.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

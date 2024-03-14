@@ -6,17 +6,14 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "type": "string"
     }
@@ -28,12 +25,10 @@
    "type": "object"
   },
   "UserHierarchyGroupArn": {
-   "description": "The Amazon Resource Name (ARN) for the user hierarchy group.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent-group/[-a-zA-Z0-9]*$",
    "type": "string"
   }
  },
- "description": "Resource Type definition for AWS::Connect::UserHierarchyGroup",
  "handlers": {
   "create": {
    "permissions": [
@@ -80,22 +75,18 @@
  ],
  "properties": {
   "InstanceArn": {
-   "description": "The identifier of the Amazon Connect instance.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the user hierarchy group.",
    "maxLength": 100,
    "minLength": 1,
    "type": "string"
   },
   "ParentGroupArn": {
-   "$ref": "#/definitions/UserHierarchyGroupArn",
-   "description": "The Amazon Resource Name (ARN) for the parent user hierarchy group."
+   "$ref": "#/definitions/UserHierarchyGroupArn"
   },
   "Tags": {
-   "description": "One or more tags.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -105,8 +96,7 @@
    "uniqueItems": true
   },
   "UserHierarchyGroupArn": {
-   "$ref": "#/definitions/UserHierarchyGroupArn",
-   "description": "The Amazon Resource Name (ARN) for the user hierarchy group."
+   "$ref": "#/definitions/UserHierarchyGroupArn"
   }
  },
  "readOnlyProperties": [

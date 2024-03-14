@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConformancePackName"
+ ],
+ "definitions": {
+  "ConformancePackInputParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "$ref": "#/definitions/ParameterName"
+    },
+    "ParameterValue": {
+     "$ref": "#/definitions/ParameterValue"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "ParameterName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ParameterValue": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutConformancePack",
+    "config:DescribeConformancePackStatus",
+    "config:DescribeConformancePacks",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteConformancePack",
+    "config:DescribeConformancePackStatus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeConformancePacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeConformancePacks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutConformancePack",
+    "config:DescribeConformancePackStatus",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConformancePackName"
+ ],
+ "properties": {
+  "ConformancePackInputParameters": {
+   "items": {
+    "$ref": "#/definitions/ConformancePackInputParameter"
+   },
+   "maxItems": 60,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ConformancePackName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][-a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "DeliveryS3Bucket": {
+   "maxLength": 63,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DeliveryS3KeyPrefix": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "TemplateBody": {
+   "maxLength": 51200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateS3Uri": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "s3://.*",
+   "type": "string"
+  },
+  "TemplateSSMDocumentDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "DocumentName": {
+     "maxLength": 128,
+     "minLength": 3,
+     "type": "string"
+    },
+    "DocumentVersion": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "ConformancePackName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Config::ConformancePack",
+ "writeOnlyProperties": [
+  "/properties/TemplateBody",
+  "/properties/TemplateS3Uri",
+  "/properties/TemplateSSMDocumentDetails"
+ ]
+}

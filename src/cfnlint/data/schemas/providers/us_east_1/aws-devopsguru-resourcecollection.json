@@ -3,10 +3,8 @@
  "definitions": {
   "CloudFormationCollectionFilter": {
    "additionalProperties": false,
-   "description": "CloudFormation resource for DevOps Guru to monitor",
    "properties": {
     "StackNames": {
-     "description": "An array of CloudFormation stack names.",
      "insertionOrder": false,
      "items": {
       "maxLength": 128,
@@ -23,7 +21,6 @@
   },
   "ResourceCollectionFilter": {
    "additionalProperties": false,
-   "description": "Information about a filter used to specify which AWS resources are analyzed for anomalous behavior by DevOps Guru.",
    "properties": {
     "CloudFormation": {
      "$ref": "#/definitions/CloudFormationCollectionFilter"
@@ -36,16 +33,13 @@
   },
   "TagCollection": {
    "additionalProperties": false,
-   "description": "Tagged resource for DevOps Guru to monitor",
    "properties": {
     "AppBoundaryKey": {
-     "description": "A Tag key for DevOps Guru app boundary.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "TagValues": {
-     "description": "Tag values of DevOps Guru app boundary.",
      "insertionOrder": false,
      "items": {
       "maxLength": 256,
@@ -60,7 +54,6 @@
    "type": "object"
   },
   "TagCollections": {
-   "description": "Tagged resources for DevOps Guru to monitor",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/TagCollection"
@@ -68,7 +61,6 @@
    "type": "array"
   }
  },
- "description": "This resource schema represents the ResourceCollection resource in the Amazon DevOps Guru.",
  "handlers": {
   "create": {
    "permissions": [
@@ -107,7 +99,6 @@
    "$ref": "#/definitions/ResourceCollectionFilter"
   },
   "ResourceCollectionType": {
-   "description": "The type of ResourceCollection",
    "enum": [
     "AWS_CLOUD_FORMATION",
     "AWS_TAGS"

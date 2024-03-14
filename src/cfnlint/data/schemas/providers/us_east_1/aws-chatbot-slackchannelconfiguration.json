@@ -4,7 +4,6 @@
   "/properties/SlackWorkspaceId",
   "/properties/ConfigurationName"
  ],
- "description": "Resource schema for AWS::Chatbot::SlackChannelConfiguration.",
  "handlers": {
   "create": {
    "permissions": [
@@ -40,19 +39,16 @@
  ],
  "properties": {
   "Arn": {
-   "description": "Amazon Resource Name (ARN) of the configuration",
    "pattern": "^arn:(aws[a-zA-Z-]*)?:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
    "type": "string"
   },
   "ConfigurationName": {
-   "description": "The name of the configuration",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^[A-Za-z0-9-_]+$",
    "type": "string"
   },
   "GuardrailPolicies": {
-   "description": "The list of IAM policy ARNs that are applied as channel guardrails. The AWS managed 'AdministratorAccess' policy is applied as a default if this is not set.",
    "insertionOrder": false,
    "items": {
     "pattern": "^(^$|arn:aws:iam:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_\\/+=,@.-]{0,1023})$",
@@ -61,32 +57,27 @@
    "type": "array"
   },
   "IamRoleArn": {
-   "description": "The ARN of the IAM role that defines the permissions for AWS Chatbot",
    "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
    "type": "string"
   },
   "LoggingLevel": {
    "default": "NONE",
-   "description": "Specifies the logging level for this configuration:ERROR,INFO or NONE. This property affects the log entries pushed to Amazon CloudWatch logs",
    "pattern": "^(ERROR|INFO|NONE)$",
    "type": "string"
   },
   "SlackChannelId": {
-   "description": "The id of the Slack channel",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^[A-Za-z0-9]+$",
    "type": "string"
   },
   "SlackWorkspaceId": {
-   "description": "The id of the Slack workspace",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^[0-9A-Z]{1,255}$",
    "type": "string"
   },
   "SnsTopicArns": {
-   "description": "ARNs of SNS topics which delivers notifications to AWS Chatbot, for example CloudWatch alarm notifications.",
    "insertionOrder": false,
    "items": {
     "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
@@ -96,7 +87,6 @@
   },
   "UserRoleRequired": {
    "default": false,
-   "description": "Enables use of a user role requirement in your chat configuration",
    "type": "boolean"
   }
  },

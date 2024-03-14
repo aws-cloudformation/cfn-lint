@@ -14,7 +14,6 @@
  "definitions": {
   "LaunchTemplateSpecification": {
    "additionalProperties": false,
-   "description": "An object representing a launch template specification for AWS EKS Nodegroup.",
    "properties": {
     "Id": {
      "minLength": 1,
@@ -33,7 +32,6 @@
   },
   "RemoteAccess": {
    "additionalProperties": false,
-   "description": "An object representing a remote access configuration specification for AWS EKS Nodegroup.",
    "properties": {
     "Ec2SshKey": {
      "type": "string"
@@ -54,7 +52,6 @@
   },
   "ScalingConfig": {
    "additionalProperties": false,
-   "description": "An object representing a auto scaling group specification for AWS EKS Nodegroup.",
    "properties": {
     "DesiredSize": {
      "minimum": 0,
@@ -73,7 +70,6 @@
   },
   "Taint": {
    "additionalProperties": false,
-   "description": "An object representing a Taint specification for AWS EKS Nodegroup.",
    "properties": {
     "Effect": {
      "minLength": 1,
@@ -92,15 +88,12 @@
   },
   "UpdateConfig": {
    "additionalProperties": false,
-   "description": "The node group update configuration.",
    "properties": {
     "MaxUnavailable": {
-     "description": "The maximum number of nodes unavailable at once during a version update. Nodes will be updated in parallel. This value or maxUnavailablePercentage is required to have a value.The maximum number is 100. ",
      "minimum": 1,
      "type": "number"
     },
     "MaxUnavailablePercentage": {
-     "description": "The maximum percentage of nodes unavailable during a version update. This percentage of nodes will be updated in parallel, up to 100 nodes at once. This value or maxUnavailable is required to have a value.",
      "maximum": 100,
      "minimum": 1,
      "type": "number"
@@ -109,7 +102,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::EKS::Nodegroup",
  "handlers": {
   "create": {
    "permissions": [
@@ -178,35 +170,29 @@
  ],
  "properties": {
   "AmiType": {
-   "description": "The AMI type for your node group.",
    "type": "string"
   },
   "Arn": {
    "type": "string"
   },
   "CapacityType": {
-   "description": "The capacity type of your managed node group.",
    "type": "string"
   },
   "ClusterName": {
-   "description": "Name of the cluster to create the node group in.",
    "minLength": 1,
    "type": "string"
   },
   "DiskSize": {
-   "description": "The root device disk size (in GiB) for your node group instances.",
    "type": "integer"
   },
   "ForceUpdateEnabled": {
    "default": false,
-   "description": "Force the update if the existing node group's pods are unable to be drained due to a pod disruption budget issue.",
    "type": "boolean"
   },
   "Id": {
    "type": "string"
   },
   "InstanceTypes": {
-   "description": "Specify the instance types for a node group.",
    "insertionOrder": false,
    "items": {
     "type": "string"
@@ -216,7 +202,6 @@
   },
   "Labels": {
    "additionalProperties": false,
-   "description": "The Kubernetes labels to be applied to the nodes in the node group when they are created.",
    "patternProperties": {
     "^.+$": {
      "type": "string"
@@ -225,32 +210,25 @@
    "type": "object"
   },
   "LaunchTemplate": {
-   "$ref": "#/definitions/LaunchTemplateSpecification",
-   "description": "An object representing a node group's launch template specification."
+   "$ref": "#/definitions/LaunchTemplateSpecification"
   },
   "NodeRole": {
-   "description": "The Amazon Resource Name (ARN) of the IAM role to associate with your node group.",
    "type": "string"
   },
   "NodegroupName": {
-   "description": "The unique name to give your node group.",
    "minLength": 1,
    "type": "string"
   },
   "ReleaseVersion": {
-   "description": "The AMI version of the Amazon EKS-optimized AMI to use with your node group.",
    "type": "string"
   },
   "RemoteAccess": {
-   "$ref": "#/definitions/RemoteAccess",
-   "description": "The remote access (SSH) configuration to use with your node group."
+   "$ref": "#/definitions/RemoteAccess"
   },
   "ScalingConfig": {
-   "$ref": "#/definitions/ScalingConfig",
-   "description": "The scaling configuration details for the Auto Scaling group that is created for your node group."
+   "$ref": "#/definitions/ScalingConfig"
   },
   "Subnets": {
-   "description": "The subnets to use for the Auto Scaling group that is created for your node group.",
    "insertionOrder": false,
    "items": {
     "type": "string"
@@ -260,7 +238,6 @@
   },
   "Tags": {
    "additionalProperties": false,
-   "description": "The metadata, as key-value pairs, to apply to the node group to assist with categorization and organization. Follows same schema as Labels for consistency.",
    "patternProperties": {
     "^.+$": {
      "type": "string"
@@ -269,7 +246,6 @@
    "type": "object"
   },
   "Taints": {
-   "description": "The Kubernetes taints to be applied to the nodes in the node group when they are created.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Taint"
@@ -277,11 +253,9 @@
    "type": "array"
   },
   "UpdateConfig": {
-   "$ref": "#/definitions/UpdateConfig",
-   "description": "The node group update configuration."
+   "$ref": "#/definitions/UpdateConfig"
   },
   "Version": {
-   "description": "The Kubernetes version to use for your managed nodes.",
    "type": "string"
   }
  },
