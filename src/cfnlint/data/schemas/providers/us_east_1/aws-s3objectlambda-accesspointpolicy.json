@@ -1,0 +1,54 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ObjectLambdaAccessPoint"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:PutAccessPointPolicyForObjectLambda",
+    "s3:GetAccessPointPolicyForObjectLambda"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:DeleteAccessPointPolicyForObjectLambda",
+    "s3:GetAccessPointPolicyForObjectLambda"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3:GetAccessPointPolicyForObjectLambda"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:PutAccessPointPolicyForObjectLambda",
+    "s3:GetAccessPointPolicyForObjectLambda"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ObjectLambdaAccessPoint"
+ ],
+ "properties": {
+  "ObjectLambdaAccessPoint": {
+   "maxLength": 45,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "ObjectLambdaAccessPoint",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3ObjectLambda::AccessPointPolicy"
+}

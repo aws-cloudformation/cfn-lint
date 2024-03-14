@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.data.schemas.other import mappings as schema_mappings
+from cfnlint.helpers import load_resource
+from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 
-class Configuration(CloudFormationLintRule):
+class Configuration(BaseJsonSchema):
     """Check if Mappings are configured correctly"""
 
     id = "E7001"
@@ -15,41 +17,23 @@ class Configuration(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html"
     tags = ["mappings"]
 
-    def match(self, cfn):
-        matches = []
+    def __init__(self):
+        """Init"""
+        super().__init__()
+        self.rule_set = {
+            "additionalProperties": "E7001",
+            "patternProperties": "E7001",
+            "properties": "E7001",
+            "propertyNames": "E7002",
+            "maxProperties": "E7010",
+            "minProperties": "E7001",
+            "required": "E7001",
+            "type": "E7001",
+        }
+        self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self.cfnmappings = self.validate
+        self._schema = load_resource(schema_mappings, "configuration.json")
 
-        valid_map_types = (str, list, int, float)
-
-        mappings = cfn.template.get("Mappings", {})
-        if mappings:
-            for mapname, mapobj in mappings.items():
-                if not isinstance(mapobj, dict):
-                    message = "Mapping {0} has invalid property"
-                    matches.append(
-                        RuleMatch(["Mappings", mapname], message.format(mapname))
-                    )
-                else:
-                    for firstkey in mapobj:
-                        firstkeyobj = mapobj[firstkey]
-                        if not isinstance(firstkeyobj, dict):
-                            message = "Mapping {0} has invalid property at {1}"
-                            matches.append(
-                                RuleMatch(
-                                    ["Mappings", mapname, firstkey],
-                                    message.format(mapname, firstkeyobj),
-                                )
-                            )
-                        else:
-                            for secondkey in firstkeyobj:
-                                if not isinstance(
-                                    firstkeyobj[secondkey], valid_map_types
-                                ):
-                                    message = "Mapping {0} has invalid property at {1}"
-                                    matches.append(
-                                        RuleMatch(
-                                            ["Mappings", mapname, firstkey, secondkey],
-                                            message.format(mapname, secondkey),
-                                        )
-                                    )
-
-        return matches
+    @property
+    def schema(self):
+        return self._schema

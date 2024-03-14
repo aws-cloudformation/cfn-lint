@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfiguredTableIdentifier",
+  "/properties/Name",
+  "/properties/MembershipIdentifier"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cleanrooms:CreateConfiguredTableAssociation",
+    "iam:PassRole",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:GetConfiguredTableAssociation",
+    "cleanrooms:ListConfiguredTableAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cleanrooms:DeleteConfiguredTableAssociation",
+    "cleanrooms:GetConfiguredTableAssociation",
+    "cleanrooms:ListConfiguredTableAssociations",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MembershipIdentifier": {
+      "$ref": "resource-schema.json#/properties/MembershipIdentifier"
+     }
+    },
+    "required": [
+     "MembershipIdentifier"
+    ]
+   },
+   "permissions": [
+    "cleanrooms:ListConfiguredTableAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cleanrooms:GetConfiguredTableAssociation",
+    "cleanrooms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cleanrooms:UpdateConfiguredTableAssociation",
+    "cleanrooms:GetConfiguredTableAssociation",
+    "iam:PassRole",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfiguredTableAssociationIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "ConfiguredTableAssociationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "ConfiguredTableIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 512,
+   "minLength": 32,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfiguredTableAssociationIdentifier",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ConfiguredTableIdentifier",
+  "Name",
+  "RoleArn",
+  "MembershipIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::ConfiguredTableAssociation"
+}

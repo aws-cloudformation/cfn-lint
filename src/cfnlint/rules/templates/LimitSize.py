@@ -26,7 +26,10 @@ class LimitSize(CloudFormationLintRule):
             if Path(cfn.filename).is_file():
                 statinfo = os.stat(cfn.filename)
                 if statinfo.st_size > LIMITS["template"]["body"]:
-                    message = "The template file size ({0} bytes) exceeds the limit ({1} bytes)"
+                    message = (
+                        "The template file size ({0} bytes) exceeds the limit ({1}"
+                        " bytes)"
+                    )
                     matches.append(
                         RuleMatch(
                             ["Template"],

@@ -1,0 +1,152 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "definitions": {
+  "S3Location": {
+   "$comment": "Contains object details present in the S3 Bucket",
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "gamelift:CreateScript",
+    "gamelift:ListTagsForResource",
+    "gamelift:TagResource",
+    "gamelift:DescribeScript",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "gamelift:DeleteScript"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "gamelift:ListScripts",
+    "gamelift:DescribeScript"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "gamelift:DescribeScript",
+    "gamelift:ListScripts",
+    "gamelift:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "gamelift:DescribeScript",
+    "gamelift:UpdateScript",
+    "gamelift:ListTagsForResource",
+    "gamelift:TagResource",
+    "gamelift:UntagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.*:script\\/script-\\S+",
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^script-\\S+",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SizeOnDisk": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/S3Location",
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Version": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/CreationTime",
+  "/properties/Arn",
+  "/properties/SizeOnDisk"
+ ],
+ "required": [
+  "StorageLocation"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagProperty": "/properties/Tags",
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::Script"
+}

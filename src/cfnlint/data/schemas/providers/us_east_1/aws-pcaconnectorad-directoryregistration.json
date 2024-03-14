@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryId"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "pca-connector-ad:GetDirectoryRegistration",
+    "pca-connector-ad:CreateDirectoryRegistration",
+    "ds:AuthorizeApplication",
+    "ds:DescribeDirectories"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "pca-connector-ad:GetDirectoryRegistration",
+    "pca-connector-ad:DeleteDirectoryRegistration",
+    "ds:DescribeDirectories",
+    "ds:UnauthorizeApplication",
+    "ds:UpdateAuthorizedApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "pca-connector-ad:ListDirectoryRegistrations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "pca-connector-ad:ListTagsForResource",
+    "pca-connector-ad:GetDirectoryRegistration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "pca-connector-ad:ListTagsForResource",
+    "pca-connector-ad:TagResource",
+    "pca-connector-ad:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DirectoryRegistrationArn"
+ ],
+ "properties": {
+  "DirectoryId": {
+   "pattern": "^d-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "DirectoryRegistrationArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:directory-registration(\\/[\\w-]+)$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DirectoryRegistrationArn"
+ ],
+ "required": [
+  "DirectoryId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorAD::DirectoryRegistration",
+ "writeOnlyProperties": [
+  "/properties/DirectoryId",
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CsvClassifier": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowSingleColumn": {
+     "type": "boolean"
+    },
+    "ContainsCustomDatatype": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainsHeader": {
+     "type": "string"
+    },
+    "CustomDatatypeConfigured": {
+     "type": "boolean"
+    },
+    "Delimiter": {
+     "type": "string"
+    },
+    "DisableValueTrimming": {
+     "type": "boolean"
+    },
+    "Header": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "type": "string"
+    },
+    "QuoteSymbol": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GrokClassifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Classification": {
+     "type": "string"
+    },
+    "CustomPatterns": {
+     "type": "string"
+    },
+    "GrokPattern": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "GrokPattern",
+    "Classification"
+   ],
+   "type": "object"
+  },
+  "JsonClassifier": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "JsonPath"
+   ],
+   "type": "object"
+  },
+  "XMLClassifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Classification": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "RowTag": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RowTag",
+    "Classification"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CsvClassifier": {
+   "$ref": "#/definitions/CsvClassifier"
+  },
+  "GrokClassifier": {
+   "$ref": "#/definitions/GrokClassifier"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "JsonClassifier": {
+   "$ref": "#/definitions/JsonClassifier"
+  },
+  "XMLClassifier": {
+   "$ref": "#/definitions/XMLClassifier"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::Glue::Classifier"
+}

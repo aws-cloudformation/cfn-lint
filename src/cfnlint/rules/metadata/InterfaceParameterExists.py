@@ -3,10 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any
+
+from cfnlint.jsonschema.protocols import Validator
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class InterfaceParameterExists(CloudFormationLintRule):
+class InterfaceParameterExists(CfnLintKeyword):
     """Check if Metadata Interface parameters exist"""
 
     id = "W4001"
@@ -17,57 +20,15 @@ class InterfaceParameterExists(CloudFormationLintRule):
 
     valid_keys = ["ParameterGroups", "ParameterLabels"]
 
-    def match(self, cfn):
-        """Check CloudFormation Metadata Parameters Exist"""
+    def __init__(self) -> None:
+        super().__init__()
+        self.keywords = [
+            "cfnParameter",
+        ]
 
-        matches = []
-
-        strinterface = "AWS::CloudFormation::Interface"
-        parameters = cfn.get_parameter_names()
-        metadata_obj = cfn.template.get("Metadata", {})
-        if metadata_obj:
-            interfaces = metadata_obj.get(strinterface, {})
-            if isinstance(interfaces, dict):
-                # Check Parameter Group Parameters
-                paramgroups = interfaces.get("ParameterGroups", [])
-                if isinstance(paramgroups, list):
-                    for index, value in enumerate(paramgroups):
-                        if "Parameters" in value:
-                            for paramindex, paramvalue in enumerate(
-                                value["Parameters"]
-                            ):
-                                if paramvalue not in parameters:
-                                    message = (
-                                        "Metadata Interface parameter doesn't exist {0}"
-                                    )
-                                    matches.append(
-                                        RuleMatch(
-                                            [
-                                                "Metadata",
-                                                strinterface,
-                                                "ParameterGroups",
-                                                index,
-                                                "Parameters",
-                                                paramindex,
-                                            ],
-                                            message.format(paramvalue),
-                                        )
-                                    )
-                paramlabels = interfaces.get("ParameterLabels", {})
-                if isinstance(paramlabels, dict):
-                    for param in paramlabels:
-                        if param not in parameters:
-                            message = "Metadata Interface parameter doesn't exist {0}"
-                            matches.append(
-                                RuleMatch(
-                                    [
-                                        "Metadata",
-                                        strinterface,
-                                        "ParameterLabels",
-                                        param,
-                                    ],
-                                    message.format(param),
-                                )
-                            )
-
-        return matches
+    def validate(self, validator: Validator, _, instance: Any, schema):
+        for err in validator.descend(
+            instance, schema={"enum": list(validator.context.parameters.keys())}
+        ):
+            err.rule = self
+            yield err

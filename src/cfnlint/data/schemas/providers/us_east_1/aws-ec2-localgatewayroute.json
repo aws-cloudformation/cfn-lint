@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DestinationCidrBlock",
+  "/properties/LocalGatewayRouteTableId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateLocalGatewayRoute",
+    "ec2:SearchLocalGatewayRoutes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteLocalGatewayRoute",
+    "ec2:SearchLocalGatewayRoutes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayRouteTables",
+    "ec2:SearchLocalGatewayRoutes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:SearchLocalGatewayRoutes"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyLocalGatewayRoute",
+    "ec2:SearchLocalGatewayRoutes"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "DestinationCidrBlock",
+    "LocalGatewayRouteTableId",
+    "LocalGatewayVirtualInterfaceGroupId"
+   ]
+  },
+  {
+   "required": [
+    "DestinationCidrBlock",
+    "LocalGatewayRouteTableId",
+    "NetworkInterfaceId"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/DestinationCidrBlock",
+  "/properties/LocalGatewayRouteTableId"
+ ],
+ "properties": {
+  "DestinationCidrBlock": {
+   "type": "string"
+  },
+  "LocalGatewayRouteTableId": {
+   "type": "string"
+  },
+  "LocalGatewayVirtualInterfaceGroupId": {
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/State",
+  "/properties/Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-lgw.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::LocalGatewayRoute"
+}

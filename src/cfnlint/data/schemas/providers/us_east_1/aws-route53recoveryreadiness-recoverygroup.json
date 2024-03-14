@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RecoveryGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53-recovery-readiness:CreateRecoveryGroup",
+    "route53-recovery-readiness:GetRecoveryGroup",
+    "route53-recovery-readiness:GetCell",
+    "route53-recovery-readiness:ListTagsForResources",
+    "route53-recovery-readiness:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53-recovery-readiness:DeleteRecoveryGroup",
+    "route53-recovery-readiness:GetRecoveryGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53-recovery-readiness:ListRecoveryGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53-recovery-readiness:GetRecoveryGroup",
+    "route53-recovery-readiness:ListTagsForResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53-recovery-readiness:UpdateRecoveryGroup",
+    "route53-recovery-readiness:GetRecoveryGroup",
+    "route53-recovery-readiness:GetCell",
+    "route53-recovery-readiness:ListTagsForResources",
+    "route53-recovery-readiness:TagResource",
+    "route53-recovery-readiness:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RecoveryGroupName"
+ ],
+ "properties": {
+  "Cells": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "RecoveryGroupArn": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "RecoveryGroupName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RecoveryGroupArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-readiness-readiness.git",
+ "taggable": true,
+ "typeName": "AWS::Route53RecoveryReadiness::RecoveryGroup"
+}

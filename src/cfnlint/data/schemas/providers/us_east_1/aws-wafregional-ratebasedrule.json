@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName",
+  "/properties/RateKey",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Predicate": {
+   "additionalProperties": false,
+   "properties": {
+    "DataId": {
+     "type": "string"
+    },
+    "Negated": {
+     "type": "boolean"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Negated",
+    "DataId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "MatchPredicates": {
+   "items": {
+    "$ref": "#/definitions/Predicate"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RateKey": {
+   "type": "string"
+  },
+  "RateLimit": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "MetricName",
+  "RateLimit",
+  "RateKey",
+  "Name"
+ ],
+ "typeName": "AWS::WAFRegional::RateBasedRule"
+}

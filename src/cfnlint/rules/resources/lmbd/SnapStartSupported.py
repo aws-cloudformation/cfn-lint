@@ -71,7 +71,10 @@ class SnapStartSupported(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(
                             path + ["SnapStart"],
-                            f"Region {region} does not support SnapStart enabled functions",
+                            (
+                                f"Region {region} does not support SnapStart"
+                                "enabled functions"
+                            ),
                         )
                     )
 
@@ -90,7 +93,10 @@ class SnapStartSupported(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(
                             path + ["SnapStart", "ApplyOn"],
-                            f"{runtime} is not supported for SnapStart enabled functions",
+                            (
+                                f"{runtime} is not supported for SnapStart "
+                                "enabled functions"
+                            ),
                         )
                     )
 

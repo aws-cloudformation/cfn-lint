@@ -1,0 +1,82 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/GenerateDistinctId",
+  "/properties/Value"
+ ],
+ "definitions": {
+  "StageKey": {
+   "additionalProperties": false,
+   "properties": {
+    "RestApiId": {
+     "type": "string"
+    },
+    "StageName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CustomerId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "GenerateDistinctId": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "StageKeys": {
+   "items": {
+    "$ref": "#/definitions/StageKey"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Value": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::ApiGateway::ApiKey"
+}

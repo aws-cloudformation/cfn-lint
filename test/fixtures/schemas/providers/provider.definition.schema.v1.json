@@ -1,0 +1,297 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "provider.definition.schema.v1",
+    "title": "CloudFormation Resource Provider Definition MetaSchema",
+    "description": "This schema validates a CloudFormation resource provider definition.",
+    "definitions": {
+        "handlerDefinition": {
+            "description": "Defines any execution operations which can be performed on this resource provider",
+            "type": "object",
+            "properties": {
+                "handlerSchema": {
+                    "type": "object"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "additionalItems": false
+                },
+                "timeoutInMinutes": {
+                    "description": "Defines the timeout for the entire operation to be interpreted by the invoker of the handler.  The default is 120 (2 hours).",
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 2160,
+                    "default": 120
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "permissions"
+            ]
+        },
+        "replacementStrategy": {
+            "type": "string",
+            "description": "The valid replacement strategies are [create_then_delete] and [delete_then_create]. All other inputs are invalid.",
+            "default": "create_then_delete",
+            "enum": [
+                "create_then_delete",
+                "delete_then_create"
+            ]
+        },
+        "resourceLink": {
+            "type": "object",
+            "properties": {
+                "$comment": {
+                    "$ref": "http://json-schema.org/draft-07/schema#/properties/$comment"
+                },
+                "templateUri": {
+                    "type": "string",
+                    "pattern": "^(/|https:)"
+                },
+                "mappings": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[A-Za-z0-9]{1,64}$": {
+                            "type": "string",
+                            "format": "json-pointer"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "templateUri",
+                "mappings"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "type": "object",
+    "patternProperties": {
+        "^\\$id$": {
+            "$ref": "http://json-schema.org/draft-07/schema#/properties/$id"
+        }
+    },
+    "properties": {
+        "$schema": {
+            "$ref": "base.definition.schema.v1.json#/properties/$schema"
+        },
+        "type": {
+            "$comment": "Resource Type",
+            "type": "string",
+            "const": "RESOURCE"
+        },
+        "cfnLint": {
+            "type": ["string", "array"],
+            "cfnLint": "true"
+        },
+        "typeName": {
+            "$comment": "Resource Type Identifier",
+            "examples": [
+                "Organization::Service::Resource",
+                "AWS::EC2::Instance",
+                "Initech::TPS::Report"
+            ],
+            "$ref": "base.definition.schema.v1.json#/properties/typeName"
+        },
+        "$comment": {
+            "$ref": "base.definition.schema.v1.json#/properties/$comment"
+        },
+        "title": {
+            "$ref": "base.definition.schema.v1.json#/properties/title"
+        },
+        "description": {
+            "$comment": "A short description of the resource provider. This will be shown in the AWS CloudFormation console.",
+            "$ref": "base.definition.schema.v1.json#/properties/description"
+        },
+        "sourceUrl": {
+            "$comment": "The location of the source code for this resource provider, to help interested parties submit issues or improvements.",
+            "examples": [
+                "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3"
+            ],
+            "$ref": "base.definition.schema.v1.json#/properties/sourceUrl"
+        },
+        "documentationUrl": {
+            "$comment": "A page with supplemental documentation. The property documentation in schemas should be able to stand alone, but this is an opportunity for e.g. rich examples or more guided documents.",
+            "examples": [
+                "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/CHAP_Using.html"
+            ],
+            "$ref": "base.definition.schema.v1.json#/definitions/httpsUrl"
+        },
+        "taggable": {
+            "description": "(Deprecated, please use new metadata attribute tagging) A boolean flag indicating whether this resource type supports tagging.",
+            "type": "boolean",
+            "default": true
+        },
+        "tagging": {
+            "type": "object",
+            "properties": {
+                "taggable": {
+                    "description": "A boolean flag indicating whether this resource type supports tagging.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "tagOnCreate": {
+                    "description": "A boolean flag indicating whether this resource type supports tagging resources upon creation.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "tagUpdatable": {
+                    "description": "A boolean flag indicating whether this resource type supports updatable tagging.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "cloudFormationSystemTags": {
+                    "description": "A boolean flag indicating whether this resource type supports CloudFormation system tags.",
+                    "type": "boolean",
+                    "default": true
+                },
+                "tagProperty": {
+                    "description": "A reference to the Tags property in the schema.",
+                    "$ref": "http://json-schema.org/draft-07/schema#/properties/$ref",
+                    "default": "/properties/Tags"
+                }
+            },
+            "required": [
+                "taggable"
+            ],
+            "additionalProperties": false
+        },
+        "replacementStrategy": {
+            "$comment": "The order of replacement for an immutable resource update.",
+            "$ref": "#/definitions/replacementStrategy"
+        },
+        "additionalProperties": {
+            "$comment": "All properties of a resource must be expressed in the schema - arbitrary inputs are not allowed",
+            "$ref": "base.definition.schema.v1.json#/properties/additionalProperties"
+        },
+        "properties": {
+            "$ref": "base.definition.schema.v1.json#/properties/properties"
+        },
+        "dependentExcluded": {
+            "$ref": "base.definition.schema.v1.json#/properties/dependentExcluded"
+        },
+        "dependentRequired": {
+            "$ref": "base.definition.schema.v1.json#/properties/dependentRequired"
+        },
+        "definitions": {
+            "$ref": "base.definition.schema.v1.json#/properties/definitions"
+        },
+        "handlers": {
+            "description": "Defines the provisioning operations which can be performed on this resource type",
+            "type": "object",
+            "properties": {
+                "create": {
+                    "$ref": "#/definitions/handlerDefinition"
+                },
+                "read": {
+                    "$ref": "#/definitions/handlerDefinition"
+                },
+                "update": {
+                    "$ref": "#/definitions/handlerDefinition"
+                },
+                "delete": {
+                    "$ref": "#/definitions/handlerDefinition"
+                },
+                "list": {
+                    "$ref": "#/definitions/handlerDefinition"
+                }
+            },
+            "additionalProperties": false
+        },
+        "remote": {
+            "description": "Reserved for CloudFormation use. A namespace to inline remote schemas.",
+            "$ref": "base.definition.schema.v1.json#/properties/remote"
+        },
+        "readOnlyProperties": {
+            "description": "A list of JSON pointers to properties that are able to be found in a Read request but unable to be specified by the customer",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "writeOnlyProperties": {
+            "description": "A list of JSON pointers to properties (typically sensitive) that are able to be specified by the customer but unable to be returned in a Read request",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "conditionalCreateOnlyProperties": {
+            "description": "A list of JSON pointers for properties that can only be updated under certain conditions. For example, you can upgrade the engine version of an RDS DBInstance but you cannot downgrade it.  When updating this property for a resource in a CloudFormation stack, the resource will be replaced if it cannot be updated.",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "nonPublicProperties": {
+            "description": "A list of JSON pointers for properties that are hidden. These properties will still be used but will not be visible",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "nonPublicDefinitions": {
+            "description": "A list of JSON pointers for definitions that are hidden. These definitions will still be used but will not be visible",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "createOnlyProperties": {
+            "description": "A list of JSON pointers to properties that are only able to be specified by the customer when creating a resource. Conversely, any property *not* in this list can be applied to an Update request.",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "deprecatedProperties": {
+            "description": "A list of JSON pointers to properties that have been deprecated by the underlying service provider. These properties are still accepted in create & update operations, however they may be ignored, or converted to a consistent model on application. Deprecated properties are not guaranteed to be present in read paths.",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "primaryIdentifier": {
+            "description": "A required identifier which uniquely identifies an instance of this resource type. An identifier is a non-zero-length list of JSON pointers to properties that form a single key. An identifier can be a single or multiple properties to support composite-key identifiers.",
+            "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+        },
+        "additionalIdentifiers": {
+            "description": "An optional list of supplementary identifiers, each of which uniquely identifies an instance of this resource type. An identifier is a non-zero-length list of JSON pointers to properties that form a single key. An identifier can be a single or multiple properties to support composite-key identifiers.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "base.definition.schema.v1.json#/definitions/jsonPointerArray"
+            }
+        },
+        "message": {
+            "$ref": "base.definition.schema.v1.json#/definitions/message"
+        },
+        "required": {
+            "$ref": "base.definition.schema.v1.json#/properties/required"
+        },
+        "requiredXor": {
+            "$ref": "base.definition.schema.v1.json#/properties/requiredXor"
+        },
+        "requiredOr": {
+            "$ref": "base.definition.schema.v1.json#/properties/requiredOr"
+        },
+        "allOf": {
+            "$ref": "base.definition.schema.v1.json#/definitions/schemaArray"
+        },
+        "anyOf": {
+            "$ref": "base.definition.schema.v1.json#/definitions/schemaArray"
+        },
+        "oneOf": {
+            "$ref": "base.definition.schema.v1.json#/definitions/schemaArray"
+        },
+        "dependencies": {
+            "$ref": "http://json-schema.org/draft-07/schema#/properties/dependencies"
+        },
+        "resourceLink": {
+            "description": "A template-able link to a resource instance. AWS-internal service links must be relative to the AWS console domain. External service links must be absolute, HTTPS URIs.",
+            "$ref": "#/definitions/resourceLink"
+        },
+        "propertyTransform": {
+            "description": "A map which allows resource owners to define a function for a property with possible transformation. This property helps ensure the input to the model is equal to output",
+            "type": "object",
+            "patternProperties": {
+                "^[A-Za-z0-9]{1,64}$": {
+                    "type": "string"
+                }
+            }
+        },
+        "typeConfiguration": {
+            "description": "TypeConfiguration to set the configuration data for registry types. This configuration data is not passed through the resource properties in template. One of the possible use cases is configuring auth keys for 3P resource providers.",
+            "$ref": "provider.configuration.definition.schema.v1"
+        }
+    },
+    "required": [
+        "typeName",
+        "properties",
+        "primaryIdentifier",
+        "additionalProperties"
+    ],
+    "additionalProperties": false
+}

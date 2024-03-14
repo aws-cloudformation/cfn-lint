@@ -15,7 +15,7 @@ This documentation is meant for the maintainers and contributors of this project
 
 ## Property data
 
-The precision of the linter depends on having up-to-date resource specifications that model the properties accurately. The rules use this property data for all the validations. 
+The precision of the linter depends on having up-to-date resource specifications that model the properties accurately. The rules use this property data for all the validations.
 
 ### Updating it
 
@@ -111,11 +111,11 @@ These files follow the [JsonPatch format](http://jsonpatch.com/) and are merged 
     }
     ```
 
-There should be no functional difference, but [`src/cfnlint/data/ExtendedSpecs/all/03_value_types`](https://github.com/aws-cloudformation/cfn-python-lint/tree/main/src/cfnlint/data/ExtendedSpecs/all/03_value_types) and [`src/cfnlint/data/ExtendedSpecs/all/04_property_values`](https://github.com/aws-cloudformation/cfn-python-lint/tree/main/src/cfnlint/data/ExtendedSpecs/all/04_property_values) are more organized than [`src/cfnlint/data/ExtendedSpecs/all/03_value_types.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/all/03_value_types.json) and [`src/cfnlint/data/ExtendedSpecs/all/04_property_values.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/all/04_property_values.json), so they should be preferred locations for new constraints. 
+There should be no functional difference, but [`src/cfnlint/data/ExtendedSpecs/all/03_value_types`](https://github.com/aws-cloudformation/cfn-python-lint/tree/main/src/cfnlint/data/ExtendedSpecs/all/03_value_types) and [`src/cfnlint/data/ExtendedSpecs/all/04_property_values`](https://github.com/aws-cloudformation/cfn-python-lint/tree/main/src/cfnlint/data/ExtendedSpecs/all/04_property_values) are more organized than [`src/cfnlint/data/ExtendedSpecs/all/03_value_types.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/all/03_value_types.json) and [`src/cfnlint/data/ExtendedSpecs/all/04_property_values.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/all/04_property_values.json), so they should be preferred locations for new constraints.
 
 [`ExtendedSpecs/$REGION/06_ssm_service_removal.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/us-gov-east-1/06_ssm_service_removal.json) is written by [`scripts/update_specs_services_from_ssm.py`](https://github.com/aws-cloudformation/cfn-python-lint/blob/cc6ac28ff7deba86cb82813733cceec4bdff68a2/scripts/update_specs_services_from_ssm.py#L165) and [`ExtendedSpecs/$REGION/07_ssm_service_addition.json`](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/data/ExtendedSpecs/us-gov-east-1/07_ssm_service_addition.json) is written by [`scripts/update_specs_services_from_ssm.py`](https://github.com/aws-cloudformation/cfn-python-lint/blob/cc6ac28ff7deba86cb82813733cceec4bdff68a2/scripts/update_specs_services_from_ssm.py#L204).
 
-If we push changes to these files, customers will have to update `cfn-lint`. The person changing the file(s) can also see the changes by running the following: 
+If we push changes to these files, customers will have to update `cfn-lint`. The person changing the file(s) can also see the changes by running the following:
 
 ```shell
 pip3 install -e .
@@ -129,43 +129,43 @@ If we push changes to these files, customers will have to update their version o
 - [At least one of these properties must be specified](https://github.com/aws-cloudformation/cfn-python-lint/blob/b788cc9bd3d49ed20d5f2e58602755a0ef37f52c/src/cfnlint/data/AdditionalSpecs/AtLeastOne.json#L20-L25), used by rule [E2522](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/rules/resources/properties/AtLeastOne.py). Example:
 
     ```json
-    "AWS::EC2::Instance": [ 
-        [ 
-            "ImageId", 
-            "LaunchTemplate" 
-        ] 
+    "AWS::EC2::Instance": [
+        [
+            "ImageId",
+            "LaunchTemplate"
+        ]
     ]
     ```
 
 - [Only one of these properties may be specified](https://github.com/aws-cloudformation/cfn-python-lint/blob/b788cc9bd3d49ed20d5f2e58602755a0ef37f52c/src/cfnlint/data/AdditionalSpecs/OnlyOne.json#L79-L84), used by rule [E2523](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/rules/resources/properties/OnlyOne.py). Example:
 
     ```json
-    "AWS::CloudWatch::Alarm": [ 
-        [ 
-            "MetricName", 
-            "Metrics" 
-        ] 
+    "AWS::CloudWatch::Alarm": [
+        [
+            "MetricName",
+            "Metrics"
+        ]
     ]
     ```
 
 - [If this property is specified, these properties must be excluded](https://github.com/aws-cloudformation/cfn-python-lint/blob/b788cc9bd3d49ed20d5f2e58602755a0ef37f52c/src/cfnlint/data/AdditionalSpecs/Exclusive.json#L102-L107), used by rule [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/rules/resources/properties/Exclusive.py). Example:
 
     ```json
-    "AWS::RDS::DBCluster": { 
-        "SnapshotIdentifier": [ 
-            "MasterUsername", 
-            "MasterUserPassword" 
-        ] 
+    "AWS::RDS::DBCluster": {
+        "SnapshotIdentifier": [
+            "MasterUsername",
+            "MasterUserPassword"
+        ]
     }
     ```
 
 - [If this property is specified, these properties must be included](https://github.com/aws-cloudformation/cfn-python-lint/blob/b788cc9bd3d49ed20d5f2e58602755a0ef37f52c/src/cfnlint/data/AdditionalSpecs/Inclusive.json#L48-L52), used by rule [E2521](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/src/cfnlint/rules/resources/properties/Inclusive.py). Example:
 
     ```json
-    "AWS::OpsWorks::Stack": { 
-        "VpcId": [ 
-            "DefaultSubnetId" 
-        ] 
+    "AWS::OpsWorks::Stack": {
+        "VpcId": [
+            "DefaultSubnetId"
+        ]
     }
     ```
 

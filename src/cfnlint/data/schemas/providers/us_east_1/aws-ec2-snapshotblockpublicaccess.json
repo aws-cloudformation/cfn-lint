@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:EnableSnapshotBlockPublicAccess",
+    "ec2:GetSnapshotBlockPublicAccessState"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisableSnapshotBlockPublicAccess",
+    "ec2:GetSnapshotBlockPublicAccessState"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:GetSnapshotBlockPublicAccessState"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetSnapshotBlockPublicAccessState"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:EnableSnapshotBlockPublicAccess",
+    "ec2:GetSnapshotBlockPublicAccessState"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "block-all-sharing",
+    "block-new-sharing"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "required": [
+  "State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::SnapshotBlockPublicAccess"
+}

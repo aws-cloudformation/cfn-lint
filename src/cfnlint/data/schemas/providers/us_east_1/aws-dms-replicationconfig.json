@@ -1,0 +1,179 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ReplicationConfigIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ],
+ "definitions": {
+  "ComputeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "DnsNameServers": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "MaxCapacityUnits": {
+     "type": "integer"
+    },
+    "MinCapacityUnits": {
+     "type": "integer"
+    },
+    "MultiAZ": {
+     "type": "boolean"
+    },
+    "PreferredMaintenanceWindow": {
+     "type": "string"
+    },
+    "ReplicationSubnetGroupId": {
+     "type": "string"
+    },
+    "VpcSecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "MaxCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "dms:CreateReplicationConfig",
+    "dms:AddTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:CreateServiceLinkedRole",
+    "iam:AttachRolePolicy",
+    "iam:PutRolePolicy",
+    "iam:UpdateRoleDescription"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "dms:DescribeReplicationConfigs",
+    "dms:DeleteReplicationConfig",
+    "dms:ListTagsForResource",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "dms:DescribeReplicationConfigs",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dms:DescribeReplicationConfigs",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "dms:ModifyReplicationConfig",
+    "dms:AddTagsToResource",
+    "dms:RemoveTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:CreateServiceLinkedRole",
+    "iam:AttachRolePolicy",
+    "iam:PutRolePolicy",
+    "iam:UpdateRoleDescription"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReplicationConfigArn"
+ ],
+ "properties": {
+  "ComputeConfig": {
+   "$ref": "#/definitions/ComputeConfig"
+  },
+  "ReplicationConfigArn": {
+   "type": "string"
+  },
+  "ReplicationConfigIdentifier": {
+   "type": "string"
+  },
+  "ReplicationSettings": {
+   "type": "object"
+  },
+  "ReplicationType": {
+   "enum": [
+    "full-load",
+    "full-load-and-cdc",
+    "cdc"
+   ],
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "type": "string"
+  },
+  "SourceEndpointArn": {
+   "type": "string"
+  },
+  "SupplementalSettings": {
+   "type": "object"
+  },
+  "TableMappings": {
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TargetEndpointArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReplicationConfigArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::ReplicationConfig"
+}

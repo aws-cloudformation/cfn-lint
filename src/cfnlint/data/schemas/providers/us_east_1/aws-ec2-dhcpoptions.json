@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NetbiosNameServers",
+  "/properties/NetbiosNodeType",
+  "/properties/NtpServers",
+  "/properties/DomainName",
+  "/properties/DomainNameServers",
+  "/properties/Ipv6AddressPreferredLeaseTime"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateDhcpOptions",
+    "ec2:DescribeDhcpOptions",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteDhcpOptions",
+    "ec2:DeleteTags",
+    "ec2:DescribeDhcpOptions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeDhcpOptions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeDhcpOptions",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DescribeDhcpOptions",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DhcpOptionsId"
+ ],
+ "properties": {
+  "DhcpOptionsId": {
+   "type": "string"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "DomainNameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Ipv6AddressPreferredLeaseTime": {
+   "type": "integer"
+  },
+  "NetbiosNameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NetbiosNodeType": {
+   "enum": [
+    "1",
+    "2",
+    "4",
+    "8"
+   ],
+   "type": "integer"
+  },
+  "NtpServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DhcpOptionsId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::DHCPOptions"
+}

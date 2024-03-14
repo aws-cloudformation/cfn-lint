@@ -1,0 +1,190 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceTypeSpecifications",
+  "/properties/AllocationStrategy",
+  "/properties/TagSpecifications",
+  "/properties/EndDate",
+  "/properties/Tenancy",
+  "/properties/InstanceMatchCriteria"
+ ],
+ "definitions": {
+  "InstanceTypeSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "AvailabilityZoneId": {
+     "type": "string"
+    },
+    "EbsOptimized": {
+     "type": "boolean"
+    },
+    "InstancePlatform": {
+     "type": "string"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "Priority": {
+     "maximum": 999,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Weight": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateCapacityReservationFleet",
+    "ec2:ModifyCapacityReservationFleet",
+    "ec2:DescribeCapacityReservationFleets",
+    "ec2:CancelCapacityReservationFleets",
+    "ec2:CreateCapacityReservation",
+    "ec2:DescribeCapacityReservations",
+    "ec2:CancelCapacityReservation",
+    "ec2:DescribeInstances",
+    "ec2:CreateTags",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:CreateCapacityReservationFleet",
+    "ec2:ModifyCapacityReservationFleet",
+    "ec2:DescribeCapacityReservationFleets",
+    "ec2:CancelCapacityReservationFleets",
+    "ec2:CreateCapacityReservation",
+    "ec2:DescribeCapacityReservations",
+    "ec2:CancelCapacityReservation",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeCapacityReservationFleets",
+    "ec2:DescribeCapacityReservations",
+    "ec2:DescribeInstances"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeCapacityReservationFleets",
+    "ec2:DescribeInstances",
+    "ec2:DescribeCapacityReservations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateCapacityReservationFleet",
+    "ec2:ModifyCapacityReservationFleet",
+    "ec2:DescribeCapacityReservationFleets",
+    "ec2:CancelCapacityReservationFleets",
+    "ec2:CreateCapacityReservation",
+    "ec2:ModifyCapacityReservation",
+    "ec2:DescribeCapacityReservations",
+    "ec2:CancelCapacityReservation",
+    "ec2:DescribeInstances",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CapacityReservationFleetId"
+ ],
+ "properties": {
+  "AllocationStrategy": {
+   "type": "string"
+  },
+  "CapacityReservationFleetId": {
+   "type": "string"
+  },
+  "EndDate": {
+   "type": "string"
+  },
+  "InstanceMatchCriteria": {
+   "enum": [
+    "open"
+   ],
+   "type": "string"
+  },
+  "InstanceTypeSpecifications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceTypeSpecification"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NoRemoveEndDate": {
+   "type": "boolean"
+  },
+  "RemoveEndDate": {
+   "type": "boolean"
+  },
+  "TagSpecifications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tenancy": {
+   "enum": [
+    "default"
+   ],
+   "type": "string"
+  },
+  "TotalTargetCapacity": {
+   "maximum": 25000,
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CapacityReservationFleetId"
+ ],
+ "taggable": true,
+ "typeName": "AWS::EC2::CapacityReservationFleet"
+}

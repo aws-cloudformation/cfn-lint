@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MrapName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:PutMultiRegionAccessPointPolicy",
+    "s3:DescribeMultiRegionAccessPointOperation"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:GetMultiRegionAccessPointPolicy",
+    "s3:GetMultiRegionAccessPoint"
+   ]
+  },
+  "list": {
+   "permissions": []
+  },
+  "read": {
+   "permissions": [
+    "s3:GetMultiRegionAccessPointPolicy",
+    "s3:GetMultiRegionAccessPointPolicyStatus"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:PutMultiRegionAccessPointPolicy",
+    "s3:DescribeMultiRegionAccessPointOperation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MrapName"
+ ],
+ "properties": {
+  "MrapName": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$",
+   "type": "string"
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "PolicyStatus": {
+   "additionalProperties": false,
+   "properties": {
+    "IsPublic": {
+     "enum": [
+      "true",
+      "false"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IsPublic"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic"
+ ],
+ "required": [
+  "Policy",
+  "MrapName"
+ ],
+ "typeName": "AWS::S3::MultiRegionAccessPointPolicy"
+}

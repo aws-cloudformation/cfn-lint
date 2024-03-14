@@ -1,0 +1,89 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName",
+  "/properties/ComputePlatform"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codedeploy:CreateApplication",
+    "codedeploy:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codedeploy:GetApplication",
+    "codedeploy:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codedeploy:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codedeploy:GetApplication",
+    "codedeploy:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codedeploy:TagResource",
+    "codedeploy:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationName"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "type": "string"
+  },
+  "ComputePlatform": {
+   "enum": [
+    "Server",
+    "Lambda",
+    "ECS"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeDeploy::Application"
+}

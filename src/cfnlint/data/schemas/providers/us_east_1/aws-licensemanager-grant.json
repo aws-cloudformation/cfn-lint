@@ -1,0 +1,85 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "license-manager:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "license-manager:DeleteGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "license-manager:ListDistributedGrants"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "license-manager:GetGrant"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "license-manager:CreateGrantVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GrantArn"
+ ],
+ "properties": {
+  "AllowedOperations": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "GrantArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "GrantName": {
+   "type": "string"
+  },
+  "HomeRegion": {
+   "type": "string"
+  },
+  "LicenseArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Principals": {
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GrantArn",
+  "/properties/Version"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::LicenseManager::Grant",
+ "writeOnlyProperties": [
+  "/properties/Principals",
+  "/properties/AllowedOperations",
+  "/properties/Status"
+ ]
+}

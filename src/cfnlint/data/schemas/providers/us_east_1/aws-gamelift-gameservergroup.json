@@ -1,0 +1,400 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "definitions": {
+  "AutoScalingGroupArn": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "[ -\ud7ff\ue000-\ufffd\ud800\udc00-\udbff\udfff\r\n\t]*",
+   "type": "string"
+  },
+  "AutoScalingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "EstimatedInstanceWarmup": {
+     "$ref": "#/definitions/EstimatedInstanceWarmup"
+    },
+    "TargetTrackingConfiguration": {
+     "$ref": "#/definitions/TargetTrackingConfiguration"
+    }
+   },
+   "required": [
+    "TargetTrackingConfiguration"
+   ],
+   "type": "object"
+  },
+  "BalancingStrategy": {
+   "enum": [
+    "SPOT_ONLY",
+    "SPOT_PREFERRED",
+    "ON_DEMAND_ONLY"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "DeleteOption": {
+   "enum": [
+    "SAFE_DELETE",
+    "FORCE_DELETE",
+    "RETAIN"
+   ],
+   "type": "string"
+  },
+  "EstimatedInstanceWarmup": {
+   "type": "number"
+  },
+  "GameServerGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingGroupArn": {
+     "$ref": "#/definitions/AutoScalingGroupArn"
+    },
+    "BalancingStrategy": {
+     "$ref": "#/definitions/BalancingStrategy"
+    },
+    "CreationTime": {
+     "$ref": "#/definitions/CreationTime"
+    },
+    "GameServerGroupArn": {
+     "$ref": "#/definitions/GameServerGroupArn"
+    },
+    "GameServerGroupName": {
+     "$ref": "#/definitions/GameServerGroupName"
+    },
+    "GameServerProtectionPolicy": {
+     "$ref": "#/definitions/GameServerProtectionPolicy"
+    },
+    "InstanceDefinitions": {
+     "$ref": "#/definitions/InstanceDefinitions"
+    },
+    "LastUpdatedTime": {
+     "$ref": "#/definitions/LastUpdatedTime"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "Status": {
+     "$ref": "#/definitions/Status"
+    },
+    "StatusReason": {
+     "$ref": "#/definitions/StatusReason"
+    },
+    "SuspendedActions": {
+     "$ref": "#/definitions/SuspendedActions"
+    }
+   },
+   "type": "object"
+  },
+  "GameServerGroupArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:.*:gameservergroup\\/[a-zA-Z0-9-\\.]*",
+   "type": "string"
+  },
+  "GameServerGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-\\.]+",
+   "type": "string"
+  },
+  "GameServerProtectionPolicy": {
+   "enum": [
+    "NO_PROTECTION",
+    "FULL_PROTECTION"
+   ],
+   "type": "string"
+  },
+  "InstanceDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceType": {
+     "$ref": "#/definitions/InstanceType"
+    },
+    "WeightedCapacity": {
+     "$ref": "#/definitions/WeightedCapacity"
+    }
+   },
+   "required": [
+    "InstanceType"
+   ],
+   "type": "object"
+  },
+  "InstanceDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceDefinition"
+   },
+   "maxItems": 20,
+   "minItems": 2,
+   "type": "array"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "LaunchTemplate": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "$ref": "#/definitions/LaunchTemplateId"
+    },
+    "LaunchTemplateName": {
+     "$ref": "#/definitions/LaunchTemplateName"
+    },
+    "Version": {
+     "$ref": "#/definitions/Version"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateId": {
+   "type": "string"
+  },
+  "LaunchTemplateName": {
+   "type": "string"
+  },
+  "MaxSize": {
+   "minimum": 1,
+   "type": "number"
+  },
+  "MinSize": {
+   "minimum": 0,
+   "type": "number"
+  },
+  "RoleArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:.*:role\\/[\\w+=,.@-]+",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "NEW",
+    "ACTIVATING",
+    "ACTIVE",
+    "DELETE_SCHEDULED",
+    "DELETING",
+    "DELETED",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "StatusReason": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SuspendedActions": {
+   "items": {
+    "enum": [
+     "REPLACE_INSTANCE_TYPES"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TargetTrackingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetValue": {
+     "$ref": "#/definitions/TargetValue"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  },
+  "TargetValue": {
+   "type": "number"
+  },
+  "Version": {
+   "type": "string"
+  },
+  "VpcSubnets": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 24,
+    "minLength": 15,
+    "pattern": "^subnet-[0-9a-z]+$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "WeightedCapacity": {
+   "pattern": "^[\\u0031-\\u0039][\\u0030-\\u0039]{0,2}$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "gamelift:CreateGameServerGroup",
+    "gamelift:TagResource",
+    "gamelift:DescribeGameServerGroup",
+    "iam:assumeRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeSubnets",
+    "ec2:RunInstances",
+    "ec2:CreateTags",
+    "ec2:DescribeLaunchTemplateVersions",
+    "autoscaling:CreateAutoScalingGroup",
+    "autoscaling:DescribeLifecycleHooks",
+    "autoscaling:DescribeNotificationConfigurations",
+    "autoscaling:CreateAutoScalingGroup",
+    "autoscaling:CreateOrUpdateTags",
+    "autoscaling:DescribeAutoScalingGroups",
+    "autoscaling:ExitStandby",
+    "autoscaling:PutLifecycleHook",
+    "autoscaling:PutScalingPolicy",
+    "autoscaling:ResumeProcesses",
+    "autoscaling:SetInstanceProtection",
+    "autoscaling:UpdateAutoScalingGroup",
+    "events:PutRule",
+    "events:PutTargets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "gamelift:DeleteGameServerGroup",
+    "gamelift:DescribeGameServerGroup",
+    "iam:assumeRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeLaunchTemplateVersions",
+    "autoscaling:CreateAutoScalingGroup",
+    "autoscaling:DescribeLifecycleHooks",
+    "autoscaling:DescribeNotificationConfigurations",
+    "autoscaling:DescribeAutoScalingGroups",
+    "autoscaling:ExitStandby",
+    "autoscaling:PutLifecycleHook",
+    "autoscaling:PutScalingPolicy",
+    "autoscaling:ResumeProcesses",
+    "autoscaling:SetInstanceProtection",
+    "autoscaling:UpdateAutoScalingGroup",
+    "autoscaling:DeleteAutoScalingGroup",
+    "events:PutRule",
+    "events:PutTargets"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "gamelift:ListGameServerGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "gamelift:DescribeGameServerGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "gamelift:UpdateGameServerGroup",
+    "iam:assumeRole",
+    "iam:PassRole",
+    "autoscaling:DescribeAutoScalingGroups",
+    "autoscaling:UpdateAutoScalingGroup",
+    "autoscaling:SetInstanceProtection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GameServerGroupArn"
+ ],
+ "properties": {
+  "AutoScalingGroupArn": {
+   "$ref": "#/definitions/AutoScalingGroupArn"
+  },
+  "AutoScalingPolicy": {
+   "$ref": "#/definitions/AutoScalingPolicy"
+  },
+  "BalancingStrategy": {
+   "$ref": "#/definitions/BalancingStrategy"
+  },
+  "DeleteOption": {
+   "$ref": "#/definitions/DeleteOption"
+  },
+  "GameServerGroupArn": {
+   "$ref": "#/definitions/GameServerGroupArn"
+  },
+  "GameServerGroupName": {
+   "$ref": "#/definitions/GameServerGroupName"
+  },
+  "GameServerProtectionPolicy": {
+   "$ref": "#/definitions/GameServerProtectionPolicy"
+  },
+  "InstanceDefinitions": {
+   "$ref": "#/definitions/InstanceDefinitions"
+  },
+  "LaunchTemplate": {
+   "$ref": "#/definitions/LaunchTemplate"
+  },
+  "MaxSize": {
+   "$ref": "#/definitions/MaxSize"
+  },
+  "MinSize": {
+   "$ref": "#/definitions/MinSize"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "VpcSubnets": {
+   "$ref": "#/definitions/VpcSubnets"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GameServerGroupArn",
+  "/properties/AutoScalingGroupArn"
+ ],
+ "required": [
+  "GameServerGroupName",
+  "InstanceDefinitions",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "taggable": true,
+ "typeName": "AWS::GameLift::GameServerGroup",
+ "writeOnlyProperties": [
+  "/properties/DeleteOption",
+  "/properties/LaunchTemplate",
+  "/properties/MinSize",
+  "/properties/MaxSize",
+  "/properties/AutoScalingPolicy",
+  "/properties/VpcSubnets",
+  "/properties/Tags"
+ ]
+}

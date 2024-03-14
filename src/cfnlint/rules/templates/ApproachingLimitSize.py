@@ -30,7 +30,10 @@ class LimitSize(CloudFormationLintRule):
                     < statinfo.st_size
                     <= LIMITS["template"]["body"]
                 ):
-                    message = "The template file size ({0} bytes) is approaching the limit ({1} bytes)"
+                    message = (
+                        "The template file size ({0} bytes) is approaching the limit"
+                        " ({1} bytes)"
+                    )
                     matches.append(
                         RuleMatch(
                             ["Template"],

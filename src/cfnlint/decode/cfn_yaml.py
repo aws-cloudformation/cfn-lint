@@ -15,7 +15,7 @@ from yaml.resolver import Resolver
 from yaml.scanner import Scanner
 
 import cfnlint
-from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
+from cfnlint.decode.node import dict_node, list_node, str_node
 
 try:
     from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,
@@ -94,7 +94,10 @@ class NodeConstructor(SafeConstructor):
                     [
                         build_match(
                             filename=self.filename,
-                            message=f"Null key {key_node.value!r} not supported (line {key_node.start_mark.line + 1})",
+                            message=(
+                                f"Null key {key_node.value!r} not supported "
+                                f"(line {key_node.start_mark.line + 1})"
+                            ),
                             line_number=key_node.start_mark.line,
                             column_number=key_node.start_mark.column,
                             key=key_node.value,
@@ -108,14 +111,20 @@ class NodeConstructor(SafeConstructor):
                             [
                                 build_match(
                                     filename=self.filename,
-                                    message=f'Duplicate found "{key}" (line {key_dup.start_mark.line + 1})',
+                                    message=(
+                                        f'Duplicate found "{key}" (line'
+                                        f" {key_dup.start_mark.line + 1})"
+                                    ),
                                     line_number=key_dup.start_mark.line,
                                     column_number=key_dup.start_mark.column,
                                     key=key,
                                 ),
                                 build_match(
                                     filename=self.filename,
-                                    message=f'Duplicate found "{key}" (line {key_node.start_mark.line + 1})',
+                                    message=(
+                                        f'Duplicate found "{key}" (line'
+                                        f" {key_node.start_mark.line + 1})"
+                                    ),
                                     line_number=key_node.start_mark.line,
                                     column_number=key_node.start_mark.column,
                                     key=key,
@@ -126,7 +135,10 @@ class NodeConstructor(SafeConstructor):
                         matches.append(
                             build_match(
                                 filename=self.filename,
-                                message=f'Duplicate found "{key}" (line {key_node.start_mark.line + 1})',
+                                message=(
+                                    f'Duplicate found "{key}" (line'
+                                    f" {key_node.start_mark.line + 1})"
+                                ),
                                 line_number=key_node.start_mark.line,
                                 column_number=key_node.start_mark.column,
                                 key=key,
@@ -140,7 +152,10 @@ class NodeConstructor(SafeConstructor):
                     [
                         build_match(
                             filename=self.filename,
-                            message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
+                            message=(
+                                f'Unhashable type "{key}" (line'
+                                f" {key.start_mark.line + 1})"
+                            ),
                             line_number=key.start_mark.line,
                             column_number=key.start_mark.column,
                             key=key,
@@ -155,10 +170,6 @@ class NodeConstructor(SafeConstructor):
             )
 
         (obj,) = SafeConstructor.construct_yaml_map(self, node)
-
-        if len(mapping) == 1:
-            if "Fn::Sub" in mapping:
-                return sub_node(obj, node.start_mark, node.end_mark)
 
         return dict_node(obj, node.start_mark, node.end_mark)
 
@@ -238,9 +249,6 @@ def multi_constructor(loader, tag_suffix, node):
         constructor = loader.construct_mapping
     else:
         raise f"Bad tag: !{tag_suffix}"
-
-    if tag_suffix == "Fn::Sub":
-        return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 

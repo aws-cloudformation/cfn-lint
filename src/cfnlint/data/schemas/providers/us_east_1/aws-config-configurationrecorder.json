@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ExclusionByResourceTypes": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ResourceTypes"
+   ],
+   "type": "object"
+  },
+  "RecordingGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "AllSupported": {
+     "type": "boolean"
+    },
+    "ExclusionByResourceTypes": {
+     "$ref": "#/definitions/ExclusionByResourceTypes"
+    },
+    "IncludeGlobalResourceTypes": {
+     "type": "boolean"
+    },
+    "RecordingStrategy": {
+     "$ref": "#/definitions/RecordingStrategy"
+    },
+    "ResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "RecordingMode": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordingFrequency": {
+     "type": "string"
+    },
+    "RecordingModeOverrides": {
+     "items": {
+      "$ref": "#/definitions/RecordingModeOverride"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "RecordingFrequency"
+   ],
+   "type": "object"
+  },
+  "RecordingModeOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "RecordingFrequency": {
+     "type": "string"
+    },
+    "ResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ResourceTypes",
+    "RecordingFrequency"
+   ],
+   "type": "object"
+  },
+  "RecordingStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "UseOnly": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "UseOnly"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RecordingGroup": {
+   "$ref": "#/definitions/RecordingGroup"
+  },
+  "RecordingMode": {
+   "$ref": "#/definitions/RecordingMode"
+  },
+  "RoleARN": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "RoleARN"
+ ],
+ "typeName": "AWS::Config::ConfigurationRecorder"
+}

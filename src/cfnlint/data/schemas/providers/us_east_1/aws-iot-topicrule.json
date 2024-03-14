@@ -1,0 +1,1004 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RuleName"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudwatchAlarm": {
+     "$ref": "#/definitions/CloudwatchAlarmAction"
+    },
+    "CloudwatchLogs": {
+     "$ref": "#/definitions/CloudwatchLogsAction"
+    },
+    "CloudwatchMetric": {
+     "$ref": "#/definitions/CloudwatchMetricAction"
+    },
+    "DynamoDB": {
+     "$ref": "#/definitions/DynamoDBAction"
+    },
+    "DynamoDBv2": {
+     "$ref": "#/definitions/DynamoDBv2Action"
+    },
+    "Elasticsearch": {
+     "$ref": "#/definitions/ElasticsearchAction"
+    },
+    "Firehose": {
+     "$ref": "#/definitions/FirehoseAction"
+    },
+    "Http": {
+     "$ref": "#/definitions/HttpAction"
+    },
+    "IotAnalytics": {
+     "$ref": "#/definitions/IotAnalyticsAction"
+    },
+    "IotEvents": {
+     "$ref": "#/definitions/IotEventsAction"
+    },
+    "IotSiteWise": {
+     "$ref": "#/definitions/IotSiteWiseAction"
+    },
+    "Kafka": {
+     "$ref": "#/definitions/KafkaAction"
+    },
+    "Kinesis": {
+     "$ref": "#/definitions/KinesisAction"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/LambdaAction"
+    },
+    "Location": {
+     "$ref": "#/definitions/LocationAction"
+    },
+    "OpenSearch": {
+     "$ref": "#/definitions/OpenSearchAction"
+    },
+    "Republish": {
+     "$ref": "#/definitions/RepublishAction"
+    },
+    "S3": {
+     "$ref": "#/definitions/S3Action"
+    },
+    "Sns": {
+     "$ref": "#/definitions/SnsAction"
+    },
+    "Sqs": {
+     "$ref": "#/definitions/SqsAction"
+    },
+    "StepFunctions": {
+     "$ref": "#/definitions/StepFunctionsAction"
+    },
+    "Timestream": {
+     "$ref": "#/definitions/TimestreamAction"
+    }
+   },
+   "type": "object"
+  },
+  "AssetPropertyTimestamp": {
+   "additionalProperties": false,
+   "properties": {
+    "OffsetInNanos": {
+     "type": "string"
+    },
+    "TimeInSeconds": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Quality": {
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/AssetPropertyTimestamp"
+    },
+    "Value": {
+     "$ref": "#/definitions/AssetPropertyVariant"
+    }
+   },
+   "required": [
+    "Value",
+    "Timestamp"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyVariant": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "string"
+    },
+    "DoubleValue": {
+     "type": "string"
+    },
+    "IntegerValue": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CannedAccessControlList": {
+   "enum": [
+    "private",
+    "public-read",
+    "public-read-write",
+    "aws-exec-read",
+    "authenticated-read",
+    "bucket-owner-read",
+    "bucket-owner-full-control",
+    "log-delivery-write"
+   ],
+   "type": "string"
+  },
+  "CloudwatchAlarmAction": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "StateReason": {
+     "type": "string"
+    },
+    "StateValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlarmName",
+    "StateReason",
+    "StateValue",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "CloudwatchLogsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchMode": {
+     "type": "boolean"
+    },
+    "LogGroupName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "CloudwatchMetricAction": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricName": {
+     "type": "string"
+    },
+    "MetricNamespace": {
+     "type": "string"
+    },
+    "MetricTimestamp": {
+     "type": "string"
+    },
+    "MetricUnit": {
+     "type": "string"
+    },
+    "MetricValue": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "MetricValue",
+    "MetricNamespace",
+    "MetricUnit",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "DynamoDBAction": {
+   "additionalProperties": false,
+   "properties": {
+    "HashKeyField": {
+     "type": "string"
+    },
+    "HashKeyType": {
+     "type": "string"
+    },
+    "HashKeyValue": {
+     "type": "string"
+    },
+    "PayloadField": {
+     "type": "string"
+    },
+    "RangeKeyField": {
+     "type": "string"
+    },
+    "RangeKeyType": {
+     "type": "string"
+    },
+    "RangeKeyValue": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName",
+    "HashKeyField",
+    "HashKeyValue",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "DynamoDBv2Action": {
+   "additionalProperties": false,
+   "properties": {
+    "PutItem": {
+     "$ref": "#/definitions/PutItemInput"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticsearchAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Index": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Endpoint",
+    "Index",
+    "Id",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "FirehoseAction": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchMode": {
+     "type": "boolean"
+    },
+    "DeliveryStreamName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Separator": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "HttpAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Auth": {
+     "$ref": "#/definitions/HttpAuthorization"
+    },
+    "ConfirmationUrl": {
+     "type": "string"
+    },
+    "Headers": {
+     "items": {
+      "$ref": "#/definitions/HttpActionHeader"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Url"
+   ],
+   "type": "object"
+  },
+  "HttpActionHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "HttpAuthorization": {
+   "additionalProperties": false,
+   "properties": {
+    "Sigv4": {
+     "$ref": "#/definitions/SigV4Authorization"
+    }
+   },
+   "type": "object"
+  },
+  "IotAnalyticsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchMode": {
+     "type": "boolean"
+    },
+    "ChannelName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ChannelName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "IotEventsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchMode": {
+     "type": "boolean"
+    },
+    "InputName": {
+     "type": "string"
+    },
+    "MessageId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "IotSiteWiseAction": {
+   "additionalProperties": false,
+   "properties": {
+    "PutAssetPropertyValueEntries": {
+     "items": {
+      "$ref": "#/definitions/PutAssetPropertyValueEntry"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PutAssetPropertyValueEntries",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "KafkaAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientProperties": {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "patternProperties": {
+      ".*": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Headers": {
+     "items": {
+      "$ref": "#/definitions/KafkaActionHeader"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Partition": {
+     "type": "string"
+    },
+    "Topic": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationArn",
+    "Topic",
+    "ClientProperties"
+   ],
+   "type": "object"
+  },
+  "KafkaActionHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "KinesisAction": {
+   "additionalProperties": false,
+   "properties": {
+    "PartitionKey": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "StreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "LambdaAction": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LocationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceId": {
+     "type": "string"
+    },
+    "Latitude": {
+     "type": "string"
+    },
+    "Longitude": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/Timestamp"
+    },
+    "TrackerName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "TrackerName",
+    "DeviceId",
+    "Latitude",
+    "Longitude"
+   ],
+   "type": "object"
+  },
+  "OpenSearchAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Index": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Endpoint",
+    "Index",
+    "Id",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "PutAssetPropertyValueEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetId": {
+     "type": "string"
+    },
+    "EntryId": {
+     "type": "string"
+    },
+    "PropertyAlias": {
+     "type": "string"
+    },
+    "PropertyId": {
+     "type": "string"
+    },
+    "PropertyValues": {
+     "items": {
+      "$ref": "#/definitions/AssetPropertyValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "PropertyValues"
+   ],
+   "type": "object"
+  },
+  "PutItemInput": {
+   "additionalProperties": false,
+   "properties": {
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "RepublishAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Headers": {
+     "$ref": "#/definitions/RepublishActionHeaders"
+    },
+    "Qos": {
+     "type": "integer"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "Topic": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Topic",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "RepublishActionHeaders": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentType": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "CorrelationData": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "MessageExpiry": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "PayloadFormatIndicator": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ResponseTopic": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "UserProperties": {
+     "$ref": "#/definitions/UserProperties"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "S3Action": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "CannedAcl": {
+     "$ref": "#/definitions/CannedAccessControlList"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "Key",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SigV4Authorization": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "type": "string"
+    },
+    "ServiceName": {
+     "type": "string"
+    },
+    "SigningRegion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ServiceName",
+    "SigningRegion",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SnsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "MessageFormat": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "TargetArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArn",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SqsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "QueueUrl": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "UseBase64": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "QueueUrl"
+   ],
+   "type": "object"
+  },
+  "StepFunctionsAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionNamePrefix": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "StateMachineName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StateMachineName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimestreamAction": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Dimensions": {
+     "$ref": "#/definitions/TimestreamDimensionsList"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/TimestreamTimestamp"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "DatabaseName",
+    "TableName",
+    "Dimensions"
+   ],
+   "type": "object"
+  },
+  "TimestreamDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimestreamDimensionsList": {
+   "items": {
+    "$ref": "#/definitions/TimestreamDimension"
+   },
+   "maxItems": 128,
+   "minItems": 1,
+   "type": "array"
+  },
+  "TimestreamTimestamp": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "TopicRulePayload": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array"
+    },
+    "AwsIotSqlVersion": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "ErrorAction": {
+     "$ref": "#/definitions/Action"
+    },
+    "RuleDisabled": {
+     "type": "boolean"
+    },
+    "Sql": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Sql"
+   ],
+   "type": "object"
+  },
+  "UserProperties": {
+   "items": {
+    "$ref": "#/definitions/UserProperty"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "UserProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iot:CreateTopicRule",
+    "iot:GetTopicRule",
+    "iot:TagResource",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:GetTopicRule",
+    "iot:DeleteTopicRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListTopicRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:GetTopicRule",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iot:GetTopicRule",
+    "iot:ListTagsForResource",
+    "iot:ReplaceTopicRule",
+    "iot:TagResource",
+    "iot:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "RuleName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TopicRulePayload": {
+   "$ref": "#/definitions/TopicRulePayload"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "TopicRulePayload"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::TopicRule"
+}

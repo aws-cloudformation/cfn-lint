@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "type": "string"
+  },
+  "ExpiryEventsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysBeforeExpiry": {
+     "maximum": 45,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm:GetAccountConfiguration",
+    "acm:PutAccountConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm:GetAccountConfiguration",
+    "acm:PutAccountConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm:GetAccountConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "acm:GetAccountConfiguration",
+    "acm:PutAccountConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "$ref": "#/definitions/AccountId"
+  },
+  "ExpiryEventsConfiguration": {
+   "$ref": "#/definitions/ExpiryEventsConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "required": [
+  "ExpiryEventsConfiguration"
+ ],
+ "typeName": "AWS::CertificateManager::Account"
+}

@@ -1,0 +1,226 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "NameNode": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "maxLength": 255,
+     "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65536,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Hostname",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "QopConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTransferProtection": {
+     "default": "PRIVACY",
+     "enum": [
+      "AUTHENTICATION",
+      "INTEGRITY",
+      "PRIVACY",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "RpcProtection": {
+     "default": "PRIVACY",
+     "enum": [
+      "AUTHENTICATION",
+      "INTEGRITY",
+      "PRIVACY",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateLocationHdfs",
+    "datasync:DescribeLocationHdfs",
+    "datasync:TagResource",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteLocation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListLocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeLocationHdfs",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:UpdateLocationHdfs",
+    "datasync:DescribeLocationHdfs",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "SIMPLE",
+    "KERBEROS"
+   ],
+   "type": "string"
+  },
+  "BlockSize": {
+   "format": "int64",
+   "maximum": 1073741824,
+   "minimum": 1048576,
+   "type": "integer"
+  },
+  "KerberosKeytab": {
+   "maxLength": 87384,
+   "type": "string"
+  },
+  "KerberosKrb5Conf": {
+   "maxLength": 174764,
+   "type": "string"
+  },
+  "KerberosPrincipal": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "KmsKeyProviderUri": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^kms:\\/\\/http[s]?@(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])(;(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9]))*:[0-9]{1,5}\\/kms$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw|hdfs)://[a-zA-Z0-9.:/\\-]+$",
+   "type": "string"
+  },
+  "NameNodes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NameNode"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "QopConfiguration": {
+   "$ref": "#/definitions/QopConfiguration"
+  },
+  "ReplicationFactor": {
+   "default": 3,
+   "format": "int64",
+   "maximum": 512,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SimpleUser": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[_.A-Za-z0-9][-_.A-Za-z0-9]*$",
+   "type": "string"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "NameNodes",
+  "AuthenticationType",
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationHDFS",
+ "writeOnlyProperties": [
+  "/properties/Subdirectory",
+  "/properties/KerberosKeytab",
+  "/properties/KerberosKrb5Conf"
+ ]
+}

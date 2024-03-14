@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DurationInSeconds",
+  "/properties/AssessmentTemplateName",
+  "/properties/UserAttributesForFindings",
+  "/properties/AssessmentTargetArn",
+  "/properties/RulesPackageArns"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssessmentTargetArn": {
+   "type": "string"
+  },
+  "AssessmentTemplateName": {
+   "type": "string"
+  },
+  "DurationInSeconds": {
+   "maximum": 86400,
+   "minimum": 180,
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RulesPackageArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserAttributesForFindings": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "AssessmentTargetArn",
+  "DurationInSeconds",
+  "RulesPackageArns"
+ ],
+ "typeName": "AWS::Inspector::AssessmentTemplate"
+}

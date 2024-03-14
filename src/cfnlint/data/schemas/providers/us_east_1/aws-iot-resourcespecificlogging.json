@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetName",
+  "/properties/TargetType"
+ ],
+ "definitions": {},
+ "documentationUrl": "https://docs.aws.amazon.com/iot/latest/developerguide/configure-logging.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:SetV2LoggingLevel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:DeleteV2LoggingLevel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListV2LoggingLevels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:ListV2LoggingLevels"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:SetV2LoggingLevel"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetId"
+ ],
+ "properties": {
+  "LogLevel": {
+   "enum": [
+    "ERROR",
+    "WARN",
+    "INFO",
+    "DEBUG",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "TargetId": {
+   "maxLength": 140,
+   "minLength": 13,
+   "pattern": "[a-zA-Z0-9.:\\s_\\-]+",
+   "type": "string"
+  },
+  "TargetName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9.:\\s_\\-]+",
+   "type": "string"
+  },
+  "TargetType": {
+   "enum": [
+    "THING_GROUP",
+    "CLIENT_ID",
+    "SOURCE_IP",
+    "PRINCIPAL_ID",
+    "EVENT_TYPE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetId"
+ ],
+ "required": [
+  "TargetName",
+  "TargetType",
+  "LogLevel"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "taggable": false,
+ "typeName": "AWS::IoT::ResourceSpecificLogging"
+}

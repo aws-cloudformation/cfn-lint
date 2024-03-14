@@ -1,0 +1,70 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CodeRepositoryName"
+ ],
+ "definitions": {
+  "GitConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Branch": {
+     "type": "string"
+    },
+    "RepositoryUrl": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryUrl"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CodeRepositoryName": {
+   "type": "string"
+  },
+  "GitConfig": {
+   "$ref": "#/definitions/GitConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "GitConfig"
+ ],
+ "typeName": "AWS::SageMaker::CodeRepository"
+}

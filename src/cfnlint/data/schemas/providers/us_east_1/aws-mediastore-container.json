@@ -1,0 +1,144 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContainerName"
+ ],
+ "definitions": {
+  "CorsRule": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedHeaders": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AllowedMethods": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AllowedOrigins": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ExposeHeaders": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaxAgeSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MetricPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerLevelMetrics": {
+     "type": "string"
+    },
+    "MetricPolicyRules": {
+     "items": {
+      "$ref": "#/definitions/MetricPolicyRule"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "ContainerLevelMetrics"
+   ],
+   "type": "object"
+  },
+  "MetricPolicyRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectGroup": {
+     "type": "string"
+    },
+    "ObjectGroupName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectGroup",
+    "ObjectGroupName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccessLoggingEnabled": {
+   "type": "boolean"
+  },
+  "ContainerName": {
+   "type": "string"
+  },
+  "CorsPolicy": {
+   "items": {
+    "$ref": "#/definitions/CorsRule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LifecyclePolicy": {
+   "type": "string"
+  },
+  "MetricPolicy": {
+   "$ref": "#/definitions/MetricPolicy"
+  },
+  "Policy": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Endpoint"
+ ],
+ "required": [
+  "ContainerName"
+ ],
+ "typeName": "AWS::MediaStore::Container"
+}

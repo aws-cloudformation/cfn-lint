@@ -1,0 +1,226 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/Components",
+  "/properties/ParentImage",
+  "/properties/Description",
+  "/properties/BlockDeviceMappings",
+  "/properties/WorkingDirectory",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AdditionalInstanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SystemsManagerAgent": {
+     "$ref": "#/definitions/SystemsManagerAgent"
+    },
+    "UserDataOverride": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentArn": {
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ComponentParameter"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EbsInstanceBlockDeviceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "Throughput": {
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "gp3",
+      "sc1",
+      "st1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceBlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsInstanceBlockDeviceSpecification"
+    },
+    "NoDevice": {
+     "type": "string"
+    },
+    "VirtualName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SystemsManagerAgent": {
+   "additionalProperties": false,
+   "properties": {
+    "UninstallAfterBuild": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "imagebuilder:GetComponent",
+    "imagebuilder:GetImage",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetImageRecipe",
+    "imagebuilder:CreateImageRecipe",
+    "ec2:DescribeImages"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:UnTagResource",
+    "imagebuilder:GetImageRecipe",
+    "imagebuilder:DeleteImageRecipe"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "imagebuilder:ListImageRecipes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetImageRecipe"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AdditionalInstanceConfiguration": {
+   "$ref": "#/definitions/AdditionalInstanceConfiguration"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "BlockDeviceMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceBlockDeviceMapping"
+   },
+   "type": "array"
+  },
+  "Components": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ComponentConfiguration"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ParentImage": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Version": {
+   "type": "string"
+  },
+  "WorkingDirectory": {
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Version",
+  "Components",
+  "ParentImage"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::ImageRecipe"
+}

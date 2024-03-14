@@ -1,0 +1,65 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Data": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "XssMatchTuple": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "TextTransformation": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TextTransformation",
+    "FieldToMatch"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "XssMatchTuples": {
+   "items": {
+    "$ref": "#/definitions/XssMatchTuple"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "XssMatchTuples"
+ ],
+ "typeName": "AWS::WAF::XssMatchSet"
+}

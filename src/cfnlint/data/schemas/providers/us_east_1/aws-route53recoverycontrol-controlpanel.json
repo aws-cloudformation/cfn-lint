@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53-recovery-control-config:CreateControlPanel",
+    "route53-recovery-control-config:DescribeCluster",
+    "route53-recovery-control-config:DescribeControlPanel",
+    "route53-recovery-control-config:ListTagsForResource",
+    "route53-recovery-control-config:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53-recovery-control-config:DeleteControlPanel",
+    "route53-recovery-control-config:DescribeControlPanel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53-recovery-control-config:ListControlPanels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53-recovery-control-config:DescribeControlPanel",
+    "route53-recovery-control-config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53-recovery-control-config:UpdateControlPanel",
+    "route53-recovery-control-config:DescribeControlPanel",
+    "route53-recovery-control-config:ListTagsForResource",
+    "route53-recovery-control-config:TagResource",
+    "route53-recovery-control-config:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ControlPanelArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "type": "string"
+  },
+  "ControlPanelArn": {
+   "type": "string"
+  },
+  "DefaultControlPanel": {
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoutingControlCount": {
+   "type": "integer"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "DEPLOYED",
+    "PENDING_DELETION"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ControlPanelArn",
+  "/properties/Status",
+  "/properties/RoutingControlCount",
+  "/properties/DefaultControlPanel"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+ "taggable": true,
+ "typeName": "AWS::Route53RecoveryControl::ControlPanel",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

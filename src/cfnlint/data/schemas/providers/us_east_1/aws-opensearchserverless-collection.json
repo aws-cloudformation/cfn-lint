@@ -1,0 +1,148 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ],
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "CollectionType": {
+   "enum": [
+    "SEARCH",
+    "TIMESERIES",
+    "VECTORSEARCH"
+   ],
+   "type": "string"
+  },
+  "StandbyReplicas": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:CreateCollection",
+    "aoss:BatchGetCollection",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:DeleteCollection",
+    "aoss:BatchGetCollection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aoss:ListCollections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:BatchGetCollection"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:UpdateCollection",
+    "aoss:BatchGetCollection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CollectionEndpoint": {
+   "type": "string"
+  },
+  "DashboardEndpoint": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 40,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "StandbyReplicas": {
+   "$ref": "#/definitions/StandbyReplicas"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/CollectionType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/CollectionEndpoint",
+  "/properties/DashboardEndpoint"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::OpenSearchServerless::Collection",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

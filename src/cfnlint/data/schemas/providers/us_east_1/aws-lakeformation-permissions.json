@@ -1,0 +1,156 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DataLakePrincipal",
+  "/properties/Resource"
+ ],
+ "definitions": {
+  "ColumnWildcard": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludedColumnNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataLocationResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "S3Resource": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Resource": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLocationResource": {
+     "$ref": "#/definitions/DataLocationResource"
+    },
+    "DatabaseResource": {
+     "$ref": "#/definitions/DatabaseResource"
+    },
+    "TableResource": {
+     "$ref": "#/definitions/TableResource"
+    },
+    "TableWithColumnsResource": {
+     "$ref": "#/definitions/TableWithColumnsResource"
+    }
+   },
+   "type": "object"
+  },
+  "TableResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "TableWildcard": {
+     "$ref": "#/definitions/TableWildcard"
+    }
+   },
+   "type": "object"
+  },
+  "TableWildcard": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "TableWithColumnsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "ColumnNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ColumnWildcard": {
+     "$ref": "#/definitions/ColumnWildcard"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DataLakePrincipal": {
+   "$ref": "#/definitions/DataLakePrincipal"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Permissions": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PermissionsWithGrantOption": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Resource": {
+   "$ref": "#/definitions/Resource"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DataLakePrincipal",
+  "Resource"
+ ],
+ "typeName": "AWS::LakeFormation::Permissions"
+}

@@ -1,0 +1,183 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CNAMEPrefix",
+  "/properties/EnvironmentName",
+  "/properties/ApplicationName",
+  "/properties/SolutionStackName",
+  "/properties/Tier/Name",
+  "/properties/Tier/Type"
+ ],
+ "definitions": {
+  "OptionSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "OptionName": {
+     "type": "string"
+    },
+    "ResourceName": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace",
+    "OptionName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tier": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticbeanstalk:DescribeEnvironments",
+    "elasticbeanstalk:CreateEnvironment",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 120
+  },
+  "delete": {
+   "permissions": [
+    "elasticbeanstalk:DescribeEnvironments",
+    "elasticbeanstalk:TerminateEnvironment"
+   ],
+   "timeoutInMinutes": 210
+  },
+  "list": {
+   "permissions": [
+    "elasticbeanstalk:DescribeEnvironments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticbeanstalk:DescribeEnvironments",
+    "elasticbeanstalk:DescribeConfigurationSettings",
+    "elasticbeanstalk:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticbeanstalk:DescribeEnvironments",
+    "elasticbeanstalk:UpdateEnvironment",
+    "elasticbeanstalk:UpdateTagsForResource",
+    "elasticbeanstalk:AssociateEnvironmentOperationsRole",
+    "elasticbeanstalk:DisassociateEnvironmentOperationsRole",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 300
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentName"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "type": "string"
+  },
+  "CNAMEPrefix": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EndpointURL": {
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "type": "string"
+  },
+  "OperationsRole": {
+   "type": "string"
+  },
+  "OptionSettings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OptionSetting"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlatformArn": {
+   "type": "string"
+  },
+  "SolutionStackName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TemplateName": {
+   "type": "string"
+  },
+  "Tier": {
+   "$ref": "#/definitions/Tier"
+  },
+  "VersionLabel": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EndpointURL"
+ ],
+ "required": [
+  "ApplicationName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElasticBeanstalk::Environment",
+ "writeOnlyProperties": [
+  "/properties/TemplateName",
+  "/properties/OptionSettings",
+  "/properties/OptionSettings/*/OptionName",
+  "/properties/OptionSettings/*/ResourceName",
+  "/properties/OptionSettings/*/Namespace",
+  "/properties/OptionSettings/*/Value"
+ ]
+}

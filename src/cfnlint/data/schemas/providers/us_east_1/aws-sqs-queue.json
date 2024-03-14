@@ -1,0 +1,160 @@
+{
+ "additionalProperties": false,
+ "cfnLint": [
+  "AWS::SQS::Queue/Properties"
+ ],
+ "createOnlyProperties": [
+  "/properties/FifoQueue",
+  "/properties/QueueName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sqs:CreateQueue",
+    "sqs:GetQueueUrl",
+    "sqs:GetQueueAttributes",
+    "sqs:ListQueueTags",
+    "sqs:TagQueue"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sqs:DeleteQueue",
+    "sqs:GetQueueAttributes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sqs:ListQueues"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sqs:GetQueueAttributes",
+    "sqs:ListQueueTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sqs:SetQueueAttributes",
+    "sqs:GetQueueAttributes",
+    "sqs:ListQueueTags",
+    "sqs:TagQueue",
+    "sqs:UntagQueue"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QueueUrl"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContentBasedDeduplication": {
+   "type": "boolean"
+  },
+  "DeduplicationScope": {
+   "type": "string"
+  },
+  "DelaySeconds": {
+   "maximum": 900,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "FifoQueue": {
+   "type": "boolean"
+  },
+  "FifoThroughputLimit": {
+   "type": "string"
+  },
+  "KmsDataKeyReusePeriodSeconds": {
+   "maximum": 86400,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "KmsMasterKeyId": {
+   "type": "string"
+  },
+  "MaximumMessageSize": {
+   "maximum": 262144,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "MessageRetentionPeriod": {
+   "maximum": 1209600,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "QueueName": {
+   "type": "string"
+  },
+  "QueueUrl": {
+   "type": "string"
+  },
+  "ReceiveMessageWaitTimeSeconds": {
+   "maximum": 20,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "RedriveAllowPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RedrivePolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "SqsManagedSseEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VisibilityTimeout": {
+   "maximum": 43200,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QueueUrl",
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sqs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SQS::Queue"
+}

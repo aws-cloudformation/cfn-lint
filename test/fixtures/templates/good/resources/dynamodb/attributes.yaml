@@ -1,7 +1,9 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
 Resources:
-  DDBTable:
+  DDBTable1:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
@@ -26,6 +28,40 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DDBTable2:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "ArtistId"
+          AttributeType: "S"
+        - AttributeName: "Concert"
+          AttributeType: "S"
+        - Fn::If:
+          - IsUsEast1
+          - AttributeName: "TicketSales"
+            AttributeType: "S"
+          - !Ref AWS::NoValue
+      KeySchema:
+        - AttributeName: "ArtistId"
+          KeyType: "HASH"
+        - AttributeName: "Concert"
+          KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        Fn::If:
+        - IsUsEast1
+        - - IndexName: "GSI"
+            KeySchema:
+              - AttributeName: "TicketSales"
+                KeyType: "HASH"
+            Projection:
+              ProjectionType: "KEYS_ONLY"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+        - !Ref AWS::NoValue
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5

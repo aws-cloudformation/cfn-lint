@@ -20,9 +20,6 @@ rule_match = RuleMatch([], "Message", rule=rule(), location=(0, 0, 0, 0))
 class TestMatching(BaseTestCase):
     """Test Matching Wrapper"""
 
-    def setUp(self) -> None:
-        return super().setUp()
-
     def example(self: Any, *args: Any, **kwargs: Any):
         return [rule_match]
 
@@ -30,4 +27,20 @@ class TestMatching(BaseTestCase):
         f = matching("example")
         r = f(self.example)
         t = r(self, "", None)
-        self.assertEqual(t, [Match(1, 1, 1, 1, "", rule(), "Message", rule_match)])
+        self.assertEqual(
+            list(t), [Match(1, 1, 1, 1, "", rule(), "Message", rule_match)]
+        )
+
+    def test_compare(self):
+        rule_match_1 = RuleMatch(
+            ["path"], "Message", rule=rule(), location=(0, 0, 0, 0)
+        )
+        rule_match_2 = RuleMatch(
+            ["path"], "Message", rule=rule(), location=(0, 0, 0, 0)
+        )
+        self.assertEqual(rule_match_1, rule_match_2)
+
+        rule_match_3 = RuleMatch(
+            ["path"], "New Message", rule=rule(), location=(1, 1, 1, 1)
+        )
+        self.assertNotEqual(rule_match_1, rule_match_3)

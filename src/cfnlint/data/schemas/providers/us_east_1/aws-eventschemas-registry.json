@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RegistryName"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:CreateRegistry",
+    "schemas:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:DeleteRegistry"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "schemas:ListRegistries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "schemas:DescribeRegistry"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "schemas:DescribeRegistry",
+    "schemas:UpdateRegistry",
+    "schemas:TagResource",
+    "schemas:UntagResource",
+    "schemas:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RegistryArn"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "RegistryArn": {
+   "type": "string"
+  },
+  "RegistryName": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RegistryArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EventSchemas::Registry"
+}

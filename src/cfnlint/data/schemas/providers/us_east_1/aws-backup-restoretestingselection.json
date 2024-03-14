@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProtectedResourceType",
+  "/properties/RestoreTestingPlanName",
+  "/properties/RestoreTestingSelectionName"
+ ],
+ "definitions": {
+  "KeyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ProtectedResourceConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "StringEquals": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValue"
+     },
+     "type": "array"
+    },
+    "StringNotEquals": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SensitiveStringMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "backup:CreateRestoreTestingSelection",
+    "backup:GetRestoreTestingSelection",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "delete": {
+   "permissions": [
+    "backup:DeleteRestoreTestingSelection",
+    "backup:GetRestoreTestingSelection"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "list": {
+   "permissions": [
+    "backup:ListRestoreTestingSelections"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "read": {
+   "permissions": [
+    "backup:GetRestoreTestingSelection"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "update": {
+   "permissions": [
+    "backup:UpdateRestoreTestingSelection",
+    "backup:GetRestoreTestingSelection",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 5
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestoreTestingPlanName",
+  "/properties/RestoreTestingSelectionName"
+ ],
+ "properties": {
+  "IamRoleArn": {
+   "type": "string"
+  },
+  "ProtectedResourceArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ProtectedResourceConditions": {
+   "$ref": "#/definitions/ProtectedResourceConditions"
+  },
+  "ProtectedResourceType": {
+   "type": "string"
+  },
+  "RestoreMetadataOverrides": {
+   "$ref": "#/definitions/SensitiveStringMap"
+  },
+  "RestoreTestingPlanName": {
+   "type": "string"
+  },
+  "RestoreTestingSelectionName": {
+   "type": "string"
+  },
+  "ValidationWindowHours": {
+   "type": "integer"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "IamRoleArn",
+  "ProtectedResourceType",
+  "RestoreTestingPlanName",
+  "RestoreTestingSelectionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Backup::RestoreTestingSelection"
+}

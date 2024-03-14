@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-truststore.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:CreateTrustStore",
+    "elasticloadbalancing:DescribeTrustStores",
+    "elasticloadbalancing:AddTags",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStores",
+    "elasticloadbalancing:DeleteTrustStore"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Names": {
+      "insertionOrder": false,
+      "items": {
+       "$ref": "resource-schema.json#/properties/Name"
+      },
+      "type": "array",
+      "uniqueItems": false
+     },
+     "TrustStoreArns": {
+      "insertionOrder": false,
+      "items": {
+       "$ref": "resource-schema.json#/properties/TrustStoreArn"
+      },
+      "type": "array",
+      "uniqueItems": false
+     }
+    }
+   },
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStores",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTrustStores",
+    "elasticloadbalancing:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticloadbalancing:ModifyTrustStore",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RemoveTags",
+    "s3:GetObject",
+    "s3:GetObjectVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrustStoreArn"
+ ],
+ "properties": {
+  "CaCertificatesBundleS3Bucket": {
+   "type": "string"
+  },
+  "CaCertificatesBundleS3Key": {
+   "type": "string"
+  },
+  "CaCertificatesBundleS3ObjectVersion": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NumberOfCaCertificates": {
+   "type": "integer"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrustStoreArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TrustStoreArn",
+  "/properties/Status",
+  "/properties/NumberOfCaCertificates"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::TrustStore",
+ "writeOnlyProperties": [
+  "/properties/CaCertificatesBundleS3Bucket",
+  "/properties/CaCertificatesBundleS3Key",
+  "/properties/CaCertificatesBundleS3ObjectVersion"
+ ]
+}

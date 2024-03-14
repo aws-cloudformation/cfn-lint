@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/Description",
+  "/properties/Content",
+  "/properties/ContentType",
+  "/properties/LatestVersionNumber",
+  "/properties/VersionLabel"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appconfig:CreateHostedConfigurationVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appconfig:DeleteHostedConfigurationVersion"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationId": {
+      "$ref": "resource-schema.json#/properties/ApplicationId"
+     },
+     "ConfigurationProfileId": {
+      "$ref": "resource-schema.json#/properties/ConfigurationProfileId"
+     }
+    },
+    "required": [
+     "ApplicationId",
+     "ConfigurationProfileId"
+    ]
+   },
+   "permissions": [
+    "appconfig:ListHostedConfigurationVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appconfig:GetHostedConfigurationVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/VersionNumber"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "Content": {
+   "type": "string"
+  },
+  "ContentType": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LatestVersionNumber": {
+   "type": "integer"
+  },
+  "VersionLabel": {
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "^$|.*[^0-9].*",
+   "type": "string"
+  },
+  "VersionNumber": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VersionNumber"
+ ],
+ "required": [
+  "ApplicationId",
+  "ConfigurationProfileId",
+  "Content",
+  "ContentType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppConfig::HostedConfigurationVersion",
+ "writeOnlyProperties": [
+  "/properties/LatestVersionNumber"
+ ]
+}

@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/StackName"
+ ],
+ "definitions": {
+  "Attribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:CreateEntitlement"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DeleteEntitlement"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:DescribeEntitlements"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appstream:UpdateEntitlement"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StackName",
+  "/properties/Name"
+ ],
+ "properties": {
+  "AppVisibility": {
+   "type": "string"
+  },
+  "Attributes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Attribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "StackName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "StackName",
+  "AppVisibility",
+  "Attributes"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppStream::Entitlement"
+}

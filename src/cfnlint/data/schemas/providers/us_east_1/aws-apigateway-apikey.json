@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GenerateDistinctId",
+  "/properties/Name",
+  "/properties/Value"
+ ],
+ "definitions": {
+  "StageKey": {
+   "additionalProperties": false,
+   "properties": {
+    "RestApiId": {
+     "type": "string"
+    },
+    "StageName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE",
+    "apigateway:GET"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH",
+    "apigateway:PUT",
+    "apigateway:DELETE"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/APIKeyId"
+ ],
+ "properties": {
+  "APIKeyId": {
+   "type": "string"
+  },
+  "CustomerId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Enabled": {
+   "default": false,
+   "type": "boolean"
+  },
+  "GenerateDistinctId": {
+   "type": "boolean"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "StageKeys": {
+   "items": {
+    "$ref": "#/definitions/StageKey"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Value": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/APIKeyId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "typeName": "AWS::ApiGateway::ApiKey",
+ "writeOnlyProperties": [
+  "/properties/GenerateDistinctId"
+ ]
+}

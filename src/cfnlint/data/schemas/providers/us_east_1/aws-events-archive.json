@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ArchiveName",
+  "/properties/SourceArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:DescribeArchive",
+    "events:CreateArchive"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "events:DescribeArchive",
+    "events:DeleteArchive"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListArchives"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "events:DescribeArchive"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:DescribeArchive",
+    "events:UpdateArchive"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ArchiveName"
+ ],
+ "properties": {
+  "ArchiveName": {
+   "maxLength": 48,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EventPattern": {
+   "type": "object"
+  },
+  "RetentionDays": {
+   "type": "integer"
+  },
+  "SourceArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "SourceArn"
+ ],
+ "typeName": "AWS::Events::Archive"
+}

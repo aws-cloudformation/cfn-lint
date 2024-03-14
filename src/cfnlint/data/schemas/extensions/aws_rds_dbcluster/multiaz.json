@@ -1,0 +1,52 @@
+{
+ "if": {
+  "properties": {
+   "Engine": {
+    "enum": [
+     "mysql",
+     "postgres"
+    ],
+    "type": "string"
+   }
+  },
+  "required": [
+   "Engine"
+  ]
+ },
+ "then": {
+  "properties": {
+   "AvailabilityZones": false,
+   "BacktrackWindow": false,
+   "Domain": false,
+   "DomainIAMRoleName": false,
+   "EnableGlobalWriteForwarding": false,
+   "EnableHttpEndpoint": false,
+   "EnableIAMDatabaseAuthentication": false,
+   "EngineMode": false,
+   "GlobalClusterIdentifier": false,
+   "NetworkType": false,
+   "ReplicationSourceIdentifier": false,
+   "ScalingConfiguration": false,
+   "ServerlessV2ScalingConfiguration": false,
+   "SourceRegion": false,
+   "StorageType": {
+    "if": {
+     "type": "string"
+    },
+    "then": {
+     "enum": [
+      "io1",
+      "io2",
+      "gp3"
+     ]
+    }
+   }
+  },
+  "required": [
+   "AllocatedStorage",
+   "DBClusterInstanceClass",
+   "Iops",
+   "StorageType"
+  ]
+ }
+}

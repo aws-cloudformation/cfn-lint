@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "autoscaling:PutScheduledUpdateGroupAction",
+    "autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "autoscaling:DeleteScheduledAction",
+    "autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "autoscaling:PutScheduledUpdateGroupAction"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ScheduledActionName",
+  "/properties/AutoScalingGroupName"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "DesiredCapacity": {
+   "type": "integer"
+  },
+  "EndTime": {
+   "type": "string"
+  },
+  "MaxSize": {
+   "type": "integer"
+  },
+  "MinSize": {
+   "type": "integer"
+  },
+  "Recurrence": {
+   "type": "string"
+  },
+  "ScheduledActionName": {
+   "type": "string"
+  },
+  "StartTime": {
+   "type": "string"
+  },
+  "TimeZone": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ScheduledActionName"
+ ],
+ "required": [
+  "AutoScalingGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AutoScaling::ScheduledAction"
+}

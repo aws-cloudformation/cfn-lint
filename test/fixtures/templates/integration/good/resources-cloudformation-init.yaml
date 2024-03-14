@@ -1,0 +1,94 @@
+Parameters:
+  DBName:
+    Type: String
+  DBUsername:
+    Type: String
+  DBPassword:
+    Type: String
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Metadata:
+      "AWS::CloudFormation::Init":
+        config:
+          packages:
+            rpm:
+              epel: "http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm"
+            yum:
+              httpd: []
+              php: []
+              wordpress: []
+            rubygems:
+              chef:
+                - "0.10.2"
+            zypper:
+              git: []
+            msi:
+              awscli: "https://s3.amazonaws.com/aws-cli/AWSCLI64.msi"
+          groups:
+            groupOne: {}
+            groupTwo:
+              gid: "45"
+          users:
+            myUser:
+              groups:
+                - "groupOne"
+                - "groupTwo"
+              uid: "50"
+              homeDir: "/tmp"
+          sources:
+            /etc/puppet: "https://github.com/user1/cfn-demo/tarball/main"
+          files:
+            /tmp/setup.mysql:
+              content: !Sub |
+                CREATE DATABASE ${DBName};
+                CREATE USER '${DBUsername}'@'localhost' IDENTIFIED BY '${DBPassword}';
+                GRANT ALL ON ${DBName}.* TO '${DBUsername}'@'localhost';
+                FLUSH PRIVILEGES;
+              mode: "000644"
+              owner: "root"
+              group: "root"
+            /tmp/myfile2.txt:
+              content: "/tmp/myfile1.txt"
+              mode: "120644"
+            /tmp/test9.txt:
+              content: "Content for {{name}}"
+              context:
+                name: "test9"
+          commands:
+            test:
+              command: "echo \"$MAGIC\" > test.txt"
+              env:
+                MAGIC: "I come from the environment!"
+              cwd: "~"
+              test: "test ! -e ~/test.txt"
+              ignoreErrors: "false"
+            test2:
+              command: "echo \"$MAGIC2\" > test2.txt"
+              env:
+                MAGIC2: "I come from the environment!"
+              cwd: "~"
+              test: "test ! -e ~/test2.txt"
+              ignoreErrors: "false"
+          services:
+            sysvinit:
+              nginx:
+                enabled: "true"
+                ensureRunning: "true"
+                files:
+                  - "/etc/nginx/nginx.conf"
+                sources:
+                  - "/var/www/html"
+              php-fastcgi:
+                enabled: "true"
+                ensureRunning: "true"
+                packages:
+                  yum:
+                    - "php"
+                    - "spawn-fcgi"
+            systemd:
+              sendmail:
+                enabled: "false"
+                ensureRunning: "false"
+    Properties:
+      ImageId: ami-1234567

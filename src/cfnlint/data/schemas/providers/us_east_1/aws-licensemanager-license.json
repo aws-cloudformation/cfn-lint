@@ -1,0 +1,231 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "BorrowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowEarlyCheckIn": {
+     "type": "boolean"
+    },
+    "MaxTimeToLiveInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTimeToLiveInMinutes",
+    "AllowEarlyCheckIn"
+   ],
+   "type": "object"
+  },
+  "ConsumptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BorrowConfiguration": {
+     "$ref": "#/definitions/BorrowConfiguration"
+    },
+    "ProvisionalConfiguration": {
+     "$ref": "#/definitions/ProvisionalConfiguration"
+    },
+    "RenewType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Entitlement": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowCheckIn": {
+     "type": "boolean"
+    },
+    "MaxCount": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Overage": {
+     "type": "boolean"
+    },
+    "Unit": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "IssuerData": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "SignKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "LicenseStatus": {
+   "type": "string"
+  },
+  "Metadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ProvisionalConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTimeToLiveInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTimeToLiveInMinutes"
+   ],
+   "type": "object"
+  },
+  "ValidityDateFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "Begin": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "End": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Begin",
+    "End"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "license-manager:CreateLicense"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "license-manager:DeleteLicense"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "license-manager:ListLicenses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "license-manager:GetLicense"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "license-manager:CreateLicenseVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LicenseArn"
+ ],
+ "properties": {
+  "Beneficiary": {
+   "type": "string"
+  },
+  "ConsumptionConfiguration": {
+   "$ref": "#/definitions/ConsumptionConfiguration"
+  },
+  "Entitlements": {
+   "items": {
+    "$ref": "#/definitions/Entitlement"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "HomeRegion": {
+   "type": "string"
+  },
+  "Issuer": {
+   "$ref": "#/definitions/IssuerData"
+  },
+  "LicenseArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "LicenseMetadata": {
+   "items": {
+    "$ref": "#/definitions/Metadata"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LicenseName": {
+   "type": "string"
+  },
+  "ProductName": {
+   "type": "string"
+  },
+  "ProductSKU": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/LicenseStatus"
+  },
+  "Validity": {
+   "$ref": "#/definitions/ValidityDateFormat"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LicenseArn",
+  "/properties/Version"
+ ],
+ "required": [
+  "LicenseName",
+  "ProductName",
+  "Issuer",
+  "HomeRegion",
+  "Validity",
+  "ConsumptionConfiguration",
+  "Entitlements"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-licensemanager.git",
+ "typeName": "AWS::LicenseManager::License",
+ "writeOnlyProperties": [
+  "/properties/Status"
+ ]
+}

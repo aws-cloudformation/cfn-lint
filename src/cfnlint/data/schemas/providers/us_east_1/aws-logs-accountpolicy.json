@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName",
+  "/properties/PolicyType"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutAccountPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:CreateLogDelivery",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream",
+    "logs:PutSubscriptionFilter",
+    "logs:DeleteSubscriptionFilter",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteAccountPolicy",
+    "logs:DeleteDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:DeleteSubscriptionFilter",
+    "iam:PassRole"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PolicyType": {
+      "$ref": "resource-schema.json#/properties/PolicyType"
+     }
+    },
+    "required": [
+     "PolicyType"
+    ]
+   },
+   "permissions": [
+    "logs:DescribeAccountPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeAccountPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutAccountPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:DescribeAccountPolicies",
+    "logs:DeleteAccountPolicy",
+    "logs:DeleteDataProtectionPolicy",
+    "logs:CreateLogDelivery",
+    "logs:PutSubscriptionFilter",
+    "logs:DeleteSubscriptionFilter",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId",
+  "/properties/PolicyType",
+  "/properties/PolicyName"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "maxLength": 30720,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PolicyName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,256}$",
+   "type": "string"
+  },
+  "PolicyType": {
+   "enum": [
+    "DATA_PROTECTION_POLICY",
+    "SUBSCRIPTION_FILTER_POLICY"
+   ],
+   "type": "string"
+  },
+  "Scope": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "SelectionCriteria": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "PolicyName",
+  "PolicyType",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::AccountPolicy"
+}

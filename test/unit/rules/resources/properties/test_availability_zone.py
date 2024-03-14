@@ -3,29 +3,117 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
+import pytest
+
+from cfnlint.context import create_context_for_template
+from cfnlint.helpers import FUNCTIONS
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.properties.AvailabilityZone import (
     AvailabilityZone,  # pylint: disable=E0401
 )
+from cfnlint.template import Template
 
 
-class TestPropertyAvailabilityZone(BaseRuleTestCase):
-    """Test Password Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AvailabilityZone()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestPropertyAvailabilityZone, self).setUp()
-        self.collection.register(AvailabilityZone())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/az.yaml",
-            "test/fixtures/templates/good/resources/properties/az_cdk.yaml",
-        ]
 
-    def test_file_positive(self):
-        """Success test"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    cfn = Template(
+        "",
+        {
+            "Resources": {
+                "MySqs": {
+                    "Type": "AWS::SQS::Queue",
+                }
+            }
+        },
+    )
+    context = (
+        create_context_for_template(cfn)
+        .evolve(
+            functions=FUNCTIONS,
+            path="Resources",
+        )
+        .evolve(path="MySqs")
+        .evolve(path="Properties")
+    )
+    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
-    def test_file_negative(self):
-        """Failure test"""
-        self.helper_file_negative("test/fixtures/templates/bad/properties_az.yaml", 3)
+
+@pytest.mark.parametrize(
+    "name,instance,path,expected",
+    [
+        (
+            "Valid ref",
+            {"Ref": "AZ"},
+            None,
+            [],
+        ),
+        (
+            "Valid list ref",
+            [{"Ref": "AZ"}],
+            None,
+            [],
+        ),
+        (
+            "Valid inside Ref",
+            "us-east-1a",
+            "Ref",
+            [],
+        ),
+        (
+            "Valid GetAZs",
+            ["us-east-1a", "us-east-1b"],
+            "Fn::GetAZs",
+            [],
+        ),
+        (
+            "Invalid type",
+            True,
+            deque(["Resources", "MySqs", "Properties"]),
+            [],
+        ),
+        (
+            "Invalid hardcoded string",
+            "us-east-1a",
+            deque(["Resources", "MySqs", "Properties"]),
+            [
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    rule=AvailabilityZone(),
+                )
+            ],
+        ),
+        (
+            "Invalid hardcoded array",
+            ["us-east-1a", "us-east-1b"],
+            deque(["Resources", "MySqs", "Properties"]),
+            [
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1a'"),
+                    rule=AvailabilityZone(),
+                ),
+                ValidationError(
+                    ("Avoid hardcoding availability zones 'us-east-1b'"),
+                    rule=AvailabilityZone(),
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, path, expected, rule, validator):
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            path=path,
+        )
+    )
+    errors = list(rule.validate(validator, False, instance, {}))
+    # we use error counts in this one as the instance types are
+    # always changing so we aren't going to hold ourselves up by that
+    assert errors == expected, f"Test {name!r} got {errors!r}"

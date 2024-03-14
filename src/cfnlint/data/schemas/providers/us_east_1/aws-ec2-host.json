@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZone",
+  "/properties/InstanceType",
+  "/properties/InstanceFamily",
+  "/properties/OutpostArn",
+  "/properties/AssetId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AllocateHosts",
+    "ec2:DescribeHosts"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:ReleaseHosts",
+    "ec2:DescribeHosts"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeHosts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeHosts"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyHosts",
+    "ec2:DescribeHosts"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HostId"
+ ],
+ "properties": {
+  "AssetId": {
+   "type": "string"
+  },
+  "AutoPlacement": {
+   "enum": [
+    "on",
+    "off"
+   ],
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "cfnLint": [
+    "AWS::EC2::Host/Properties/AvailabilityZone"
+   ],
+   "type": "string"
+  },
+  "HostId": {
+   "type": "string"
+  },
+  "HostMaintenance": {
+   "type": "string"
+  },
+  "HostRecovery": {
+   "type": "string"
+  },
+  "InstanceFamily": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "OutpostArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HostId"
+ ],
+ "required": [
+  "AvailabilityZone"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "typeName": "AWS::EC2::Host"
+}

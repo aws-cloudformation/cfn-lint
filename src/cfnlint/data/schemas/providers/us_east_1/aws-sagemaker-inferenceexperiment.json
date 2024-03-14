@@ -1,0 +1,396 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/RoleArn",
+  "/properties/EndpointName",
+  "/properties/KmsKey"
+ ],
+ "definitions": {
+  "CaptureContentTypeHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "CsvContentTypes": {
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*/[a-zA-Z0-9](-*[a-zA-Z0-9.])*",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "JsonContentTypes": {
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*/[a-zA-Z0-9](-*[a-zA-Z0-9.])*",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DataStorageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentType": {
+     "$ref": "#/definitions/CaptureContentTypeHeader"
+    },
+    "Destination": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/])/?(.*)$",
+     "type": "string"
+    },
+    "KmsKey": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination"
+   ],
+   "type": "object"
+  },
+  "EndpointMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointConfigName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+     "type": "string"
+    },
+    "EndpointName": {
+     "$ref": "#/definitions/EndpointName"
+    },
+    "EndpointStatus": {
+     "enum": [
+      "Creating",
+      "Updating",
+      "SystemUpdating",
+      "RollingBack",
+      "InService",
+      "OutOfService",
+      "Deleting",
+      "Failed"
+     ],
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointName"
+   ],
+   "type": "object"
+  },
+  "EndpointName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "InferenceExperimentSchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ModelInfrastructureConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InfrastructureType": {
+     "enum": [
+      "RealTimeInference"
+     ],
+     "type": "string"
+    },
+    "RealTimeInferenceConfig": {
+     "$ref": "#/definitions/RealTimeInferenceConfig"
+    }
+   },
+   "required": [
+    "InfrastructureType",
+    "RealTimeInferenceConfig"
+   ],
+   "type": "object"
+  },
+  "ModelVariantConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InfrastructureConfig": {
+     "$ref": "#/definitions/ModelInfrastructureConfig"
+    },
+    "ModelName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+     "type": "string"
+    },
+    "VariantName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelName",
+    "VariantName",
+    "InfrastructureConfig"
+   ],
+   "type": "object"
+  },
+  "RealTimeInferenceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceCount": {
+     "type": "integer"
+    },
+    "InstanceType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceType",
+    "InstanceCount"
+   ],
+   "type": "object"
+  },
+  "ShadowModeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ShadowModelVariants": {
+     "items": {
+      "$ref": "#/definitions/ShadowModelVariantConfig"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SourceModelVariantName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceModelVariantName",
+    "ShadowModelVariants"
+   ],
+   "type": "object"
+  },
+  "ShadowModelVariantConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SamplingPercentage": {
+     "maximum": 100,
+     "type": "integer"
+    },
+    "ShadowModelVariantName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9]([\\-a-zA-Z0-9]*[a-zA-Z0-9])?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ShadowModelVariantName",
+    "SamplingPercentage"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateInferenceExperiment",
+    "sagemaker:DescribeInferenceExperiment",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteInferenceExperiment",
+    "sagemaker:DescribeInferenceExperiment",
+    "sagemaker:StopInferenceExperiment",
+    "sagemaker:ListTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListInferenceExperiments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeInferenceExperiment",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateInferenceExperiment",
+    "sagemaker:StartInferenceExperiment",
+    "sagemaker:StopInferenceExperiment",
+    "sagemaker:DescribeInferenceExperiment",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:inference-experiment/[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "DataStorageConfig": {
+   "$ref": "#/definitions/DataStorageConfig"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "DesiredState": {
+   "enum": [
+    "Running",
+    "Completed",
+    "Cancelled"
+   ],
+   "type": "string"
+  },
+  "EndpointMetadata": {
+   "$ref": "#/definitions/EndpointMetadata"
+  },
+  "EndpointName": {
+   "$ref": "#/definitions/EndpointName"
+  },
+  "KmsKey": {
+   "maxLength": 2048,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "ModelVariants": {
+   "items": {
+    "$ref": "#/definitions/ModelVariantConfig"
+   },
+   "maxItems": 2,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 120,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/InferenceExperimentSchedule"
+  },
+  "ShadowModeConfig": {
+   "$ref": "#/definitions/ShadowModeConfig"
+  },
+  "Status": {
+   "enum": [
+    "Creating",
+    "Created",
+    "Updating",
+    "Starting",
+    "Stopping",
+    "Running",
+    "Completed",
+    "Cancelled"
+   ],
+   "type": "string"
+  },
+  "StatusReason": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Type": {
+   "enum": [
+    "ShadowMode"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime",
+  "/properties/EndpointMetadata",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Type",
+  "RoleArn",
+  "EndpointName",
+  "ModelVariants"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::InferenceExperiment"
+}

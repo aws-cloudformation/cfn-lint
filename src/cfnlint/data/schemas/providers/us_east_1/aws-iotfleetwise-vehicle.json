@@ -1,0 +1,149 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VehicleAssociationBehavior": {
+   "enum": [
+    "CreateIotThing",
+    "ValidateIotThingExists"
+   ],
+   "type": "string"
+  },
+  "attributesMap": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-zA-Z0-9_.-]+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotfleetwise:GetVehicle",
+    "iotfleetwise:CreateVehicle",
+    "iot:CreateThing",
+    "iot:DescribeThing",
+    "iotfleetwise:ListTagsForResource",
+    "iotfleetwise:ListVehicles",
+    "iotfleetwise:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotfleetwise:GetVehicle",
+    "iotfleetwise:DeleteVehicle"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotfleetwise:ListVehicles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotfleetwise:GetVehicle",
+    "iotfleetwise:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotfleetwise:GetVehicle",
+    "iotfleetwise:UpdateVehicle",
+    "iotfleetwise:ListTagsForResource",
+    "iotfleetwise:TagResource",
+    "iotfleetwise:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssociationBehavior": {
+   "$ref": "#/definitions/VehicleAssociationBehavior"
+  },
+  "Attributes": {
+   "$ref": "#/definitions/attributesMap"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DecoderManifestArn": {
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ModelManifestArn": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime"
+ ],
+ "required": [
+  "Name",
+  "DecoderManifestArn",
+  "ModelManifestArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::Vehicle",
+ "writeOnlyProperties": [
+  "/properties/AssociationBehavior"
+ ]
+}

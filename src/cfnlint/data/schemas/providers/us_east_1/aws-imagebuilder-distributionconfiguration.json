@@ -1,0 +1,294 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AmiDistributionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiTags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "LaunchPermissionConfiguration": {
+     "$ref": "#/definitions/LaunchPermissionConfiguration"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "TargetAccountIds": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerDistributionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "TargetRepository": {
+     "$ref": "#/definitions/TargetContainerRepository"
+    }
+   },
+   "type": "object"
+  },
+  "Distribution": {
+   "additionalProperties": false,
+   "properties": {
+    "AmiDistributionConfiguration": {
+     "$ref": "#/definitions/AmiDistributionConfiguration"
+    },
+    "ContainerDistributionConfiguration": {
+     "$ref": "#/definitions/ContainerDistributionConfiguration"
+    },
+    "FastLaunchConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FastLaunchConfiguration"
+     },
+     "type": "array"
+    },
+    "LaunchTemplateConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateConfiguration"
+     },
+     "type": "array"
+    },
+    "LicenseConfigurationArns": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LicenseConfigurationArn"
+     },
+     "type": "array"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Region"
+   ],
+   "type": "object"
+  },
+  "FastLaunchConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "LaunchTemplate": {
+     "$ref": "#/definitions/FastLaunchLaunchTemplateSpecification"
+    },
+    "MaxParallelLaunches": {
+     "type": "integer"
+    },
+    "SnapshotConfiguration": {
+     "$ref": "#/definitions/FastLaunchSnapshotConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "FastLaunchLaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "type": "string"
+    },
+    "LaunchTemplateVersion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FastLaunchSnapshotConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetResourceCount": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchPermissionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "OrganizationalUnitArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "UserGroups": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "UserIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "SetDefaultVersion": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "LicenseConfigurationArn": {
+   "type": "string"
+  },
+  "TargetContainerRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryName": {
+     "type": "string"
+    },
+    "Service": {
+     "enum": [
+      "ECR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:CreateLaunchTemplateVersion",
+    "ec2:ModifyLaunchTemplate",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetDistributionConfiguration",
+    "imagebuilder:CreateDistributionConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:GetDistributionConfiguration",
+    "imagebuilder:UnTagResource",
+    "imagebuilder:DeleteDistributionConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "imagebuilder:ListDistributionConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetDistributionConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeLaunchTemplates",
+    "ec2:CreateLaunchTemplateVersion",
+    "ec2:ModifyLaunchTemplate",
+    "imagebuilder:GetDistributionConfiguration",
+    "imagebuilder:UpdateDistributionConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Distributions": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Distribution"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Distributions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::DistributionConfiguration"
+}

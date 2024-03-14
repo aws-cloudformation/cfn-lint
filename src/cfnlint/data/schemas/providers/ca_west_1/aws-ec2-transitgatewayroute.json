@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayRouteTableId",
+  "/properties/TransitGatewayAttachmentId",
+  "/properties/DestinationCidrBlock",
+  "/properties/Blackhole"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGatewayRoute",
+    "ec2:SearchTransitGatewayRoutes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGatewayRoute",
+    "ec2:SearchTransitGatewayRoutes"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "TransitGatewayRouteTableId": {
+      "$ref": "resource-schema.json#/properties/TransitGatewayRouteTableId"
+     }
+    },
+    "required": [
+     "TransitGatewayRouteTableId"
+    ]
+   },
+   "permissions": [
+    "ec2:SearchTransitGatewayRoutes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:SearchTransitGatewayRoutes"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayRouteTableId",
+  "/properties/DestinationCidrBlock"
+ ],
+ "properties": {
+  "Blackhole": {
+   "type": "boolean"
+  },
+  "DestinationCidrBlock": {
+   "type": "string"
+  },
+  "TransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TransitGatewayRouteTableId": {
+   "type": "string"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TransitGatewayRouteTableId",
+  "DestinationCidrBlock"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::TransitGatewayRoute"
+}

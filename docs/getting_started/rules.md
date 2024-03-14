@@ -78,7 +78,7 @@ See the [code snippets](#code_snippets) section below for some examples of an im
 You can test your new rule by just running `cfn-lint`, but preferably your new rule is validated by unit tests.
 
 #### Fixtures
-Fixture templates are created under the [test/fixtures/templates/good](/test/fixtures/templates/good) (for templates with valid CloudFormation code) or [test/fixtures/templates/bad](/test/fixtures/templates/bad) (for template with invalid CloudFormation code) folders.  
+Fixture templates are created under the [test/fixtures/templates/good](/test/fixtures/templates/good) (for templates with valid CloudFormation code) or [test/fixtures/templates/bad](/test/fixtures/templates/bad) (for template with invalid CloudFormation code) folders.
 Use `YAML` for the CloudFormation templates for readability and the ability to add comments in the template
 
 #### Test class

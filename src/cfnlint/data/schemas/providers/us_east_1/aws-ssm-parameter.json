@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:PutParameter",
+    "ssm:AddTagsToResource",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 5
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeleteParameter"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:DescribeParameters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:GetParameters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:PutParameter",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:GetParameters"
+   ],
+   "timeoutInMinutes": 5
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AllowedPattern": {
+   "type": "string"
+  },
+  "DataType": {
+   "enum": [
+    "text",
+    "aws:ec2:image"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Policies": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tier": {
+   "enum": [
+    "Standard",
+    "Advanced",
+    "Intelligent-Tiering"
+   ],
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "String",
+    "StringList"
+   ],
+   "type": "string"
+  },
+  "Value": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "Value",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::Parameter",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Description",
+  "/properties/Tier",
+  "/properties/AllowedPattern",
+  "/properties/Policies"
+ ]
+}

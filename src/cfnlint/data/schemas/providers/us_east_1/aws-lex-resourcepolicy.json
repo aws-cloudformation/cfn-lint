@@ -1,0 +1,85 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ResourceArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "PhysicalId": {
+   "type": "string"
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "ResourceArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RevisionId": {
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lex:CreateResourcePolicy",
+    "lex:DescribeResourcePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lex:DeleteResourcePolicy",
+    "lex:DescribeResourcePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lex:DescribeResourcePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lex:DescribeResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lex:UpdateResourcePolicy",
+    "lex:DescribeResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "$ref": "#/definitions/PhysicalId"
+  },
+  "Policy": {
+   "$ref": "#/definitions/Policy"
+  },
+  "ResourceArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "RevisionId": {
+   "$ref": "#/definitions/RevisionId"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/RevisionId"
+ ],
+ "required": [
+  "ResourceArn",
+  "Policy"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/lexv2/latest/dg/security_iam_service-with-iam.html#security_iam_service-with-iam-resource-based-policies",
+ "taggable": false,
+ "typeName": "AWS::Lex::ResourcePolicy"
+}

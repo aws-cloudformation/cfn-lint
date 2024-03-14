@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KMSKeyArn",
+  "/properties/SyncFormat",
+  "/properties/BucketPrefix",
+  "/properties/SyncName",
+  "/properties/BucketRegion",
+  "/properties/BucketName",
+  "/properties/S3Destination",
+  "/properties/SyncType"
+ ],
+ "definitions": {
+  "AwsOrganizationsSource": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationSourceType": {
+     "type": "string"
+    },
+    "OrganizationalUnits": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "OrganizationSourceType"
+   ],
+   "type": "object"
+  },
+  "S3Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "BucketPrefix": {
+     "type": "string"
+    },
+    "BucketRegion": {
+     "type": "string"
+    },
+    "KMSKeyArn": {
+     "type": "string"
+    },
+    "SyncFormat": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "BucketRegion",
+    "SyncFormat"
+   ],
+   "type": "object"
+  },
+  "SyncSource": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsOrganizationsSource": {
+     "$ref": "#/definitions/AwsOrganizationsSource"
+    },
+    "IncludeFutureRegions": {
+     "type": "boolean"
+    },
+    "SourceRegions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType",
+    "SourceRegions"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "BucketName": {
+   "type": "string"
+  },
+  "BucketPrefix": {
+   "type": "string"
+  },
+  "BucketRegion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KMSKeyArn": {
+   "type": "string"
+  },
+  "S3Destination": {
+   "$ref": "#/definitions/S3Destination"
+  },
+  "SyncFormat": {
+   "type": "string"
+  },
+  "SyncName": {
+   "type": "string"
+  },
+  "SyncSource": {
+   "$ref": "#/definitions/SyncSource"
+  },
+  "SyncType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SyncName"
+ ],
+ "typeName": "AWS::SSM::ResourceDataSync"
+}

@@ -1,0 +1,192 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PrimaryAccountId"
+ ],
+ "definitions": {
+  "AccountGrouping": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAssociate": {
+     "type": "boolean"
+    },
+    "LinkedAccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "[0-9]{12}",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "LinkedAccountIds"
+   ],
+   "type": "object"
+  },
+  "BillingGroupStatus": {
+   "enum": [
+    "ACTIVE",
+    "PRIMARY_ACCOUNT_MISSING"
+   ],
+   "type": "string"
+  },
+  "ComputationPreference": {
+   "additionalProperties": false,
+   "properties": {
+    "PricingPlanArn": {
+     "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingplan/[a-zA-Z0-9]{10}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PricingPlanArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "billingconductor:CreateBillingGroup",
+    "billingconductor:AssociateAccounts",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:TagResource",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "billingconductor:DeleteBillingGroup",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:UntagResource",
+    "billingconductor:UpdateBillingGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "billingconductor:ListBillingGroups",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "billingconductor:ListBillingGroups",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "billingconductor:UpdateBillingGroup",
+    "billingconductor:ListAccountAssociations",
+    "organizations:ListAccounts",
+    "billingconductor:AssociateAccounts",
+    "billingconductor:DisassociateAccounts",
+    "billingconductor:ListBillingGroups",
+    "billingconductor:TagResource",
+    "billingconductor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccountGrouping": {
+   "$ref": "#/definitions/AccountGrouping"
+  },
+  "Arn": {
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[0-9]{12}",
+   "type": "string"
+  },
+  "ComputationPreference": {
+   "$ref": "#/definitions/ComputationPreference"
+  },
+  "CreationTime": {
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "PrimaryAccountId": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "Size": {
+   "type": "integer"
+  },
+  "Status": {
+   "$ref": "#/definitions/BillingGroupStatus"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Size",
+  "/properties/Status",
+  "/properties/StatusReason",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name",
+  "AccountGrouping",
+  "PrimaryAccountId",
+  "ComputationPreference"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BillingConductor::BillingGroup"
+}

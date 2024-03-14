@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ModelPackageGroupName",
+  "/properties/ModelPackageGroupDescription"
+ ],
+ "definitions": {
+  "ModelPackageGroupArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "ModelPackageGroupDescription": {
+   "maxLength": 1024,
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*",
+   "type": "string"
+  },
+  "ModelPackageGroupName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateModelPackageGroup",
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteModelPackageGroup",
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:DeleteModelPackageGroupPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListModelPackageGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:DeleteModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelPackageGroupArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "ModelPackageGroupArn": {
+   "$ref": "#/definitions/ModelPackageGroupArn"
+  },
+  "ModelPackageGroupDescription": {
+   "$ref": "#/definitions/ModelPackageGroupDescription"
+  },
+  "ModelPackageGroupName": {
+   "$ref": "#/definitions/ModelPackageGroupName"
+  },
+  "ModelPackageGroupPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ModelPackageGroupStatus": {
+   "enum": [
+    "Pending",
+    "InProgress",
+    "Completed",
+    "Failed",
+    "Deleting",
+    "DeleteFailed"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelPackageGroupArn",
+  "/properties/CreationTime",
+  "/properties/ModelPackageGroupStatus"
+ ],
+ "required": [
+  "ModelPackageGroupName"
+ ],
+ "typeName": "AWS::SageMaker::ModelPackageGroup"
+}

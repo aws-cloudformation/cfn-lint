@@ -1,0 +1,204 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName"
+ ],
+ "definitions": {
+  "CapacityProviderStrategyItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Name",
+      "typeName": "AWS::ECS::CapacityProvider"
+     },
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecuteCommandConfiguration": {
+     "$ref": "#/definitions/ExecuteCommandConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExecuteCommandConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     },
+     "type": "string"
+    },
+    "LogConfiguration": {
+     "$ref": "#/definitions/ExecuteCommandLogConfiguration"
+    },
+    "Logging": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExecuteCommandLogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchEncryptionEnabled": {
+     "type": "boolean"
+    },
+    "CloudWatchLogGroupName": {
+     "relationshipRef": {
+      "propertyPath": "/properties/LogGroupName",
+      "typeName": "AWS::Logs::LogGroup"
+     },
+     "type": "string"
+    },
+    "S3BucketName": {
+     "type": "string"
+    },
+    "S3EncryptionEnabled": {
+     "type": "boolean"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceConnectDefaults": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecs:CreateCluster",
+    "ecs:DescribeClusters",
+    "iam:CreateServiceLinkedRole",
+    "ecs:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecs:DeleteCluster",
+    "ecs:DescribeClusters"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecs:DescribeClusters",
+    "ecs:ListClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecs:DescribeClusters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecs:PutAccountSettingDefault",
+    "ecs:DescribeClusters",
+    "ecs:TagResource",
+    "ecs:UntagResource",
+    "ecs:PutAccountSetting",
+    "ecs:ListTagsForResource",
+    "ecs:UpdateCluster",
+    "ecs:UpdateClusterSettings",
+    "ecs:PutClusterCapacityProviders"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CapacityProviders": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterName": {
+   "type": "string"
+  },
+  "ClusterSettings": {
+   "items": {
+    "$ref": "#/definitions/ClusterSettings"
+   },
+   "type": "array"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ClusterConfiguration"
+  },
+  "DefaultCapacityProviderStrategy": {
+   "items": {
+    "$ref": "#/definitions/CapacityProviderStrategyItem"
+   },
+   "type": "array"
+  },
+  "ServiceConnectDefaults": {
+   "$ref": "#/definitions/ServiceConnectDefaults"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::Cluster",
+ "writeOnlyProperties": [
+  "/properties/ServiceConnectDefaults"
+ ]
+}

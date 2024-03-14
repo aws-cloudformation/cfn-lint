@@ -3,31 +3,40 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.resources.iam.PolicyVersion import (
-    PolicyVersion,  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.iam.PolicyVersion import PolicyVersion
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = PolicyVersion()
+    yield rule
+
+
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        ("Valid version", "2012-10-17", []),
+        (
+            "Invalid version",
+            "2008-10-17",
+            [
+                ValidationError(
+                    "IAM Policy Version should be updated to '2012-10-17'",
+                    rule=PolicyVersion(),
+                ),
+            ],
+        ),
+        ("No error on invalid structure", {}, []),
+    ],
 )
-
-
-class TestPolicyVersion(BaseRuleTestCase):
-    """Test IAM Resource Policies"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestPolicyVersion, self).setUp()
-        self.collection.register(PolicyVersion())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/iam/resource_policy.yaml",
-            "test/fixtures/templates/good/resources/iam/policy.yaml",
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/iam/policy_version.yaml", 1
-        )
+def test_policy_version(name, instance, expected, rule, validator):
+    errors = list(rule.validate(validator, {}, instance, {}))
+    assert errors == expected, f"Test {name!r} got {errors!r}"

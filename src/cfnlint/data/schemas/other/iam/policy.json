@@ -1,0 +1,283 @@
+{
+ "$id": "policy",
+ "additionalProperties": false,
+ "definitions": {
+  "Action": {
+   "anyOf": [
+    {
+     "$ref": "#/definitions/Wildcard"
+    },
+    {
+     "$ref": "#/definitions/StringOrStringArray"
+    }
+   ],
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"
+   ]
+  },
+  "AwsArn": {
+   "pattern": "^(arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*:(?:\\d{12}|\\*)?:.+|\\*)$",
+   "type": "string"
+  },
+  "AwsPrincipalArn": {
+   "pattern": "^((arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)|\\d{12})",
+   "type": "string"
+  },
+  "Condition": {
+   "patternProperties": {
+    "ForAllValues:^(Not)?IpAddress$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^Arn(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^Arn(Not)?Like$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^Date(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^Number(Less|Greater)Than(Equals)?$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^Number(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^String(Not)?Equals(IgnoreCase)?$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAllValues:^String(Not)?Like$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^(Not)?IpAddress$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^Arn(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^Arn(Not)?Like$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^Date(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^Number(Less|Greater)Than(Equals)?$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^Number(Not)?Equals$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^String(Not)?Equals(IgnoreCase)?$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "ForAnyValues:^String(Not)?Like?$": {
+     "$ref": "#/definitions/ConditionSetValue"
+    },
+    "^(Not)?IpAddress(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^Arn(Not)?Equals(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^Arn(Not)?Like(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^Date(Not)?Equals(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^Number(Less|Greater)Than(Equals)?(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^Number(Not)?Equals(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^String(Not)?Equals(IgnoreCase)?(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "^String(Not)?Like(Exists)?$": {
+     "$ref": "#/definitions/ConditionValue"
+    }
+   },
+   "properties": {
+    "BinaryEquals": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "Bool": {
+     "$ref": "#/definitions/ConditionValue"
+    },
+    "Null": {
+     "additionalProperties": {
+      "enum": [
+       "true",
+       "false",
+       true,
+       false
+      ]
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ConditionSetValue": {
+   "additionalProperties": {
+    "$ref": "#/definitions/StringArray"
+   },
+   "type": "object"
+  },
+  "ConditionValue": {
+   "additionalProperties": {
+    "anyOf": [
+     {
+      "$ref": "#/definitions/StringOrStringArray"
+     },
+     {
+      "type": "boolean"
+     },
+     {
+      "type": "number"
+     }
+    ]
+   },
+   "type": "object"
+  },
+  "Principal": {
+   "anyOf": [
+    {
+     "$ref": "#/definitions/Wildcard"
+    },
+    {
+     "properties": {
+      "AWS": {
+       "scalarOrArray": {
+        "$ref": "#/definitions/AwsPrincipalArn"
+       }
+      },
+      "CanonicalUser": {
+       "$ref": "#/definitions/StringOrStringArray"
+      },
+      "Federated": {
+       "$ref": "#/definitions/StringOrStringArray"
+      },
+      "Service": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   ]
+  },
+  "Resource": {
+   "scalarOrArray": {
+    "$ref": "#/definitions/AwsArn"
+   }
+  },
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Action"
+       ]
+      },
+      {
+       "required": [
+        "NotAction"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Resource"
+       ]
+      },
+      {
+       "required": [
+        "NotResource"
+       ]
+      }
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "#/definitions/Condition"
+    },
+    "Effect": {
+     "enum": [
+      "Allow",
+      "Deny"
+     ],
+     "type": "string"
+    },
+    "NotAction": {
+     "$ref": "#/definitions/Action"
+    },
+    "NotPrincipal": {
+     "$ref": "#/definitions/Principal"
+    },
+    "NotResource": {
+     "$ref": "#/definitions/Resource"
+    },
+    "Principal": {
+     "$ref": "#/definitions/Principal"
+    },
+    "Resource": {
+     "$ref": "#/definitions/Resource"
+    },
+    "Sid": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Effect"
+   ],
+   "type": "object"
+  },
+  "StringArray": {
+   "type": "string"
+  },
+  "StringOrStringArray": {
+   "scalarOrArray": {
+    "$ref": "#/definitions/StringArray"
+   }
+  },
+  "Wildcard": {
+   "const": "*"
+  }
+ },
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Statement": {
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
+   }
+  },
+  "Version": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument/Version"
+   ],
+   "enum": [
+    "2008-10-17",
+    "2012-10-17"
+   ],
+   "type": [
+    "string"
+   ]
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

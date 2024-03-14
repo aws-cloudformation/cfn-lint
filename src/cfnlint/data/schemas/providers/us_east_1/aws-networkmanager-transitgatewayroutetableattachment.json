@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeeringId",
+  "/properties/TransitGatewayRouteTableArn"
+ ],
+ "definitions": {
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateTransitGatewayRouteTableAttachment",
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:DeleteAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "PeeringId": {
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayRouteTableArn": {
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CoreNetworkId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName"
+ ],
+ "required": [
+  "PeeringId",
+  "TransitGatewayRouteTableArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-transitgatewayroutetableattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::TransitGatewayRouteTableAttachment"
+}

@@ -3,15 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import json
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.helpers
-from cfnlint.rules import RulesCollection
-from cfnlint.rules.resources.properties.Required import (
-    Required,  # pylint: disable=E0401
-)
+from cfnlint import ConfigMixIn
+from cfnlint.config import _DEFAULT_RULESDIR
+from cfnlint.rules import Rules
 from cfnlint.runner import Runner
+from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
 class TestOverrideRequired(BaseTestCase):
@@ -19,35 +17,47 @@ class TestOverrideRequired(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
-        self.collection.register(Required())
+        self.collection = Rules.create_from_directory(_DEFAULT_RULESDIR)
+        self.region = "us-east-1"
 
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
-        cfnlint.helpers.initialize_specs()
+        PROVIDER_SCHEMA_MANAGER.reset()
 
     def test_success_run(self):
         """Success test"""
         filename = "test/fixtures/templates/good/override/required.yaml"
-        template = self.load_template(filename)
-        with open("test/fixtures/templates/override_spec/required.json") as fp:
-            custom_spec = json.load(fp)
 
-        cfnlint.helpers.set_specs(custom_spec)
+        PROVIDER_SCHEMA_MANAGER.patch(
+            "test/fixtures/templates/override_spec/required.json", regions=[self.region]
+        )
 
-        good_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-        self.assertEqual([], good_runner.run())
+        config = ConfigMixIn(
+            regions=[self.region],
+            templates=[filename],
+        )
+        runner = Runner(config)
+        runner.rules = self.collection
+
+        self.assertEqual([], list(runner.run()))
 
     def test_fail_run(self):
         """Failure test required"""
         filename = "test/fixtures/templates/bad/override/required.yaml"
-        template = self.load_template(filename)
-        with open("test/fixtures/templates/override_spec/required.json") as fp:
-            custom_spec = json.load(fp)
 
-        cfnlint.helpers.set_specs(custom_spec)
+        PROVIDER_SCHEMA_MANAGER.patch(
+            "test/fixtures/templates/override_spec/required.json", regions=[self.region]
+        )
 
-        bad_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-        errs = bad_runner.run()
-        self.assertEqual(1, len(errs))
+        config = ConfigMixIn(
+            regions=[self.region],
+            templates=[filename],
+            ignore_checks=["I", "W", "E"],
+            mandatory_checks=["E3003"],
+        )
+        runner = Runner(config)
+        runner.rules = self.collection
+
+        errs = list(runner.run())
+        self.assertEqual(1, len(errs), errs)

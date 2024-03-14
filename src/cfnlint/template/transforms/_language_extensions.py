@@ -9,7 +9,7 @@ import logging
 import random
 import string
 from copy import deepcopy
-from typing import Any, Iterable, List, Mapping, MutableMapping, Optional, Tuple
+from typing import Any, Iterator, List, Mapping, MutableMapping, Optional, Tuple
 
 import regex as re
 
@@ -27,19 +27,19 @@ _SCALAR_TYPES = (str, int, float, bool)
 
 
 class _ResolveError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
 
 class _ValueError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
 
 class _TypeError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
@@ -157,15 +157,16 @@ class _Transform:
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
                         map_value = mapping.value(cfn, params, True)
-                        # if we get None this means its all strings but couldn't be resolved
-                        # we will pass this forward
+                        # if we get None this means its all strings
+                        # but couldn't be resolved we will pass this forward
                         if map_value is None:
                             continue
                         # if we can resolve it we will return it
                         if isinstance(map_value, tuple([list]) + _SCALAR_TYPES):
                             return map_value
                     except Exception as e:  # pylint: disable=broad-exception-caught
-                        # We couldn't resolve the FindInMap so we are going to leave it as it is
+                        # We couldn't resolve the FindInMap so we are going to
+                        # leave it as it is
                         LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
                 elif k == "Ref":
                     if isinstance(v, str):
@@ -263,6 +264,9 @@ class _FnFindInMapDefaultValue(_ForEachValue):
                 raise _ValueError(
                     "Fn::FindInMap parameter only supports 'DefaultValue'", value
                 )
+            if isinstance(v, list):
+                self._value = [_ForEachValue.create(a) for a in v]
+                return
             self._value = _ForEachValue.create(v)
 
     def value(
@@ -271,6 +275,8 @@ class _FnFindInMapDefaultValue(_ForEachValue):
         if params is None:
             params = {}
 
+        if isinstance(self._value, list):
+            return [v.value(cfn, params, only_params) for v in self._value]
         return self._value.value(cfn, params, only_params)
 
 
@@ -472,8 +478,8 @@ class _ForEachCollection:
         raise _TypeError("Collection must be a list or an object", obj)
 
     def values(
-        self, cfn: Any, collection_cache: MutableMapping[str, str]
-    ) -> Iterable[str]:
+        self, cfn: Any, collection_cache: MutableMapping[str, Any]
+    ) -> Iterator[str]:
         if self._collection:
             for item in self._collection:
                 try:
@@ -493,7 +499,10 @@ class _ForEachCollection:
                                 yield value
                             else:
                                 raise _ValueError(
-                                    f"Fn::ForEach collection value must be a {_SCALAR_TYPES!r}",
+                                    (
+                                        "Fn::ForEach collection value "
+                                        f"must be a {_SCALAR_TYPES!r}"
+                                    ),
                                     self._obj,
                                 )
                         return
@@ -540,6 +549,6 @@ class _ForEach:
         self._collection = _ForEachCollection(value[1])
         self._output = _ForEachOutput(value[2])
 
-    def items(self, cfn: Any) -> Iterable[Tuple[str, str]]:
+    def items(self, cfn: Any) -> Iterator[str]:
         items = self._collection.values(cfn, self._collection_cache)
         yield from iter(items)

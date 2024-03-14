@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Cluster"
+ ],
+ "definitions": {
+  "CapacityProvider": {
+   "anyOf": [
+    {
+     "enum": [
+      "FARGATE",
+      "FARGATE_SPOT"
+     ],
+     "type": "string"
+    },
+    {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   ],
+   "type": "string"
+  },
+  "CapacityProviderStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "maximum": 100000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "$ref": "#/definitions/CapacityProvider"
+    },
+    "Weight": {
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CapacityProvider"
+   ],
+   "type": "object"
+  },
+  "CapacityProviders": {
+   "items": {
+    "$ref": "#/definitions/CapacityProvider"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Cluster": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DefaultCapacityProviderStrategy": {
+   "items": {
+    "$ref": "#/definitions/CapacityProviderStrategy"
+   },
+   "type": "array"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecs:DescribeClusters",
+    "ecs:PutClusterCapacityProviders"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecs:PutClusterCapacityProviders",
+    "ecs:DescribeClusters"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecs:DescribeClusters",
+    "ecs:ListClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecs:DescribeClusters"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecs:DescribeClusters",
+    "ecs:PutClusterCapacityProviders"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Cluster"
+ ],
+ "properties": {
+  "CapacityProviders": {
+   "$ref": "#/definitions/CapacityProviders"
+  },
+  "Cluster": {
+   "$ref": "#/definitions/Cluster"
+  },
+  "DefaultCapacityProviderStrategy": {
+   "$ref": "#/definitions/DefaultCapacityProviderStrategy"
+  }
+ },
+ "required": [
+  "CapacityProviders",
+  "Cluster",
+  "DefaultCapacityProviderStrategy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ECS::ClusterCapacityProviderAssociations"
+}

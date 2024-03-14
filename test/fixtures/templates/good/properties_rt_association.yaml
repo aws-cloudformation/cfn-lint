@@ -28,34 +28,34 @@ Resources:
     Condition: isPublic
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           Ref: AppSubnet01
 
   AppSubnetPrivateRouteTableAssociation:
     Condition: isPrivate
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PrivateRouteTable
-        SubnetId: 
+        SubnetId:
           Ref: AppSubnet01
 
   ProxySubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           Fn::If: [ isPublic, Ref: PublicProxySubnet , Ref: PrivateProxySubnet ]
-  
+
   PublicSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           Ref: PublicSubnet01
 
   CustomResource:
@@ -66,7 +66,7 @@ Resources:
   CustomSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           !GetAtt CustomResource.PublicSubnet

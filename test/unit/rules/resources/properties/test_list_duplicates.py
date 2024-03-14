@@ -3,30 +3,41 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.resources.properties.ListDuplicates import (
-    ListDuplicates,  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.resources.properties.ListDuplicates import ListDuplicates
+from cfnlint.rules.resources.properties.ListDuplicatesAllowed import (
+    ListDuplicatesAllowed,
 )
 
 
-class TestListDuplicates(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = ListDuplicates()
+    rule.child_rules["I3037"] = ListDuplicatesAllowed()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestListDuplicates, self).setUp()
-        self.collection.register(ListDuplicates())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/list_duplicates.yaml"
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/list_duplicates.yaml", 4
-        )
+
+@pytest.mark.parametrize(
+    "instance,uI,schema,expected",
+    [
+        (["foo", "bar"], True, {}, None),
+        (["foo", "bar"], False, {}, None),
+        (["foo", "foo"], False, {}, "I3037"),
+        (["foo", "foo"], True, {}, "E3037"),
+    ],
+)
+def test_unique_items_fails(instance, uI, expected, rule, schema, validator):
+    errs = list(rule.uniqueItems(validator, uI, instance, schema))
+    if expected is None:
+        assert not errs
+    else:
+        assert len(errs) == 1
+        if expected != "E3037":
+            assert errs[0].rule.id == expected

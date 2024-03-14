@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateClusterSubnetGroup",
+    "redshift:CreateTags",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DeleteClusterSubnetGroup",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:ModifyClusterSubnetGroup",
+    "redshift:DescribeClusterSubnetGroups",
+    "redshift:DescribeTags",
+    "redshift:CreateTags",
+    "redshift:DeleteTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "properties": {
+  "ClusterSubnetGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 20,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "required": [
+  "Description",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::ClusterSubnetGroup",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

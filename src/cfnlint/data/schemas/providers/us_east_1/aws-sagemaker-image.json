@@ -1,0 +1,142 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ImageName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ImageName"
+ ],
+ "definitions": {
+  "ImageArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ImageDescription": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": ".+",
+   "type": "string"
+  },
+  "ImageDisplayName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9 -_]+$",
+   "type": "string"
+  },
+  "ImageName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ImageRoleArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateImage",
+    "sagemaker:DescribeImage",
+    "iam:PassRole",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteImage",
+    "sagemaker:DescribeImage"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListImages"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeImage",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateImage",
+    "sagemaker:DescribeImage",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ImageArn"
+ ],
+ "properties": {
+  "ImageArn": {
+   "$ref": "#/definitions/ImageArn"
+  },
+  "ImageDescription": {
+   "$ref": "#/definitions/ImageDescription"
+  },
+  "ImageDisplayName": {
+   "$ref": "#/definitions/ImageDisplayName"
+  },
+  "ImageName": {
+   "$ref": "#/definitions/ImageName"
+  },
+  "ImageRoleArn": {
+   "$ref": "#/definitions/ImageRoleArn"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ImageArn"
+ ],
+ "required": [
+  "ImageName",
+  "ImageRoleArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Image"
+}

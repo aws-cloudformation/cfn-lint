@@ -3,30 +3,34 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.functions.SubParametersUsed import (
-    SubParametersUsed,  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.functions.SubParametersUsed import SubParametersUsed
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = SubParametersUsed()
+    yield rule
+
+
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
+
+
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        ("Valid with matching parameters", ["${Foo}", {"Foo": "Bar"}], []),
+        (
+            "Invalid with a missing parameter",
+            ["${Foo}", {"Foo": "Bar", "Bar": "Foo"}],
+            [ValidationError("Parameter 'Bar' not used in 'Fn::Sub'", path=[1, "Bar"])],
+        ),
+    ],
 )
-
-
-class TestSubParametersUsed(BaseRuleTestCase):
-    """Test Rules Get Att"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestSubParametersUsed, self).setUp()
-        self.collection.register(SubParametersUsed())
-        self.success_templates = [
-            "test/fixtures/templates/good/functions/sub_parameters_used.yaml",
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/functions/sub_parameters_used.yaml", 1
-        )
+def test_sub_parameters_used(name, instance, expected, rule, validator):
+    errors = list(rule.validate(validator, {}, instance, {}))
+    assert errors == expected, f"Test {name!r} got {errors!r}"

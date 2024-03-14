@@ -1,0 +1,82 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StateMachineArn",
+  "/properties/StateMachineRevisionId"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "states:PublishStateMachineVersion",
+    "states:ListStateMachineVersions",
+    "states:DescribeStateMachine"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "states:DeleteStateMachineVersion",
+    "states:DescribeStateMachine"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "StateMachineArn": {
+      "$ref": "resource-schema.json#/properties/StateMachineArn"
+     }
+    },
+    "required": [
+     "StateMachineArn"
+    ]
+   },
+   "permissions": [
+    "states:ListStateMachineVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "states:DescribeStateMachine"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StateMachineArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StateMachineRevisionId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "StateMachineArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::StepFunctions::StateMachineVersion",
+ "writeOnlyProperties": [
+  "/properties/StateMachineArn"
+ ]
+}

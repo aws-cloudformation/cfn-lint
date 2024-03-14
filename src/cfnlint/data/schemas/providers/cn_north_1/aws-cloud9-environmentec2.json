@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutomaticStopTimeMinutes",
+  "/properties/OwnerArn",
+  "/properties/ConnectionType",
+  "/properties/InstanceType",
+  "/properties/ImageId",
+  "/properties/SubnetId",
+  "/properties/Repositories"
+ ],
+ "definitions": {
+  "Repository": {
+   "additionalProperties": false,
+   "properties": {
+    "PathComponent": {
+     "type": "string"
+    },
+    "RepositoryUrl": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PathComponent",
+    "RepositoryUrl"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AutomaticStopTimeMinutes": {
+   "type": "integer"
+  },
+  "ConnectionType": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImageId": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OwnerArn": {
+   "type": "string"
+  },
+  "Repositories": {
+   "items": {
+    "$ref": "#/definitions/Repository"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "InstanceType"
+ ],
+ "typeName": "AWS::Cloud9::EnvironmentEC2"
+}

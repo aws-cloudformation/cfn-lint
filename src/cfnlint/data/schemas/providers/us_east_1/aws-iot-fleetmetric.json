@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName"
+ ],
+ "definitions": {
+  "AggregationType": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateFleetMetric",
+    "iot:DescribeFleetMetric",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeleteFleetMetric",
+    "iot:DescribeFleetMetric"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListFleetMetrics"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeFleetMetric",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateFleetMetric",
+    "iot:DescribeFleetMetric",
+    "iot:ListTagsForResource",
+    "iot:UntagResource",
+    "iot:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MetricName"
+ ],
+ "properties": {
+  "AggregationField": {
+   "type": "string"
+  },
+  "AggregationType": {
+   "$ref": "#/definitions/AggregationType"
+  },
+  "CreationDate": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IndexName": {
+   "type": "string"
+  },
+  "LastModifiedDate": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "MetricArn": {
+   "type": "string"
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "Period": {
+   "type": "integer"
+  },
+  "QueryString": {
+   "type": "string"
+  },
+  "QueryVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Unit": {
+   "type": "string"
+  },
+  "Version": {
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MetricArn",
+  "/properties/CreationDate",
+  "/properties/LastModifiedDate",
+  "/properties/Version"
+ ],
+ "required": [
+  "MetricName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "taggable": true,
+ "typeName": "AWS::IoT::FleetMetric"
+}

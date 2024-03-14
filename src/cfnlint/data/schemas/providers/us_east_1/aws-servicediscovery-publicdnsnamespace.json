@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Properties": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsProperties": {
+     "$ref": "#/definitions/PublicDnsPropertiesMutable"
+    }
+   },
+   "type": "object"
+  },
+  "PublicDnsPropertiesMutable": {
+   "additionalProperties": false,
+   "properties": {
+    "SOA": {
+     "$ref": "#/definitions/SOA"
+    }
+   },
+   "type": "object"
+  },
+  "SOA": {
+   "additionalProperties": false,
+   "properties": {
+    "TTL": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Properties": {
+   "$ref": "#/definitions/Properties"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/HostedZoneId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::ServiceDiscovery::PublicDnsNamespace"
+}

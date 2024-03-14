@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Subscriptions",
+  "/properties/SubscriptionDefinitionId"
+ ],
+ "definitions": {
+  "Subscription": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Source": {
+     "type": "string"
+    },
+    "Subject": {
+     "type": "string"
+    },
+    "Target": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Target",
+    "Id",
+    "Source",
+    "Subject"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "SubscriptionDefinitionId": {
+   "type": "string"
+  },
+  "Subscriptions": {
+   "items": {
+    "$ref": "#/definitions/Subscription"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SubscriptionDefinitionId",
+  "Subscriptions"
+ ],
+ "typeName": "AWS::Greengrass::SubscriptionDefinitionVersion"
+}

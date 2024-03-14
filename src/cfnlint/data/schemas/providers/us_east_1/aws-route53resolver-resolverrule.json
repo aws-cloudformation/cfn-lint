@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "createOnlyProperties": [
+  "/properties/RuleType"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "type": "string"
+    },
+    "Ipv6": {
+     "type": "string"
+    },
+    "Port": {
+     "maxLength": 65535,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "Do53",
+      "DoH"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:CreateResolverRule",
+    "route53resolver:GetResolverRule",
+    "route53resolver:ListTagsForResource",
+    "route53resolver:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DeleteResolverRule",
+    "route53resolver:GetResolverRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListResolverRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetResolverRule",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53resolver:UpdateResolverRule",
+    "route53resolver:GetResolverRule",
+    "route53resolver:ListTagsForResource",
+    "route53resolver:TagResource",
+    "route53resolver:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverRuleId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ResolverEndpointId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResolverRuleId": {
+   "type": "string"
+  },
+  "RuleType": {
+   "enum": [
+    "FORWARD",
+    "SYSTEM",
+    "RECURSIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetIps": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TargetAddress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/DomainName": "$join([DomainName, \".\"]) $OR DomainName"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ResolverRuleId"
+ ],
+ "required": [
+  "DomainName",
+  "RuleType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53resolver.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::ResolverRule"
+}

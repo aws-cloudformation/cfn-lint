@@ -15,7 +15,7 @@ from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
 from cfnlint.match import Match
-from cfnlint.rules import ParseError, RuleError, RulesCollection, TransformError
+from cfnlint.rules import ParseError, RuleError, Rules, TransformError
 from cfnlint.version import __version__
 
 Matches = List[Match]
@@ -46,12 +46,8 @@ class BaseFormatter:
     def _format(self, match):
         """Format the specific match"""
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         """Output all the matches"""
-        # Unused argument http://pylint-messages.wikidot.com/messages:w0613
-        del rules
-        del filenames
-
         if not matches:
             return None
 
@@ -88,7 +84,7 @@ class JUnitFormatter(BaseFormatter):
             match.message, match.filename, match.linenumber, match.columnnumber
         )
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         """Output all the matches"""
 
         if not rules:
@@ -99,8 +95,8 @@ class JUnitFormatter(BaseFormatter):
             rules.extend([ParseError(), TransformError(), RuleError()])
 
         test_cases = []
-        for rule in rules.all_rules.values():
-            if not rule.id in rules.used_rules:
+        for rule in rules.values():
+            if rule.id not in rules.used_rules:
                 if not rule.id:
                     continue
                 test_case = TestCase(name=f"{rule.id} {rule.shortdesc}")
@@ -165,13 +161,13 @@ class JsonFormatter(BaseFormatter):
                 }
             return {f"__{o.__class__.__name__}__": o.__dict__}
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules=None, config=None):
         # JSON formatter outputs a single JSON object
         # Unused argument http://pylint-messages.wikidot.com/messages:w0613
         del rules
 
         return json.dumps(
-            matches,
+            list(matches),
             indent=4,
             cls=self.CustomEncoder,
             sort_keys=True,
@@ -218,11 +214,12 @@ class PrettyFormatter(BaseFormatter):
             match.message,
         )
 
-    def print_matches(self, matches, rules=None, filenames=None):
+    def print_matches(self, matches, rules, config):
         results = self._format_matches(matches)
 
+        # ruff: noqa: E501
         results.append(
-            f"Cfn-lint scanned {colored(len(filenames), color.bold_reset)} templates against "
+            f"Cfn-lint scanned {colored(len(config.templates), color.bold_reset)} templates against "
             f"{colored(len(rules.used_rules), color.bold_reset)} rules and found "
             f'{colored(len([i for i in matches if i.rule.severity.lower() == "error"]), color.error)} '
             f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
@@ -286,7 +283,7 @@ class SARIFFormatter(BaseFormatter):
         """Output all the matches"""
 
         if not rules:
-            rules = RulesCollection()
+            rules = Rules()
 
         # These "base" rules are not passed into formatters
         rules.extend([ParseError(), TransformError(), RuleError()])
@@ -319,20 +316,19 @@ class SARIFFormatter(BaseFormatter):
 
         # Output only the rules that have matches
         matched_rules = set(r.rule_id for r in results)
-        rules_map = {r.id: r for r in list(rules)}
 
         rules = [
             sarif.ReportingDescriptor(
                 id=rule_id,
                 short_description=sarif.MultiformatMessageString(
-                    text=rules_map[rule_id].shortdesc
+                    text=rules[rule_id].shortdesc
                 ),
                 full_description=sarif.MultiformatMessageString(
-                    text=rules_map[rule_id].description
+                    text=rules[rule_id].description
                 ),
                 help_uri=(
-                    rules_map[rule_id].source_url
-                    if rules_map[rule_id]
+                    rules[rule_id].source_url
+                    if rules[rule_id]
                     else "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md"
                 ),
             )

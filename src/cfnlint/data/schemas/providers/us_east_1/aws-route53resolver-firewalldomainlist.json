@@ -1,0 +1,187 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Domains": {
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:*",
+    "ec2:*",
+    "logs:*",
+    "iam:*",
+    "lambda:*",
+    "s3:*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:*",
+    "ec2:*",
+    "logs:*",
+    "iam:*",
+    "lambda:*",
+    "s3:*"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:*",
+    "ec2:*",
+    "logs:*",
+    "iam:*",
+    "lambda:*",
+    "s3:*"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:*",
+    "ec2:*",
+    "logs:*",
+    "iam:*",
+    "lambda:*",
+    "s3:*"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53resolver:*",
+    "ec2:*",
+    "logs:*",
+    "iam:*",
+    "lambda:*",
+    "s3:*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreatorRequestId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainCount": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DomainFileUrl": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Domains": {
+   "$ref": "#/definitions/Domains"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ManagedOwnerName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ModificationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "COMPLETE",
+    "DELETING",
+    "UPDATING",
+    "COMPLETE_IMPORT_FAILED",
+    "IMPORTING",
+    "INACTIVE_OWNER_ACCOUNT_CLOSED"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/DomainCount",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/ManagedOwnerName",
+  "/properties/CreatorRequestId",
+  "/properties/CreationTime",
+  "/properties/ModificationTime"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::FirewallDomainList",
+ "writeOnlyProperties": [
+  "/properties/Domains",
+  "/properties/DomainFileUrl"
+ ]
+}

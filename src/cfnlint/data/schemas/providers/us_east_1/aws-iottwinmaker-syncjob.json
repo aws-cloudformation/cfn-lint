@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/SyncSource",
+  "/properties/SyncRole",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iottwinmaker:CreateSyncJob",
+    "iottwinmaker:GetSyncJob",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteSyncJob",
+    "iottwinmaker:GetSyncJob",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "WorkspaceId": {
+      "$ref": "resource-schema.json#/properties/WorkspaceId",
+      "type": "string"
+     }
+    },
+    "required": [
+     "WorkspaceId"
+    ]
+   },
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListSyncJobs",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetSyncJob",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId",
+  "/properties/SyncSource"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "State": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_\\-0-9]+",
+   "type": "string"
+  },
+  "SyncRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "SyncSource": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "WorkspaceId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime",
+  "/properties/State"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "WorkspaceId",
+  "SyncSource",
+  "SyncRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iottwinmaker",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::SyncJob"
+}

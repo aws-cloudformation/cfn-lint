@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AnalyzerName",
+  "/properties/Type",
+  "/properties/AnalyzerConfiguration"
+ ],
+ "definitions": {
+  "ArchiveRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter",
+    "RuleName"
+   ],
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Contains": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Eq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Exists": {
+     "type": "boolean"
+    },
+    "Neq": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Property"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnusedAccessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "UnusedAccessAge": {
+     "maximum": 180,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "access-analyzer:CreateAnalyzer",
+    "access-analyzer:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "organizations:ListAWSServiceAccessForOrganization",
+    "organizations:ListDelegatedAdministrators"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "access-analyzer:DeleteAnalyzer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:GetAnalyzer",
+    "access-analyzer:ListArchiveRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "access-analyzer:CreateArchiveRule",
+    "access-analyzer:DeleteArchiveRule",
+    "access-analyzer:ListAnalyzers",
+    "access-analyzer:TagResource",
+    "access-analyzer:UntagResource",
+    "access-analyzer:UpdateArchiveRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AnalyzerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "UnusedAccessConfiguration": {
+     "$ref": "#/definitions/UnusedAccessConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AnalyzerName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ArchiveRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ArchiveRule"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Type"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "AnalyzerName": "/AnalyzerName"
+  },
+  "templateUri": "/access-analyzer/home?region=${awsRegion}#/analyzer/${AnalyzerName}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-accessanalyzer.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AccessAnalyzer::Analyzer"
+}

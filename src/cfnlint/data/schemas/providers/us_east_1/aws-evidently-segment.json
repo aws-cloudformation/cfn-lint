@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "evidently:CreateSegment",
+    "evidently:GetSegment",
+    "evidently:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "evidently:DeleteSegment",
+    "evidently:GetSegment",
+    "evidently:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "evidently:ListSegment",
+    "evidently:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "evidently:GetSegment",
+    "evidently:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Pattern": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Evidently::Segment"
+}

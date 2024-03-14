@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/TransitGatewayArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateTransitGatewayPeering",
+    "networkmanager:TagResource",
+    "networkmanager:GetTransitGatewayPeering",
+    "iam:CreateServiceLinkedRole",
+    "ec2:CreateTransitGatewayPeeringAttachment",
+    "ec2:AcceptTransitGatewayPeeringAttachment",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeletePeering",
+    "networkmanager:GetTransitGatewayPeering",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListPeerings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayPeering",
+    "networkmanager:TagResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:GetTransitGatewayPeering",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PeeringId"
+ ],
+ "properties": {
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "PeeringId": {
+   "type": "string"
+  },
+  "PeeringType": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayArn": {
+   "type": "string"
+  },
+  "TransitGatewayPeeringAttachmentId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/PeeringId",
+  "/properties/State",
+  "/properties/PeeringType",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/ResourceArn",
+  "/properties/CreatedAt",
+  "/properties/TransitGatewayPeeringAttachmentId"
+ ],
+ "required": [
+  "CoreNetworkId",
+  "TransitGatewayArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-transitgatewaypeering",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::TransitGatewayPeering"
+}

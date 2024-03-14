@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Base62Id": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^([a-z0-9A-Z]*)$",
+   "type": "string"
+  },
+  "Resource": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "ResourceType": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "fms:PutResourceSet",
+    "fms:BatchAssociateResource",
+    "fms:ListResourceSetResources",
+    "fms:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "fms:DeleteResourceSet"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "fms:ListResourceSets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "fms:GetResourceSet",
+    "fms:ListResourceSetResources",
+    "fms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "fms:PutResourceSet",
+    "fms:BatchAssociateResource",
+    "fms:BatchDisassociateResource",
+    "fms:GetResourceSet",
+    "fms:ListResourceSetResources",
+    "fms:TagResource",
+    "fms:UntagResource",
+    "fms:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 256,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]*)$",
+   "type": "string"
+  },
+  "Id": {
+   "$ref": "#/definitions/Base62Id"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]+)$",
+   "type": "string"
+  },
+  "ResourceTypeList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceType"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Resources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Resource"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "ResourceTypeList"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::FMS::ResourceSet"
+}

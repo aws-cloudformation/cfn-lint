@@ -11,7 +11,10 @@ class ServerlessTransform(CloudFormationLintRule):
 
     id = "E3038"
     shortdesc = "Check if Serverless Resources have Serverless Transform"
-    description = "Check that a template with Serverless Resources also includes the Serverless Transform"
+    description = (
+        "Check that a template with Serverless Resources also includes the Serverless"
+        " Transform"
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources", "transform"]
 

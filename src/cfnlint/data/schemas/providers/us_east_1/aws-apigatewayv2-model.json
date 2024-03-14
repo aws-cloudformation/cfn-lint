@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApiId": {
+      "$ref": "resource-schema.json#/properties/ApiId"
+     }
+    },
+    "required": [
+     "ApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId",
+  "/properties/ModelId"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "ContentType": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "ModelId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Schema": {
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelId"
+ ],
+ "required": [
+  "ApiId",
+  "Schema",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::Model"
+}

@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "InstanceMetadataOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpPutResponseHopLimit": {
+     "type": "integer"
+    },
+    "HttpTokens": {
+     "enum": [
+      "required",
+      "optional"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Logs": {
+     "$ref": "#/definitions/S3Logs"
+    }
+   },
+   "type": "object"
+  },
+  "S3Logs": {
+   "additionalProperties": false,
+   "properties": {
+    "S3BucketName": {
+     "type": "string"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "properties": {
+    "TagKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TagValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iam:GetRole",
+    "iam:GetInstanceProfile",
+    "iam:CreateServiceLinkedRole",
+    "sns:Publish",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetInfrastructureConfiguration",
+    "imagebuilder:CreateInfrastructureConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:UnTagResource",
+    "imagebuilder:GetInfrastructureConfiguration",
+    "imagebuilder:DeleteInfrastructureConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "imagebuilder:ListInfrastructureConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetInfrastructureConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "sns:Publish",
+    "imagebuilder:GetInfrastructureConfiguration",
+    "imagebuilder:UpdateInfrastructureConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "InstanceMetadataOptions": {
+   "$ref": "#/definitions/InstanceMetadataOptions"
+  },
+  "InstanceProfileName": {
+   "type": "string"
+  },
+  "InstanceTypes": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "KeyPair": {
+   "type": "string"
+  },
+  "Logging": {
+   "$ref": "#/definitions/Logging"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ResourceTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SnsTopicArn": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TerminateInstanceOnFailure": {
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "InstanceProfileName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::InfrastructureConfiguration"
+}

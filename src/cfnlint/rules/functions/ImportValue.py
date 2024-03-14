@@ -3,10 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any, Iterator
+
+from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
 
 
-class ImportValue(CloudFormationLintRule):
+class ImportValue(BaseFn):
     """Check if ImportValue values are correct"""
 
     id = "E1016"
@@ -15,54 +18,41 @@ class ImportValue(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html"
     tags = ["functions", "importvalue"]
 
-    def match(self, cfn):
-        matches = []
+    def __init__(self) -> None:
+        super().__init__(
+            "Fn::ImportValue",
+            singular_types,
+            (
+                "Fn::Base64",
+                "Fn::FindInMap",
+                "Fn::If",
+                "Fn::Join",
+                "Fn::Select",
+                "Fn::Sub",
+                "Ref",
+            ),
+        )
+        self.child_rules = {
+            "W6001": None,
+        }
 
-        iv_objs = cfn.search_deep_keys("Fn::ImportValue")
+    def validator(self, validator: Validator) -> Validator:
+        return validator.evolve(
+            context=validator.context.evolve(
+                functions=self.functions,
+                resources={},
+            ),
+        )
 
-        supported_functions = [
-            "Fn::Base64",
-            "Fn::FindInMap",
-            "Fn::If",
-            "Fn::Join",
-            "Fn::Select",
-            "Fn::Split",
-            "Fn::Sub",
-            "Ref",
-        ]
+    def fn_importvalue(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> Iterator[ValidationError]:
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
 
-        unsupported_locations = ["Conditions"]
+        for rule in self.child_rules.values():
+            if rule is None:
+                continue
 
-        for iv_obj in iv_objs:
-            iv_value = iv_obj[-1]
-            tree = iv_obj[:-1]
-            if iv_obj[0] in unsupported_locations:
-                message = "ImportValue cannot be used inside {0} at {1}"
-                matches.append(
-                    RuleMatch(
-                        tree, message.format(iv_obj[0], "/".join(map(str, tree[:-1])))
-                    )
-                )
-            if isinstance(iv_value, dict):
-                if len(iv_value) == 1:
-                    for key, _ in iv_value.items():
-                        if key not in supported_functions:
-                            message = (
-                                "ImportValue should be using supported function for {0}"
-                            )
-                            matches.append(
-                                RuleMatch(
-                                    tree, message.format("/".join(map(str, tree[:-1])))
-                                )
-                            )
-                else:
-                    message = "ImportValue should have one mapping for {0}"
-                    matches.append(
-                        RuleMatch(tree, message.format("/".join(map(str, tree[:-1]))))
-                    )
-            elif not isinstance(iv_value, str):
-                message = "ImportValue should have supported function or string for {0}"
-                matches.append(
-                    RuleMatch(tree, message.format("/".join(map(str, tree))))
-                )
-        return matches
+            yield from rule.validate(validator, s, instance, schema)

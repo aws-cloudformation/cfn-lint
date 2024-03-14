@@ -3,30 +3,49 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.properties.AllowedValue import (
-    AllowedValue,  # pylint: disable=E0401
-)
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
+from cfnlint.rules.resources.properties.AllowedValue import AllowedValue
 
 
-class TestAllowedValue(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AllowedValue()
+    rule.child_rules["W2030"] = ParameterAllowedValue()
+    yield AllowedValue()
 
-    def setUp(self):
-        """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/allowed_values.yaml"
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/allowed_values.yaml", 216
+
+def test_allowed_value(rule, validator):
+    assert len(list(rule.enum(validator, ["foo", "bar"], "foo", {}))) == 0
+    assert len(list(rule.enum(validator, ["foo"], "bar", {}))) == 1
+
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Fn::Sub"]),
         )
+    )
+    errs = list(rule.enum(evolved, ["bar"], "bar", {}))
+    assert len(errs) == 0
+
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Ref"]),
+            value_path=deque(["Parameters", "MyParameter", "Default"]),
+        )
+    )
+    errs = list(rule.enum(evolved, ["foo"], "bar", {}))
+    assert len(errs) == 1
+    assert errs[0].rule.id == ParameterAllowedValue.id
+
+    rule.child_rules["W2030"] = None
+    errs = list(rule.enum(evolved, ["foo"], "bar", {}))
+    assert len(errs) == 0

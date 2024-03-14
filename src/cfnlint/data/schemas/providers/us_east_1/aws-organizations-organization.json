@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "handlers": {
+  "create": {
+   "permissions": [
+    "organizations:CreateOrganization",
+    "organizations:DescribeOrganization",
+    "iam:CreateServiceLinkedRole",
+    "organizations:ListRoots"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:DeleteOrganization",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "organizations:DescribeOrganization",
+    "organizations:ListRoots"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws.*:organizations::\\d{12}:organization\\/o-[a-z0-9]{10,32}",
+   "type": "string"
+  },
+  "FeatureSet": {
+   "default": "ALL",
+   "enum": [
+    "ALL",
+    "CONSOLIDATED_BILLING"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^o-[a-z0-9]{10,32}$",
+   "type": "string"
+  },
+  "ManagementAccountArn": {
+   "pattern": "^arn:aws.*:organizations::\\d{12}:account\\/o-[a-z0-9]{10,32}\\/\\d{12}",
+   "type": "string"
+  },
+  "ManagementAccountEmail": {
+   "maxLength": 64,
+   "minLength": 6,
+   "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+   "type": "string"
+  },
+  "ManagementAccountId": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "RootId": {
+   "maxLength": 64,
+   "pattern": "^r-[0-9a-z]{4,32}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ManagementAccountArn",
+  "/properties/ManagementAccountId",
+  "/properties/ManagementAccountEmail",
+  "/properties/RootId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Organizations::Organization"
+}

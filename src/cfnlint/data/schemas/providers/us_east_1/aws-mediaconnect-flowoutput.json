@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "mediaconnect:AddFlowOutputs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:RemoveFlowOutput"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:UpdateFlowOutput"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OutputArn"
+ ],
+ "properties": {
+  "CidrAllowList": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Destination": {
+   "type": "string"
+  },
+  "Encryption": {
+   "$ref": "#/definitions/Encryption"
+  },
+  "FlowArn": {
+   "type": "string"
+  },
+  "MaxLatency": {
+   "type": "integer"
+  },
+  "MinLatency": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OutputArn": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "enum": [
+    "zixi-push",
+    "rtp-fec",
+    "rtp",
+    "zixi-pull",
+    "rist",
+    "fujitsu-qos",
+    "srt-listener",
+    "srt-caller"
+   ],
+   "type": "string"
+  },
+  "RemoteId": {
+   "type": "string"
+  },
+  "SmoothingLatency": {
+   "type": "integer"
+  },
+  "StreamId": {
+   "type": "string"
+  },
+  "VpcInterfaceAttachment": {
+   "$ref": "#/definitions/VpcInterfaceAttachment"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OutputArn"
+ ],
+ "required": [
+  "FlowArn",
+  "Protocol"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowOutput"
+}

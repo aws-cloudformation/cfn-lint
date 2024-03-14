@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Egress",
+  "/properties/RuleNumber",
+  "/properties/NetworkAclId"
+ ],
+ "definitions": {
+  "Icmp": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "integer"
+    },
+    "Type": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "From": {
+     "type": "integer"
+    },
+    "To": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CidrBlock": {
+   "type": "string"
+  },
+  "Egress": {
+   "type": "boolean"
+  },
+  "Icmp": {
+   "$ref": "#/definitions/Icmp"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Ipv6CidrBlock": {
+   "type": "string"
+  },
+  "NetworkAclId": {
+   "type": "string"
+  },
+  "PortRange": {
+   "$ref": "#/definitions/PortRange"
+  },
+  "Protocol": {
+   "type": "integer"
+  },
+  "RuleAction": {
+   "enum": [
+    "allow",
+    "deny"
+   ],
+   "type": "string"
+  },
+  "RuleNumber": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "NetworkAclId",
+  "RuleAction",
+  "RuleNumber",
+  "Protocol"
+ ],
+ "requiredXor": [
+  "Ipv6CidrBlock",
+  "CidrBlock"
+ ],
+ "typeName": "AWS::EC2::NetworkAclEntry"
+}

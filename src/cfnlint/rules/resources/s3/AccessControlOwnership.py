@@ -52,7 +52,10 @@ class AccessControlOwnership(CloudFormationLintRule):
             matches.append(
                 RuleMatch(
                     path + ["AccessControl"],
-                    "A bucket with AccessControl set should also have OwnershipControl configured",
+                    (
+                        "A bucket with AccessControl set should also have "
+                        "OwnershipControl configured"
+                    ),
                 )
             )
 

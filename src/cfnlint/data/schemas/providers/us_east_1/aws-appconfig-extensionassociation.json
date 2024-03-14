@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier",
+  "/properties/ExtensionVersionNumber",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appconfig:CreateExtensionAssociation",
+    "appconfig:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appconfig:DeleteExtensionAssociation",
+    "appconfig:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appconfig:ListExtensionAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appconfig:GetExtensionAssociation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appconfig:UpdateExtensionAssociation",
+    "appconfig:TagResource",
+    "appconfig:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ExtensionArn": {
+   "type": "string"
+  },
+  "ExtensionIdentifier": {
+   "type": "string"
+  },
+  "ExtensionVersionNumber": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ResourceArn",
+  "/properties/ExtensionArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::ExtensionAssociation",
+ "writeOnlyProperties": [
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

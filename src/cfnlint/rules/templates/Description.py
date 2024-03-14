@@ -19,7 +19,7 @@ class Description(CloudFormationLintRule):
         matches = []
 
         description = cfn.template.get("Description")
-        if not "Description" in cfn.template:
+        if "Description" not in cfn.template:
             return matches
 
         if not isinstance(description, str):

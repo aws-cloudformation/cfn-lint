@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceProfileName",
+  "/properties/Path"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateInstanceProfile",
+    "iam:PassRole",
+    "iam:AddRoleToInstanceProfile",
+    "iam:GetInstanceProfile"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:GetInstanceProfile",
+    "iam:RemoveRoleFromInstanceProfile",
+    "iam:DeleteInstanceProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListInstanceProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetInstanceProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iam:RemoveRoleFromInstanceProfile",
+    "iam:AddRoleToInstanceProfile",
+    "iam:GetInstanceProfile"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceProfileName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "InstanceProfileName": {
+   "type": "string"
+  },
+  "Path": {
+   "type": "string"
+  },
+  "Roles": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "[a-zA-Z0-9+=,.@\\-_]+",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Roles"
+ ],
+ "taggable": false,
+ "typeName": "AWS::IAM::InstanceProfile"
+}

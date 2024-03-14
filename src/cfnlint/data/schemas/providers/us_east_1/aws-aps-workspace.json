@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn"
+ ],
+ "definitions": {
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "maxLength": 512,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aps:CreateWorkspace",
+    "aps:DescribeWorkspace",
+    "aps:TagResource",
+    "aps:CreateAlertManagerDefinition",
+    "aps:DescribeAlertManagerDefinition",
+    "aps:CreateLoggingConfiguration",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:PutResourcePolicy",
+    "kms:CreateGrant",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aps:DeleteWorkspace",
+    "aps:DescribeWorkspace",
+    "aps:DeleteAlertManagerDefinition",
+    "aps:DeleteLoggingConfiguration",
+    "logs:DeleteLogDelivery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aps:ListWorkspaces",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aps:DescribeWorkspace",
+    "aps:ListTagsForResource",
+    "aps:DescribeAlertManagerDefinition",
+    "aps:DescribeLoggingConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aps:UpdateWorkspaceAlias",
+    "aps:DescribeWorkspace",
+    "aps:TagResource",
+    "aps:UntagResource",
+    "aps:ListTagsForResource",
+    "aps:CreateAlertManagerDefinition",
+    "aps:PutAlertManagerDefinition",
+    "aps:DeleteAlertManagerDefinition",
+    "aps:CreateLoggingConfiguration",
+    "aps:DescribeLoggingConfiguration",
+    "aps:UpdateLoggingConfiguration",
+    "aps:DeleteLoggingConfiguration",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:DeleteLogDelivery",
+    "logs:PutResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AlertManagerDefinition": {
+   "type": "string"
+  },
+  "Alias": {
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z]*:kms:[-a-z0-9]+:[0-9]{12}:key/.+$",
+   "type": "string"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "PrometheusEndpoint": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkspaceId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/Arn",
+  "/properties/PrometheusEndpoint"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::Workspace"
+}

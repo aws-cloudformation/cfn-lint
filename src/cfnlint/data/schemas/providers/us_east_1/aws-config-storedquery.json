@@ -1,0 +1,122 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/QueryName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutStoredQuery",
+    "config:GetStoredQuery",
+    "config:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteStoredQuery",
+    "config:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:ListStoredQueries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:GetStoredQuery",
+    "config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutStoredQuery",
+    "config:GetStoredQuery",
+    "config:TagResource",
+    "config:UntagResource",
+    "config:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/QueryName"
+ ],
+ "properties": {
+  "QueryArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueryDescription": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "QueryExpression": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "QueryId": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "QueryName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/QueryId",
+  "/properties/QueryArn"
+ ],
+ "required": [
+  "QueryName",
+  "QueryExpression"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Config::StoredQuery"
+}

@@ -1,0 +1,438 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MeshName",
+  "/properties/VirtualGatewayName",
+  "/properties/MeshOwner",
+  "/properties/GatewayRouteName"
+ ],
+ "definitions": {
+  "GatewayRouteHostnameMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    },
+    "Suffix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayRouteHostnameRewrite": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultTargetHostname": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayRouteMetadataMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Range": {
+     "$ref": "#/definitions/GatewayRouteRangeMatch"
+    },
+    "Regex": {
+     "type": "string"
+    },
+    "Suffix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayRouteRangeMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "type": "integer"
+    },
+    "Start": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Start",
+    "End"
+   ],
+   "type": "object"
+  },
+  "GatewayRouteSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "GrpcRoute": {
+     "$ref": "#/definitions/GrpcGatewayRoute"
+    },
+    "Http2Route": {
+     "$ref": "#/definitions/HttpGatewayRoute"
+    },
+    "HttpRoute": {
+     "$ref": "#/definitions/HttpGatewayRoute"
+    },
+    "Priority": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayRouteTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "integer"
+    },
+    "VirtualService": {
+     "$ref": "#/definitions/GatewayRouteVirtualService"
+    }
+   },
+   "required": [
+    "VirtualService"
+   ],
+   "type": "object"
+  },
+  "GatewayRouteVirtualService": {
+   "additionalProperties": false,
+   "properties": {
+    "VirtualServiceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VirtualServiceName"
+   ],
+   "type": "object"
+  },
+  "GrpcGatewayRoute": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/GrpcGatewayRouteAction"
+    },
+    "Match": {
+     "$ref": "#/definitions/GrpcGatewayRouteMatch"
+    }
+   },
+   "required": [
+    "Action",
+    "Match"
+   ],
+   "type": "object"
+  },
+  "GrpcGatewayRouteAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Rewrite": {
+     "$ref": "#/definitions/GrpcGatewayRouteRewrite"
+    },
+    "Target": {
+     "$ref": "#/definitions/GatewayRouteTarget"
+    }
+   },
+   "required": [
+    "Target"
+   ],
+   "type": "object"
+  },
+  "GrpcGatewayRouteMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "$ref": "#/definitions/GatewayRouteHostnameMatch"
+    },
+    "Metadata": {
+     "items": {
+      "$ref": "#/definitions/GrpcGatewayRouteMetadata"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "ServiceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GrpcGatewayRouteMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Invert": {
+     "type": "boolean"
+    },
+    "Match": {
+     "$ref": "#/definitions/GatewayRouteMetadataMatch"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "GrpcGatewayRouteRewrite": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "$ref": "#/definitions/GatewayRouteHostnameRewrite"
+    }
+   },
+   "type": "object"
+  },
+  "HttpGatewayRoute": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/HttpGatewayRouteAction"
+    },
+    "Match": {
+     "$ref": "#/definitions/HttpGatewayRouteMatch"
+    }
+   },
+   "required": [
+    "Action",
+    "Match"
+   ],
+   "type": "object"
+  },
+  "HttpGatewayRouteAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Rewrite": {
+     "$ref": "#/definitions/HttpGatewayRouteRewrite"
+    },
+    "Target": {
+     "$ref": "#/definitions/GatewayRouteTarget"
+    }
+   },
+   "required": [
+    "Target"
+   ],
+   "type": "object"
+  },
+  "HttpGatewayRouteHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Invert": {
+     "type": "boolean"
+    },
+    "Match": {
+     "$ref": "#/definitions/HttpGatewayRouteHeaderMatch"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "HttpGatewayRouteHeaderMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Range": {
+     "$ref": "#/definitions/GatewayRouteRangeMatch"
+    },
+    "Regex": {
+     "type": "string"
+    },
+    "Suffix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpGatewayRouteMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Headers": {
+     "items": {
+      "$ref": "#/definitions/HttpGatewayRouteHeader"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Hostname": {
+     "$ref": "#/definitions/GatewayRouteHostnameMatch"
+    },
+    "Method": {
+     "type": "string"
+    },
+    "Path": {
+     "$ref": "#/definitions/HttpPathMatch"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "QueryParameters": {
+     "items": {
+      "$ref": "#/definitions/QueryParameter"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "HttpGatewayRoutePathRewrite": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpGatewayRoutePrefixRewrite": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultPrefix": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpGatewayRouteRewrite": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "$ref": "#/definitions/GatewayRouteHostnameRewrite"
+    },
+    "Path": {
+     "$ref": "#/definitions/HttpGatewayRoutePathRewrite"
+    },
+    "Prefix": {
+     "$ref": "#/definitions/HttpGatewayRoutePrefixRewrite"
+    }
+   },
+   "type": "object"
+  },
+  "HttpPathMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    },
+    "Regex": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HttpQueryParameterMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QueryParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Match": {
+     "$ref": "#/definitions/HttpQueryParameterMatch"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "GatewayRouteName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MeshName": {
+   "type": "string"
+  },
+  "MeshOwner": {
+   "type": "string"
+  },
+  "ResourceOwner": {
+   "type": "string"
+  },
+  "Spec": {
+   "$ref": "#/definitions/GatewayRouteSpec"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Uid": {
+   "type": "string"
+  },
+  "VirtualGatewayName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceOwner",
+  "/properties/Arn",
+  "/properties/Uid"
+ ],
+ "required": [
+  "MeshName",
+  "VirtualGatewayName",
+  "Spec"
+ ],
+ "typeName": "AWS::AppMesh::GatewayRoute"
+}

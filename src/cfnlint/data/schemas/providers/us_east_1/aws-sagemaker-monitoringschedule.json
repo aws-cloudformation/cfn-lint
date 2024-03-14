@@ -1,0 +1,656 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MonitoringScheduleName"
+ ],
+ "definitions": {
+  "BaselineConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConstraintsResource": {
+     "$ref": "#/definitions/ConstraintsResource"
+    },
+    "StatisticsResource": {
+     "$ref": "#/definitions/StatisticsResource"
+    }
+   },
+   "type": "object"
+  },
+  "BatchTransformInput": {
+   "additionalProperties": false,
+   "properties": {
+    "DataCapturedDestinationS3Uri": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    },
+    "DatasetFormat": {
+     "$ref": "#/definitions/DatasetFormat"
+    },
+    "ExcludeFeaturesAttribute": {
+     "maxLength": 100,
+     "type": "string"
+    },
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3DataDistributionType": {
+     "enum": [
+      "FullyReplicated",
+      "ShardedByS3Key"
+     ],
+     "type": "string"
+    },
+    "S3InputMode": {
+     "enum": [
+      "Pipe",
+      "File"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataCapturedDestinationS3Uri",
+    "DatasetFormat",
+    "LocalPath"
+   ],
+   "type": "object"
+  },
+  "ClusterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceCount": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "VolumeKmsKeyId": {
+     "maximum": 2048,
+     "minimum": 1,
+     "type": "string"
+    },
+    "VolumeSizeInGB": {
+     "maximum": 16384,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "InstanceCount",
+    "InstanceType",
+    "VolumeSizeInGB"
+   ],
+   "type": "object"
+  },
+  "ConstraintsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Uri": {
+     "$ref": "#/definitions/S3Uri"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerArgument": {
+   "additionalProperties": false,
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Csv": {
+   "properties": {
+    "Header": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DataAnalysisTimeString": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^.?P.*",
+   "type": "string"
+  },
+  "DatasetFormat": {
+   "properties": {
+    "Csv": {
+     "$ref": "#/definitions/Csv"
+    },
+    "Json": {
+     "$ref": "#/definitions/Json"
+    },
+    "Parquet": {
+     "$ref": "#/definitions/Parquet"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointInput": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointName": {
+     "$ref": "#/definitions/EndpointName"
+    },
+    "ExcludeFeaturesAttribute": {
+     "maxLength": 100,
+     "type": "string"
+    },
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3DataDistributionType": {
+     "enum": [
+      "FullyReplicated",
+      "ShardedByS3Key"
+     ],
+     "type": "string"
+    },
+    "S3InputMode": {
+     "enum": [
+      "Pipe",
+      "File"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointName",
+    "LocalPath"
+   ],
+   "type": "object"
+  },
+  "EndpointName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "Json": {
+   "properties": {
+    "Line": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringAppSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerArguments": {
+     "items": {
+      "$ref": "#/definitions/ContainerArgument"
+     },
+     "maxItems": 50,
+     "type": "array"
+    },
+    "ContainerEntrypoint": {
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "PostAnalyticsProcessorSourceUri": {
+     "$ref": "#/definitions/S3Uri"
+    },
+    "RecordPreprocessorSourceUri": {
+     "$ref": "#/definitions/S3Uri"
+    }
+   },
+   "required": [
+    "ImageUri"
+   ],
+   "type": "object"
+  },
+  "MonitoringExecutionSummary": {
+   "properties": {
+    "CreationTime": {
+     "type": "string"
+    },
+    "EndpointName": {
+     "$ref": "#/definitions/EndpointName"
+    },
+    "FailureReason": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "LastModifiedTime": {
+     "type": "string"
+    },
+    "MonitoringExecutionStatus": {
+     "enum": [
+      "Pending",
+      "Completed",
+      "CompletedWithViolations",
+      "InProgress",
+      "Failed",
+      "Stopping",
+      "Stopped"
+     ],
+     "type": "string"
+    },
+    "MonitoringScheduleName": {
+     "$ref": "#/definitions/MonitoringScheduleName"
+    },
+    "ProcessingJobArn": {
+     "maxLength": 256,
+     "pattern": "aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:processing-job/.*",
+     "type": "string"
+    },
+    "ScheduledTime": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CreationTime",
+    "LastModifiedTime",
+    "MonitoringExecutionStatus",
+    "MonitoringScheduleName",
+    "ScheduledTime"
+   ],
+   "type": "object"
+  },
+  "MonitoringInput": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchTransformInput": {
+     "$ref": "#/definitions/BatchTransformInput"
+    },
+    "EndpointInput": {
+     "$ref": "#/definitions/EndpointInput"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringInputs": {
+   "additionalProperties": false,
+   "items": {
+    "$ref": "#/definitions/MonitoringInput"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "MonitoringJobDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "BaselineConfig": {
+     "$ref": "#/definitions/BaselineConfig"
+    },
+    "Environment": {
+     "patternProperties": {
+      "[\\S\\s]*": {
+       "maxLength": 256,
+       "type": "string"
+      },
+      "[a-zA-Z_][a-zA-Z0-9_]*": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "MonitoringAppSpecification": {
+     "$ref": "#/definitions/MonitoringAppSpecification"
+    },
+    "MonitoringInputs": {
+     "$ref": "#/definitions/MonitoringInputs"
+    },
+    "MonitoringOutputConfig": {
+     "$ref": "#/definitions/MonitoringOutputConfig"
+    },
+    "MonitoringResources": {
+     "$ref": "#/definitions/MonitoringResources"
+    },
+    "NetworkConfig": {
+     "$ref": "#/definitions/NetworkConfig"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    },
+    "StoppingCondition": {
+     "$ref": "#/definitions/StoppingCondition"
+    }
+   },
+   "required": [
+    "MonitoringAppSpecification",
+    "MonitoringInputs",
+    "MonitoringOutputConfig",
+    "MonitoringResources",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "MonitoringOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Output": {
+     "$ref": "#/definitions/S3Output"
+    }
+   },
+   "required": [
+    "S3Output"
+   ],
+   "type": "object"
+  },
+  "MonitoringOutputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "MonitoringOutputs": {
+     "items": {
+      "$ref": "#/definitions/MonitoringOutput"
+     },
+     "maxLength": 1,
+     "minLength": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "MonitoringOutputs"
+   ],
+   "type": "object"
+  },
+  "MonitoringResources": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterConfig": {
+     "$ref": "#/definitions/ClusterConfig"
+    }
+   },
+   "required": [
+    "ClusterConfig"
+   ],
+   "type": "object"
+  },
+  "MonitoringScheduleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MonitoringJobDefinition": {
+     "$ref": "#/definitions/MonitoringJobDefinition"
+    },
+    "MonitoringJobDefinitionName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+     "type": "string"
+    },
+    "MonitoringType": {
+     "$ref": "#/definitions/MonitoringType"
+    },
+    "ScheduleConfig": {
+     "$ref": "#/definitions/ScheduleConfig"
+    }
+   },
+   "type": "object"
+  },
+  "MonitoringScheduleName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "MonitoringType": {
+   "enum": [
+    "DataQuality",
+    "ModelQuality",
+    "ModelBias",
+    "ModelExplainability"
+   ],
+   "type": "string"
+  },
+  "NetworkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableInterContainerTrafficEncryption": {
+     "type": "boolean"
+    },
+    "EnableNetworkIsolation": {
+     "type": "boolean"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Parquet": {
+   "type": "boolean"
+  },
+  "S3Output": {
+   "additionalProperties": false,
+   "properties": {
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3UploadMode": {
+     "enum": [
+      "Continuous",
+      "EndOfJob"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LocalPath",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "S3Uri": {
+   "maxLength": 1024,
+   "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+   "type": "string"
+  },
+  "ScheduleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataAnalysisEndTime": {
+     "$ref": "#/definitions/DataAnalysisTimeString"
+    },
+    "DataAnalysisStartTime": {
+     "$ref": "#/definitions/DataAnalysisTimeString"
+    },
+    "ScheduleExpression": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduleExpression"
+   ],
+   "type": "object"
+  },
+  "StatisticsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Uri": {
+     "$ref": "#/definitions/S3Uri"
+    }
+   },
+   "type": "object"
+  },
+  "StoppingCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRuntimeInSeconds": {
+     "maximum": 86400,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxRuntimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Subnets": {
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "Subnets"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateMonitoringSchedule",
+    "sagemaker:DescribeMonitoringSchedule",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteMonitoringSchedule",
+    "sagemaker:DescribeMonitoringSchedule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListMonitoringSchedule"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeMonitoringSchedule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateMonitoringSchedule",
+    "sagemaker:DescribeMonitoringSchedule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MonitoringScheduleArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "EndpointName": {
+   "$ref": "#/definitions/EndpointName"
+  },
+  "FailureReason": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "LastMonitoringExecutionSummary": {
+   "$ref": "#/definitions/MonitoringExecutionSummary"
+  },
+  "MonitoringScheduleArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MonitoringScheduleConfig": {
+   "$ref": "#/definitions/MonitoringScheduleConfig"
+  },
+  "MonitoringScheduleName": {
+   "$ref": "#/definitions/MonitoringScheduleName"
+  },
+  "MonitoringScheduleStatus": {
+   "enum": [
+    "Pending",
+    "Failed",
+    "Scheduled",
+    "Stopped"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MonitoringScheduleArn",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "MonitoringScheduleConfig",
+  "MonitoringScheduleName"
+ ],
+ "typeName": "AWS::SageMaker::MonitoringSchedule"
+}

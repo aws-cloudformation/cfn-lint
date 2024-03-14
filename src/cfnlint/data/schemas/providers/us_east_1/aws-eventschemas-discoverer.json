@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceArn"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "schemas:CreateDiscoverer",
+    "schemas:DescribeDiscoverer",
+    "schemas:TagResource",
+    "events:PutRule",
+    "events:PutTargets",
+    "events:EnableRule",
+    "events:ListTargetsByRule",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "schemas:DescribeDiscoverer",
+    "schemas:DeleteDiscoverer",
+    "events:DeleteRule",
+    "events:DisableRule",
+    "events:RemoveTargets"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "schemas:ListDiscoverers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "schemas:DescribeDiscoverer"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "schemas:DescribeDiscoverer",
+    "schemas:UpdateDiscoverer",
+    "schemas:TagResource",
+    "schemas:UntagResource",
+    "schemas:ListTagsForResource",
+    "events:PutTargets",
+    "events:PutRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DiscovererArn"
+ ],
+ "properties": {
+  "CrossAccount": {
+   "default": true,
+   "type": "boolean"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DiscovererArn": {
+   "type": "string"
+  },
+  "DiscovererId": {
+   "type": "string"
+  },
+  "SourceArn": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DiscovererArn",
+  "/properties/DiscovererId",
+  "/properties/State"
+ ],
+ "required": [
+  "SourceArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EventSchemas::Discoverer"
+}

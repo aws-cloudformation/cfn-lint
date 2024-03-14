@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneName",
+  "/properties/Name",
+  "/properties/HostedZoneId"
+ ],
+ "definitions": {
+  "AliasTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "DNSName": {
+     "type": "string"
+    },
+    "EvaluateTargetHealth": {
+     "type": "boolean"
+    },
+    "HostedZoneId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostedZoneId",
+    "DNSName"
+   ],
+   "type": "object"
+  },
+  "CidrRoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionId": {
+     "type": "string"
+    },
+    "LocationName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CollectionId",
+    "LocationName"
+   ],
+   "type": "object"
+  },
+  "Coordinates": {
+   "additionalProperties": false,
+   "properties": {
+    "Latitude": {
+     "type": "string"
+    },
+    "Longitude": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Latitude",
+    "Longitude"
+   ],
+   "type": "object"
+  },
+  "GeoLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "ContinentCode": {
+     "type": "string"
+    },
+    "CountryCode": {
+     "type": "string"
+    },
+    "SubdivisionCode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GeoProximityLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "AWSRegion": {
+     "type": "string"
+    },
+    "Bias": {
+     "type": "integer"
+    },
+    "Coordinates": {
+     "$ref": "#/definitions/Coordinates"
+    },
+    "LocalZoneGroup": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AliasTarget": {
+   "$ref": "#/definitions/AliasTarget"
+  },
+  "CidrRoutingConfig": {
+   "$ref": "#/definitions/CidrRoutingConfig"
+  },
+  "Comment": {
+   "type": "string"
+  },
+  "Failover": {
+   "type": "string"
+  },
+  "GeoLocation": {
+   "$ref": "#/definitions/GeoLocation"
+  },
+  "GeoProximityLocation": {
+   "$ref": "#/definitions/GeoProximityLocation"
+  },
+  "HealthCheckId": {
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "type": "string"
+  },
+  "HostedZoneName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MultiValueAnswer": {
+   "type": "boolean"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Region": {
+   "type": "string"
+  },
+  "ResourceRecords": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SetIdentifier": {
+   "type": "string"
+  },
+  "TTL": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "Weight": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Type",
+  "Name"
+ ],
+ "requiredXor": [
+  "HostedZoneId",
+  "HostedZoneName"
+ ],
+ "typeName": "AWS::Route53::RecordSet"
+}

@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "Priority": {
+     "type": "integer"
+    },
+    "RuleId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Priority",
+    "RuleId"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DefaultAction": {
+   "$ref": "#/definitions/Action"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DefaultAction",
+  "MetricName",
+  "Name"
+ ],
+ "typeName": "AWS::WAFRegional::WebACL"
+}

@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resolverdnssec:CreateConfig",
+    "route53resolver:UpdateResolverDnssecConfig",
+    "route53resolver:GetResolverDnssecConfig",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resolverdnssec:DeleteConfig",
+    "route53resolver:UpdateResolverDnssecConfig",
+    "route53resolver:ListResolverDnssecConfigs",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resolverdnssec:ListConfig",
+    "route53resolver:ListResolverDnssecConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resolverdnssec:GetConfig",
+    "route53resolver:ListResolverDnssecConfigs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OwnerId": {
+   "maxLength": 32,
+   "minLength": 12,
+   "type": "string"
+  },
+  "ResourceId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ValidationStatus": {
+   "enum": [
+    "ENABLING",
+    "ENABLED",
+    "DISABLING",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerId",
+  "/properties/Id",
+  "/properties/ValidationStatus"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53Resolver::ResolverDNSSECConfig"
+}

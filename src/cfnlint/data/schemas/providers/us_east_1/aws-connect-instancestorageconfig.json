@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/ResourceType"
+ ],
+ "definitions": {
+  "AssociationId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-a-z0-9]*$",
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EncryptionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/EncryptionType"
+    },
+    "KeyId": {
+     "$ref": "#/definitions/KeyId"
+    }
+   },
+   "required": [
+    "EncryptionType",
+    "KeyId"
+   ],
+   "type": "object"
+  },
+  "EncryptionType": {
+   "enum": [
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "FirehoseDeliveryStreamArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:firehose:[-a-z0-9]*:[0-9]{12}:deliverystream/[-a-zA-Z0-9_.]*$",
+   "type": "string"
+  },
+  "Hours": {
+   "type": "number"
+  },
+  "InstanceStorageResourceType": {
+   "enum": [
+    "CHAT_TRANSCRIPTS",
+    "CALL_RECORDINGS",
+    "SCHEDULED_REPORTS",
+    "MEDIA_STREAMS",
+    "CONTACT_TRACE_RECORDS",
+    "AGENT_EVENTS"
+   ],
+   "type": "string"
+  },
+  "KeyId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KinesisFirehoseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FirehoseArn": {
+     "$ref": "#/definitions/FirehoseDeliveryStreamArn"
+    }
+   },
+   "required": [
+    "FirehoseArn"
+   ],
+   "type": "object"
+  },
+  "KinesisStreamArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:kinesis:[-a-z0-9]*:[0-9]{12}:stream/[-a-zA-Z0-9_.]*$",
+   "type": "string"
+  },
+  "KinesisStreamConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamArn": {
+     "$ref": "#/definitions/KinesisStreamArn"
+    }
+   },
+   "required": [
+    "StreamArn"
+   ],
+   "type": "object"
+  },
+  "KinesisVideoStreamConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionConfig": {
+     "$ref": "#/definitions/EncryptionConfig"
+    },
+    "Prefix": {
+     "$ref": "#/definitions/Prefix"
+    },
+    "RetentionPeriodHours": {
+     "$ref": "#/definitions/Hours"
+    }
+   },
+   "required": [
+    "Prefix",
+    "RetentionPeriodHours",
+    "EncryptionConfig"
+   ],
+   "type": "object"
+  },
+  "Prefix": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "S3Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "$ref": "#/definitions/BucketName"
+    },
+    "BucketPrefix": {
+     "$ref": "#/definitions/Prefix"
+    },
+    "EncryptionConfig": {
+     "$ref": "#/definitions/EncryptionConfig"
+    }
+   },
+   "required": [
+    "BucketName",
+    "BucketPrefix"
+   ],
+   "type": "object"
+  },
+  "StorageType": {
+   "enum": [
+    "S3",
+    "KINESIS_VIDEO_STREAM",
+    "KINESIS_STREAM",
+    "KINESIS_FIREHOSE"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:AssociateInstanceStorageConfig",
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "s3:GetBucketAcl",
+    "s3:GetBucketLocation",
+    "iam:PutRolePolicy",
+    "kinesis:DescribeStream",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "firehose:DescribeDeliveryStream"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DisassociateInstanceStorageConfig",
+    "connect:DescribeInstance",
+    "s3:GetBucketAcl",
+    "s3:GetBucketLocation",
+    "kms:RetireGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "connect:DescribeInstance",
+    "connect:ListInstanceStorageConfigs",
+    "ds:DescribeDirectories"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeInstanceStorageConfig",
+    "connect:ListInstanceStorageConfigs",
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "s3:GetBucketAcl",
+    "s3:GetBucketLocation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateInstanceStorageConfig",
+    "ds:DescribeDirectories",
+    "s3:GetBucketAcl",
+    "s3:GetBucketLocation",
+    "kinesis:DescribeStream",
+    "iam:PutRolePolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:RetireGrant",
+    "firehose:DescribeDeliveryStream"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/AssociationId",
+  "/properties/ResourceType"
+ ],
+ "properties": {
+  "AssociationId": {
+   "$ref": "#/definitions/AssociationId"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "KinesisFirehoseConfig": {
+   "$ref": "#/definitions/KinesisFirehoseConfig"
+  },
+  "KinesisStreamConfig": {
+   "$ref": "#/definitions/KinesisStreamConfig"
+  },
+  "KinesisVideoStreamConfig": {
+   "$ref": "#/definitions/KinesisVideoStreamConfig"
+  },
+  "ResourceType": {
+   "$ref": "#/definitions/InstanceStorageResourceType"
+  },
+  "S3Config": {
+   "$ref": "#/definitions/S3Config"
+  },
+  "StorageType": {
+   "$ref": "#/definitions/StorageType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId"
+ ],
+ "required": [
+  "InstanceArn",
+  "ResourceType",
+  "StorageType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::InstanceStorageConfig"
+}

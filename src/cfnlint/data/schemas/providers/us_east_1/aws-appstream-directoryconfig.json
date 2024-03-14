@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryName"
+ ],
+ "definitions": {
+  "CertificateBasedAuthProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateAuthorityArn": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceAccountCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountName": {
+     "type": "string"
+    },
+    "AccountPassword": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccountName",
+    "AccountPassword"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appstream:CreateDirectoryConfig",
+    "appstream:DeleteDirectoryConfig",
+    "appstream:DescribeDirectoryConfigs",
+    "appstream:UpdateDirectoryConfig",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:CreateDirectoryConfig",
+    "appstream:DeleteDirectoryConfig",
+    "appstream:DescribeDirectoryConfigs",
+    "appstream:UpdateDirectoryConfig",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appstream:CreateDirectoryConfig",
+    "appstream:DeleteDirectoryConfig",
+    "appstream:DescribeDirectoryConfigs",
+    "appstream:UpdateDirectoryConfig",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:CreateDirectoryConfig",
+    "appstream:DeleteDirectoryConfig",
+    "appstream:DescribeDirectoryConfigs",
+    "appstream:UpdateDirectoryConfig",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appstream:CreateDirectoryConfig",
+    "appstream:DeleteDirectoryConfig",
+    "appstream:DescribeDirectoryConfigs",
+    "appstream:UpdateDirectoryConfig",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteServiceLinkedRole",
+    "iam:GetServiceLinkedRoleDeletionStatus"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DirectoryName"
+ ],
+ "properties": {
+  "CertificateBasedAuthProperties": {
+   "$ref": "#/definitions/CertificateBasedAuthProperties"
+  },
+  "DirectoryName": {
+   "type": "string"
+  },
+  "OrganizationalUnitDistinguishedNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ServiceAccountCredentials": {
+   "$ref": "#/definitions/ServiceAccountCredentials"
+  }
+ },
+ "required": [
+  "DirectoryName",
+  "OrganizationalUnitDistinguishedNames",
+  "ServiceAccountCredentials"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AppStream::DirectoryConfig",
+ "writeOnlyProperties": [
+  "/properties/ServiceAccountCredentials/AccountPassword"
+ ]
+}

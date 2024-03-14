@@ -1,0 +1,751 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MeshName",
+  "/properties/VirtualNodeName",
+  "/properties/MeshOwner"
+ ],
+ "definitions": {
+  "AccessLog": {
+   "additionalProperties": false,
+   "properties": {
+    "File": {
+     "$ref": "#/definitions/FileAccessLog"
+    }
+   },
+   "type": "object"
+  },
+  "AwsCloudMapInstanceAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "AwsCloudMapServiceDiscovery": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "items": {
+      "$ref": "#/definitions/AwsCloudMapInstanceAttribute"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "IpPreference": {
+     "type": "string"
+    },
+    "NamespaceName": {
+     "type": "string"
+    },
+    "ServiceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "NamespaceName",
+    "ServiceName"
+   ],
+   "type": "object"
+  },
+  "Backend": {
+   "additionalProperties": false,
+   "properties": {
+    "VirtualService": {
+     "$ref": "#/definitions/VirtualServiceBackend"
+    }
+   },
+   "type": "object"
+  },
+  "BackendDefaults": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientPolicy": {
+     "$ref": "#/definitions/ClientPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "ClientPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "TLS": {
+     "$ref": "#/definitions/ClientPolicyTls"
+    }
+   },
+   "type": "object"
+  },
+  "ClientPolicyTls": {
+   "additionalProperties": false,
+   "properties": {
+    "Certificate": {
+     "$ref": "#/definitions/ClientTlsCertificate"
+    },
+    "Enforce": {
+     "type": "boolean"
+    },
+    "Ports": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Validation": {
+     "$ref": "#/definitions/TlsValidationContext"
+    }
+   },
+   "required": [
+    "Validation"
+   ],
+   "type": "object"
+  },
+  "ClientTlsCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "File": {
+     "$ref": "#/definitions/ListenerTlsFileCertificate"
+    },
+    "SDS": {
+     "$ref": "#/definitions/ListenerTlsSdsCertificate"
+    }
+   },
+   "type": "object"
+  },
+  "DnsServiceDiscovery": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "type": "string"
+    },
+    "IpPreference": {
+     "type": "string"
+    },
+    "ResponseType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Hostname"
+   ],
+   "type": "object"
+  },
+  "Duration": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "FileAccessLog": {
+   "additionalProperties": false,
+   "properties": {
+    "Format": {
+     "$ref": "#/definitions/LoggingFormat"
+    },
+    "Path": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Path"
+   ],
+   "type": "object"
+  },
+  "GrpcTimeout": {
+   "additionalProperties": false,
+   "properties": {
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    },
+    "PerRequest": {
+     "$ref": "#/definitions/Duration"
+    }
+   },
+   "type": "object"
+  },
+  "HealthCheck": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthyThreshold": {
+     "type": "integer"
+    },
+    "IntervalMillis": {
+     "type": "integer"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "TimeoutMillis": {
+     "type": "integer"
+    },
+    "UnhealthyThreshold": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "UnhealthyThreshold",
+    "HealthyThreshold",
+    "TimeoutMillis",
+    "Protocol",
+    "IntervalMillis"
+   ],
+   "type": "object"
+  },
+  "HttpTimeout": {
+   "additionalProperties": false,
+   "properties": {
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    },
+    "PerRequest": {
+     "$ref": "#/definitions/Duration"
+    }
+   },
+   "type": "object"
+  },
+  "JsonFormatRef": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Listener": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionPool": {
+     "$ref": "#/definitions/VirtualNodeConnectionPool"
+    },
+    "HealthCheck": {
+     "$ref": "#/definitions/HealthCheck"
+    },
+    "OutlierDetection": {
+     "$ref": "#/definitions/OutlierDetection"
+    },
+    "PortMapping": {
+     "$ref": "#/definitions/PortMapping"
+    },
+    "TLS": {
+     "$ref": "#/definitions/ListenerTls"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/ListenerTimeout"
+    }
+   },
+   "required": [
+    "PortMapping"
+   ],
+   "type": "object"
+  },
+  "ListenerTimeout": {
+   "additionalProperties": false,
+   "properties": {
+    "GRPC": {
+     "$ref": "#/definitions/GrpcTimeout"
+    },
+    "HTTP": {
+     "$ref": "#/definitions/HttpTimeout"
+    },
+    "HTTP2": {
+     "$ref": "#/definitions/HttpTimeout"
+    },
+    "TCP": {
+     "$ref": "#/definitions/TcpTimeout"
+    }
+   },
+   "type": "object"
+  },
+  "ListenerTls": {
+   "additionalProperties": false,
+   "properties": {
+    "Certificate": {
+     "$ref": "#/definitions/ListenerTlsCertificate"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "Validation": {
+     "$ref": "#/definitions/ListenerTlsValidationContext"
+    }
+   },
+   "required": [
+    "Mode",
+    "Certificate"
+   ],
+   "type": "object"
+  },
+  "ListenerTlsAcmCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateArn"
+   ],
+   "type": "object"
+  },
+  "ListenerTlsCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "ACM": {
+     "$ref": "#/definitions/ListenerTlsAcmCertificate"
+    },
+    "File": {
+     "$ref": "#/definitions/ListenerTlsFileCertificate"
+    },
+    "SDS": {
+     "$ref": "#/definitions/ListenerTlsSdsCertificate"
+    }
+   },
+   "type": "object"
+  },
+  "ListenerTlsFileCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateChain": {
+     "type": "string"
+    },
+    "PrivateKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrivateKey",
+    "CertificateChain"
+   ],
+   "type": "object"
+  },
+  "ListenerTlsSdsCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretName"
+   ],
+   "type": "object"
+  },
+  "ListenerTlsValidationContext": {
+   "additionalProperties": false,
+   "properties": {
+    "SubjectAlternativeNames": {
+     "$ref": "#/definitions/SubjectAlternativeNames"
+    },
+    "Trust": {
+     "$ref": "#/definitions/ListenerTlsValidationContextTrust"
+    }
+   },
+   "required": [
+    "Trust"
+   ],
+   "type": "object"
+  },
+  "ListenerTlsValidationContextTrust": {
+   "additionalProperties": false,
+   "properties": {
+    "File": {
+     "$ref": "#/definitions/TlsValidationContextFileTrust"
+    },
+    "SDS": {
+     "$ref": "#/definitions/TlsValidationContextSdsTrust"
+    }
+   },
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessLog": {
+     "$ref": "#/definitions/AccessLog"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "Json": {
+     "items": {
+      "$ref": "#/definitions/JsonFormatRef"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Text": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OutlierDetection": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseEjectionDuration": {
+     "$ref": "#/definitions/Duration"
+    },
+    "Interval": {
+     "$ref": "#/definitions/Duration"
+    },
+    "MaxEjectionPercent": {
+     "type": "integer"
+    },
+    "MaxServerErrors": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxEjectionPercent",
+    "BaseEjectionDuration",
+    "MaxServerErrors",
+    "Interval"
+   ],
+   "type": "object"
+  },
+  "PortMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Port",
+    "Protocol"
+   ],
+   "type": "object"
+  },
+  "ServiceDiscovery": {
+   "additionalProperties": false,
+   "properties": {
+    "AWSCloudMap": {
+     "$ref": "#/definitions/AwsCloudMapServiceDiscovery"
+    },
+    "DNS": {
+     "$ref": "#/definitions/DnsServiceDiscovery"
+    }
+   },
+   "type": "object"
+  },
+  "SubjectAlternativeNameMatchers": {
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SubjectAlternativeNames": {
+   "additionalProperties": false,
+   "properties": {
+    "Match": {
+     "$ref": "#/definitions/SubjectAlternativeNameMatchers"
+    }
+   },
+   "required": [
+    "Match"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TcpTimeout": {
+   "additionalProperties": false,
+   "properties": {
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    }
+   },
+   "type": "object"
+  },
+  "TlsValidationContext": {
+   "additionalProperties": false,
+   "properties": {
+    "SubjectAlternativeNames": {
+     "$ref": "#/definitions/SubjectAlternativeNames"
+    },
+    "Trust": {
+     "$ref": "#/definitions/TlsValidationContextTrust"
+    }
+   },
+   "required": [
+    "Trust"
+   ],
+   "type": "object"
+  },
+  "TlsValidationContextAcmTrust": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateAuthorityArns": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "CertificateAuthorityArns"
+   ],
+   "type": "object"
+  },
+  "TlsValidationContextFileTrust": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateChain": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateChain"
+   ],
+   "type": "object"
+  },
+  "TlsValidationContextSdsTrust": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretName"
+   ],
+   "type": "object"
+  },
+  "TlsValidationContextTrust": {
+   "additionalProperties": false,
+   "properties": {
+    "ACM": {
+     "$ref": "#/definitions/TlsValidationContextAcmTrust"
+    },
+    "File": {
+     "$ref": "#/definitions/TlsValidationContextFileTrust"
+    },
+    "SDS": {
+     "$ref": "#/definitions/TlsValidationContextSdsTrust"
+    }
+   },
+   "type": "object"
+  },
+  "VirtualNodeConnectionPool": {
+   "additionalProperties": false,
+   "properties": {
+    "GRPC": {
+     "$ref": "#/definitions/VirtualNodeGrpcConnectionPool"
+    },
+    "HTTP": {
+     "$ref": "#/definitions/VirtualNodeHttpConnectionPool"
+    },
+    "HTTP2": {
+     "$ref": "#/definitions/VirtualNodeHttp2ConnectionPool"
+    },
+    "TCP": {
+     "$ref": "#/definitions/VirtualNodeTcpConnectionPool"
+    }
+   },
+   "type": "object"
+  },
+  "VirtualNodeGrpcConnectionPool": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRequests": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxRequests"
+   ],
+   "type": "object"
+  },
+  "VirtualNodeHttp2ConnectionPool": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRequests": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxRequests"
+   ],
+   "type": "object"
+  },
+  "VirtualNodeHttpConnectionPool": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConnections": {
+     "type": "integer"
+    },
+    "MaxPendingRequests": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxConnections"
+   ],
+   "type": "object"
+  },
+  "VirtualNodeSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "BackendDefaults": {
+     "$ref": "#/definitions/BackendDefaults"
+    },
+    "Backends": {
+     "items": {
+      "$ref": "#/definitions/Backend"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Listeners": {
+     "items": {
+      "$ref": "#/definitions/Listener"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Logging": {
+     "$ref": "#/definitions/Logging"
+    },
+    "ServiceDiscovery": {
+     "$ref": "#/definitions/ServiceDiscovery"
+    }
+   },
+   "type": "object"
+  },
+  "VirtualNodeTcpConnectionPool": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConnections": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxConnections"
+   ],
+   "type": "object"
+  },
+  "VirtualServiceBackend": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientPolicy": {
+     "$ref": "#/definitions/ClientPolicy"
+    },
+    "VirtualServiceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VirtualServiceName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MeshName": {
+   "type": "string"
+  },
+  "MeshOwner": {
+   "type": "string"
+  },
+  "ResourceOwner": {
+   "type": "string"
+  },
+  "Spec": {
+   "$ref": "#/definitions/VirtualNodeSpec"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Uid": {
+   "type": "string"
+  },
+  "VirtualNodeName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceOwner",
+  "/properties/Arn",
+  "/properties/Uid"
+ ],
+ "required": [
+  "MeshName",
+  "Spec"
+ ],
+ "typeName": "AWS::AppMesh::VirtualNode"
+}

@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "FairsharePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeReservation": {
+     "maximum": 99,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ShareDecaySeconds": {
+     "maximum": 604800,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ShareDistribution": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ShareAttributes"
+     },
+     "type": "array"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ShareAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "ShareIdentifier": {
+     "type": "string"
+    },
+    "WeightFactor": {
+     "maximum": 1000,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "Batch:CreateSchedulingPolicy",
+    "Batch:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "Batch:DescribeSchedulingPolicies",
+    "Batch:DeleteSchedulingPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "Batch:ListSchedulingPolicies",
+    "Batch:DescribeSchedulingPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "Batch:DescribeSchedulingPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "Batch:UpdateSchedulingPolicy",
+    "Batch:TagResource",
+    "Batch:UnTagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FairsharePolicy": {
+   "$ref": "#/definitions/FairsharePolicy"
+  },
+  "Name": {
+   "pattern": "",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::SchedulingPolicy"
+}

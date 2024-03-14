@@ -60,16 +60,16 @@ Resources:
   CustomSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           !GetAtt CustomResource.PublicSubnet
 
   AuxilliaryCustomSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Condition: CreateAuxiliaryNetworks
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           !GetAtt CustomResource.PublicSubnet

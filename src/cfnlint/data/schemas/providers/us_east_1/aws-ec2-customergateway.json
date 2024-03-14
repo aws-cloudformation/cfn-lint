@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BgpAsn",
+  "/properties/Type",
+  "/properties/IpAddress",
+  "/properties/DeviceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateCustomerGateway",
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteCustomerGateway",
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CustomerGatewayId"
+ ],
+ "properties": {
+  "BgpAsn": {
+   "default": 65000,
+   "type": "integer"
+  },
+  "CustomerGatewayId": {
+   "type": "string"
+  },
+  "DeviceName": {
+   "type": "string"
+  },
+  "IpAddress": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "enum": [
+    "ipsec.1"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomerGatewayId"
+ ],
+ "required": [
+  "BgpAsn",
+  "IpAddress",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::CustomerGateway"
+}

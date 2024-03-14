@@ -3,57 +3,58 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-import regex as re
+import pytest
 
-from cfnlint.data import CloudSpecs
-from cfnlint.helpers import RESOURCE_SPECS, load_resource
-from cfnlint.rules.resources.properties.AllowedPattern import (
-    AllowedPattern,  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.parameters.AllowedPattern import (
+    AllowedPattern as ParameterAllowedPattern,
 )
+from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern
 
 
-class TestAllowedPattern(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AllowedPattern()
+    rule.child_rules["W2031"] = ParameterAllowedPattern()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestAllowedPattern, self).setUp()
-        self.collection.register(AllowedPattern())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/allowed_pattern.yaml"
-        ]
 
-        self.spec = RESOURCE_SPECS["us-east-1"]
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
 
-    def test_template_config(self):
-        """Test strict false"""
-        self.helper_file_rule_config(
-            "test/fixtures/templates/bad/properties_sg_ingress.yaml",
-            {"exceptions": ["Special charaters*"]},
-            1,
+def test_allowed_pattern(rule, validator):
+    assert len(list(rule.pattern(validator, ".*", "foo", {}))) == 0
+    assert len(list(rule.pattern(validator, "foo", "bar", {}))) == 1
+
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Fn::Sub"]),
         )
+    )
+    errs = list(rule.pattern(evolved, "bar", "bar", {}))
+    assert len(errs) == 0
 
-    def test_file_negative_sg_ingress(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/properties_sg_ingress.yaml", 2
+    evolved = validator.evolve(
+        context=validator.context.evolve(
+            path=deque(["Ref"]),
+            value_path=deque(["Parameters", "MyParameter", "Default"]),
         )
+    )
+    errs = list(rule.pattern(evolved, "foo", "bar", {}))
+    assert len(errs) == 1
+    assert errs[0].rule.id == ParameterAllowedPattern.id
 
-    def test_valid_regex(self):
-        """Test Resource Type Value Regex"""
-        for r_name, r_values in self.spec.get("ValueTypes").items():
-            if r_values.get("AllowedPatternRegex"):
-                p_regex = r_values.get("AllowedPatternRegex")
-                try:
-                    re.compile(p_regex)
-                except re.error:
-                    self.fail(
-                        "Invalid regex value %s specified for ValueType %s"
-                        % (p_regex, r_name)
-                    )
+    rule.child_rules["W2031"] = None
+    errs = list(rule.pattern(evolved, "foo", "bar", {}))
+    assert len(errs) == 0
+
+
+def test_allowed_pattern_exceptions(rule, validator):
+    rule.configure({"exceptions": ["AWS::"]})
+
+    assert len(list(rule.pattern(validator, "foo", "Another AWS::Instance", {}))) == 1
+    assert len(list(rule.pattern(validator, "foo", "AWS::Dummy::Resource", {}))) == 0

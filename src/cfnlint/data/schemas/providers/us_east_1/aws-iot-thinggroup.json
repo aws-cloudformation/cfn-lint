@@ -1,0 +1,148 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ThingGroupName",
+  "/properties/ParentGroupName"
+ ],
+ "definitions": {
+  "AttributePayload": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9_.,@/:#-]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:ListTagsForResource",
+    "iot:CreateThingGroup",
+    "iot:CreateDynamicThingGroup",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:DeleteThingGroup",
+    "iot:DeleteDynamicThingGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListThingGroups",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:ListTagsForResource",
+    "iot:DescribeThingGroup",
+    "iot:UpdateThingGroup",
+    "iot:UpdateDynamicThingGroup",
+    "iot:TagResource",
+    "iot:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ThingGroupName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ParentGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "QueryString": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "ThingGroupProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributePayload": {
+     "$ref": "#/definitions/AttributePayload"
+    },
+    "ThingGroupDescription": {
+     "maxLength": 2028,
+     "pattern": "[\\p{Graph}\\x20]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ThingGroup"
+}

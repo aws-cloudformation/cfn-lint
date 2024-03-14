@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "detective:CreateGraph",
+    "detective:UpdateOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "detective:DeleteGraph"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "detective:ListGraphs",
+    "detective:ListTagsForResource",
+    "detective:DescribeOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "detective:ListGraphs",
+    "detective:ListTagsForResource",
+    "detective:DescribeOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "detective:UntagResource",
+    "detective:TagResource",
+    "detective:ListTagsForResource",
+    "detective:UpdateOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AutoEnableMembers": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-detective.git",
+ "typeName": "AWS::Detective::Graph"
+}

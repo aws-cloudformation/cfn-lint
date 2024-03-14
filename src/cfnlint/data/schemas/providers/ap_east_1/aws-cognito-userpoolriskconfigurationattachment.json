@@ -1,0 +1,182 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserPoolId",
+  "/properties/ClientId"
+ ],
+ "definitions": {
+  "AccountTakeoverActionType": {
+   "additionalProperties": false,
+   "properties": {
+    "EventAction": {
+     "type": "string"
+    },
+    "Notify": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Notify",
+    "EventAction"
+   ],
+   "type": "object"
+  },
+  "AccountTakeoverActionsType": {
+   "additionalProperties": false,
+   "properties": {
+    "HighAction": {
+     "$ref": "#/definitions/AccountTakeoverActionType"
+    },
+    "LowAction": {
+     "$ref": "#/definitions/AccountTakeoverActionType"
+    },
+    "MediumAction": {
+     "$ref": "#/definitions/AccountTakeoverActionType"
+    }
+   },
+   "type": "object"
+  },
+  "AccountTakeoverRiskConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "$ref": "#/definitions/AccountTakeoverActionsType"
+    },
+    "NotifyConfiguration": {
+     "$ref": "#/definitions/NotifyConfigurationType"
+    }
+   },
+   "required": [
+    "Actions"
+   ],
+   "type": "object"
+  },
+  "CompromisedCredentialsActionsType": {
+   "additionalProperties": false,
+   "properties": {
+    "EventAction": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventAction"
+   ],
+   "type": "object"
+  },
+  "CompromisedCredentialsRiskConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "$ref": "#/definitions/CompromisedCredentialsActionsType"
+    },
+    "EventFilter": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Actions"
+   ],
+   "type": "object"
+  },
+  "NotifyConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockEmail": {
+     "$ref": "#/definitions/NotifyEmailType"
+    },
+    "From": {
+     "type": "string"
+    },
+    "MfaEmail": {
+     "$ref": "#/definitions/NotifyEmailType"
+    },
+    "NoActionEmail": {
+     "$ref": "#/definitions/NotifyEmailType"
+    },
+    "ReplyTo": {
+     "type": "string"
+    },
+    "SourceArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceArn"
+   ],
+   "type": "object"
+  },
+  "NotifyEmailType": {
+   "additionalProperties": false,
+   "properties": {
+    "HtmlBody": {
+     "type": "string"
+    },
+    "Subject": {
+     "type": "string"
+    },
+    "TextBody": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Subject"
+   ],
+   "type": "object"
+  },
+  "RiskExceptionConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockedIPRangeList": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SkippedIPRangeList": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccountTakeoverRiskConfiguration": {
+   "$ref": "#/definitions/AccountTakeoverRiskConfigurationType"
+  },
+  "ClientId": {
+   "type": "string"
+  },
+  "CompromisedCredentialsRiskConfiguration": {
+   "$ref": "#/definitions/CompromisedCredentialsRiskConfigurationType"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RiskExceptionConfiguration": {
+   "$ref": "#/definitions/RiskExceptionConfigurationType"
+  },
+  "UserPoolId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "UserPoolId",
+  "ClientId"
+ ],
+ "typeName": "AWS::Cognito::UserPoolRiskConfigurationAttachment"
+}

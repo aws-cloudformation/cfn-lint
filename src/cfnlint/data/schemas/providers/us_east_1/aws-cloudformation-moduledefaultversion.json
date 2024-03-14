@@ -1,0 +1,70 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ModuleName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ModuleName",
+  "/properties/VersionId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudformation:DescribeType",
+    "cloudformation:SetTypeDefaultVersion"
+   ]
+  },
+  "delete": {
+   "permissions": []
+  },
+  "list": {
+   "permissions": [
+    "cloudformation:ListTypes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudformation:DescribeType"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Arn"
+   ]
+  },
+  {
+   "required": [
+    "ModuleName",
+    "VersionId"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/module/.+/[0-9]{8}$",
+   "type": "string"
+  },
+  "ModuleName": {
+   "pattern": "^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE",
+   "type": "string"
+  },
+  "VersionId": {
+   "pattern": "^[0-9]{8}$",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudformation",
+ "typeName": "AWS::CloudFormation::ModuleDefaultVersion",
+ "writeOnlyProperties": [
+  "/properties/ModuleName",
+  "/properties/VersionId"
+ ]
+}

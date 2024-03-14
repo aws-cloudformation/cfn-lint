@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupName"
+ ],
+ "definitions": {
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "cfnLint": [
+      "AWS::IAM::Group/Properties/Policies/PolicyDocument"
+     ],
+     "type": [
+      "string",
+      "object"
+     ]
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyDocument",
+    "PolicyName"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateGroup",
+    "iam:PutGroupPolicy",
+    "iam:AttachGroupPolicy",
+    "iam:GetGroupPolicy",
+    "iam:GetGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:DeleteGroup",
+    "iam:ListAttachedGroupPolicies",
+    "iam:ListGroupPolicies",
+    "iam:DetachGroupPolicy",
+    "iam:DeleteGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:ListGroupPolicies",
+    "iam:GetGroupPolicy",
+    "iam:ListAttachedGroupPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetGroup",
+    "iam:UpdateGroup",
+    "iam:DetachGroupPolicy",
+    "iam:AttachGroupPolicy",
+    "iam:DeleteGroupPolicy",
+    "iam:PutGroupPolicy",
+    "iam:GetGroupPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "GroupName": {
+   "type": "string"
+  },
+  "ManagedPolicyArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Path": {
+   "pattern": "^/(.+/)*$",
+   "type": "string"
+  },
+  "Policies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Policy"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IAM::Group"
+}

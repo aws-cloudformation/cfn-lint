@@ -1,0 +1,73 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubscriptionName",
+  "/properties/SourceIds"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Enabled": {
+   "type": "boolean"
+  },
+  "EventCategories": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SnsTopicArn": {
+   "type": "string"
+  },
+  "SourceIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SourceType": {
+   "type": "string"
+  },
+  "SubscriptionName": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SnsTopicArn"
+ ],
+ "typeName": "AWS::DMS::EventSubscription"
+}

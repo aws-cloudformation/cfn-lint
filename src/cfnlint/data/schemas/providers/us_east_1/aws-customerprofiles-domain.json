@@ -1,0 +1,421 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "AttributeTypesSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    },
+    "AttributeMatchingModel": {
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "EmailAddress": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PhoneNumber": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AttributeMatchingModel"
+   ],
+   "type": "object"
+  },
+  "AutoMerging": {
+   "additionalProperties": false,
+   "properties": {
+    "ConflictResolution": {
+     "$ref": "#/definitions/ConflictResolution"
+    },
+    "Consolidation": {
+     "$ref": "#/definitions/Consolidation"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "MinAllowedConfidenceScoreForMerging": {
+     "maximum": 1.0,
+     "minimum": 0.0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "ConflictResolution": {
+   "additionalProperties": false,
+   "properties": {
+    "ConflictResolvingModel": {
+     "enum": [
+      "RECENCY",
+      "SOURCE"
+     ],
+     "type": "string"
+    },
+    "SourceName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConflictResolvingModel"
+   ],
+   "type": "object"
+  },
+  "Consolidation": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingAttributesList": {
+     "items": {
+      "$ref": "#/definitions/MatchingAttributes"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "MatchingAttributesList"
+   ],
+   "type": "object"
+  },
+  "DomainStats": {
+   "additionalProperties": false,
+   "properties": {
+    "MeteringProfileCount": {
+     "type": "number"
+    },
+    "ObjectCount": {
+     "type": "number"
+    },
+    "ProfileCount": {
+     "type": "number"
+    },
+    "TotalSize": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ExportingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Exporting": {
+     "$ref": "#/definitions/S3ExportingConfig"
+    }
+   },
+   "type": "object"
+  },
+  "JobSchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "DayOfTheWeek": {
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "Time": {
+     "maxLength": 5,
+     "minLength": 3,
+     "pattern": "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DayOfTheWeek",
+    "Time"
+   ],
+   "type": "object"
+  },
+  "Matching": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoMerging": {
+     "$ref": "#/definitions/AutoMerging"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "ExportingConfig": {
+     "$ref": "#/definitions/ExportingConfig"
+    },
+    "JobSchedule": {
+     "$ref": "#/definitions/JobSchedule"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "MatchingAttributes": {
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "MatchingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Rule": {
+     "$ref": "#/definitions/MatchingRuleAttributeList"
+    }
+   },
+   "required": [
+    "Rule"
+   ],
+   "type": "object"
+  },
+  "MatchingRuleAttributeList": {
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 15,
+   "minItems": 1,
+   "type": "array"
+  },
+  "RuleBasedMatching": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeTypesSelector": {
+     "$ref": "#/definitions/AttributeTypesSelector"
+    },
+    "ConflictResolution": {
+     "$ref": "#/definitions/ConflictResolution"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "ExportingConfig": {
+     "$ref": "#/definitions/ExportingConfig"
+    },
+    "MatchingRules": {
+     "items": {
+      "$ref": "#/definitions/MatchingRule"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    },
+    "MaxAllowedRuleLevelForMatching": {
+     "maximum": 15,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxAllowedRuleLevelForMerging": {
+     "maximum": 15,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "enum": [
+      "PENDING",
+      "IN_PROGRESS",
+      "ACTIVE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "S3ExportingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "S3BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9.-]+$",
+     "type": "string"
+    },
+    "S3KeyName": {
+     "maxLength": 800,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "profile:CreateDomain",
+    "profile:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "profile:DeleteDomain"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
+   "permissions": [
+    "profile:ListDomains"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "profile:GetDomain"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "profile:GetDomain",
+    "profile:UpdateDomain",
+    "profile:UntagResource",
+    "profile:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DeadLetterQueueUrl": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DefaultEncryptionKey": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DefaultExpirationDays": {
+   "maximum": 1098,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "Matching": {
+   "$ref": "#/definitions/Matching"
+  },
+  "RuleBasedMatching": {
+   "$ref": "#/definitions/RuleBasedMatching"
+  },
+  "Stats": {
+   "$ref": "#/definitions/DomainStats"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LastUpdatedAt",
+  "/properties/CreatedAt",
+  "/properties/RuleBasedMatching/Status",
+  "/properties/Stats"
+ ],
+ "required": [
+  "DomainName",
+  "DefaultExpirationDays"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::Domain"
+}

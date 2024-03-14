@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ResourceType",
+  "/properties/PolicyTemplate"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ram:CreatePermission",
+    "ram:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ram:DeletePermissionVersion",
+    "ram:DeletePermission"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ram:ListPermissions",
+    "ram:ListPermissionVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ram:GetPermission"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ram:CreatePermissionVersion",
+    "ram:DeletePermissionVersion",
+    "ram:SetDefaultPermissionVersion",
+    "ram:GetPermission",
+    "ram:ReplacePermissionAssociations",
+    "ram:ListReplacePermissionAssociationsWork",
+    "ram:ListPermissionVersions",
+    "ram:UntagResource",
+    "ram:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "IsResourceTypeDefault": {
+   "type": "boolean"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PermissionType": {
+   "type": "string"
+  },
+  "PolicyTemplate": {
+   "type": "object"
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Version",
+  "/properties/IsResourceTypeDefault",
+  "/properties/PermissionType"
+ ],
+ "required": [
+  "Name",
+  "ResourceType",
+  "PolicyTemplate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ram",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RAM::Permission"
+}

@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EmailIdentity"
+ ],
+ "definitions": {
+  "ConfigurationSetAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigurationSetName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DkimAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "SigningEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DkimSigningAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainSigningPrivateKey": {
+     "type": "string"
+    },
+    "DomainSigningSelector": {
+     "type": "string"
+    },
+    "NextSigningKeyLength": {
+     "pattern": "RSA_1024_BIT|RSA_2048_BIT",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FeedbackAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailForwardingEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MailFromAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "BehaviorOnMxFailure": {
+     "pattern": "USE_DEFAULT_VALUE|REJECT_MESSAGE",
+     "type": "string"
+    },
+    "MailFromDomain": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateEmailIdentity",
+    "ses:PutEmailIdentityMailFromAttributes",
+    "ses:PutEmailIdentityFeedbackAttributes",
+    "ses:PutEmailIdentityDkimAttributes",
+    "ses:GetEmailIdentity"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteEmailIdentity"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListEmailIdentities"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetEmailIdentity"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:PutEmailIdentityMailFromAttributes",
+    "ses:PutEmailIdentityFeedbackAttributes",
+    "ses:PutEmailIdentityConfigurationSetAttributes",
+    "ses:PutEmailIdentityDkimSigningAttributes",
+    "ses:PutEmailIdentityDkimAttributes",
+    "ses:GetEmailIdentity"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EmailIdentity"
+ ],
+ "properties": {
+  "ConfigurationSetAttributes": {
+   "$ref": "#/definitions/ConfigurationSetAttributes"
+  },
+  "DkimAttributes": {
+   "$ref": "#/definitions/DkimAttributes"
+  },
+  "DkimDNSTokenName1": {
+   "type": "string"
+  },
+  "DkimDNSTokenName2": {
+   "type": "string"
+  },
+  "DkimDNSTokenName3": {
+   "type": "string"
+  },
+  "DkimDNSTokenValue1": {
+   "type": "string"
+  },
+  "DkimDNSTokenValue2": {
+   "type": "string"
+  },
+  "DkimDNSTokenValue3": {
+   "type": "string"
+  },
+  "DkimSigningAttributes": {
+   "$ref": "#/definitions/DkimSigningAttributes"
+  },
+  "EmailIdentity": {
+   "type": "string"
+  },
+  "FeedbackAttributes": {
+   "$ref": "#/definitions/FeedbackAttributes"
+  },
+  "MailFromAttributes": {
+   "$ref": "#/definitions/MailFromAttributes"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DkimDNSTokenName1",
+  "/properties/DkimDNSTokenName2",
+  "/properties/DkimDNSTokenName3",
+  "/properties/DkimDNSTokenValue1",
+  "/properties/DkimDNSTokenValue2",
+  "/properties/DkimDNSTokenValue3"
+ ],
+ "required": [
+  "EmailIdentity"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::EmailIdentity",
+ "writeOnlyProperties": [
+  "/properties/DkimSigningAttributes/DomainSigningSelector",
+  "/properties/DkimSigningAttributes/DomainSigningPrivateKey"
+ ]
+}

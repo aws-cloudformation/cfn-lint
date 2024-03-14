@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Template/TemplateName"
+ ],
+ "definitions": {
+  "Template": {
+   "additionalProperties": false,
+   "properties": {
+    "HtmlPart": {
+     "type": "string"
+    },
+    "SubjectPart": {
+     "type": "string"
+    },
+    "TemplateName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+     "type": "string"
+    },
+    "TextPart": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubjectPart"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateEmailTemplate",
+    "ses:GetEmailTemplate",
+    "ses:CreateTemplate",
+    "ses:GetTemplate"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteEmailTemplate",
+    "ses:DeleteTemplate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListEmailTemplates",
+    "ses:ListTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetEmailTemplate",
+    "ses:GetTemplate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:GetEmailTemplate",
+    "ses:UpdateEmailTemplate",
+    "ses:GetTemplate",
+    "ses:UpdateTemplate"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Template": {
+   "$ref": "#/definitions/Template"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::Template"
+}

@@ -1,0 +1,122 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/blob/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Domain",
+  "/properties/NetworkBorderGroup",
+  "/properties/TransferAddress"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AllocateAddress",
+    "ec2:AcceptAddressTransfer",
+    "ec2:DescribeAddresses",
+    "ec2:AssociateAddress",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:ReleaseAddress",
+    "ec2:DescribeAddresses",
+    "ec2:DisassociateAddress"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeAddresses",
+    "ec2:DisassociateAddress",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "ec2:AssociateAddress"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PublicIp",
+  "/properties/AllocationId"
+ ],
+ "properties": {
+  "AllocationId": {
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "vpc",
+    "standard"
+   ],
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "NetworkBorderGroup": {
+   "type": "string"
+  },
+  "PublicIp": {
+   "type": "string"
+  },
+  "PublicIpv4Pool": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransferAddress": {
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Domain": "\"vpc\""
+ },
+ "readOnlyProperties": [
+  "/properties/PublicIp",
+  "/properties/AllocationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::EIP",
+ "writeOnlyProperties": [
+  "/properties/TransferAddress"
+ ]
+}

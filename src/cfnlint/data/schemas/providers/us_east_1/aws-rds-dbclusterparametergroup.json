@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBClusterParameterGroupName",
+  "/properties/Description",
+  "/properties/Family"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "rds:AddTagsToResource",
+    "rds:CreateDBClusterParameterGroup",
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:DescribeDBClusterParameters",
+    "rds:DescribeDBClusters",
+    "rds:DescribeEngineDefaultClusterParameters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBClusterParameterGroup",
+    "rds:RemoveTagsFromResource"
+   ],
+   "timeoutInMinutes": 180
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBClusterParameterGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBClusterParameterGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:DescribeDBClusterParameters",
+    "rds:DescribeEngineDefaultClusterParameters",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:AddTagsToResource",
+    "rds:DescribeDBClusterParameterGroups",
+    "rds:DescribeDBClusterParameters",
+    "rds:DescribeDBClusters",
+    "rds:DescribeEngineDefaultClusterParameters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBClusterParameterGroup",
+    "rds:RemoveTagsFromResource",
+    "rds:ResetDBClusterParameterGroup"
+   ],
+   "timeoutInMinutes": 180
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBClusterParameterGroupName"
+ ],
+ "properties": {
+  "DBClusterParameterGroupName": {
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Family": {
+   "type": "string"
+  },
+  "Parameters": {
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)"
+ },
+ "required": [
+  "Description",
+  "Family",
+  "Parameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "typeName": "AWS::RDS::DBClusterParameterGroup"
+}

@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CollectionName",
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "PricingPlan": {
+   "enum": [
+    "RequestBasedUsage"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/PricingPlan",
+  "/properties/PricingPlanDataSource"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:CreateGeofenceCollection",
+    "geo:DescribeGeofenceCollection",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "kms:DescribeKey",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DeleteGeofenceCollection",
+    "geo:DescribeGeofenceCollection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListGeofenceCollections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:DescribeGeofenceCollection",
+    "kms:DescribeKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "geo:CreateGeofenceCollection",
+    "geo:DescribeGeofenceCollection",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "geo:UpdateGeofenceCollection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CollectionName"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "CollectionArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "CollectionName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PricingPlan": {
+   "$ref": "#/definitions/PricingPlan"
+  },
+  "PricingPlanDataSource": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CollectionArn",
+  "/properties/Arn",
+  "/properties/CreateTime",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "CollectionName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Location::GeofenceCollection"
+}

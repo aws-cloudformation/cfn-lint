@@ -6,16 +6,16 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import logging
 import traceback
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Any, Dict, Iterator, List, Set, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
 from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 from sympy.logic.inference import satisfiable
 
+from cfnlint.conditions._condition import ConditionNamed
+from cfnlint.conditions._equals import Equal
 from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.condition import ConditionNamed
-from cfnlint.conditions.equals import Equal
 
 LOGGER = logging.getLogger(__name__)
 
@@ -23,13 +23,11 @@ LOGGER = logging.getLogger(__name__)
 class Conditions:
     """Conditions provides the logic for relating individual condition together"""
 
-    _conditions: Dict[str, ConditionNamed]
-    _parameters: Dict[str, List[str]]  # Dict of parameters with AllowedValues hashed
     _max_scenarios: int = 128  # equivalent to 2^7
 
-    def __init__(self, cfn):
-        self._conditions = {}
-        self._parameters = {}
+    def __init__(self, cfn) -> None:
+        self._conditions: Dict[str, ConditionNamed] = {}
+        self._parameters: Dict[str, List[str]] = {}
         self._init_conditions(cfn=cfn)
         self._init_parameters(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
@@ -103,8 +101,9 @@ class Conditions:
                     for param in c_equal.parameters:
                         for e_hash, e_equals in equals.items():
                             if param in e_equals.parameters:
-                                # equivalent to NAND logic. We want to make sure that both equals
-                                # are not both True at the same time
+                                # equivalent to NAND logic. We want to make
+                                # sure that both equals are not both True
+                                # at the same time
                                 cnf.add_prop(
                                     ~(equal_vars[c_equal.hash] & equal_vars[e_hash])
                                 )
@@ -113,7 +112,8 @@ class Conditions:
         # Determine if a set of conditions can never be all false
         allowed_values = self._parameters.copy()
         if allowed_values:
-            # iteration 1 cleans up all the hash values from allowed_values to know if we
+            # iteration 1 cleans up all the hash values
+            # from allowed_values to know if we
             # used them all
             for _, equal_1 in equals.items():
                 for param in equal_1.parameters:
@@ -154,10 +154,11 @@ class Conditions:
         return (cnf, equal_vars)
 
     def build_scenarios(
-        self, condition_names: List[str], region: None = None
+        self, conditions: Dict[str, Set[bool]], region: None = None
     ) -> Iterator[Dict[str, bool]]:
-        """Given a list of condition names this function will yield scenarios that represent
-        those conditions and there result (True/False)
+        """Given a list of condition names this function will
+        yield scenarios that represent those conditions and
+        there result (True/False)
 
         Args:
             condition_names (List[str]): A list of condition names
@@ -166,11 +167,35 @@ class Conditions:
             Iterator[Dict[str, bool]]: yield dict objects of {ConditionName: True/False}
         """
         # nothing to yield if there are no conditions
-        if len(condition_names) == 0:
+        if len(conditions) == 0:
             return
 
+        c_cnf = self._cnf.copy()
+        condition_names = []
+        conditions_set = {}
+        for condition_name, values in conditions.items():
+            if condition_name in self._conditions:
+                if values == {True}:
+                    c_cnf.add_prop(
+                        self._conditions[condition_name].build_true_cnf(
+                            self._solver_params
+                        )
+                    )
+                    conditions_set[condition_name] = True
+                    continue
+                if values == {False}:
+                    c_cnf.add_prop(
+                        self._conditions[condition_name].build_false_cnf(
+                            self._solver_params
+                        )
+                    )
+                    conditions_set[condition_name] = False
+                    continue
+            condition_names.append(condition_name)
+
         try:
-            # build a large matric of True/False options based on the provided conditions
+            # build a large matric of True/False options
+            # based on the provided conditions
             scenarios_returned = 0
             if region:
                 products = itertools.starmap(
@@ -179,8 +204,9 @@ class Conditions:
                 )
             else:
                 products = itertools.product([True, False], repeat=len(condition_names))
+
             for p in products:
-                cnf = self._cnf.copy()
+                cnf = c_cnf.copy()
                 params = dict(zip(condition_names, p))
                 for condition_name, opt in params.items():
                     if opt:
@@ -198,7 +224,7 @@ class Conditions:
 
                 # if the scenario can be satisfied then return it
                 if satisfiable(cnf):
-                    yield params
+                    yield {**params, **conditions_set}
                     scenarios_returned += 1
 
                 # On occassions people will use a lot of non-related conditions
@@ -216,8 +242,9 @@ class Conditions:
         solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
 
         Args:
-            scenarios (Dict[str, bool]): A list of condition names and if they are True or False
-            implies: the condition name that we are implying will also be True
+            scenarios (Dict[str, bool]): A list of condition names
+            and if they are True or False implies: the condition name that
+            we are implying will also be True
 
         Returns:
             bool: if the implied condition will be True if the scenario is True
@@ -281,8 +308,14 @@ class Conditions:
             return
         cnf_region = self._cnf.copy()
         found_region = False
+
+        # validate the condition name exists
+        # return True/False if it doesn't
         if condition_name not in self._conditions:
+            yield True
+            yield False
             return
+
         for eql in self._conditions[condition_name].equals:
             is_region, equal_region = eql.is_region
             if is_region:

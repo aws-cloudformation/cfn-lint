@@ -1,0 +1,184 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PrincipalArn",
+  "/properties/ClusterName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AccessPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessScope": {
+     "$ref": "#/definitions/AccessScope"
+    },
+    "PolicyArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyArn",
+    "AccessScope"
+   ],
+   "type": "object"
+  },
+  "AccessScope": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespaces": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Type": {
+     "enum": [
+      "namespace",
+      "cluster"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreateAccessEntry",
+    "eks:DescribeAccessEntry",
+    "eks:AssociateAccessPolicy",
+    "eks:TagResource",
+    "eks:ListAssociatedAccessPolicies"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeleteAccessEntry",
+    "eks:DescribeAccessEntry"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListAccessEntries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeAccessEntry",
+    "eks:ListAssociatedAccessPolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "eks:DescribeAccessEntry",
+    "eks:ListAssociatedAccessPolicies",
+    "eks:UpdateAccessEntry",
+    "eks:AssociateAccessPolicy",
+    "eks:DisassociateAccessPolicy",
+    "eks:TagResource",
+    "eks:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PrincipalArn",
+  "/properties/ClusterName"
+ ],
+ "properties": {
+  "AccessEntryArn": {
+   "type": "string"
+  },
+  "AccessPolicies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AccessPolicy"
+   },
+   "maxItems": 20,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "KubernetesGroups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PrincipalArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "type": "string"
+  },
+  "Username": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessEntryArn"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "PrincipalArn",
+  "ClusterName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::AccessEntry"
+}

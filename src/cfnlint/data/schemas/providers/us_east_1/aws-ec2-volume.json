@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVolume",
+    "ec2:DescribeVolumes",
+    "ec2:DescribeVolumeAttribute",
+    "ec2:ModifyVolumeAttribute",
+    "ec2:CreateTags",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVolume",
+    "ec2:CreateSnapshot",
+    "ec2:DescribeSnapshots",
+    "ec2:DeleteTags",
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVolumes",
+    "ec2:DescribeTags",
+    "ec2:DescribeVolumeAttribute"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVolumes",
+    "ec2:DescribeVolumeAttribute",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVolume",
+    "ec2:ModifyVolumeAttribute",
+    "ec2:DescribeVolumeAttribute",
+    "ec2:DescribeVolumesModifications",
+    "ec2:DescribeVolumes",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId"
+ ],
+ "properties": {
+  "AutoEnableIO": {
+   "type": "boolean"
+  },
+  "AvailabilityZone": {
+   "cfnLint": [
+    "AWS::EC2::Volume/Properties/AvailabilityZone"
+   ],
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Iops": {
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "MultiAttachEnabled": {
+   "type": "boolean"
+  },
+  "OutpostArn": {
+   "type": "string"
+  },
+  "Size": {
+   "type": "integer"
+  },
+  "SnapshotId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Throughput": {
+   "type": "integer"
+  },
+  "VolumeId": {
+   "type": "string"
+  },
+  "VolumeType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VolumeId"
+ ],
+ "required": [
+  "AvailabilityZone"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::Volume"
+}

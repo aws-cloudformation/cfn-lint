@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AllocationId",
+  "/properties/NetworkInterfaceId",
+  "/properties/InstanceId",
+  "/properties/PrivateIpAddress",
+  "/properties/EIP"
+ ],
+ "deprecatedProperties": [
+  "/properties/EIP"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeAddresses",
+    "ec2:AssociateAddress"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateAddress",
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeAddresses"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocationId": {
+   "type": "string"
+  },
+  "EIP": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2/tree/master/aws-ec2-eipassociation",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::EIPAssociation"
+}

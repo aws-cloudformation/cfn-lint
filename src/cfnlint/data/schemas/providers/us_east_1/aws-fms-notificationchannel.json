@@ -1,0 +1,57 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ResourceArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([^\\s]+)$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "fms:PutNotificationChannel",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "fms:DeleteNotificationChannel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "fms:GetNotificationChannel"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "fms:GetNotificationChannel"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "fms:PutNotificationChannel",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SnsTopicArn"
+ ],
+ "properties": {
+  "SnsRoleName": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "SnsTopicArn": {
+   "$ref": "#/definitions/ResourceArn"
+  }
+ },
+ "required": [
+  "SnsRoleName",
+  "SnsTopicArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
+ "typeName": "AWS::FMS::NotificationChannel"
+}

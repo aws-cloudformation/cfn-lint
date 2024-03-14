@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RootVolumeSecurityStyle",
+  "/properties/FileSystemId"
+ ],
+ "definitions": {
+  "ActiveDirectoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NetBiosName": {
+     "type": "string"
+    },
+    "SelfManagedActiveDirectoryConfiguration": {
+     "$ref": "#/definitions/SelfManagedActiveDirectoryConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedActiveDirectoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsIps": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DomainName": {
+     "type": "string"
+    },
+    "FileSystemAdministratorsGroup": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    },
+    "Password": {
+     "type": "string"
+    },
+    "UserName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StorageVirtualMachineId"
+ ],
+ "properties": {
+  "ActiveDirectoryConfiguration": {
+   "$ref": "#/definitions/ActiveDirectoryConfiguration"
+  },
+  "FileSystemId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ResourceARN": {
+   "type": "string"
+  },
+  "RootVolumeSecurityStyle": {
+   "type": "string"
+  },
+  "StorageVirtualMachineId": {
+   "type": "string"
+  },
+  "SvmAdminPassword": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UUID": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceARN",
+  "/properties/UUID",
+  "/properties/StorageVirtualMachineId"
+ ],
+ "required": [
+  "FileSystemId",
+  "Name"
+ ],
+ "typeName": "AWS::FSx::StorageVirtualMachine"
+}

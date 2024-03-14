@@ -1,0 +1,55 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:EnableHostedZoneDNSSEC",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:DisableHostedZoneDNSSEC",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:ListHostedZones"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:GetDNSSEC"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HostedZoneId"
+ ],
+ "properties": {
+  "HostedZoneId": {
+   "pattern": "^[A-Z0-9]{1,32}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "HostedZoneId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53::DNSSEC"
+}

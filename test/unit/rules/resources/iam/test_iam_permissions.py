@@ -3,22 +3,40 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.resources.iam.Permissions import Permissions  # pylint: disable=E0401
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.resources.iam.Permissions import Permissions
 
 
-class TestPermissions(BaseRuleTestCase):
-    """Test IAM Resource Policies"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = Permissions()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestPermissions, self).setUp()
-        self.collection.register(Permissions())
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/iam/managed_policy_permissions.yaml",
-            3,
-        )
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
+
+
+@pytest.mark.parametrize(
+    "name,instance,err_count",
+    [
+        ("Valid string", "s3:GetObject", 0),
+        ("Valid list", ["s3:GetObject"], 0),
+        ("Invalid string", "s3:Foo", 1),
+        ("Invalid list", ["s3:Foo"], 1),
+        ("Valid astrisk for permission", ["s3:*"], 0),
+        ("Valid all astrisk", ["*"], 0),
+        ("Valid string with ending astrisk", "s3:Get*", 0),
+        ("Valid string with starting astrisk", "s3:*Object", 0),
+        ("Invalid list", ["s3:Foo"], 1),
+        ("Invalid string with ending astrisk", "s3:Foo*", 1),
+        ("Invalid string with starting astrisk", "s3:*Foo", 1),
+        ("Invalid service", "foo:Bar", 1),
+    ],
+)
+def test_permissions(name, instance, err_count, rule, validator):
+    errors = list(rule.validate(validator, {}, instance, {}))
+    assert len(errors) == err_count, f"Test {name!r} got {errors!r}"

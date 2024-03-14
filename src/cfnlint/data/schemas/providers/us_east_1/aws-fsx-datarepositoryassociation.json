@@ -1,0 +1,192 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FileSystemId",
+  "/properties/FileSystemPath",
+  "/properties/DataRepositoryPath",
+  "/properties/BatchImportMetaDataOnCreate"
+ ],
+ "definitions": {
+  "AutoExportPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "$ref": "#/definitions/EventTypes"
+    }
+   },
+   "required": [
+    "Events"
+   ],
+   "type": "object"
+  },
+  "AutoImportPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "$ref": "#/definitions/EventTypes"
+    }
+   },
+   "required": [
+    "Events"
+   ],
+   "type": "object"
+  },
+  "EventType": {
+   "enum": [
+    "NEW",
+    "CHANGED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "EventTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventType"
+   },
+   "maxItems": 3,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "S3": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoExportPolicy": {
+     "$ref": "#/definitions/AutoExportPolicy"
+    },
+    "AutoImportPolicy": {
+     "$ref": "#/definitions/AutoImportPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "fsx:CreateDataRepositoryAssociation",
+    "fsx:DescribeDataRepositoryAssociations",
+    "fsx:TagResource",
+    "s3:ListBucket",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "iam:CreateServiceLinkedRole",
+    "iam:PutRolePolicy"
+   ],
+   "timeoutInMinutes": 120
+  },
+  "delete": {
+   "permissions": [
+    "fsx:DescribeDataRepositoryAssociations",
+    "fsx:DeleteDataRepositoryAssociation"
+   ],
+   "timeoutInMinutes": 180
+  },
+  "list": {
+   "permissions": [
+    "fsx:DescribeDataRepositoryAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "fsx:DescribeDataRepositoryAssociations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "fsx:DescribeDataRepositoryAssociations",
+    "fsx:UpdateDataRepositoryAssociation",
+    "fsx:TagResource",
+    "fsx:UntagResource",
+    "s3:ListBucket",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "iam:CreateServiceLinkedRole",
+    "iam:PutRolePolicy"
+   ],
+   "timeoutInMinutes": 180
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationId"
+ ],
+ "properties": {
+  "AssociationId": {
+   "type": "string"
+  },
+  "BatchImportMetaDataOnCreate": {
+   "type": "boolean"
+  },
+  "DataRepositoryPath": {
+   "type": "string"
+  },
+  "FileSystemId": {
+   "type": "string"
+  },
+  "FileSystemPath": {
+   "type": "string"
+  },
+  "ImportedFileChunkSize": {
+   "type": "integer"
+  },
+  "ResourceARN": {
+   "type": "string"
+  },
+  "S3": {
+   "$ref": "#/definitions/S3"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationId",
+  "/properties/ResourceARN"
+ ],
+ "required": [
+  "FileSystemId",
+  "FileSystemPath",
+  "DataRepositoryPath"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "AssociationId": "/AssociationId",
+   "FileSystemId": "/FileSystemId"
+  },
+  "templateUri": "/fsx/home?region=${awsRegion}#data-repository-associations-details/${FileSystemId}/${AssociationId}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fsx.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::FSx::DataRepositoryAssociation"
+}

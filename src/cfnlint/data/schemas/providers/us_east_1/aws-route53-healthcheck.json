@@ -1,0 +1,209 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HealthCheckConfig/Type",
+  "/properties/HealthCheckConfig/MeasureLatency",
+  "/properties/HealthCheckConfig/RequestInterval"
+ ],
+ "definitions": {
+  "AlarmIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "HealthCheckTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:CreateHealthCheck",
+    "route53:ChangeTagsForResource",
+    "cloudwatch:DescribeAlarms",
+    "route53-recovery-control-config:DescribeRoutingControl"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:DeleteHealthCheck"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:ListHealthChecks",
+    "route53:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:GetHealthCheck",
+    "route53:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53:UpdateHealthCheck",
+    "route53:ChangeTagsForResource",
+    "route53:ListTagsForResource",
+    "cloudwatch:DescribeAlarms"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HealthCheckId"
+ ],
+ "properties": {
+  "HealthCheckConfig": {
+   "additionalProperties": false,
+   "cfnLint": [
+    "AWS::Route53::HealthCheck/Properties/HealthCheckConfig"
+   ],
+   "properties": {
+    "AlarmIdentifier": {
+     "$ref": "#/definitions/AlarmIdentifier"
+    },
+    "ChildHealthChecks": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 256,
+     "type": "array"
+    },
+    "EnableSNI": {
+     "type": "boolean"
+    },
+    "FailureThreshold": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "FullyQualifiedDomainName": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "HealthThreshold": {
+     "maximum": 256,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "IPAddress": {
+     "maxLength": 45,
+     "pattern": "^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))$|^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$",
+     "type": "string"
+    },
+    "InsufficientDataHealthStatus": {
+     "enum": [
+      "Healthy",
+      "LastKnownStatus",
+      "Unhealthy"
+     ],
+     "type": "string"
+    },
+    "Inverted": {
+     "type": "boolean"
+    },
+    "MeasureLatency": {
+     "type": "boolean"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 64,
+     "type": "array"
+    },
+    "RequestInterval": {
+     "maximum": 30,
+     "minimum": 10,
+     "type": "integer"
+    },
+    "ResourcePath": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "RoutingControlArn": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SearchString": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CALCULATED",
+      "CLOUDWATCH_METRIC",
+      "HTTP",
+      "HTTP_STR_MATCH",
+      "HTTPS",
+      "HTTPS_STR_MATCH",
+      "TCP",
+      "RECOVERY_CONTROL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "HealthCheckId": {
+   "type": "string"
+  },
+  "HealthCheckTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HealthCheckTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HealthCheckId"
+ ],
+ "required": [
+  "HealthCheckConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53.git",
+ "taggable": true,
+ "typeName": "AWS::Route53::HealthCheck"
+}

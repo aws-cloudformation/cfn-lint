@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import os
 from test.testlib.testcase import BaseTestCase
 
 from cfnlint.helpers import create_rules
@@ -14,8 +13,8 @@ class TestCreateRules(BaseTestCase):
     """Test creating rules from a module."""
 
     def testBase(self):
-        from cfnlint.rules.templates import Base
+        from cfnlint.rules.jsonschema import JsonSchema
 
-        rules = create_rules(Base)
+        rules = create_rules(JsonSchema)
         self.assertTrue(all(isinstance(r, CloudFormationLintRule) for r in rules))
         self.assertTrue("E1001" in (r.id for r in rules))

@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "type": "string"
+  },
+  "Alias": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "pattern": "^[A-Z]*$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[a-z0-9\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AwsLambda": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FunctionPayload": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "ObjectLambdaConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedFeatures": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CloudWatchMetricsEnabled": {
+     "type": "boolean"
+    },
+    "SupportingAccessPoint": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TransformationConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TransformationConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "SupportingAccessPoint",
+    "TransformationConfigurations"
+   ],
+   "type": "object"
+  },
+  "PolicyStatus": {
+   "additionalProperties": false,
+   "properties": {
+    "IsPublic": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PublicAccessBlockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockPublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TransformationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ContentTransformation": {
+     "oneOf": [
+      {
+       "additionalProperties": false,
+       "properties": {
+        "AwsLambda": {
+         "$ref": "#/definitions/AwsLambda"
+        }
+       },
+       "required": [
+        "AwsLambda"
+       ]
+      }
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "Actions",
+    "ContentTransformation"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:CreateAccessPointForObjectLambda",
+    "s3:PutAccessPointConfigurationForObjectLambda",
+    "s3:GetAccessPointForObjectLambda",
+    "s3:GetAccessPointPolicyStatusForObjectLambda",
+    "s3:GetAccessPointConfigurationForObjectLambda"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:DeleteAccessPointForObjectLambda"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3:ListAccessPointsForObjectLambda"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3:GetAccessPointForObjectLambda",
+    "s3:GetAccessPointPolicyStatusForObjectLambda",
+    "s3:GetAccessPointConfigurationForObjectLambda"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:PutAccessPointConfigurationForObjectLambda",
+    "s3:GetAccessPointForObjectLambda",
+    "s3:GetAccessPointPolicyStatusForObjectLambda",
+    "s3:GetAccessPointConfigurationForObjectLambda"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Alias": {
+   "$ref": "#/definitions/Alias"
+  },
+  "Arn": {
+   "pattern": "arn:[^:]+:s3-object-lambda:[^:]*:\\d{12}:accesspoint/.*",
+   "type": "string"
+  },
+  "CreationDate": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 45,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "ObjectLambdaConfiguration": {
+   "$ref": "#/definitions/ObjectLambdaConfiguration"
+  },
+  "PolicyStatus": {
+   "$ref": "#/definitions/PolicyStatus"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Alias",
+  "/properties/Alias/Value",
+  "/properties/Alias/Status",
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic",
+  "/properties/CreationDate",
+  "/properties/PublicAccessBlockConfiguration"
+ ],
+ "required": [
+  "ObjectLambdaConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3ObjectLambda::AccessPoint"
+}

@@ -1,0 +1,192 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeerAddress",
+  "/properties/CoreNetworkAddress",
+  "/properties/BgpOptions",
+  "/properties/InsideCidrBlocks",
+  "/properties/ConnectAttachmentId"
+ ],
+ "definitions": {
+  "BgpOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PeerAsn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectPeerBgpConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CoreNetworkAddress": {
+     "type": "string"
+    },
+    "CoreNetworkAsn": {
+     "type": "number"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "PeerAsn": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectPeerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BgpConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConnectPeerBgpConfiguration"
+     },
+     "type": "array"
+    },
+    "CoreNetworkAddress": {
+     "type": "string"
+    },
+    "InsideCidrBlocks": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PeerAddress": {
+     "type": "string"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/TunnelProtocol"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TunnelProtocol": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetConnectPeer",
+    "networkmanager:CreateConnectPeer",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetConnectPeer",
+    "networkmanager:DeleteConnectPeer",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListConnectPeers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetConnectPeer"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectPeerId"
+ ],
+ "properties": {
+  "BgpOptions": {
+   "$ref": "#/definitions/BgpOptions"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ConnectPeerConfiguration"
+  },
+  "ConnectAttachmentId": {
+   "type": "string"
+  },
+  "ConnectPeerId": {
+   "type": "string"
+  },
+  "CoreNetworkAddress": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "InsideCidrBlocks": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "PeerAddress": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectPeerId",
+  "/properties/State",
+  "/properties/CreatedAt",
+  "/properties/Configuration",
+  "/properties/CoreNetworkId",
+  "/properties/EdgeLocation"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-connectpeer",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::ConnectPeer",
+ "writeOnlyProperties": [
+  "/properties/PeerAddress",
+  "/properties/CoreNetworkAddress",
+  "/properties/BgpOptions",
+  "/properties/InsideCidrBlocks"
+ ]
+}

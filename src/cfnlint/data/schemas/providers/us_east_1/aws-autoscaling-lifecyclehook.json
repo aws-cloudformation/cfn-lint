@@ -1,0 +1,91 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupName",
+  "/properties/LifecycleHookName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "autoscaling:PutLifecycleHook",
+    "autoscaling:DescribeLifecycleHooks",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "autoscaling:DeleteLifecycleHook",
+    "autoscaling:DescribeLifecycleHooks"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "autoscaling:DescribeLifecycleHooks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "autoscaling:DescribeLifecycleHooks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "autoscaling:PutLifecycleHook",
+    "autoscaling:DescribeLifecycleHooks",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AutoScalingGroupName",
+  "/properties/LifecycleHookName"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "DefaultResult": {
+   "enum": [
+    "ABANDON",
+    "CONTINUE"
+   ],
+   "type": "string"
+  },
+  "HeartbeatTimeout": {
+   "type": "integer"
+  },
+  "LifecycleHookName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LifecycleTransition": {
+   "enum": [
+    "autoscaling:EC2_INSTANCE_LAUNCHING",
+    "autoscaling:EC2_INSTANCE_TERMINATING"
+   ],
+   "type": "string"
+  },
+  "NotificationMetadata": {
+   "maxLength": 1023,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NotificationTargetARN": {
+   "type": "string"
+  },
+  "RoleARN": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "LifecycleTransition",
+  "AutoScalingGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-autoscaling.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::AutoScaling::LifecycleHook"
+}

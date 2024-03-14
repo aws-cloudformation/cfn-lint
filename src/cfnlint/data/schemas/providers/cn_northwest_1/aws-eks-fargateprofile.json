@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName",
+  "/properties/PodExecutionRoleArn",
+  "/properties/Subnets",
+  "/properties/Selectors"
+ ],
+ "definitions": {
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Selector": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "type": "array"
+    },
+    "Namespace": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreateFargateProfile",
+    "eks:DescribeFargateProfile",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "eks:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeleteFargateProfile",
+    "eks:DescribeFargateProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "eks:ListFargateProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeFargateProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "eks:DescribeFargateProfile",
+    "eks:ListTagsForResource",
+    "eks:TagResource",
+    "eks:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "FargateProfileName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "PodExecutionRoleArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Selectors": {
+   "items": {
+    "$ref": "#/definitions/Selector"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Subnets": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "PodExecutionRoleArn",
+  "Selectors"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "typeName": "AWS::EKS::FargateProfile"
+}

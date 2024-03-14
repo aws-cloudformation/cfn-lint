@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExperimentTemplateId",
+  "/properties/AccountId"
+ ],
+ "definitions": {
+  "TargetAccountConfigurationDescription": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "TargetAccountId": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "TargetAccountRoleArn": {
+   "maxLength": 1224,
+   "type": "string"
+  },
+  "TargetExperimentTemplateId": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "fis:CreateTargetAccountConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "fis:DeleteTargetAccountConfiguration"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ExperimentTemplateId": {
+      "$ref": "resource-schema.json#/properties/ExperimentTemplateId"
+     }
+    },
+    "required": [
+     "ExperimentTemplateId"
+    ]
+   },
+   "permissions": [
+    "fis:ListTargetAccountConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "fis:GetTargetAccountConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "fis:UpdateTargetAccountConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ExperimentTemplateId",
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "$ref": "#/definitions/TargetAccountId"
+  },
+  "Description": {
+   "$ref": "#/definitions/TargetAccountConfigurationDescription"
+  },
+  "ExperimentTemplateId": {
+   "$ref": "#/definitions/TargetExperimentTemplateId"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/TargetAccountRoleArn"
+  }
+ },
+ "required": [
+  "ExperimentTemplateId",
+  "AccountId",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fis.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::FIS::TargetAccountConfiguration"
+}

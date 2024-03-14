@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ConnectivityType",
+  "/properties/AllocationId",
+  "/properties/PrivateIpAddress"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateNatGateway",
+    "ec2:DescribeNatGateways",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteNatGateway",
+    "ec2:DescribeNatGateways"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeNatGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeNatGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeNatGateways",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:AssociateNatGatewayAddress",
+    "ec2:DisassociateNatGatewayAddress",
+    "ec2:AssignPrivateNatGatewayAddress",
+    "ec2:UnassignPrivateNatGatewayAddress"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NatGatewayId"
+ ],
+ "properties": {
+  "AllocationId": {
+   "type": "string"
+  },
+  "ConnectivityType": {
+   "type": "string"
+  },
+  "MaxDrainDurationSeconds": {
+   "type": "integer"
+  },
+  "NatGatewayId": {
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  },
+  "SecondaryAllocationIds": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SecondaryPrivateIpAddressCount": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "SecondaryPrivateIpAddresses": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NatGatewayId"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::NatGateway",
+ "writeOnlyProperties": [
+  "/properties/MaxDrainDurationSeconds"
+ ]
+}

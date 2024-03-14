@@ -1,0 +1,63 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "vpc-lattice:GetAuthPolicy",
+    "vpc-lattice:PutAuthPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "vpc-lattice:GetAuthPolicy",
+    "vpc-lattice:DeleteAuthPolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "vpc-lattice:GetAuthPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "vpc-lattice:GetAuthPolicy",
+    "vpc-lattice:PutAuthPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceIdentifier"
+ ],
+ "properties": {
+  "Policy": {
+   "type": "object"
+  },
+  "ResourceIdentifier": {
+   "maxLength": 200,
+   "minLength": 21,
+   "pattern": "^((((sn)|(svc))-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:((servicenetwork/sn)|(service/svc))-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/State"
+ ],
+ "required": [
+  "ResourceIdentifier",
+  "Policy"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::VpcLattice::AuthPolicy"
+}

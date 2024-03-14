@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ImportSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceArn": {
+     "type": "string"
+    },
+    "SourceType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType",
+    "SourceArn"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateKeyValueStore",
+    "cloudfront:DescribeKeyValueStore",
+    "s3:GetObject",
+    "s3:HeadObject",
+    "s3:GetBucketLocation"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteKeyValueStore",
+    "cloudfront:DescribeKeyValueStore"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListKeyValueStores"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:DescribeKeyValueStore"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:UpdateKeyValueStore",
+    "cloudfront:DescribeKeyValueStore"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Comment": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImportSource": {
+   "$ref": "#/definitions/ImportSource"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::KeyValueStore",
+ "writeOnlyProperties": [
+  "/properties/ImportSource"
+ ]
+}

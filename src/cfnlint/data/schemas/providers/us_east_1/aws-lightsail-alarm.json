@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName",
+  "/properties/MonitoredResourceName",
+  "/properties/MetricName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:PutAlarm",
+    "lightsail:GetAlarms"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:DeleteAlarm",
+    "lightsail:GetAlarms"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetAlarms"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetAlarms"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:PutAlarm",
+    "lightsail:GetAlarms"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "AlarmArn": {
+   "type": "string"
+  },
+  "AlarmName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "ComparisonOperator": {
+   "type": "string"
+  },
+  "ContactProtocols": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DatapointsToAlarm": {
+   "type": "integer"
+  },
+  "EvaluationPeriods": {
+   "type": "integer"
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "MonitoredResourceName": {
+   "type": "string"
+  },
+  "NotificationEnabled": {
+   "type": "boolean"
+  },
+  "NotificationTriggers": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "State": {
+   "type": "string"
+  },
+  "Threshold": {
+   "type": "number"
+  },
+  "TreatMissingData": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AlarmArn",
+  "/properties/State"
+ ],
+ "required": [
+  "AlarmName",
+  "MonitoredResourceName",
+  "MetricName",
+  "ComparisonOperator",
+  "EvaluationPeriods",
+  "Threshold"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "taggable": true,
+ "typeName": "AWS::Lightsail::Alarm"
+}

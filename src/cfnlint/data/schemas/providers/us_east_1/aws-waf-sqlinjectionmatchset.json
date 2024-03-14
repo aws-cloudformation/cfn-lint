@@ -1,0 +1,64 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Data": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SqlInjectionMatchTuple": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "TextTransformation": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TextTransformation",
+    "FieldToMatch"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "SqlInjectionMatchTuples": {
+   "items": {
+    "$ref": "#/definitions/SqlInjectionMatchTuple"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::WAF::SqlInjectionMatchSet"
+}

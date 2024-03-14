@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TableCatalogId",
+  "/properties/DatabaseName",
+  "/properties/TableName",
+  "/properties/Name",
+  "/properties/RowFilter",
+  "/properties/ColumnNames",
+  "/properties/ColumnWildcard"
+ ],
+ "definitions": {
+  "CatalogIdString": {
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "ColumnNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NameString"
+   },
+   "type": "array"
+  },
+  "ColumnWildcard": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludedColumnNames": {
+     "$ref": "#/definitions/ColumnNames"
+    }
+   },
+   "type": "object"
+  },
+  "NameString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RowFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "AllRowsWildcard": {
+     "additionalProperties": false,
+     "type": "object"
+    },
+    "FilterExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lakeformation:CreateDataCellsFilter",
+    "glue:GetTable"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lakeformation:DeleteDataCellsFilter"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lakeformation:ListDataCellsFilter"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lakeformation:ListDataCellsFilter"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableCatalogId",
+  "/properties/DatabaseName",
+  "/properties/TableName",
+  "/properties/Name"
+ ],
+ "properties": {
+  "ColumnNames": {
+   "$ref": "#/definitions/ColumnNames"
+  },
+  "ColumnWildcard": {
+   "$ref": "#/definitions/ColumnWildcard"
+  },
+  "DatabaseName": {
+   "$ref": "#/definitions/NameString"
+  },
+  "Name": {
+   "$ref": "#/definitions/NameString"
+  },
+  "RowFilter": {
+   "$ref": "#/definitions/RowFilter"
+  },
+  "TableCatalogId": {
+   "$ref": "#/definitions/CatalogIdString"
+  },
+  "TableName": {
+   "$ref": "#/definitions/NameString"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TableCatalogId",
+  "DatabaseName",
+  "TableName",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::LakeFormation::DataCellsFilter"
+}

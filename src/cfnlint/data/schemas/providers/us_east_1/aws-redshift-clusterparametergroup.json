@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParameterGroupName",
+  "/properties/ParameterGroupFamily",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterValue",
+    "ParameterName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateClusterParameterGroup",
+    "redshift:ModifyClusterParameterGroup",
+    "redshift:DescribeClusterParameterGroups",
+    "redshift:DescribeClusterParameters",
+    "redshift:DescribeTags",
+    "redshift:CreateTags",
+    "ec2:AllocateAddress",
+    "ec2:AssociateAddress",
+    "ec2:AttachNetworkInterface",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusterParameterGroups",
+    "redshift:DeleteClusterParameterGroup",
+    "redshift:DescribeClusterParameters",
+    "initech:DeleteReport"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusterParameterGroups",
+    "redshift:DescribeClusterParameters",
+    "initech:ListReports"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeClusterParameterGroups",
+    "initech:DescribeReport",
+    "redshift:DescribeClusterParameters",
+    "redshift:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:DescribeClusterParameterGroups",
+    "redshift:ResetClusterParameterGroup",
+    "redshift:ModifyClusterParameterGroup",
+    "redshift:DescribeClusterParameters",
+    "redshift:DescribeTags",
+    "redshift:CreateTags",
+    "redshift:DeleteTags",
+    "initech:UpdateReport"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ParameterGroupName"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "ParameterGroupFamily": {
+   "type": "string"
+  },
+  "ParameterGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "Parameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Parameter"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "Description",
+  "ParameterGroupFamily"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::ClusterParameterGroup",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

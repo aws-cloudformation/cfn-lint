@@ -1,0 +1,536 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "CampaignCustomMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "Data": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CampaignEmailMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "type": "string"
+    },
+    "FromAddress": {
+     "type": "string"
+    },
+    "HtmlBody": {
+     "type": "string"
+    },
+    "Title": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CampaignEventFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "$ref": "#/definitions/EventDimensions"
+    },
+    "FilterType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CampaignHook": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaFunctionName": {
+     "type": "string"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "WebUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CampaignInAppMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "items": {
+      "$ref": "#/definitions/InAppMessageContent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CustomConfig": {
+     "type": "object"
+    },
+    "Layout": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CampaignSmsMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "type": "string"
+    },
+    "EntityId": {
+     "type": "string"
+    },
+    "MessageType": {
+     "type": "string"
+    },
+    "OriginationNumber": {
+     "type": "string"
+    },
+    "SenderId": {
+     "type": "string"
+    },
+    "TemplateId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomDeliveryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryUri": {
+     "type": "string"
+    },
+    "EndpointTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DefaultButtonConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BackgroundColor": {
+     "type": "string"
+    },
+    "BorderRadius": {
+     "type": "integer"
+    },
+    "ButtonAction": {
+     "type": "string"
+    },
+    "Link": {
+     "type": "string"
+    },
+    "Text": {
+     "type": "string"
+    },
+    "TextColor": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EventDimensions": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "type": "object"
+    },
+    "EventType": {
+     "$ref": "#/definitions/SetDimension"
+    },
+    "Metrics": {
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "InAppMessageBodyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Alignment": {
+     "type": "string"
+    },
+    "Body": {
+     "type": "string"
+    },
+    "TextColor": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InAppMessageButton": {
+   "additionalProperties": false,
+   "properties": {
+    "Android": {
+     "$ref": "#/definitions/OverrideButtonConfiguration"
+    },
+    "DefaultConfig": {
+     "$ref": "#/definitions/DefaultButtonConfiguration"
+    },
+    "IOS": {
+     "$ref": "#/definitions/OverrideButtonConfiguration"
+    },
+    "Web": {
+     "$ref": "#/definitions/OverrideButtonConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "InAppMessageContent": {
+   "additionalProperties": false,
+   "properties": {
+    "BackgroundColor": {
+     "type": "string"
+    },
+    "BodyConfig": {
+     "$ref": "#/definitions/InAppMessageBodyConfig"
+    },
+    "HeaderConfig": {
+     "$ref": "#/definitions/InAppMessageHeaderConfig"
+    },
+    "ImageUrl": {
+     "type": "string"
+    },
+    "PrimaryBtn": {
+     "$ref": "#/definitions/InAppMessageButton"
+    },
+    "SecondaryBtn": {
+     "$ref": "#/definitions/InAppMessageButton"
+    }
+   },
+   "type": "object"
+  },
+  "InAppMessageHeaderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Alignment": {
+     "type": "string"
+    },
+    "Header": {
+     "type": "string"
+    },
+    "TextColor": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Limits": {
+   "additionalProperties": false,
+   "properties": {
+    "Daily": {
+     "type": "integer"
+    },
+    "MaximumDuration": {
+     "type": "integer"
+    },
+    "MessagesPerSecond": {
+     "type": "integer"
+    },
+    "Session": {
+     "type": "integer"
+    },
+    "Total": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Message": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "type": "string"
+    },
+    "Body": {
+     "type": "string"
+    },
+    "ImageIconUrl": {
+     "type": "string"
+    },
+    "ImageSmallIconUrl": {
+     "type": "string"
+    },
+    "ImageUrl": {
+     "type": "string"
+    },
+    "JsonBody": {
+     "type": "string"
+    },
+    "MediaUrl": {
+     "type": "string"
+    },
+    "RawContent": {
+     "type": "string"
+    },
+    "SilentPush": {
+     "type": "boolean"
+    },
+    "TimeToLive": {
+     "type": "integer"
+    },
+    "Title": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MessageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ADMMessage": {
+     "$ref": "#/definitions/Message"
+    },
+    "APNSMessage": {
+     "$ref": "#/definitions/Message"
+    },
+    "BaiduMessage": {
+     "$ref": "#/definitions/Message"
+    },
+    "CustomMessage": {
+     "$ref": "#/definitions/CampaignCustomMessage"
+    },
+    "DefaultMessage": {
+     "$ref": "#/definitions/Message"
+    },
+    "EmailMessage": {
+     "$ref": "#/definitions/CampaignEmailMessage"
+    },
+    "GCMMessage": {
+     "$ref": "#/definitions/Message"
+    },
+    "InAppMessage": {
+     "$ref": "#/definitions/CampaignInAppMessage"
+    },
+    "SMSMessage": {
+     "$ref": "#/definitions/CampaignSmsMessage"
+    }
+   },
+   "type": "object"
+  },
+  "OverrideButtonConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ButtonAction": {
+     "type": "string"
+    },
+    "Link": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QuietTime": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "type": "string"
+    },
+    "Start": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Start",
+    "End"
+   ],
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "EventFilter": {
+     "$ref": "#/definitions/CampaignEventFilter"
+    },
+    "Frequency": {
+     "type": "string"
+    },
+    "IsLocalTime": {
+     "type": "boolean"
+    },
+    "QuietTime": {
+     "$ref": "#/definitions/QuietTime"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "TimeZone": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SetDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionType": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Template": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailTemplate": {
+     "$ref": "#/definitions/Template"
+    },
+    "PushTemplate": {
+     "$ref": "#/definitions/Template"
+    },
+    "SMSTemplate": {
+     "$ref": "#/definitions/Template"
+    },
+    "VoiceTemplate": {
+     "$ref": "#/definitions/Template"
+    }
+   },
+   "type": "object"
+  },
+  "WriteTreatmentResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDeliveryConfiguration": {
+     "$ref": "#/definitions/CustomDeliveryConfiguration"
+    },
+    "MessageConfiguration": {
+     "$ref": "#/definitions/MessageConfiguration"
+    },
+    "Schedule": {
+     "$ref": "#/definitions/Schedule"
+    },
+    "SizePercent": {
+     "type": "integer"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/TemplateConfiguration"
+    },
+    "TreatmentDescription": {
+     "type": "string"
+    },
+    "TreatmentName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CampaignId"
+ ],
+ "properties": {
+  "AdditionalTreatments": {
+   "items": {
+    "$ref": "#/definitions/WriteTreatmentResource"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ApplicationId": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CampaignHook": {
+   "$ref": "#/definitions/CampaignHook"
+  },
+  "CampaignId": {
+   "type": "string"
+  },
+  "CustomDeliveryConfiguration": {
+   "$ref": "#/definitions/CustomDeliveryConfiguration"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "HoldoutPercent": {
+   "type": "integer"
+  },
+  "IsPaused": {
+   "type": "boolean"
+  },
+  "Limits": {
+   "$ref": "#/definitions/Limits"
+  },
+  "MessageConfiguration": {
+   "$ref": "#/definitions/MessageConfiguration"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Priority": {
+   "type": "integer"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "SegmentId": {
+   "type": "string"
+  },
+  "SegmentVersion": {
+   "type": "integer"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "TemplateConfiguration": {
+   "$ref": "#/definitions/TemplateConfiguration"
+  },
+  "TreatmentDescription": {
+   "type": "string"
+  },
+  "TreatmentName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CampaignId"
+ ],
+ "required": [
+  "SegmentId",
+  "Schedule",
+  "ApplicationId",
+  "Name"
+ ],
+ "typeName": "AWS::Pinpoint::Campaign"
+}

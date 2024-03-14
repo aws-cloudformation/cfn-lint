@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VerificationCertificatePem",
+  "/properties/CertificateMode",
+  "/properties/CACertificatePem"
+ ],
+ "definitions": {
+  "RegistrationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+     "type": "string"
+    },
+    "TemplateBody": {
+     "maxLength": 10240,
+     "minLength": 0,
+     "pattern": "[\\s\\S]*",
+     "type": "string"
+    },
+    "TemplateName": {
+     "maxLength": 36,
+     "minLength": 1,
+     "pattern": "^[0-9A-Za-z_-]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "iot:RegisterCACertificate",
+    "iot:DescribeCACertificate",
+    "iot:TagResource",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:UpdateCACertificate",
+    "iot:DeleteCACertificate",
+    "iot:DescribeCACertificate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListCACertificates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeCACertificate",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "iot:UpdateCACertificate",
+    "iot:DescribeCACertificate",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AutoRegistrationStatus": {
+   "enum": [
+    "ENABLE",
+    "DISABLE"
+   ],
+   "type": "string"
+  },
+  "CACertificatePem": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "CertificateMode": {
+   "enum": [
+    "DEFAULT",
+    "SNI_ONLY"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RegistrationConfig": {
+   "$ref": "#/definitions/RegistrationConfig"
+  },
+  "RemoveAutoRegistration": {
+   "type": "boolean"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VerificationCertificatePem": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "CACertificatePem",
+  "Status"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::CACertificate",
+ "writeOnlyProperties": [
+  "/properties/VerificationCertificatePem",
+  "/properties/RemoveAutoRegistration"
+ ]
+}

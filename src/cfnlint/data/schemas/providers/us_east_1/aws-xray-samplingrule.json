@@ -1,0 +1,255 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SamplingRule/Version"
+ ],
+ "definitions": {
+  "RuleARN": {
+   "type": "string"
+  },
+  "RuleName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SamplingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$comment": "String to string map",
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "FixedRate": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "HTTPMethod": {
+     "maxLength": 10,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "Priority": {
+     "maximum": 9999,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReservoirSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ResourceARN": {
+     "maxLength": 500,
+     "type": "string"
+    },
+    "RuleARN": {
+     "$ref": "#/definitions/RuleARN"
+    },
+    "RuleName": {
+     "$ref": "#/definitions/RuleName"
+    },
+    "ServiceName": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "ServiceType": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "URLPath": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Version": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FixedRate",
+    "Host",
+    "HTTPMethod",
+    "Priority",
+    "ReservoirSize",
+    "ResourceARN",
+    "ServiceName",
+    "ServiceType",
+    "URLPath"
+   ],
+   "type": "object"
+  },
+  "SamplingRuleRecord": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "type": "string"
+    },
+    "ModifiedAt": {
+     "type": "string"
+    },
+    "SamplingRule": {
+     "$ref": "#/definitions/SamplingRule"
+    }
+   },
+   "type": "object"
+  },
+  "SamplingRuleUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$comment": "String to string map",
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "FixedRate": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "HTTPMethod": {
+     "maxLength": 10,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "Priority": {
+     "maximum": 9999,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReservoirSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ResourceARN": {
+     "maxLength": 500,
+     "type": "string"
+    },
+    "RuleARN": {
+     "$ref": "#/definitions/RuleARN"
+    },
+    "RuleName": {
+     "$ref": "#/definitions/RuleName"
+    },
+    "ServiceName": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "ServiceType": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "URLPath": {
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/RuleName",
+  "/properties/SamplingRuleRecord",
+  "/properties/SamplingRuleUpdate"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "xray:CreateSamplingRule",
+    "xray:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "xray:DeleteSamplingRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "xray:GetSamplingRules",
+    "xray:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "xray:GetSamplingRules",
+    "xray:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "xray:UpdateSamplingRule",
+    "xray:TagResource",
+    "xray:UntagResource",
+    "xray:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleARN"
+ ],
+ "properties": {
+  "RuleARN": {
+   "$ref": "#/definitions/RuleARN"
+  },
+  "RuleName": {
+   "$ref": "#/definitions/RuleName"
+  },
+  "SamplingRule": {
+   "$ref": "#/definitions/SamplingRule"
+  },
+  "SamplingRuleRecord": {
+   "$ref": "#/definitions/SamplingRuleRecord"
+  },
+  "SamplingRuleUpdate": {
+   "$ref": "#/definitions/SamplingRuleUpdate"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleARN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::XRay::SamplingRule"
+}

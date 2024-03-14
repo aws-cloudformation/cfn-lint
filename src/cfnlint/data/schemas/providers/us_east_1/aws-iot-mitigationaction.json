@@ -1,0 +1,241 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ActionName"
+ ],
+ "definitions": {
+  "ActionParams": {
+   "additionalProperties": false,
+   "properties": {
+    "AddThingsToThingGroupParams": {
+     "$ref": "#/definitions/AddThingsToThingGroupParams"
+    },
+    "EnableIoTLoggingParams": {
+     "$ref": "#/definitions/EnableIoTLoggingParams"
+    },
+    "PublishFindingToSnsParams": {
+     "$ref": "#/definitions/PublishFindingToSnsParams"
+    },
+    "ReplaceDefaultPolicyVersionParams": {
+     "$ref": "#/definitions/ReplaceDefaultPolicyVersionParams"
+    },
+    "UpdateCACertificateParams": {
+     "$ref": "#/definitions/UpdateCACertificateParams"
+    },
+    "UpdateDeviceCertificateParams": {
+     "$ref": "#/definitions/UpdateDeviceCertificateParams"
+    }
+   },
+   "type": "object"
+  },
+  "AddThingsToThingGroupParams": {
+   "additionalProperties": false,
+   "properties": {
+    "OverrideDynamicGroups": {
+     "type": "boolean"
+    },
+    "ThingGroupNames": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ThingGroupNames"
+   ],
+   "type": "object"
+  },
+  "EnableIoTLoggingParams": {
+   "additionalProperties": false,
+   "properties": {
+    "LogLevel": {
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "ERROR",
+      "WARN",
+      "UNSET_VALUE"
+     ],
+     "type": "string"
+    },
+    "RoleArnForLogging": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogLevel",
+    "RoleArnForLogging"
+   ],
+   "type": "object"
+  },
+  "PublishFindingToSnsParams": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicArn"
+   ],
+   "type": "object"
+  },
+  "ReplaceDefaultPolicyVersionParams": {
+   "additionalProperties": false,
+   "properties": {
+    "TemplateName": {
+     "enum": [
+      "BLANK_POLICY",
+      "UNSET_VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TemplateName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UpdateCACertificateParams": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "DEACTIVATE",
+      "UNSET_VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action"
+   ],
+   "type": "object"
+  },
+  "UpdateDeviceCertificateParams": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "DEACTIVATE",
+      "UNSET_VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateMitigationAction",
+    "iot:DescribeMitigationAction",
+    "iot:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeMitigationAction",
+    "iot:DeleteMitigationAction"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListMitigationActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeMitigationAction",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateMitigationAction",
+    "iot:ListTagsForResource",
+    "iot:UntagResource",
+    "iot:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ActionName"
+ ],
+ "properties": {
+  "ActionName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "ActionParams": {
+   "$ref": "#/definitions/ActionParams"
+  },
+  "MitigationActionArn": {
+   "type": "string"
+  },
+  "MitigationActionId": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MitigationActionArn",
+  "/properties/MitigationActionId"
+ ],
+ "required": [
+  "RoleArn",
+  "ActionParams"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "typeName": "AWS::IoT::MitigationAction"
+}

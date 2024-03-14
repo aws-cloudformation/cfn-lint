@@ -1,0 +1,143 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Enabled",
+    "Prefix"
+   ],
+   "type": "object"
+  },
+  "S3Origin": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainName": {
+     "type": "string"
+    },
+    "OriginAccessIdentity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DomainName",
+    "OriginAccessIdentity"
+   ],
+   "type": "object"
+  },
+  "StreamingDistributionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Aliases": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Comment": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Logging": {
+     "$ref": "#/definitions/Logging"
+    },
+    "PriceClass": {
+     "type": "string"
+    },
+    "S3Origin": {
+     "$ref": "#/definitions/S3Origin"
+    },
+    "TrustedSigners": {
+     "$ref": "#/definitions/TrustedSigners"
+    }
+   },
+   "required": [
+    "Comment",
+    "Enabled",
+    "S3Origin",
+    "TrustedSigners"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TrustedSigners": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountNumbers": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DomainName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "StreamingDistributionConfig": {
+   "$ref": "#/definitions/StreamingDistributionConfig"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/Id"
+ ],
+ "required": [
+  "StreamingDistributionConfig",
+  "Tags"
+ ],
+ "typeName": "AWS::CloudFront::StreamingDistribution"
+}

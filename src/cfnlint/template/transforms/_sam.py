@@ -89,9 +89,9 @@ class Transform:
                         if v in self._template.get("Parameters"):
                             self._parameters[v] = "Alias"
 
-        for _, resource in all_resources.items():
-            resource_type = resource.get("Type")
-            resource_dict = resource.get("Properties")
+        for _, rsc in all_resources.items():
+            resource_type = rsc.get("Type")
+            resource_dict = rsc.get("Properties")
 
             if resource_type == "AWS::Serverless::Function":
                 if resource_dict.get("PackageType") == "Image":

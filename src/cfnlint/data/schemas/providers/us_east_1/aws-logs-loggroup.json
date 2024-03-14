@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LogGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:DescribeLogGroups",
+    "logs:CreateLogGroup",
+    "logs:PutRetentionPolicy",
+    "logs:TagResource",
+    "logs:GetDataProtectionPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:CreateLogDelivery",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DescribeLogGroups",
+    "logs:DeleteLogGroup",
+    "logs:DeleteDataProtectionPolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "LogGroupName": {
+      "$ref": "resource-schema.json#/properties/LogGroupName"
+     }
+    },
+    "required": []
+   },
+   "permissions": [
+    "logs:DescribeLogGroups",
+    "logs:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeLogGroups",
+    "logs:ListTagsForResource",
+    "logs:GetDataProtectionPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:DescribeLogGroups",
+    "logs:AssociateKmsKey",
+    "logs:DisassociateKmsKey",
+    "logs:PutRetentionPolicy",
+    "logs:DeleteRetentionPolicy",
+    "logs:TagResource",
+    "logs:UntagResource",
+    "logs:GetDataProtectionPolicy",
+    "logs:PutDataProtectionPolicy",
+    "logs:CreateLogDelivery",
+    "s3:REST.PUT.OBJECT",
+    "firehose:TagDeliveryStream"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LogGroupName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DataProtectionPolicy": {
+   "type": "object"
+  },
+  "KmsKeyId": {
+   "maxLength": 256,
+   "pattern": "^arn:[a-z0-9-]+:kms:[a-z0-9-]+:\\d{12}:(key|alias)/.+\\Z",
+   "type": "string"
+  },
+  "LogGroupClass": {
+   "default": "STANDARD",
+   "enum": [
+    "STANDARD",
+    "INFREQUENT_ACCESS"
+   ],
+   "type": "string"
+  },
+  "LogGroupName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[.\\-_/#A-Za-z0-9]{1,512}\\Z",
+   "type": "string"
+  },
+  "RetentionInDays": {
+   "enum": [
+    1,
+    3,
+    5,
+    7,
+    14,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    365,
+    400,
+    545,
+    731,
+    1096,
+    1827,
+    2192,
+    2557,
+    2922,
+    3288,
+    3653
+   ],
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Logs::LogGroup"
+}

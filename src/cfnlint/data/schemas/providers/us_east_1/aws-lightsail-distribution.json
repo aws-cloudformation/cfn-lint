@@ -1,0 +1,262 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DistributionName",
+  "/properties/IpAddressType"
+ ],
+ "definitions": {
+  "CacheBehavior": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CacheBehaviorPerPath": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CacheSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedHTTPMethods": {
+     "type": "string"
+    },
+    "CachedHTTPMethods": {
+     "type": "string"
+    },
+    "DefaultTTL": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "ForwardedCookies": {
+     "$ref": "#/definitions/CookieObject"
+    },
+    "ForwardedHeaders": {
+     "$ref": "#/definitions/HeaderObject"
+    },
+    "ForwardedQueryStrings": {
+     "$ref": "#/definitions/QueryStringObject"
+    },
+    "MaximumTTL": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "MinimumTTL": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CookieObject": {
+   "additionalProperties": false,
+   "properties": {
+    "CookiesAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Option": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HeaderObject": {
+   "additionalProperties": false,
+   "properties": {
+    "HeadersAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Option": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputOrigin": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "ProtocolPolicy": {
+     "type": "string"
+    },
+    "RegionName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "QueryStringObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Option": {
+     "type": "boolean"
+    },
+    "QueryStringsAllowList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:AttachCertificateToDistribution",
+    "lightsail:CreateDistribution",
+    "lightsail:DetachCertificateFromDistribution",
+    "lightsail:GetCertificates",
+    "lightsail:GetCertificateDetails",
+    "lightsail:GetDistributions",
+    "lightsail:TagResource",
+    "lightsail:UntagResource",
+    "lightsail:UpdateDistribution",
+    "lightsail:UpdateDistributionBundle"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:DeleteDistribution",
+    "lightsail:GetDistributions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetDistributions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetDistributions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:AttachCertificateToDistribution",
+    "lightsail:DetachCertificateFromDistribution",
+    "lightsail:GetCertificates",
+    "lightsail:GetCertificateDetails",
+    "lightsail:GetDistributions",
+    "lightsail:TagResource",
+    "lightsail:UntagResource",
+    "lightsail:UpdateDistribution",
+    "lightsail:UpdateDistributionBundle"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DistributionName"
+ ],
+ "properties": {
+  "AbleToUpdateBundle": {
+   "type": "boolean"
+  },
+  "BundleId": {
+   "type": "string"
+  },
+  "CacheBehaviorSettings": {
+   "$ref": "#/definitions/CacheSettings"
+  },
+  "CacheBehaviors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CacheBehaviorPerPath"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CertificateName": {
+   "type": "string"
+  },
+  "DefaultCacheBehavior": {
+   "$ref": "#/definitions/CacheBehavior"
+  },
+  "DistributionArn": {
+   "type": "string"
+  },
+  "DistributionName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "IpAddressType": {
+   "type": "string"
+  },
+  "IsEnabled": {
+   "type": "boolean"
+  },
+  "Origin": {
+   "$ref": "#/definitions/InputOrigin"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DistributionArn",
+  "/properties/Status",
+  "/properties/AbleToUpdateBundle"
+ ],
+ "required": [
+  "DistributionName",
+  "BundleId",
+  "DefaultCacheBehavior",
+  "Origin"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "taggable": true,
+ "typeName": "AWS::Lightsail::Distribution"
+}

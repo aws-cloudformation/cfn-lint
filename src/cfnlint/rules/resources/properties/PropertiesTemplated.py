@@ -51,7 +51,10 @@ class PropertiesTemplated(CloudFormationLintRule):
         matches = []
         if isinstance(value, str):
             if not value.startswith("s3://") and not value.startswith("https://"):
-                message = f'This code may only work with `package` cli command as the property ({"/".join(map(str, path))}) is a string'
+                message = (
+                    "This code may only work with `package` cli command as the"
+                    f" property ({'/'.join(map(str, path))}) is a string"
+                )
                 matches.append(RuleMatch(path, message))
 
         return matches

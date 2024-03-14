@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "definitions": {
+  "ScalableTargetAction": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduledAction": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "ScalableTargetAction": {
+     "$ref": "#/definitions/ScalableTargetAction"
+    },
+    "Schedule": {
+     "type": "string"
+    },
+    "ScheduledActionName": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "Timezone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduledActionName",
+    "Schedule"
+   ],
+   "type": "object"
+  },
+  "SuspendedState": {
+   "additionalProperties": false,
+   "properties": {
+    "DynamicScalingInSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingOutSuspended": {
+     "type": "boolean"
+    },
+    "ScheduledScalingSuspended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "integer"
+  },
+  "MinCapacity": {
+   "type": "integer"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "RoleARN": {
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "type": "string"
+  },
+  "ScheduledActions": {
+   "items": {
+    "$ref": "#/definitions/ScheduledAction"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceNamespace": {
+   "type": "string"
+  },
+  "SuspendedState": {
+   "$ref": "#/definitions/SuspendedState"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResourceId",
+  "ServiceNamespace",
+  "ScalableDimension",
+  "MinCapacity",
+  "RoleARN",
+  "MaxCapacity"
+ ],
+ "typeName": "AWS::ApplicationAutoScaling::ScalableTarget"
+}

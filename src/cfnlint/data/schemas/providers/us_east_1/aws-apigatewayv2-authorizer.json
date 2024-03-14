@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "JWTConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Audience": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Issuer": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApiId": {
+      "$ref": "resource-schema.json#/properties/ApiId"
+     }
+    },
+    "required": [
+     "ApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AuthorizerId",
+  "/properties/ApiId"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "AuthorizerCredentialsArn": {
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "type": "string"
+  },
+  "AuthorizerPayloadFormatVersion": {
+   "type": "string"
+  },
+  "AuthorizerResultTtlInSeconds": {
+   "type": "integer"
+  },
+  "AuthorizerType": {
+   "type": "string"
+  },
+  "AuthorizerUri": {
+   "type": "string"
+  },
+  "EnableSimpleResponses": {
+   "type": "boolean"
+  },
+  "IdentitySource": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "IdentityValidationExpression": {
+   "type": "string"
+  },
+  "JwtConfiguration": {
+   "$ref": "#/definitions/JWTConfiguration"
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AuthorizerId"
+ ],
+ "required": [
+  "AuthorizerType",
+  "ApiId",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::Authorizer"
+}

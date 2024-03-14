@@ -1,0 +1,158 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/IdentityPoolId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityPoolId"
+ ],
+ "definitions": {
+  "MappingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Claim": {
+     "type": "string"
+    },
+    "MatchType": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Claim",
+    "MatchType",
+    "RoleARN",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RoleMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AmbiguousRoleResolution": {
+     "type": "string"
+    },
+    "IdentityProvider": {
+     "type": "string"
+    },
+    "RulesConfiguration": {
+     "$ref": "#/definitions/RulesConfigurationType"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RulesConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MappingRule"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-identity:GetIdentityPoolRoles",
+    "cognito-identity:SetIdentityPoolRoles",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cognito-identity:GetIdentityPoolRoles",
+    "cognito-identity:SetIdentityPoolRoles"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "IdentityPoolId": {
+      "$ref": "resource-schema.json#/properties/IdentityPoolId"
+     }
+    },
+    "required": [
+     "IdentityPoolId"
+    ]
+   },
+   "permissions": [
+    "cognito-identity:GetIdentityPoolRoles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cognito-identity:GetIdentityPoolRoles"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-identity:GetIdentityPoolRoles",
+    "cognito-identity:SetIdentityPoolRoles",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "IdentityPoolId": {
+   "type": "string"
+  },
+  "RoleMappings": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "$ref": "#/definitions/RoleMapping"
+    }
+   }
+  },
+  "Roles": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "IdentityPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::IdentityPoolRoleAttachment"
+}

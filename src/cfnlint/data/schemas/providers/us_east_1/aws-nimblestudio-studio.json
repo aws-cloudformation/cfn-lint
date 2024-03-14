@@ -1,0 +1,155 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "StudioEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "minLength": 4,
+     "pattern": "^arn:.*",
+     "type": "string"
+    },
+    "KeyType": {
+     "$ref": "#/definitions/StudioEncryptionConfigurationKeyType"
+    }
+   },
+   "required": [
+    "KeyType"
+   ],
+   "type": "object"
+  },
+  "StudioEncryptionConfigurationKeyType": {
+   "enum": [
+    "AWS_OWNED_KEY",
+    "CUSTOMER_MANAGED_KEY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "nimble:CreateStudio",
+    "nimble:GetStudio",
+    "nimble:TagResource",
+    "sso:CreateManagedApplicationInstance",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:ListGrants",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "nimble:DeleteStudio",
+    "nimble:GetStudio",
+    "nimble:UntagResource",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ListGrants",
+    "kms:RetireGrant",
+    "kms:GenerateDataKey",
+    "sso:DeleteManagedApplicationInstance",
+    "sso:GetManagedApplicationInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "nimble:ListStudios"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "nimble:GetStudio",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ListGrants",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "nimble:UpdateStudio",
+    "nimble:GetStudio",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:ListGrants",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioId"
+ ],
+ "properties": {
+  "AdminRoleArn": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "HomeRegion": {
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]",
+   "type": "string"
+  },
+  "SsoClientId": {
+   "type": "string"
+  },
+  "StudioEncryptionConfiguration": {
+   "$ref": "#/definitions/StudioEncryptionConfiguration"
+  },
+  "StudioId": {
+   "type": "string"
+  },
+  "StudioName": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]*$",
+   "type": "string"
+  },
+  "StudioUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UserRoleArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HomeRegion",
+  "/properties/SsoClientId",
+  "/properties/StudioId",
+  "/properties/StudioUrl"
+ ],
+ "required": [
+  "DisplayName",
+  "UserRoleArn",
+  "AdminRoleArn",
+  "StudioName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
+ "typeName": "AWS::NimbleStudio::Studio"
+}

@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthorizedAccountId",
+  "/properties/AuthorizedAwsRegion"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:PutAggregationAuthorization",
+    "config:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:DeleteAggregationAuthorization",
+    "config:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:TagResource",
+    "config:UntagResource",
+    "config:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AuthorizedAccountId",
+  "/properties/AuthorizedAwsRegion"
+ ],
+ "properties": {
+  "AggregationAuthorizationArn": {
+   "type": "string"
+  },
+  "AuthorizedAccountId": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "AuthorizedAwsRegion": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AggregationAuthorizationArn"
+ ],
+ "required": [
+  "AuthorizedAccountId",
+  "AuthorizedAwsRegion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Config::AggregationAuthorization"
+}

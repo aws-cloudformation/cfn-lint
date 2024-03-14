@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "detective:EnableOrganizationAdminAccount",
+    "detective:ListOrganizationAdminAccount",
+    "iam:CreateServiceLinkedRole",
+    "organizations:RegisterDelegatedAdministrator",
+    "organizations:DescribeOrganization",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListAccounts"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "detective:DisableOrganizationAdminAccount",
+    "detective:ListOrganizationAdminAccount",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "detective:ListOrganizationAdminAccount",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "detective:ListOrganizationAdminAccount",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "GraphArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GraphArn"
+ ],
+ "required": [
+  "AccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-detective.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Detective::OrganizationAdmin"
+}

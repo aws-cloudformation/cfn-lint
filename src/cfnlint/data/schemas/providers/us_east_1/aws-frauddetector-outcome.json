@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "frauddetector:GetOutcomes",
+    "frauddetector:PutOutcome",
+    "frauddetector:ListTagsForResource",
+    "frauddetector:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "frauddetector:GetOutcomes",
+    "frauddetector:DeleteOutcome"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "frauddetector:GetOutcomes",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "frauddetector:GetOutcomes",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "frauddetector:GetOutcomes",
+    "frauddetector:PutOutcome",
+    "frauddetector:ListTagsForResource",
+    "frauddetector:TagResource",
+    "frauddetector:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::FraudDetector::Outcome"
+}

@@ -3,13 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import json
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.helpers
-from cfnlint.rules import RulesCollection
-from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
+from cfnlint import ConfigMixIn
+from cfnlint.config import _DEFAULT_RULESDIR
+from cfnlint.rules import Rules
 from cfnlint.runner import Runner
+from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
 class TestInclude(BaseTestCase):
@@ -17,23 +17,30 @@ class TestInclude(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
-        self.collection.register(Configuration())
+        self.collection = Rules.create_from_directory(_DEFAULT_RULESDIR)
+        self.region = "us-east-1"
 
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
-        cfnlint.helpers.initialize_specs()
+        PROVIDER_SCHEMA_MANAGER.reset()
 
     def test_fail_run(self):
         """Failure test required"""
         filename = "test/fixtures/templates/bad/override/include.yaml"
-        template = self.load_template(filename)
 
-        with open("test/fixtures/templates/override_spec/include.json") as fp:
-            custom_spec = json.load(fp)
-        cfnlint.helpers.set_specs(custom_spec)
+        PROVIDER_SCHEMA_MANAGER.patch(
+            "test/fixtures/templates/override_spec/include.json", regions=[self.region]
+        )
 
-        bad_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
-        errs = bad_runner.run()
+        config = ConfigMixIn(
+            regions=[self.region],
+            templates=[filename],
+            ignore_checks=["I", "W", "E"],
+            mandatory_checks=["E3011"],
+        )
+        runner = Runner(config)
+        runner.rules = self.collection
+
+        errs = list(runner.run())
         self.assertEqual(2, len(errs))

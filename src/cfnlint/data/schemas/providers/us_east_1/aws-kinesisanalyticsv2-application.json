@@ -1,0 +1,857 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName",
+  "/properties/ApplicationMode"
+ ],
+ "definitions": {
+  "ApplicationCodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeContent": {
+     "$ref": "#/definitions/CodeContent"
+    },
+    "CodeContentType": {
+     "enum": [
+      "PLAINTEXT",
+      "ZIPFILE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "CodeContentType",
+    "CodeContent"
+   ],
+   "type": "object"
+  },
+  "ApplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationCodeConfiguration": {
+     "$ref": "#/definitions/ApplicationCodeConfiguration"
+    },
+    "ApplicationSnapshotConfiguration": {
+     "$ref": "#/definitions/ApplicationSnapshotConfiguration"
+    },
+    "EnvironmentProperties": {
+     "$ref": "#/definitions/EnvironmentProperties"
+    },
+    "FlinkApplicationConfiguration": {
+     "$ref": "#/definitions/FlinkApplicationConfiguration"
+    },
+    "SqlApplicationConfiguration": {
+     "$ref": "#/definitions/SqlApplicationConfiguration"
+    },
+    "VpcConfigurations": {
+     "$ref": "#/definitions/VpcConfigurations"
+    },
+    "ZeppelinApplicationConfiguration": {
+     "$ref": "#/definitions/ZeppelinApplicationConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ApplicationMaintenanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationMaintenanceWindowStartTime": {
+     "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationMaintenanceWindowStartTime"
+   ],
+   "type": "object"
+  },
+  "ApplicationRestoreConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationRestoreType": {
+     "enum": [
+      "SKIP_RESTORE_FROM_SNAPSHOT",
+      "RESTORE_FROM_LATEST_SNAPSHOT",
+      "RESTORE_FROM_CUSTOM_SNAPSHOT"
+     ],
+     "type": "string"
+    },
+    "SnapshotName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationRestoreType"
+   ],
+   "type": "object"
+  },
+  "ApplicationSnapshotConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SnapshotsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "SnapshotsEnabled"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:.*$",
+   "type": "string"
+  },
+  "CSVMappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordColumnDelimiter": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RecordRowDelimiter": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordRowDelimiter",
+    "RecordColumnDelimiter"
+   ],
+   "type": "object"
+  },
+  "CatalogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GlueDataCatalogConfiguration": {
+     "$ref": "#/definitions/GlueDataCatalogConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "CheckpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CheckpointInterval": {
+     "format": "int64",
+     "maximum": 9223372036854775807,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "CheckpointingEnabled": {
+     "type": "boolean"
+    },
+    "ConfigurationType": {
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "MinPauseBetweenCheckpoints": {
+     "format": "int64",
+     "maximum": 9223372036854775807,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ConfigurationType"
+   ],
+   "type": "object"
+  },
+  "CodeContent": {
+   "additionalProperties": false,
+   "properties": {
+    "S3ContentLocation": {
+     "$ref": "#/definitions/S3ContentLocation"
+    },
+    "TextContent": {
+     "maxLength": 102400,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ZipFileContent": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomArtifactConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactType": {
+     "enum": [
+      "DEPENDENCY_JAR",
+      "UDF"
+     ],
+     "type": "string"
+    },
+    "MavenReference": {
+     "$ref": "#/definitions/MavenReference"
+    },
+    "S3ContentLocation": {
+     "$ref": "#/definitions/S3ContentLocation"
+    }
+   },
+   "required": [
+    "ArtifactType"
+   ],
+   "type": "object"
+  },
+  "CustomArtifactsConfiguration": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomArtifactConfiguration"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DeployAsApplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3ContentLocation": {
+     "$ref": "#/definitions/S3ContentBaseLocation"
+    }
+   },
+   "required": [
+    "S3ContentLocation"
+   ],
+   "type": "object"
+  },
+  "EnvironmentProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "PropertyGroups": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PropertyGroup"
+     },
+     "maxItems": 50,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "FlinkApplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CheckpointConfiguration": {
+     "$ref": "#/definitions/CheckpointConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/MonitoringConfiguration"
+    },
+    "ParallelismConfiguration": {
+     "$ref": "#/definitions/ParallelismConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "FlinkRunConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowNonRestoredState": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "GlueDataCatalogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseARN": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "type": "object"
+  },
+  "Input": {
+   "additionalProperties": false,
+   "properties": {
+    "InputParallelism": {
+     "$ref": "#/definitions/InputParallelism"
+    },
+    "InputProcessingConfiguration": {
+     "$ref": "#/definitions/InputProcessingConfiguration"
+    },
+    "InputSchema": {
+     "$ref": "#/definitions/InputSchema"
+    },
+    "KinesisFirehoseInput": {
+     "$ref": "#/definitions/KinesisFirehoseInput"
+    },
+    "KinesisStreamsInput": {
+     "$ref": "#/definitions/KinesisStreamsInput"
+    },
+    "NamePrefix": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "^[^-\\s<>&]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "NamePrefix",
+    "InputSchema"
+   ],
+   "type": "object"
+  },
+  "InputLambdaProcessor": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ],
+   "type": "object"
+  },
+  "InputParallelism": {
+   "additionalProperties": false,
+   "properties": {
+    "Count": {
+     "maximum": 64,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "InputProcessingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputLambdaProcessor": {
+     "$ref": "#/definitions/InputLambdaProcessor"
+    }
+   },
+   "type": "object"
+  },
+  "InputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordColumns": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RecordColumn"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RecordEncoding": {
+     "enum": [
+      "UTF-8"
+     ],
+     "type": "string"
+    },
+    "RecordFormat": {
+     "$ref": "#/definitions/RecordFormat"
+    }
+   },
+   "required": [
+    "RecordColumns",
+    "RecordFormat"
+   ],
+   "type": "object"
+  },
+  "JSONMappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordRowPath": {
+     "maxLength": 65535,
+     "minLength": 1,
+     "pattern": "^(?=^\\$)(?=^\\S+$).*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordRowPath"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ],
+   "type": "object"
+  },
+  "KinesisStreamsInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ],
+   "type": "object"
+  },
+  "MappingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CSVMappingParameters": {
+     "$ref": "#/definitions/CSVMappingParameters"
+    },
+    "JSONMappingParameters": {
+     "$ref": "#/definitions/JSONMappingParameters"
+    }
+   },
+   "type": "object"
+  },
+  "MavenReference": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "GroupId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactId",
+    "GroupId",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigurationType": {
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "LogLevel": {
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR"
+     ],
+     "type": "string"
+    },
+    "MetricsLevel": {
+     "enum": [
+      "APPLICATION",
+      "OPERATOR",
+      "PARALLELISM",
+      "TASK"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConfigurationType"
+   ],
+   "type": "object"
+  },
+  "ParallelismConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingEnabled": {
+     "type": "boolean"
+    },
+    "ConfigurationType": {
+     "enum": [
+      "CUSTOM",
+      "DEFAULT"
+     ],
+     "type": "string"
+    },
+    "Parallelism": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ParallelismPerKPU": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ConfigurationType"
+   ],
+   "type": "object"
+  },
+  "PropertyGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "PropertyGroupId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "PropertyMap": {
+     "additionalProperties": false,
+     "maxProperties": 50,
+     "patternProperties": {
+      "^.{1,2048}$": {
+       "maxLength": 2048,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "RecordColumn": {
+   "additionalProperties": false,
+   "properties": {
+    "Mapping": {
+     "maxLength": 65535,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[^-\\s<>&]*$",
+     "type": "string"
+    },
+    "SqlType": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SqlType",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RecordFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "MappingParameters": {
+     "$ref": "#/definitions/MappingParameters"
+    },
+    "RecordFormatType": {
+     "enum": [
+      "CSV",
+      "JSON"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RecordFormatType"
+   ],
+   "type": "object"
+  },
+  "RunConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationRestoreConfiguration": {
+     "$ref": "#/definitions/ApplicationRestoreConfiguration"
+    },
+    "FlinkRunConfiguration": {
+     "$ref": "#/definitions/FlinkRunConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "S3ContentBaseLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "BasePath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9/!-_.*'()]+$",
+     "type": "string"
+    },
+    "BucketARN": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "BucketARN"
+   ],
+   "type": "object"
+  },
+  "S3ContentLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketARN": {
+     "$ref": "#/definitions/Arn"
+    },
+    "FileKey": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketARN",
+    "FileKey"
+   ],
+   "type": "object"
+  },
+  "SqlApplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Inputs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Input"
+     },
+     "maxItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetIds"
+   ],
+   "type": "object"
+  },
+  "VpcConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcConfiguration"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ZeppelinApplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogConfiguration": {
+     "$ref": "#/definitions/CatalogConfiguration"
+    },
+    "CustomArtifactsConfiguration": {
+     "$ref": "#/definitions/CustomArtifactsConfiguration"
+    },
+    "DeployAsApplicationConfiguration": {
+     "$ref": "#/definitions/DeployAsApplicationConfiguration"
+    },
+    "MonitoringConfiguration": {
+     "$ref": "#/definitions/ZeppelinMonitoringConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ZeppelinMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogLevel": {
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "kinesisanalytics:CreateApplication",
+    "kinesisanalytics:DescribeApplication",
+    "kinesisanalytics:ListTagsForResource",
+    "kinesisanalytics:UpdateApplicationMaintenanceConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kinesisanalytics:DescribeApplication",
+    "kinesisanalytics:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kinesisanalytics:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kinesisanalytics:DescribeApplication",
+    "kinesisanalytics:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kinesisanalytics:UpdateApplication",
+    "kinesisanalytics:DescribeApplication",
+    "kinesisanalytics:TagResource",
+    "kinesisanalytics:UntagResource",
+    "kinesisanalytics:AddApplicationVpcConfiguration",
+    "kinesisanalytics:DeleteApplicationVpcConfiguration",
+    "kinesisanalytics:UpdateApplicationMaintenanceConfiguration",
+    "kinesisanalytics:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationName"
+ ],
+ "properties": {
+  "ApplicationConfiguration": {
+   "$ref": "#/definitions/ApplicationConfiguration"
+  },
+  "ApplicationDescription": {
+   "default": "",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ApplicationMaintenanceConfiguration": {
+   "$ref": "#/definitions/ApplicationMaintenanceConfiguration"
+  },
+  "ApplicationMode": {
+   "enum": [
+    "INTERACTIVE",
+    "STREAMING"
+   ],
+   "type": "string"
+  },
+  "ApplicationName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "RunConfiguration": {
+   "$ref": "#/definitions/RunConfiguration"
+  },
+  "RuntimeEnvironment": {
+   "enum": [
+    "SQL-1_0",
+    "FLINK-1_6",
+    "FLINK-1_8",
+    "ZEPPELIN-FLINK-1_0",
+    "FLINK-1_11",
+    "FLINK-1_13",
+    "ZEPPELIN-FLINK-2_0",
+    "FLINK-1_15",
+    "ZEPPELIN-FLINK-3_0"
+   ],
+   "type": "string"
+  },
+  "ServiceExecutionRole": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "RuntimeEnvironment",
+  "ServiceExecutionRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesisanalyticsv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::KinesisAnalyticsV2::Application",
+ "writeOnlyProperties": [
+  "/properties/RunConfiguration",
+  "/properties/ApplicationConfiguration/EnvironmentProperties",
+  "/properties/ApplicationConfiguration/ApplicationCodeConfiguration/CodeContent/ZipFileContent"
+ ]
+}

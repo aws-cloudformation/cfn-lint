@@ -1,0 +1,73 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId",
+  "/properties/CustomerGatewayArn",
+  "/properties/DeviceId",
+  "/properties/LinkId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations",
+    "networkmanager:AssociateCustomerGateway"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DisassociateCustomerGateway"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GlobalNetworkId": {
+      "$ref": "resource-schema.json#/properties/GlobalNetworkId"
+     }
+    },
+    "required": [
+     "GlobalNetworkId"
+    ]
+   },
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetCustomerGatewayAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/CustomerGatewayArn"
+ ],
+ "properties": {
+  "CustomerGatewayArn": {
+   "type": "string"
+  },
+  "DeviceId": {
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "type": "string"
+  },
+  "LinkId": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "GlobalNetworkId",
+  "CustomerGatewayArn",
+  "DeviceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::NetworkManager::CustomerGatewayAssociation"
+}

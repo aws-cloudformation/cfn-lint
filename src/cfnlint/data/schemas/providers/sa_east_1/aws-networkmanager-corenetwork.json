@@ -1,0 +1,185 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "CoreNetworkEdge": {
+   "additionalProperties": false,
+   "properties": {
+    "Asn": {
+     "type": "number"
+    },
+    "EdgeLocation": {
+     "type": "string"
+    },
+    "InsideCidrBlocks": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CoreNetworkSegment": {
+   "additionalProperties": false,
+   "properties": {
+    "EdgeLocations": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "SharedSegments": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateCoreNetwork",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy",
+    "networkmanager:TagResource",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteCoreNetwork",
+    "networkmanager:UntagResource",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListCoreNetworks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateCoreNetwork",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:PutCoreNetworkPolicy",
+    "networkmanager:GetCoreNetworkPolicy",
+    "networkmanager:ExecuteCoreNetworkChangeSet",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CoreNetworkId"
+ ],
+ "properties": {
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Edges": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkEdge"
+   },
+   "type": "array"
+  },
+  "GlobalNetworkId": {
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "type": "object"
+  },
+  "Segments": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkSegment"
+   },
+   "type": "array"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerAccount",
+  "/properties/CoreNetworkId",
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/State",
+  "/properties/Segments",
+  "/properties/Edges"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-corenetwork",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::CoreNetwork"
+}

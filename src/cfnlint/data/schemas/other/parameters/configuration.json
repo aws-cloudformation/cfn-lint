@@ -1,0 +1,207 @@
+{
+ "additionalProperties": {
+  "additionalProperties": false,
+  "else": {
+   "allOf": [
+    {
+     "not": {
+      "properties": {
+       "MaxValue": true
+      },
+      "required": [
+       "MaxValue"
+      ]
+     }
+    },
+    {
+     "not": {
+      "properties": {
+       "MinValue": true
+      },
+      "required": [
+       "MinValue"
+      ]
+     }
+    }
+   ],
+   "else": {
+    "allOf": [
+     {
+      "not": {
+       "properties": {
+        "AllowedPattern": true
+       },
+       "required": [
+        "AllowedPattern"
+       ]
+      }
+     }
+    ]
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "enum": [
+       "String",
+       "CommaDelimitedList"
+      ]
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   }
+  },
+  "if": {
+   "properties": {
+    "Type": {
+     "const": "Number"
+    }
+   },
+   "required": [
+    "Type"
+   ]
+  },
+  "properties": {
+   "AllowedPattern": {
+    "type": "string"
+   },
+   "AllowedValues": {
+    "items": {
+     "maxLength": 4096,
+     "type": "string"
+    },
+    "type": "array"
+   },
+   "ConstraintDescription": {
+    "type": "string"
+   },
+   "Default": {
+    "maxLength": 4096,
+    "type": "string"
+   },
+   "Description": {
+    "maxLength": 4000,
+    "type": "string"
+   },
+   "MaxLength": {
+    "maximum": 4096,
+    "type": "integer"
+   },
+   "MaxValue": {
+    "type": "number"
+   },
+   "MinLength": {
+    "type": "integer"
+   },
+   "MinValue": {
+    "type": "number"
+   },
+   "NoEcho": {
+    "type": "boolean"
+   },
+   "Type": {
+    "enum": [
+     "String",
+     "Number",
+     "CommaDelimitedList",
+     "AWS::EC2::AvailabilityZone::Name",
+     "AWS::EC2::Image::Id",
+     "AWS::EC2::Instance::Id",
+     "AWS::EC2::KeyPair::KeyName",
+     "AWS::EC2::SecurityGroup::GroupName",
+     "AWS::EC2::SecurityGroup::Id",
+     "AWS::EC2::Subnet::Id",
+     "AWS::EC2::VPC::Id",
+     "AWS::EC2::Volume::Id",
+     "AWS::Route53::HostedZone::Id",
+     "AWS::SSM::Parameter::Name",
+     "AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::Instance::Id>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::GroupName>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
+     "AWS::SSM::Parameter::Value<AWS::EC2::Volume::Id>",
+     "AWS::SSM::Parameter::Value<AWS::Route53::HostedZone::Id>",
+     "AWS::SSM::Parameter::Value<AWS::SSM::Parameter::Name>",
+     "AWS::SSM::Parameter::Value<Number>",
+     "AWS::SSM::Parameter::Value<String>",
+     "AWS::SSM::Parameter::Value<CommaDelimitedList>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::Image::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::Instance::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::GroupName>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::VPC::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::EC2::Volume::Id>>",
+     "AWS::SSM::Parameter::Value<List<AWS::Route53::HostedZone::Id>>",
+     "AWS::SSM::Parameter::Value<List<Number>>",
+     "AWS::SSM::Parameter::Value<List<String>>",
+     "List<AWS::EC2::AvailabilityZone::Name>",
+     "List<AWS::EC2::Image::Id>",
+     "List<AWS::EC2::Instance::Id>",
+     "List<AWS::EC2::SecurityGroup::GroupName>",
+     "List<AWS::EC2::SecurityGroup::Id>",
+     "List<AWS::EC2::Subnet::Id>",
+     "List<AWS::EC2::VPC::Id>",
+     "List<AWS::EC2::Volume::Id>",
+     "List<AWS::Route53::HostedZone::Id>",
+     "List<Number>",
+     "List<String>"
+    ],
+    "type": "string"
+   }
+  },
+  "required": [
+   "Type"
+  ],
+  "then": {
+   "allOf": [
+    {
+     "not": {
+      "properties": {
+       "MaxLength": true
+      },
+      "required": [
+       "MaxLength"
+      ]
+     }
+    },
+    {
+     "not": {
+      "properties": {
+       "MinLength": true
+      },
+      "required": [
+       "MinLength"
+      ]
+     }
+    },
+    {
+     "not": {
+      "properties": {
+       "AllowedPattern": true
+      },
+      "required": [
+       "AllowedPattern"
+      ]
+     }
+    }
+   ]
+  },
+  "type": "object"
+ },
+ "maxProperties": 200,
+ "propertyNames": {
+  "maxLength": 255,
+  "pattern": "^[a-zA-Z0-9]+$",
+  "type": [
+   "string"
+  ]
+ },
+ "type": "object"
+}

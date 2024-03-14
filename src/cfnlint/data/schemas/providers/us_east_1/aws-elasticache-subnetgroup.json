@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CacheSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticache:CreateCacheSubnetGroup",
+    "elasticache:AddTagsToResource",
+    "elasticache:DescribeCacheSubnetGroups",
+    "elasticache:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticache:DeleteCacheSubnetGroup",
+    "elasticache:DescribeCacheSubnetGroups",
+    "elasticache:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticache:DescribeCacheSubnetGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticache:DescribeCacheSubnetGroups",
+    "elasticache:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticache:ModifyCacheSubnetGroup",
+    "elasticache:DescribeCacheSubnetGroups",
+    "elasticache:AddTagsToResource",
+    "elasticache:RemoveTagsFromResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CacheSubnetGroupName"
+ ],
+ "properties": {
+  "CacheSubnetGroupName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "Description",
+  "SubnetIds"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::SubnetGroup"
+}

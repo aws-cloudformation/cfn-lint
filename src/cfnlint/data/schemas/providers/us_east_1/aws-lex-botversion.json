@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BotId"
+ ],
+ "definitions": {
+  "BotVersion": {
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "^(DRAFT|[0-9]+)$",
+   "type": "string"
+  },
+  "BotVersionLocaleDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceBotVersion": {
+     "$ref": "#/definitions/BotVersion"
+    }
+   },
+   "required": [
+    "SourceBotVersion"
+   ],
+   "type": "object"
+  },
+  "BotVersionLocaleSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "BotVersionLocaleDetails": {
+     "$ref": "#/definitions/BotVersionLocaleDetails"
+    },
+    "LocaleId": {
+     "$ref": "#/definitions/LocaleId"
+    }
+   },
+   "required": [
+    "LocaleId",
+    "BotVersionLocaleDetails"
+   ],
+   "type": "object"
+  },
+  "BotVersionLocaleSpecificationList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BotVersionLocaleSpecification"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^[0-9a-zA-Z]+$",
+   "type": "string"
+  },
+  "LocaleId": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lex:CreateBotVersion",
+    "lex:DescribeBotVersion",
+    "lex:DescribeBot",
+    "lex:DescribeBotLocale",
+    "lex:BuildBotLocale"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lex:DeleteBotVersion",
+    "lex:DescribeBotVersion"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lex:ListBotVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lex:DescribeBotVersion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BotId",
+  "/properties/BotVersion"
+ ],
+ "properties": {
+  "BotId": {
+   "$ref": "#/definitions/Id"
+  },
+  "BotVersion": {
+   "$ref": "#/definitions/BotVersion"
+  },
+  "BotVersionLocaleSpecification": {
+   "$ref": "#/definitions/BotVersionLocaleSpecificationList"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BotVersion"
+ ],
+ "required": [
+  "BotId",
+  "BotVersionLocaleSpecification"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/lexv2/latest/dg/API_CreateBotVersion.html",
+ "taggable": false,
+ "typeName": "AWS::Lex::BotVersion",
+ "writeOnlyProperties": [
+  "/properties/BotVersionLocaleSpecification"
+ ]
+}

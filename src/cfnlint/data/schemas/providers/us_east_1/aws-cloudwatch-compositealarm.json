@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:PutCompositeAlarm"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:DeleteAlarms"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:PutCompositeAlarm"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "ActionsEnabled": {
+   "type": "boolean"
+  },
+  "ActionsSuppressor": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ActionsSuppressorExtensionPeriod": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ActionsSuppressorWaitPeriod": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "AlarmActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "AlarmDescription": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "AlarmName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AlarmRule": {
+   "maxLength": 10240,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InsufficientDataActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "OKActions": {
+   "items": {
+    "maxLength": 1024,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AlarmRule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CloudWatch::CompositeAlarm"
+}

@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateSigningRequest",
+  "/properties/CACertificatePem",
+  "/properties/CertificatePem",
+  "/properties/CertificateMode"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateCertificateFromCsr",
+    "iot:RegisterCertificate",
+    "iot:RegisterCertificateWithoutCA",
+    "iot:DescribeCertificate"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeleteCertificate",
+    "iot:UpdateCertificate",
+    "iot:DescribeCertificate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListCertificates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeCertificate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateCertificate",
+    "iot:DescribeCertificate"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CACertificatePem": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CertificateMode": {
+   "enum": [
+    "DEFAULT",
+    "SNI_ONLY"
+   ],
+   "type": "string"
+  },
+  "CertificatePem": {
+   "maxLength": 65536,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CertificateSigningRequest": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE",
+    "REVOKED",
+    "PENDING_TRANSFER",
+    "PENDING_ACTIVATION"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Status"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IoT::Certificate",
+ "writeOnlyProperties": [
+  "/properties/CertificateSigningRequest",
+  "/properties/CACertificatePem"
+ ]
+}

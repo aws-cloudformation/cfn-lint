@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn"
+ ],
+ "definitions": {
+  "AccessControlAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]+",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/AccessControlAttributeValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AccessControlAttributeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AccessControlAttribute"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "AccessControlAttributeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Source": {
+     "$ref": "#/definitions/AccessControlAttributeValueSourceList"
+    }
+   },
+   "required": [
+    "Source"
+   ],
+   "type": "object"
+  },
+  "AccessControlAttributeValueSource": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@\\[\\]\\{\\}\\$\\\\\"]*",
+   "type": "string"
+  },
+  "AccessControlAttributeValueSourceList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AccessControlAttributeValueSource"
+   },
+   "maxItems": 1,
+   "type": "array"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/InstanceAccessControlAttributeConfiguration"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sso:CreateInstanceAccessControlAttributeConfiguration",
+    "sso:UpdateApplicationProfileForAWSAccountInstance",
+    "sso:DescribeInstanceAccessControlAttributeConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sso:DeleteInstanceAccessControlAttributeConfiguration",
+    "sso:DescribeInstanceAccessControlAttributeConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sso:DescribeInstanceAccessControlAttributeConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sso:DescribeInstanceAccessControlAttributeConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sso:UpdateInstanceAccessControlAttributeConfiguration",
+    "sso:DescribeInstanceAccessControlAttributeConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn"
+ ],
+ "properties": {
+  "AccessControlAttributes": {
+   "$ref": "#/definitions/AccessControlAttributeList"
+  },
+  "InstanceAccessControlAttributeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessControlAttributes": {
+     "$ref": "#/definitions/AccessControlAttributeList"
+    }
+   },
+   "required": [
+    "AccessControlAttributes"
+   ],
+   "type": "object"
+  },
+  "InstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+   "type": "string"
+  }
+ },
+ "required": [
+  "InstanceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instanceaccesscontrolattributeconfiguration",
+ "tagging": {
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SSO::InstanceAccessControlAttributeConfiguration"
+}

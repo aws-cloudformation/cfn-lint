@@ -1,0 +1,80 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StatementName",
+  "/properties/WorkGroup"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "athena:CreatePreparedStatement",
+    "athena:GetPreparedStatement"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "athena:DeletePreparedStatement",
+    "athena:GetPreparedStatement"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "WorkGroup": {
+      "$ref": "resource-schema.json#/properties/WorkGroup"
+     }
+    },
+    "required": [
+     "WorkGroup"
+    ]
+   },
+   "permissions": [
+    "athena:ListPreparedStatements"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "athena:GetPreparedStatement"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "athena:UpdatePreparedStatement"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StatementName",
+  "/properties/WorkGroup"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueryStatement": {
+   "maxLength": 262144,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StatementName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkGroup": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "required": [
+  "StatementName",
+  "WorkGroup",
+  "QueryStatement"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+ "taggable": false,
+ "typeName": "AWS::Athena::PreparedStatement"
+}
