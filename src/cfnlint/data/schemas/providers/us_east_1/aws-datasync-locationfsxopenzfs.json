@@ -9,10 +9,8 @@
  "definitions": {
   "MountOptions": {
    "additionalProperties": false,
-   "description": "The NFS mount options that DataSync can use to mount your NFS share.",
    "properties": {
     "Version": {
-     "description": "The specific NFS version that you want DataSync to use to mount your NFS share.",
      "enum": [
       "AUTOMATIC",
       "NFS3",
@@ -26,7 +24,6 @@
   },
   "NFS": {
    "additionalProperties": false,
-   "description": "FSx OpenZFS file system NFS protocol information",
    "properties": {
     "MountOptions": {
      "$ref": "#/definitions/MountOptions"
@@ -39,7 +36,6 @@
   },
   "Protocol": {
    "additionalProperties": false,
-   "description": "Configuration settings for an NFS or SMB protocol, currently only support NFS",
    "properties": {
     "NFS": {
      "$ref": "#/definitions/NFS"
@@ -49,17 +45,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
@@ -73,7 +66,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::DataSync::LocationFSxOpenZFS.",
  "handlers": {
   "create": {
    "permissions": [
@@ -117,19 +109,16 @@
  ],
  "properties": {
   "FsxFilesystemArn": {
-   "description": "The Amazon Resource Name (ARN) for the FSx OpenZFS file system.",
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]+:[0-9]{12}:file-system/fs-[0-9a-f]+$",
    "type": "string"
   },
   "LocationArn": {
-   "description": "The Amazon Resource Name (ARN) of the Amazon FSx OpenZFS file system location that is created.",
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
    "type": "string"
   },
   "LocationUri": {
-   "description": "The URL of the FSx OpenZFS that was described.",
    "maxLength": 4356,
    "pattern": "^(efs|nfs|s3|smb|fsxw|hdfs|fsxl|fsxz)://[a-zA-Z0-9.:/\\-]+$",
    "type": "string"
@@ -138,7 +127,6 @@
    "$ref": "#/definitions/Protocol"
   },
   "SecurityGroupArns": {
-   "description": "The ARNs of the security groups that are to use to configure the FSx OpenZFS file system.",
    "insertionOrder": false,
    "items": {
     "maxLength": 128,
@@ -150,13 +138,11 @@
    "type": "array"
   },
   "Subdirectory": {
-   "description": "A subdirectory in the location's path.",
    "maxLength": 4096,
    "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

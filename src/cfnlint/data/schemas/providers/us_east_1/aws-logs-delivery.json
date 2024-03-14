@@ -6,7 +6,6 @@
  ],
  "definitions": {
   "Arn": {
-   "description": "Amazon Resource Name (ARN) that uniquely identify AWS resource.",
    "maxLength": 2048,
    "minLength": 16,
    "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
@@ -14,16 +13,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -36,7 +32,6 @@
    "type": "object"
   }
  },
- "description": "This structure contains information about one delivery in your account.\n\nA delivery is a connection between a logical delivery source and a logical delivery destination.\n\nFor more information, see [CreateDelivery](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateDelivery.html).",
  "handlers": {
   "create": {
    "permissions": [
@@ -82,36 +77,30 @@
  ],
  "properties": {
   "Arn": {
-   "$ref": "#/definitions/Arn",
-   "description": "The Amazon Resource Name (ARN) that uniquely identifies this delivery."
+   "$ref": "#/definitions/Arn"
   },
   "DeliveryDestinationArn": {
-   "$ref": "#/definitions/Arn",
-   "description": "The ARN of the delivery destination that is associated with this delivery."
+   "$ref": "#/definitions/Arn"
   },
   "DeliveryDestinationType": {
-   "description": "Displays whether the delivery destination associated with this delivery is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
    "maxLength": 12,
    "minLength": 1,
    "pattern": "^[0-9A-Za-z]+$",
    "type": "string"
   },
   "DeliveryId": {
-   "description": "The unique ID that identifies this delivery in your account.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[0-9A-Za-z]+$",
    "type": "string"
   },
   "DeliverySourceName": {
-   "description": "The name of the delivery source that is associated with this delivery.",
    "maxLength": 60,
    "minLength": 1,
    "pattern": "[\\w-]*$",
    "type": "string"
   },
   "Tags": {
-   "description": "The tags that have been assigned to this delivery.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

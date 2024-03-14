@@ -6,14 +6,12 @@
  ],
  "definitions": {
   "AccessGrantArn": {
-   "description": "the Amazon Resource Name (ARN) of the specified access grant.",
    "type": "string"
   },
   "AccessGrantsLocationConfiguration": {
    "additionalProperties": false,
    "properties": {
     "S3SubPrefix": {
-     "description": "The S3 sub prefix of a registered location in your S3 Access Grants instance",
      "type": "string"
     }
    },
@@ -26,11 +24,9 @@
    "additionalProperties": false,
    "properties": {
     "GranteeIdentifier": {
-     "description": "The unique identifier of the Grantee",
      "type": "string"
     },
     "GranteeType": {
-     "description": "Configures the transfer acceleration state for an Amazon S3 bucket.",
      "enum": [
       "IAM",
       "DIRECTORY_USER",
@@ -62,7 +58,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::S3::AccessGrant resource is an Amazon S3 resource type representing permissions to a specific S3 bucket or prefix hosted in an S3 Access Grants instance.",
  "handlers": {
   "create": {
    "permissions": [
@@ -97,43 +92,35 @@
  "properties": {
   "AccessGrantArn": {
    "$ref": "#/definitions/AccessGrantArn",
-   "description": "The Amazon Resource Name (ARN) of the specified access grant.",
    "examples": [
     "arn:aws:s3:us-east-2:111122223333:access-grants/default/grant/7c89cbd1-0f4e-40e3-861d-afb906952b77"
    ]
   },
   "AccessGrantId": {
-   "description": "The ID assigned to this access grant.",
    "examples": [
     "7c89cbd1-0f4e-40e3-861d-afb906952b77"
    ],
    "type": "string"
   },
   "AccessGrantsLocationConfiguration": {
-   "$ref": "#/definitions/AccessGrantsLocationConfiguration",
-   "description": "The configuration options of the grant location, which is the S3 path to the data to which you are granting access."
+   "$ref": "#/definitions/AccessGrantsLocationConfiguration"
   },
   "AccessGrantsLocationId": {
-   "description": "The custom S3 location to be accessed by the grantee",
    "examples": [
     "125f332b-a499-4eb6-806f-8a6a1aa4cb96"
    ],
    "type": "string"
   },
   "ApplicationArn": {
-   "description": "The ARN of the application grantees will use to access the location",
    "type": "string"
   },
   "GrantScope": {
-   "description": "The S3 path of the data to which you are granting access. It is a combination of the S3 path of the registered location and the subprefix.",
    "type": "string"
   },
   "Grantee": {
-   "$ref": "#/definitions/Grantee",
-   "description": "The principal who will be granted permission to access S3."
+   "$ref": "#/definitions/Grantee"
   },
   "Permission": {
-   "description": "The level of access to be afforded to the grantee",
    "enum": [
     "READ",
     "WRITE",
@@ -142,7 +129,6 @@
    "type": "string"
   },
   "S3PrefixType": {
-   "description": "The type of S3SubPrefix.",
    "enum": [
     "Object"
    ],

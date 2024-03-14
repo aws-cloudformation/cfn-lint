@@ -11,7 +11,6 @@
    "type": "string"
   },
   "CreatedAt": {
-   "description": "The time of this MatchingWorkflow got created",
    "type": "string"
   },
   "Description": {
@@ -32,7 +31,6 @@
      "type": "boolean"
     },
     "InputSourceARN": {
-     "description": "An Glue table ARN for the input source table",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):.*:.*:[0-9]+:.*$",
      "type": "string"
     },
@@ -51,7 +49,6 @@
    "additionalProperties": false,
    "properties": {
     "IntermediateS3Path": {
-     "description": "The s3 path that would be used to stage the intermediate data being generated during workflow execution.",
      "type": "string"
     }
    },
@@ -65,7 +62,6 @@
    "type": "string"
   },
   "MatchingWorkflowArn": {
-   "description": "The default MatchingWorkflow arn",
    "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(matchingworkflow/.*)$",
    "type": "string"
   },
@@ -103,7 +99,6 @@
      "type": "array"
     },
     "OutputS3Path": {
-     "description": "The S3 path to which Entity Resolution will write the output table",
      "pattern": "^s3://([^/]+)/?(.*?([^/]+)/?)$",
      "type": "string"
     }
@@ -122,7 +117,6 @@
     },
     "ProviderConfiguration": {
      "additionalProperties": false,
-     "description": "Additional Provider configuration that would be required for the provider service. The Configuration must be in JSON string format",
      "patternProperties": {
       "^.+$": {
        "type": "string"
@@ -131,7 +125,6 @@
      "type": "object"
     },
     "ProviderServiceArn": {
-     "description": "Arn of the Provider service being used.",
      "type": "string"
     }
    },
@@ -212,22 +205,18 @@
    "type": "object"
   },
   "SchemaMappingArn": {
-   "description": "The SchemaMapping arn associated with the Schema",
    "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -240,11 +229,9 @@
    "type": "object"
   },
   "UpdatedAt": {
-   "description": "The time of this MatchingWorkflow got last updated at",
    "type": "string"
   }
  },
- "description": "MatchingWorkflow defined in AWS Entity Resolution service",
  "handlers": {
   "create": {
    "permissions": [
@@ -295,8 +282,7 @@
    "$ref": "#/definitions/CreatedAt"
   },
   "Description": {
-   "$ref": "#/definitions/Description",
-   "description": "The description of the MatchingWorkflow"
+   "$ref": "#/definitions/Description"
   },
   "InputSourceConfig": {
    "insertionOrder": false,
@@ -340,8 +326,7 @@
    "$ref": "#/definitions/MatchingWorkflowArn"
   },
   "WorkflowName": {
-   "$ref": "#/definitions/EntityName",
-   "description": "The name of the MatchingWorkflow"
+   "$ref": "#/definitions/EntityName"
   }
  },
  "readOnlyProperties": [

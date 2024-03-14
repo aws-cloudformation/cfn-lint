@@ -6,30 +6,25 @@
  ],
  "definitions": {
   "Permission": {
-   "description": "A permission associated with the security profile.",
    "maxLength": 128,
    "minLength": 1,
    "type": "string"
   },
   "ResourceName": {
-   "description": "A resource that a security profile applies tag restrictions to in Amazon Connect.",
    "maxLength": 128,
    "minLength": 1,
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -42,7 +37,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Connect::SecurityProfile",
  "handlers": {
   "create": {
    "permissions": [
@@ -90,7 +84,6 @@
  ],
  "properties": {
   "AllowedAccessControlTags": {
-   "description": "The list of tags that a security profile uses to restrict access to resources in Amazon Connect.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -100,18 +93,15 @@
    "uniqueItems": true
   },
   "Description": {
-   "description": "The description of the security profile.",
    "maxLength": 250,
    "minLength": 0,
    "type": "string"
   },
   "InstanceArn": {
-   "description": "The identifier of the Amazon Connect instance.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Permissions": {
-   "description": "Permissions assigned to the security profile.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Permission"
@@ -121,19 +111,16 @@
    "uniqueItems": true
   },
   "SecurityProfileArn": {
-   "description": "The Amazon Resource Name (ARN) for the security profile.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/security-profile/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "SecurityProfileName": {
-   "description": "The name of the security profile.",
    "maxLength": 127,
    "minLength": 1,
    "pattern": "^[ a-zA-Z0-9_@-]+$",
    "type": "string"
   },
   "TagRestrictedResources": {
-   "description": "The list of resources that a security profile applies tag restrictions to in Amazon Connect.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/ResourceName"
@@ -143,7 +130,6 @@
    "uniqueItems": true
   },
   "Tags": {
-   "description": "The tags used to organize, track, or control access for this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

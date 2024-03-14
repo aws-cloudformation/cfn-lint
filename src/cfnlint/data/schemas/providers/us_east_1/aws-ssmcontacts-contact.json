@@ -7,14 +7,11 @@
  "definitions": {
   "ChannelTargetInfo": {
    "additionalProperties": false,
-   "description": "Information about the contact channel that SSM Incident Manager uses to engage the contact.",
    "properties": {
     "ChannelId": {
-     "description": "The Amazon Resource Name (ARN) of the contact channel.",
      "type": "string"
     },
     "RetryIntervalInMinutes": {
-     "description": "The number of minutes to wait to retry sending engagement in the case the engagement initially fails.",
      "type": "integer"
     }
    },
@@ -26,14 +23,11 @@
   },
   "ContactTargetInfo": {
    "additionalProperties": false,
-   "description": "The contact that SSM Incident Manager is engaging during an incident.",
    "properties": {
     "ContactId": {
-     "description": "The Amazon Resource Name (ARN) of the contact.",
      "type": "string"
     },
     "IsEssential": {
-     "description": "A Boolean value determining if the contact's acknowledgement stops the progress of stages in the plan.",
      "type": "boolean"
     }
    },
@@ -45,7 +39,6 @@
   },
   "Stage": {
    "additionalProperties": false,
-   "description": "A set amount of time that an escalation plan or engagement plan engages the specified contacts or contact methods.",
    "oneOf": [
     {
      "required": [
@@ -60,11 +53,9 @@
    ],
    "properties": {
     "DurationInMinutes": {
-     "description": "The time to wait until beginning the next stage.",
      "type": "integer"
     },
     "RotationIds": {
-     "description": "List of Rotation Ids to associate with Contact",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -72,7 +63,6 @@
      "type": "array"
     },
     "Targets": {
-     "description": "The contacts or contact methods that the escalation plan or engagement plan is engaging.",
      "items": {
       "$ref": "#/definitions/Targets"
      },
@@ -83,7 +73,6 @@
   },
   "Targets": {
    "additionalProperties": false,
-   "description": "The contacts or contact methods that the escalation plan or engagement plan is engaging.",
    "oneOf": [
     {
      "required": [
@@ -107,7 +96,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SSMContacts::Contact",
  "handlers": {
   "create": {
    "permissions": [
@@ -146,36 +134,29 @@
  ],
  "properties": {
   "Alias": {
-   "description": "Alias of the contact. String value with 20 to 256 characters. Only alphabetical, numeric characters, dash, or underscore allowed.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-z0-9_\\-\\.]*$",
    "type": "string"
   },
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the contact.",
    "type": "string"
   },
   "DisplayName": {
-   "description": "Name of the contact. String value with 3 to 256 characters. Only alphabetical, space, numeric characters, dash, or underscore allowed.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_\\-\\s]*$",
    "type": "string"
   },
   "Plan": {
-   "description": "The stages that an escalation plan or engagement plan engages contacts and contact methods in.",
    "items": {
     "$ref": "#/definitions/Stage"
    },
    "type": "array"
   },
   "Type": {
-   "description": "Contact type, which specify type of contact. Currently supported values: \u201cPERSONAL\u201d, \u201cSHARED\u201d, \u201cOTHER\u201c.",
    "enum": [
     "PERSONAL",
-    "CUSTOM",
-    "SERVICE",
     "ESCALATION",
     "ONCALL_SCHEDULE"
    ],

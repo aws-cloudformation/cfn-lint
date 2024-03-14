@@ -12,7 +12,6 @@
  "definitions": {
   "AccessDescription": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 AccessDescription information.",
    "properties": {
     "AccessLocation": {
      "$ref": "#/definitions/GeneralName"
@@ -29,7 +28,6 @@
   },
   "AccessMethod": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 AccessMethod information. Assign one and ONLY one field.",
    "properties": {
     "AccessMethodType": {
      "$ref": "#/definitions/AccessMethodType"
@@ -41,7 +39,6 @@
    "type": "object"
   },
   "AccessMethodType": {
-   "description": "Pre-defined enum string for X.509 AccessMethod ObjectIdentifiers.",
    "type": "string"
   },
   "Arn": {
@@ -49,7 +46,6 @@
   },
   "CrlConfiguration": {
    "additionalProperties": false,
-   "description": "Your certificate authority can create and maintain a certificate revocation list (CRL). A CRL contains information about certificates that have been revoked.",
    "properties": {
     "CrlDistributionPointExtensionConfiguration": {
      "$ref": "#/definitions/CrlDistributionPointExtensionConfiguration"
@@ -74,7 +70,6 @@
   },
   "CrlDistributionPointExtensionConfiguration": {
    "additionalProperties": false,
-   "description": "Configures the default behavior of the CRL Distribution Point extension for certificates issued by your certificate authority",
    "properties": {
     "OmitExtension": {
      "type": "boolean"
@@ -87,7 +82,6 @@
   },
   "CsrExtensions": {
    "additionalProperties": false,
-   "description": "Structure that contains CSR pass though extensions information.",
    "properties": {
     "KeyUsage": {
      "$ref": "#/definitions/KeyUsage"
@@ -100,7 +94,6 @@
   },
   "CustomAttribute": {
    "additionalProperties": false,
-   "description": "Structure that contains X.500 attribute type and value.",
    "properties": {
     "ObjectIdentifier": {
      "$ref": "#/definitions/CustomObjectIdentifier"
@@ -116,23 +109,19 @@
    "type": "object"
   },
   "CustomAttributeList": {
-   "description": "Array of X.500 attribute type and value. CustomAttributes cannot be used along with pre-defined attributes.",
    "items": {
     "$ref": "#/definitions/CustomAttribute"
    },
    "type": "array"
   },
   "CustomObjectIdentifier": {
-   "description": "String that contains X.509 ObjectIdentifier information.",
    "type": "string"
   },
   "DnsName": {
-   "description": "String that contains X.509 DnsName information.",
    "type": "string"
   },
   "EdiPartyName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 EdiPartyName information.",
    "properties": {
     "NameAssigner": {
      "type": "string"
@@ -149,7 +138,6 @@
   },
   "GeneralName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 GeneralName information. Assign one and ONLY one field.",
    "properties": {
     "DirectoryName": {
      "$ref": "#/definitions/Subject"
@@ -179,12 +167,10 @@
    "type": "object"
   },
   "IpAddress": {
-   "description": "String that contains X.509 IpAddress information.",
    "type": "string"
   },
   "KeyUsage": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 KeyUsage information.",
    "properties": {
     "CRLSign": {
      "default": false,
@@ -227,7 +213,6 @@
   },
   "OcspConfiguration": {
    "additionalProperties": false,
-   "description": "Helps to configure online certificate status protocol (OCSP) responder for your certificate authority",
    "properties": {
     "Enabled": {
      "type": "boolean"
@@ -240,7 +225,6 @@
   },
   "OtherName": {
    "additionalProperties": false,
-   "description": "Structure that contains X.509 OtherName information.",
    "properties": {
     "TypeId": {
      "$ref": "#/definitions/CustomObjectIdentifier"
@@ -257,7 +241,6 @@
   },
   "RevocationConfiguration": {
    "additionalProperties": false,
-   "description": "Certificate Authority revocation information.",
    "properties": {
     "CrlConfiguration": {
      "$ref": "#/definitions/CrlConfiguration"
@@ -269,12 +252,10 @@
    "type": "object"
   },
   "Rfc822Name": {
-   "description": "String that contains X.509 Rfc822Name information.",
    "type": "string"
   },
   "Subject": {
    "additionalProperties": false,
-   "description": "Structure that contains X.500 distinguished name information for your CA.",
    "properties": {
     "CommonName": {
      "type": "string"
@@ -325,7 +306,6 @@
    "type": "object"
   },
   "SubjectInformationAccess": {
-   "description": "Array of X.509 AccessDescription.",
    "items": {
     "$ref": "#/definitions/AccessDescription"
    },
@@ -344,11 +324,9 @@
    "type": "object"
   },
   "UniformResourceIdentifier": {
-   "description": "String that contains X.509 UniformResourceIdentifier information.",
    "type": "string"
   }
  },
- "description": "Private certificate authority.",
  "handlers": {
   "create": {
    "permissions": [
@@ -392,36 +370,28 @@
  ],
  "properties": {
   "Arn": {
-   "$ref": "#/definitions/Arn",
-   "description": "The Amazon Resource Name (ARN) of the certificate authority."
+   "$ref": "#/definitions/Arn"
   },
   "CertificateSigningRequest": {
-   "description": "The base64 PEM-encoded certificate signing request (CSR) for your certificate authority certificate.",
    "type": "string"
   },
   "CsrExtensions": {
-   "$ref": "#/definitions/CsrExtensions",
-   "description": "Structure that contains CSR pass through extension information used by the CreateCertificateAuthority action."
+   "$ref": "#/definitions/CsrExtensions"
   },
   "KeyAlgorithm": {
-   "description": "Public key algorithm and size, in bits, of the key pair that your CA creates when it issues a certificate.",
    "type": "string"
   },
   "KeyStorageSecurityStandard": {
-   "description": "KeyStorageSecurityStadard defines a cryptographic key management compliance standard used for handling CA keys.",
    "type": "string"
   },
   "RevocationConfiguration": {
-   "$ref": "#/definitions/RevocationConfiguration",
-   "description": "Certificate revocation information used by the CreateCertificateAuthority and UpdateCertificateAuthority actions."
+   "$ref": "#/definitions/RevocationConfiguration"
   },
   "SigningAlgorithm": {
-   "description": "Algorithm your CA uses to sign certificate requests.",
    "type": "string"
   },
   "Subject": {
-   "$ref": "#/definitions/Subject",
-   "description": "Structure that contains X.500 distinguished name information for your CA."
+   "$ref": "#/definitions/Subject"
   },
   "Tags": {
    "items": {
@@ -430,11 +400,9 @@
    "type": "array"
   },
   "Type": {
-   "description": "The type of the certificate authority.",
    "type": "string"
   },
   "UsageMode": {
-   "description": "Usage mode of the ceritificate authority.",
    "type": "string"
   }
  },

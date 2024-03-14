@@ -5,23 +5,19 @@
  ],
  "definitions": {
   "ResourceArn": {
-   "description": "Provide Canary Arn associated with the group.",
    "pattern": "arn:(aws[a-zA-Z-]*)?:synthetics:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:canary:[0-9a-z_\\-]",
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)([a-zA-Z\\d\\s_.:/=+\\-@]+)$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "pattern": "^([a-zA-Z\\d\\s_.:/=+\\-@]*)$",
@@ -35,7 +31,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Synthetics::Group",
  "handlers": {
   "create": {
    "permissions": [
@@ -79,11 +74,9 @@
  ],
  "properties": {
   "Id": {
-   "description": "Id of the group.",
    "type": "string"
   },
   "Name": {
-   "description": "Name of the group.",
    "pattern": "^[0-9a-z_\\-]{1,64}$",
    "type": "string"
   },
