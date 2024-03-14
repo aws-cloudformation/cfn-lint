@@ -7,7 +7,6 @@
  "definitions": {
   "CsvOptions": {
    "additionalProperties": false,
-   "description": "Csv options",
    "properties": {
     "Delimiter": {
      "maxLength": 1,
@@ -24,15 +23,12 @@
    "additionalProperties": false,
    "properties": {
     "CatalogId": {
-     "description": "Catalog id",
      "type": "string"
     },
     "DatabaseName": {
-     "description": "Database name",
      "type": "string"
     },
     "TableName": {
-     "description": "Table name",
      "type": "string"
     },
     "TempDirectory": {
@@ -45,15 +41,12 @@
    "additionalProperties": false,
    "properties": {
     "DatabaseTableName": {
-     "description": "Database table name",
      "type": "string"
     },
     "GlueConnectionName": {
-     "description": "Glue connection name",
      "type": "string"
     },
     "QueryString": {
-     "description": "Custom SQL to run against the provided AWS Glue connection. This SQL will be used as the input for DataBrew projects and jobs.",
      "type": "string"
     },
     "TempDirectory": {
@@ -69,7 +62,6 @@
    "additionalProperties": false,
    "properties": {
     "CreateColumn": {
-     "description": "Add the value of this parameter as a column in a dataset.",
      "type": "boolean"
     },
     "DatetimeOptions": {
@@ -82,7 +74,6 @@
      "$ref": "#/definitions/PathParameterName"
     },
     "Type": {
-     "description": "Parameter type",
      "enum": [
       "String",
       "Number",
@@ -101,20 +92,17 @@
    "additionalProperties": false,
    "properties": {
     "Format": {
-     "description": "Date/time format of a date parameter",
      "maxLength": 100,
      "minLength": 2,
      "type": "string"
     },
     "LocaleCode": {
-     "description": "Locale code for a date parameter",
      "maxLength": 100,
      "minLength": 2,
      "pattern": "^[A-Za-z0-9_\\.#@\\-]+$",
      "type": "string"
     },
     "TimezoneOffset": {
-     "description": "Timezone offset",
      "maxLength": 6,
      "minLength": 1,
      "pattern": "^(Z|[-+](\\d|\\d{2}|\\d{2}:?\\d{2}))$",
@@ -169,11 +157,9 @@
    "additionalProperties": false,
    "properties": {
     "MaxFiles": {
-     "description": "Maximum number of files",
      "type": "integer"
     },
     "Order": {
-     "description": "Order",
      "enum": [
       "ASCENDING",
       "DESCENDING"
@@ -181,7 +167,6 @@
      "type": "string"
     },
     "OrderedBy": {
-     "description": "Ordered by",
      "enum": [
       "LAST_MODIFIED_DATE"
      ],
@@ -197,7 +182,6 @@
    "additionalProperties": false,
    "properties": {
     "Expression": {
-     "description": "Filtering expression for a parameter",
      "maxLength": 1024,
      "minLength": 4,
      "pattern": "^[><0-9A-Za-z_.,:)(!= ]+$",
@@ -219,7 +203,6 @@
   },
   "FilterValue": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate expression variable names with their values",
    "properties": {
     "Value": {
      "maxLength": 1024,
@@ -227,7 +210,6 @@
      "type": "string"
     },
     "ValueReference": {
-     "description": "Variable name",
      "maxLength": 128,
      "minLength": 2,
      "pattern": "^:[A-Za-z0-9_]+$",
@@ -242,7 +224,6 @@
   },
   "FormatOptions": {
    "additionalProperties": false,
-   "description": "Format options for dataset",
    "properties": {
     "Csv": {
      "$ref": "#/definitions/CsvOptions"
@@ -258,7 +239,6 @@
   },
   "Input": {
    "additionalProperties": false,
-   "description": "Input",
    "properties": {
     "DataCatalogInputDefinition": {
      "$ref": "#/definitions/DataCatalogInputDefinition"
@@ -277,7 +257,6 @@
   },
   "JsonOptions": {
    "additionalProperties": false,
-   "description": "Json options",
    "properties": {
     "MultiLine": {
      "type": "boolean"
@@ -289,7 +268,6 @@
    "additionalProperties": false,
    "properties": {
     "SourceArn": {
-     "description": "Arn of the source of the dataset. For e.g.: AppFlow Flow ARN.",
      "type": "string"
     }
    },
@@ -297,7 +275,6 @@
   },
   "PathOptions": {
    "additionalProperties": false,
-   "description": "Path options for dataset",
    "properties": {
     "FilesLimit": {
      "$ref": "#/definitions/FilesLimit"
@@ -317,7 +294,6 @@
   },
   "PathParameter": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate dataset parameter name with its definition.",
    "properties": {
     "DatasetParameter": {
      "$ref": "#/definitions/DatasetParameter"
@@ -333,14 +309,12 @@
    "type": "object"
   },
   "PathParameterName": {
-   "description": "Parameter name",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "S3Location": {
    "additionalProperties": false,
-   "description": "Input location",
    "properties": {
     "Bucket": {
      "type": "string"
@@ -356,7 +330,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -376,7 +349,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::DataBrew::Dataset.",
  "handlers": {
   "create": {
    "permissions": [
@@ -420,7 +392,6 @@
  ],
  "properties": {
   "Format": {
-   "description": "Dataset format",
    "enum": [
     "CSV",
     "JSON",
@@ -431,22 +402,18 @@
    "type": "string"
   },
   "FormatOptions": {
-   "$ref": "#/definitions/FormatOptions",
-   "description": "Format options for dataset"
+   "$ref": "#/definitions/FormatOptions"
   },
   "Input": {
-   "$ref": "#/definitions/Input",
-   "description": "Input"
+   "$ref": "#/definitions/Input"
   },
   "Name": {
-   "description": "Dataset name",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "PathOptions": {
-   "$ref": "#/definitions/PathOptions",
-   "description": "PathOptions"
+   "$ref": "#/definitions/PathOptions"
   },
   "Tags": {
    "insertionOrder": false,

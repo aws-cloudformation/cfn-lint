@@ -16,10 +16,8 @@
  "definitions": {
   "ApacheKafkaCluster": {
    "additionalProperties": false,
-   "description": "Details of how to connect to an Apache Kafka cluster.",
    "properties": {
     "BootstrapServers": {
-     "description": "The bootstrap servers string of the Apache Kafka cluster.",
      "type": "string"
     },
     "Vpc": {
@@ -34,14 +32,11 @@
   },
   "AutoScaling": {
    "additionalProperties": false,
-   "description": "Details about auto scaling of a connector.",
    "properties": {
     "MaxWorkerCount": {
-     "description": "The maximum number of workers for a connector.",
      "type": "integer"
     },
     "McuCount": {
-     "description": "Specifies how many MSK Connect Units (MCU) as the minimum scaling unit.",
      "enum": [
       1,
       2,
@@ -51,7 +46,6 @@
      "type": "integer"
     },
     "MinWorkerCount": {
-     "description": "The minimum number of workers for a connector.",
      "type": "integer"
     },
     "ScaleInPolicy": {
@@ -72,7 +66,6 @@
   },
   "Capacity": {
    "additionalProperties": false,
-   "description": "Information about the capacity allocated to the connector.",
    "oneOf": [
     {
      "required": [
@@ -97,14 +90,11 @@
   },
   "CloudWatchLogsLogDelivery": {
    "additionalProperties": false,
-   "description": "Details about delivering logs to Amazon CloudWatch Logs.",
    "properties": {
     "Enabled": {
-     "description": "Specifies whether the logs get sent to the specified CloudWatch Logs destination.",
      "type": "boolean"
     },
     "LogGroup": {
-     "description": "The CloudWatch log group that is the destination for log delivery.",
      "type": "string"
     }
    },
@@ -115,15 +105,12 @@
   },
   "CustomPlugin": {
    "additionalProperties": false,
-   "description": "Details about a custom plugin.",
    "properties": {
     "CustomPluginArn": {
-     "description": "The Amazon Resource Name (ARN) of the custom plugin to use.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
      "type": "string"
     },
     "Revision": {
-     "description": "The revision of the custom plugin to use.",
      "format": "int64",
      "minimum": 1,
      "type": "integer"
@@ -137,14 +124,11 @@
   },
   "FirehoseLogDelivery": {
    "additionalProperties": false,
-   "description": "Details about delivering logs to Amazon Kinesis Data Firehose.",
    "properties": {
     "DeliveryStream": {
-     "description": "The Kinesis Data Firehose delivery stream that is the destination for log delivery.",
      "type": "string"
     },
     "Enabled": {
-     "description": "Specifies whether the logs get sent to the specified Kinesis Data Firehose delivery stream.",
      "type": "boolean"
     }
    },
@@ -155,7 +139,6 @@
   },
   "KafkaCluster": {
    "additionalProperties": false,
-   "description": "Details of how to connect to the Kafka cluster.",
    "properties": {
     "ApacheKafkaCluster": {
      "$ref": "#/definitions/ApacheKafkaCluster"
@@ -168,7 +151,6 @@
   },
   "KafkaClusterClientAuthentication": {
    "additionalProperties": false,
-   "description": "Details of the client authentication used by the Kafka cluster.",
    "properties": {
     "AuthenticationType": {
      "$ref": "#/definitions/KafkaClusterClientAuthenticationType"
@@ -180,7 +162,6 @@
    "type": "object"
   },
   "KafkaClusterClientAuthenticationType": {
-   "description": "The type of client authentication used to connect to the Kafka cluster. Value NONE means that no client authentication is used.",
    "enum": [
     "NONE",
     "IAM"
@@ -189,7 +170,6 @@
   },
   "KafkaClusterEncryptionInTransit": {
    "additionalProperties": false,
-   "description": "Details of encryption in transit to the Kafka cluster.",
    "properties": {
     "EncryptionType": {
      "$ref": "#/definitions/KafkaClusterEncryptionInTransitType"
@@ -201,7 +181,6 @@
    "type": "object"
   },
   "KafkaClusterEncryptionInTransitType": {
-   "description": "The type of encryption in transit to the Kafka cluster.",
    "enum": [
     "PLAINTEXT",
     "TLS"
@@ -210,7 +189,6 @@
   },
   "LogDelivery": {
    "additionalProperties": false,
-   "description": "Details of what logs are delivered and where they are delivered.",
    "properties": {
     "WorkerLogDelivery": {
      "$ref": "#/definitions/WorkerLogDelivery"
@@ -223,7 +201,6 @@
   },
   "Plugin": {
    "additionalProperties": false,
-   "description": "Details about a Kafka Connect plugin which will be used with the connector.",
    "properties": {
     "CustomPlugin": {
      "$ref": "#/definitions/CustomPlugin"
@@ -236,10 +213,8 @@
   },
   "ProvisionedCapacity": {
    "additionalProperties": false,
-   "description": "Details about a fixed capacity allocated to a connector.",
    "properties": {
     "McuCount": {
-     "description": "Specifies how many MSK Connect Units (MCU) are allocated to the connector.",
      "enum": [
       1,
       2,
@@ -249,7 +224,6 @@
      "type": "integer"
     },
     "WorkerCount": {
-     "description": "Number of workers for a connector.",
      "type": "integer"
     }
    },
@@ -260,18 +234,14 @@
   },
   "S3LogDelivery": {
    "additionalProperties": false,
-   "description": "Details about delivering logs to Amazon S3.",
    "properties": {
     "Bucket": {
-     "description": "The name of the S3 bucket that is the destination for log delivery.",
      "type": "string"
     },
     "Enabled": {
-     "description": "Specifies whether the logs get sent to the specified Amazon S3 destination.",
      "type": "boolean"
     },
     "Prefix": {
-     "description": "The S3 prefix that is the destination for log delivery.",
      "type": "string"
     }
    },
@@ -282,10 +252,8 @@
   },
   "ScaleInPolicy": {
    "additionalProperties": false,
-   "description": "Information about the scale in policy of the connector.",
    "properties": {
     "CpuUtilizationPercentage": {
-     "description": "Specifies the CPU utilization percentage threshold at which connector scale in should trigger.",
      "maximum": 100,
      "minimum": 1,
      "type": "integer"
@@ -298,10 +266,8 @@
   },
   "ScaleOutPolicy": {
    "additionalProperties": false,
-   "description": "Information about the scale out policy of the connector.",
    "properties": {
     "CpuUtilizationPercentage": {
-     "description": "Specifies the CPU utilization percentage threshold at which connector scale out should trigger.",
      "maximum": 100,
      "minimum": 1,
      "type": "integer"
@@ -314,10 +280,8 @@
   },
   "Vpc": {
    "additionalProperties": false,
-   "description": "Information about a VPC used with the connector.",
    "properties": {
     "SecurityGroups": {
-     "description": "The AWS security groups to associate with the elastic network interfaces in order to specify what the connector has access to.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -326,7 +290,6 @@
      "uniqueItems": true
     },
     "Subnets": {
-     "description": "The list of subnets to connect to in the virtual private cloud (VPC). AWS creates elastic network interfaces inside these subnets.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -344,16 +307,13 @@
   },
   "WorkerConfiguration": {
    "additionalProperties": false,
-   "description": "Specifies the worker configuration to use with the connector.",
    "properties": {
     "Revision": {
-     "description": "The revision of the worker configuration to use.",
      "format": "int64",
      "minimum": 1,
      "type": "integer"
     },
     "WorkerConfigurationArn": {
-     "description": "The Amazon Resource Name (ARN) of the worker configuration to use.",
      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
      "type": "string"
     }
@@ -366,7 +326,6 @@
   },
   "WorkerLogDelivery": {
    "additionalProperties": false,
-   "description": "Specifies where worker logs are delivered.",
    "properties": {
     "CloudWatchLogs": {
      "$ref": "#/definitions/CloudWatchLogsLogDelivery"
@@ -381,7 +340,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::KafkaConnect::Connector",
  "handlers": {
   "create": {
    "permissions": [
@@ -448,13 +406,11 @@
    "$ref": "#/definitions/Capacity"
   },
   "ConnectorArn": {
-   "description": "Amazon Resource Name for the created Connector.",
    "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
    "type": "string"
   },
   "ConnectorConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration for the connector.",
    "patternProperties": {
     ".*": {
      "type": "string"
@@ -463,12 +419,10 @@
    "type": "object"
   },
   "ConnectorDescription": {
-   "description": "A summary description of the connector.",
    "maxLength": 1024,
    "type": "string"
   },
   "ConnectorName": {
-   "description": "The name of the connector.",
    "maxLength": 128,
    "minLength": 1,
    "type": "string"
@@ -483,14 +437,12 @@
    "$ref": "#/definitions/KafkaClusterEncryptionInTransit"
   },
   "KafkaConnectVersion": {
-   "description": "The version of Kafka Connect. It has to be compatible with both the Kafka cluster's version and the plugins.",
    "type": "string"
   },
   "LogDelivery": {
    "$ref": "#/definitions/LogDelivery"
   },
   "Plugins": {
-   "description": "List of plugins to use with the connector.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Plugin"
@@ -500,7 +452,6 @@
    "uniqueItems": true
   },
   "ServiceExecutionRoleArn": {
-   "description": "The Amazon Resource Name (ARN) of the IAM role used by the connector to access Amazon S3 objects and other external resources.",
    "pattern": "arn:(aws|aws-us-gov|aws-cn):iam:.*",
    "type": "string"
   },

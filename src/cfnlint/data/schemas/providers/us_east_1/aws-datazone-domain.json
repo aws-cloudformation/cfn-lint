@@ -10,7 +10,6 @@
  ],
  "definitions": {
   "AuthType": {
-   "description": "The type of single sign-on in Amazon DataZone.",
    "enum": [
     "IAM_IDC",
     "DISABLED"
@@ -18,7 +17,6 @@
    "type": "string"
   },
   "DomainStatus": {
-   "description": "The status of the Amazon DataZone domain.",
    "enum": [
     "CREATING",
     "AVAILABLE",
@@ -31,7 +29,6 @@
   },
   "SingleSignOn": {
    "additionalProperties": false,
-   "description": "The single-sign on configuration of the Amazon DataZone domain.",
    "properties": {
     "Type": {
      "$ref": "#/definitions/AuthType"
@@ -44,16 +41,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with the domain.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -66,7 +60,6 @@
    "type": "object"
   },
   "UserAssignment": {
-   "description": "The single sign-on user assignment in Amazon DataZone.",
    "enum": [
     "AUTOMATIC",
     "MANUAL"
@@ -74,7 +67,6 @@
    "type": "string"
   }
  },
- "description": "A domain is an organizing entity for connecting together assets, users, and their projects",
  "handlers": {
   "create": {
    "permissions": [
@@ -120,63 +112,50 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The ARN of the Amazon DataZone domain.",
    "pattern": "^arn:aws(|-cn|-us-gov):datazone:\\w+(?:-\\w+)+:\\d{12}:domain/dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "CreatedAt": {
-   "description": "The timestamp of when the Amazon DataZone domain was last updated.",
    "format": "date-time",
    "type": "string"
   },
   "Description": {
-   "description": "The description of the Amazon DataZone domain.",
    "type": "string"
   },
   "DomainExecutionRole": {
-   "description": "The domain execution role that is created when an Amazon DataZone domain is created. The domain execution role is created in the AWS account that houses the Amazon DataZone domain.",
    "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
    "type": "string"
   },
   "Id": {
-   "description": "The id of the Amazon DataZone domain.",
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "KmsKeyIdentifier": {
-   "description": "The identifier of the AWS Key Management Service (KMS) key that is used to encrypt the Amazon DataZone domain, metadata, and reporting data.",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
    "type": "string"
   },
   "LastUpdatedAt": {
-   "description": "The timestamp of when the Amazon DataZone domain was last updated.",
    "format": "date-time",
    "type": "string"
   },
   "ManagedAccountId": {
-   "description": "The identifier of the AWS account that manages the domain.",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the Amazon DataZone domain.",
    "type": "string"
   },
   "PortalUrl": {
-   "description": "The URL of the data portal for this Amazon DataZone domain.",
    "type": "string"
   },
   "SingleSignOn": {
-   "$ref": "#/definitions/SingleSignOn",
-   "description": "The single-sign on configuration of the Amazon DataZone domain."
+   "$ref": "#/definitions/SingleSignOn"
   },
   "Status": {
-   "$ref": "#/definitions/DomainStatus",
-   "description": "The status of the Amazon DataZone domain."
+   "$ref": "#/definitions/DomainStatus"
   },
   "Tags": {
-   "description": "The tags specified for the Amazon DataZone domain.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

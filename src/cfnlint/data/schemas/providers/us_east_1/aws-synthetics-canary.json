@@ -11,8 +11,7 @@
    "additionalProperties": false,
    "properties": {
     "S3Encryption": {
-     "$ref": "#/definitions/S3Encryption",
-     "description": "Encryption configuration for uploading artifacts to S3"
+     "$ref": "#/definitions/S3Encryption"
     }
    },
    "type": "object"
@@ -20,15 +19,12 @@
   "BaseScreenshot": {
    "properties": {
     "IgnoreCoordinates": {
-     "description": "List of coordinates of rectangles to be ignored during visual testing",
      "items": {
-      "description": "Coordinates of a rectangle to be ignored during visual testing",
       "type": "string"
      },
      "type": "array"
     },
     "ScreenshotName": {
-     "description": "Name of the screenshot to be used as base reference for visual testing",
      "type": "string"
     }
    },
@@ -81,12 +77,10 @@
    "additionalProperties": false,
    "properties": {
     "ActiveTracing": {
-     "description": "Enable active tracing if set to true",
      "type": "boolean"
     },
     "EnvironmentVariables": {
      "additionalProperties": false,
-     "description": "Environment variable key-value pairs.",
      "patternProperties": {
       "[a-zA-Z][a-zA-Z0-9_]+": {
        "type": "string"
@@ -95,11 +89,9 @@
      "type": "object"
     },
     "MemoryInMB": {
-     "description": "Provide maximum memory available for canary in MB",
      "type": "integer"
     },
     "TimeoutInSeconds": {
-     "description": "Provide maximum canary timeout per run in seconds",
      "type": "integer"
     }
    },
@@ -109,11 +101,9 @@
    "additionalProperties": false,
    "properties": {
     "EncryptionMode": {
-     "description": "Encryption mode for encrypting artifacts when uploading to S3. Valid values: SSE_S3 and SSE_KMS.",
      "type": "string"
     },
     "KmsKeyArn": {
-     "description": "KMS key Arn for encrypting artifacts when uploading to S3. You must specify KMS key Arn for SSE_KMS encryption mode only.",
      "type": "string"
     }
    },
@@ -136,16 +126,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -186,11 +173,9 @@
    "additionalProperties": false,
    "properties": {
     "BaseCanaryRunId": {
-     "description": "Canary run id to be used as base reference for visual testing",
      "type": "string"
     },
     "BaseScreenshots": {
-     "description": "List of screenshots used as base reference for visual testing",
      "items": {
       "$ref": "#/definitions/BaseScreenshot"
      },
@@ -206,7 +191,6 @@
  "deprecatedProperties": [
   "/properties/DeleteLambdaResourcesOnCanaryDeletion"
  ],
- "description": "Resource Type definition for AWS::Synthetics::Canary",
  "handlers": {
   "create": {
    "permissions": [
@@ -284,61 +268,47 @@
  ],
  "properties": {
   "ArtifactConfig": {
-   "$ref": "#/definitions/ArtifactConfig",
-   "description": "Provide artifact configuration"
+   "$ref": "#/definitions/ArtifactConfig"
   },
   "ArtifactS3Location": {
-   "description": "Provide the s3 bucket output location for test results",
    "pattern": "^(s3|S3)://",
    "type": "string"
   },
   "Code": {
-   "$ref": "#/definitions/Code",
-   "description": "Provide the canary script source"
+   "$ref": "#/definitions/Code"
   },
   "DeleteLambdaResourcesOnCanaryDeletion": {
-   "description": "Deletes associated lambda resources created by Synthetics if set to True. Default is False",
    "type": "boolean"
   },
   "ExecutionRoleArn": {
-   "description": "Lambda Execution role used to run your canaries",
    "type": "string"
   },
   "FailureRetentionPeriod": {
-   "description": "Retention period of failed canary runs represented in number of days",
    "type": "integer"
   },
   "Id": {
-   "description": "Id of the canary",
    "type": "string"
   },
   "Name": {
-   "description": "Name of the canary.",
    "pattern": "^[0-9a-z_\\-]{1,21}$",
    "type": "string"
   },
   "RunConfig": {
-   "$ref": "#/definitions/RunConfig",
-   "description": "Provide canary run configuration"
+   "$ref": "#/definitions/RunConfig"
   },
   "RuntimeVersion": {
-   "description": "Runtime version of Synthetics Library",
    "type": "string"
   },
   "Schedule": {
-   "$ref": "#/definitions/Schedule",
-   "description": "Frequency to run your canaries"
+   "$ref": "#/definitions/Schedule"
   },
   "StartCanaryAfterCreation": {
-   "description": "Runs canary if set to True. Default is False",
    "type": "boolean"
   },
   "State": {
-   "description": "State of the canary",
    "type": "string"
   },
   "SuccessRetentionPeriod": {
-   "description": "Retention period of successful canary runs represented in number of days",
    "type": "integer"
   },
   "Tags": {
@@ -349,12 +319,10 @@
    "uniqueItems": false
   },
   "VPCConfig": {
-   "$ref": "#/definitions/VPCConfig",
-   "description": "Provide VPC Configuration if enabled."
+   "$ref": "#/definitions/VPCConfig"
   },
   "VisualReference": {
-   "$ref": "#/definitions/VisualReference",
-   "description": "Visual reference configuration for visual testing"
+   "$ref": "#/definitions/VisualReference"
   }
  },
  "readOnlyProperties": [

@@ -14,12 +14,10 @@
    "type": "string"
   },
   "DataAccessRole": {
-   "description": "The data access role included in the configuration details of the AWS Glue data source.",
    "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]{1,128}$",
    "type": "string"
   },
   "DataSourceConfigurationInput": {
-   "description": "Specifies the configuration of the data source. It can be set to either glueRunConfiguration or redshiftRunConfiguration.",
    "oneOf": [
     {
      "additionalProperties": false,
@@ -44,7 +42,6 @@
    ]
   },
   "DataSourceStatus": {
-   "description": "The status of the data source.",
    "enum": [
     "CREATING",
     "FAILED_CREATION",
@@ -58,7 +55,6 @@
    "type": "string"
   },
   "EnableSetting": {
-   "description": "Specifies whether the data source is enabled.",
    "enum": [
     "ENABLED",
     "DISABLED"
@@ -67,7 +63,6 @@
   },
   "FilterExpression": {
    "additionalProperties": false,
-   "description": "The search filter expression.",
    "properties": {
     "Expression": {
      "maxLength": 2048,
@@ -85,7 +80,6 @@
    "type": "object"
   },
   "FilterExpressionType": {
-   "description": "The search filter expression type.",
    "enum": [
     "INCLUDE",
     "EXCLUDE"
@@ -94,27 +88,22 @@
   },
   "FormInput": {
    "additionalProperties": false,
-   "description": "The details of a metadata form.",
    "properties": {
     "Content": {
-     "description": "The content of the metadata form.",
      "maxLength": 75000,
      "type": "string"
     },
     "FormName": {
-     "$ref": "#/definitions/FormName",
-     "description": "The name of the metadata form."
+     "$ref": "#/definitions/FormName"
     },
     "TypeIdentifier": {
-     "description": "The ID of the metadata form type.",
      "maxLength": 385,
      "minLength": 1,
      "pattern": "^(?!\\.)[\\w\\.]*\\w$",
      "type": "string"
     },
     "TypeRevision": {
-     "$ref": "#/definitions/TypeRevision",
-     "description": "The revision of the metadata form type."
+     "$ref": "#/definitions/TypeRevision"
     }
    },
    "required": [
@@ -123,7 +112,6 @@
    "type": "object"
   },
   "FormName": {
-   "description": "The name of the metadata form.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
@@ -133,11 +121,9 @@
    "additionalProperties": false,
    "properties": {
     "DataAccessRole": {
-     "$ref": "#/definitions/DataAccessRole",
-     "description": "The data access role included in the configuration details of the AWS Glue data source."
+     "$ref": "#/definitions/DataAccessRole"
     },
     "RelationalFilterConfigurations": {
-     "description": "The relational filter configurations included in the configuration details of the AWS Glue data source.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/RelationalFilterConfiguration"
@@ -152,10 +138,8 @@
   },
   "RecommendationConfiguration": {
    "additionalProperties": false,
-   "description": "The recommendation to be updated as part of the UpdateDataSource action.",
    "properties": {
     "EnableBusinessNameGeneration": {
-     "description": "Specifies whether automatic business name generation is to be enabled or not as part of the recommendation configuration.",
      "type": "boolean"
     }
    },
@@ -163,10 +147,8 @@
   },
   "RedshiftClusterStorage": {
    "additionalProperties": false,
-   "description": "The name of an Amazon Redshift cluster.",
    "properties": {
     "ClusterName": {
-     "description": "The name of an Amazon Redshift cluster.",
      "maxLength": 63,
      "minLength": 1,
      "pattern": "^[0-9a-z].[a-z0-9\\-]*$",
@@ -180,10 +162,8 @@
   },
   "RedshiftCredentialConfiguration": {
    "additionalProperties": false,
-   "description": "The ARN of a secret manager for an Amazon Redshift cluster.",
    "properties": {
     "SecretManagerArn": {
-     "description": "The ARN of a secret manager for an Amazon Redshift cluster.",
      "maxLength": 256,
      "pattern": "^arn:aws[^:]*:secretsmanager:[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]:\\d{12}:secret:.*$",
      "type": "string"
@@ -196,19 +176,15 @@
   },
   "RedshiftRunConfigurationInput": {
    "additionalProperties": false,
-   "description": "The configuration details of the Amazon Redshift data source.",
    "properties": {
     "DataAccessRole": {
-     "$ref": "#/definitions/DataAccessRole",
-     "description": "The data access role included in the configuration details of the Amazon Redshift data source."
+     "$ref": "#/definitions/DataAccessRole"
     },
     "RedshiftCredentialConfiguration": {
-     "$ref": "#/definitions/RedshiftCredentialConfiguration",
-     "description": "The details of the credentials required to access an Amazon Redshift cluster."
+     "$ref": "#/definitions/RedshiftCredentialConfiguration"
     },
     "RedshiftStorage": {
-     "$ref": "#/definitions/RedshiftStorage",
-     "description": "The details of the Amazon Redshift storage as part of the configuration of an Amazon Redshift data source run."
+     "$ref": "#/definitions/RedshiftStorage"
     },
     "RelationalFilterConfigurations": {
      "$ref": "#/definitions/RelationalFilterConfigurations"
@@ -223,10 +199,8 @@
   },
   "RedshiftServerlessStorage": {
    "additionalProperties": false,
-   "description": "The details of the Amazon Redshift Serverless workgroup storage.",
    "properties": {
     "WorkgroupName": {
-     "description": "The name of the Amazon Redshift Serverless workgroup.",
      "maxLength": 64,
      "minLength": 3,
      "pattern": "^[a-z0-9-]+$",
@@ -239,11 +213,9 @@
    "type": "object"
   },
   "RedshiftStorage": {
-   "description": "The details of the Amazon Redshift storage as part of the configuration of an Amazon Redshift data source run.",
    "oneOf": [
     {
      "additionalProperties": false,
-     "description": "The details of the Amazon Redshift cluster source.",
      "properties": {
       "RedshiftClusterSource": {
        "$ref": "#/definitions/RedshiftClusterStorage"
@@ -257,7 +229,6 @@
     },
     {
      "additionalProperties": false,
-     "description": "The details of the Amazon Redshift Serverless workgroup source.",
      "properties": {
       "RedshiftServerlessSource": {
        "$ref": "#/definitions/RedshiftServerlessStorage"
@@ -279,16 +250,13 @@
   },
   "RelationalFilterConfiguration": {
    "additionalProperties": false,
-   "description": "The relational filter configuration for the data source.",
    "properties": {
     "DatabaseName": {
-     "description": "The database name specified in the relational filter configuration for the data source.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "FilterExpressions": {
-     "description": "The filter expressions specified in the relational filter configuration for the data source.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/FilterExpression"
@@ -296,7 +264,6 @@
      "type": "array"
     },
     "SchemaName": {
-     "description": "The schema name specified in the relational filter configuration for the data source.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
@@ -308,7 +275,6 @@
    "type": "object"
   },
   "RelationalFilterConfigurations": {
-   "description": "The relational filter configurations included in the configuration details of the Amazon Redshift data source.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/RelationalFilterConfiguration"
@@ -317,18 +283,15 @@
   },
   "ScheduleConfiguration": {
    "additionalProperties": false,
-   "description": "The schedule of the data source runs.",
    "properties": {
     "Schedule": {
-     "description": "The schedule of the data source runs.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "cron\\((\\b[0-5]?[0-9]\\b) (\\b2[0-3]\\b|\\b[0-1]?[0-9]\\b) (.*){1,5} (.*){1,5} (.*){1,5} (.*){1,5}\\)",
      "type": "string"
     },
     "Timezone": {
-     "$ref": "#/definitions/Timezone",
-     "description": "The timezone of the data source run."
+     "$ref": "#/definitions/Timezone"
     }
    },
    "type": "object"
@@ -337,13 +300,11 @@
    "type": "string"
   },
   "TypeRevision": {
-   "description": "The revision of the metadata form type.",
    "maxLength": 64,
    "minLength": 1,
    "type": "string"
   }
  },
- "description": "Definition of AWS::DataZone::DataSource Resource Type",
  "handlers": {
   "create": {
    "permissions": [
@@ -396,7 +357,6 @@
  ],
  "properties": {
   "AssetFormsInput": {
-   "description": "The metadata forms that are to be attached to the assets that this data source works with.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/FormInput"
@@ -406,98 +366,77 @@
    "type": "array"
   },
   "Configuration": {
-   "$ref": "#/definitions/DataSourceConfigurationInput",
-   "description": "Configuration of the data source. It can be set to either glueRunConfiguration or redshiftRunConfiguration."
+   "$ref": "#/definitions/DataSourceConfigurationInput"
   },
   "CreatedAt": {
-   "description": "The timestamp of when the data source was created.",
    "format": "date-time",
    "type": "string"
   },
   "Description": {
-   "description": "The description of the data source.",
    "maxLength": 2048,
    "type": "string"
   },
   "DomainId": {
-   "description": "The ID of the Amazon DataZone domain where the data source is created.",
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "DomainIdentifier": {
-   "description": "The ID of the Amazon DataZone domain where the data source is created.",
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnableSetting": {
-   "$ref": "#/definitions/EnableSetting",
-   "description": "Specifies whether the data source is enabled."
+   "$ref": "#/definitions/EnableSetting"
   },
   "EnvironmentId": {
-   "description": "The unique identifier of the Amazon DataZone environment to which the data source publishes assets.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentIdentifier": {
-   "description": "The unique identifier of the Amazon DataZone environment to which the data source publishes assets.",
    "type": "string"
   },
   "Id": {
-   "description": "The unique identifier of the data source.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "LastRunAssetCount": {
-   "description": "The number of assets created by the data source during its last run.",
    "type": "number"
   },
   "LastRunAt": {
-   "description": "The timestamp that specifies when the data source was last run.",
    "type": "string"
   },
   "LastRunStatus": {
-   "description": "The status of the last run of this data source.",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the data source.",
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
   },
   "ProjectId": {
-   "description": "The ID of the Amazon DataZone project to which the data source is added.",
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "ProjectIdentifier": {
-   "description": "The identifier of the Amazon DataZone project in which you want to add the data source.",
    "type": "string"
   },
   "PublishOnImport": {
-   "description": "Specifies whether the assets that this data source creates in the inventory are to be also automatically published to the catalog.",
    "type": "boolean"
   },
   "Recommendation": {
-   "$ref": "#/definitions/RecommendationConfiguration",
-   "description": "Specifies whether the business name generation is to be enabled for this data source."
+   "$ref": "#/definitions/RecommendationConfiguration"
   },
   "Schedule": {
-   "$ref": "#/definitions/ScheduleConfiguration",
-   "description": "The schedule of the data source runs."
+   "$ref": "#/definitions/ScheduleConfiguration"
   },
   "Status": {
-   "$ref": "#/definitions/DataSourceStatus",
-   "description": "The status of the data source."
+   "$ref": "#/definitions/DataSourceStatus"
   },
   "Type": {
-   "description": "The type of the data source.",
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
   },
   "UpdatedAt": {
-   "description": "The timestamp of when this data source was updated.",
    "format": "date-time",
    "type": "string"
   }

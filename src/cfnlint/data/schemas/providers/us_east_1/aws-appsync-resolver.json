@@ -8,14 +8,11 @@
  "definitions": {
   "AppSyncRuntime": {
    "additionalProperties": false,
-   "description": "Describes a runtime used by an APSYlong resolver or APSYlong function. Specifies the name and version of the runtime to use. Note that if a runtime is specified, code must also be specified.",
    "properties": {
     "Name": {
-     "description": "The ``name`` of the runtime to use. Currently, the only allowed value is ``APPSYNC_JS``.",
      "type": "string"
     },
     "RuntimeVersion": {
-     "description": "The ``version`` of the runtime to use. Currently, the only allowed version is ``1.0.0``.",
      "type": "string"
     }
    },
@@ -27,10 +24,8 @@
   },
   "CachingConfig": {
    "additionalProperties": false,
-   "description": "The caching configuration for a resolver that has caching activated.",
    "properties": {
     "CachingKeys": {
-     "description": "The caching keys for a resolver that has caching activated.\n Valid values are entries from the ``$context.arguments``, ``$context.source``, and ``$context.identity`` maps.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -39,7 +34,6 @@
      "uniqueItems": false
     },
     "Ttl": {
-     "description": "The TTL in seconds for a resolver that has caching activated.\n Valid values are 1\u20133,600 seconds.",
      "type": "number"
     }
    },
@@ -50,10 +44,8 @@
   },
   "LambdaConflictHandlerConfig": {
    "additionalProperties": false,
-   "description": "The ``LambdaConflictHandlerConfig`` when configuring LAMBDA as the Conflict Handler.",
    "properties": {
     "LambdaConflictHandlerArn": {
-     "description": "The Amazon Resource Name (ARN) for the Lambda function to use as the Conflict Handler.",
      "type": "string"
     }
    },
@@ -61,10 +53,8 @@
   },
   "PipelineConfig": {
    "additionalProperties": false,
-   "description": "Use the ``PipelineConfig`` property type to specify ``PipelineConfig`` for an APSYlong resolver.\n  ``PipelineConfig`` is a property of the [AWS::AppSync::Resolver](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html) resource.",
    "properties": {
     "Functions": {
-     "description": "A list of ``Function`` objects.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -77,19 +67,15 @@
   },
   "SyncConfig": {
    "additionalProperties": false,
-   "description": "Describes a Sync configuration for a resolver.\n Specifies which Conflict Detection strategy and Resolution strategy to use when the resolver is invoked.",
    "properties": {
     "ConflictDetection": {
-     "description": "The Conflict Detection strategy to use.\n  +   *VERSION*: Detect conflicts based on object versions for this resolver.\n  +   *NONE*: Do not detect conflicts when invoking this resolver.",
      "type": "string"
     },
     "ConflictHandler": {
-     "description": "The Conflict Resolution strategy to perform in the event of a conflict.\n  +   *OPTIMISTIC_CONCURRENCY*: Resolve conflicts by rejecting mutations when versions don't match the latest version at the server.\n  +   *AUTOMERGE*: Resolve conflicts with the Automerge conflict resolution strategy.\n  +   *LAMBDA*: Resolve conflicts with an LAMlong function supplied in the ``LambdaConflictHandlerConfig``.",
      "type": "string"
     },
     "LambdaConflictHandlerConfig": {
-     "$ref": "#/definitions/LambdaConflictHandlerConfig",
-     "description": "The ``LambdaConflictHandlerConfig`` when configuring ``LAMBDA`` as the Conflict Handler."
+     "$ref": "#/definitions/LambdaConflictHandlerConfig"
     }
    },
    "required": [
@@ -98,7 +84,6 @@
    "type": "object"
   }
  },
- "description": "The ``AWS::AppSync::Resolver`` resource defines the logical GraphQL resolver that you attach to fields in a schema. Request and response templates for resolvers are written in Apache Velocity Template Language (VTL) format. For more information about resolvers, see [Resolver Mapping Template Reference](https://docs.aws.amazon.com/appsync/latest/devguide/resolver-mapping-template-reference.html).\n  When you submit an update, CFNLong updates resources based on differences between what you submit and the stack's current template. To cause this resource to be updated you must change a property value for this resource in the CFNshort template. Changing the S3 file content without changing a property value will not result in an update operation.\n See [Update Behaviors of Stack Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html) in the *User Guide*.",
  "handlers": {
   "create": {
    "permissions": [
@@ -148,31 +133,24 @@
  ],
  "properties": {
   "ApiId": {
-   "description": "The APSYlong GraphQL API to which you want to attach this resolver.",
    "type": "string"
   },
   "CachingConfig": {
-   "$ref": "#/definitions/CachingConfig",
-   "description": "The caching configuration for the resolver."
+   "$ref": "#/definitions/CachingConfig"
   },
   "Code": {
-   "description": "The ``resolver`` code that contains the request and response functions. When code is used, the ``runtime`` is required. The runtime value must be ``APPSYNC_JS``.",
    "type": "string"
   },
   "CodeS3Location": {
-   "description": "The Amazon S3 endpoint.",
    "type": "string"
   },
   "DataSourceName": {
-   "description": "The resolver data source name.",
    "type": "string"
   },
   "FieldName": {
-   "description": "The GraphQL field on a type that invokes the resolver.",
    "type": "string"
   },
   "Kind": {
-   "description": "The resolver type.\n  +   *UNIT*: A UNIT resolver type. A UNIT resolver is the default resolver type. You can use a UNIT resolver to run a GraphQL query against a single data source.\n  +   *PIPELINE*: A PIPELINE resolver type. You can use a PIPELINE resolver to invoke a series of ``Function`` objects in a serial manner. You can use a pipeline resolver to run a GraphQL query against multiple data sources.",
    "enum": [
     "UNIT",
     "PIPELINE"
@@ -180,11 +158,9 @@
    "type": "string"
   },
   "MaxBatchSize": {
-   "description": "The maximum number of resolver request inputs that will be sent to a single LAMlong function in a ``BatchInvoke`` operation.",
    "type": "integer"
   },
   "MetricsConfig": {
-   "description": "",
    "enum": [
     "ENABLED",
     "DISABLED"
@@ -192,39 +168,30 @@
    "type": "string"
   },
   "PipelineConfig": {
-   "$ref": "#/definitions/PipelineConfig",
-   "description": "Functions linked with the pipeline resolver."
+   "$ref": "#/definitions/PipelineConfig"
   },
   "RequestMappingTemplate": {
-   "description": "The request mapping template.\n Request mapping templates are optional when using a Lambda data source. For all other data sources, a request mapping template is required.",
    "type": "string"
   },
   "RequestMappingTemplateS3Location": {
-   "description": "The location of a request mapping template in an S3 bucket. Use this if you want to provision with a template file in S3 rather than embedding it in your CFNshort template.",
    "type": "string"
   },
   "ResolverArn": {
-   "description": "",
    "type": "string"
   },
   "ResponseMappingTemplate": {
-   "description": "The response mapping template.",
    "type": "string"
   },
   "ResponseMappingTemplateS3Location": {
-   "description": "The location of a response mapping template in an S3 bucket. Use this if you want to provision with a template file in S3 rather than embedding it in your CFNshort template.",
    "type": "string"
   },
   "Runtime": {
-   "$ref": "#/definitions/AppSyncRuntime",
-   "description": "Describes a runtime used by an APSYlong resolver or APSYlong function. Specifies the name and version of the runtime to use. Note that if a runtime is specified, code must also be specified."
+   "$ref": "#/definitions/AppSyncRuntime"
   },
   "SyncConfig": {
-   "$ref": "#/definitions/SyncConfig",
-   "description": "The ``SyncConfig`` for a resolver attached to a versioned data source."
+   "$ref": "#/definitions/SyncConfig"
   },
   "TypeName": {
-   "description": "The GraphQL type that invokes this resolver.",
    "type": "string"
   }
  },

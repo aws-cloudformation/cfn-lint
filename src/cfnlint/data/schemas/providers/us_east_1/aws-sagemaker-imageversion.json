@@ -6,60 +6,51 @@
  ],
  "definitions": {
   "Alias": {
-   "description": "The alias of the image version.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "(?!^[.-])^([a-zA-Z0-9-_.]+)$",
    "type": "string"
   },
   "Aliases": {
-   "description": "List of aliases for the image version.",
    "items": {
     "$ref": "#/definitions/Alias"
    },
    "type": "array"
   },
   "BaseImage": {
-   "description": "The registry path of the container image on which this image version is based.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": ".+",
    "type": "string"
   },
   "ContainerImage": {
-   "description": "The registry path of the container image that contains this image version.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": ".+",
    "type": "string"
   },
   "Horovod": {
-   "description": "Indicates Horovod compatibility.",
    "type": "boolean"
   },
   "ImageArn": {
-   "description": "The Amazon Resource Name (ARN) of the parent image.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ImageName": {
-   "description": "The name of the image this version belongs to.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[A-Za-z0-9]([-.]?[A-Za-z0-9])*$",
    "type": "string"
   },
   "ImageVersionArn": {
-   "description": "The Amazon Resource Name (ARN) of the image version.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image-version\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*\\/[0-9]+$",
    "type": "string"
   },
   "JobType": {
-   "description": "Indicates SageMaker job type compatibility.",
    "enum": [
     "TRAINING",
     "INFERENCE",
@@ -68,14 +59,12 @@
    "type": "string"
   },
   "MLFramework": {
-   "description": "The machine learning framework vended in the image version.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
    "type": "string"
   },
   "Processor": {
-   "description": "Indicates CPU or GPU compatibility.",
    "enum": [
     "CPU",
     "GPU"
@@ -83,21 +72,18 @@
    "type": "string"
   },
   "ProgrammingLang": {
-   "description": "The supported programming language and its version.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
    "type": "string"
   },
   "ReleaseNotes": {
-   "description": "The maintainer description of the image version.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": ".*",
    "type": "string"
   },
   "VendorGuidance": {
-   "description": "The availability of the image version specified by the maintainer.",
    "enum": [
     "NOT_PROVIDED",
     "STABLE",
@@ -107,12 +93,10 @@
    "type": "string"
   },
   "Version": {
-   "description": "The version number of the image version.",
    "minimum": 1,
    "type": "integer"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::ImageVersion",
  "handlers": {
   "create": {
    "permissions": [

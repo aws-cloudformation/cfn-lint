@@ -6,15 +6,12 @@
  "definitions": {
   "AlertTarget": {
    "additionalProperties": false,
-   "description": "A structure containing the alert target ARN and the role ARN.",
    "properties": {
     "AlertTargetArn": {
-     "description": "The ARN of the notification target to which alerts are sent.",
      "maxLength": 2048,
      "type": "string"
     },
     "RoleArn": {
-     "description": "The ARN of the role that grants permission to send alerts to the notification target.",
      "maxLength": 2048,
      "minLength": 20,
      "type": "string"
@@ -28,7 +25,6 @@
   },
   "Behavior": {
    "additionalProperties": false,
-   "description": "A security profile behavior.",
    "properties": {
     "Criteria": {
      "$ref": "#/definitions/BehaviorCriteria"
@@ -37,7 +33,6 @@
      "$ref": "#/definitions/ExportMetric"
     },
     "Metric": {
-     "description": "What is measured by the behavior.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9:_-]+",
@@ -47,14 +42,12 @@
      "$ref": "#/definitions/MetricDimension"
     },
     "Name": {
-     "description": "The name for the behavior.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9:_-]+",
      "type": "string"
     },
     "SuppressAlerts": {
-     "description": "Manage Detect alarm SNS notifications by setting behavior notification to on or suppressed. Detect will continue to performing device behavior evaluations. However, suppressed alarms wouldn't be forwarded for SNS notification.",
      "type": "boolean"
     }
    },
@@ -65,10 +58,8 @@
   },
   "BehaviorCriteria": {
    "additionalProperties": false,
-   "description": "The criteria by which the behavior is determined to be normal.",
    "properties": {
     "ComparisonOperator": {
-     "description": "The operator that relates the thing measured (metric) to the criteria (containing a value or statisticalThreshold).",
      "enum": [
       "less-than",
       "less-than-equals",
@@ -84,19 +75,16 @@
      "type": "string"
     },
     "ConsecutiveDatapointsToAlarm": {
-     "description": "If a device is in violation of the behavior for the specified number of consecutive datapoints, an alarm occurs. If not specified, the default is 1.",
      "maximum": 10,
      "minimum": 1,
      "type": "integer"
     },
     "ConsecutiveDatapointsToClear": {
-     "description": "If an alarm has occurred and the offending device is no longer in violation of the behavior for the specified number of consecutive datapoints, the alarm is cleared. If not specified, the default is 1.",
      "maximum": 10,
      "minimum": 1,
      "type": "integer"
     },
     "DurationSeconds": {
-     "description": "Use this to specify the time duration over which the behavior is evaluated.",
      "type": "integer"
     },
     "MlDetectionConfig": {
@@ -112,15 +100,12 @@
    "type": "object"
   },
   "ExportMetric": {
-   "description": "Flag to enable/disable metrics export for metric to be retained.",
    "type": "boolean"
   },
   "MachineLearningDetectionConfig": {
    "additionalProperties": false,
-   "description": "The configuration of an ML Detect Security Profile.",
    "properties": {
     "ConfidenceLevel": {
-     "description": "The sensitivity of anomalous behavior evaluation. Can be Low, Medium, or High.",
      "enum": [
       "LOW",
       "MEDIUM",
@@ -133,17 +118,14 @@
   },
   "MetricDimension": {
    "additionalProperties": false,
-   "description": "The dimension of a metric.",
    "properties": {
     "DimensionName": {
-     "description": "A unique identifier for the dimension.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9:_-]+",
      "type": "string"
     },
     "Operator": {
-     "description": "Defines how the dimensionValues of a dimension are interpreted.",
      "enum": [
       "IN",
       "NOT_IN"
@@ -158,13 +140,11 @@
   },
   "MetricToRetain": {
    "additionalProperties": false,
-   "description": "The metric you want to retain. Dimensions are optional.",
    "properties": {
     "ExportMetric": {
      "$ref": "#/definitions/ExportMetric"
     },
     "Metric": {
-     "description": "What is measured by the behavior.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9:_-]+",
@@ -181,10 +161,8 @@
   },
   "MetricValue": {
    "additionalProperties": false,
-   "description": "The value to be compared with the metric.",
    "properties": {
     "Cidrs": {
-     "description": "If the ComparisonOperator calls for a set of CIDRs, use this to specify that set to be compared with the metric.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -193,16 +171,13 @@
      "uniqueItems": true
     },
     "Count": {
-     "description": "If the ComparisonOperator calls for a numeric value, use this to specify that (integer) numeric value to be compared with the metric.",
      "minimum": 0,
      "type": "string"
     },
     "Number": {
-     "description": "The numeral value of a metric.",
      "type": "number"
     },
     "Numbers": {
-     "description": "The numeral values of a metric.",
      "insertionOrder": false,
      "items": {
       "type": "number"
@@ -211,7 +186,6 @@
      "uniqueItems": true
     },
     "Ports": {
-     "description": "If the ComparisonOperator calls for a set of ports, use this to specify that set to be compared with the metric.",
      "insertionOrder": false,
      "items": {
       "maximum": 65535,
@@ -222,7 +196,6 @@
      "uniqueItems": true
     },
     "Strings": {
-     "description": "The string values of a metric.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -235,10 +208,8 @@
   },
   "StatisticalThreshold": {
    "additionalProperties": false,
-   "description": "A statistical ranking (percentile) which indicates a threshold value by which a behavior is determined to be in compliance or in violation of the behavior.",
    "properties": {
     "Statistic": {
-     "description": "The percentile which resolves to a threshold value by which compliance with a behavior is determined",
      "enum": [
       "Average",
       "p0",
@@ -260,16 +231,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The tag's key.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The tag's value.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
@@ -282,7 +250,6 @@
    "type": "object"
   }
  },
- "description": "A security profile defines a set of expected behaviors for devices in your account.",
  "handlers": {
   "create": {
    "permissions": [
@@ -329,7 +296,6 @@
  ],
  "properties": {
   "AdditionalMetricsToRetainV2": {
-   "description": "A list of metrics whose data is retained (stored). By default, data is retained for any metric used in the profile's behaviors, but it is also retained for any metric specified here.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/MetricToRetain"
@@ -339,7 +305,6 @@
   },
   "AlertTargets": {
    "additionalProperties": false,
-   "description": "Specifies the destinations to which alerts are sent.",
    "patternProperties": {
     "[a-zA-Z0-9:_-]+": {
      "$ref": "#/definitions/AlertTarget"
@@ -348,7 +313,6 @@
    "type": "object"
   },
   "Behaviors": {
-   "description": "Specifies the behaviors that, when violated by a device (thing), cause an alert.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Behavior"
@@ -359,16 +323,13 @@
   },
   "MetricsExportConfig": {
    "additionalProperties": false,
-   "description": "A structure containing the mqtt topic for metrics export.",
    "properties": {
     "MqttTopic": {
-     "description": "The topic for metrics export.",
      "maxLength": 512,
      "minLength": 1,
      "type": "string"
     },
     "RoleArn": {
-     "description": "The ARN of the role that grants permission to publish to mqtt topic.",
      "maxLength": 2048,
      "minLength": 20,
      "type": "string"
@@ -381,23 +342,19 @@
    "type": "object"
   },
   "SecurityProfileArn": {
-   "description": "The ARN (Amazon resource name) of the created security profile.",
    "type": "string"
   },
   "SecurityProfileDescription": {
-   "description": "A description of the security profile.",
    "maxLength": 1000,
    "type": "string"
   },
   "SecurityProfileName": {
-   "description": "A unique identifier for the security profile.",
    "maxLength": 128,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9:_-]+",
    "type": "string"
   },
   "Tags": {
-   "description": "Metadata that can be used to manage the security profile.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -407,10 +364,8 @@
    "uniqueItems": true
   },
   "TargetArns": {
-   "description": "A set of target ARNs that the security profile is attached to.",
    "insertionOrder": false,
    "items": {
-    "description": "The ARN of the target to which the security profile is attached.",
     "maxLength": 2048,
     "type": "string"
    },

@@ -9,17 +9,14 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "type": "string"
     }
@@ -31,7 +28,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Connect::PhoneNumber",
  "handlers": {
   "create": {
    "permissions": [
@@ -84,37 +80,30 @@
  ],
  "properties": {
   "Address": {
-   "description": "The phone number e164 address.",
    "pattern": "^\\+[0-9]{2,15}",
    "type": "string"
   },
   "CountryCode": {
-   "description": "The phone number country code.",
    "pattern": "^[A-Z]{2}",
    "type": "string"
   },
   "Description": {
-   "description": "The description of the phone number.",
    "maxLength": 500,
    "minLength": 1,
    "type": "string"
   },
   "PhoneNumberArn": {
-   "description": "The phone number ARN",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:phone-number/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Prefix": {
-   "description": "The phone number prefix.",
    "pattern": "^\\+[0-9]{1,15}",
    "type": "string"
   },
   "SourcePhoneNumberArn": {
-   "description": "The source phone number arn.",
    "type": "string"
   },
   "Tags": {
-   "description": "One or more tags.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -124,12 +113,10 @@
    "uniqueItems": true
   },
   "TargetArn": {
-   "description": "The ARN of the target the phone number is claimed to.",
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:(instance|traffic-distribution-group)/[-a-zA-Z0-9]*$",
    "type": "string"
   },
   "Type": {
-   "description": "The phone number type",
    "pattern": "TOLL_FREE|DID|UIFN|SHARED|THIRD_PARTY_DID|THIRD_PARTY_TF|SHORT_CODE",
    "type": "string"
   }

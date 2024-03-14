@@ -7,16 +7,13 @@
  "definitions": {
   "Alarm": {
    "additionalProperties": false,
-   "description": "A CloudWatch alarm to be monitored for the component.",
    "properties": {
     "AlarmName": {
-     "description": "The name of the CloudWatch alarm to be monitored for the component.",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
     },
     "Severity": {
-     "description": "Indicates the degree of outage when the alarm goes off.",
      "enum": [
       "HIGH",
       "MEDIUM",
@@ -32,10 +29,8 @@
   },
   "AlarmMetric": {
    "additionalProperties": false,
-   "description": "A metric to be monitored for the component.",
    "properties": {
     "AlarmMetricName": {
-     "description": "The name of the metric to be monitored for the component.",
      "type": "string"
     }
    },
@@ -46,14 +41,11 @@
   },
   "ComponentConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration settings of the component.",
    "properties": {
     "ConfigurationDetails": {
-     "$ref": "#/definitions/ConfigurationDetails",
-     "description": "The configuration settings"
+     "$ref": "#/definitions/ConfigurationDetails"
     },
     "SubComponentTypeConfigurations": {
-     "description": "Sub component configurations of the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/SubComponentTypeConfiguration"
@@ -66,7 +58,6 @@
   },
   "ComponentMonitoringSetting": {
    "additionalProperties": false,
-   "description": "The monitoring setting of the component.",
    "oneOf": [
     {
      "required": [
@@ -81,14 +72,12 @@
    ],
    "properties": {
     "ComponentARN": {
-     "description": "The ARN of the compnonent.",
      "maxLength": 300,
      "minLength": 20,
      "pattern": "^arn:aws(-[\\w]+)*:[\\w\\d-]+:([\\w\\d-]*)?:[\\w\\d_-]*([:/].+)*$",
      "type": "string"
     },
     "ComponentConfigurationMode": {
-     "description": "The component monitoring configuration mode.",
      "enum": [
       "DEFAULT",
       "DEFAULT_WITH_OVERWRITE",
@@ -97,22 +86,18 @@
      "type": "string"
     },
     "ComponentName": {
-     "description": "The name of the component.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^[\\d\\w\\-_.+]*$",
      "type": "string"
     },
     "CustomComponentConfiguration": {
-     "$ref": "#/definitions/ComponentConfiguration",
-     "description": "The monitoring configuration of the component."
+     "$ref": "#/definitions/ComponentConfiguration"
     },
     "DefaultOverwriteComponentConfiguration": {
-     "$ref": "#/definitions/ComponentConfiguration",
-     "description": "The overwritten settings on default component monitoring configuration."
+     "$ref": "#/definitions/ComponentConfiguration"
     },
     "Tier": {
-     "description": "The tier of the application component.",
      "pattern": "^[A-Z][[A-Z]_]*$",
      "type": "string"
     }
@@ -125,10 +110,8 @@
   },
   "ConfigurationDetails": {
    "additionalProperties": false,
-   "description": "The configuration settings.",
    "properties": {
     "AlarmMetrics": {
-     "description": "A list of metrics to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/AlarmMetric"
@@ -136,7 +119,6 @@
      "type": "array"
     },
     "Alarms": {
-     "description": "A list of alarms to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Alarm"
@@ -144,19 +126,15 @@
      "type": "array"
     },
     "HAClusterPrometheusExporter": {
-     "$ref": "#/definitions/HAClusterPrometheusExporter",
-     "description": "The HA cluster Prometheus Exporter settings."
+     "$ref": "#/definitions/HAClusterPrometheusExporter"
     },
     "HANAPrometheusExporter": {
-     "$ref": "#/definitions/HANAPrometheusExporter",
-     "description": "The HANA DB Prometheus Exporter settings."
+     "$ref": "#/definitions/HANAPrometheusExporter"
     },
     "JMXPrometheusExporter": {
-     "$ref": "#/definitions/JMXPrometheusExporter",
-     "description": "The JMX Prometheus Exporter settings."
+     "$ref": "#/definitions/JMXPrometheusExporter"
     },
     "Logs": {
-     "description": "A list of logs to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Log"
@@ -164,11 +142,9 @@
      "type": "array"
     },
     "NetWeaverPrometheusExporter": {
-     "$ref": "#/definitions/NetWeaverPrometheusExporter",
-     "description": "The NetWeaver Prometheus Exporter settings."
+     "$ref": "#/definitions/NetWeaverPrometheusExporter"
     },
     "Processes": {
-     "description": "A list of processes to monitor for the component. Only Windows EC2 instances can have a processes section.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Process"
@@ -176,11 +152,9 @@
      "type": "array"
     },
     "SQLServerPrometheusExporter": {
-     "$ref": "#/definitions/SQLServerPrometheusExporter",
-     "description": "The SQL Prometheus Exporter settings."
+     "$ref": "#/definitions/SQLServerPrometheusExporter"
     },
     "WindowsEvents": {
-     "description": "A list of Windows Events to log.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/WindowsEvent"
@@ -192,17 +166,14 @@
   },
   "CustomComponent": {
    "additionalProperties": false,
-   "description": "The custom grouped component.",
    "properties": {
     "ComponentName": {
-     "description": "The name of the component.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^[\\d\\w\\-_.+]*$",
      "type": "string"
     },
     "ResourceList": {
-     "description": "The list of resource ARNs that belong to the component.",
      "insertionOrder": true,
      "items": {
       "maxLength": 300,
@@ -221,7 +192,6 @@
    "type": "object"
   },
   "EventLevel": {
-   "description": "The level of event to log.",
    "enum": [
     "INFORMATION",
     "WARNING",
@@ -233,10 +203,8 @@
   },
   "HAClusterPrometheusExporter": {
    "additionalProperties": false,
-   "description": "The HA cluster Prometheus Exporter settings.",
    "properties": {
     "PrometheusPort": {
-     "description": "Prometheus exporter port.",
      "type": "string"
     }
    },
@@ -244,26 +212,20 @@
   },
   "HANAPrometheusExporter": {
    "additionalProperties": false,
-   "description": "The HANA DB Prometheus Exporter settings.",
    "properties": {
     "AgreeToInstallHANADBClient": {
-     "description": "A flag which indicates agreeing to install SAP HANA DB client.",
      "type": "boolean"
     },
     "HANAPort": {
-     "description": "The HANA DB port.",
      "type": "string"
     },
     "HANASID": {
-     "description": "HANA DB SID.",
      "type": "string"
     },
     "HANASecretName": {
-     "description": "The secret name which manages the HANA DB credentials e.g. {\n  \"username\": \"<>\",\n  \"password\": \"<>\"\n}.",
      "type": "string"
     },
     "PrometheusPort": {
-     "description": "Prometheus exporter port.",
      "type": "string"
     }
    },
@@ -277,18 +239,14 @@
   },
   "JMXPrometheusExporter": {
    "additionalProperties": false,
-   "description": "The JMX Prometheus Exporter settings.",
    "properties": {
     "HostPort": {
-     "description": "Java agent host port",
      "type": "string"
     },
     "JMXURL": {
-     "description": "JMX service URL.",
      "type": "string"
     },
     "PrometheusPort": {
-     "description": "Prometheus exporter port.",
      "type": "string"
     }
    },
@@ -296,10 +254,8 @@
   },
   "Log": {
    "additionalProperties": false,
-   "description": "A log to be monitored for the component.",
    "properties": {
     "Encoding": {
-     "description": "The type of encoding of the logs to be monitored.",
      "enum": [
       "utf-8",
       "utf-16",
@@ -308,26 +264,22 @@
      "type": "string"
     },
     "LogGroupName": {
-     "description": "The CloudWatch log group name to be associated to the monitored log.",
      "maxLength": 512,
      "minLength": 1,
      "pattern": "[\\.\\-_/#A-Za-z0-9]+",
      "type": "string"
     },
     "LogPath": {
-     "description": "The path of the logs to be monitored.",
      "maxLength": 260,
      "minLength": 1,
      "pattern": "^([a-zA-Z]:\\\\[\\\\\\S|*\\S]?.*|/[^\"']*)$",
      "type": "string"
     },
     "LogType": {
-     "description": "The log type decides the log patterns against which Application Insights analyzes the log.",
      "pattern": "^[A-Z][[A-Z]_]*$",
      "type": "string"
     },
     "PatternSet": {
-     "description": "The name of the log pattern set.",
      "maxLength": 30,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9.-_]*",
@@ -341,23 +293,19 @@
   },
   "LogPattern": {
    "additionalProperties": false,
-   "description": "The log pattern.",
    "properties": {
     "Pattern": {
-     "description": "The log pattern.",
      "maxLength": 50,
      "minLength": 1,
      "type": "string"
     },
     "PatternName": {
-     "description": "The name of the log pattern.",
      "maxLength": 50,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9.-_]*",
      "type": "string"
     },
     "Rank": {
-     "description": "Rank of the log pattern.",
      "type": "integer"
     }
    },
@@ -370,10 +318,8 @@
   },
   "LogPatternSet": {
    "additionalProperties": false,
-   "description": "The log pattern set.",
    "properties": {
     "LogPatterns": {
-     "description": "The log patterns of a set.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/LogPattern"
@@ -382,7 +328,6 @@
      "type": "array"
     },
     "PatternSetName": {
-     "description": "The name of the log pattern set.",
      "maxLength": 30,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9.-_]*",
@@ -397,10 +342,8 @@
   },
   "NetWeaverPrometheusExporter": {
    "additionalProperties": false,
-   "description": "The NetWeaver Prometheus Exporter Settings.",
    "properties": {
     "InstanceNumbers": {
-     "description": "SAP instance numbers for ASCS, ERS, and App Servers.",
      "items": {
       "maxLength": 2,
       "minLength": 1,
@@ -410,11 +353,9 @@
      "type": "array"
     },
     "PrometheusPort": {
-     "description": "Prometheus exporter port.",
      "type": "string"
     },
     "SAPSID": {
-     "description": "SAP NetWeaver SID.",
      "type": "string"
     }
    },
@@ -426,10 +367,8 @@
   },
   "Process": {
    "additionalProperties": false,
-   "description": "A process to be monitored for the component.",
    "properties": {
     "AlarmMetrics": {
-     "description": "A list of metrics to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/AlarmMetric"
@@ -437,7 +376,6 @@
      "type": "array"
     },
     "ProcessName": {
-     "description": "The name of the process to be monitored for the component.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9_,-]+$",
@@ -452,14 +390,11 @@
   },
   "SQLServerPrometheusExporter": {
    "additionalProperties": false,
-   "description": "The SQL prometheus exporter settings.",
    "properties": {
     "PrometheusPort": {
-     "description": "Prometheus exporter port.",
      "type": "string"
     },
     "SQLSecretName": {
-     "description": "Secret name which managers SQL exporter connection. e.g. {\"data_source_name\": \"sqlserver://<USERNAME>:<PASSWORD>@localhost:1433\"}",
      "type": "string"
     }
    },
@@ -471,10 +406,8 @@
   },
   "SubComponentConfigurationDetails": {
    "additionalProperties": false,
-   "description": "The configuration settings of sub components.",
    "properties": {
     "AlarmMetrics": {
-     "description": "A list of metrics to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/AlarmMetric"
@@ -482,7 +415,6 @@
      "type": "array"
     },
     "Logs": {
-     "description": "A list of logs to monitor for the component.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Log"
@@ -490,7 +422,6 @@
      "type": "array"
     },
     "Processes": {
-     "description": "A list of processes to monitor for the component. Only Windows EC2 instances can have a processes section.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Process"
@@ -498,7 +429,6 @@
      "type": "array"
     },
     "WindowsEvents": {
-     "description": "A list of Windows Events to log.",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/WindowsEvent"
@@ -510,14 +440,11 @@
   },
   "SubComponentTypeConfiguration": {
    "additionalProperties": false,
-   "description": "One type sub component configurations for the component.",
    "properties": {
     "SubComponentConfigurationDetails": {
-     "$ref": "#/definitions/SubComponentConfigurationDetails",
-     "description": "The configuration settings of sub components."
+     "$ref": "#/definitions/SubComponentConfigurationDetails"
     },
     "SubComponentType": {
-     "description": "The sub component type.",
      "enum": [
       "AWS::EC2::Instance",
       "AWS::EC2::Volume"
@@ -533,16 +460,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -556,10 +480,8 @@
   },
   "WindowsEvent": {
    "additionalProperties": false,
-   "description": "A Windows Event to be monitored for the component.",
    "properties": {
     "EventLevels": {
-     "description": "The levels of event to log. ",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/EventLevel"
@@ -568,21 +490,18 @@
      "type": "array"
     },
     "EventName": {
-     "description": "The type of Windows Events to log.",
      "maxLength": 260,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9_ \\\\/-]+$",
      "type": "string"
     },
     "LogGroupName": {
-     "description": "The CloudWatch log group name to be associated to the monitored log.",
      "maxLength": 512,
      "minLength": 1,
      "pattern": "[\\.\\-_/#A-Za-z0-9]+",
      "type": "string"
     },
     "PatternSet": {
-     "description": "The name of the log pattern set.",
      "maxLength": 30,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9.-_]*",
@@ -597,7 +516,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::ApplicationInsights::Application",
  "handlers": {
   "create": {
    "permissions": [
@@ -632,23 +550,18 @@
  ],
  "properties": {
   "ApplicationARN": {
-   "description": "The ARN of the ApplicationInsights application.",
    "type": "string"
   },
   "AttachMissingPermission": {
-   "description": "If set to true, the managed policies for SSM and CW will be attached to the instance roles if they are missing",
    "type": "boolean"
   },
   "AutoConfigurationEnabled": {
-   "description": "If set to true, application will be configured with recommended monitoring configuration.",
    "type": "boolean"
   },
   "CWEMonitorEnabled": {
-   "description": "Indicates whether Application Insights can listen to CloudWatch events for the application resources.",
    "type": "boolean"
   },
   "ComponentMonitoringSettings": {
-   "description": "The monitoring settings of the components.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/ComponentMonitoringSetting"
@@ -657,7 +570,6 @@
    "type": "array"
   },
   "CustomComponents": {
-   "description": "The custom grouped components.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/CustomComponent"
@@ -666,14 +578,12 @@
    "type": "array"
   },
   "GroupingType": {
-   "description": "The grouping type of the application",
    "enum": [
     "ACCOUNT_BASED"
    ],
    "type": "string"
   },
   "LogPatternSets": {
-   "description": "The log pattern sets.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/LogPatternSet"
@@ -682,25 +592,21 @@
    "type": "array"
   },
   "OpsCenterEnabled": {
-   "description": "When set to true, creates opsItems for any problems detected on an application.",
    "type": "boolean"
   },
   "OpsItemSNSTopicArn": {
-   "description": "The SNS topic provided to Application Insights that is associated to the created opsItem.",
    "maxLength": 300,
    "minLength": 20,
    "pattern": "^arn:aws(-[\\w]+)*:[\\w\\d-]+:([\\w\\d-]*)?:[\\w\\d_-]*([:/].+)*$",
    "type": "string"
   },
   "ResourceGroupName": {
-   "description": "The name of the resource group.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9.-_]*",
    "type": "string"
   },
   "Tags": {
-   "description": "The tags of Application Insights application.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Tag"

@@ -7,7 +7,6 @@
  ],
  "definitions": {
   "Status": {
-   "description": "The status of enabling the Kinesis stream as a destination for export.",
    "enum": [
     "HEALTHY",
     "UNHEALTHY"
@@ -16,17 +15,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -39,13 +35,11 @@
    "type": "object"
   },
   "Uri": {
-   "description": "The StreamARN of the destination to deliver profile events to. For example, arn:aws:kinesis:region:account-id:stream/stream-name",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   }
  },
- "description": "An Event Stream resource of Amazon Connect Customer Profiles",
  "handlers": {
   "create": {
    "permissions": [
@@ -97,12 +91,10 @@
  ],
  "properties": {
   "CreatedAt": {
-   "description": "The timestamp of when the export was created.",
    "type": "string"
   },
   "DestinationDetails": {
    "additionalProperties": false,
-   "description": "Details regarding the Kinesis stream.",
    "properties": {
     "Status": {
      "$ref": "#/definitions/Status"
@@ -118,27 +110,23 @@
    "type": "object"
   },
   "DomainName": {
-   "description": "The unique name of the domain.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_-]+$",
    "type": "string"
   },
   "EventStreamArn": {
-   "description": "A unique identifier for the event stream.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "EventStreamName": {
-   "description": "The name of the event stream.",
    "maxLength": 255,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_-]+$",
    "type": "string"
   },
   "State": {
-   "description": "The operational state of destination stream for export.",
    "enum": [
     "RUNNING",
     "STOPPED"
@@ -146,7 +134,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "The tags used to organize, track, or control access for this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
