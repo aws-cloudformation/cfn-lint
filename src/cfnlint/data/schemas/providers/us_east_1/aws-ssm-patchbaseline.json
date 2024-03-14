@@ -6,7 +6,6 @@
  "definitions": {
   "PatchFilter": {
    "additionalProperties": false,
-   "description": "Defines which patches should be included in a patch baseline.",
    "properties": {
     "Key": {
      "enum": [
@@ -48,7 +47,6 @@
   },
   "PatchFilterGroup": {
    "additionalProperties": false,
-   "description": "The patch filter group that defines the criteria for the rule.",
    "properties": {
     "PatchFilters": {
      "items": {
@@ -64,7 +62,6 @@
   },
   "PatchSource": {
    "additionalProperties": false,
-   "description": "Information about the patches to use to update the instances, including target operating systems and source repository. Applies to Linux instances only.",
    "properties": {
     "Configuration": {
      "maxLength": 1024,
@@ -91,7 +88,6 @@
   },
   "Rule": {
    "additionalProperties": false,
-   "description": "Defines an approval rule for a patch baseline.",
    "insertionOrder": false,
    "properties": {
     "ApproveAfterDays": {
@@ -127,7 +123,6 @@
   },
   "RuleGroup": {
    "additionalProperties": false,
-   "description": "A set of rules defining the approval rules for a patch baseline.",
    "insertionOrder": false,
    "properties": {
     "PatchRules": {
@@ -144,7 +139,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Metadata that you assign to your AWS resources.",
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -164,7 +158,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SSM::PatchBaseline",
  "handlers": {
   "create": {
    "permissions": [
@@ -219,7 +212,6 @@
    "$ref": "#/definitions/RuleGroup"
   },
   "ApprovedPatches": {
-   "description": "A list of explicitly approved patches for the baseline.",
    "insertionOrder": false,
    "items": {
     "maxLength": 100,
@@ -233,7 +225,6 @@
   },
   "ApprovedPatchesComplianceLevel": {
    "default": "UNSPECIFIED",
-   "description": "Defines the compliance level for approved patches. This means that if an approved patch is reported as missing, this is the severity of the compliance violation. The default value is UNSPECIFIED.",
    "enum": [
     "CRITICAL",
     "HIGH",
@@ -246,33 +237,27 @@
   },
   "ApprovedPatchesEnableNonSecurity": {
    "default": false,
-   "description": "Indicates whether the list of approved patches includes non-security updates that should be applied to the instances. The default value is 'false'. Applies to Linux instances only.",
    "type": "boolean"
   },
   "DefaultBaseline": {
    "default": false,
-   "description": "Set the baseline as default baseline. Only registering to default patch baseline is allowed.",
    "type": "boolean"
   },
   "Description": {
-   "description": "The description of the patch baseline.",
    "maxLength": 1024,
    "minLength": 1,
    "type": "string"
   },
   "GlobalFilters": {
-   "$ref": "#/definitions/PatchFilterGroup",
-   "description": "A set of global filters used to include patches in the baseline."
+   "$ref": "#/definitions/PatchFilterGroup"
   },
   "Id": {
-   "description": "The ID of the patch baseline.",
    "maxLength": 128,
    "minLength": 20,
    "pattern": "^[a-zA-Z0-9_\\-:/]{20,128}$",
    "type": "string"
   },
   "Name": {
-   "description": "The name of the patch baseline.",
    "maxLength": 128,
    "minLength": 3,
    "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
@@ -280,7 +265,6 @@
   },
   "OperatingSystem": {
    "default": "WINDOWS",
-   "description": "Defines the operating system the patch baseline applies to. The Default value is WINDOWS.",
    "enum": [
     "WINDOWS",
     "AMAZON_LINUX",
@@ -301,7 +285,6 @@
    "type": "string"
   },
   "PatchGroups": {
-   "description": "PatchGroups is used to associate instances with a specific patch baseline",
    "items": {
     "maxLength": 256,
     "minLength": 1,
@@ -311,7 +294,6 @@
    "uniqueItems": false
   },
   "RejectedPatches": {
-   "description": "A list of explicitly rejected patches for the baseline.",
    "insertionOrder": false,
    "items": {
     "maxLength": 100,
@@ -325,7 +307,6 @@
   },
   "RejectedPatchesAction": {
    "default": "ALLOW_AS_DEPENDENCY",
-   "description": "The action for Patch Manager to take on patches included in the RejectedPackages list.",
    "enum": [
     "ALLOW_AS_DEPENDENCY",
     "BLOCK"
@@ -333,7 +314,6 @@
    "type": "string"
   },
   "Sources": {
-   "description": "Information about the patches to use to update the instances, including target operating systems and source repository. Applies to Linux instances only.",
    "items": {
     "$ref": "#/definitions/PatchSource"
    },
@@ -343,7 +323,6 @@
    "uniqueItems": false
   },
   "Tags": {
-   "description": "Optional metadata that you assign to a resource. Tags enable you to categorize a resource in different ways.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

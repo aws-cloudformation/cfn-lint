@@ -37,22 +37,18 @@
   },
   "Application": {
    "additionalProperties": false,
-   "description": "LoRaWAN application configuration, which can be used to perform geolocation.",
    "properties": {
     "DestinationName": {
-     "description": "The name of the position data destination that describes the AWS IoT rule that processes the device's position data for use by AWS IoT Core for LoRaWAN.",
      "maxLength": 128,
      "pattern": "[a-zA-Z0-9-_]+",
      "type": "string"
     },
     "FPort": {
-     "description": "The Fport value.",
      "maximum": 223,
      "minimum": 1,
      "type": "integer"
     },
     "Type": {
-     "description": "Application type, which can be specified to obtain real-time position information of your LoRaWAN device.",
      "enum": [
       "SemtechGeolocation"
      ],
@@ -65,7 +61,6 @@
    "additionalProperties": false,
    "properties": {
     "Applications": {
-     "description": "A list of optional LoRaWAN application information, which can be used for geolocation.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Application"
@@ -235,7 +230,6 @@
    "type": "object"
   }
  },
- "description": "Create and manage wireless gateways, including LoRa gateways.",
  "handlers": {
   "create": {
    "permissions": [
@@ -276,39 +270,31 @@
  ],
  "properties": {
   "Arn": {
-   "description": "Wireless device arn. Returned after successful create.",
    "type": "string"
   },
   "Description": {
-   "description": "Wireless device description",
    "maxLength": 2048,
    "type": "string"
   },
   "DestinationName": {
-   "description": "Wireless device destination name",
    "maxLength": 128,
    "type": "string"
   },
   "Id": {
-   "description": "Wireless device Id. Returned after successful create.",
    "maxLength": 256,
    "type": "string"
   },
   "LastUplinkReceivedAt": {
-   "description": "The date and time when the most recent uplink was received.",
    "type": "string"
   },
   "LoRaWAN": {
-   "$ref": "#/definitions/LoRaWANDevice",
-   "description": "The combination of Package, Station and Model which represents the version of the LoRaWAN Wireless Device."
+   "$ref": "#/definitions/LoRaWANDevice"
   },
   "Name": {
-   "description": "Wireless device name",
    "maxLength": 256,
    "type": "string"
   },
   "Positioning": {
-   "description": "FPort values for the GNSS, stream, and ClockSync functions of the positioning information.",
    "enum": [
     "Enabled",
     "Disabled"
@@ -316,7 +302,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "A list of key-value pairs that contain metadata for the device. Currently not supported, will not create if tags are passed.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -326,15 +311,12 @@
    "uniqueItems": true
   },
   "ThingArn": {
-   "description": "Thing arn. Passed into update to associate Thing with Wireless device.",
    "type": "string"
   },
   "ThingName": {
-   "description": "Thing Arn. If there is a Thing created, this can be returned with a Get call.",
    "type": "string"
   },
   "Type": {
-   "description": "Wireless device type, currently only Sidewalk and LoRa",
    "enum": [
     "Sidewalk",
     "LoRaWAN"

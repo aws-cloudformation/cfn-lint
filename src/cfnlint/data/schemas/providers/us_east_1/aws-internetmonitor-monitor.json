@@ -100,7 +100,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "The metadata that you apply to the cluster to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define.",
    "properties": {
     "Key": {
      "type": "string"
@@ -112,12 +111,10 @@
    "type": "object"
   },
   "iso8601UTC": {
-   "description": "The date value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ssZ)",
    "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
    "type": "string"
   }
  },
- "description": "Represents a monitor, which defines the monitoring boundaries for measurements that Internet Monitor publishes information about for an application",
  "handlers": {
   "create": {
    "permissions": [
@@ -184,8 +181,17 @@
   "HealthEventsConfig": {
    "$ref": "#/definitions/HealthEventsConfig"
   },
+  "IncludeLinkedAccounts": {
+   "type": "boolean"
+  },
   "InternetMeasurementsLogDelivery": {
    "$ref": "#/definitions/InternetMeasurementsLogDelivery"
+  },
+  "LinkedAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^(\\d{12})$",
+   "type": "string"
   },
   "MaxCityNetworksToMonitor": {
    "maximum": 500000,
@@ -277,6 +283,8 @@
  "typeName": "AWS::InternetMonitor::Monitor",
  "writeOnlyProperties": [
   "/properties/ResourcesToAdd",
-  "/properties/ResourcesToRemove"
+  "/properties/ResourcesToRemove",
+  "/properties/LinkedAccountId",
+  "/properties/IncludeLinkedAccounts"
  ]
 }

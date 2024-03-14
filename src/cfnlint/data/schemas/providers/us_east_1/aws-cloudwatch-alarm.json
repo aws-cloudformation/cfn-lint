@@ -9,14 +9,11 @@
  "definitions": {
   "Dimension": {
    "additionalProperties": false,
-   "description": "Dimensions are arbitrary name/value pairs that can be associated with a CloudWatch metric.",
    "properties": {
     "Name": {
-     "description": "The name of the dimension.",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the dimension.",
      "type": "string"
     }
    },
@@ -28,10 +25,8 @@
   },
   "Metric": {
    "additionalProperties": false,
-   "description": "The Metric property type represents a specific metric.",
    "properties": {
     "Dimensions": {
-     "description": "The dimensions for the metric.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Dimension"
@@ -40,11 +35,9 @@
      "uniqueItems": false
     },
     "MetricName": {
-     "description": "The name of the metric.",
      "type": "string"
     },
     "Namespace": {
-     "description": "The namespace of the metric.",
      "type": "string"
     }
    },
@@ -52,35 +45,27 @@
   },
   "MetricDataQuery": {
    "additionalProperties": false,
-   "description": "This property type specifies the metric data to return, and whether this call is just retrieving a batch set of data for one metric, or is performing a math expression on metric data.",
    "properties": {
     "AccountId": {
-     "description": "The ID of the account where the metrics are located, if this is a cross-account alarm.",
      "type": "string"
     },
     "Expression": {
-     "description": "The math expression to be performed on the returned data.",
      "type": "string"
     },
     "Id": {
-     "description": "A short name used to tie this object to the results in the response.",
      "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
      "type": "string"
     },
     "Label": {
-     "description": "A human-readable label for this metric or expression.",
      "type": "string"
     },
     "MetricStat": {
-     "$ref": "#/definitions/MetricStat",
-     "description": "The metric to be returned, along with statistics, period, and units."
+     "$ref": "#/definitions/MetricStat"
     },
     "Period": {
-     "description": "The period in seconds, over which the statistic is applied.",
      "type": "integer"
     },
     "ReturnData": {
-     "description": "This option indicates whether to return the timestamps and raw data values of this metric.",
      "type": "boolean"
     }
    },
@@ -91,22 +76,17 @@
   },
   "MetricStat": {
    "additionalProperties": false,
-   "description": "This structure defines the metric to be returned, along with the statistics, period, and units.",
    "properties": {
     "Metric": {
-     "$ref": "#/definitions/Metric",
-     "description": "The metric to return, including the metric name, namespace, and dimensions."
+     "$ref": "#/definitions/Metric"
     },
     "Period": {
-     "description": "The granularity, in seconds, of the returned data points.",
      "type": "integer"
     },
     "Stat": {
-     "description": "The statistic to return.",
      "type": "string"
     },
     "Unit": {
-     "description": "The unit to use for the returned data points.",
      "type": "string"
     }
    },
@@ -141,7 +121,6 @@
    "Threshold"
   ]
  },
- "description": "Resource Type definition for AWS::CloudWatch::Alarm",
  "handlers": {
   "create": {
    "permissions": [
@@ -178,11 +157,9 @@
  "properties": {
   "ActionsEnabled": {
    "default": true,
-   "description": "Indicates whether actions should be executed during any changes to the alarm state. The default is TRUE.",
    "type": "boolean"
   },
   "AlarmActions": {
-   "description": "The list of actions to execute when this alarm transitions into an ALARM state from any other state.",
    "items": {
     "maximum": 1024,
     "minimum": 1,
@@ -194,19 +171,15 @@
    "uniqueItems": false
   },
   "AlarmDescription": {
-   "description": "The description of the alarm.",
    "type": "string"
   },
   "AlarmName": {
-   "description": "The name of the alarm.",
    "type": "string"
   },
   "Arn": {
-   "description": "Amazon Resource Name is a unique name for each resource.",
    "type": "string"
   },
   "ComparisonOperator": {
-   "description": "The arithmetic operation to use when comparing the specified statistic and threshold.",
    "enum": [
     "GreaterThanOrEqualToThreshold",
     "GreaterThanThreshold",
@@ -219,11 +192,9 @@
    "type": "string"
   },
   "DatapointsToAlarm": {
-   "description": "The number of datapoints that must be breaching to trigger the alarm.",
    "type": "integer"
   },
   "Dimensions": {
-   "description": "The dimensions for the metric associated with the alarm. For an alarm based on a math expression, you can't specify Dimensions. Instead, you use Metrics.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Dimension"
@@ -232,19 +203,15 @@
    "uniqueItems": false
   },
   "EvaluateLowSampleCountPercentile": {
-   "description": "Used only for alarms based on percentiles.",
    "type": "string"
   },
   "EvaluationPeriods": {
-   "description": "The number of periods over which data is compared to the specified threshold.",
    "type": "integer"
   },
   "ExtendedStatistic": {
-   "description": "The percentile statistic for the metric associated with the alarm. Specify a value between p0.0 and p100.",
    "type": "string"
   },
   "InsufficientDataActions": {
-   "description": "The actions to execute when this alarm transitions to the INSUFFICIENT_DATA state from any other state.",
    "items": {
     "type": "string"
    },
@@ -252,11 +219,9 @@
    "uniqueItems": false
   },
   "MetricName": {
-   "description": "The name of the metric associated with the alarm.",
    "type": "string"
   },
   "Metrics": {
-   "description": "An array that enables you to create an alarm based on the result of a metric math expression.",
    "items": {
     "$ref": "#/definitions/MetricDataQuery"
    },
@@ -264,11 +229,9 @@
    "uniqueItems": true
   },
   "Namespace": {
-   "description": "The namespace of the metric associated with the alarm.",
    "type": "string"
   },
   "OKActions": {
-   "description": "The actions to execute when this alarm transitions to the OK state from any other state.",
    "items": {
     "type": "string"
    },
@@ -276,11 +239,9 @@
    "uniqueItems": false
   },
   "Period": {
-   "description": "The period in seconds, over which the statistic is applied.",
    "type": "integer"
   },
   "Statistic": {
-   "description": "The statistic for the metric associated with the alarm, other than percentile.",
    "enum": [
     "SampleCount",
     "Average",
@@ -291,15 +252,12 @@
    "type": "string"
   },
   "Threshold": {
-   "description": "In an alarm based on an anomaly detection model, this is the ID of the ANOMALY_DETECTION_BAND function used as the threshold for the alarm.",
    "type": "number"
   },
   "ThresholdMetricId": {
-   "description": "In an alarm based on an anomaly detection model, this is the ID of the ANOMALY_DETECTION_BAND function used as the threshold for the alarm.",
    "type": "string"
   },
   "TreatMissingData": {
-   "description": "Sets how this alarm is to handle missing data points. Valid values are breaching, notBreaching, ignore, and missing.",
    "enum": [
     "breaching",
     "ignore",
@@ -309,7 +267,6 @@
    "type": "string"
   },
   "Unit": {
-   "description": "The unit of the metric associated with the alarm.",
    "enum": [
     "Seconds",
     "Microseconds",

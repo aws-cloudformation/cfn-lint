@@ -8,14 +8,12 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyId": {
-     "description": "The KMS key id used for encryption on the S3 bucket",
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "[a-zA-Z0-9:_-]+",
      "type": "string"
     },
     "S3OutputLocation": {
-     "description": "The Amazon Simple Storage (S3) bucket URI",
      "maxLength": 1024,
      "pattern": "^s3://([^/]+)/?(.*)$",
      "type": "string"
@@ -28,17 +26,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Key-value pair to associate as a tag for the resource",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^((?!aws:)[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
-     "description": "The key value of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "minLength": 0,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
@@ -52,7 +47,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::SageMaker::DeviceFleet",
  "handlers": {
   "create": {
    "permissions": [
@@ -82,32 +76,27 @@
  ],
  "properties": {
   "Description": {
-   "description": "Description for the edge device fleet",
    "maxLength": 800,
    "minLength": 0,
    "pattern": "[\\S\\s]+",
    "type": "string"
   },
   "DeviceFleetName": {
-   "description": "The name of the edge device fleet",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*_*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "OutputConfig": {
-   "$ref": "#/definitions/EdgeOutputConfig",
-   "description": "S3 bucket and an ecryption key id (if available) to store outputs for the fleet"
+   "$ref": "#/definitions/EdgeOutputConfig"
   },
   "RoleArn": {
-   "description": "Role associated with the device fleet",
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "Tags": {
-   "description": "Associate tags with the resource",
    "items": {
     "$ref": "#/definitions/Tag"
    },

@@ -8,66 +8,55 @@
  ],
  "definitions": {
   "PathId": {
-   "description": "The path identifier of the product.",
    "maxLength": 100,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ProductId": {
-   "description": "Service Catalog product identifier.",
    "maxLength": 100,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ProjectArn": {
-   "description": "The Amazon Resource Name (ARN) of the Project.",
    "maxLength": 2048,
    "minLength": 1,
    "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:project.*",
    "type": "string"
   },
   "ProjectDescription": {
-   "description": "The description of the project.",
    "maxLength": 1024,
    "pattern": ".*",
    "type": "string"
   },
   "ProjectId": {
-   "description": "Project Id.",
    "maxLength": 20,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
    "type": "string"
   },
   "ProjectName": {
-   "description": "The name of the project.",
    "maxLength": 32,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ProvisionedProductStatusMessage": {
-   "description": "Provisioned Product Status Message",
    "type": "string"
   },
   "ProvisioningArtifactId": {
-   "description": "The identifier of the provisioning artifact (also known as a version).",
    "maxLength": 100,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
    "type": "string"
   },
   "ProvisioningParameter": {
    "additionalProperties": false,
-   "description": "Information about a parameter used to provision a product.",
    "properties": {
     "Key": {
-     "description": "The parameter key.",
      "maxLength": 1000,
      "minLength": 1,
      "pattern": ".*",
      "type": "string"
     },
     "Value": {
-     "description": "The parameter value.",
      "maxLength": 4096,
      "pattern": ".*",
      "type": "string"
@@ -81,17 +70,14 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 128,
      "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
      "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
@@ -104,7 +90,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::Project",
  "handlers": {
   "create": {
    "permissions": [
@@ -152,7 +137,6 @@
  ],
  "properties": {
   "CreationTime": {
-   "description": "The time at which the project was created.",
    "type": "string"
   },
   "ProjectArn": {
@@ -168,7 +152,6 @@
    "$ref": "#/definitions/ProjectName"
   },
   "ProjectStatus": {
-   "description": "The status of a project.",
    "enum": [
     "Pending",
     "CreateInProgress",
@@ -182,7 +165,6 @@
   },
   "ServiceCatalogProvisionedProductDetails": {
    "additionalProperties": false,
-   "description": "Provisioned ServiceCatalog  Details",
    "properties": {
     "ProvisionedProductId": {
      "$ref": "#/definitions/ProvisioningArtifactId"
@@ -195,7 +177,6 @@
   },
   "ServiceCatalogProvisioningDetails": {
    "additionalProperties": false,
-   "description": "Input ServiceCatalog Provisioning Details",
    "properties": {
     "PathId": {
      "$ref": "#/definitions/PathId"
@@ -207,7 +188,6 @@
      "$ref": "#/definitions/ProvisioningArtifactId"
     },
     "ProvisioningParameters": {
-     "description": "Parameters specified by the administrator that are required for provisioning the product.",
      "items": {
       "$ref": "#/definitions/ProvisioningParameter"
      },
@@ -220,7 +200,6 @@
    "type": "object"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "items": {
     "$ref": "#/definitions/Tag"
    },

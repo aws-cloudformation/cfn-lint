@@ -18,23 +18,18 @@
  "definitions": {
   "AbortCriteria": {
    "additionalProperties": false,
-   "description": "The criteria that determine when and how a job abort takes place.",
    "properties": {
     "Action": {
-     "$ref": "#/definitions/Action",
-     "description": "The type of job action to take to initiate the job abort."
+     "$ref": "#/definitions/Action"
     },
     "FailureType": {
-     "$ref": "#/definitions/FailureType",
-     "description": "The type of job execution failures that can initiate a job abort."
+     "$ref": "#/definitions/FailureType"
     },
     "MinNumberOfExecutedThings": {
-     "$ref": "#/definitions/MinNumberOfExecutedThings",
-     "description": "The minimum number of things which must receive job execution notifications before the job can be aborted."
+     "$ref": "#/definitions/MinNumberOfExecutedThings"
     },
     "ThresholdPercentage": {
-     "$ref": "#/definitions/ThresholdPercentage",
-     "description": "The minimum percentage of job execution failures that must occur to initiate the job abort."
+     "$ref": "#/definitions/ThresholdPercentage"
     }
    },
    "required": [
@@ -56,32 +51,26 @@
    "type": "integer"
   },
   "DestinationPackageVersion": {
-   "description": "Specifies target package version ARNs for a software update job.",
    "maxLength": 1600,
    "minLength": 1,
    "type": "string"
   },
   "ExpiresInSec": {
-   "description": "How number (in seconds) pre-signed URLs are valid.",
    "maximum": 3600,
    "minimum": 60,
    "type": "integer"
   },
   "ExponentialRolloutRate": {
    "additionalProperties": false,
-   "description": "Allows you to create an exponential rate of rollout for a job.",
    "properties": {
     "BaseRatePerMinute": {
-     "$ref": "#/definitions/BaseRatePerMinute",
-     "description": "The minimum number of things that will be notified of a pending job, per minute at the start of job rollout. This parameter allows you to define the initial rate of rollout."
+     "$ref": "#/definitions/BaseRatePerMinute"
     },
     "IncrementFactor": {
-     "$ref": "#/definitions/IncrementFactor",
-     "description": "The exponential factor to increase the rate of rollout for a job."
+     "$ref": "#/definitions/IncrementFactor"
     },
     "RateIncreaseCriteria": {
      "$ref": "#/definitions/RateIncreaseCriteria",
-     "description": "The criteria to initiate the increase in rate of rollout for a job.",
      "type": "object"
     }
    },
@@ -102,7 +91,6 @@
    "type": "string"
   },
   "InProgressTimeoutInMinutes": {
-   "description": "Specifies the amount of time, in minutes, this device has to finish execution of this job.",
    "maximum": 10080,
    "minimum": 1,
    "type": "integer"
@@ -122,7 +110,6 @@
   },
   "MaintenanceWindow": {
    "additionalProperties": false,
-   "description": "Specifies a start time and duration for a scheduled Job.",
    "properties": {
     "DurationInMinutes": {
      "maximum": 1430,
@@ -167,7 +154,6 @@
   },
   "RetryCriteria": {
    "additionalProperties": false,
-   "description": "Specifies how many times a failure type should be retried.",
    "properties": {
     "FailureType": {
      "$ref": "#/definitions/JobRetryFailureType"
@@ -181,23 +167,19 @@
    "type": "object"
   },
   "RoleArn": {
-   "description": "The ARN of an IAM role that grants grants permission to download files from the S3 bucket where the job data/updates are stored. The role must also grant permission for IoT to download the files.",
    "maxLength": 2048,
    "minLength": 20,
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The tag's key.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The tag's value.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
@@ -214,7 +196,6 @@
    "type": "number"
   }
  },
- "description": "Job templates enable you to preconfigure jobs so that you can deploy them to multiple sets of target devices.",
  "documentationUrl": "https://docs.aws.amazon.com/iot/latest/developerguide/job-templates.html",
  "handlers": {
   "create": {
@@ -247,7 +228,6 @@
  "properties": {
   "AbortConfig": {
    "additionalProperties": false,
-   "description": "The criteria that determine when and how a job abort takes place.",
    "properties": {
     "CriteriaList": {
      "insertionOrder": false,
@@ -267,7 +247,6 @@
    "type": "string"
   },
   "Description": {
-   "description": "A description of the Job Template.",
    "maxLength": 2028,
    "pattern": "[^\\p{C}]+",
    "type": "string"
@@ -280,18 +259,15 @@
    "type": "array"
   },
   "Document": {
-   "description": "The job document. Required if you don't specify a value for documentSource.",
    "maxLength": 32768,
    "type": "string"
   },
   "DocumentSource": {
-   "description": "An S3 link to the job document to use in the template. Required if you don't specify a value for document.",
    "maxLength": 1350,
    "minLength": 1,
    "type": "string"
   },
   "JobArn": {
-   "description": "Optional for copying a JobTemplate from a pre-existing Job configuration.",
    "type": "string"
   },
   "JobExecutionsRetryConfig": {
@@ -311,15 +287,12 @@
   },
   "JobExecutionsRolloutConfig": {
    "additionalProperties": false,
-   "description": "Allows you to create a staged rollout of a job.",
    "properties": {
     "ExponentialRolloutRate": {
-     "$ref": "#/definitions/ExponentialRolloutRate",
-     "description": "The rate of increase for a job rollout. This parameter allows you to define an exponential rate for a job rollout."
+     "$ref": "#/definitions/ExponentialRolloutRate"
     },
     "MaximumPerMinute": {
-     "$ref": "#/definitions/MaximumPerMinute",
-     "description": "The maximum number of things that will be notified of a pending job, per minute. This parameter allows you to create a staged rollout."
+     "$ref": "#/definitions/MaximumPerMinute"
     }
    },
    "type": "object"
@@ -339,7 +312,6 @@
   },
   "PresignedUrlConfig": {
    "additionalProperties": false,
-   "description": "Configuration for pre-signed S3 URLs.",
    "properties": {
     "ExpiresInSec": {
      "$ref": "#/definitions/ExpiresInSec"
@@ -354,7 +326,6 @@
    "type": "object"
   },
   "Tags": {
-   "description": "Metadata that can be used to manage the JobTemplate.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -365,7 +336,6 @@
   },
   "TimeoutConfig": {
    "additionalProperties": false,
-   "description": "Specifies the amount of time each device has to finish its execution of the job.",
    "properties": {
     "InProgressTimeoutInMinutes": {
      "$ref": "#/definitions/InProgressTimeoutInMinutes"

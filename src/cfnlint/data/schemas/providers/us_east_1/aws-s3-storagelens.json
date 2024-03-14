@@ -6,7 +6,6 @@
  "definitions": {
   "AccountLevel": {
    "additionalProperties": false,
-   "description": "Account-level metrics configurations.",
    "properties": {
     "ActivityMetrics": {
      "$ref": "#/definitions/ActivityMetrics"
@@ -34,10 +33,8 @@
   },
   "ActivityMetrics": {
    "additionalProperties": false,
-   "description": "Enables activity metrics.",
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether activity metrics are enabled or disabled.",
      "type": "boolean"
     }
    },
@@ -45,10 +42,8 @@
   },
   "AdvancedCostOptimizationMetrics": {
    "additionalProperties": false,
-   "description": "Enables advanced cost optimization metrics.",
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether advanced cost optimization metrics are enabled or disabled.",
      "type": "boolean"
     }
    },
@@ -56,22 +51,18 @@
   },
   "AdvancedDataProtectionMetrics": {
    "additionalProperties": false,
-   "description": "Enables advanced data protection metrics.",
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether advanced data protection metrics are enabled or disabled.",
      "type": "boolean"
     }
    },
    "type": "object"
   },
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the specified resource.",
    "type": "string"
   },
   "AwsOrg": {
    "additionalProperties": false,
-   "description": "The AWS Organizations ARN to use in the Amazon S3 Storage Lens configuration.",
    "properties": {
     "Arn": {
      "$ref": "#/definitions/Arn"
@@ -84,7 +75,6 @@
   },
   "BucketLevel": {
    "additionalProperties": false,
-   "description": "Bucket-level metrics configurations.",
    "properties": {
     "ActivityMetrics": {
      "$ref": "#/definitions/ActivityMetrics"
@@ -106,7 +96,6 @@
   },
   "BucketsAndRegions": {
    "additionalProperties": false,
-   "description": "S3 buckets and Regions to include/exclude in the Amazon S3 Storage Lens configuration.",
    "properties": {
     "Buckets": {
      "insertionOrder": false,
@@ -119,7 +108,6 @@
     "Regions": {
      "insertionOrder": false,
      "items": {
-      "description": "An AWS Region.",
       "type": "string"
      },
      "type": "array",
@@ -130,10 +118,8 @@
   },
   "CloudWatchMetrics": {
    "additionalProperties": false,
-   "description": "CloudWatch metrics settings for the Amazon S3 Storage Lens metrics export.",
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether CloudWatch metrics are enabled or disabled.",
      "type": "boolean"
     }
    },
@@ -144,7 +130,6 @@
   },
   "DataExport": {
    "additionalProperties": false,
-   "description": "Specifies how Amazon S3 Storage Lens metrics should be exported.",
    "properties": {
     "CloudWatchMetrics": {
      "$ref": "#/definitions/CloudWatchMetrics"
@@ -157,24 +142,20 @@
   },
   "DetailedStatusCodesMetrics": {
    "additionalProperties": false,
-   "description": "Enables detailed status codes metrics.",
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether detailed status codes metrics are enabled or disabled.",
      "type": "boolean"
     }
    },
    "type": "object"
   },
   "Encryption": {
-   "description": "Configures the server-side encryption for Amazon S3 Storage Lens report files with either S3-managed keys (SSE-S3) or KMS-managed keys (SSE-KMS).",
    "oneOf": [
     {
      "additionalProperties": false,
      "properties": {
       "SSES3": {
        "additionalProperties": false,
-       "description": "S3 default server-side encryption.",
        "type": "object"
       }
      },
@@ -197,7 +178,6 @@
    "type": "object"
   },
   "Id": {
-   "description": "The ID that identifies the Amazon S3 Storage Lens configuration.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9\\-_.]+$",
@@ -205,7 +185,6 @@
   },
   "PrefixLevel": {
    "additionalProperties": false,
-   "description": "Prefix-level metrics configurations.",
    "properties": {
     "StorageMetrics": {
      "$ref": "#/definitions/PrefixLevelStorageMetrics"
@@ -220,7 +199,6 @@
    "additionalProperties": false,
    "properties": {
     "IsEnabled": {
-     "description": "Specifies whether prefix-level storage metrics are enabled or disabled.",
      "type": "boolean"
     },
     "SelectionCriteria": {
@@ -231,21 +209,17 @@
   },
   "S3BucketDestination": {
    "additionalProperties": false,
-   "description": "S3 bucket destination settings for the Amazon S3 Storage Lens metrics export.",
    "properties": {
     "AccountId": {
-     "description": "The AWS account ID that owns the destination S3 bucket.",
      "type": "string"
     },
     "Arn": {
-     "description": "The ARN of the bucket to which Amazon S3 Storage Lens exports will be placed.",
      "type": "string"
     },
     "Encryption": {
      "$ref": "#/definitions/Encryption"
     },
     "Format": {
-     "description": "Specifies the file format to use when exporting Amazon S3 Storage Lens metrics export.",
      "enum": [
       "CSV",
       "Parquet"
@@ -253,14 +227,12 @@
      "type": "string"
     },
     "OutputSchemaVersion": {
-     "description": "The version of the output schema to use when exporting Amazon S3 Storage Lens metrics.",
      "enum": [
       "V_1"
      ],
      "type": "string"
     },
     "Prefix": {
-     "description": "The prefix to use for Amazon S3 Storage Lens export.",
      "type": "string"
     }
    },
@@ -274,10 +246,8 @@
   },
   "SSEKMS": {
    "additionalProperties": false,
-   "description": "AWS KMS server-side encryption.",
    "properties": {
     "KeyId": {
-     "description": "The ARN of the KMS key to use for encryption.",
      "type": "string"
     }
    },
@@ -288,18 +258,14 @@
   },
   "SelectionCriteria": {
    "additionalProperties": false,
-   "description": "Selection criteria for prefix-level metrics.",
    "properties": {
     "Delimiter": {
-     "description": "Delimiter to divide S3 key into hierarchy of prefixes.",
      "type": "string"
     },
     "MaxDepth": {
-     "description": "Max depth of prefixes of S3 key that Amazon S3 Storage Lens will analyze.",
      "type": "integer"
     },
     "MinStorageBytesPercentage": {
-     "description": "The minimum storage bytes threshold for the prefixes to be included in the analysis.",
      "type": "number"
     }
    },
@@ -307,7 +273,6 @@
   },
   "StorageLensConfiguration": {
    "additionalProperties": false,
-   "description": "Specifies the details of Amazon S3 Storage Lens configuration.",
    "properties": {
     "AccountLevel": {
      "$ref": "#/definitions/AccountLevel"
@@ -328,11 +293,9 @@
      "$ref": "#/definitions/BucketsAndRegions"
     },
     "IsEnabled": {
-     "description": "Specifies whether the Amazon S3 Storage Lens configuration is enabled or disabled.",
      "type": "boolean"
     },
     "StorageLensArn": {
-     "description": "The ARN for the Amazon S3 Storage Lens configuration.",
      "type": "string"
     }
    },
@@ -344,12 +307,10 @@
    "type": "object"
   },
   "StorageLensGroupArn": {
-   "description": "The ARN for the Amazon S3 Storage Lens Group configuration.",
    "type": "string"
   },
   "StorageLensGroupLevel": {
    "additionalProperties": false,
-   "description": "Specifies the details of Amazon S3 Storage Lens Group configuration.",
    "properties": {
     "StorageLensGroupSelectionCriteria": {
      "$ref": "#/definitions/StorageLensGroupSelectionCriteria"
@@ -359,7 +320,6 @@
   },
   "StorageLensGroupSelectionCriteria": {
    "additionalProperties": false,
-   "description": "Selection criteria for Storage Lens Group level metrics",
    "properties": {
     "Exclude": {
      "insertionOrder": false,
@@ -403,7 +363,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::S3::StorageLens resource is an Amazon S3 resource type that you can use to create Storage Lens configurations.",
  "handlers": {
   "create": {
    "permissions": [
@@ -457,7 +416,6 @@
    "$ref": "#/definitions/StorageLensConfiguration"
   },
   "Tags": {
-   "description": "A set of tags (key-value pairs) for this Amazon S3 Storage Lens configuration.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -474,5 +432,12 @@
   "StorageLensConfiguration"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3-storagelens",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::S3::StorageLens"
 }

@@ -14,7 +14,6 @@
    "type": "string"
   }
  },
- "description": "Describes an endpoint authorization for authorizing Redshift-managed VPC endpoint access to a cluster across AWS accounts.",
  "handlers": {
   "create": {
    "permissions": [
@@ -62,15 +61,12 @@
  ],
  "properties": {
   "Account": {
-   "$ref": "#/definitions/AwsAccount",
-   "description": "The target AWS account ID to grant or revoke access for."
+   "$ref": "#/definitions/AwsAccount"
   },
   "AllowedAllVPCs": {
-   "description": "Indicates whether all VPCs in the grantee account are allowed access to the cluster.",
    "type": "boolean"
   },
   "AllowedVPCs": {
-   "description": "The VPCs allowed access to the cluster.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/VpcId"
@@ -78,40 +74,31 @@
    "type": "array"
   },
   "AuthorizeTime": {
-   "description": "The time (UTC) when the authorization was created.",
    "type": "string"
   },
   "ClusterIdentifier": {
-   "description": "The cluster identifier.",
    "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,63}$",
    "type": "string"
   },
   "ClusterStatus": {
-   "description": "The status of the cluster.",
    "type": "string"
   },
   "EndpointCount": {
-   "description": "The number of Redshift-managed VPC endpoints created for the authorization.",
    "type": "integer"
   },
   "Force": {
-   "description": " Indicates whether to force the revoke action. If true, the Redshift-managed VPC endpoints associated with the endpoint authorization are also deleted.",
    "type": "boolean"
   },
   "Grantee": {
-   "$ref": "#/definitions/AwsAccount",
-   "description": "The AWS account ID of the grantee of the cluster."
+   "$ref": "#/definitions/AwsAccount"
   },
   "Grantor": {
-   "$ref": "#/definitions/AwsAccount",
-   "description": "The AWS account ID of the cluster owner."
+   "$ref": "#/definitions/AwsAccount"
   },
   "Status": {
-   "description": "The status of the authorization action.",
    "type": "string"
   },
   "VpcIds": {
-   "description": "The virtual private cloud (VPC) identifiers to grant or revoke access to.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/VpcId"

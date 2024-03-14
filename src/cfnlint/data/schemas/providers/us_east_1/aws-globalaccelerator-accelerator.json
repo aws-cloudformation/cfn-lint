@@ -2,22 +2,18 @@
  "additionalProperties": false,
  "definitions": {
   "IpAddress": {
-   "description": "An IPV4 address",
    "pattern": "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$",
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "Tag is a key-value pair associated with accelerator.",
    "properties": {
     "Key": {
-     "description": "Key of the tag. Value can be 1 to 127 characters.",
      "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "Value for the tag. Value can be 1 to 255 characters.",
      "maxLength": 255,
      "minLength": 1,
      "type": "string"
@@ -30,7 +26,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::GlobalAccelerator::Accelerator",
  "handlers": {
   "create": {
    "permissions": [
@@ -70,25 +65,20 @@
  ],
  "properties": {
   "AcceleratorArn": {
-   "description": "The Amazon Resource Name (ARN) of the accelerator.",
    "type": "string"
   },
   "DnsName": {
-   "description": "The Domain Name System (DNS) name that Global Accelerator creates that points to your accelerator's static IPv4 addresses.",
    "type": "string"
   },
   "DualStackDnsName": {
-   "description": "The Domain Name System (DNS) name that Global Accelerator creates that points to your accelerator's static IPv4 and IPv6 addresses.",
    "type": "string"
   },
   "Enabled": {
    "default": true,
-   "description": "Indicates whether an accelerator is enabled. The value is true or false.",
    "type": "boolean"
   },
   "IpAddressType": {
    "default": "IPV4",
-   "description": "IP Address type.",
    "enum": [
     "IPV4",
     "DUAL_STACK"
@@ -97,7 +87,6 @@
   },
   "IpAddresses": {
    "default": null,
-   "description": "The IP addresses from BYOIP Prefix pool.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/IpAddress"
@@ -105,7 +94,6 @@
    "type": "array"
   },
   "Ipv4Addresses": {
-   "description": "The IPv4 addresses assigned to the accelerator.",
    "insertionOrder": true,
    "items": {
     "type": "string"
@@ -114,7 +102,6 @@
   },
   "Ipv6Addresses": {
    "default": null,
-   "description": "The IPv6 addresses assigned if the accelerator is dualstack",
    "insertionOrder": true,
    "items": {
     "type": "string"
@@ -122,7 +109,6 @@
    "type": "array"
   },
   "Name": {
-   "description": "Name of accelerator.",
    "maxLength": 64,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9_-]{0,64}$",

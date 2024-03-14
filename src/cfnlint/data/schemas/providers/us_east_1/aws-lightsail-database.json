@@ -11,38 +11,29 @@
  "definitions": {
   "RelationalDatabaseParameter": {
    "additionalProperties": false,
-   "description": "Describes the parameters of the database.",
    "properties": {
     "AllowedValues": {
-     "description": "Specifies the valid range of values for the parameter.",
      "type": "string"
     },
     "ApplyMethod": {
-     "description": "Indicates when parameter updates are applied. Can be immediate or pending-reboot.",
      "type": "string"
     },
     "ApplyType": {
-     "description": "Specifies the engine-specific parameter type.",
      "type": "string"
     },
     "DataType": {
-     "description": "Specifies the valid data type for the parameter.",
      "type": "string"
     },
     "Description": {
-     "description": "Provides a description of the parameter.",
      "type": "string"
     },
     "IsModifiable": {
-     "description": "A Boolean value indicating whether the parameter can be modified.",
      "type": "boolean"
     },
     "ParameterName": {
-     "description": "Specifies the name of the parameter.",
      "type": "string"
     },
     "ParameterValue": {
-     "description": "Specifies the value of the parameter.",
      "type": "string"
     }
    },
@@ -50,16 +41,13 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -71,7 +59,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::Lightsail::Database",
  "handlers": {
   "create": {
    "permissions": [
@@ -119,73 +106,60 @@
  ],
  "properties": {
   "AvailabilityZone": {
-   "description": "The Availability Zone in which to create your new database. Use the us-east-2a case-sensitive format.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "BackupRetention": {
-   "description": "When true, enables automated backup retention for your database. Updates are applied during the next maintenance window because this can result in an outage.",
    "type": "boolean"
   },
   "CaCertificateIdentifier": {
-   "description": "Indicates the certificate that needs to be associated with the database.",
    "type": "string"
   },
   "DatabaseArn": {
    "type": "string"
   },
   "MasterDatabaseName": {
-   "description": "The name of the database to create when the Lightsail database resource is created. For MySQL, if this parameter isn't specified, no database is created in the database resource. For PostgreSQL, if this parameter isn't specified, a database named postgres is created in the database resource.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "MasterUserPassword": {
-   "description": "The password for the master user. The password can include any printable ASCII character except \"/\", \"\"\", or \"@\". It cannot contain spaces.",
    "maxLength": 63,
    "minLength": 1,
    "type": "string"
   },
   "MasterUsername": {
-   "description": "The name for the master user.",
    "maxLength": 63,
    "minLength": 1,
    "type": "string"
   },
   "PreferredBackupWindow": {
-   "description": "The daily time range during which automated backups are created for your new database if automated backups are enabled.",
    "type": "string"
   },
   "PreferredMaintenanceWindow": {
-   "description": "The weekly time range during which system maintenance can occur on your new database.",
    "type": "string"
   },
   "PubliclyAccessible": {
-   "description": "Specifies the accessibility options for your new database. A value of true specifies a database that is available to resources outside of your Lightsail account. A value of false specifies a database that is available only to your Lightsail resources in the same region as your database.",
    "type": "boolean"
   },
   "RelationalDatabaseBlueprintId": {
-   "description": "The blueprint ID for your new database. A blueprint describes the major engine version of a database.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "RelationalDatabaseBundleId": {
-   "description": "The bundle ID for your new database. A bundle describes the performance specifications for your database.",
    "maxLength": 255,
    "minLength": 1,
    "type": "string"
   },
   "RelationalDatabaseName": {
-   "description": "The name to use for your new Lightsail database resource.",
    "maxLength": 255,
    "minLength": 2,
    "pattern": "\\w[\\w\\-]*\\w",
    "type": "string"
   },
   "RelationalDatabaseParameters": {
-   "description": "Update one or more parameters of the relational database.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/RelationalDatabaseParameter"
@@ -194,11 +168,9 @@
    "uniqueItems": true
   },
   "RotateMasterUserPassword": {
-   "description": "When true, the master user password is changed to a new strong password generated by Lightsail. Use the get relational database master user password operation to get the new password.",
    "type": "boolean"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
