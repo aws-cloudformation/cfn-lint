@@ -1209,7 +1209,6 @@ cached: List[str] = [
     "aws-appconfig-application.json",
     "aws-opsworks-stack.json",
     "aws-mediatailor-channel.json",
-    "aws-lambda-url.json",
     "aws-mediatailor-channelpolicy.json",
     "aws-gamelift-fleet.json",
     "aws-datasync-locationfsxwindows.json",

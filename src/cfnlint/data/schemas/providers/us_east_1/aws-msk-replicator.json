@@ -9,7 +9,8 @@
   "/properties/ReplicatorName",
   "/properties/Description",
   "/properties/KafkaClusters",
-  "/properties/ServiceExecutionRoleArn"
+  "/properties/ServiceExecutionRoleArn",
+  "/properties/ReplicationInfoList/*/TopicReplication/StartingPosition/Type"
  ],
  "definitions": {
   "AmazonMskCluster": {
@@ -163,6 +164,25 @@
    ],
    "type": "object"
   },
+  "ReplicationStartingPosition": {
+   "additionalProperties": false,
+   "description": "Configuration for specifying the position in the topics to start replicating from.",
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ReplicationStartingPositionType"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "ReplicationStartingPositionType": {
+   "description": "The type of replication starting position.",
+   "enum": [
+    "LATEST",
+    "EARLIEST"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -196,6 +216,10 @@
     "DetectAndCopyNewTopics": {
      "description": "Whether to periodically check for new topics and partitions.",
      "type": "boolean"
+    },
+    "StartingPosition": {
+     "$ref": "#/definitions/ReplicationStartingPosition",
+     "description": "Configuration for specifying the position in the topics to start replicating from."
     },
     "TopicsToExclude": {
      "description": "List of regular expression patterns indicating the topics that should not be replicated.",

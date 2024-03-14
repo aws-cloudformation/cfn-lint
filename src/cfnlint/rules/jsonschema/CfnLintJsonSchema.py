@@ -52,6 +52,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
             err = best_match(errs)
             if err is not None:
                 err.message = self.message(instance, err)
+                err.context = []
                 err.rule = self
                 yield err
                 return

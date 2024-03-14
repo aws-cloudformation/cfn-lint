@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConformancePackName"
+ ],
+ "definitions": {
+  "ConformancePackInputParameter": {
+   "additionalProperties": false,
+   "description": "Input parameters in the form of key-value pairs for the conformance pack.",
+   "properties": {
+    "ParameterName": {
+     "$ref": "#/definitions/ParameterName"
+    },
+    "ParameterValue": {
+     "$ref": "#/definitions/ParameterValue"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "ParameterName": {
+   "description": "Key part of key-value pair with value being parameter value",
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ParameterValue": {
+   "description": "Value part of key-value pair with key being parameter Name",
+   "maxLength": 4096,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "description": "A conformance pack is a collection of AWS Config rules and remediation actions that can be easily deployed as a single entity in an account and a region or across an entire AWS Organization.",
+ "documentationUrl": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-packs.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutConformancePack",
+    "config:DescribeConformancePackStatus",
+    "config:DescribeConformancePacks",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteConformancePack",
+    "config:DescribeConformancePackStatus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeConformancePacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeConformancePacks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutConformancePack",
+    "config:DescribeConformancePackStatus",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConformancePackName"
+ ],
+ "properties": {
+  "ConformancePackInputParameters": {
+   "description": "A list of ConformancePackInputParameter objects.",
+   "items": {
+    "$ref": "#/definitions/ConformancePackInputParameter"
+   },
+   "maxItems": 60,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ConformancePackName": {
+   "description": "Name of the conformance pack which will be assigned as the unique identifier.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][-a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "DeliveryS3Bucket": {
+   "description": "AWS Config stores intermediate files while processing conformance pack template.",
+   "maxLength": 63,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DeliveryS3KeyPrefix": {
+   "description": "The prefix for delivery S3 bucket.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "TemplateBody": {
+   "description": "A string containing full conformance pack template body. You can only specify one of the template body or template S3Uri fields.",
+   "maxLength": 51200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateS3Uri": {
+   "description": "Location of file containing the template body which points to the conformance pack template that is located in an Amazon S3 bucket. You can only specify one of the template body or template S3Uri fields.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "s3://.*",
+   "type": "string"
+  },
+  "TemplateSSMDocumentDetails": {
+   "additionalProperties": false,
+   "description": "The TemplateSSMDocumentDetails object contains the name of the SSM document and the version of the SSM document.",
+   "properties": {
+    "DocumentName": {
+     "maxLength": 128,
+     "minLength": 3,
+     "type": "string"
+    },
+    "DocumentVersion": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "required": [
+  "ConformancePackName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Config::ConformancePack",
+ "writeOnlyProperties": [
+  "/properties/TemplateBody",
+  "/properties/TemplateS3Uri",
+  "/properties/TemplateSSMDocumentDetails"
+ ]
+}
