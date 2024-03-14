@@ -6,12 +6,15 @@
  "definitions": {
   "CapacityProviderStrategyItem": {
    "additionalProperties": false,
-   "description": "A capacity provider strategy consists of one or more capacity providers along with the `base` and `weight` to assign to them. A capacity provider must be associated with the cluster to be used in a capacity provider strategy. The PutClusterCapacityProviders API is used to associate a capacity provider with a cluster. Only capacity providers with an `ACTIVE` or `UPDATING` status can be used.",
    "properties": {
     "Base": {
      "type": "integer"
     },
     "CapacityProvider": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Name",
+      "typeName": "AWS::ECS::CapacityProvider"
+     },
      "type": "string"
     },
     "Weight": {
@@ -22,7 +25,6 @@
   },
   "ClusterConfiguration": {
    "additionalProperties": false,
-   "description": "The configurations to be set at cluster level.",
    "properties": {
     "ExecuteCommandConfiguration": {
      "$ref": "#/definitions/ExecuteCommandConfiguration"
@@ -32,7 +34,6 @@
   },
   "ClusterSettings": {
    "additionalProperties": false,
-   "description": "The setting to use when creating a cluster. This parameter is used to enable CloudWatch Container Insights for a cluster. If this value is specified, it will override the containerInsights value set with PutAccountSetting or PutAccountSettingDefault.",
    "properties": {
     "Name": {
      "type": "string"
@@ -45,9 +46,12 @@
   },
   "ExecuteCommandConfiguration": {
    "additionalProperties": false,
-   "description": "The configuration for ExecuteCommand.",
    "properties": {
     "KmsKeyId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     },
      "type": "string"
     },
     "LogConfiguration": {
@@ -61,12 +65,15 @@
   },
   "ExecuteCommandLogConfiguration": {
    "additionalProperties": false,
-   "description": "The session logging configuration for ExecuteCommand.",
    "properties": {
     "CloudWatchEncryptionEnabled": {
      "type": "boolean"
     },
     "CloudWatchLogGroupName": {
+     "relationshipRef": {
+      "propertyPath": "/properties/LogGroupName",
+      "typeName": "AWS::Logs::LogGroup"
+     },
      "type": "string"
     },
     "S3BucketName": {
@@ -83,10 +90,8 @@
   },
   "ServiceConnectDefaults": {
    "additionalProperties": false,
-   "description": "Service Connect Configuration default for all services or tasks within this cluster",
    "properties": {
     "Namespace": {
-     "description": "Service Connect Namespace Name or ARN default for all services or tasks within this cluster",
      "type": "string"
     }
    },
@@ -94,7 +99,6 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "The metadata that you apply to the cluster to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define.",
    "properties": {
     "Key": {
      "type": "string"
@@ -106,7 +110,6 @@
    "type": "object"
   }
  },
- "description": "Create an Elastic Container Service (ECS) cluster.",
  "handlers": {
   "create": {
    "permissions": [
@@ -152,7 +155,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "The Amazon Resource Name (ARN) of the Amazon ECS cluster, such as arn:aws:ecs:us-east-2:123456789012:cluster/MyECSCluster.",
    "type": "string"
   },
   "CapacityProviders": {
@@ -162,7 +164,6 @@
    "type": "array"
   },
   "ClusterName": {
-   "description": "A user-generated string that you use to identify your cluster. If you don't specify a name, AWS CloudFormation generates a unique physical ID for the name.",
    "type": "string"
   },
   "ClusterSettings": {

@@ -10,29 +10,24 @@
    "type": "string"
   },
   "MaxResults": {
-   "description": "The number of items to return in the response.",
    "maximum": 100,
    "minimum": 1,
    "type": "integer"
   },
   "NextToken": {
-   "description": "If the result of the previous request was truncated, the response includes a NextToken. To retrieve the next set of results, use the token in the next request. Tokens expire after 24 hours.",
    "maxLength": 3000,
    "minLength": 1,
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -45,7 +40,6 @@
    "type": "object"
   }
  },
- "description": "Represents a dataset group that holds a collection of related datasets",
  "handlers": {
   "create": {
    "permissions": [
@@ -78,7 +72,6 @@
  ],
  "properties": {
   "DatasetArns": {
-   "description": "An array of Amazon Resource Names (ARNs) of the datasets that you want to include in the dataset group.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Arn"
@@ -86,20 +79,17 @@
    "type": "array"
   },
   "DatasetGroupArn": {
-   "description": "The Amazon Resource Name (ARN) of the dataset group to delete.",
    "maxLength": 256,
    "pattern": "^[a-zA-Z0-9\\-\\_\\.\\/\\:]+$",
    "type": "string"
   },
   "DatasetGroupName": {
-   "description": "A name for the dataset group.",
    "maxLength": 63,
    "minLength": 1,
    "pattern": "^[a-zA-Z][a-zA-Z0-9_]*",
    "type": "string"
   },
   "Domain": {
-   "description": "The domain associated with the dataset group. When you add a dataset to a dataset group, this value and the value specified for the Domain parameter of the CreateDataset operation must match.",
    "enum": [
     "RETAIL",
     "CUSTOM",
@@ -112,7 +102,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "The tags of Application Insights application.",
    "insertionOrder": true,
    "items": {
     "$ref": "#/definitions/Tag"

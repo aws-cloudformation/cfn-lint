@@ -18,7 +18,6 @@
  "definitions": {
   "DestinationConfiguration": {
    "additionalProperties": false,
-   "description": "Recording Destination Configuration.",
    "properties": {
     "S3": {
      "$ref": "#/definitions/S3DestinationConfiguration"
@@ -29,11 +28,9 @@
   },
   "RenditionConfiguration": {
    "additionalProperties": false,
-   "description": "Rendition Configuration describes which renditions should be recorded for a stream.",
    "properties": {
     "RenditionSelection": {
      "default": "ALL",
-     "description": "Resolution Selection indicates which set of renditions are recorded for a stream.",
      "enum": [
       "ALL",
       "NONE",
@@ -42,7 +39,6 @@
      "type": "string"
     },
     "Renditions": {
-     "description": "Renditions indicates which renditions are recorded for a stream.",
      "insertionOrder": false,
      "items": {
       "enum": [
@@ -64,7 +60,6 @@
   },
   "S3DestinationConfiguration": {
    "additionalProperties": false,
-   "description": "Recording S3 Destination Configuration.",
    "properties": {
     "BucketName": {
      "maxLength": 63,
@@ -100,11 +95,9 @@
   },
   "ThumbnailConfiguration": {
    "additionalProperties": false,
-   "description": "Recording Thumbnail Configuration.",
    "properties": {
     "RecordingMode": {
      "default": "INTERVAL",
-     "description": "Thumbnail Recording Mode, which determines whether thumbnails are recorded at an interval or are disabled.",
      "enum": [
       "INTERVAL",
       "DISABLED"
@@ -112,7 +105,6 @@
      "type": "string"
     },
     "Resolution": {
-     "description": "Resolution indicates the desired resolution of recorded thumbnails.",
      "enum": [
       "FULL_HD",
       "HD",
@@ -122,7 +114,6 @@
      "type": "string"
     },
     "Storage": {
-     "description": "Storage indicates the format in which thumbnails are recorded.",
      "insertionOrder": false,
      "items": {
       "enum": [
@@ -138,7 +129,6 @@
     },
     "TargetIntervalSeconds": {
      "default": 60,
-     "description": "Target Interval Seconds defines the interval at which thumbnails are recorded. This field is required if RecordingMode is INTERVAL.",
      "maximum": 60,
      "minimum": 1,
      "type": "integer"
@@ -148,7 +138,6 @@
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::IVS::RecordingConfiguration",
  "handlers": {
   "create": {
    "permissions": [
@@ -203,7 +192,6 @@
  ],
  "properties": {
   "Arn": {
-   "description": "Recording Configuration ARN is automatically generated on creation and assigned as the unique identifier.",
    "maxLength": 128,
    "minLength": 0,
    "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$",
@@ -213,7 +201,6 @@
    "$ref": "#/definitions/DestinationConfiguration"
   },
   "Name": {
-   "description": "Recording Configuration Name.",
    "maxLength": 128,
    "minLength": 0,
    "pattern": "^[a-zA-Z0-9-_]*$",
@@ -221,7 +208,6 @@
   },
   "RecordingReconnectWindowSeconds": {
    "default": 0,
-   "description": "Recording Reconnect Window Seconds. (0 means disabled)",
    "maximum": 300,
    "minimum": 0,
    "type": "integer"
@@ -230,7 +216,6 @@
    "$ref": "#/definitions/RenditionConfiguration"
   },
   "State": {
-   "description": "Recording Configuration State.",
    "enum": [
     "CREATING",
     "CREATE_FAILED",
@@ -239,7 +224,6 @@
    "type": "string"
   },
   "Tags": {
-   "description": "A list of key-value pairs that contain metadata for the asset model.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"

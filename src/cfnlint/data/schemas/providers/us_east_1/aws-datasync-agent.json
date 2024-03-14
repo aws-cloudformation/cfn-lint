@@ -9,17 +9,14 @@
  "definitions": {
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
      "type": "string"
     },
     "Value": {
-     "description": "The value for an AWS resource tag.",
      "maxLength": 256,
      "minLength": 1,
      "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
@@ -33,7 +30,6 @@
    "type": "object"
   }
  },
- "description": "Resource schema for AWS::DataSync::Agent.",
  "handlers": {
   "create": {
    "permissions": [
@@ -78,26 +74,22 @@
  ],
  "properties": {
   "ActivationKey": {
-   "description": "Activation key of the Agent.",
    "maxLength": 29,
    "pattern": "[A-Z0-9]{5}(-[A-Z0-9]{5}){4}",
    "type": "string"
   },
   "AgentArn": {
-   "description": "The DataSync Agent ARN.",
    "maxLength": 128,
    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
    "type": "string"
   },
   "AgentName": {
-   "description": "The name configured for the agent. Text reference used to identify the agent in the console.",
    "maxLength": 256,
    "minLength": 1,
    "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
    "type": "string"
   },
   "EndpointType": {
-   "description": "The service endpoints that the agent will connect to.",
    "enum": [
     "FIPS",
     "PUBLIC",
@@ -106,7 +98,6 @@
    "type": "string"
   },
   "SecurityGroupArns": {
-   "description": "The ARNs of the security group used to protect your data transfer task subnets.",
    "insertionOrder": false,
    "items": {
     "maxLength": 128,
@@ -116,7 +107,6 @@
    "type": "array"
   },
   "SubnetArns": {
-   "description": "The ARNs of the subnets in which DataSync will create elastic network interfaces for each data transfer task.",
    "insertionOrder": false,
    "items": {
     "maxLength": 128,
@@ -126,7 +116,6 @@
    "type": "array"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -136,7 +125,6 @@
    "uniqueItems": true
   },
   "VpcEndpointId": {
-   "description": "The ID of the VPC endpoint that the agent has access to.",
    "pattern": "^vpce-[0-9a-f]{17}$",
    "type": "string"
   }

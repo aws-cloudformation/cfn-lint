@@ -13,24 +13,19 @@
  "definitions": {
   "LoadBalancerOptions": {
    "additionalProperties": false,
-   "description": "The load balancer details if creating the AWS Verified Access endpoint as load-balancertype.",
    "properties": {
     "LoadBalancerArn": {
-     "description": "The ARN of the load balancer.",
      "type": "string"
     },
     "Port": {
-     "description": "The IP port number.",
      "maximum": 65535,
      "minimum": 1,
      "type": "integer"
     },
     "Protocol": {
-     "description": "The IP protocol.",
      "type": "string"
     },
     "SubnetIds": {
-     "description": "The IDs of the subnets.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/SubnetId"
@@ -43,60 +38,48 @@
   },
   "NetworkInterfaceOptions": {
    "additionalProperties": false,
-   "description": "The options for network-interface type endpoint.",
    "properties": {
     "NetworkInterfaceId": {
-     "description": "The ID of the network interface.",
      "type": "string"
     },
     "Port": {
-     "description": "The IP port number.",
      "maximum": 65535,
      "minimum": 1,
      "type": "integer"
     },
     "Protocol": {
-     "description": "The IP protocol.",
      "type": "string"
     }
    },
    "type": "object"
   },
   "SecurityGroupId": {
-   "description": "The ID of a security group for the endpoint.",
    "type": "string"
   },
   "SseSpecification": {
    "additionalProperties": false,
-   "description": "The configuration options for customer provided KMS encryption.",
    "properties": {
     "CustomerManagedKeyEnabled": {
-     "description": "Whether to encrypt the policy with the provided key or disable encryption",
      "type": "boolean"
     },
     "KmsKeyArn": {
-     "description": "KMS Key Arn used to encrypt the group policy",
      "type": "string"
     }
    },
    "type": "object"
   },
   "SubnetId": {
-   "description": "The IDs of the subnet.",
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 128,
      "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "maxLength": 256,
      "minLength": 0,
      "type": "string"
@@ -109,7 +92,6 @@
    "type": "object"
   }
  },
- "description": "The AWS::EC2::VerifiedAccessEndpoint resource creates an AWS EC2 Verified Access Endpoint.",
  "handlers": {
   "create": {
    "permissions": [
@@ -300,63 +282,48 @@
  ],
  "properties": {
   "ApplicationDomain": {
-   "description": "The DNS name for users to reach your application.",
    "type": "string"
   },
   "AttachmentType": {
-   "description": "The type of attachment used to provide connectivity between the AWS Verified Access endpoint and the application.",
    "type": "string"
   },
   "CreationTime": {
-   "description": "The creation time.",
    "type": "string"
   },
   "Description": {
-   "description": "A description for the AWS Verified Access endpoint.",
    "type": "string"
   },
   "DeviceValidationDomain": {
-   "description": "Returned if endpoint has a device trust provider attached.",
    "type": "string"
   },
   "DomainCertificateArn": {
-   "description": "The ARN of a public TLS/SSL certificate imported into or created with ACM.",
    "type": "string"
   },
   "EndpointDomain": {
-   "description": "A DNS name that is generated for the endpoint.",
    "type": "string"
   },
   "EndpointDomainPrefix": {
-   "description": "A custom identifier that gets prepended to a DNS name that is generated for the endpoint.",
    "type": "string"
   },
   "EndpointType": {
-   "description": "The type of AWS Verified Access endpoint. Incoming application requests will be sent to an IP address, load balancer or a network interface depending on the endpoint type specified.The type of AWS Verified Access endpoint. Incoming application requests will be sent to an IP address, load balancer or a network interface depending on the endpoint type specified.",
    "type": "string"
   },
   "LastUpdatedTime": {
-   "description": "The last updated time.",
    "type": "string"
   },
   "LoadBalancerOptions": {
-   "$ref": "#/definitions/LoadBalancerOptions",
-   "description": "The load balancer details if creating the AWS Verified Access endpoint as load-balancer type."
+   "$ref": "#/definitions/LoadBalancerOptions"
   },
   "NetworkInterfaceOptions": {
-   "$ref": "#/definitions/NetworkInterfaceOptions",
-   "description": "The options for network-interface type endpoint."
+   "$ref": "#/definitions/NetworkInterfaceOptions"
   },
   "PolicyDocument": {
-   "description": "The AWS Verified Access policy document.",
    "type": "string"
   },
   "PolicyEnabled": {
-   "description": "The status of the Verified Access policy.",
    "type": "boolean"
   },
   "SecurityGroupIds": {
-   "description": "The IDs of the security groups for the endpoint.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/SecurityGroupId"
@@ -365,15 +332,12 @@
    "uniqueItems": true
   },
   "SseSpecification": {
-   "$ref": "#/definitions/SseSpecification",
-   "description": "The configuration options for customer provided KMS encryption."
+   "$ref": "#/definitions/SseSpecification"
   },
   "Status": {
-   "description": "The endpoint status.",
    "type": "string"
   },
   "Tags": {
-   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
@@ -382,15 +346,12 @@
    "uniqueItems": true
   },
   "VerifiedAccessEndpointId": {
-   "description": "The ID of the AWS Verified Access endpoint.",
    "type": "string"
   },
   "VerifiedAccessGroupId": {
-   "description": "The ID of the AWS Verified Access group.",
    "type": "string"
   },
   "VerifiedAccessInstanceId": {
-   "description": "The ID of the AWS Verified Access instance.",
    "type": "string"
   }
  },

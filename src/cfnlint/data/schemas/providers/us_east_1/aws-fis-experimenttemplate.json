@@ -6,13 +6,11 @@
  ],
  "definitions": {
   "ActionId": {
-   "description": "The ID of the action.",
    "maxLength": 64,
    "type": "string"
   },
   "ExperimentTemplateAction": {
    "additionalProperties": false,
-   "description": "Specifies an action for the experiment template.",
    "properties": {
     "ActionId": {
      "$ref": "#/definitions/ActionId"
@@ -22,7 +20,6 @@
     },
     "Parameters": {
      "additionalProperties": false,
-     "description": "The parameters for the action, if applicable.",
      "patternProperties": {
       ".{1,64}": {
        "$ref": "#/definitions/ExperimentTemplateActionItemParameter"
@@ -35,7 +32,6 @@
     },
     "Targets": {
      "additionalProperties": false,
-     "description": "One or more targets for the action.",
      "patternProperties": {
       ".{1,64}": {
        "$ref": "#/definitions/ExperimentTemplateActionItemTarget"
@@ -50,7 +46,6 @@
    "type": "object"
   },
   "ExperimentTemplateActionItemDescription": {
-   "description": "A description for the action.",
    "maxLength": 512,
    "type": "string"
   },
@@ -63,7 +58,6 @@
    "type": "string"
   },
   "ExperimentTemplateActionItemStartAfterList": {
-   "description": "The names of the actions that must be completed before the current action starts.",
    "items": {
     "$ref": "#/definitions/ExperimentTemplateActionItemStartAfter"
    },
@@ -75,7 +69,6 @@
   },
   "ExperimentTemplateActionMap": {
    "additionalProperties": false,
-   "description": "The actions for the experiment.",
    "patternProperties": {
     "[\\S]{1,64}": {
      "$ref": "#/definitions/ExperimentTemplateAction"
@@ -84,7 +77,6 @@
    "type": "object"
   },
   "ExperimentTemplateDescription": {
-   "description": "A description for the experiment template.",
    "maxLength": 512,
    "type": "string"
   },
@@ -92,7 +84,6 @@
    "additionalProperties": false,
    "properties": {
     "AccountTargeting": {
-     "description": "The account targeting setting for the experiment template.",
      "enum": [
       "multi-account",
       "single-account"
@@ -100,7 +91,6 @@
      "type": "string"
     },
     "EmptyTargetResolutionMode": {
-     "description": "The target resolution failure mode for the experiment template.",
      "enum": [
       "fail",
       "skip"
@@ -175,7 +165,6 @@
    "type": "object"
   },
   "ExperimentTemplateStopConditionList": {
-   "description": "One or more stop conditions.",
    "items": {
     "$ref": "#/definitions/ExperimentTemplateStopCondition"
    },
@@ -183,7 +172,6 @@
   },
   "ExperimentTemplateTarget": {
    "additionalProperties": false,
-   "description": "Specifies a target for an experiment.",
    "properties": {
     "Filters": {
      "$ref": "#/definitions/ExperimentTemplateTargetFilterList"
@@ -226,7 +214,6 @@
   },
   "ExperimentTemplateTargetFilter": {
    "additionalProperties": false,
-   "description": "Describes a filter used for the target resource input in an experiment template.",
    "properties": {
     "Path": {
      "$ref": "#/definitions/ExperimentTemplateTargetFilterPath"
@@ -248,7 +235,6 @@
    "type": "array"
   },
   "ExperimentTemplateTargetFilterPath": {
-   "description": "The attribute path for the filter.",
    "maxLength": 256,
    "type": "string"
   },
@@ -257,7 +243,6 @@
    "type": "string"
   },
   "ExperimentTemplateTargetFilterValues": {
-   "description": "The attribute values for the filter.",
    "items": {
     "$ref": "#/definitions/ExperimentTemplateTargetFilterValue"
    },
@@ -265,7 +250,6 @@
   },
   "ExperimentTemplateTargetMap": {
    "additionalProperties": false,
-   "description": "The targets for the experiment.",
    "patternProperties": {
     ".{1,64}": {
      "$ref": "#/definitions/ExperimentTemplateTarget"
@@ -274,7 +258,6 @@
    "type": "object"
   },
   "ExperimentTemplateTargetSelectionMode": {
-   "description": "Scopes the identified resources to a specific number of the resources at random, or a percentage of the resources.",
    "maxLength": 64,
    "type": "string"
   },
@@ -284,19 +267,16 @@
    "type": "string"
   },
   "ResourceArnList": {
-   "description": "The Amazon Resource Names (ARNs) of the target resources.",
    "items": {
     "$ref": "#/definitions/ResourceArn"
    },
    "type": "array"
   },
   "ResourceType": {
-   "description": "The AWS resource type. The resource type must be supported for the specified action.",
    "maxLength": 64,
    "type": "string"
   },
   "RoleArn": {
-   "description": "The Amazon Resource Name (ARN) of an IAM role that grants the AWS FIS service permission to perform service actions on your behalf.",
    "maxLength": 1224,
    "type": "string"
   },
@@ -310,7 +290,6 @@
    "type": "string"
   }
  },
- "description": "Resource schema for AWS::FIS::ExperimentTemplate",
  "handlers": {
   "create": {
    "permissions": [

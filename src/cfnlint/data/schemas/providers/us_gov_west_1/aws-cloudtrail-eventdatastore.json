@@ -3,10 +3,8 @@
  "definitions": {
   "AdvancedEventSelector": {
    "additionalProperties": false,
-   "description": "Advanced event selectors let you create fine-grained selectors for the following AWS CloudTrail event record \ufb01elds. They help you control costs by logging only those events that are important to you.",
    "properties": {
     "FieldSelectors": {
-     "description": "Contains all selector statements in an advanced event selector.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/AdvancedFieldSelector"
@@ -16,7 +14,6 @@
      "uniqueItems": true
     },
     "Name": {
-     "description": "An optional, descriptive name for an advanced event selector, such as \"Log data events for only two S3 buckets\".",
      "maxLength": 1000,
      "minLength": 1,
      "type": "string"
@@ -29,10 +26,8 @@
   },
   "AdvancedFieldSelector": {
    "additionalProperties": false,
-   "description": "A single selector statement in an advanced event selector.",
    "properties": {
     "EndsWith": {
-     "description": "An operator that includes events that match the last few characters of the event record field specified as the value of Field.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -45,7 +40,6 @@
      "uniqueItems": true
     },
     "Equals": {
-     "description": "An operator that includes events that match the exact value of the event record field specified as the value of Field. This is the only valid operator that you can use with the readOnly, eventCategory, and resources.type fields.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -58,14 +52,12 @@
      "uniqueItems": true
     },
     "Field": {
-     "description": "A field in an event record on which to filter events to be logged. Supported fields include readOnly, eventCategory, eventSource (for management events), eventName, resources.type, and resources.ARN.",
      "maxLength": 1000,
      "minLength": 1,
      "pattern": "([\\w|\\d|\\.|_]+)",
      "type": "string"
     },
     "NotEndsWith": {
-     "description": "An operator that excludes events that match the last few characters of the event record field specified as the value of Field.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -78,7 +70,6 @@
      "uniqueItems": true
     },
     "NotEquals": {
-     "description": "An operator that excludes events that match the exact value of the event record field specified as the value of Field.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -91,7 +82,6 @@
      "uniqueItems": true
     },
     "NotStartsWith": {
-     "description": "An operator that excludes events that match the first few characters of the event record field specified as the value of Field.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -104,7 +94,6 @@
      "uniqueItems": true
     },
     "StartsWith": {
-     "description": "An operator that includes events that match the first few characters of the event record field specified as the value of Field.",
      "insertionOrder": false,
      "items": {
       "maxLength": 2048,
@@ -124,10 +113,8 @@
   },
   "InsightSelector": {
    "additionalProperties": false,
-   "description": "A string that contains Insights types that are logged on an event data store.",
    "properties": {
     "InsightType": {
-     "description": "The type of Insights to log on an event data store.",
      "type": "string"
     }
    },
@@ -135,14 +122,11 @@
   },
   "Tag": {
    "additionalProperties": false,
-   "description": "An arbitrary set of tags (key-value pairs) for this event data store.",
    "properties": {
     "Key": {
-     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "type": "string"
     },
     "Value": {
-     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
      "type": "string"
     }
    },
@@ -156,7 +140,6 @@
    "type": "string"
   }
  },
- "description": "A storage lake of event data against which you can run complex SQL-based queries. An event data store can include events that you have logged on your account from the last 7 to 2557 or 3653 days (about seven or ten years) depending on the selected BillingMode.",
  "handlers": {
   "create": {
    "permissions": [
@@ -235,7 +218,6 @@
  ],
  "properties": {
   "AdvancedEventSelectors": {
-   "description": "The advanced event selectors that were used to select events for the data store.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/AdvancedEventSelector"
@@ -244,31 +226,24 @@
    "uniqueItems": true
   },
   "BillingMode": {
-   "description": "The mode that the event data store will use to charge for event storage.",
    "type": "string"
   },
   "CreatedTimestamp": {
-   "$ref": "#/definitions/Timestamp",
-   "description": "The timestamp of the event data store's creation."
+   "$ref": "#/definitions/Timestamp"
   },
   "EventDataStoreArn": {
-   "description": "The ARN of the event data store.",
    "type": "string"
   },
   "FederationEnabled": {
-   "description": "Indicates whether federation is enabled on an event data store.",
    "type": "boolean"
   },
   "FederationRoleArn": {
-   "description": "The ARN of the role used for event data store federation.",
    "type": "string"
   },
   "IngestionEnabled": {
-   "description": "Indicates whether the event data store is ingesting events.",
    "type": "boolean"
   },
   "InsightSelectors": {
-   "description": "Lets you enable Insights event logging by specifying the Insights selectors that you want to enable on an existing event data store. Both InsightSelectors and InsightsDestination need to have a value in order to enable Insights events on an event data store.",
    "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/InsightSelector"
@@ -277,31 +252,24 @@
    "uniqueItems": true
   },
   "InsightsDestination": {
-   "description": "Specifies the ARN of the event data store that will collect Insights events. Both InsightSelectors and InsightsDestination need to have a value in order to enable Insights events on an event data store",
    "type": "string"
   },
   "KmsKeyId": {
-   "description": "Specifies the KMS key ID to use to encrypt the events delivered by CloudTrail. The value can be an alias name prefixed by 'alias/', a fully specified ARN to an alias, a fully specified ARN to a key, or a globally unique identifier.",
    "type": "string"
   },
   "MultiRegionEnabled": {
-   "description": "Indicates whether the event data store includes events from all regions, or only from the region in which it was created.",
    "type": "boolean"
   },
   "Name": {
-   "description": "The name of the event data store.",
    "type": "string"
   },
   "OrganizationEnabled": {
-   "description": "Indicates that an event data store is collecting logged events for an organization.",
    "type": "boolean"
   },
   "RetentionPeriod": {
-   "description": "The retention period, in days.",
    "type": "integer"
   },
   "Status": {
-   "description": "The status of an event data store. Values are STARTING_INGESTION, ENABLED, STOPPING_INGESTION, STOPPED_INGESTION and PENDING_DELETION.",
    "type": "string"
   },
   "Tags": {
@@ -313,12 +281,10 @@
    "uniqueItems": false
   },
   "TerminationProtectionEnabled": {
-   "description": "Indicates whether the event data store is protected from termination.",
    "type": "boolean"
   },
   "UpdatedTimestamp": {
-   "$ref": "#/definitions/Timestamp",
-   "description": "The timestamp showing when an event data store was updated, if applicable. UpdatedTimestamp is always either the same or newer than the time shown in CreatedTimestamp."
+   "$ref": "#/definitions/Timestamp"
   }
  },
  "propertyTransform": {
