@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import hashlib
 import logging
 from typing import Any, Dict, List
@@ -25,7 +27,7 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.validators: Dict[str, V] = {}
 
     def _convert_validation_errors_to_matches(
-        self, path: List[str], e: ValidationError
+        self, path: List[str], e: ValidationError, parent_id: str | None = None
     ):
         matches = []
         kwargs: Dict[Any, Any] = {}
@@ -57,27 +59,25 @@ class BaseJsonSchema(CloudFormationLintRule):
 
             e_rule = rs_rule
 
+        match = RuleMatch(
+            e_path,
+            e.message,
+            rule=e_rule,
+            **kwargs,
+        )
+
+        if parent_id:
+            match.parent_id = parent_id
+
+        matches.append(match)
+
         if e.context:
-            parent_id = hashlib.shake_128(
-                f"{e.message} + {'/'.join(e.path)}".encode("utf-8")
-            ).hexdigest(4)
-            e.message = f"{e.message} (id: {parent_id!r})"
             for err in e.context:
                 err.path.extend(e.path)
-                err.message = (
-                    f"{err.message} (parent: {parent_id!r}. "
-                    f"Schema group {err.schema_path[0]!r})"
+                matches.extend(
+                    self._convert_validation_errors_to_matches(path, err, match.id)
                 )
-                matches.extend(self._convert_validation_errors_to_matches(path, err))
 
-        matches.append(
-            RuleMatch(
-                e_path,
-                e.message,
-                rule=e_rule,
-                **kwargs,
-            )
-        )
         return matches
 
     def json_schema_validate(self, validator, properties, path):
