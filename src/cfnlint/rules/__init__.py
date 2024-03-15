@@ -312,23 +312,29 @@ class Rules(TypedRules):
                 return False
             rule = self.data[rule]
         if rule.is_enabled(
-            config.include_experimental,
+            include_experimental=config.include_experimental,
             ignore_rules=config.ignore_checks,
             include_rules=config.include_checks,
             mandatory_rules=config.mandatory_checks,
         ):
-            self._used_rules[rule.id] = rule
             return True
         return False
 
     def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
         for rule in self.data.values():
+            if rule.is_enabled(
+                config.include_experimental,
+                ignore_rules=config.ignore_checks,
+                include_rules=config.include_checks,
+                mandatory_rules=config.mandatory_checks,
+            ):
+                self._used_rules[rule.id] = rule
             # rules that have children need to be run
             # we will remove the results later
-            if rule.child_rules:
+            if self.is_rule_enabled(rule.id, config):
                 yield rule
                 continue
-            if self.is_rule_enabled(rule.id, config):
+            if rule.child_rules:
                 yield rule
 
     def extend(self, rules: List[CloudFormationLintRule]):
