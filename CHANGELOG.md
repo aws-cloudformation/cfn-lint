@@ -1,3 +1,10 @@
+### v0.86.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `165.0.0` (pull #[3092](https://github.com/aws-cloudformation/cfn-lint/pull/3092))
+###### Fixes
+- RDS DB Cluster remove MasterUserPassword from exclusion with MasterUsername (pull #[3106](https://github.com/aws-cloudformation/cfn-lint/pull/3106))
+- fix an issue when searching for Ref in tojsonstring (pull #[3107](https://github.com/aws-cloudformation/cfn-lint/pull/3107))
+
 ### v0.86.0
 ###### Feature
 - Disable and configure certain rules when template is from CDK (pull #[2971](https://github.com/aws-cloudformation/cfn-lint/pull/2971))
