@@ -27,18 +27,16 @@ class ToJsonString(CloudFormationLintRule):
         for fn_toJsonString_object in fn_toJsonString_objects:
             tree = fn_toJsonString_object[:-1]
             fn_toJsonString_object_value = fn_toJsonString_object[-1]
-            LanguageExtensions.validate_transform_is_declared(
-                self,
+            LanguageExtensions().validate_transform_is_declared(
                 has_language_extensions_transform,
                 matches,
                 tree,
                 intrinsic_function,
             )
-            LanguageExtensions.validate_type(
-                self, fn_toJsonString_object_value, matches, tree, intrinsic_function
+            LanguageExtensions().validate_type(
+                fn_toJsonString_object_value, matches, tree, intrinsic_function
             )
-            LanguageExtensions.validate_pseudo_parameters(
-                self,
+            LanguageExtensions().validate_pseudo_parameters(
                 fn_toJsonString_object_value,
                 matches,
                 tree,
