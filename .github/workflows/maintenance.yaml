@@ -15,7 +15,7 @@ jobs:
         id: maintenance
         run: |
           latest_sam_cli=`curl -s https://api.github.com/repos/aws/aws-sam-cli/releases/latest | jq -r .tag_name | cut -c 2-`
-          latest=`curl "https://pypi.org/pypi/aws-sam-cli/$latest_sam_cli/json" -s | jq -r '.info.requires_dist[] | select(contains("aws-sam-translator"))' | cut -c 22-`
+          latest=`curl "https://pypi.org/pypi/aws-sam-cli/$latest_sam_cli/json" -s | jq -r '.info.requires_dist[] | select(contains("aws-sam-translator"))' | cut -c 21-`
           sed -i -E "s/aws-sam-translator>=[0-9.]+/aws-sam-translator>=$latest/" setup.py
           pip install -e .
           rm -rf src/cfnlint/data/DownloadsMetadata/*
