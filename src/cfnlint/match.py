@@ -3,18 +3,25 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cfnlint.rules import CloudFormationLintRule, RuleMatch
+
 
 class Match:
     """Match Classes"""
 
     def __init__(
         self,
-        linenumber,
-        columnnumber,
-        linenumberend,
-        columnnumberend,
-        filename,
-        rule,
+        linenumber: int,
+        columnnumber: int,
+        linenumberend: int,
+        columnnumberend: int,
+        filename: str,
+        rule: CloudFormationLintRule,
         message=None,
         rulematch_obj=None,
     ):
@@ -51,4 +58,36 @@ class Match:
             item.columnnumber,
             item.rule.id,
             item.message,
+        )
+
+    @classmethod
+    def create(
+        cls,
+        message: str,
+        filename: str,
+        rule: CloudFormationLintRule,
+        linenumber: int | None = None,
+        columnnumber: int | None = None,
+        linenumberend: int | None = None,
+        columnnumberend: int | None = None,
+        rulematch_obj: RuleMatch | None = None,
+    ) -> "Match":
+        if columnnumber is None:
+            columnnumber = 1
+        if columnnumberend is None:
+            columnnumberend = columnnumber + 1
+        if linenumber is None:
+            linenumber = 1
+        if linenumberend is None:
+            linenumberend = linenumber
+
+        return Match(
+            linenumber=linenumber,
+            columnnumber=columnnumber,
+            linenumberend=linenumberend,
+            columnnumberend=columnnumberend,
+            filename=filename,
+            rule=rule,
+            message=message,
+            rulematch_obj=rulematch_obj,
         )

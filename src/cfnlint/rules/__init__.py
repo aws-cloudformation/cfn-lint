@@ -8,9 +8,7 @@ from __future__ import annotations
 import importlib
 import logging
 import os
-import random
 import traceback
-import uuid
 from collections import UserDict
 from datetime import datetime
 from typing import (
@@ -42,9 +40,6 @@ else:
 
 
 LOGGER = logging.getLogger(__name__)
-
-_rd = random.Random()
-_rd.seed(0)
 
 
 def _rule_is_enabled(
@@ -92,7 +87,6 @@ class RuleMatch:
         self.path = path
         self.path_string = "/".join(map(str, path))
         self.message = message
-        self.id = uuid.UUID(int=_rd.getrandbits(128), version=4)
         for k, v in kwargs.items():
             setattr(self, k, v)
 

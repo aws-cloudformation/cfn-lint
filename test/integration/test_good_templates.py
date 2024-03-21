@@ -44,7 +44,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     ),
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
                     "Rule": {
@@ -73,7 +73,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     ),
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
                     "Rule": {
@@ -101,7 +101,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     ),
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
                     "Rule": {

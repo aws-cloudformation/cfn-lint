@@ -68,14 +68,14 @@ def language_extension(cfn: Any) -> TransformResult:
             em_column = 1
 
         return [
-            Match(
-                sm_line,
-                sm_column,
-                em_line,
-                em_column,
-                cfn.filename,
-                TransformError(),
-                message.format(str(e)),
+            Match.create(
+                linenumber=sm_line,
+                columnnumber=sm_column,
+                linenumberend=em_line,
+                columnnumberend=em_column,
+                filename=cfn.filename,
+                rule=TransformError(),
+                message=message.format(str(e)),
             )
         ], None
     except Exception as e:  # pylint: disable=broad-exception-caught
@@ -85,14 +85,10 @@ def language_extension(cfn: Any) -> TransformResult:
 
         message = "Error transforming template: {0}"
         return [
-            Match(
-                1,
-                1,
-                1,
-                1,
-                cfn.filename,
-                TransformError(),
-                message.format(str(e)),
+            Match.create(
+                filename=cfn.filename,
+                rule=TransformError(),
+                message=message.format(str(e)),
             )
         ], None
 
