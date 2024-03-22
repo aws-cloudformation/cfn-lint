@@ -22,6 +22,7 @@ class TestDirectives(BaseCliTestCase):
             "results": [
                 {
                     "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Id": "4d8d1fd7-496f-9420-44df-f053d372c3be",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 17},
@@ -34,6 +35,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
                     "Message": "Additional properties are not allowed ('BucketName1' was unexpected. Did you mean 'BucketName'?)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -46,6 +48,7 @@ class TestDirectives(BaseCliTestCase):
                 },
                 {
                     "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Id": "dd126795-8106-b986-19ed-db769ee48fba",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 28},
@@ -58,6 +61,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 28},
                     },
                     "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -70,6 +74,7 @@ class TestDirectives(BaseCliTestCase):
                 },
                 {
                     "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Id": "431970a8-482e-2aca-af3f-5d4f819f0b45",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 32},
@@ -81,6 +86,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 5, "LineNumber": 32},
                     },
                     "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"
@@ -95,6 +101,7 @@ class TestDirectives(BaseCliTestCase):
                 },
                 {
                     "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Id": "814e8b07-dcef-f3ac-4285-8032d1fb010e",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 35},
@@ -107,6 +114,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 35},
                     },
                     "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -119,6 +127,7 @@ class TestDirectives(BaseCliTestCase):
                 },
                 {
                     "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Id": "2637b826-b8a7-4e03-8b27-bf8e8d4d12ee",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 37},
@@ -132,6 +141,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 9, "LineNumber": 37},
                     },
                     "Message": "'Enabled1' is not one of ['Enabled', 'Suspended']",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Check if properties have a valid value in case of an"

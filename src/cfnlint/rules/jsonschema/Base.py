@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-import hashlib
 import logging
 from typing import Any, Dict, List
 
@@ -27,7 +26,9 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.validators: Dict[str, V] = {}
 
     def _convert_validation_errors_to_matches(
-        self, path: List[str], e: ValidationError, parent_id: str | None = None
+        self,
+        path: List[str],
+        e: ValidationError,
     ):
         matches = []
         kwargs: Dict[Any, Any] = {}
@@ -63,19 +64,16 @@ class BaseJsonSchema(CloudFormationLintRule):
             e_path,
             e.message,
             rule=e_rule,
+            context=[],
             **kwargs,
         )
-
-        if parent_id:
-            match.parent_id = parent_id
 
         matches.append(match)
 
         if e.context:
             for err in e.context:
-                err.path.extend(e.path)
-                matches.extend(
-                    self._convert_validation_errors_to_matches(path, err, match.id)
+                match.context.extend(
+                    self._convert_validation_errors_to_matches(path, err)
                 )
 
         return matches

@@ -5,10 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
-
 import cfnlint.data.schemas.extensions.aws_dynamodb_table
-from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -17,7 +14,10 @@ class TableSseSpecification(CfnLintJsonSchema):
     shortdesc = (
         "Validate DynamoDB SSE Specification has required properties when using KMS"
     )
-    description = "When doing KMS encryption in an AWS DynamoDB table there are required properties."
+    description = (
+        "When doing KMS encryption in an AWS DynamoDB "
+        "table there are required properties."
+    )
     tags = ["resources"]
 
     def __init__(self) -> None:

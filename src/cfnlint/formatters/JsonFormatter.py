@@ -20,6 +20,8 @@ class JsonFormatter(BaseFormatter):
         def default(self, o):
             if isinstance(o, Match):
                 return {
+                    "Id": o.id,
+                    "ParentId": o.parent_id,
                     "Rule": {
                         "Id": o.rule.id,
                         "Description": o.rule.description,
