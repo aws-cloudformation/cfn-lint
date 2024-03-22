@@ -11,9 +11,10 @@ from json.decoder import WHITESPACE  # type: ignore
 from json.decoder import BACKSLASH, STRINGCHUNK, WHITESPACE_STR  # type: ignore
 from json.scanner import NUMBER_RE
 
-import cfnlint
 from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, list_node, str_node
+from cfnlint.match import Match
+from cfnlint.rules import ParseError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ class JSONDecodeError(ValueError):
     # Note that this exception is used from _json
 
     def __init__(self, doc, pos, errors):
-        if isinstance(errors, cfnlint.rules.Match):
+        if isinstance(errors, Match):
             errors = [errors]
 
         errmsg = (
@@ -92,26 +93,26 @@ def build_match(message, doc, pos, key=" "):
     lineno = doc.count("\n", 0, pos) + 1
     colno = pos - doc.rfind("\n", 0, pos)
 
-    return cfnlint.rules.Match(
-        lineno,
-        colno + 1,
-        lineno,
-        colno + 1 + len(key),
-        "",
-        cfnlint.rules.ParseError(),
+    return Match.create(
         message=message,
+        filename="",
+        rule=ParseError(),
+        linenumber=lineno,
+        columnnumber=colno + 1,
+        linenumberend=lineno,
+        columnnumberend=colno + 1 + len(key),
     )
 
 
 def build_match_from_key(message, key):
-    return cfnlint.rules.Match(
-        key.start_mark.line,
-        key.start_mark.column + 1,
-        key.end_mark.line,
-        key.end_mark.column + 1 + len(key),
-        "",
-        cfnlint.rules.ParseError(),
+    return Match.create(
         message=message,
+        filename="",
+        rule=ParseError(),
+        linenumber=key.start_mark.line,
+        columnnumber=key.start_mark.column + 1,
+        linenumberend=key.end_mark.line,
+        columnnumberend=key.end_mark.column + 1 + len(key),
     )
 
 
