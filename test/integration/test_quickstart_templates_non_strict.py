@@ -49,7 +49,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             [
                 "--include-checks",
                 "I",
-                "--include-expiremental",
+                "--include-experimental",
                 "--configure-rule",
                 "E3012:strict=false",
             ]
