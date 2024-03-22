@@ -14,8 +14,8 @@ from yaml.reader import Reader
 from yaml.resolver import Resolver
 from yaml.scanner import Scanner
 
-import cfnlint
 from cfnlint.decode.node import dict_node, list_node, str_node
+from cfnlint.rules import Match, ParseError
 
 try:
     from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,
@@ -38,7 +38,7 @@ class CfnParseError(ConstructorError):
     """
 
     def __init__(self, filename, errors):
-        if isinstance(errors, cfnlint.rules.Match):
+        if isinstance(errors, Match):
             errors = [errors]
 
         # Call the base class constructor with the parameters it needs
@@ -50,14 +50,14 @@ class CfnParseError(ConstructorError):
 
 
 def build_match(filename, message, line_number, column_number, key):
-    return cfnlint.rules.Match(
-        line_number + 1,
-        column_number + 1,
-        line_number + 1,
-        column_number + 1 + len(key),
-        filename,
-        cfnlint.rules.ParseError(),
+    return Match.create(
         message=message,
+        filename=filename,
+        rule=ParseError(),
+        linenumber=line_number + 1,
+        columnnumber=column_number + 1,
+        linenumberend=line_number + 1,
+        columnnumberend=column_number + 1 + len(key),
     )
 
 
