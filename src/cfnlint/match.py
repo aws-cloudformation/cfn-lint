@@ -3,20 +3,30 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+import hashlib
+import uuid
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cfnlint.rules import CloudFormationLintRule, RuleMatch
+
 
 class Match:
     """Match Classes"""
 
     def __init__(
         self,
-        linenumber,
-        columnnumber,
-        linenumberend,
-        columnnumberend,
-        filename,
-        rule,
+        linenumber: int,
+        columnnumber: int,
+        linenumberend: int,
+        columnnumberend: int,
+        filename: str,
+        rule: CloudFormationLintRule,
         message=None,
         rulematch_obj=None,
+        parent_id=None,
     ):
         """Init"""
         self.linenumber = linenumber
@@ -33,6 +43,11 @@ class Match:
         self.rule = rule
         """The rule of this match"""
         self.message = message  # or rule.shortdesc
+
+        hex_string = hashlib.md5(f"{self}".encode("UTF-8")).hexdigest()
+        self.id: str = str(uuid.UUID(hex=hex_string))
+
+        self.parent_id = parent_id
         """The message of this match"""
         if rulematch_obj:
             for k, v in vars(rulematch_obj).items():
@@ -51,4 +66,38 @@ class Match:
             item.columnnumber,
             item.rule.id,
             item.message,
+        )
+
+    @classmethod
+    def create(
+        cls,
+        message: str,
+        filename: str,
+        rule: CloudFormationLintRule,
+        linenumber: int | None = None,
+        columnnumber: int | None = None,
+        linenumberend: int | None = None,
+        columnnumberend: int | None = None,
+        rulematch_obj: RuleMatch | None = None,
+        parent_id: str | None = None,
+    ) -> "Match":
+        if columnnumber is None:
+            columnnumber = 1
+        if columnnumberend is None:
+            columnnumberend = columnnumber + 1
+        if linenumber is None:
+            linenumber = 1
+        if linenumberend is None:
+            linenumberend = linenumber
+
+        return Match(
+            linenumber=linenumber,
+            columnnumber=columnnumber,
+            linenumberend=linenumberend,
+            columnnumberend=columnnumberend,
+            filename=filename,
+            rule=rule,
+            message=message,
+            rulematch_obj=rulematch_obj,
+            parent_id=parent_id,
         )

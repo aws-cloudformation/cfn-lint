@@ -40,7 +40,16 @@ class TestFormatters(BaseTestCase):
         super().setUp()
         self.rules = Rules.create_from_directory(cfnlint.config._DEFAULT_RULESDIR)
         self.filename = str(Path("test/fixtures/templates/bad/formatters.yaml"))
-        self.config = ConfigMixIn(cli_args=["--", self.filename])
+        self.config = ConfigMixIn(
+            cli_args=[
+                "--include-checks",
+                "I",
+                "--ignore-checks",
+                "E1029",
+                "--",
+                self.filename,
+            ]
+        )
 
         self.results = [
             Match(
@@ -82,7 +91,9 @@ class TestFormatters(BaseTestCase):
     def test_base_formatter(self):
         """Test base formatter"""
         formatter = Formatter()
-        a_results = formatter.print_matches(self.results).splitlines()
+        a_results = formatter.print_matches(
+            self.results, self.rules, self.config
+        ).splitlines()
 
         # Check the errors
         self.assertEqual(
@@ -113,7 +124,9 @@ class TestFormatters(BaseTestCase):
         """Test quiet formatter"""
 
         formatter = QuietFormatter()
-        a_results = formatter.print_matches(self.results).splitlines()
+        a_results = formatter.print_matches(
+            self.results, self.rules, self.config
+        ).splitlines()
 
         for i in range(3):
             # Check the errors
@@ -129,7 +142,9 @@ class TestFormatters(BaseTestCase):
     def test_parseable_formatter(self):
         """Test Parseable formatter"""
         formatter = ParseableFormatter()
-        results = formatter.print_matches(self.results).splitlines()
+        results = formatter.print_matches(
+            self.results, self.rules, self.config
+        ).splitlines()
 
         for i in range(3):
             # Check the errors
@@ -204,7 +219,9 @@ class TestFormatters(BaseTestCase):
         formatter = JsonFormatter()
 
         # Get the JSON output
-        json_results = json.loads(formatter.print_matches(self.results))
+        json_results = json.loads(
+            formatter.print_matches(self.results, self.rules, self.config)
+        )
 
         # Check the 3 errors again
         self.assertEqual(len(json_results), 3)
@@ -219,7 +236,7 @@ class TestFormatters(BaseTestCase):
         formatter = JUnitFormatter()
 
         # The actual test
-        self.assertIsNone(formatter.print_matches([], []))
+        self.assertIsNone(formatter.print_matches([], [], self.config))
 
     def test_junit_formatter(self):
         """Test JUnit Formatter"""
@@ -230,7 +247,7 @@ class TestFormatters(BaseTestCase):
             "E3012": self.rules["E3012"],
             "W1020": self.rules["W1020"],
         }
-        s = formatter.print_matches(self.results, self.rules)
+        s = formatter.print_matches(self.results, self.rules, self.config)
         root = ET.fromstring(s)
 
         self.assertEqual(root.tag, "testsuites")
@@ -275,7 +292,9 @@ class TestFormatters(BaseTestCase):
         formatter = SARIFFormatter()
 
         # Get the SARIF JSON output
-        sarif = json.loads(formatter.print_matches(self.results, self.rules))
+        sarif = json.loads(
+            formatter.print_matches(self.results, self.rules, self.config)
+        )
 
         # Fetch the SARIF schema
         schema = json.loads(cfnlint.helpers.get_url_content(sarif["$schema"], False))
