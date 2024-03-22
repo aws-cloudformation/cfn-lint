@@ -1243,7 +1243,6 @@ patches.extend(
                         "dependentExcluded": {
                             "SnapshotIdentifier": [
                                 "MasterUsername",
-                                "MasterUserPassword",
                             ],
                             "SourceDBClusterIdentifier": [
                                 "MasterUsername",

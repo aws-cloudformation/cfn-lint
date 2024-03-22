@@ -42,11 +42,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/bad/transform_serverless_template.yaml"
                     ),
+                    "Id": "74181426-e865-10eb-96fd-908dfd30a358",
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
+                    "ParentId": None,
                     "Rule": {
                         "Id": "E0001",
                         "Description": (
@@ -71,11 +73,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/bad/transform_serverless_template.yaml"
                     ),
+                    "Id": "fd751fa3-7d1f-e194-7108-eb08352814c8",
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
+                    "ParentId": None,
                     "Rule": {
                         "Id": "E0001",
                         "Description": (
@@ -99,11 +103,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/bad/transform_serverless_template.yaml"
                     ),
+                    "Id": "9e05773a-b0d0-f157-2955-596d9bd54749",
                     "Location": {
                         "Start": {"ColumnNumber": 1, "LineNumber": 1},
-                        "End": {"ColumnNumber": 1, "LineNumber": 1},
+                        "End": {"ColumnNumber": 2, "LineNumber": 1},
                         "Path": None,
                     },
+                    "ParentId": None,
                     "Rule": {
                         "Id": "E0001",
                         "Description": (
@@ -147,6 +153,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results": [
                 {
                     "Filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
+                    "Id": "3732b0a0-6d44-72af-860a-88e5f8ca790c",
                     "Level": "Error",
                     "Location": {
                         "Start": {"ColumnNumber": 7, "LineNumber": 16},
@@ -162,6 +169,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "[{'Key': 'Key1', 'Value': 'Value1'}, {'Key': 'Key2', 'Value':"
                         " 'Value2'}] is not of type 'object'"
                     ),
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Checks resource property values with Primitive Types for"
@@ -196,6 +204,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/good/transform_serverless_globals.yaml"
                     ),
+                    "Id": "bbc3467b-5b8b-1300-e638-dc3e4a1741cb",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 10},
@@ -206,6 +215,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Deprecated runtime 'nodejs6.10' specified. Updating disabled"
                         " since '2019-08-12'. Please consider updating to 'nodejs16.x'"
                     ),
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Check if an EOL Lambda Runtime is specified and give an"
