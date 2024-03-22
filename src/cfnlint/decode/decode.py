@@ -129,13 +129,9 @@ def _decode(
 
         # Template isn't a dict which means nearly nothing will work
         matches = [
-            Match(
-                1,
-                1,
-                1,
-                1,
-                filename,
-                ParseError(),
+            Match.create(
+                filename=filename or "",
+                rule=ParseError(),
                 message="Template needs to be an object.",
             )
         ]
@@ -150,7 +146,13 @@ def create_match_yaml_parser_error(parser_error, filename):
     lineno = parser_error.problem_mark.line + 1
     colno = parser_error.problem_mark.column + 1
     msg = parser_error.problem
-    return Match(lineno, colno, lineno, colno + 1, filename, ParseError(), message=msg)
+    return Match.create(
+        message=msg,
+        rule=ParseError(),
+        filename=filename,
+        linenumber=lineno,
+        columnnumber=colno,
+    )
 
 
 def create_match_file_error(filename, msg):
@@ -158,11 +160,7 @@ def create_match_file_error(filename, msg):
     # pylint: disable=import-outside-toplevel
     from cfnlint.rules import ParseError
 
-    return Match(
-        linenumber=1,
-        columnnumber=1,
-        linenumberend=1,
-        columnnumberend=2,
+    return Match.create(
         filename=filename,
         rule=ParseError(),
         message=msg,
@@ -177,4 +175,10 @@ def create_match_json_parser_error(parser_error, filename):
     lineno = parser_error.lineno
     colno = parser_error.colno
     msg = parser_error.msg
-    return Match(lineno, colno, lineno, colno + 1, filename, ParseError(), message=msg)
+    return Match.create(
+        filename=filename,
+        rule=ParseError(),
+        message=msg,
+        linenumber=lineno,
+        columnnumber=colno,
+    )

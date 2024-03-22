@@ -23,6 +23,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "c93c312c-c623-117a-7085-9d03d9f6a3af",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 17},
@@ -35,6 +36,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
                     "Message": "Additional properties are not allowed ('BucketName1' was unexpected. Did you mean 'BucketName'?)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -49,6 +51,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "8d22c4cc-c440-b845-21de-ec27bde90312",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 23},
@@ -61,6 +64,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 23},
                     },
                     "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -75,6 +79,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "114825b2-3b6f-b2dc-945a-8ad2ea0a4dc2",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 27},
@@ -86,6 +91,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 5, "LineNumber": 27},
                     },
                     "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"
@@ -102,6 +108,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "a89a2538-9395-c5fa-df78-390412c8042f",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 30},
@@ -114,6 +121,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 30},
                     },
                     "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -128,6 +136,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "be85985f-7f5a-03d9-2974-684226bbe38b",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 25},
@@ -141,6 +150,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 9, "LineNumber": 25},
                     },
                     "Message": "'Enabled1' is not one of ['Enabled', 'Suspended']",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Check if properties have a valid value in case of an"
@@ -155,6 +165,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "fba65f07-d001-40c3-ea91-df14792b2649",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 13},
@@ -167,6 +178,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 7, "LineNumber": 13},
                     },
                     "Message": "Additional properties are not allowed ('BucketName1' was unexpected. Did you mean 'BucketName'?)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -181,6 +193,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
                     ),
+                    "Id": "2449357e-568a-5c23-5cef-88381662e53c",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 19},
@@ -192,6 +205,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 5, "LineNumber": 19},
                     },
                     "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"
@@ -208,6 +222,7 @@ class TestDirectives(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/bad/core/mandatory_checks.yaml"
                     ),
+                    "Id": "790d09d4-4c82-7a75-89c1-fef2f13d2dcb",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 32},
@@ -221,6 +236,7 @@ class TestDirectives(BaseCliTestCase):
                         "Start": {"ColumnNumber": 9, "LineNumber": 32},
                     },
                     "Message": "'Enabled1' is not one of ['Enabled', 'Suspended']",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Check if properties have a valid value in case of an"
