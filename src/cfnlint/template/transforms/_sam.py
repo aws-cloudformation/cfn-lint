@@ -169,14 +169,10 @@ class Transform:
             message = "Error transforming template: {0}"
             for cause in e.causes:
                 matches.append(
-                    Match(
-                        1,
-                        1,
-                        1,
-                        1,
-                        self._filename,
-                        TransformError(),
-                        message.format(cause.message),
+                    Match.create(
+                        filename=self._filename,
+                        rule=TransformError(),
+                        message=message.format(cause.message),
                     )
                 )
         except Exception as e:  # pylint: disable=W0703
@@ -188,8 +184,10 @@ class Transform:
             LOGGER.debug("Stack trace: %s", e, exc_info=True)
             message = "Error transforming template: {0}"
             matches.append(
-                Match(
-                    1, 1, 1, 1, self._filename, TransformError(), message.format(str(e))
+                Match.create(
+                    filename=self._filename,
+                    rule=TransformError(),
+                    message=message.format(str(e)),
                 )
             )
 
