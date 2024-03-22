@@ -3,9 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import logging
-import random
-import string
 from typing import Any, Dict, List
 
 from cfnlint.context import Context
@@ -26,7 +26,9 @@ class BaseJsonSchema(CloudFormationLintRule):
         self.validators: Dict[str, V] = {}
 
     def _convert_validation_errors_to_matches(
-        self, path: List[str], e: ValidationError
+        self,
+        path: List[str],
+        e: ValidationError,
     ):
         matches = []
         kwargs: Dict[Any, Any] = {}
@@ -58,28 +60,22 @@ class BaseJsonSchema(CloudFormationLintRule):
 
             e_rule = rs_rule
 
-        if e.context:
-
-            parent_id = "".join(
-                random.choices(string.ascii_lowercase + string.digits, k=5)  # nosec
-            )
-            e.message = f"{e.message} (id {parent_id!r})"
-            for err in e.context:
-                err.path.extend(e.path)
-                err.message = (
-                    f"{err.message} (parent {parent_id!r}. "
-                    "Schema group {err.schema_path[0]!r})"
-                )
-                matches.extend(self._convert_validation_errors_to_matches(path, err))
-
-        matches.append(
-            RuleMatch(
-                e_path,
-                e.message,
-                rule=e_rule,
-                **kwargs,
-            )
+        match = RuleMatch(
+            e_path,
+            e.message,
+            rule=e_rule,
+            context=[],
+            **kwargs,
         )
+
+        matches.append(match)
+
+        if e.context:
+            for err in e.context:
+                match.context.extend(
+                    self._convert_validation_errors_to_matches(path, err)
+                )
+
         return matches
 
     def json_schema_validate(self, validator, properties, path):
