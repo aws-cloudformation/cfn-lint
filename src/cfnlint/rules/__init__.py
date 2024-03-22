@@ -20,6 +20,7 @@ from typing import (
     List,
     MutableSet,
     Optional,
+    Sequence,
     Tuple,
     Union,
 )
@@ -84,9 +85,10 @@ class RuleMatch:
 
     def __init__(self, path, message, **kwargs):
         """Init"""
-        self.path = path
-        self.path_string = "/".join(map(str, path))
-        self.message = message
+        self.path: Sequence[str, int] = path
+        self.path_string: str = "/".join(map(str, path))
+        self.message: str = message
+        self.context: List[RuleMatch] = []
         for k, v in kwargs.items():
             setattr(self, k, v)
 
@@ -97,6 +99,51 @@ class RuleMatch:
     def __hash__(self):
         """Hash for comparisons"""
         return hash((self.path, self.message))
+
+
+def _rule_match_to_match(
+    rule: CloudFormationLintRule,
+    filename: str,
+    cfn: Template,
+    match: RuleMatch,
+    parent_id: str | None = None,
+) -> Iterator[Match]:
+    error_rule = rule
+    if hasattr(match, "rule"):
+        error_rule = match.rule
+    linenumbers: Union[Tuple[int, int, int, int], None] = None
+    if hasattr(match, "location"):
+        linenumbers = match.location
+    else:
+        linenumbers = cfn.get_location_yaml(cfn.template, match.path)
+    if linenumbers:
+        result = Match.create(
+            linenumber=linenumbers[0] + 1,
+            columnnumber=linenumbers[1] + 1,
+            linenumberend=linenumbers[2] + 1,
+            columnnumberend=linenumbers[3] + 1,
+            filename=filename,
+            rule=error_rule,
+            message=match.message,
+            rulematch_obj=match,
+            parent_id=parent_id,
+        )
+    else:
+        result = Match.create(
+            filename=filename,
+            rule=error_rule,
+            message=match.message,
+            rulematch_obj=match,
+            parent_id=parent_id,
+        )
+
+    yield result
+
+    for sub_match in match.context:
+        sub_match.path = list(match.path) + list(sub_match.path)
+        yield from _rule_match_to_match(
+            rule=rule, filename=filename, cfn=cfn, match=sub_match, parent_id=result.id
+        )
 
 
 def matching(match_type: Any):
@@ -118,29 +165,8 @@ def matching(match_type: Any):
             LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
             # pylint: disable=E1102
             for result in match_function(self, filename, cfn, *args, **kwargs):
-                error_rule = self
-                if hasattr(result, "rule"):
-                    error_rule = result.rule
-                linenumbers: Union[Tuple[int, int, int, int], None] = None
-                if hasattr(result, "location"):
-                    linenumbers = result.location
-                else:
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                if linenumbers:
-                    yield Match(
-                        linenumbers[0] + 1,
-                        linenumbers[1] + 1,
-                        linenumbers[2] + 1,
-                        linenumbers[3] + 1,
-                        filename,
-                        error_rule,
-                        result.message,
-                        result,
-                    )
-                else:
-                    yield Match(
-                        1, 1, 1, 1, filename, error_rule, result.message, result
-                    )
+                yield from _rule_match_to_match(self, filename, cfn, result)
+
             LOGGER.debug(
                 "Complete match function for rule %s at %s.  Ran in %s",
                 self.id,
@@ -357,14 +383,10 @@ class Rules(TypedRules):
                     error_message = traceback.format_exc()
                 else:
                     error_message = str(err)
-                yield Match(
-                    1,
-                    1,
-                    1,
-                    1,
-                    filename,
-                    RuleError(),
-                    f"Unknown exception while processing rule {rule_id}: {error_message!r}",
+                yield Match.create(
+                    filename=filename,
+                    rule=RuleError(),
+                    message=f"Unknown exception while processing rule {rule_id}: {error_message!r}",
                 )
 
     def _filter_matches(
@@ -569,14 +591,10 @@ class RulesCollection:
                     error_message = str(err)
                 message = "Unknown exception while processing rule {}: {}"
                 return [
-                    Match(
-                        1,
-                        1,
-                        1,
-                        1,
-                        filename,
-                        RuleError(),
-                        message.format(rule_id, error_message),
+                    Match.create(
+                        filename=filename,
+                        rule=RuleError(),
+                        message=message.format(rule_id, error_message),
                     )
                 ]
 
