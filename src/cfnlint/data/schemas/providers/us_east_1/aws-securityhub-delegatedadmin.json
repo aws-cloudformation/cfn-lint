@@ -1,0 +1,70 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdminAccountId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:EnableOrganizationAdminAccount",
+    "organizations:DescribeOrganization",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:RegisterDelegatedAdministrator"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:DisableOrganizationAdminAccount",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListOrganizationAdminAccounts",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:ListOrganizationAdminAccounts",
+    "organizations:DescribeOrganization"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DelegatedAdminIdentifier"
+ ],
+ "properties": {
+  "AdminAccountId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "DelegatedAdminIdentifier": {
+   "pattern": "^[0-9]{12}/[a-zA-Z0-9-]{1,32}$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLE_IN_PROGRESS"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DelegatedAdminIdentifier",
+  "/properties/Status"
+ ],
+ "required": [
+  "AdminAccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::DelegatedAdmin"
+}

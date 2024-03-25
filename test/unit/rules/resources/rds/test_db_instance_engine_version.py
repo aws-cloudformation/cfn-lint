@@ -96,6 +96,4 @@ def validator():
 )
 def test_validate(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
-    for err in errs:
-        print(err.schema_path)
     assert errs == expected, f"Expected {expected} got {errs}"
