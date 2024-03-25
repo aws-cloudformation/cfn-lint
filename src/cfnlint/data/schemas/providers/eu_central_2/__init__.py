@@ -944,7 +944,6 @@ cached: List[str] = [
     "aws-accessanalyzer-analyzer.json",
     "aws-servicecatalog-cloudformationproduct.json",
     "aws-ec2-vpcendpointservice.json",
-    "aws-iam-managedpolicy.json",
     "aws-ec2-launchtemplate.json",
     "aws-cloudfront-originrequestpolicy.json",
     "aws-datasync-locationfsxontap.json",
