@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OrganizationConformancePackName"
+ ],
+ "definitions": {
+  "AccountId": {
+   "type": "string"
+  },
+  "ConformancePackInputParameter": {
+   "properties": {
+    "ParameterName": {
+     "$ref": "#/definitions/ParameterName"
+    },
+    "ParameterValue": {
+     "$ref": "#/definitions/ParameterValue"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "ParameterName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ParameterValue": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/config/latest/developerguide/conformance-pack-organization-apis.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutOrganizationConformancePack",
+    "config:DescribeOrganizationConformancePackStatuses",
+    "config:GetOrganizationConformancePackDetailedStatus",
+    "config:DescribeOrganizationConformancePacks",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "organizations:ListDelegatedAdministrators",
+    "organizations:EnableAWSServiceAccess"
+   ],
+   "timeoutInMinutes": 706
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteOrganizationConformancePack",
+    "config:DescribeOrganizationConformancePackStatuses",
+    "config:GetOrganizationConformancePackDetailedStatus",
+    "organizations:ListDelegatedAdministrators"
+   ],
+   "timeoutInMinutes": 706
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeOrganizationConformancePacks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeOrganizationConformancePacks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutOrganizationConformancePack",
+    "config:DescribeOrganizationConformancePackStatuses",
+    "config:GetOrganizationConformancePackDetailedStatus",
+    "s3:GetObject",
+    "s3:GetBucketAcl",
+    "iam:CreateServiceLinkedRole",
+    "iam:PassRole",
+    "organizations:ListDelegatedAdministrators",
+    "organizations:EnableAWSServiceAccess"
+   ],
+   "timeoutInMinutes": 706
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OrganizationConformancePackName"
+ ],
+ "properties": {
+  "ConformancePackInputParameters": {
+   "items": {
+    "$ref": "#/definitions/ConformancePackInputParameter"
+   },
+   "maxItems": 60,
+   "minItems": 0,
+   "type": "array"
+  },
+  "DeliveryS3Bucket": {
+   "maxLength": 63,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DeliveryS3KeyPrefix": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExcludedAccounts": {
+   "items": {
+    "$ref": "#/definitions/AccountId"
+   },
+   "maxItems": 1000,
+   "minItems": 0,
+   "type": "array"
+  },
+  "OrganizationConformancePackName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][-a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "TemplateBody": {
+   "maxLength": 51200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateS3Uri": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "s3://.*",
+   "type": "string"
+  }
+ },
+ "required": [
+  "OrganizationConformancePackName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Config::OrganizationConformancePack",
+ "writeOnlyProperties": [
+  "/properties/TemplateBody",
+  "/properties/TemplateS3Uri"
+ ]
+}
