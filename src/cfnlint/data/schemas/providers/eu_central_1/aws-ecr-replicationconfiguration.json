@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Filter": {
+   "pattern": "^(?:[a-z0-9]+(?:[._-][a-z0-9]*)*/)*[a-z0-9]*(?:[._-][a-z0-9]*)*$",
+   "type": "string"
+  },
+  "FilterType": {
+   "enum": [
+    "PREFIX_MATCH"
+   ],
+   "type": "string"
+  },
+  "Region": {
+   "pattern": "[0-9a-z-]{2,25}",
+   "type": "string"
+  },
+  "RegistryId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/ReplicationRule"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "ReplicationDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "Region": {
+     "$ref": "#/definitions/Region"
+    },
+    "RegistryId": {
+     "$ref": "#/definitions/RegistryId"
+    }
+   },
+   "required": [
+    "Region",
+    "RegistryId"
+   ],
+   "type": "object"
+  },
+  "ReplicationRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/ReplicationDestination"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RepositoryFilters": {
+     "items": {
+      "$ref": "#/definitions/RepositoryFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Destinations"
+   ],
+   "type": "object"
+  },
+  "RepositoryFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "$ref": "#/definitions/Filter"
+    },
+    "FilterType": {
+     "$ref": "#/definitions/FilterType"
+    }
+   },
+   "required": [
+    "Filter",
+    "FilterType"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:DescribeRegistry"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:DescribeRegistry"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RegistryId"
+ ],
+ "properties": {
+  "RegistryId": {
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RegistryId"
+ ],
+ "required": [
+  "ReplicationConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ECR::ReplicationConfiguration"
+}

@@ -33,6 +33,62 @@
    },
    "type": "object"
   },
+  "ManifestConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "TRANSFER"
+     ],
+     "type": "string"
+    },
+    "Format": {
+     "enum": [
+      "CSV"
+     ],
+     "type": "string"
+    },
+    "Source": {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/ManifestConfigSourceS3"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Source"
+   ],
+   "type": "object"
+  },
+  "ManifestConfigSourceS3": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "ManifestObjectPath": {
+     "maxLength": 1024,
+     "pattern": "^[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\\p{C}]*$",
+     "type": "string"
+    },
+    "ManifestObjectVersionId": {
+     "maxLength": 100,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "maxLength": 156,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Options": {
    "additionalProperties": false,
    "properties": {
@@ -187,25 +243,7 @@
      "additionalProperties": false,
      "properties": {
       "S3": {
-       "additionalProperties": false,
-       "properties": {
-        "BucketAccessRoleArn": {
-         "maxLength": 2048,
-         "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
-         "type": "string"
-        },
-        "S3BucketArn": {
-         "maxLength": 156,
-         "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
-         "type": "string"
-        },
-        "Subdirectory": {
-         "maxLength": 4096,
-         "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
-         "type": "string"
-        }
-       },
-       "type": "object"
+       "$ref": "#/definitions/TaskReportConfigDestinationS3"
       }
      },
      "type": "object"
@@ -296,6 +334,27 @@
    ],
    "type": "object"
   },
+  "TaskReportConfigDestinationS3": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "maxLength": 156,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    },
+    "Subdirectory": {
+     "maxLength": 4096,
+     "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "TaskSchedule": {
    "additionalProperties": false,
    "properties": {
@@ -320,6 +379,8 @@
     "datasync:TagResource",
     "s3:ListAllMyBuckets",
     "s3:ListBucket",
+    "s3:GetObject",
+    "s3:GetObjectVersion",
     "ec2:DescribeNetworkInterfaces",
     "ec2:CreateNetworkInterface",
     "ec2:DeleteNetworkInterface",
@@ -405,6 +466,9 @@
    "maxItems": 1,
    "minItems": 0,
    "type": "array"
+  },
+  "ManifestConfig": {
+   "$ref": "#/definitions/ManifestConfig"
   },
   "Name": {
    "maxLength": 256,

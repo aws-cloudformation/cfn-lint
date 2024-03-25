@@ -8,9 +8,25 @@
   "/properties/ConfigurationProfileId",
   "/properties/Tags",
   "/properties/EnvironmentId",
-  "/properties/Description"
+  "/properties/Description",
+  "/properties/DynamicExtensionParameters"
  ],
  "definitions": {
+  "DynamicExtensionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ExtensionReference": {
+     "type": "string"
+    },
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Tags": {
    "additionalProperties": false,
    "properties": {
@@ -42,6 +58,13 @@
   },
   "Description": {
    "type": "string"
+  },
+  "DynamicExtensionParameters": {
+   "items": {
+    "$ref": "#/definitions/DynamicExtensionParameters"
+   },
+   "type": "array",
+   "uniqueItems": false
   },
   "EnvironmentId": {
    "type": "string"
