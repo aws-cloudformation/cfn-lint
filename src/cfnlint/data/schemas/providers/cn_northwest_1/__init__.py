@@ -1136,7 +1136,6 @@ cached: List[str] = [
     "aws-servicecatalog-cloudformationproduct.json",
     "aws-s3-storagelens.json",
     "aws-ec2-vpcendpointservice.json",
-    "aws-iam-managedpolicy.json",
     "aws-ec2-launchtemplate.json",
     "aws-elasticbeanstalk-environment.json",
     "aws-wafregional-sqlinjectionmatchset.json",
