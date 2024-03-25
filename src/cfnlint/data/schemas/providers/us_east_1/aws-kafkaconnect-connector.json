@@ -1,4 +1,9 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectorName"
+  ]
+ ],
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/ConnectorConfiguration",
@@ -278,6 +283,25 @@
    ],
    "type": "object"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
   "Vpc": {
    "additionalProperties": false,
    "properties": {
@@ -345,6 +369,8 @@
    "permissions": [
     "kafkaconnect:CreateConnector",
     "kafkaconnect:DescribeConnector",
+    "kafkaconnect:TagResource",
+    "kafkaconnect:ListTagsForResource",
     "iam:CreateServiceLinkedRole",
     "iam:PassRole",
     "ec2:CreateNetworkInterface",
@@ -378,13 +404,17 @@
   },
   "read": {
    "permissions": [
-    "kafkaconnect:DescribeConnector"
+    "kafkaconnect:DescribeConnector",
+    "kafkaconnect:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
     "kafkaconnect:UpdateConnector",
     "kafkaconnect:DescribeConnector",
+    "kafkaconnect:TagResource",
+    "kafkaconnect:ListTagsForResource",
+    "kafkaconnect:UntagResource",
     "iam:CreateServiceLinkedRole",
     "logs:UpdateLogDelivery",
     "logs:GetLogDelivery",
@@ -455,6 +485,14 @@
    "pattern": "arn:(aws|aws-us-gov|aws-cn):iam:.*",
    "type": "string"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "WorkerConfiguration": {
    "$ref": "#/definitions/WorkerConfiguration"
   }
@@ -475,6 +513,12 @@
   "ServiceExecutionRoleArn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kafkaconnect.git",
- "taggable": false,
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::KafkaConnect::Connector"
 }
