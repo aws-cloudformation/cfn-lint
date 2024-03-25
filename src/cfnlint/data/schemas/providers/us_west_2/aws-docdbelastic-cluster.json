@@ -1,0 +1,209 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdminUserName",
+  "/properties/AuthType",
+  "/properties/ClusterName",
+  "/properties/KmsKeyId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "docdb-elastic:CreateCluster",
+    "docdb-elastic:TagResource",
+    "docdb-elastic:GetCluster",
+    "docdb-elastic:ListTagsForResource",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeAvailabilityZones",
+    "secretsmanager:ListSecrets",
+    "secretsmanager:ListSecretVersionIds",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:GetResourcePolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "docdb-elastic:DeleteCluster",
+    "docdb-elastic:GetCluster",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeAvailabilityZones"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "docdb-elastic:ListClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "docdb-elastic:GetCluster",
+    "docdb-elastic:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "docdb-elastic:UpdateCluster",
+    "docdb-elastic:TagResource",
+    "docdb-elastic:UntagResource",
+    "docdb-elastic:GetCluster",
+    "docdb-elastic:ListTagsForResource",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeAvailabilityZones",
+    "secretsmanager:ListSecrets",
+    "secretsmanager:ListSecretVersionIds",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:GetResourcePolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "AdminUserName": {
+   "type": "string"
+  },
+  "AdminUserPassword": {
+   "type": "string"
+  },
+  "AuthType": {
+   "type": "string"
+  },
+  "BackupRetentionPeriod": {
+   "type": "integer"
+  },
+  "ClusterArn": {
+   "type": "string"
+  },
+  "ClusterEndpoint": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "[a-zA-z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ShardCapacity": {
+   "type": "integer"
+  },
+  "ShardCount": {
+   "type": "integer"
+  },
+  "ShardInstanceCount": {
+   "type": "integer"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/ClusterEndpoint"
+ ],
+ "required": [
+  "ClusterName",
+  "AdminUserName",
+  "ShardCapacity",
+  "ShardCount",
+  "AuthType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-docdbelastic/",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DocDBElastic::Cluster",
+ "writeOnlyProperties": [
+  "/properties/AdminUserPassword"
+ ]
+}
