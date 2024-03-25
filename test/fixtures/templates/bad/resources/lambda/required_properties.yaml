@@ -9,7 +9,7 @@ Resources:
       Code:
         S3Bucket: my-bucket
         S3Key: function.zip
-#      Runtime: nodejs16.x
+#      Runtime: nodejs20.x
   Function2:
     Type: AWS::Lambda::Function
     Properties:
@@ -27,6 +27,6 @@ Resources:
       Role: arn:aws:iam::123456789012:role/lambda-role
       Code:
         ZipFile: |
-          var aws = require('aws-sdk')
+          import {LambdaClient} from '@aws-sdk/client-lambda';
           exports.handler = function(event, context) {}
-#      Runtime: nodejs16.x
+#      Runtime: nodejs20.x
