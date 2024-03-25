@@ -19,6 +19,10 @@
   "S3BucketName": {
    "maxLength": 63,
    "minLength": 3,
+   "relationshipRef": {
+    "propertyPath": "/properties/BucketName",
+    "typeName": "AWS::S3::Bucket"
+   },
    "type": "string"
   },
   "S3KeyPrefix": {
@@ -54,6 +58,14 @@
     },
     "Values": {
      "items": {
+      "anyOf": [
+       {
+        "relationshipRef": {
+         "propertyPath": "/properties/Id",
+         "typeName": "AWS::EC2::Instance"
+        }
+       }
+      ],
       "type": "string"
      },
      "maxItems": 50,
