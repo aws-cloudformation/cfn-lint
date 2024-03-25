@@ -1,0 +1,142 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/RepositoryLinkId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/OwnerId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codestar-connections:CreateRepositoryLink",
+    "codestar-connections:TagResource",
+    "codestar-connections:UseConnection",
+    "codestar-connections:PassConnection",
+    "codestar-connections:GetConnection",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codestar-connections:GetRepositoryLink",
+    "codestar-connections:DeleteRepositoryLink",
+    "codestar-connections:GetConnection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codestar-connections:ListRepositoryLinks",
+    "codestar-connections:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codestar-connections:GetRepositoryLink",
+    "codestar-connections:ListTagsForResource",
+    "codestar-connections:GetConnection"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codestar-connections:GetConnection",
+    "codestar-connections:ListTagsForResource",
+    "codestar-connections:PassConnection",
+    "codestar-connections:UseConnection",
+    "codestar-connections:TagResource",
+    "codestar-connections:UntagResource",
+    "codestar-connections:UpdateRepositoryLink"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryLinkArn"
+ ],
+ "properties": {
+  "ConnectionArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "OwnerId": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ProviderType": {
+   "enum": [
+    "GitHub",
+    "Bitbucket",
+    "GitHubEnterprise",
+    "GitLab",
+    "GitLabSelfManaged"
+   ],
+   "type": "string"
+  },
+  "RepositoryLinkArn": {
+   "pattern": "arn:(aws|aws-us-gov|aws-cn):.+:.+:[0-9]{12}:.+",
+   "type": "string"
+  },
+  "RepositoryLinkId": {
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "RepositoryName": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RepositoryLinkArn",
+  "/properties/RepositoryLinkId",
+  "/properties/ProviderType"
+ ],
+ "required": [
+  "RepositoryName",
+  "ConnectionArn",
+  "OwnerId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeStarConnections::RepositoryLink"
+}
