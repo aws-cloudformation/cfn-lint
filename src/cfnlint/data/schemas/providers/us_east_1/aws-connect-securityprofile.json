@@ -5,6 +5,35 @@
   "/properties/InstanceArn"
  ],
  "definitions": {
+  "Application": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationPermissions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ApplicationPermission"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Namespace": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplicationPermissions",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "ApplicationPermission": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
   "Permission": {
    "maxLength": 128,
    "minLength": 1,
@@ -68,6 +97,7 @@
   "read": {
    "permissions": [
     "connect:DescribeSecurityProfile",
+    "connect:ListSecurityProfileApplications",
     "connect:ListSecurityProfilePermissions"
    ]
   },
@@ -83,6 +113,12 @@
   "/properties/SecurityProfileArn"
  ],
  "properties": {
+  "AllowedAccessControlHierarchyGroupId": {
+   "maxLength": 127,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
   "AllowedAccessControlTags": {
    "insertionOrder": false,
    "items": {
@@ -92,14 +128,39 @@
    "type": "array",
    "uniqueItems": true
   },
+  "Applications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Application"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
   "Description": {
    "maxLength": 250,
    "minLength": 0,
    "type": "string"
   },
+  "HierarchyRestrictedResources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceName"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
   "InstanceArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
    "type": "string"
+  },
+  "LastModifiedRegion": {
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "number"
   },
   "Permissions": {
    "insertionOrder": false,
@@ -140,7 +201,9 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/SecurityProfileArn"
+  "/properties/SecurityProfileArn",
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
  ],
  "required": [
   "InstanceArn",
