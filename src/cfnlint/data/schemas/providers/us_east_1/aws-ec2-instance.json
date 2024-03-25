@@ -1,24 +1,39 @@
 {
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AdditionalInfo",
+  "/properties/Affinity",
+  "/properties/EbsOptimized",
+  "/properties/HostId",
+  "/properties/InstanceType",
+  "/properties/KernelId",
+  "/properties/PrivateDnsNameOptions",
+  "/properties/RamdiskId",
+  "/properties/SecurityGroupIds",
+  "/properties/Tenancy",
+  "/properties/UserData",
+  "/properties/BlockDeviceMappings"
+ ],
  "createOnlyProperties": [
-  "/properties/ElasticGpuSpecifications",
-  "/properties/Ipv6Addresses",
-  "/properties/PlacementGroupName",
-  "/properties/HostResourceGroupArn",
-  "/properties/ImageId",
+  "/properties/AvailabilityZone",
   "/properties/CpuOptions",
-  "/properties/PrivateIpAddress",
+  "/properties/ElasticGpuSpecifications",
   "/properties/ElasticInferenceAccelerators",
   "/properties/EnclaveOptions",
   "/properties/HibernationOptions",
+  "/properties/HostResourceGroupArn",
+  "/properties/ImageId",
+  "/properties/Ipv6AddressCount",
+  "/properties/Ipv6Addresses",
   "/properties/KeyName",
+  "/properties/LaunchTemplate",
   "/properties/LicenseSpecifications",
   "/properties/NetworkInterfaces",
-  "/properties/AvailabilityZone",
-  "/properties/SubnetId",
-  "/properties/LaunchTemplate",
+  "/properties/PlacementGroupName",
+  "/properties/PrivateIpAddress",
   "/properties/SecurityGroups",
-  "/properties/Ipv6AddressCount"
+  "/properties/SubnetId"
  ],
  "definitions": {
   "AssociationParameter": {
@@ -28,6 +43,7 @@
      "type": "string"
     },
     "Value": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -51,7 +67,8 @@
      "$ref": "#/definitions/Ebs"
     },
     "NoDevice": {
-     "$ref": "#/definitions/NoDevice"
+     "additionalProperties": false,
+     "type": "object"
     },
     "VirtualName": {
      "type": "string"
@@ -65,27 +82,6 @@
     "Ebs",
     "NoDevice"
    ],
-   "type": "object"
-  },
-  "CpuOptions": {
-   "additionalProperties": false,
-   "properties": {
-    "CoreCount": {
-     "type": "integer"
-    },
-    "ThreadsPerCore": {
-     "type": "integer"
-    }
-   },
-   "type": "object"
-  },
-  "CreditSpecification": {
-   "additionalProperties": false,
-   "properties": {
-    "CPUCredits": {
-     "type": "string"
-    }
-   },
    "type": "object"
   },
   "Ebs": {
@@ -131,6 +127,7 @@
    "additionalProperties": false,
    "properties": {
     "Count": {
+     "minimum": 0,
      "type": "integer"
     },
     "Type": {
@@ -140,24 +137,6 @@
    "required": [
     "Type"
    ],
-   "type": "object"
-  },
-  "EnclaveOptions": {
-   "additionalProperties": false,
-   "properties": {
-    "Enabled": {
-     "type": "boolean"
-    }
-   },
-   "type": "object"
-  },
-  "HibernationOptions": {
-   "additionalProperties": false,
-   "properties": {
-    "Configured": {
-     "type": "boolean"
-    }
-   },
    "type": "object"
   },
   "InstanceIpv6Address": {
@@ -174,6 +153,20 @@
   },
   "LaunchTemplateSpecification": {
    "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "LaunchTemplateName",
+      "Version"
+     ]
+    },
+    {
+     "required": [
+      "LaunchTemplateId",
+      "Version"
+     ]
+    }
+   ],
    "properties": {
     "LaunchTemplateId": {
      "type": "string"
@@ -185,9 +178,6 @@
      "type": "string"
     }
    },
-   "required": [
-    "Version"
-   ],
    "type": "object"
   },
   "LicenseSpecification": {
@@ -221,6 +211,7 @@
      "type": "string"
     },
     "GroupSet": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -231,6 +222,7 @@
      "type": "integer"
     },
     "Ipv6Addresses": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/InstanceIpv6Address"
      },
@@ -244,6 +236,7 @@
      "type": "string"
     },
     "PrivateIpAddresses": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/PrivateIpAddressSpecification"
      },
@@ -262,10 +255,6 @@
    ],
    "type": "object"
   },
-  "NoDevice": {
-   "additionalProperties": false,
-   "type": "object"
-  },
   "PrivateDnsNameOptions": {
    "additionalProperties": false,
    "properties": {
@@ -276,6 +265,10 @@
      "type": "boolean"
     },
     "HostnameType": {
+     "enum": [
+      "ip-name",
+      "resource-name"
+     ],
      "type": "string"
     }
    },
@@ -301,6 +294,7 @@
    "additionalProperties": false,
    "properties": {
     "AssociationParameters": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/AssociationParameter"
      },
@@ -357,8 +351,116 @@
    "NetworkInterfaces"
   ]
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "ec2:ModifyPrivateDnsNameOptions",
+    "ec2:DescribeElasticGpus",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeVolumes",
+    "ec2:RunInstances",
+    "ec2:AssociateIamInstanceProfile",
+    "ec2:DescribeIamInstanceProfileAssociations",
+    "ec2:DescribeInstances",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeKeyPairs",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstanceCreditSpecifications",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DescribeLaunchTemplateVersions",
+    "ec2:DetachVolume",
+    "ec2:DisassociateIamInstanceProfile",
+    "ec2:ModifyInstanceAttribute",
+    "ec2:ModifyInstanceCreditSpecification",
+    "ec2:ModifyInstancePlacement",
+    "ec2:MonitorInstances",
+    "ec2:AttachVolume",
+    "ec2:CreateTags",
+    "ec2:ReplaceIamInstanceProfileAssociation",
+    "ec2:StartInstances",
+    "elastic-inference:DescribeAccelerators",
+    "ssm:CreateAssociation",
+    "ssm:DescribeAssociation",
+    "ssm:ListAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeInstances",
+    "ec2:TerminateInstances",
+    "ec2:DescribeElasticGpus",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeVolumes",
+    "ec2:DescribeInstances",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstanceCreditSpecifications",
+    "ec2:DescribeLaunchTemplates",
+    "elastic-inference:DescribeAccelerators",
+    "ssm:DescribeAssociation",
+    "ssm:ListAssociations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeInstances"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeElasticGpus",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeVolumes",
+    "ec2:DescribeInstances",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstanceCreditSpecifications",
+    "ec2:DescribeLaunchTemplates",
+    "elastic-inference:DescribeAccelerators",
+    "ssm:DescribeAssociation",
+    "ssm:ListAssociations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeElasticGpus",
+    "ec2:ModifyPrivateDnsNameOptions",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:AssociateIamInstanceProfile",
+    "ec2:DescribeIamInstanceProfileAssociations",
+    "ec2:DescribeInstances",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeKeyPairs",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeInstanceAttribute",
+    "ec2:DescribeInstanceCreditSpecifications",
+    "ec2:DescribeLaunchTemplates",
+    "ec2:DetachVolume",
+    "ec2:DisassociateIamInstanceProfile",
+    "ec2:ModifyInstanceAttribute",
+    "ec2:ModifyInstanceCreditSpecification",
+    "ec2:ModifyInstanceMaintenanceOptions",
+    "ec2:ModifyInstancePlacement",
+    "ec2:MonitorInstances",
+    "ec2:AttachVolume",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:ReplaceIamInstanceProfileAssociation",
+    "ec2:StartInstances",
+    "ec2:StopInstances",
+    "ec2:UnmonitorInstances",
+    "elastic-inference:DescribeAccelerators",
+    "ssm:CreateAssociation",
+    "ssm:DeleteAssociation",
+    "ssm:DescribeAssociation",
+    "ssm:ListAssociations"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/InstanceId"
  ],
  "properties": {
   "AdditionalInfo": {
@@ -378,6 +480,7 @@
    "type": "string"
   },
   "BlockDeviceMappings": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/BlockDeviceMapping"
    },
@@ -385,10 +488,25 @@
    "uniqueItems": false
   },
   "CpuOptions": {
-   "$ref": "#/definitions/CpuOptions"
+   "additionalProperties": false,
+   "properties": {
+    "CoreCount": {
+     "type": "integer"
+    },
+    "ThreadsPerCore": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
   },
   "CreditSpecification": {
-   "$ref": "#/definitions/CreditSpecification"
+   "additionalProperties": false,
+   "properties": {
+    "CPUCredits": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "DisableApiTermination": {
    "type": "boolean"
@@ -397,24 +515,39 @@
    "type": "boolean"
   },
   "ElasticGpuSpecifications": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/ElasticGpuSpecification"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "ElasticInferenceAccelerators": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/ElasticInferenceAccelerator"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "EnclaveOptions": {
-   "$ref": "#/definitions/EnclaveOptions"
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
   },
   "HibernationOptions": {
-   "$ref": "#/definitions/HibernationOptions"
+   "additionalProperties": false,
+   "properties": {
+    "Configured": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
   },
   "HostId": {
    "type": "string"
@@ -425,10 +558,10 @@
   "IamInstanceProfile": {
    "type": "string"
   },
-  "Id": {
+  "ImageId": {
    "type": "string"
   },
-  "ImageId": {
+  "InstanceId": {
    "type": "string"
   },
   "InstanceInitiatedShutdownBehavior": {
@@ -444,6 +577,7 @@
    "type": "integer"
   },
   "Ipv6Addresses": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/InstanceIpv6Address"
    },
@@ -457,19 +591,22 @@
    "type": "string"
   },
   "LaunchTemplate": {
-   "$ref": "#/definitions/LaunchTemplateSpecification"
+   "$ref": "#/definitions/LaunchTemplateSpecification",
+   "type": "object"
   },
   "LicenseSpecifications": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/LicenseSpecification"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": false
   },
   "Monitoring": {
    "type": "boolean"
   },
   "NetworkInterfaces": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/NetworkInterface"
    },
@@ -483,7 +620,8 @@
    "type": "string"
   },
   "PrivateDnsNameOptions": {
-   "$ref": "#/definitions/PrivateDnsNameOptions"
+   "$ref": "#/definitions/PrivateDnsNameOptions",
+   "type": "object"
   },
   "PrivateIp": {
    "type": "string"
@@ -504,6 +642,7 @@
    "type": "string"
   },
   "SecurityGroupIds": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -511,6 +650,7 @@
    "uniqueItems": false
   },
   "SecurityGroups": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -521,6 +661,7 @@
    "type": "boolean"
   },
   "SsmAssociations": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/SsmAssociation"
    },
@@ -531,6 +672,7 @@
    "type": "string"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -549,23 +691,45 @@
    "type": "string"
   },
   "Volumes": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Volume"
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "VpcId": {
+   "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/PublicIp",
-  "/properties/Id",
+  "/properties/InstanceId",
+  "/properties/PrivateIp",
   "/properties/PublicDnsName",
+  "/properties/PublicIp",
   "/properties/PrivateDnsName",
-  "/properties/PrivateIp"
+  "/properties/VpcId"
  ],
  "requiredXor": [
   "ImageId",
   "LaunchTemplate"
  ],
- "typeName": "AWS::EC2::Instance"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::Instance",
+ "writeOnlyProperties": [
+  "/properties/BlockDeviceMappings/*/NoDevice",
+  "/properties/BlockDeviceMappings/*/VirtualName",
+  "/properties/LicenseSpecifications",
+  "/properties/AdditionalInfo",
+  "/properties/Ipv6AddressCount",
+  "/properties/Ipv6Addresses",
+  "/properties/PropagateTagsToVolumeOnCreation"
+ ]
 }

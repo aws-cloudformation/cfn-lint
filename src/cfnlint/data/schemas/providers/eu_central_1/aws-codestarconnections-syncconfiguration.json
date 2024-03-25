@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SyncType",
+  "/properties/ResourceName"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codestar-connections:CreateSyncConfiguration",
+    "codestar-connections:PassRepository",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codestar-connections:DeleteSyncConfiguration",
+    "codestar-connections:GetSyncConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codestar-connections:ListSyncConfigurations",
+    "codestar-connections:ListRepositoryLinks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codestar-connections:GetSyncConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codestar-connections:UpdateSyncConfiguration",
+    "codestar-connections:PassRepository",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceName",
+  "/properties/SyncType"
+ ],
+ "properties": {
+  "Branch": {
+   "type": "string"
+  },
+  "ConfigFile": {
+   "type": "string"
+  },
+  "OwnerId": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ProviderType": {
+   "enum": [
+    "GitHub",
+    "Bitbucket",
+    "GitHubEnterprise",
+    "GitLab",
+    "GitLabSelfManaged"
+   ],
+   "type": "string"
+  },
+  "PublishDeploymentStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "RepositoryLinkId": {
+   "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+   "type": "string"
+  },
+  "RepositoryName": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "ResourceName": {
+   "pattern": "[a-za-z0-9_\\.-]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "SyncType": {
+   "type": "string"
+  },
+  "TriggerResourceUpdateOn": {
+   "enum": [
+    "ANY_CHANGE",
+    "FILE_CHANGE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProviderType",
+  "/properties/OwnerId",
+  "/properties/RepositoryName"
+ ],
+ "required": [
+  "Branch",
+  "ConfigFile",
+  "RepositoryLinkId",
+  "ResourceName",
+  "SyncType",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CodeStarConnections::SyncConfiguration"
+}
