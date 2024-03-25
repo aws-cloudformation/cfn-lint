@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "StringList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Value"
+   },
+   "maxItems": 128,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Value": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreatePredefinedAttribute"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeletePredefinedAttribute"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListPredefinedAttributes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribePredefinedAttribute"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdatePredefinedAttribute"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedRegion": {
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Values": {
+   "additionalProperties": false,
+   "properties": {
+    "StringList": {
+     "$ref": "#/definitions/StringList"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "Values"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::PredefinedAttribute"
+}

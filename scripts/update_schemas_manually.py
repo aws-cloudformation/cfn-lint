@@ -1235,23 +1235,8 @@ patches.extend(
             resource_type="AWS::RDS::DBCluster",
             patches=[
                 Patch(
-                    values={"maximum": 35, "minimum": 1},
+                    values={"maximum": 35},
                     path="/properties/BackupRetentionPeriod",
-                ),
-                Patch(
-                    values={
-                        "dependentExcluded": {
-                            "SnapshotIdentifier": [
-                                "MasterUsername",
-                            ],
-                            "SourceDBClusterIdentifier": [
-                                "MasterUsername",
-                                "MasterUserPassword",
-                                "StorageEncrypted",
-                            ],
-                        },
-                    },
-                    path="/",
                 ),
             ],
         ),
@@ -1259,11 +1244,11 @@ patches.extend(
             resource_type="AWS::RDS::DBInstance",
             patches=[
                 Patch(
-                    values={"maximum": 15, "minimum": 0},
+                    values={"maximum": 15},
                     path="/properties/PromotionTier",
                 ),
                 Patch(
-                    values={"maximum": 35, "minimum": 1},
+                    values={"maximum": 35},
                     path="/properties/BackupRetentionPeriod",
                 ),
                 Patch(
