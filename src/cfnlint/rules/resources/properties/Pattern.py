@@ -9,7 +9,7 @@ from cfnlint.jsonschema._validators import pattern
 from cfnlint.rules import CloudFormationLintRule
 
 
-class AllowedPattern(CloudFormationLintRule):
+class Pattern(CloudFormationLintRule):
     """Check if properties have a valid value"""
 
     id = "E3031"
