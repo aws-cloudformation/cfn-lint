@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Dict
 
-from cfnlint.jsonschema import Validator
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
 
 
@@ -20,7 +20,6 @@ class FindInMap(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Fn::FindInMap", ("array",) + singular_types)
-        self.fn_findinmap = self.validate
 
     def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
         scalar_schema = {
@@ -45,6 +44,16 @@ class FindInMap(BaseFn):
         }
 
         if validator.context.transforms.has_language_extensions_transform():
+            scalar_schema["functions"] = [
+                "Fn::FindInMap",
+                "Fn::Join",
+                "Fn::Sub",
+                "Fn::If",
+                "Fn::Select",
+                "Fn::Length",
+                "Fn::ToJsonString",
+                "Ref",
+            ]
             schema["maxItems"] = 4
             schema["fn_items"] = [
                 scalar_schema,
@@ -65,3 +74,13 @@ class FindInMap(BaseFn):
             ]
 
         return schema
+
+    def fn_findinmap(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                resources={},
+            )
+        )
+        yield from super().validate(validator, s, instance, schema)
