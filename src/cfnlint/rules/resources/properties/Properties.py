@@ -28,9 +28,10 @@ class Properties(BaseJsonSchema):
         super().__init__()
         self.rule_set = {
             "additionalProperties": "E3002",
+            "anyOf": "E3017",
             "properties": "E3002",
-            "dependentExcluded": "E3023",
-            "dependentRequired": "E3024",
+            "dependentExcluded": "E3020",
+            "dependentRequired": "E3021",
             "required": "E3003",
             "requiredXor": "E3014",
             "requiredOr": "E3015",
@@ -46,9 +47,9 @@ class Properties(BaseJsonSchema):
             "maxItems": "E3032",
             "minItems": "E3032",
             "pattern": "E3031",
-            "oneOf": "E2523",
+            "oneOf": "E3018",
             "cfnLint": "E1101",
-            "tagging": "E3021",
+            "tagging": "E3024",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
