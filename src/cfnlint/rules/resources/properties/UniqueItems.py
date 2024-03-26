@@ -7,7 +7,7 @@ from cfnlint.jsonschema import ValidationError, _utils
 from cfnlint.rules import CloudFormationLintRule
 
 
-class ListDuplicates(CloudFormationLintRule):
+class UniqueItems(CloudFormationLintRule):
     """Check if duplicates exist in a List"""
 
     id = "E3037"
