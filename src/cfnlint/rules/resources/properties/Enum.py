@@ -7,7 +7,7 @@ from cfnlint.jsonschema._validators import enum
 from cfnlint.rules import CloudFormationLintRule
 
 
-class AllowedValue(CloudFormationLintRule):
+class Enum(CloudFormationLintRule):
     """Check if properties have a valid value"""
 
     id = "E3030"
