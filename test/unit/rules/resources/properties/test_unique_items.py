@@ -6,16 +6,14 @@ SPDX-License-Identifier: MIT-0
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.resources.properties.ListDuplicates import ListDuplicates
-from cfnlint.rules.resources.properties.ListDuplicatesAllowed import (
-    ListDuplicatesAllowed,
-)
+from cfnlint.rules.resources.properties.UniqueItems import UniqueItems
+from cfnlint.rules.resources.properties.UniqueItemsAllowed import UniqueItemsAllowed
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = ListDuplicates()
-    rule.child_rules["I3037"] = ListDuplicatesAllowed()
+    rule = UniqueItems()
+    rule.child_rules["I3037"] = UniqueItemsAllowed()
     yield rule
 
 

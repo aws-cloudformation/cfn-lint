@@ -9,14 +9,14 @@ import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.NumberSize import NumberSize as ParameterNumberSize
-from cfnlint.rules.resources.properties.NumberSize import NumberSize
+from cfnlint.rules.resources.properties.MinMax import MinMax
 
 
 @pytest.fixture
 def rule():
-    rule = NumberSize()
+    rule = MinMax()
     rule.child_rules["W3034"] = ParameterNumberSize()
-    yield NumberSize()
+    yield MinMax()
 
 
 @pytest.fixture(scope="module")
