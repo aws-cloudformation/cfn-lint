@@ -12,7 +12,7 @@ from cfnlint.rules import CloudFormationLintRule
 
 
 class Tagging(CloudFormationLintRule):
-    id = "E3021"
+    id = "E3024"
     shortdesc = "Validate tag configuration"
     description = (
         "Validates tag values to make sure they have unique keys "

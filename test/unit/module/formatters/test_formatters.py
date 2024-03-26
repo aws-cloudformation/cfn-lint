@@ -25,7 +25,7 @@ from cfnlint.formatters import (
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.functions.SubUnneeded import SubUnneeded
-from cfnlint.rules.resources.properties.ValuePrimitiveType import ValuePrimitiveType
+from cfnlint.rules.resources.properties.Type import Type
 from cfnlint.rules.resources.UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes import (
     UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes,
 )
@@ -81,7 +81,7 @@ class TestFormatters(BaseTestCase):
                 18,
                 27,
                 self.filename,
-                ValuePrimitiveType(),
+                Type(),
                 "'5' is not of type 'integer'",
             ),
         ]

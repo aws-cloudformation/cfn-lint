@@ -12,7 +12,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
 
-    id = "E3020"
+    id = "E3023"
     shortdesc = "Validate Route53 RecordSets"
     description = "Check if all RecordSets are correctly configured"
     source_url = "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html"

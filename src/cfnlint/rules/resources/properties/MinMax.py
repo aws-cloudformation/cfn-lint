@@ -12,7 +12,7 @@ from cfnlint.jsonschema._validators import (
 from cfnlint.rules import CloudFormationLintRule
 
 
-class NumberSize(CloudFormationLintRule):
+class MinMax(CloudFormationLintRule):
     """Check if a Number has a length within the limit"""
 
     id = "E3034"

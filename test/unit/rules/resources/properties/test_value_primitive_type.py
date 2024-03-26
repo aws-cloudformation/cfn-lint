@@ -8,15 +8,15 @@ from test.unit.rules import BaseRuleTestCase
 from cfnlint.jsonschema import CfnTemplateValidator
 
 # ruff: noqa: E501
-from cfnlint.rules.resources.properties.ValuePrimitiveType import ValuePrimitiveType
+from cfnlint.rules.resources.properties.Type import Type
 
 
-class TestValuePrimtiveType(BaseRuleTestCase):
+class TestType(BaseRuleTestCase):
     """Test Primitive Value Types for Json Schema non strict"""
 
     def setUp(self):
         """Setup"""
-        self.rule = ValuePrimitiveType()
+        self.rule = Type()
         self.rule.config["strict"] = False
         self.validator = CfnTemplateValidator()
 

@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules import CloudFormationLintRule
 
 
-class ListDuplicatesAllowed(CloudFormationLintRule):
+class UniqueItemsAllowed(CloudFormationLintRule):
     """Check if duplicates exist in a List"""
 
     id = "I3037"

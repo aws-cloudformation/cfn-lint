@@ -8,12 +8,12 @@ import datetime
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.resources.properties.StringSize import StringSize
+from cfnlint.rules.resources.properties.MinMaxLength import MinMaxLength
 
 
 @pytest.fixture(scope="module")
 def rule():
-    yield StringSize()
+    yield MinMaxLength()
 
 
 @pytest.fixture(scope="module")

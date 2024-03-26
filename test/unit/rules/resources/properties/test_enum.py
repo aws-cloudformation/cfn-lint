@@ -9,14 +9,14 @@ import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
-from cfnlint.rules.resources.properties.AllowedValue import AllowedValue
+from cfnlint.rules.resources.properties.Enum import Enum
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = AllowedValue()
+    rule = Enum()
     rule.child_rules["W2030"] = ParameterAllowedValue()
-    yield AllowedValue()
+    yield Enum()
 
 
 @pytest.fixture(scope="module")
@@ -24,7 +24,7 @@ def validator():
     yield CfnTemplateValidator(schema={})
 
 
-def test_allowed_value(rule, validator):
+def test_validate(rule, validator):
     assert len(list(rule.enum(validator, ["foo", "bar"], "foo", {}))) == 0
     assert len(list(rule.enum(validator, ["foo"], "bar", {}))) == 1
 
