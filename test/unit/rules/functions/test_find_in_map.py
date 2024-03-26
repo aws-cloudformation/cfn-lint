@@ -4,11 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 
 from collections import deque
+from unittest.mock import MagicMock
 
 import pytest
 
 from cfnlint.context import create_context_for_template
-from cfnlint.context.context import Transforms
+from cfnlint.context.context import Resource, Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.FindInMap import FindInMap
 from cfnlint.template import Template
@@ -24,7 +25,10 @@ def rule():
 def cfn():
     return Template(
         "",
-        {"Resources": {}, "Mappings": {"A": {"B": {"C": "Value"}}}},
+        {
+            "Resources": {"MyResource": Resource({"Type": "AWS::SSM::Parameter"})},
+            "Mappings": {"A": {"B": {"C": "Value"}}},
+        },
         regions=["us-east-1"],
     )
 
@@ -35,7 +39,7 @@ def context(cfn):
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,context_evolve,expected",
+    "name,instance,schema,context_evolve,ref_mock_values,expected",
     [
         (
             "Valid Fn::FindInMap",
@@ -43,12 +47,14 @@ def context(cfn):
             {"type": "string"},
             {},
             [],
+            [],
         ),
         (
             "Invalid Fn::FindInMap too long",
             {"Fn::FindInMap": ["foo", "bar", "key", "key2"]},
             {"type": "string"},
             {},
+            [],
             [
                 ValidationError(
                     "['foo', 'bar', 'key', 'key2'] is too long (3)",
@@ -63,6 +69,7 @@ def context(cfn):
             {"Fn::FindInMap": {"foo": "bar"}},
             {"type": "string"},
             {},
+            [],
             [
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array'",
@@ -77,6 +84,7 @@ def context(cfn):
             {"Fn::FindInMap": [{"Fn::GetAtt": "MyResource.Arn"}, "foo", "bar"]},
             {"type": "string"},
             {},
+            [],
             [
                 ValidationError(
                     "{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'string'",
@@ -92,12 +100,14 @@ def context(cfn):
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [],
+            [],
         ),
         (
             "Invalid Fn::FindInMap options not of type object",
             {"Fn::FindInMap": ["A", "B", "C", []]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
             [
                 ValidationError(
                     "[] is not of type 'object'",
@@ -112,6 +122,7 @@ def context(cfn):
             {"Fn::FindInMap": ["A", "B", "C", {}]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
             [
                 ValidationError(
                     "'DefaultValue' is a required property",
@@ -121,10 +132,40 @@ def context(cfn):
                 ),
             ],
         ),
+        (
+            "Invalid Fn::FindInMap with a Ref to a resource",
+            {"Fn::FindInMap": ["A", {"Ref": "MyResource"}, "C"]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [ValidationError("Foo")],
+            [
+                ValidationError(
+                    "Foo",
+                    path=deque(["Fn::FindInMap", 1]),
+                    schema_path=deque(["fn_items", "ref"]),
+                    validator="ref",
+                ),
+            ],
+        ),
     ],
 )
-def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
+def test_validate(
+    name,
+    instance,
+    schema,
+    ref_mock_values,
+    context_evolve,
+    expected,
+    rule,
+    context,
+    cfn,
+):
     context = context.evolve(**context_evolve)
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    ref_mock = MagicMock()
+    ref_mock.return_value = iter(ref_mock_values)
+    validator = CfnTemplateValidator({}).extend(validators={"ref": ref_mock})(
+        context=context, cfn=cfn
+    )
     errs = list(rule.fn_findinmap(validator, schema, instance, {}))
+    assert ref_mock.call_count == len(ref_mock_values)
     assert errs == expected, f"Test {name!r} got {errs!r}"
