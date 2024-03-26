@@ -11,12 +11,12 @@ from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.AllowedPattern import (
     AllowedPattern as ParameterAllowedPattern,
 )
-from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern
+from cfnlint.rules.resources.properties.Pattern import Pattern
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = AllowedPattern()
+    rule = Pattern()
     rule.child_rules["W2031"] = ParameterAllowedPattern()
     yield rule
 
@@ -26,7 +26,7 @@ def validator():
     yield CfnTemplateValidator(schema={})
 
 
-def test_allowed_pattern(rule, validator):
+def test_validate(rule, validator):
     assert len(list(rule.pattern(validator, ".*", "foo", {}))) == 0
     assert len(list(rule.pattern(validator, "foo", "bar", {}))) == 1
 
@@ -53,7 +53,7 @@ def test_allowed_pattern(rule, validator):
     assert len(errs) == 0
 
 
-def test_allowed_pattern_exceptions(rule, validator):
+def test_pattern_exceptions(rule, validator):
     rule.configure({"exceptions": ["AWS::"]})
 
     assert len(list(rule.pattern(validator, "foo", "Another AWS::Instance", {}))) == 1
