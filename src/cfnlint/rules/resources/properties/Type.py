@@ -8,7 +8,7 @@ from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.rules import CloudFormationLintRule
 
 
-class ValuePrimitiveType(CloudFormationLintRule):
+class Type(CloudFormationLintRule):
     """Check if Resource PrimitiveTypes are correct"""
 
     id = "E3012"

@@ -9,7 +9,7 @@ from cfnlint.rules import CloudFormationLintRule
 class DependentExcluded(CloudFormationLintRule):
     """Check Required Resource Configuration"""
 
-    id = "E3024"
+    id = "E3021"
     shortdesc = (
         "Validate that when a property is specified that "
         "other properties should be included"
