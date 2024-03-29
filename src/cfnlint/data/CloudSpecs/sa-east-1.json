@@ -2398,6 +2398,9 @@
   "AWS::KafkaConnect::Connector.Vpc": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerLogDelivery": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginFileDescription": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginLocation": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.S3Location": "CACHED",
   "AWS::Kinesis::Stream.StreamEncryption": "CACHED",
   "AWS::Kinesis::Stream.StreamModeDetails": "CACHED",
   "AWS::KinesisAnalytics::Application.CSVMappingParameters": "CACHED",
@@ -5285,14 +5288,6 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate": "CACHED",
-  "AWS::SecurityHub::Insight.AwsSecurityFindingFilters": "CACHED",
-  "AWS::SecurityHub::Insight.BooleanFilter": "CACHED",
-  "AWS::SecurityHub::Insight.DateFilter": "CACHED",
-  "AWS::SecurityHub::Insight.DateRange": "CACHED",
-  "AWS::SecurityHub::Insight.IpFilter": "CACHED",
-  "AWS::SecurityHub::Insight.MapFilter": "CACHED",
-  "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
-  "AWS::SecurityHub::Insight.StringFilter": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
@@ -5532,7 +5527,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "166.0.0",
+ "ResourceSpecificationVersion": "167.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5854,7 +5849,94 @@
   "AWS::DocDB::DBInstance": "CACHED",
   "AWS::DocDB::DBSubnetGroup": "CACHED",
   "AWS::DocDB::EventSubscription": "CACHED",
-  "AWS::DocDBElastic::Cluster": "CACHED",
+  "AWS::DocDBElastic::Cluster": {
+   "Attributes": {
+    "ClusterArn": {
+     "PrimitiveType": "String"
+    },
+    "ClusterEndpoint": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html",
+   "Properties": {
+    "AdminUserName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-adminusername",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "AdminUserPassword": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-adminuserpassword",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AuthType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-authtype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ClusterName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-clustername",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DocDBElastic::Cluster.ClusterName"
+     }
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PreferredMaintenanceWindow": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-preferredmaintenancewindow",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ShardCapacity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-shardcapacity",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ShardCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-shardcount",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcSecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-vpcsecuritygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::DynamoDB::GlobalTable": "CACHED",
   "AWS::DynamoDB::Table": "CACHED",
   "AWS::EC2::CapacityReservation": "CACHED",
@@ -6490,6 +6572,8 @@
   "AWS::KMS::Key": "CACHED",
   "AWS::KMS::ReplicaKey": "CACHED",
   "AWS::KafkaConnect::Connector": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration": "CACHED",
   "AWS::Kinesis::Stream": "CACHED",
   "AWS::Kinesis::StreamConsumer": "CACHED",
   "AWS::KinesisAnalytics::Application": "CACHED",
@@ -7343,10 +7427,7 @@
   "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::AutomationRule": "CACHED",
-  "AWS::SecurityHub::DelegatedAdmin": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
-  "AWS::SecurityHub::Insight": "CACHED",
-  "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
@@ -8975,6 +9056,11 @@
   "AWS::KafkaConnect::Connector.ScaleOutPolicy.CpuUtilizationPercentage": "CACHED",
   "AWS::KafkaConnect::Connector.ServiceExecutionRoleArn": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration.WorkerConfigurationArn": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.ContentType": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Description": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Name": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Description": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Name": "CACHED",
   "AWS::Kinesis::Stream.Name": "CACHED",
   "AWS::Kinesis::Stream.RetentionPeriodHours": "CACHED",
   "AWS::Kinesis::Stream.ShardCount": "CACHED",
@@ -12341,15 +12427,7 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate.Label": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate.Status": "CACHED",
-  "AWS::SecurityHub::DelegatedAdmin.AdminAccountId": "CACHED",
   "AWS::SecurityHub::Hub.ControlFindingGenerator": "CACHED",
-  "AWS::SecurityHub::Insight.DateFilter.End": "CACHED",
-  "AWS::SecurityHub::Insight.DateFilter.Start": "CACHED",
-  "AWS::SecurityHub::Insight.DateRange.Unit": "CACHED",
-  "AWS::SecurityHub::Insight.MapFilter.Comparison": "CACHED",
-  "AWS::SecurityHub::Insight.Name": "CACHED",
-  "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
-  "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",

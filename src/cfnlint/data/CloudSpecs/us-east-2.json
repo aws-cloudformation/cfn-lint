@@ -777,10 +777,60 @@
   "AWS::CleanRooms::ConfiguredTable.AggregationConstraint": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.AnalysisRule": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.AnalysisRuleAggregation": "CACHED",
-  "AWS::CleanRooms::ConfiguredTable.AnalysisRuleCustom": "CACHED",
+  "AWS::CleanRooms::ConfiguredTable.AnalysisRuleCustom": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-analysisrulecustom.html",
+   "Properties": {
+    "AllowedAnalyses": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-analysisrulecustom.html#cfn-cleanrooms-configuredtable-analysisrulecustom-allowedanalyses",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "AllowedAnalysisProviders": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-analysisrulecustom.html#cfn-cleanrooms-configuredtable-analysisrulecustom-allowedanalysisproviders",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "DifferentialPrivacy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-analysisrulecustom.html#cfn-cleanrooms-configuredtable-analysisrulecustom-differentialprivacy",
+     "Required": false,
+     "Type": "DifferentialPrivacy",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::CleanRooms::ConfiguredTable.AnalysisRuleList": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.ConfiguredTableAnalysisRulePolicy": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.ConfiguredTableAnalysisRulePolicyV1": "CACHED",
+  "AWS::CleanRooms::ConfiguredTable.DifferentialPrivacy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-differentialprivacy.html",
+   "Properties": {
+    "Columns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-differentialprivacy.html#cfn-cleanrooms-configuredtable-differentialprivacy-columns",
+     "DuplicatesAllowed": true,
+     "ItemType": "DifferentialPrivacyColumn",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::CleanRooms::ConfiguredTable.DifferentialPrivacyColumn": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-differentialprivacycolumn.html",
+   "Properties": {
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cleanrooms-configuredtable-differentialprivacycolumn.html#cfn-cleanrooms-configuredtable-differentialprivacycolumn-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::CleanRooms::ConfiguredTable.GlueTableReference": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.TableReference": "CACHED",
   "AWS::CleanRooms::Membership.MembershipPaymentConfiguration": "CACHED",
@@ -2846,57 +2896,9 @@
   "AWS::KafkaConnect::Connector.Vpc": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerLogDelivery": "CACHED",
-  "AWS::KafkaConnect::CustomPlugin.CustomPluginFileDescription": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-custompluginfiledescription.html",
-   "Properties": {
-    "FileMd5": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-custompluginfiledescription.html#cfn-kafkaconnect-customplugin-custompluginfiledescription-filemd5",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "FileSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-custompluginfiledescription.html#cfn-kafkaconnect-customplugin-custompluginfiledescription-filesize",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::KafkaConnect::CustomPlugin.CustomPluginLocation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-custompluginlocation.html",
-   "Properties": {
-    "S3Location": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-custompluginlocation.html#cfn-kafkaconnect-customplugin-custompluginlocation-s3location",
-     "Required": true,
-     "Type": "S3Location",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
-  "AWS::KafkaConnect::CustomPlugin.S3Location": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-s3location.html",
-   "Properties": {
-    "BucketArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-s3location.html#cfn-kafkaconnect-customplugin-s3location-bucketarn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "FileKey": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-s3location.html#cfn-kafkaconnect-customplugin-s3location-filekey",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "ObjectVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kafkaconnect-customplugin-s3location.html#cfn-kafkaconnect-customplugin-s3location-objectversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginFileDescription": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginLocation": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.S3Location": "CACHED",
   "AWS::Kendra::DataSource.AccessControlListConfiguration": "CACHED",
   "AWS::Kendra::DataSource.AclConfiguration": "CACHED",
   "AWS::Kendra::DataSource.ColumnConfiguration": "CACHED",
@@ -6165,7 +6167,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "166.0.0",
+ "ResourceSpecificationVersion": "167.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7343,99 +7345,8 @@
   "AWS::KMS::Key": "CACHED",
   "AWS::KMS::ReplicaKey": "CACHED",
   "AWS::KafkaConnect::Connector": "CACHED",
-  "AWS::KafkaConnect::CustomPlugin": {
-   "Attributes": {
-    "CustomPluginArn": {
-     "PrimitiveType": "String"
-    },
-    "FileDescription": {
-     "Type": "CustomPluginFileDescription"
-    },
-    "FileDescription.FileMd5": {
-     "PrimitiveType": "String"
-    },
-    "FileDescription.FileSize": {
-     "PrimitiveType": "Integer"
-    },
-    "Revision": {
-     "PrimitiveType": "Integer"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html",
-   "Properties": {
-    "ContentType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html#cfn-kafkaconnect-customplugin-contenttype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html#cfn-kafkaconnect-customplugin-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Location": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html#cfn-kafkaconnect-customplugin-location",
-     "Required": true,
-     "Type": "CustomPluginLocation",
-     "UpdateType": "Immutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html#cfn-kafkaconnect-customplugin-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-customplugin.html#cfn-kafkaconnect-customplugin-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::KafkaConnect::WorkerConfiguration": {
-   "Attributes": {
-    "Revision": {
-     "PrimitiveType": "Integer"
-    },
-    "WorkerConfigurationArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-workerconfiguration.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-workerconfiguration.html#cfn-kafkaconnect-workerconfiguration-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-workerconfiguration.html#cfn-kafkaconnect-workerconfiguration-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "PropertiesFileContent": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-workerconfiguration.html#cfn-kafkaconnect-workerconfiguration-propertiesfilecontent",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-workerconfiguration.html#cfn-kafkaconnect-workerconfiguration-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::KafkaConnect::CustomPlugin": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration": "CACHED",
   "AWS::Kendra::DataSource": "CACHED",
   "AWS::Kendra::Faq": "CACHED",
   "AWS::Kendra::Index": "CACHED",
@@ -9173,6 +9084,7 @@
   "AWS::EntityResolution::IdMappingWorkflow.IdMappingTechniques.IdMappingType": "CACHED",
   "AWS::EntityResolution::IdMappingWorkflow.IdMappingWorkflowInputSource.InputSourceARN": "CACHED",
   "AWS::EntityResolution::IdMappingWorkflow.IdMappingWorkflowInputSource.SchemaArn": "CACHED",
+  "AWS::EntityResolution::IdMappingWorkflow.IdMappingWorkflowInputSource.Type": "CACHED",
   "AWS::EntityResolution::IdMappingWorkflow.IdMappingWorkflowOutputSource.KMSArn": "CACHED",
   "AWS::EntityResolution::IdMappingWorkflow.IdMappingWorkflowOutputSource.OutputS3Path": "CACHED",
   "AWS::EntityResolution::IdMappingWorkflow.ProviderProperties.ProviderServiceArn": "CACHED",
@@ -9900,6 +9812,11 @@
   "AWS::KafkaConnect::Connector.ScaleOutPolicy.CpuUtilizationPercentage": "CACHED",
   "AWS::KafkaConnect::Connector.ServiceExecutionRoleArn": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration.WorkerConfigurationArn": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.ContentType": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Description": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Name": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Description": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Name": "CACHED",
   "AWS::Kendra::DataSource.AccessControlListConfiguration.KeyPath": "CACHED",
   "AWS::Kendra::DataSource.AclConfiguration.AllowedGroupsColumnName": "CACHED",
   "AWS::Kendra::DataSource.ColumnConfiguration.ChangeDetectingColumns": "CACHED",
