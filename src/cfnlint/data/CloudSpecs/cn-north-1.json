@@ -717,6 +717,8 @@
   "AWS::Config::ConfigRule.Scope": "CACHED",
   "AWS::Config::ConfigRule.Source": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail": "CACHED",
+  "AWS::Config::ConfigurationAggregator.AccountAggregationSource": "CACHED",
+  "AWS::Config::ConfigurationAggregator.OrganizationAggregationSource": "CACHED",
   "AWS::Config::ConfigurationRecorder.ExclusionByResourceTypes": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingGroup": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingMode": "CACHED",
@@ -834,11 +836,14 @@
   "AWS::DataSync::Task.Deleted": "CACHED",
   "AWS::DataSync::Task.Destination": "CACHED",
   "AWS::DataSync::Task.FilterRule": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3": "CACHED",
   "AWS::DataSync::Task.Options": "CACHED",
   "AWS::DataSync::Task.Overrides": "CACHED",
-  "AWS::DataSync::Task.S3": "CACHED",
   "AWS::DataSync::Task.Skipped": "CACHED",
+  "AWS::DataSync::Task.Source": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3": "CACHED",
   "AWS::DataSync::Task.TaskSchedule": "CACHED",
   "AWS::DataSync::Task.Transferred": "CACHED",
   "AWS::DataSync::Task.Verified": "CACHED",
@@ -878,6 +883,8 @@
   "AWS::DynamoDB::GlobalTable.ReplicaGlobalSecondaryIndexSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaSSESpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaSpecification": "CACHED",
+  "AWS::DynamoDB::GlobalTable.ReplicaStreamSpecification": "CACHED",
+  "AWS::DynamoDB::GlobalTable.ResourcePolicy": "CACHED",
   "AWS::DynamoDB::GlobalTable.SSESpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.StreamSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.TargetTrackingScalingPolicyConfiguration": "CACHED",
@@ -895,6 +902,7 @@
   "AWS::DynamoDB::Table.PointInTimeRecoverySpecification": "CACHED",
   "AWS::DynamoDB::Table.Projection": "CACHED",
   "AWS::DynamoDB::Table.ProvisionedThroughput": "CACHED",
+  "AWS::DynamoDB::Table.ResourcePolicy": "CACHED",
   "AWS::DynamoDB::Table.S3BucketSource": "CACHED",
   "AWS::DynamoDB::Table.SSESpecification": "CACHED",
   "AWS::DynamoDB::Table.StreamSpecification": "CACHED",
@@ -937,7 +945,6 @@
   "AWS::EC2::Instance.LaunchTemplateSpecification": "CACHED",
   "AWS::EC2::Instance.LicenseSpecification": "CACHED",
   "AWS::EC2::Instance.NetworkInterface": "CACHED",
-  "AWS::EC2::Instance.NoDevice": "CACHED",
   "AWS::EC2::Instance.PrivateDnsNameOptions": "CACHED",
   "AWS::EC2::Instance.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::Instance.SsmAssociation": "CACHED",
@@ -1805,6 +1812,7 @@
   "AWS::IoTSiteWise::Gateway.GatewayPlatform": "CACHED",
   "AWS::IoTSiteWise::Gateway.Greengrass": "CACHED",
   "AWS::IoTSiteWise::Gateway.GreengrassV2": "CACHED",
+  "AWS::IoTSiteWise::Gateway.SiemensIE": "CACHED",
   "AWS::IoTSiteWise::Portal.Alarms": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.CompositeComponentType": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.DataConnector": "CACHED",
@@ -3761,6 +3769,11 @@
     }
    }
   },
+  "AWS::RedshiftServerless::Workgroup.ConfigParameter": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Endpoint": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.NetworkInterface": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.VpcEndpoint": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup": "CACHED",
   "AWS::Rekognition::StreamProcessor.List": "CACHED",
   "AWS::ResourceGroups::Group.ConfigurationItem": "CACHED",
   "AWS::ResourceGroups::Group.ConfigurationParameter": "CACHED",
@@ -4312,6 +4325,9 @@
   "AWS::SageMaker::Pipeline.ParallelismConfiguration": "CACHED",
   "AWS::SageMaker::Pipeline.PipelineDefinition": "CACHED",
   "AWS::SageMaker::Pipeline.S3Location": "CACHED",
+  "AWS::SageMaker::Project.ProvisioningParameter": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisionedProductDetails": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisioningDetails": "CACHED",
   "AWS::SageMaker::UserProfile.CodeEditorAppSettings": "CACHED",
   "AWS::SageMaker::UserProfile.CodeRepository": "CACHED",
   "AWS::SageMaker::UserProfile.CustomFileSystemConfig": "CACHED",
@@ -4566,7 +4582,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "165.0.0",
+ "ResourceSpecificationVersion": "167.1.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -4757,10 +4773,12 @@
    }
   },
   "AWS::Config::ConfigRule": "CACHED",
+  "AWS::Config::ConfigurationAggregator": "CACHED",
   "AWS::Config::ConfigurationRecorder": "CACHED",
   "AWS::Config::DeliveryChannel": "CACHED",
   "AWS::Config::OrganizationConfigRule": "CACHED",
   "AWS::Config::RemediationConfiguration": "CACHED",
+  "AWS::Config::StoredQuery": "CACHED",
   "AWS::DAX::Cluster": {
    "Attributes": {
     "Arn": {
@@ -5014,137 +5032,7 @@
   "AWS::EC2::NatGateway": "CACHED",
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
-  "AWS::EC2::NetworkInterface": {
-   "Attributes": {
-    "Id": {
-     "PrimitiveType": "String"
-    },
-    "PrimaryIpv6Address": {
-     "PrimitiveType": "String"
-    },
-    "PrimaryPrivateIpAddress": {
-     "PrimitiveType": "String"
-    },
-    "SecondaryPrivateIpAddresses": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "VpcId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html",
-   "Properties": {
-    "ConnectionTrackingSpecification": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-connectiontrackingspecification",
-     "Required": false,
-     "Type": "ConnectionTrackingSpecification",
-     "UpdateType": "Conditional"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "GroupSet": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-groupset",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "InterfaceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-interfacetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Ipv4PrefixCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv4prefixcount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Ipv4Prefixes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv4prefixes",
-     "DuplicatesAllowed": true,
-     "ItemType": "Ipv4PrefixSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Ipv6AddressCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv6addresscount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Ipv6Addresses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv6addresses",
-     "DuplicatesAllowed": false,
-     "ItemType": "InstanceIpv6Address",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Ipv6PrefixCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv6prefixcount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Ipv6Prefixes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-ipv6prefixes",
-     "DuplicatesAllowed": true,
-     "ItemType": "Ipv6PrefixSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "PrivateIpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-privateipaddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PrivateIpAddresses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-privateipaddresses",
-     "DuplicatesAllowed": true,
-     "ItemType": "PrivateIpAddressSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Conditional"
-    },
-    "SecondaryPrivateIpAddressCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-secondaryprivateipaddresscount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SourceDestCheck": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-sourcedestcheck",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SubnetId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-subnetid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::NetworkInterface": "CACHED",
   "AWS::EC2::NetworkInterfaceAttachment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface-attachment.html",
    "Properties": {
@@ -5314,180 +5202,11 @@
   "AWS::EMR::InstanceGroupConfig": "CACHED",
   "AWS::EMR::SecurityConfiguration": "CACHED",
   "AWS::EMR::Step": "CACHED",
-  "AWS::EMR::Studio": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "StudioId": {
-     "PrimitiveType": "String"
-    },
-    "Url": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html",
-   "Properties": {
-    "AuthMode": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-authmode",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.AuthMode"
-     }
-    },
-    "DefaultS3Location": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-defaults3location",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.DefaultS3Location"
-     }
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.Description"
-     }
-    },
-    "EngineSecurityGroupId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-enginesecuritygroupid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.EngineSecurityGroupId"
-     }
-    },
-    "IdpAuthUrl": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idpauthurl",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.IdpAuthUrl"
-     }
-    },
-    "IdpRelayStateParameterName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idprelaystateparametername",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.IdpRelayStateParameterName"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.Name"
-     }
-    },
-    "ServiceRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-servicerole",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.ServiceRole"
-     }
-    },
-    "SubnetIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-subnetids",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.SubnetIds"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "UserRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-userrole",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.UserRole"
-     }
-    },
-    "VpcId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-vpcid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.VpcId"
-     }
-    },
-    "WorkspaceSecurityGroupId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-workspacesecuritygroupid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EMR::Studio.WorkspaceSecurityGroupId"
-     }
-    }
-   }
-  },
+  "AWS::EMR::Studio": "CACHED",
   "AWS::EMRServerless::Application": "CACHED",
   "AWS::ElastiCache::CacheCluster": "CACHED",
   "AWS::ElastiCache::GlobalReplicationGroup": "CACHED",
-  "AWS::ElastiCache::ParameterGroup": {
-   "Attributes": {
-    "CacheParameterGroupName": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-parametergroup.html",
-   "Properties": {
-    "CacheParameterGroupFamily": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-parametergroup.html#cfn-elasticache-parametergroup-cacheparametergroupfamily",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-parametergroup.html#cfn-elasticache-parametergroup-description",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Properties": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-parametergroup.html#cfn-elasticache-parametergroup-properties",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-parametergroup.html#cfn-elasticache-parametergroup-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ElastiCache::ParameterGroup": "CACHED",
   "AWS::ElastiCache::ReplicationGroup": "CACHED",
   "AWS::ElastiCache::SecurityGroup": "CACHED",
   "AWS::ElastiCache::SecurityGroupIngress": "CACHED",
@@ -5735,7 +5454,93 @@
   "AWS::GameLift::Script": "CACHED",
   "AWS::Glue::Classifier": "CACHED",
   "AWS::Glue::Connection": "CACHED",
-  "AWS::Glue::Crawler": "CACHED",
+  "AWS::Glue::Crawler": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html",
+   "Properties": {
+    "Classifiers": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-classifiers",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Configuration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-configuration",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "CrawlerSecurityConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-crawlersecurityconfiguration",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DatabaseName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-databasename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "RecrawlPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-recrawlpolicy",
+     "Required": false,
+     "Type": "RecrawlPolicy",
+     "UpdateType": "Mutable"
+    },
+    "Role": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-role",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::IAM::Role.NameOrArn"
+     }
+    },
+    "Schedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-schedule",
+     "Required": false,
+     "Type": "Schedule",
+     "UpdateType": "Mutable"
+    },
+    "SchemaChangePolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-schemachangepolicy",
+     "Required": false,
+     "Type": "SchemaChangePolicy",
+     "UpdateType": "Mutable"
+    },
+    "TablePrefix": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-tableprefix",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-tags",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Targets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-targets",
+     "Required": true,
+     "Type": "Targets",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::CustomEntityType": "CACHED",
   "AWS::Glue::DataCatalogEncryptionSettings": "CACHED",
   "AWS::Glue::DataQualityRuleset": "CACHED",
@@ -6299,6 +6104,7 @@
     }
    }
   },
+  "AWS::RedshiftServerless::Workgroup": "CACHED",
   "AWS::ResourceGroups::Group": "CACHED",
   "AWS::RolesAnywhere::CRL": "CACHED",
   "AWS::RolesAnywhere::Profile": "CACHED",
@@ -6506,6 +6312,7 @@
   "AWS::SageMaker::NotebookInstance": "CACHED",
   "AWS::SageMaker::NotebookInstanceLifecycleConfig": "CACHED",
   "AWS::SageMaker::Pipeline": "CACHED",
+  "AWS::SageMaker::Project": "CACHED",
   "AWS::SageMaker::UserProfile": "CACHED",
   "AWS::SageMaker::Workteam": "CACHED",
   "AWS::SecretsManager::ResourcePolicy": "CACHED",
@@ -6864,6 +6671,10 @@
   "AWS::Config::ConfigRule.Source.Owner": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.EventSource": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.MessageType": "CACHED",
+  "AWS::Config::ConfigurationAggregator.ConfigurationAggregatorName": "CACHED",
+  "AWS::Config::StoredQuery.QueryDescription": "CACHED",
+  "AWS::Config::StoredQuery.QueryExpression": "CACHED",
+  "AWS::Config::StoredQuery.QueryName": "CACHED",
   "AWS::DataBrew::Dataset.CsvOptions.Delimiter": "CACHED",
   "AWS::DataBrew::Dataset.DatasetParameter.Name": "CACHED",
   "AWS::DataBrew::Dataset.DatasetParameter.Type": "CACHED",
@@ -6996,6 +6807,12 @@
   "AWS::DataSync::Task.DestinationLocationArn": "CACHED",
   "AWS::DataSync::Task.FilterRule.FilterType": "CACHED",
   "AWS::DataSync::Task.FilterRule.Value": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig.Action": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig.Format": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.BucketAccessRoleArn": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.ManifestObjectPath": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.ManifestObjectVersionId": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.S3BucketArn": "CACHED",
   "AWS::DataSync::Task.Name": "CACHED",
   "AWS::DataSync::Task.Options.Atime": "CACHED",
   "AWS::DataSync::Task.Options.Gid": "CACHED",
@@ -7011,14 +6828,14 @@
   "AWS::DataSync::Task.Options.TransferMode": "CACHED",
   "AWS::DataSync::Task.Options.Uid": "CACHED",
   "AWS::DataSync::Task.Options.VerifyMode": "CACHED",
-  "AWS::DataSync::Task.S3.BucketAccessRoleArn": "CACHED",
-  "AWS::DataSync::Task.S3.S3BucketArn": "CACHED",
-  "AWS::DataSync::Task.S3.Subdirectory": "CACHED",
   "AWS::DataSync::Task.Skipped.ReportLevel": "CACHED",
   "AWS::DataSync::Task.SourceLocationArn": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.ObjectVersionIds": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.OutputType": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.ReportLevel": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.BucketAccessRoleArn": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.S3BucketArn": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.Subdirectory": "CACHED",
   "AWS::DataSync::Task.TaskSchedule.ScheduleExpression": "CACHED",
   "AWS::DataSync::Task.Transferred.ReportLevel": "CACHED",
   "AWS::DataSync::Task.Verified.ReportLevel": "CACHED",
@@ -7066,6 +6883,7 @@
   "AWS::EC2::FlowLog.ResourceType": "CACHED",
   "AWS::EC2::FlowLog.TrafficType": "CACHED",
   "AWS::EC2::Instance.Affinity": "CACHED",
+  "AWS::EC2::Instance.PrivateDnsNameOptions.HostnameType": "CACHED",
   "AWS::EC2::KeyPair.KeyFormat": "CACHED",
   "AWS::EC2::KeyPair.KeyType": "CACHED",
   "AWS::EC2::LaunchTemplate.CpuOptions.AmdSevSnp": "CACHED",
@@ -7131,6 +6949,7 @@
   "AWS::EFS::AccessPoint.AccessPointTag.Value": "CACHED",
   "AWS::EFS::AccessPoint.CreationInfo.Permissions": "CACHED",
   "AWS::EFS::AccessPoint.RootDirectory.Path": "CACHED",
+  "AWS::EFS::FileSystem.BackupPolicy.Status": "CACHED",
   "AWS::EFS::FileSystem.FileSystemProtection.ReplicationOverwriteProtection": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope.Type": "CACHED",
   "AWS::EKS::Addon.ResolveConflicts": "CACHED",
@@ -7148,7 +6967,10 @@
   "AWS::EMR::Studio.AuthMode": "CACHED",
   "AWS::EMR::Studio.DefaultS3Location": "CACHED",
   "AWS::EMR::Studio.Description": "CACHED",
+  "AWS::EMR::Studio.EncryptionKeyArn": "CACHED",
   "AWS::EMR::Studio.EngineSecurityGroupId": "CACHED",
+  "AWS::EMR::Studio.IdcInstanceArn": "CACHED",
+  "AWS::EMR::Studio.IdcUserAssignment": "CACHED",
   "AWS::EMR::Studio.IdpAuthUrl": "CACHED",
   "AWS::EMR::Studio.IdpRelayStateParameterName": "CACHED",
   "AWS::EMR::Studio.Name": "CACHED",
@@ -9992,6 +9814,17 @@
   "AWS::Redshift::Cluster.MasterUserPassword": "CACHED",
   "AWS::Redshift::Cluster.MasterUsername": "CACHED",
   "AWS::Redshift::Cluster.NumberOfNodes": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.ConfigParameter.ParameterKey": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.ConfigParameter.ParameterValue": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.NamespaceName": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.SecurityGroupIds": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.SubnetIds": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup.NamespaceName": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup.SecurityGroupIds": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup.Status": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup.SubnetIds": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.Workgroup.WorkgroupName": "CACHED",
+  "AWS::RedshiftServerless::Workgroup.WorkgroupName": "CACHED",
   "AWS::ResourceGroups::Group.Description": "CACHED",
   "AWS::ResourceGroups::Group.Name": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery.Type": "CACHED",
@@ -10419,6 +10252,14 @@
   "AWS::SageMaker::Pipeline.PipelineDisplayName": "CACHED",
   "AWS::SageMaker::Pipeline.PipelineName": "CACHED",
   "AWS::SageMaker::Pipeline.RoleArn": "CACHED",
+  "AWS::SageMaker::Project.ProjectDescription": "CACHED",
+  "AWS::SageMaker::Project.ProjectName": "CACHED",
+  "AWS::SageMaker::Project.ProvisioningParameter.Key": "CACHED",
+  "AWS::SageMaker::Project.ProvisioningParameter.Value": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisionedProductDetails.ProvisionedProductId": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisioningDetails.PathId": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisioningDetails.ProductId": "CACHED",
+  "AWS::SageMaker::Project.ServiceCatalogProvisioningDetails.ProvisioningArtifactId": "CACHED",
   "AWS::SageMaker::UserProfile.CodeEditorAppSettings.LifecycleConfigArns": "CACHED",
   "AWS::SageMaker::UserProfile.CodeRepository.RepositoryUrl": "CACHED",
   "AWS::SageMaker::UserProfile.CustomImage.AppImageConfigName": "CACHED",

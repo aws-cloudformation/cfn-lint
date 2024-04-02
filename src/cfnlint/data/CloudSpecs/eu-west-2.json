@@ -166,6 +166,11 @@
   "AWS::ACMPCA::CertificateAuthority.OtherName": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.RevocationConfiguration": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.Subject": "CACHED",
+  "AWS::APS::Scraper.AmpConfiguration": "CACHED",
+  "AWS::APS::Scraper.Destination": "CACHED",
+  "AWS::APS::Scraper.EksConfiguration": "CACHED",
+  "AWS::APS::Scraper.ScrapeConfiguration": "CACHED",
+  "AWS::APS::Scraper.Source": "CACHED",
   "AWS::APS::Workspace.LoggingConfiguration": "CACHED",
   "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition": "CACHED",
   "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.PracticeRunConfiguration": "CACHED",
@@ -368,6 +373,8 @@
   "AWS::AppFlow::Flow.VeevaSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.ZendeskDestinationProperties": "CACHED",
   "AWS::AppFlow::Flow.ZendeskSourceProperties": "CACHED",
+  "AWS::AppIntegrations::Application.ApplicationSourceConfig": "CACHED",
+  "AWS::AppIntegrations::Application.ExternalUrlConfig": "CACHED",
   "AWS::AppIntegrations::DataIntegration.FileConfiguration": "CACHED",
   "AWS::AppIntegrations::DataIntegration.ScheduleConfig": "CACHED",
   "AWS::AppIntegrations::EventIntegration.EventFilter": "CACHED",
@@ -744,6 +751,7 @@
   "AWS::Batch::JobDefinition.Volumes": "CACHED",
   "AWS::Batch::JobDefinition.VolumesHost": "CACHED",
   "AWS::Batch::JobQueue.ComputeEnvironmentOrder": "CACHED",
+  "AWS::Batch::JobQueue.JobStateTimeLimitAction": "CACHED",
   "AWS::Batch::SchedulingPolicy.FairsharePolicy": "CACHED",
   "AWS::Batch::SchedulingPolicy.ShareAttributes": "CACHED",
   "AWS::Budgets::Budget.AutoAdjustData": "CACHED",
@@ -792,6 +800,8 @@
   "AWS::CleanRooms::ConfiguredTable.AnalysisRuleList": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.ConfiguredTableAnalysisRulePolicy": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.ConfiguredTableAnalysisRulePolicyV1": "CACHED",
+  "AWS::CleanRooms::ConfiguredTable.DifferentialPrivacy": "CACHED",
+  "AWS::CleanRooms::ConfiguredTable.DifferentialPrivacyColumn": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.GlueTableReference": "CACHED",
   "AWS::CleanRooms::ConfiguredTable.TableReference": "CACHED",
   "AWS::CleanRooms::Membership.MembershipPaymentConfiguration": "CACHED",
@@ -910,6 +920,9 @@
   "AWS::CloudWatch::MetricStream.MetricStreamFilter": "CACHED",
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsConfiguration": "CACHED",
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.OriginConfiguration": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.RestrictionType": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.Restrictions": "CACHED",
   "AWS::CodeBuild::Project.Artifacts": "CACHED",
   "AWS::CodeBuild::Project.BatchRestrictions": "CACHED",
   "AWS::CodeBuild::Project.BuildStatusConfig": "CACHED",
@@ -1117,6 +1130,7 @@
   "AWS::Connect::Rule.SendNotificationAction": "CACHED",
   "AWS::Connect::Rule.TaskAction": "CACHED",
   "AWS::Connect::Rule.UpdateCaseAction": "CACHED",
+  "AWS::Connect::SecurityProfile.Application": "CACHED",
   "AWS::Connect::TaskTemplate.Constraints": "CACHED",
   "AWS::Connect::TaskTemplate.DefaultFieldValue": "CACHED",
   "AWS::Connect::TaskTemplate.Field": "CACHED",
@@ -1286,11 +1300,14 @@
   "AWS::DataSync::Task.Deleted": "CACHED",
   "AWS::DataSync::Task.Destination": "CACHED",
   "AWS::DataSync::Task.FilterRule": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3": "CACHED",
   "AWS::DataSync::Task.Options": "CACHED",
   "AWS::DataSync::Task.Overrides": "CACHED",
-  "AWS::DataSync::Task.S3": "CACHED",
   "AWS::DataSync::Task.Skipped": "CACHED",
+  "AWS::DataSync::Task.Source": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3": "CACHED",
   "AWS::DataSync::Task.TaskSchedule": "CACHED",
   "AWS::DataSync::Task.Transferred": "CACHED",
   "AWS::DataSync::Task.Verified": "CACHED",
@@ -1352,7 +1369,75 @@
   "AWS::DynamoDB::GlobalTable.ReadProvisionedThroughputSettings": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaGlobalSecondaryIndexSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaSSESpecification": "CACHED",
-  "AWS::DynamoDB::GlobalTable.ReplicaSpecification": "CACHED",
+  "AWS::DynamoDB::GlobalTable.ReplicaSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html",
+   "Properties": {
+    "ContributorInsightsSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-contributorinsightsspecification",
+     "Required": false,
+     "Type": "ContributorInsightsSpecification",
+     "UpdateType": "Mutable"
+    },
+    "DeletionProtectionEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-deletionprotectionenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "GlobalSecondaryIndexes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-globalsecondaryindexes",
+     "DuplicatesAllowed": false,
+     "ItemType": "ReplicaGlobalSecondaryIndexSpecification",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "KinesisStreamSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-kinesisstreamspecification",
+     "Required": false,
+     "Type": "KinesisStreamSpecification",
+     "UpdateType": "Mutable"
+    },
+    "PointInTimeRecoverySpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-pointintimerecoveryspecification",
+     "Required": false,
+     "Type": "PointInTimeRecoverySpecification",
+     "UpdateType": "Mutable"
+    },
+    "ReadProvisionedThroughputSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-readprovisionedthroughputsettings",
+     "Required": false,
+     "Type": "ReadProvisionedThroughputSettings",
+     "UpdateType": "Mutable"
+    },
+    "Region": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-region",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SSESpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-ssespecification",
+     "Required": false,
+     "Type": "ReplicaSSESpecification",
+     "UpdateType": "Mutable"
+    },
+    "TableClass": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-tableclass",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::DynamoDB::GlobalTable.SSESpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.StreamSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.TargetTrackingScalingPolicyConfiguration": "CACHED",
@@ -1372,7 +1457,20 @@
   "AWS::DynamoDB::Table.ProvisionedThroughput": "CACHED",
   "AWS::DynamoDB::Table.S3BucketSource": "CACHED",
   "AWS::DynamoDB::Table.SSESpecification": "CACHED",
-  "AWS::DynamoDB::Table.StreamSpecification": "CACHED",
+  "AWS::DynamoDB::Table.StreamSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-table-streamspecification.html",
+   "Properties": {
+    "StreamViewType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-table-streamspecification.html#cfn-dynamodb-table-streamspecification-streamviewtype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DynamoDB::Table.StreamSpecification.StreamViewType"
+     }
+    }
+   }
+  },
   "AWS::DynamoDB::Table.TimeToLiveSpecification": "CACHED",
   "AWS::EC2::CapacityReservation.TagSpecification": "CACHED",
   "AWS::EC2::CapacityReservationFleet.InstanceTypeSpecification": "CACHED",
@@ -1424,7 +1522,6 @@
   "AWS::EC2::Instance.LaunchTemplateSpecification": "CACHED",
   "AWS::EC2::Instance.LicenseSpecification": "CACHED",
   "AWS::EC2::Instance.NetworkInterface": "CACHED",
-  "AWS::EC2::Instance.NoDevice": "CACHED",
   "AWS::EC2::Instance.PrivateDnsNameOptions": "CACHED",
   "AWS::EC2::Instance.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::Instance.SsmAssociation": "CACHED",
@@ -1958,6 +2055,7 @@
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.IcebergTarget": "CACHED",
   "AWS::Glue::Crawler.JdbcTarget": "CACHED",
+  "AWS::Glue::Crawler.LakeFormationConfiguration": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
   "AWS::Glue::Crawler.RecrawlPolicy": "CACHED",
   "AWS::Glue::Crawler.S3Target": "CACHED",
@@ -2324,6 +2422,9 @@
   "AWS::KafkaConnect::Connector.Vpc": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerLogDelivery": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginFileDescription": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.CustomPluginLocation": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.S3Location": "CACHED",
   "AWS::Kendra::DataSource.AccessControlListConfiguration": "CACHED",
   "AWS::Kendra::DataSource.AclConfiguration": "CACHED",
   "AWS::Kendra::DataSource.ColumnConfiguration": "CACHED",
@@ -4986,6 +5087,7 @@
   "AWS::ResilienceHub::App.PhysicalResourceId": "CACHED",
   "AWS::ResilienceHub::App.ResourceMapping": "CACHED",
   "AWS::ResilienceHub::ResiliencyPolicy.FailurePolicy": "CACHED",
+  "AWS::ResilienceHub::ResiliencyPolicy.PolicyMap": "CACHED",
   "AWS::ResourceExplorer2::View.IncludedProperty": "CACHED",
   "AWS::ResourceExplorer2::View.SearchFilter": "CACHED",
   "AWS::ResourceGroups::Group.ConfigurationItem": "CACHED",
@@ -5517,6 +5619,11 @@
   "AWS::SecurityHub::AutomationRule.StringFilter": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
+  "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
+  "AWS::SecurityLake::DataLake.Expiration": "CACHED",
+  "AWS::SecurityLake::DataLake.LifecycleConfiguration": "CACHED",
+  "AWS::SecurityLake::DataLake.ReplicationConfiguration": "CACHED",
+  "AWS::SecurityLake::DataLake.Transitions": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -5786,13 +5893,14 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "165.0.0",
+ "ResourceSpecificationVersion": "167.1.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
   "AWS::ACMPCA::CertificateAuthorityActivation": "CACHED",
   "AWS::ACMPCA::Permission": "CACHED",
   "AWS::APS::RuleGroupsNamespace": "CACHED",
+  "AWS::APS::Scraper": "CACHED",
   "AWS::APS::Workspace": "CACHED",
   "AWS::ARCZonalShift::ZonalAutoshiftConfiguration": "CACHED",
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
@@ -5848,6 +5956,7 @@
   "AWS::AppFlow::Connector": "CACHED",
   "AWS::AppFlow::ConnectorProfile": "CACHED",
   "AWS::AppFlow::Flow": "CACHED",
+  "AWS::AppIntegrations::Application": "CACHED",
   "AWS::AppIntegrations::DataIntegration": "CACHED",
   "AWS::AppIntegrations::EventIntegration": "CACHED",
   "AWS::AppMesh::GatewayRoute": "CACHED",
@@ -6002,64 +6111,7 @@
   "AWS::BackupGateway::Hypervisor": "CACHED",
   "AWS::Batch::ComputeEnvironment": "CACHED",
   "AWS::Batch::JobDefinition": "CACHED",
-  "AWS::Batch::JobQueue": {
-   "Attributes": {
-    "JobQueueArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html",
-   "Properties": {
-    "ComputeEnvironmentOrder": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-computeenvironmentorder",
-     "DuplicatesAllowed": true,
-     "ItemType": "ComputeEnvironmentOrder",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "JobQueueName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-jobqueuename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Batch::JobQueue.JobQueueName"
-     }
-    },
-    "Priority": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-priority",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "SchedulingPolicyArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-schedulingpolicyarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Batch::JobQueue.SchedulingPolicyArn"
-     }
-    },
-    "State": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-state",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Batch::JobQueue.State"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-tags",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::Batch::JobQueue": "CACHED",
   "AWS::Batch::SchedulingPolicy": "CACHED",
   "AWS::Budgets::Budget": "CACHED",
   "AWS::Budgets::BudgetsAction": "CACHED",
@@ -6120,6 +6172,7 @@
   "AWS::CloudWatch::InsightRule": "CACHED",
   "AWS::CloudWatch::MetricStream": "CACHED",
   "AWS::CodeArtifact::Domain": "CACHED",
+  "AWS::CodeArtifact::PackageGroup": "CACHED",
   "AWS::CodeArtifact::Repository": "CACHED",
   "AWS::CodeBuild::Project": "CACHED",
   "AWS::CodeBuild::ReportGroup": "CACHED",
@@ -6311,9 +6364,223 @@
   "AWS::DocDB::DBInstance": "CACHED",
   "AWS::DocDB::DBSubnetGroup": "CACHED",
   "AWS::DocDB::EventSubscription": "CACHED",
-  "AWS::DocDBElastic::Cluster": "CACHED",
+  "AWS::DocDBElastic::Cluster": {
+   "Attributes": {
+    "ClusterArn": {
+     "PrimitiveType": "String"
+    },
+    "ClusterEndpoint": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html",
+   "Properties": {
+    "AdminUserName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-adminusername",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "AdminUserPassword": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-adminuserpassword",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AuthType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-authtype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ClusterName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-clustername",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DocDBElastic::Cluster.ClusterName"
+     }
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PreferredMaintenanceWindow": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-preferredmaintenancewindow",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ShardCapacity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-shardcapacity",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ShardCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-shardcount",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcSecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-docdbelastic-cluster.html#cfn-docdbelastic-cluster-vpcsecuritygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::DynamoDB::GlobalTable": "CACHED",
-  "AWS::DynamoDB::Table": "CACHED",
+  "AWS::DynamoDB::Table": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "StreamArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html",
+   "Properties": {
+    "AttributeDefinitions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-attributedefinitions",
+     "DuplicatesAllowed": false,
+     "ItemType": "AttributeDefinition",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "BillingMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-billingmode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DynamoDB::Table.BillingMode"
+     }
+    },
+    "ContributorInsightsSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-contributorinsightsspecification",
+     "Required": false,
+     "Type": "ContributorInsightsSpecification",
+     "UpdateType": "Mutable"
+    },
+    "DeletionProtectionEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-deletionprotectionenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "GlobalSecondaryIndexes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-globalsecondaryindexes",
+     "DuplicatesAllowed": true,
+     "ItemType": "GlobalSecondaryIndex",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ImportSourceSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-importsourcespecification",
+     "Required": false,
+     "Type": "ImportSourceSpecification",
+     "UpdateType": "Immutable"
+    },
+    "KeySchema": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-keyschema",
+     "DuplicatesAllowed": false,
+     "ItemType": "KeySchema",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "KinesisStreamSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-kinesisstreamspecification",
+     "Required": false,
+     "Type": "KinesisStreamSpecification",
+     "UpdateType": "Mutable"
+    },
+    "LocalSecondaryIndexes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-localsecondaryindexes",
+     "DuplicatesAllowed": true,
+     "ItemType": "LocalSecondaryIndex",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PointInTimeRecoverySpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-pointintimerecoveryspecification",
+     "Required": false,
+     "Type": "PointInTimeRecoverySpecification",
+     "UpdateType": "Mutable"
+    },
+    "ProvisionedThroughput": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-provisionedthroughput",
+     "Required": false,
+     "Type": "ProvisionedThroughput",
+     "UpdateType": "Mutable"
+    },
+    "SSESpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-ssespecification",
+     "Required": false,
+     "Type": "SSESpecification",
+     "UpdateType": "Mutable"
+    },
+    "StreamSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-streamspecification",
+     "Required": false,
+     "Type": "StreamSpecification",
+     "UpdateType": "Mutable"
+    },
+    "TableClass": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tableclass",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "TableName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tablename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TimeToLiveSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-timetolivespecification",
+     "Required": false,
+     "Type": "TimeToLiveSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::CapacityReservation": "CACHED",
   "AWS::EC2::CapacityReservationFleet": "CACHED",
   "AWS::EC2::CarrierGateway": "CACHED",
@@ -6655,108 +6922,9 @@
   "AWS::KMS::Alias": "CACHED",
   "AWS::KMS::Key": "CACHED",
   "AWS::KMS::ReplicaKey": "CACHED",
-  "AWS::KafkaConnect::Connector": {
-   "Attributes": {
-    "ConnectorArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html",
-   "Properties": {
-    "Capacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-capacity",
-     "Required": true,
-     "Type": "Capacity",
-     "UpdateType": "Mutable"
-    },
-    "ConnectorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-connectorconfiguration",
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "Map",
-     "UpdateType": "Immutable"
-    },
-    "ConnectorDescription": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-connectordescription",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::KafkaConnect::Connector.ConnectorDescription"
-     }
-    },
-    "ConnectorName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-connectorname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::KafkaConnect::Connector.ConnectorName"
-     }
-    },
-    "KafkaCluster": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-kafkacluster",
-     "Required": true,
-     "Type": "KafkaCluster",
-     "UpdateType": "Immutable"
-    },
-    "KafkaClusterClientAuthentication": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-kafkaclusterclientauthentication",
-     "Required": true,
-     "Type": "KafkaClusterClientAuthentication",
-     "UpdateType": "Immutable"
-    },
-    "KafkaClusterEncryptionInTransit": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-kafkaclusterencryptionintransit",
-     "Required": true,
-     "Type": "KafkaClusterEncryptionInTransit",
-     "UpdateType": "Immutable"
-    },
-    "KafkaConnectVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-kafkaconnectversion",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "LogDelivery": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-logdelivery",
-     "Required": false,
-     "Type": "LogDelivery",
-     "UpdateType": "Immutable"
-    },
-    "Plugins": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-plugins",
-     "DuplicatesAllowed": false,
-     "ItemType": "Plugin",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "ServiceExecutionRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-serviceexecutionrolearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::KafkaConnect::Connector.ServiceExecutionRoleArn"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "WorkerConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kafkaconnect-connector.html#cfn-kafkaconnect-connector-workerconfiguration",
-     "Required": false,
-     "Type": "WorkerConfiguration",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::KafkaConnect::Connector": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration": "CACHED",
   "AWS::Kendra::DataSource": "CACHED",
   "AWS::Kendra::Faq": "CACHED",
   "AWS::Kendra::Index": "CACHED",
@@ -7356,6 +7524,7 @@
   "AWS::SecurityHub::AutomationRule": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
+  "AWS::SecurityLake::DataLake": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -7465,6 +7634,11 @@
  "ValueTypes": {
   "AWS::APS::RuleGroupsNamespace.Name": "CACHED",
   "AWS::APS::RuleGroupsNamespace.Workspace": "CACHED",
+  "AWS::APS::Scraper.Alias": "CACHED",
+  "AWS::APS::Scraper.AmpConfiguration.WorkspaceArn": "CACHED",
+  "AWS::APS::Scraper.EksConfiguration.ClusterArn": "CACHED",
+  "AWS::APS::Scraper.EksConfiguration.SecurityGroupIds": "CACHED",
+  "AWS::APS::Scraper.EksConfiguration.SubnetIds": "CACHED",
   "AWS::APS::Workspace.Alias": "CACHED",
   "AWS::APS::Workspace.KmsKeyArn": "CACHED",
   "AWS::APS::Workspace.LoggingConfiguration.LogGroupArn": "CACHED",
@@ -7764,6 +7938,11 @@
   "AWS::AppFlow::Flow.ZendeskDestinationProperties.Object": "CACHED",
   "AWS::AppFlow::Flow.ZendeskDestinationProperties.WriteOperationType": "CACHED",
   "AWS::AppFlow::Flow.ZendeskSourceProperties.Object": "CACHED",
+  "AWS::AppIntegrations::Application.Description": "CACHED",
+  "AWS::AppIntegrations::Application.ExternalUrlConfig.AccessUrl": "CACHED",
+  "AWS::AppIntegrations::Application.ExternalUrlConfig.ApprovedOrigins": "CACHED",
+  "AWS::AppIntegrations::Application.Name": "CACHED",
+  "AWS::AppIntegrations::Application.Namespace": "CACHED",
   "AWS::AppIntegrations::DataIntegration.Description": "CACHED",
   "AWS::AppIntegrations::DataIntegration.FileConfiguration.Folders": "CACHED",
   "AWS::AppIntegrations::DataIntegration.KmsKey": "CACHED",
@@ -7912,6 +8091,9 @@
   "AWS::BackupGateway::Hypervisor.Password": "CACHED",
   "AWS::BackupGateway::Hypervisor.Username": "CACHED",
   "AWS::Batch::JobQueue.JobQueueName": "CACHED",
+  "AWS::Batch::JobQueue.JobStateTimeLimitAction.Action": "CACHED",
+  "AWS::Batch::JobQueue.JobStateTimeLimitAction.MaxTimeSeconds": "CACHED",
+  "AWS::Batch::JobQueue.JobStateTimeLimitAction.State": "CACHED",
   "AWS::Batch::JobQueue.SchedulingPolicyArn": "CACHED",
   "AWS::Batch::JobQueue.State": "CACHED",
   "AWS::Budgets::Budget.BudgetType": "CACHED",
@@ -8138,6 +8320,12 @@
   "AWS::CloudWatch::MetricStream.OutputFormat": "CACHED",
   "AWS::CloudWatch::MetricStream.RoleArn": "CACHED",
   "AWS::CodeArtifact::Domain.DomainName": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.ContactInfo": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.Description": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.DomainName": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.DomainOwner": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.Pattern": "CACHED",
+  "AWS::CodeArtifact::PackageGroup.RestrictionType.RestrictionMode": "CACHED",
   "AWS::CodeArtifact::Repository.Description": "CACHED",
   "AWS::CodeArtifact::Repository.DomainName": "CACHED",
   "AWS::CodeArtifact::Repository.DomainOwner": "CACHED",
@@ -8180,8 +8368,10 @@
   "AWS::CodeStarConnections::RepositoryLink.EncryptionKeyArn": "CACHED",
   "AWS::CodeStarConnections::RepositoryLink.OwnerId": "CACHED",
   "AWS::CodeStarConnections::RepositoryLink.RepositoryName": "CACHED",
+  "AWS::CodeStarConnections::SyncConfiguration.PublishDeploymentStatus": "CACHED",
   "AWS::CodeStarConnections::SyncConfiguration.RepositoryLinkId": "CACHED",
   "AWS::CodeStarConnections::SyncConfiguration.ResourceName": "CACHED",
+  "AWS::CodeStarConnections::SyncConfiguration.TriggerResourceUpdateOn": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule.CreatedBy": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule.DetailType": "CACHED",
   "AWS::CodeStarNotifications::NotificationRule.EventTypeId": "CACHED",
@@ -8387,7 +8577,11 @@
   "AWS::Connect::Rule.TaskAction.Name": "CACHED",
   "AWS::Connect::SecurityKey.InstanceId": "CACHED",
   "AWS::Connect::SecurityKey.Key": "CACHED",
+  "AWS::Connect::SecurityProfile.AllowedAccessControlHierarchyGroupId": "CACHED",
+  "AWS::Connect::SecurityProfile.Application.ApplicationPermissions": "CACHED",
+  "AWS::Connect::SecurityProfile.Application.Namespace": "CACHED",
   "AWS::Connect::SecurityProfile.Description": "CACHED",
+  "AWS::Connect::SecurityProfile.HierarchyRestrictedResources": "CACHED",
   "AWS::Connect::SecurityProfile.InstanceArn": "CACHED",
   "AWS::Connect::SecurityProfile.Permissions": "CACHED",
   "AWS::Connect::SecurityProfile.SecurityProfileName": "CACHED",
@@ -8677,6 +8871,12 @@
   "AWS::DataSync::Task.DestinationLocationArn": "CACHED",
   "AWS::DataSync::Task.FilterRule.FilterType": "CACHED",
   "AWS::DataSync::Task.FilterRule.Value": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig.Action": "CACHED",
+  "AWS::DataSync::Task.ManifestConfig.Format": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.BucketAccessRoleArn": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.ManifestObjectPath": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.ManifestObjectVersionId": "CACHED",
+  "AWS::DataSync::Task.ManifestConfigSourceS3.S3BucketArn": "CACHED",
   "AWS::DataSync::Task.Name": "CACHED",
   "AWS::DataSync::Task.Options.Atime": "CACHED",
   "AWS::DataSync::Task.Options.Gid": "CACHED",
@@ -8692,14 +8892,14 @@
   "AWS::DataSync::Task.Options.TransferMode": "CACHED",
   "AWS::DataSync::Task.Options.Uid": "CACHED",
   "AWS::DataSync::Task.Options.VerifyMode": "CACHED",
-  "AWS::DataSync::Task.S3.BucketAccessRoleArn": "CACHED",
-  "AWS::DataSync::Task.S3.S3BucketArn": "CACHED",
-  "AWS::DataSync::Task.S3.Subdirectory": "CACHED",
   "AWS::DataSync::Task.Skipped.ReportLevel": "CACHED",
   "AWS::DataSync::Task.SourceLocationArn": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.ObjectVersionIds": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.OutputType": "CACHED",
   "AWS::DataSync::Task.TaskReportConfig.ReportLevel": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.BucketAccessRoleArn": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.S3BucketArn": "CACHED",
+  "AWS::DataSync::Task.TaskReportConfigDestinationS3.Subdirectory": "CACHED",
   "AWS::DataSync::Task.TaskSchedule.ScheduleExpression": "CACHED",
   "AWS::DataSync::Task.Transferred.ReportLevel": "CACHED",
   "AWS::DataSync::Task.Verified.ReportLevel": "CACHED",
@@ -8807,6 +9007,7 @@
   "AWS::EC2::IPAMPool.AwsService": "CACHED",
   "AWS::EC2::IPAMPool.PublicIpSource": "CACHED",
   "AWS::EC2::Instance.Affinity": "CACHED",
+  "AWS::EC2::Instance.PrivateDnsNameOptions.HostnameType": "CACHED",
   "AWS::EC2::KeyPair.KeyFormat": "CACHED",
   "AWS::EC2::KeyPair.KeyType": "CACHED",
   "AWS::EC2::LaunchTemplate.CpuOptions.AmdSevSnp": "CACHED",
@@ -8882,6 +9083,7 @@
   "AWS::EFS::AccessPoint.AccessPointTag.Value": "CACHED",
   "AWS::EFS::AccessPoint.CreationInfo.Permissions": "CACHED",
   "AWS::EFS::AccessPoint.RootDirectory.Path": "CACHED",
+  "AWS::EFS::FileSystem.BackupPolicy.Status": "CACHED",
   "AWS::EFS::FileSystem.FileSystemProtection.ReplicationOverwriteProtection": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope.Type": "CACHED",
   "AWS::EKS::Addon.ResolveConflicts": "CACHED",
@@ -9446,6 +9648,11 @@
   "AWS::KafkaConnect::Connector.ScaleOutPolicy.CpuUtilizationPercentage": "CACHED",
   "AWS::KafkaConnect::Connector.ServiceExecutionRoleArn": "CACHED",
   "AWS::KafkaConnect::Connector.WorkerConfiguration.WorkerConfigurationArn": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.ContentType": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Description": "CACHED",
+  "AWS::KafkaConnect::CustomPlugin.Name": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Description": "CACHED",
+  "AWS::KafkaConnect::WorkerConfiguration.Name": "CACHED",
   "AWS::Kendra::DataSource.AccessControlListConfiguration.KeyPath": "CACHED",
   "AWS::Kendra::DataSource.AclConfiguration.AllowedGroupsColumnName": "CACHED",
   "AWS::Kendra::DataSource.ColumnConfiguration.ChangeDetectingColumns": "CACHED",
@@ -9571,6 +9778,7 @@
   "AWS::Kendra::Faq.Description": "CACHED",
   "AWS::Kendra::Faq.FileFormat": "CACHED",
   "AWS::Kendra::Faq.IndexId": "CACHED",
+  "AWS::Kendra::Faq.LanguageCode": "CACHED",
   "AWS::Kendra::Faq.Name": "CACHED",
   "AWS::Kendra::Faq.RoleArn": "CACHED",
   "AWS::Kendra::Faq.S3Path.Bucket": "CACHED",
@@ -12202,6 +12410,14 @@
   "AWS::RDS::DBInstance.BackupRetentionPeriod": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceClass": {
    "AllowedValues": [
+    "db.c6gd.12xlarge",
+    "db.c6gd.16xlarge",
+    "db.c6gd.2xlarge",
+    "db.c6gd.4xlarge",
+    "db.c6gd.8xlarge",
+    "db.c6gd.large",
+    "db.c6gd.medium",
+    "db.c6gd.xlarge",
     "db.m4.10xlarge",
     "db.m4.16xlarge",
     "db.m4.2xlarge",
@@ -13304,6 +13520,9 @@
   "AWS::SecurityHub::Hub.ControlFindingGenerator": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
+  "AWS::SecurityLake::DataLake.MetaStoreManagerRoleArn": "CACHED",
+  "AWS::SecurityLake::DataLake.ReplicationConfiguration.Regions": "CACHED",
+  "AWS::SecurityLake::DataLake.ReplicationConfiguration.RoleArn": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",
