@@ -156,7 +156,7 @@ class _Transform:
                 elif k == "Fn::FindInMap":
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
-                        map_value = mapping.value(cfn, params, True)
+                        map_value = mapping.value(cfn, params, True, False)
                         # if we get None this means its all strings but couldn't be resolved
                         # we will pass this forward
                         if map_value is None:
@@ -298,6 +298,7 @@ class _ForEachValueFnFindInMap(_ForEachValue):
         cfn: Any,
         params: Optional[Mapping[str, Any]] = None,
         only_params: bool = False,
+        default_on_resolver_failure: bool = True,
     ) -> Any:
         if params is None:
             params = {}
@@ -361,11 +362,11 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                     t_map[2].value(cfn, params, only_params)
                 )
             except _ResolveError as e:
-                if len(self._map) == 4:
+                if len(self._map) == 4 and default_on_resolver_failure:
                     return self._map[3].value(cfn, params, only_params)
                 raise _ResolveError("Can't resolve Fn::FindInMap", self._obj) from e
 
-        if len(self._map) == 4:
+        if len(self._map) == 4 and default_on_resolver_failure:
             return self._map[3].value(cfn, params, only_params)
         raise _ResolveError("Can't resolve Fn::FindInMap", self._obj)
 

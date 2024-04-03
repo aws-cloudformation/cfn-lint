@@ -182,6 +182,32 @@ class TestFindInMap(TestCase):
         with self.assertRaises(_ValueError):
             _ForEachValueFnFindInMap("", ["foo"])
 
+    def test_find_in_map_values_with_default(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Bucket", {"Ref": "Foo"}, "Key", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
+    def test_find_in_map_values_without_default(self):
+        map = _ForEachValueFnFindInMap("a", ["Bucket", {"Ref": "Foo"}, "Key"])
+
+        with self.assertRaises(_ResolveError):
+            self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
+    def test_mapping_not_found(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Foo", {"Ref": "Foo"}, "Key", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
     def test_two_mappings(self):
         template_obj = deepcopy(self.template_obj)
         template_obj["Mappings"]["Foo"] = {"Bar": {"Key": ["a", "b"]}}
