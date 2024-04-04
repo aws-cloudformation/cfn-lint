@@ -41,7 +41,7 @@ def validator():
                     (
                         "Deprecated runtime 'nodejs4.3' specified. "
                         "Updating disabled since '2019-04-30'. "
-                        "Please consider updating to 'nodejs16.x'"
+                        "Please consider updating to 'nodejs20.x'"
                     ),
                     rule=DeprecatedRuntimeEnd(),
                 )
