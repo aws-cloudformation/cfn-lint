@@ -204,14 +204,15 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "Filename": (
                         "test/fixtures/templates/good/transform_serverless_globals.yaml"
                     ),
-                    "Id": "bbc3467b-5b8b-1300-e638-dc3e4a1741cb",
+                    "Id": "fc9f2534-f4f8-092b-52d6-dafd2d429b67",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 10},
                         "Path": ["Resources", "myFunction", "Properties", "Runtime"],
                         "Start": {"ColumnNumber": 3, "LineNumber": 10},
                     },
-                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12. Please consider updating to nodejs20.x",
+                    "Message": "Deprecated runtime 'nodejs6.10' specified. Updating disabled since '2019-08-12'. Please consider updating to 'nodejs20.x'",
+                    "ParentId": None,
                     "Rule": {
                         "Description": (
                             "Check if an EOL Lambda Runtime is specified and give an"

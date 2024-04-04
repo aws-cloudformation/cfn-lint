@@ -46,7 +46,7 @@ def validator():
                         "EOL runtime 'nodejs6.10' specified. "
                         "Runtime is EOL since '2019-04-30' and "
                         "updating will be disabled at '2019-08-12'. "
-                        "Please consider updating to 'nodejs16.x'"
+                        "Please consider updating to 'nodejs20.x'"
                     ),
                     rule=DeprecatedRuntimeEol(),
                 )
