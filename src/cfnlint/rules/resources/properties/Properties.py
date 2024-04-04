@@ -47,6 +47,7 @@ class Properties(BaseJsonSchema):
             "maxItems": "E3032",
             "minItems": "E3032",
             "pattern": "E3031",
+            "prefixItems": "E3008",
             "oneOf": "E3018",
             "cfnLint": "E1101",
             "tagging": "E3024",

@@ -543,3 +543,16 @@ def type(
     if not any(validator.is_type(instance, type) for type in tS):
         reprs = ", ".join(repr(type) for type in tS)
         yield ValidationError(f"{instance!r} is not of type {reprs}")
+
+
+def prefixItems(validator, prefixItems, instance, schema):
+    if not validator.is_type(instance, "array"):
+        return
+
+    for (index, item), subschema in zip(enumerate(instance), prefixItems):
+        yield from validator.descend(
+            instance=item,
+            schema=subschema,
+            schema_path=index,
+            path=index,
+        )

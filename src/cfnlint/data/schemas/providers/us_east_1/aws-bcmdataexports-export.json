@@ -1,0 +1,295 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Export/Name",
+  "/properties/Export/DataQuery/TableConfigurations",
+  "/properties/Export/RefreshCadence"
+ ],
+ "definitions": {
+  "CompressionOption": {
+   "enum": [
+    "GZIP",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
+  "DataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryStatement": {
+     "maxLength": 36000,
+     "minLength": 1,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    },
+    "TableConfigurations": {
+     "$ref": "#/definitions/TableConfigurations"
+    }
+   },
+   "required": [
+    "QueryStatement"
+   ],
+   "type": "object"
+  },
+  "DestinationConfigurations": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Destination": {
+     "$ref": "#/definitions/S3Destination"
+    }
+   },
+   "required": [
+    "S3Destination"
+   ],
+   "type": "object"
+  },
+  "Export": {
+   "additionalProperties": false,
+   "properties": {
+    "DataQuery": {
+     "$ref": "#/definitions/DataQuery"
+    },
+    "Description": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    },
+    "DestinationConfigurations": {
+     "$ref": "#/definitions/DestinationConfigurations"
+    },
+    "ExportArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[-a-z0-9]*:[-a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[0-9A-Za-z\\-_]+$",
+     "type": "string"
+    },
+    "RefreshCadence": {
+     "$ref": "#/definitions/RefreshCadence"
+    }
+   },
+   "required": [
+    "DataQuery",
+    "DestinationConfigurations",
+    "Name",
+    "RefreshCadence"
+   ],
+   "type": "object"
+  },
+  "FormatOption": {
+   "enum": [
+    "TEXT_OR_CSV",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
+  "FrequencyOption": {
+   "enum": [
+    "SYNCHRONOUS"
+   ],
+   "type": "string"
+  },
+  "OverwriteOption": {
+   "enum": [
+    "CREATE_NEW_REPORT",
+    "OVERWRITE_REPORT"
+   ],
+   "type": "string"
+  },
+  "RefreshCadence": {
+   "additionalProperties": false,
+   "properties": {
+    "Frequency": {
+     "$ref": "#/definitions/FrequencyOption"
+    }
+   },
+   "required": [
+    "Frequency"
+   ],
+   "type": "object"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "S3Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    },
+    "S3OutputConfigurations": {
+     "$ref": "#/definitions/S3OutputConfigurations"
+    },
+    "S3Prefix": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    },
+    "S3Region": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3OutputConfigurations",
+    "S3Prefix",
+    "S3Region"
+   ],
+   "type": "object"
+  },
+  "S3OutputConfigurations": {
+   "additionalProperties": false,
+   "properties": {
+    "Compression": {
+     "$ref": "#/definitions/CompressionOption"
+    },
+    "Format": {
+     "$ref": "#/definitions/FormatOption"
+    },
+    "OutputType": {
+     "$ref": "#/definitions/S3OutputType"
+    },
+    "Overwrite": {
+     "$ref": "#/definitions/OverwriteOption"
+    }
+   },
+   "required": [
+    "Compression",
+    "Format",
+    "OutputType",
+    "Overwrite"
+   ],
+   "type": "object"
+  },
+  "S3OutputType": {
+   "enum": [
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "TableConfigurations": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\S\\s]*$": {
+     "$ref": "#/definitions/TableProperties"
+    }
+   },
+   "type": "object"
+  },
+  "TableProperties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\S\\s]*$": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DataExports_CreateExport.html#API_DataExports_CreateExport_RequestSyntax",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bcm-data-exports:CreateExport",
+    "bcm-data-exports:GetExport",
+    "bcm-data-exports:ListTagsForResource",
+    "bcm-data-exports:TagResource",
+    "cur:PutReportDefinition"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bcm-data-exports:DeleteExport"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "bcm-data-exports:ListExports"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bcm-data-exports:GetExport",
+    "bcm-data-exports:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bcm-data-exports:UpdateExport",
+    "bcm-data-exports:TagResource",
+    "bcm-data-exports:UntagResource",
+    "bcm-data-exports:GetExport",
+    "bcm-data-exports:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ExportArn"
+ ],
+ "properties": {
+  "Export": {
+   "$ref": "#/definitions/Export"
+  },
+  "ExportArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[-a-z0-9]*:[-a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ExportArn"
+ ],
+ "required": [
+  "Export"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BCMDataExports::Export"
+}

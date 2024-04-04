@@ -635,6 +635,64 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::DynamoDB::Table",
+            patches=[
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "if": {
+                                    "type": "object",
+                                    "required": ["LocalSecondaryIndexes"],
+                                },
+                                "then": {
+                                    "type": "object",
+                                    "properties": {
+                                        "KeySchema": {
+                                            "minItems": 2,
+                                        },
+                                        "AttributeDefinitions": {
+                                            "minItems": 2,
+                                        },
+                                    },
+                                },
+                            }
+                        ]
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::DynamoDB::GlobalTable",
+            patches=[
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": ["LocalSecondaryIndexes"],
+                                    "type": "object",
+                                },
+                                "then": {
+                                    "properties": {
+                                        "KeySchema": {
+                                            "minItems": 2,
+                                        },
+                                        "AttributeDefinitions": {
+                                            "minItems": 2,
+                                        },
+                                    },
+                                    "type": "object",
+                                },
+                            }
+                        ]
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::EC2::DHCPOptions",
             patches=[
                 Patch(
