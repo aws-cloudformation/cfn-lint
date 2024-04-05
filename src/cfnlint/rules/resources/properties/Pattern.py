@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
-from cfnlint.jsonschema._validators import pattern
+from cfnlint.jsonschema._keywords import pattern
 from cfnlint.rules import CloudFormationLintRule
 
 
