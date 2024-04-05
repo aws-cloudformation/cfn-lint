@@ -1,3 +1,11 @@
+### v0.86.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `168.0.0` (pull #[3127](https://github.com/aws-cloudformation/cfn-lint/pull/3127))
+- Remove `AWS::RDS::DBCluster` from exclusive checks (pull #[3119](https://github.com/aws-cloudformation/cfn-lint/pull/3119))
+###### Fixes
+- When doing a transform pass back FindInMap when resolution failure (pull #[3131](https://github.com/aws-cloudformation/cfn-lint/pull/3131))
+- Update deprecated Lambda runtimes (pull #[3113](https://github.com/aws-cloudformation/cfn-lint/pull/3113))
+
 ### v0.86.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `165.0.0` (pull #[3092](https://github.com/aws-cloudformation/cfn-lint/pull/3092))
