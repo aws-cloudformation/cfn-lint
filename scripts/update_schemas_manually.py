@@ -1069,7 +1069,13 @@ patches.extend(
             resource_type="AWS::IAM::Policy",
             patches=[
                 Patch(
-                    values={"requiredOr": ["Users", "Groups", "Roles"]},
+                    values={
+                        "anyOf": [
+                            {"required": ["Users"]},
+                            {"required": ["Groups"]},
+                            {"required": ["Roles"]},
+                        ]
+                    },
                     path="/",
                 ),
                 Patch(
@@ -1413,9 +1419,9 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "requiredOr": [
-                            "HttpErrorCodeReturnedEquals",
-                            "KeyPrefixEquals",
+                        "anyOf": [
+                            {"required": ["HttpErrorCodeReturnedEquals"]},
+                            {"required": ["KeyPrefixEquals"]},
                         ],
                     },
                     path="/definitions/RoutingRuleCondition",

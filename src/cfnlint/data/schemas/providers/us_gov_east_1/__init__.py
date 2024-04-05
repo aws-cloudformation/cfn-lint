@@ -842,7 +842,6 @@ cached: List[str] = [
     "aws-efs-accesspoint.json",
     "aws-redshift-clustersecuritygroupingress.json",
     "aws-servicecatalogappregistry-attributegroupassociation.json",
-    "aws-elasticloadbalancingv2-loadbalancer.json",
     "aws-opensearchservice-domain.json",
     "aws-servicediscovery-instance.json",
     "aws-elasticsearch-domain.json",

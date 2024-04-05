@@ -1182,6 +1182,7 @@ cached: List[str] = [
     "aws-organizations-organizationalunit.json",
     "aws-appsync-datasource.json",
     "aws-sqs-queue.json",
+    "aws-ec2-securitygroupingress.json",
     "aws-guardduty-detector.json",
     "aws-iot-provisioningtemplate.json",
     "aws-personalize-schema.json",

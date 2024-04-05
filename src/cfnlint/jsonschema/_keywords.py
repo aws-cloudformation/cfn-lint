@@ -512,16 +512,6 @@ def requiredXor(
             )
 
 
-def requiredOr(
-    validator: Validator, required: Any, instance: Any, schema: Dict[str, Any]
-) -> ValidationResult:
-    if not validator.is_type(instance, "object"):
-        return
-    matches = set(required).intersection(instance.keys())
-    if not matches:
-        yield ValidationError(f"At least one of {required!r} is a required property")
-
-
 def uniqueItems(
     validator: Validator, uI: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
