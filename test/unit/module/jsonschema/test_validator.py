@@ -1102,6 +1102,20 @@ def test_validator(name, schema, instance, expected, validator):
             [],
             [],
         ),
+        (
+            "valid prefixItems",
+            {"prefixItems": [{"type": "string"}]},
+            ["foo"],
+            [],
+        ),
+        (
+            "invalid prefixItems with wrong type",
+            {"prefixItems": [{"type": "string"}]},
+            [1],
+            [
+                ValidationError("1 is not of type 'string'"),
+            ],
+        ),
     ],
 )
 @patch.object(ValidationError, "__eq__", spec=True, new=_eq)

@@ -22,7 +22,7 @@ from typing import Any, Dict
 
 import regex as re
 
-import cfnlint.jsonschema._validators as validators_standard
+import cfnlint.jsonschema._keywords as validators_standard
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list

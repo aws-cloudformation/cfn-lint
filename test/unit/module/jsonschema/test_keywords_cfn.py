@@ -8,7 +8,7 @@ from collections import namedtuple
 from typing import List
 
 from cfnlint.context import Context
-from cfnlint.jsonschema._validators_cfn import cfn_type
+from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
