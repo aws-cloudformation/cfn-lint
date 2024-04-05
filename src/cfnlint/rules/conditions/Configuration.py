@@ -8,7 +8,7 @@ from typing import Any
 from cfnlint.data.schemas.other import conditions as schema_conditions
 from cfnlint.helpers import FUNCTION_CONDITIONS, load_resource
 from cfnlint.jsonschema import Validator
-from cfnlint.jsonschema._validators_cfn import cfn_type
+from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
 

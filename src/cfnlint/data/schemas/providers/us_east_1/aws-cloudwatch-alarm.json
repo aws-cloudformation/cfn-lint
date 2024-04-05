@@ -96,6 +96,26 @@
     "Metric"
    ],
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "dependentExcluded": {
@@ -125,7 +145,8 @@
   "create": {
    "permissions": [
     "cloudwatch:PutMetricAlarm",
-    "cloudwatch:DescribeAlarms"
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:TagResource"
    ]
   },
   "delete": {
@@ -141,13 +162,16 @@
   },
   "read": {
    "permissions": [
-    "cloudwatch:DescribeAlarms"
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
     "cloudwatch:PutMetricAlarm",
-    "cloudwatch:DescribeAlarms"
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:TagResource",
+    "cloudwatch:UntagResource"
    ]
   }
  },
@@ -251,6 +275,14 @@
    ],
    "type": "string"
   },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
   "Threshold": {
    "type": "number"
   },
@@ -312,7 +344,11 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
  "tagging": {
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::CloudWatch::Alarm"
 }
