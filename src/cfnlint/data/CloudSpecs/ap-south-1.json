@@ -1524,6 +1524,8 @@
   "AWS::ECS::TaskDefinition.EFSVolumeConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.EnvironmentFile": "CACHED",
   "AWS::ECS::TaskDefinition.EphemeralStorage": "CACHED",
+  "AWS::ECS::TaskDefinition.FSxAuthorizationConfig": "CACHED",
+  "AWS::ECS::TaskDefinition.FSxWindowsFileServerVolumeConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.FirelensConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.HealthCheck": "CACHED",
   "AWS::ECS::TaskDefinition.HostEntry": "CACHED",
@@ -1842,6 +1844,7 @@
   "AWS::GameLift::GameSessionQueue.PriorityConfiguration": "CACHED",
   "AWS::GameLift::MatchmakingConfiguration.GameProperty": "CACHED",
   "AWS::GameLift::Script.S3Location": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment.Resource": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.EndpointConfiguration": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.PortOverride": "CACHED",
   "AWS::GlobalAccelerator::Listener.PortRange": "CACHED",
@@ -2012,10 +2015,12 @@
   "AWS::IAM::Role.Policy": "CACHED",
   "AWS::IAM::User.LoginProfile": "CACHED",
   "AWS::IAM::User.Policy": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Video": "CACHED",
   "AWS::IVS::RecordingConfiguration.DestinationConfiguration": "CACHED",
   "AWS::IVS::RecordingConfiguration.RenditionConfiguration": "CACHED",
   "AWS::IVS::RecordingConfiguration.S3DestinationConfiguration": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration": "CACHED",
+  "AWS::IVS::StorageConfiguration.S3StorageConfiguration": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.CloudWatchLogsDestinationConfiguration": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.DestinationConfiguration": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.FirehoseDestinationConfiguration": "CACHED",
@@ -5338,12 +5343,24 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate": "CACHED",
+  "AWS::SecurityHub::Insight.AwsSecurityFindingFilters": "CACHED",
+  "AWS::SecurityHub::Insight.BooleanFilter": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter": "CACHED",
+  "AWS::SecurityHub::Insight.DateRange": "CACHED",
+  "AWS::SecurityHub::Insight.IpFilter": "CACHED",
+  "AWS::SecurityHub::Insight.MapFilter": "CACHED",
+  "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
+  "AWS::SecurityHub::Insight.StringFilter": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Expiration": "CACHED",
   "AWS::SecurityLake::DataLake.LifecycleConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Transitions": "CACHED",
+  "AWS::SecurityLake::Subscriber.AwsLogSource": "CACHED",
+  "AWS::SecurityLake::Subscriber.CustomLogSource": "CACHED",
+  "AWS::SecurityLake::Subscriber.Source": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -5408,9 +5425,52 @@
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitogroupconfiguration.html",
+   "Properties": {
+    "GroupEntityType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitogroupconfiguration.html#cfn-verifiedpermissions-identitysource-cognitogroupconfiguration-groupentitytype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration.GroupEntityType"
+     }
+    }
+   }
+  },
+  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitouserpoolconfiguration.html",
+   "Properties": {
+    "ClientIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitouserpoolconfiguration.html#cfn-verifiedpermissions-identitysource-cognitouserpoolconfiguration-clientids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.ClientIds"
+     }
+    },
+    "GroupConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitouserpoolconfiguration.html#cfn-verifiedpermissions-identitysource-cognitouserpoolconfiguration-groupconfiguration",
+     "Required": false,
+     "Type": "CognitoGroupConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "UserPoolArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-verifiedpermissions-identitysource-cognitouserpoolconfiguration.html#cfn-verifiedpermissions-identitysource-cognitouserpoolconfiguration-userpoolarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.UserPoolArn"
+     }
+    }
+   }
+  },
   "AWS::VerifiedPermissions::IdentitySource.IdentitySourceConfiguration": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceDetails": "CACHED",
   "AWS::VerifiedPermissions::Policy.EntityIdentifier": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyDefinition": "CACHED",
   "AWS::VerifiedPermissions::Policy.StaticPolicyDefinition": "CACHED",
@@ -5585,7 +5645,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "167.1.0",
+ "ResourceSpecificationVersion": "168.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5773,6 +5833,7 @@
   "AWS::CodeBuild::ReportGroup": "CACHED",
   "AWS::CodeBuild::SourceCredential": "CACHED",
   "AWS::CodeCommit::Repository": "CACHED",
+  "AWS::CodeConnections::Connection": "CACHED",
   "AWS::CodeDeploy::Application": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup": "CACHED",
@@ -6169,6 +6230,7 @@
   "AWS::GameLift::MatchmakingRuleSet": "CACHED",
   "AWS::GameLift::Script": "CACHED",
   "AWS::GlobalAccelerator::Accelerator": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup": "CACHED",
   "AWS::GlobalAccelerator::Listener": "CACHED",
   "AWS::Glue::Classifier": "CACHED",
@@ -6233,9 +6295,12 @@
   "AWS::IAM::UserToGroupAddition": "CACHED",
   "AWS::IAM::VirtualMFADevice": "CACHED",
   "AWS::IVS::Channel": "CACHED",
+  "AWS::IVS::EncoderConfiguration": "CACHED",
   "AWS::IVS::PlaybackKeyPair": "CACHED",
+  "AWS::IVS::PlaybackRestrictionPolicy": "CACHED",
   "AWS::IVS::RecordingConfiguration": "CACHED",
   "AWS::IVS::Stage": "CACHED",
+  "AWS::IVS::StorageConfiguration": "CACHED",
   "AWS::IVS::StreamKey": "CACHED",
   "AWS::IVSChat::LoggingConfiguration": "CACHED",
   "AWS::IVSChat::Room": "CACHED",
@@ -6619,7 +6684,45 @@
   "AWS::SSO::InstanceAccessControlAttributeConfiguration": "CACHED",
   "AWS::SSO::PermissionSet": "CACHED",
   "AWS::SageMaker::App": "CACHED",
-  "AWS::SageMaker::AppImageConfig": "CACHED",
+  "AWS::SageMaker::AppImageConfig": {
+   "Attributes": {
+    "AppImageConfigArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html",
+   "Properties": {
+    "AppImageConfigName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-appimageconfigname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::AppImageConfig.AppImageConfigName"
+     }
+    },
+    "JupyterLabAppImageConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-jupyterlabappimageconfig",
+     "Required": false,
+     "Type": "JupyterLabAppImageConfig",
+     "UpdateType": "Mutable"
+    },
+    "KernelGatewayImageConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-kernelgatewayimageconfig",
+     "Required": false,
+     "Type": "KernelGatewayImageConfig",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::SageMaker::CodeRepository": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition": "CACHED",
   "AWS::SageMaker::Domain": "CACHED",
@@ -6652,9 +6755,14 @@
   "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::AutomationRule": "CACHED",
+  "AWS::SecurityHub::DelegatedAdmin": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
+  "AWS::SecurityHub::Insight": "CACHED",
+  "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
+  "AWS::SecurityLake::AwsLogSource": "CACHED",
   "AWS::SecurityLake::DataLake": "CACHED",
+  "AWS::SecurityLake::Subscriber": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -6700,7 +6808,40 @@
   "AWS::Transfer::Server": "CACHED",
   "AWS::Transfer::User": "CACHED",
   "AWS::Transfer::Workflow": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource": {
+   "Attributes": {
+    "IdentitySourceId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-verifiedpermissions-identitysource.html",
+   "Properties": {
+    "Configuration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-verifiedpermissions-identitysource.html#cfn-verifiedpermissions-identitysource-configuration",
+     "Required": true,
+     "Type": "IdentitySourceConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "PolicyStoreId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-verifiedpermissions-identitysource.html#cfn-verifiedpermissions-identitysource-policystoreid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId"
+     }
+    },
+    "PrincipalEntityType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-verifiedpermissions-identitysource.html#cfn-verifiedpermissions-identitysource-principalentitytype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType"
+     }
+    }
+   }
+  },
   "AWS::VerifiedPermissions::Policy": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate": "CACHED",
@@ -7418,6 +7559,8 @@
   "AWS::CodeBuild::Project.TimeoutInMinutes": "CACHED",
   "AWS::CodeCommit::Repository.RepositoryName": "CACHED",
   "AWS::CodeCommit::Repository.RepositoryTrigger.Events": "CACHED",
+  "AWS::CodeConnections::Connection.ConnectionName": "CACHED",
+  "AWS::CodeConnections::Connection.HostArn": "CACHED",
   "AWS::CodeDeploy::Application.ComputePlatform": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig.MinimumHealthyHosts.Type": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup.AutoRollbackConfiguration.Events": "CACHED",
@@ -8203,6 +8346,7 @@
   "AWS::GlobalAccelerator::Accelerator.IpAddressType": "CACHED",
   "AWS::GlobalAccelerator::Accelerator.IpAddresses": "CACHED",
   "AWS::GlobalAccelerator::Accelerator.Name": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment.Name": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.HealthCheckPort": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.HealthCheckProtocol": "CACHED",
   "AWS::GlobalAccelerator::Listener.ClientAffinity": "CACHED",
@@ -8322,7 +8466,13 @@
   "AWS::IVS::Channel.Preset": "CACHED",
   "AWS::IVS::Channel.RecordingConfigurationArn": "CACHED",
   "AWS::IVS::Channel.Type": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Name": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Video.Bitrate": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Video.Framerate": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Video.Height": "CACHED",
+  "AWS::IVS::EncoderConfiguration.Video.Width": "CACHED",
   "AWS::IVS::PlaybackKeyPair.Name": "CACHED",
+  "AWS::IVS::PlaybackRestrictionPolicy.Name": "CACHED",
   "AWS::IVS::RecordingConfiguration.Name": "CACHED",
   "AWS::IVS::RecordingConfiguration.RenditionConfiguration.RenditionSelection": "CACHED",
   "AWS::IVS::RecordingConfiguration.RenditionConfiguration.Renditions": "CACHED",
@@ -8332,6 +8482,8 @@
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.Storage": "CACHED",
   "AWS::IVS::RecordingConfiguration.ThumbnailConfiguration.TargetIntervalSeconds": "CACHED",
   "AWS::IVS::Stage.Name": "CACHED",
+  "AWS::IVS::StorageConfiguration.Name": "CACHED",
+  "AWS::IVS::StorageConfiguration.S3StorageConfiguration.BucketName": "CACHED",
   "AWS::IVS::StreamKey.ChannelArn": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.CloudWatchLogsDestinationConfiguration.LogGroupName": "CACHED",
   "AWS::IVSChat::LoggingConfiguration.FirehoseDestinationConfiguration.DeliveryStreamName": "CACHED",
@@ -12394,12 +12546,28 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate.Label": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate.Status": "CACHED",
+  "AWS::SecurityHub::DelegatedAdmin.AdminAccountId": "CACHED",
   "AWS::SecurityHub::Hub.ControlFindingGenerator": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter.End": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter.Start": "CACHED",
+  "AWS::SecurityHub::Insight.DateRange.Unit": "CACHED",
+  "AWS::SecurityHub::Insight.MapFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::Insight.Name": "CACHED",
+  "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.Accounts": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.DataLakeArn": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.SourceVersion": "CACHED",
   "AWS::SecurityLake::DataLake.MetaStoreManagerRoleArn": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration.Regions": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration.RoleArn": "CACHED",
+  "AWS::SecurityLake::Subscriber.AccessTypes": "CACHED",
+  "AWS::SecurityLake::Subscriber.DataLakeArn": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity.ExternalId": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity.Principal": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberName": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",
@@ -12532,12 +12700,13 @@
   "AWS::Transfer::Workflow.TagStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration.GroupEntityType": {
+   "AllowedPatternRegex": "^([_a-zA-Z][_a-zA-Z0-9]*::)*[_a-zA-Z][_a-zA-Z0-9]*$",
+   "StringMax": 200,
+   "StringMin": 1
+  },
   "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.ClientIds": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.UserPoolArn": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceDetails.ClientIds": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceDetails.DiscoveryUrl": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceDetails.OpenIdIssuer": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceDetails.UserPoolArn": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",

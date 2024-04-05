@@ -181,6 +181,16 @@
   "AWS::AmazonMQ::Broker.User": "CACHED",
   "AWS::AmazonMQ::Configuration.TagsEntry": "CACHED",
   "AWS::AmazonMQ::ConfigurationAssociation.ConfigurationId": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig": "CACHED",
+  "AWS::Amplify::App.BasicAuthConfig": "CACHED",
+  "AWS::Amplify::App.CustomRule": "CACHED",
+  "AWS::Amplify::App.EnvironmentVariable": "CACHED",
+  "AWS::Amplify::Branch.Backend": "CACHED",
+  "AWS::Amplify::Branch.BasicAuthConfig": "CACHED",
+  "AWS::Amplify::Branch.EnvironmentVariable": "CACHED",
+  "AWS::Amplify::Domain.Certificate": "CACHED",
+  "AWS::Amplify::Domain.CertificateSettings": "CACHED",
+  "AWS::Amplify::Domain.SubDomainSetting": "CACHED",
   "AWS::ApiGateway::ApiKey.StageKey": "CACHED",
   "AWS::ApiGateway::Deployment.AccessLogSetting": "CACHED",
   "AWS::ApiGateway::Deployment.CanarySetting": {
@@ -1860,6 +1870,8 @@
   "AWS::ECS::TaskDefinition.EFSVolumeConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.EnvironmentFile": "CACHED",
   "AWS::ECS::TaskDefinition.EphemeralStorage": "CACHED",
+  "AWS::ECS::TaskDefinition.FSxAuthorizationConfig": "CACHED",
+  "AWS::ECS::TaskDefinition.FSxWindowsFileServerVolumeConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.FirelensConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.HealthCheck": "CACHED",
   "AWS::ECS::TaskDefinition.HostEntry": "CACHED",
@@ -2246,6 +2258,7 @@
    }
   },
   "AWS::GameLift::Fleet.ServerProcess": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment.Resource": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.EndpointConfiguration": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.PortOverride": "CACHED",
   "AWS::GlobalAccelerator::Listener.PortRange": "CACHED",
@@ -2844,23 +2857,7 @@
   "AWS::RDS::OptionGroup.OptionConfiguration": "CACHED",
   "AWS::RDS::OptionGroup.OptionSetting": "CACHED",
   "AWS::Redshift::Cluster.Endpoint": "CACHED",
-  "AWS::Redshift::Cluster.LoggingProperties": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html",
-   "Properties": {
-    "BucketName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-bucketname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "S3KeyPrefix": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-cluster-loggingproperties.html#cfn-redshift-cluster-loggingproperties-s3keyprefix",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Redshift::Cluster.LoggingProperties": "CACHED",
   "AWS::Redshift::ClusterParameterGroup.Parameter": "CACHED",
   "AWS::RefactorSpaces::Application.ApiGatewayProxyInput": "CACHED",
   "AWS::RefactorSpaces::Route.DefaultRouteInput": "CACHED",
@@ -3110,7 +3107,28 @@
   "AWS::SageMaker::DataQualityJobDefinition.StatisticsResource": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition.StoppingCondition": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition.VpcConfig": "CACHED",
-  "AWS::SageMaker::Domain.CodeEditorAppSettings": "CACHED",
+  "AWS::SageMaker::Domain.CodeEditorAppSettings": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-codeeditorappsettings.html",
+   "Properties": {
+    "DefaultResourceSpec": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-codeeditorappsettings.html#cfn-sagemaker-domain-codeeditorappsettings-defaultresourcespec",
+     "Required": false,
+     "Type": "ResourceSpec",
+     "UpdateType": "Mutable"
+    },
+    "LifecycleConfigArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-codeeditorappsettings.html#cfn-sagemaker-domain-codeeditorappsettings-lifecycleconfigarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.CodeEditorAppSettings.LifecycleConfigArns"
+     }
+    }
+   }
+  },
   "AWS::SageMaker::Domain.CodeRepository": "CACHED",
   "AWS::SageMaker::Domain.CustomFileSystemConfig": "CACHED",
   "AWS::SageMaker::Domain.CustomImage": "CACHED",
@@ -3333,7 +3351,28 @@
   "AWS::SageMaker::Space.SpaceSettings": "CACHED",
   "AWS::SageMaker::Space.SpaceSharingSettings": "CACHED",
   "AWS::SageMaker::Space.SpaceStorageSettings": "CACHED",
-  "AWS::SageMaker::UserProfile.CodeEditorAppSettings": "CACHED",
+  "AWS::SageMaker::UserProfile.CodeEditorAppSettings": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-userprofile-codeeditorappsettings.html",
+   "Properties": {
+    "DefaultResourceSpec": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-userprofile-codeeditorappsettings.html#cfn-sagemaker-userprofile-codeeditorappsettings-defaultresourcespec",
+     "Required": false,
+     "Type": "ResourceSpec",
+     "UpdateType": "Mutable"
+    },
+    "LifecycleConfigArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-userprofile-codeeditorappsettings.html#cfn-sagemaker-userprofile-codeeditorappsettings-lifecycleconfigarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::UserProfile.CodeEditorAppSettings.LifecycleConfigArns"
+     }
+    }
+   }
+  },
   "AWS::SageMaker::UserProfile.CodeRepository": "CACHED",
   "AWS::SageMaker::UserProfile.CustomFileSystemConfig": "CACHED",
   "AWS::SageMaker::UserProfile.CustomImage": "CACHED",
@@ -3379,12 +3418,24 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate": "CACHED",
+  "AWS::SecurityHub::Insight.AwsSecurityFindingFilters": "CACHED",
+  "AWS::SecurityHub::Insight.BooleanFilter": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter": "CACHED",
+  "AWS::SecurityHub::Insight.DateRange": "CACHED",
+  "AWS::SecurityHub::Insight.IpFilter": "CACHED",
+  "AWS::SecurityHub::Insight.MapFilter": "CACHED",
+  "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
+  "AWS::SecurityHub::Insight.StringFilter": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Expiration": "CACHED",
   "AWS::SecurityLake::DataLake.LifecycleConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Transitions": "CACHED",
+  "AWS::SecurityLake::Subscriber.AwsLogSource": "CACHED",
+  "AWS::SecurityLake::Subscriber.CustomLogSource": "CACHED",
+  "AWS::SecurityLake::Subscriber.Source": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -3614,7 +3665,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "167.1.0",
+ "ResourceSpecificationVersion": "168.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3625,6 +3676,9 @@
   "AWS::AmazonMQ::Broker": "CACHED",
   "AWS::AmazonMQ::Configuration": "CACHED",
   "AWS::AmazonMQ::ConfigurationAssociation": "CACHED",
+  "AWS::Amplify::App": "CACHED",
+  "AWS::Amplify::Branch": "CACHED",
+  "AWS::Amplify::Domain": "CACHED",
   "AWS::ApiGateway::Account": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
    "Properties": {
@@ -5284,6 +5338,7 @@
    }
   },
   "AWS::GlobalAccelerator::Accelerator": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup": "CACHED",
   "AWS::GlobalAccelerator::Listener": "CACHED",
   "AWS::Glue::Classifier": "CACHED",
@@ -5494,351 +5549,7 @@
   "AWS::RDS::EventSubscription": "CACHED",
   "AWS::RDS::GlobalCluster": "CACHED",
   "AWS::RDS::OptionGroup": "CACHED",
-  "AWS::Redshift::Cluster": {
-   "Attributes": {
-    "DeferMaintenanceIdentifier": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Address": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Port": {
-     "PrimitiveType": "String"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html",
-   "Properties": {
-    "AllowVersionUpgrade": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-allowversionupgrade",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AquaConfigurationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-aquaconfigurationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AutomatedSnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-automatedsnapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZone": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzone",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZoneRelocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzonerelocation",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZoneRelocationStatus": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-availabilityzonerelocationstatus",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Classic": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-classic",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.ClusterIdentifier"
-     }
-    },
-    "ClusterParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusterparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.ClusterParameterGroupName"
-     }
-    },
-    "ClusterSecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustersecuritygroups",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "ClusterSubnetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustersubnetgroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ClusterType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustertype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftClusterType"
-     }
-    },
-    "ClusterVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusterversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftClusterVersion"
-     }
-    },
-    "DBName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-dbname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "DeferMaintenance": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenance",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceDuration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenanceduration",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceEndTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenanceendtime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeferMaintenanceStartTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-defermaintenancestarttime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DestinationRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-destinationregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ElasticIp": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-elasticip",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Encrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-encrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Endpoint": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-endpoint",
-     "Required": false,
-     "Type": "Endpoint",
-     "UpdateType": "Mutable"
-    },
-    "EnhancedVpcRouting": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-enhancedvpcrouting",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "HsmClientCertificateIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-hsmclientcertificateidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "HsmConfigurationIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-hsmconfigurationidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "IamRoles": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-iamroles",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LoggingProperties": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-loggingproperties",
-     "Required": false,
-     "Type": "LoggingProperties",
-     "UpdateType": "Mutable"
-    },
-    "MaintenanceTrackName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-maintenancetrackname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ManualSnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-manualsnapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-masteruserpassword",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.MasterUserPassword"
-     }
-    },
-    "MasterUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-masterusername",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.MasterUsername"
-     }
-    },
-    "MultiAZ": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-multiaz",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NodeType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-nodetype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RedshiftInstanceType"
-     }
-    },
-    "NumberOfNodes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-numberofnodes",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Redshift::Cluster.NumberOfNodes"
-     }
-    },
-    "OwnerAccount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-owneraccount",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Port": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-port",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredMaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-preferredmaintenancewindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PubliclyAccessible": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-publiclyaccessible",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ResourceAction": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-resourceaction",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RevisionTarget": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-revisiontarget",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RotateEncryptionKey": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-rotateencryptionkey",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SnapshotCopyGrantName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopygrantname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotCopyManual": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopymanual",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotCopyRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotcopyretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-snapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VpcSecurityGroupIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-vpcsecuritygroupids",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Redshift::Cluster": "CACHED",
   "AWS::Redshift::ClusterParameterGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroupIngress": "CACHED",
@@ -5993,7 +5704,45 @@
   "AWS::SSO::InstanceAccessControlAttributeConfiguration": "CACHED",
   "AWS::SSO::PermissionSet": "CACHED",
   "AWS::SageMaker::App": "CACHED",
-  "AWS::SageMaker::AppImageConfig": "CACHED",
+  "AWS::SageMaker::AppImageConfig": {
+   "Attributes": {
+    "AppImageConfigArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html",
+   "Properties": {
+    "AppImageConfigName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-appimageconfigname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::AppImageConfig.AppImageConfigName"
+     }
+    },
+    "JupyterLabAppImageConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-jupyterlabappimageconfig",
+     "Required": false,
+     "Type": "JupyterLabAppImageConfig",
+     "UpdateType": "Mutable"
+    },
+    "KernelGatewayImageConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-kernelgatewayimageconfig",
+     "Required": false,
+     "Type": "KernelGatewayImageConfig",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::SageMaker::CodeRepository": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition": "CACHED",
   "AWS::SageMaker::Domain": "CACHED",
@@ -6024,9 +5773,14 @@
   "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::AutomationRule": "CACHED",
+  "AWS::SecurityHub::DelegatedAdmin": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
+  "AWS::SecurityHub::Insight": "CACHED",
+  "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
+  "AWS::SecurityLake::AwsLogSource": "CACHED",
   "AWS::SecurityLake::DataLake": "CACHED",
+  "AWS::SecurityLake::Subscriber": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -6164,6 +5918,51 @@
     ]
    }
   },
+  "AWS::Amplify::App.AccessToken": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig.AutoBranchCreationPatterns": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig.BuildSpec": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig.Framework": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig.PullRequestEnvironmentName": "CACHED",
+  "AWS::Amplify::App.AutoBranchCreationConfig.Stage": "CACHED",
+  "AWS::Amplify::App.BasicAuthConfig.Password": "CACHED",
+  "AWS::Amplify::App.BasicAuthConfig.Username": "CACHED",
+  "AWS::Amplify::App.BuildSpec": "CACHED",
+  "AWS::Amplify::App.CustomHeaders": "CACHED",
+  "AWS::Amplify::App.CustomRule.Condition": "CACHED",
+  "AWS::Amplify::App.CustomRule.Source": "CACHED",
+  "AWS::Amplify::App.CustomRule.Status": "CACHED",
+  "AWS::Amplify::App.CustomRule.Target": "CACHED",
+  "AWS::Amplify::App.Description": "CACHED",
+  "AWS::Amplify::App.EnvironmentVariable.Name": "CACHED",
+  "AWS::Amplify::App.EnvironmentVariable.Value": "CACHED",
+  "AWS::Amplify::App.IAMServiceRole": "CACHED",
+  "AWS::Amplify::App.Name": "CACHED",
+  "AWS::Amplify::App.OauthToken": "CACHED",
+  "AWS::Amplify::App.Platform": "CACHED",
+  "AWS::Amplify::App.Repository": "CACHED",
+  "AWS::Amplify::Branch.AppId": "CACHED",
+  "AWS::Amplify::Branch.Backend.StackArn": "CACHED",
+  "AWS::Amplify::Branch.BasicAuthConfig.Password": "CACHED",
+  "AWS::Amplify::Branch.BasicAuthConfig.Username": "CACHED",
+  "AWS::Amplify::Branch.BranchName": "CACHED",
+  "AWS::Amplify::Branch.BuildSpec": "CACHED",
+  "AWS::Amplify::Branch.Description": "CACHED",
+  "AWS::Amplify::Branch.EnvironmentVariable.Name": "CACHED",
+  "AWS::Amplify::Branch.EnvironmentVariable.Value": "CACHED",
+  "AWS::Amplify::Branch.Framework": "CACHED",
+  "AWS::Amplify::Branch.PullRequestEnvironmentName": "CACHED",
+  "AWS::Amplify::Branch.Stage": "CACHED",
+  "AWS::Amplify::Domain.AppId": "CACHED",
+  "AWS::Amplify::Domain.AutoSubDomainCreationPatterns": "CACHED",
+  "AWS::Amplify::Domain.AutoSubDomainIAMRole": "CACHED",
+  "AWS::Amplify::Domain.Certificate.CertificateArn": "CACHED",
+  "AWS::Amplify::Domain.Certificate.CertificateType": "CACHED",
+  "AWS::Amplify::Domain.Certificate.CertificateVerificationDNSRecord": "CACHED",
+  "AWS::Amplify::Domain.CertificateSettings.CertificateType": "CACHED",
+  "AWS::Amplify::Domain.CertificateSettings.CustomCertificateArn": "CACHED",
+  "AWS::Amplify::Domain.DomainName": "CACHED",
+  "AWS::Amplify::Domain.SubDomainSetting.BranchName": "CACHED",
+  "AWS::Amplify::Domain.SubDomainSetting.Prefix": "CACHED",
   "AWS::ApiGateway::Authorizer.AuthorizerResultTtlInSeconds": "CACHED",
   "AWS::ApiGateway::Authorizer.Type": "CACHED",
   "AWS::ApiGateway::DocumentationPart.Location.Type": "CACHED",
@@ -6895,6 +6694,7 @@
   "AWS::GlobalAccelerator::Accelerator.IpAddressType": "CACHED",
   "AWS::GlobalAccelerator::Accelerator.IpAddresses": "CACHED",
   "AWS::GlobalAccelerator::Accelerator.Name": "CACHED",
+  "AWS::GlobalAccelerator::CrossAccountAttachment.Name": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.HealthCheckPort": "CACHED",
   "AWS::GlobalAccelerator::EndpointGroup.HealthCheckProtocol": "CACHED",
   "AWS::GlobalAccelerator::Listener.ClientAffinity": "CACHED",
@@ -8513,12 +8313,28 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate.Label": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate.Status": "CACHED",
+  "AWS::SecurityHub::DelegatedAdmin.AdminAccountId": "CACHED",
   "AWS::SecurityHub::Hub.ControlFindingGenerator": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter.End": "CACHED",
+  "AWS::SecurityHub::Insight.DateFilter.Start": "CACHED",
+  "AWS::SecurityHub::Insight.DateRange.Unit": "CACHED",
+  "AWS::SecurityHub::Insight.MapFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::Insight.Name": "CACHED",
+  "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.Accounts": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.DataLakeArn": "CACHED",
+  "AWS::SecurityLake::AwsLogSource.SourceVersion": "CACHED",
   "AWS::SecurityLake::DataLake.MetaStoreManagerRoleArn": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration.Regions": "CACHED",
   "AWS::SecurityLake::DataLake.ReplicationConfiguration.RoleArn": "CACHED",
+  "AWS::SecurityLake::Subscriber.AccessTypes": "CACHED",
+  "AWS::SecurityLake::Subscriber.DataLakeArn": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity.ExternalId": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberIdentity.Principal": "CACHED",
+  "AWS::SecurityLake::Subscriber.SubscriberName": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",
