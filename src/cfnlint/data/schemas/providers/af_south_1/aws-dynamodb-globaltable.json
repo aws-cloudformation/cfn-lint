@@ -8,6 +8,27 @@
   ]
  ],
  "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "LocalSecondaryIndexes"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "AttributeDefinitions": {
+      "minItems": 2
+     },
+     "KeySchema": {
+      "minItems": 2
+     }
+    },
+    "type": "object"
+   }
+  }
+ ],
  "createOnlyProperties": [
   "/properties/LocalSecondaryIndexes",
   "/properties/TableName",
@@ -79,13 +100,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
+     "$ref": "#/definitions/KeySchema",
      "maxItems": 2,
-     "minItems": 1,
-     "type": "array",
-     "uniqueItems": true
+     "minItems": 1
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -102,22 +119,60 @@
    "type": "object"
   },
   "KeySchema": {
-   "additionalProperties": false,
-   "properties": {
-    "AttributeName": {
-     "maxLength": 255,
-     "minLength": 1,
-     "type": "string"
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
     },
-    "KeyType": {
-     "type": "string"
-    }
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
    },
-   "required": [
-    "KeyType",
-    "AttributeName"
+   "prefixItems": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
    ],
-   "type": "object"
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "KinesisStreamSpecification": {
    "additionalProperties": false,
@@ -147,12 +202,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
+     "$ref": "#/definitions/KeySchema",
      "maxItems": 2,
-     "type": "array",
-     "uniqueItems": true
+     "minItems": 2
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -511,7 +563,10 @@
    },
    "minItems": 1,
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "BillingMode": {
    "type": "string"
@@ -525,13 +580,9 @@
    "uniqueItems": true
   },
   "KeySchema": {
-   "items": {
-    "$ref": "#/definitions/KeySchema"
-   },
+   "$ref": "#/definitions/KeySchema",
    "maxItems": 2,
-   "minItems": 1,
-   "type": "array",
-   "uniqueItems": true
+   "minItems": 1
   },
   "LocalSecondaryIndexes": {
    "insertionOrder": false,

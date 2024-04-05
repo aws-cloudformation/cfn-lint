@@ -948,34 +948,6 @@ def test_validator(name, schema, instance, expected, validator):
             ],
         ),
         (
-            "valid requiredOr",
-            {"requiredOr": ["foo", "bar"]},
-            {"foo": {}},
-            [],
-        ),
-        (
-            "valid requiredOr with wrong type",
-            {"requiredOr": ["foo", "bar"]},
-            [],
-            [],
-        ),
-        (
-            "valid requiredOr with both items",
-            {"requiredOr": ["foo", "bar"]},
-            {"foo": {}, "bar": {}},
-            [],
-        ),
-        (
-            "requiredOr",
-            {"requiredOr": ["bar"]},
-            {},
-            [
-                ValidationError(
-                    "At least one of ['bar'] is a required property",
-                )
-            ],
-        ),
-        (
             "valid requiredXor",
             {"requiredXor": ["foo", "bar"]},
             {"foo": {}},
@@ -1101,6 +1073,20 @@ def test_validator(name, schema, instance, expected, validator):
             {"dependentRequired": {"foo": ["bar"]}},
             [],
             [],
+        ),
+        (
+            "valid prefixItems",
+            {"prefixItems": [{"type": "string"}]},
+            ["foo"],
+            [],
+        ),
+        (
+            "invalid prefixItems with wrong type",
+            {"prefixItems": [{"type": "string"}]},
+            [1],
+            [
+                ValidationError("1 is not of type 'string'"),
+            ],
         ),
     ],
 )

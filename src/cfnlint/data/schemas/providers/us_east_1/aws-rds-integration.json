@@ -4,8 +4,7 @@
   "/properties/SourceArn",
   "/properties/TargetArn",
   "/properties/KMSKeyId",
-  "/properties/AdditionalEncryptionContext",
-  "/properties/IntegrationName"
+  "/properties/AdditionalEncryptionContext"
  ],
  "definitions": {
   "EncryptionContextMap": {
@@ -79,7 +78,8 @@
    "permissions": [
     "rds:DescribeIntegrations",
     "rds:AddTagsToResource",
-    "rds:RemoveTagsFromResource"
+    "rds:RemoveTagsFromResource",
+    "rds:ModifyIntegration"
    ]
   }
  },
@@ -91,6 +91,17 @@
    "$ref": "#/definitions/EncryptionContextMap"
   },
   "CreateTime": {
+   "type": "string"
+  },
+  "DataFilter": {
+   "maxLength": 25600,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_ \"\\\\\\-$,*.:?+\\/]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
    "type": "string"
   },
   "IntegrationArn": {
