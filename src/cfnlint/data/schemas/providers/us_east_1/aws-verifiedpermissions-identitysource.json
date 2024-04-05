@@ -4,6 +4,21 @@
   "/properties/PolicyStoreId"
  ],
  "definitions": {
+  "CognitoGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupEntityType": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^([_a-zA-Z][_a-zA-Z0-9]*::)*[_a-zA-Z][_a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupEntityType"
+   ],
+   "type": "object"
+  },
   "CognitoUserPoolConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -18,6 +33,9 @@
      "maxItems": 1000,
      "minItems": 0,
      "type": "array"
+    },
+    "GroupConfiguration": {
+     "$ref": "#/definitions/CognitoGroupConfiguration"
     },
     "UserPoolArn": {
      "maxLength": 255,
@@ -84,6 +102,9 @@
    "type": "string"
   }
  },
+ "deprecatedProperties": [
+  "/properties/Details"
+ ],
  "handlers": {
   "create": {
    "permissions": [

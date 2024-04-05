@@ -67,44 +67,6 @@ is equivalent to the JSON schema
 }
 ```
 
-#### requiredOr
-*requiredOr* is used to define when at least one property from a set properties is required.
-
-On the following defined object
-```json
-{
-  "properties": {
-    "a": true,
-    "b": true,
-    "c": true
-  },
-  "additionalProperties": false
-}
-```
-
-The cfn-lint schema
-```json
-{
-  "requiredOr": ["a", "b", "c"]
-}
-```
-is equivalent to the JSON schema
-```json
-{
-  "anyOf": [
-    {
-      "required": ["a"]
-    },
-    {
-      "required": ["b"]
-    },
-    {
-      "required": ["c"]
-    }
-  ]
-}
-```
-
 #### propertiesNand
 *propertiesNand* is used to define when none or only one property from a set properties can be defined.
 
@@ -189,3 +151,6 @@ is equivalent to the JSON schema
   }
 }
 ```
+
+#### prefixItems
+*prefixItems* is similar to the definition of [prefixItems](https://json-schema.org/understanding-json-schema/reference/array#tupleValidation) but doesn't actually do the prefix. The current resource schema doesn't support [items](https://json-schema.org/understanding-json-schema/reference/array#items) being an array. We use `prefixItems` to validate array items where ordering matters.

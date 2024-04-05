@@ -635,6 +635,64 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::DynamoDB::Table",
+            patches=[
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "if": {
+                                    "type": "object",
+                                    "required": ["LocalSecondaryIndexes"],
+                                },
+                                "then": {
+                                    "type": "object",
+                                    "properties": {
+                                        "KeySchema": {
+                                            "minItems": 2,
+                                        },
+                                        "AttributeDefinitions": {
+                                            "minItems": 2,
+                                        },
+                                    },
+                                },
+                            }
+                        ]
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::DynamoDB::GlobalTable",
+            patches=[
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "if": {
+                                    "required": ["LocalSecondaryIndexes"],
+                                    "type": "object",
+                                },
+                                "then": {
+                                    "properties": {
+                                        "KeySchema": {
+                                            "minItems": 2,
+                                        },
+                                        "AttributeDefinitions": {
+                                            "minItems": 2,
+                                        },
+                                    },
+                                    "type": "object",
+                                },
+                            }
+                        ]
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::EC2::DHCPOptions",
             patches=[
                 Patch(
@@ -1011,7 +1069,13 @@ patches.extend(
             resource_type="AWS::IAM::Policy",
             patches=[
                 Patch(
-                    values={"requiredOr": ["Users", "Groups", "Roles"]},
+                    values={
+                        "anyOf": [
+                            {"required": ["Users"]},
+                            {"required": ["Groups"]},
+                            {"required": ["Roles"]},
+                        ]
+                    },
                     path="/",
                 ),
                 Patch(
@@ -1355,9 +1419,9 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "requiredOr": [
-                            "HttpErrorCodeReturnedEquals",
-                            "KeyPrefixEquals",
+                        "anyOf": [
+                            {"required": ["HttpErrorCodeReturnedEquals"]},
+                            {"required": ["KeyPrefixEquals"]},
                         ],
                     },
                     path="/definitions/RoutingRuleCondition",
