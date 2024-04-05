@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DataLakeArn",
+  "/properties/SourceName",
+  "/properties/SourceVersion"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateDatabase",
+    "glue:CreateTable",
+    "glue:GetDatabase",
+    "glue:GetTable",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "securitylake:CreateDataLake",
+    "securitylake:CreateAwsLogSource",
+    "securitylake:ListLogSources"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securitylake:DeleteAwsLogSource",
+    "securitylake:ListLogSources"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securitylake:ListLogSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securitylake:ListLogSources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securitylake:CreateAwsLogSource",
+    "securitylake:DeleteAwsLogSource",
+    "glue:CreateDatabase",
+    "glue:CreateTable",
+    "glue:GetDatabase",
+    "glue:GetTable",
+    "iam:CreateServiceLinkedRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SourceName",
+  "/properties/SourceVersion"
+ ],
+ "properties": {
+  "Accounts": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[0-9]{12}$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DataLakeArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SourceName": {
+   "type": "string"
+  },
+  "SourceVersion": {
+   "pattern": "^(latest|[0-9]\\.[0-9])$",
+   "type": "string"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "DataLakeArn",
+  "SourceVersion",
+  "SourceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityLake::AwsLogSource"
+}

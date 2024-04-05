@@ -1,5 +1,26 @@
 {
  "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "LocalSecondaryIndexes"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "AttributeDefinitions": {
+      "minItems": 2
+     },
+     "KeySchema": {
+      "minItems": 2
+     }
+    },
+    "type": "object"
+   }
+  }
+ ],
  "cfnLint": [
   "AWS::DynamoDB::Table/Properties"
  ],
@@ -95,11 +116,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -147,24 +166,57 @@
    "type": "object"
   },
   "KeySchema": {
-   "additionalProperties": false,
-   "properties": {
-    "AttributeName": {
-     "type": "string"
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
     },
-    "KeyType": {
-     "enum": [
-      "HASH",
-      "RANGE"
-     ],
-     "type": "string"
-    }
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
    },
-   "required": [
-    "KeyType",
-    "AttributeName"
+   "prefixItems": [
+    {
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
    ],
-   "type": "object"
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "KinesisStreamSpecification": {
    "additionalProperties": false,
@@ -192,11 +244,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 2
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -451,7 +501,10 @@
     "$ref": "#/definitions/AttributeDefinition"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "BillingMode": {
    "enum": [
@@ -479,11 +532,9 @@
   "KeySchema": {
    "oneOf": [
     {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
     },
     {
      "type": "object"

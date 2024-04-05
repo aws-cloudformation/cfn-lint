@@ -1,0 +1,295 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DataLakeArn"
+ ],
+ "definitions": {
+  "AccessTypes": {
+   "insertionOrder": true,
+   "items": {
+    "enum": [
+     "LAKEFORMATION",
+     "S3"
+    ],
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AwsLogSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceName": {
+     "type": "string"
+    },
+    "SourceVersion": {
+     "pattern": "^(latest|[0-9]\\.[0-9])$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomLogSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\\\\\w\\-_:/.]*$",
+     "type": "string"
+    },
+    "SourceVersion": {
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9\\-\\.\\_]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AwsLogSource": {
+       "$ref": "#/definitions/AwsLogSource"
+      }
+     },
+     "required": [
+      "AwsLogSource"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CustomLogSource": {
+       "$ref": "#/definitions/CustomLogSource"
+      }
+     },
+     "required": [
+      "CustomLogSource"
+     ],
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securitylake:CreateSubscriber",
+    "securitylake:CreateCustomLogSource",
+    "securitylake:CreateDataLake",
+    "securitylake:TagResource",
+    "securitylake:GetSubscriber",
+    "securitylake:ListTagsForResource",
+    "iam:GetRole",
+    "iam:GetRolePolicy",
+    "iam:PutRolePolicy",
+    "iam:CreateRole",
+    "iam:CreateServiceLinkedRole",
+    "glue:GetDatabase",
+    "glue:GetTable",
+    "lakeformation:RegisterResource",
+    "lakeformation:GrantPermissions",
+    "lakeformation:RevokePermissions",
+    "lakeformation:ListPermissions",
+    "ram:GetResourceShareAssociations",
+    "ram:CreateResourceShare",
+    "ram:UpdateResourceShare",
+    "ram:GetResourceShares"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securitylake:DeleteSubscriber",
+    "iam:GetRole",
+    "iam:ListRolePolicies",
+    "iam:DeleteRole",
+    "iam:DeleteRolePolicy",
+    "glue:GetTable",
+    "lakeformation:RevokePermissions",
+    "lakeformation:ListPermissions",
+    "ram:GetResourceShares",
+    "ram:DeleteResourceShare",
+    "events:DeleteApiDestination",
+    "events:DeleteConnection",
+    "events:DeleteRule",
+    "events:ListApiDestinations",
+    "events:ListTargetsByRule",
+    "events:DescribeRule",
+    "events:RemoveTargets",
+    "sqs:DeleteQueue",
+    "sqs:GetQueueUrl"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securitylake:ListSubscribers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securitylake:GetSubscriber",
+    "securitylake:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securitylake:UpdateSubscriber",
+    "securitylake:GetSubscriber",
+    "securitylake:TagResource",
+    "securitylake:UntagResource",
+    "securitylake:ListTagsForResource",
+    "glue:GetDatabase",
+    "glue:GetTable",
+    "lakeformation:ListPermissions",
+    "lakeformation:GrantPermissions",
+    "lakeformation:RevokePermissions",
+    "ram:CreateResourceShare",
+    "ram:GetResourceShares",
+    "ram:GetResourceShareAssociations",
+    "ram:UpdateResourceShare",
+    "ram:DeleteResourceShare",
+    "iam:CreateRole",
+    "iam:GetRole",
+    "iam:DeleteRole",
+    "iam:PutRolePolicy",
+    "iam:DeleteRolePolicy",
+    "iam:ListRolePolicies",
+    "events:CreateApiDestination",
+    "events:CreateConnection",
+    "events:ListApiDestinations",
+    "events:ListConnections",
+    "events:PutRule",
+    "events:UpdateApiDestination",
+    "events:UpdateConnection",
+    "events:DeleteApiDestination",
+    "events:DeleteConnection",
+    "events:DeleteRule",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule",
+    "events:DescribeRule",
+    "events:PutTargets"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SubscriberArn"
+ ],
+ "properties": {
+  "AccessTypes": {
+   "$ref": "#/definitions/AccessTypes"
+  },
+  "DataLakeArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceShareArn": {
+   "type": "string"
+  },
+  "ResourceShareName": {
+   "type": "string"
+  },
+  "S3BucketArn": {
+   "type": "string"
+  },
+  "Sources": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Source"
+   },
+   "type": "array"
+  },
+  "SubscriberArn": {
+   "type": "string"
+  },
+  "SubscriberDescription": {
+   "type": "string"
+  },
+  "SubscriberIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalId": {
+     "maxLength": 1224,
+     "minLength": 2,
+     "pattern": "^[\\w+=,.@:/-]*$",
+     "type": "string"
+    },
+    "Principal": {
+     "pattern": "^([0-9]{12}|[a-z0-9\\.\\-]*\\.(amazonaws|amazon)\\.com)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ExternalId",
+    "Principal"
+   ],
+   "type": "object"
+  },
+  "SubscriberName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\\\\\w\\s\\-_:/,.@=+]*$",
+   "type": "string"
+  },
+  "SubscriberRoleArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SubscriberArn",
+  "/properties/S3BucketArn",
+  "/properties/SubscriberRoleArn",
+  "/properties/ResourceShareArn",
+  "/properties/ResourceShareName"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "AccessTypes",
+  "DataLakeArn",
+  "Sources",
+  "SubscriberIdentity",
+  "SubscriberName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityLake::Subscriber"
+}
