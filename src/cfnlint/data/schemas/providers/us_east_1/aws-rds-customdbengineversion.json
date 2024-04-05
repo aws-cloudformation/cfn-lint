@@ -5,8 +5,11 @@
   "/properties/EngineVersion",
   "/properties/DatabaseInstallationFilesS3BucketName",
   "/properties/DatabaseInstallationFilesS3Prefix",
+  "/properties/ImageId",
   "/properties/KMSKeyId",
-  "/properties/Manifest"
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
  ],
  "definitions": {
   "Tag": {
@@ -32,8 +35,14 @@
  "handlers": {
   "create": {
    "permissions": [
+    "ec2:CopySnapshot",
+    "ec2:DeleteSnapshot",
+    "ec2:DescribeSnapshots",
     "kms:CreateGrant",
+    "kms:Decrypt",
     "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:ReEncrypt",
     "mediaimport:CreateDatabaseBinarySnapshot",
     "rds:AddTagsToResource",
     "rds:CreateCustomDBEngineVersion",
@@ -110,6 +119,9 @@
    "minLength": 1,
    "type": "string"
   },
+  "ImageId": {
+   "type": "string"
+  },
   "KMSKeyId": {
    "maxLength": 2048,
    "minLength": 1,
@@ -118,6 +130,9 @@
   "Manifest": {
    "maxLength": 51000,
    "minLength": 1,
+   "type": "string"
+  },
+  "SourceCustomDbEngineVersionIdentifier": {
    "type": "string"
   },
   "Status": {
@@ -136,6 +151,9 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "UseAwsProvidedLatestImage": {
+   "type": "boolean"
   }
  },
  "propertyTransform": {
@@ -147,7 +165,6 @@
   "/properties/DBEngineVersionArn"
  ],
  "required": [
-  "DatabaseInstallationFilesS3BucketName",
   "Engine",
   "EngineVersion"
  ],
@@ -157,6 +174,8 @@
  },
  "typeName": "AWS::RDS::CustomDBEngineVersion",
  "writeOnlyProperties": [
-  "/properties/Manifest"
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
  ]
 }

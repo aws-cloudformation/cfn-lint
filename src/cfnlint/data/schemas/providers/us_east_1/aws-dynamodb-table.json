@@ -1,5 +1,26 @@
 {
  "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "LocalSecondaryIndexes"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "AttributeDefinitions": {
+      "minItems": 2
+     },
+     "KeySchema": {
+      "minItems": 2
+     }
+    },
+    "type": "object"
+   }
+  }
+ ],
  "cfnLint": [
   "AWS::DynamoDB::Table/Properties"
  ],
@@ -95,11 +116,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -147,24 +166,57 @@
    "type": "object"
   },
   "KeySchema": {
-   "additionalProperties": false,
-   "properties": {
-    "AttributeName": {
-     "type": "string"
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
     },
-    "KeyType": {
-     "enum": [
-      "HASH",
-      "RANGE"
-     ],
-     "type": "string"
-    }
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
    },
-   "required": [
-    "KeyType",
-    "AttributeName"
+   "prefixItems": [
+    {
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
    ],
-   "type": "object"
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "KinesisStreamSpecification": {
    "additionalProperties": false,
@@ -177,6 +229,10 @@
      "type": "string"
     },
     "StreamArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Kinesis::Stream"
+     },
      "type": "string"
     }
    },
@@ -192,11 +248,9 @@
      "type": "string"
     },
     "KeySchema": {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 2
     },
     "Projection": {
      "$ref": "#/definitions/Projection"
@@ -271,6 +325,10 @@
    "additionalProperties": false,
    "properties": {
     "S3Bucket": {
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
      "type": "string"
     },
     "S3BucketOwner": {
@@ -292,6 +350,26 @@
    ],
    "properties": {
     "KMSMasterKeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/AliasName",
+        "typeName": "AWS::KMS::Alias"
+       }
+      }
+     ],
      "type": "string"
     },
     "SSEEnabled": {
@@ -466,7 +544,10 @@
     "$ref": "#/definitions/AttributeDefinition"
    },
    "type": "array",
-   "uniqueItems": true
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
   },
   "BillingMode": {
    "enum": [
@@ -494,11 +575,9 @@
   "KeySchema": {
    "oneOf": [
     {
-     "items": {
-      "$ref": "#/definitions/KeySchema"
-     },
-     "type": "array",
-     "uniqueItems": true
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
     },
     {
      "type": "object"

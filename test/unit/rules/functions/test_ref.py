@@ -10,7 +10,7 @@ import pytest
 from cfnlint.context import create_context_for_template
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.jsonschema._validators_cfn import FnItems
+from cfnlint.jsonschema._keywords_cfn import FnItems
 from cfnlint.rules.functions.Ref import Ref
 from cfnlint.template import Template
 

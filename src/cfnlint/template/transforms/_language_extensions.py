@@ -153,8 +153,8 @@ class _Transform:
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
                         map_value = mapping.value(cfn, params, True, False)
-                        # if we get None this means its all strings but couldn't be resolved
-                        # we will pass this forward
+                        # if we get None this means its all strings
+                        # but couldn't be resolved we will pass this forward
                         if map_value is None:
                             continue
                         # if we can resolve it we will return it

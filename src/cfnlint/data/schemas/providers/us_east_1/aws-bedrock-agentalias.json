@@ -1,0 +1,198 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AgentAliasArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AgentId"
+ ],
+ "definitions": {
+  "AgentAliasHistoryEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "EndDate": {
+     "type": "string"
+    },
+    "RoutingConfiguration": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AgentAliasRoutingConfigurationListItem"
+     },
+     "maxItems": 1,
+     "type": "array"
+    },
+    "StartDate": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AgentAliasRoutingConfigurationListItem": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentVersion": {
+     "maxLength": 5,
+     "minLength": 1,
+     "pattern": "^(DRAFT|[0-9]{0,4}[1-9][0-9]{0,4})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentVersion"
+   ],
+   "type": "object"
+  },
+  "AgentAliasStatus": {
+   "enum": [
+    "CREATING",
+    "PREPARED",
+    "FAILED",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:PrepareAgent",
+    "bedrock:GetAgent",
+    "bedrock:CreateAgentAlias",
+    "bedrock:TagResource",
+    "bedrock:GetAgentAlias",
+    "bedrock:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:DeleteAgentAlias"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AgentId": {
+      "$ref": "resource-schema.json#/properties/AgentId"
+     }
+    },
+    "required": [
+     "AgentId"
+    ]
+   },
+   "permissions": [
+    "bedrock:ListAgentAliases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetAgentAlias",
+    "bedrock:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:PrepareAgent",
+    "bedrock:GetAgent",
+    "bedrock:UpdateAgentAlias",
+    "bedrock:TagResource",
+    "bedrock:UntagResource",
+    "bedrock:GetAgentAlias",
+    "bedrock:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentId",
+  "/properties/AgentAliasId"
+ ],
+ "properties": {
+  "AgentAliasArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "AgentAliasHistoryEvents": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentAliasHistoryEvent"
+   },
+   "maxItems": 10,
+   "type": "array"
+  },
+  "AgentAliasId": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^(\\bTSTALIASID\\b|[0-9a-zA-Z]+)$",
+   "type": "string"
+  },
+  "AgentAliasName": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "AgentAliasStatus": {
+   "$ref": "#/definitions/AgentAliasStatus"
+  },
+  "AgentId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoutingConfiguration": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentAliasRoutingConfigurationListItem"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentAliasArn",
+  "/properties/AgentAliasHistoryEvents",
+  "/properties/AgentAliasId",
+  "/properties/AgentAliasStatus",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "AgentAliasName",
+  "AgentId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-agents",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::AgentAlias"
+}

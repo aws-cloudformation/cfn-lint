@@ -10,7 +10,7 @@ from typing import Any, Sequence
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._validators import type
+from cfnlint.jsonschema._keywords import type
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
