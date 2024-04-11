@@ -423,7 +423,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         for schema in cfnlint.helpers.REGISTRY_SCHEMAS:
                             if value["Type"] == schema["typeName"]:
                                 results[name] = {}
-                                for ro_property in schema["readOnlyProperties"]:
+                                for ro_property in schema.get("readOnlyProperties", []):
                                     try:
                                         item = resolve_pointer(schema, ro_property)
                                     except KeyError:
