@@ -1009,6 +1009,7 @@
   "AWS::Batch::JobDefinition.EphemeralStorage": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.ImagePullSecret": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.Metadata": "CACHED",
@@ -5108,6 +5109,7 @@
   "AWS::SSO::PermissionSet.CustomerManagedPolicyReference": "CACHED",
   "AWS::SSO::PermissionSet.PermissionsBoundary": "CACHED",
   "AWS::SageMaker::App.ResourceSpec": "CACHED",
+  "AWS::SageMaker::AppImageConfig.CodeEditorAppImageConfig": "CACHED",
   "AWS::SageMaker::AppImageConfig.ContainerConfig": "CACHED",
   "AWS::SageMaker::AppImageConfig.CustomImageContainerEnvironmentVariable": "CACHED",
   "AWS::SageMaker::AppImageConfig.FileSystemConfig": "CACHED",
@@ -5220,6 +5222,12 @@
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
+  "AWS::VerifiedPermissions::Policy.EntityIdentifier": "CACHED",
+  "AWS::VerifiedPermissions::Policy.PolicyDefinition": "CACHED",
+  "AWS::VerifiedPermissions::Policy.StaticPolicyDefinition": "CACHED",
+  "AWS::VerifiedPermissions::Policy.TemplateLinkedPolicyDefinition": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.SchemaDefinition": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.ValidationSettings": "CACHED",
   "AWS::WAF::ByteMatchSet.ByteMatchTuple": "CACHED",
   "AWS::WAF::ByteMatchSet.FieldToMatch": "CACHED",
   "AWS::WAF::IPSet.IPSetDescriptor": "CACHED",
@@ -5613,7 +5621,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "168.0.0",
+ "ResourceSpecificationVersion": "169.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7122,7 +7130,54 @@
   "AWS::CloudTrail::EventDataStore": "CACHED",
   "AWS::CloudTrail::Trail": "CACHED",
   "AWS::CloudWatch::Alarm": "CACHED",
-  "AWS::CloudWatch::AnomalyDetector": "CACHED",
+  "AWS::CloudWatch::AnomalyDetector": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html",
+   "Properties": {
+    "Configuration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-configuration",
+     "Required": false,
+     "Type": "Configuration",
+     "UpdateType": "Mutable"
+    },
+    "Dimensions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-dimensions",
+     "ItemType": "Dimension",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "MetricMathAnomalyDetector": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricmathanomalydetector",
+     "Required": false,
+     "Type": "MetricMathAnomalyDetector",
+     "UpdateType": "Immutable"
+    },
+    "MetricName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-metricname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Namespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-namespace",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SingleMetricAnomalyDetector": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-singlemetricanomalydetector",
+     "Required": false,
+     "Type": "SingleMetricAnomalyDetector",
+     "UpdateType": "Immutable"
+    },
+    "Stat": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-anomalydetector.html#cfn-cloudwatch-anomalydetector-stat",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::CloudWatch::CompositeAlarm": "CACHED",
   "AWS::CloudWatch::Dashboard": "CACHED",
   "AWS::CloudWatch::InsightRule": "CACHED",
@@ -10446,45 +10501,7 @@
   "AWS::SSO::InstanceAccessControlAttributeConfiguration": "CACHED",
   "AWS::SSO::PermissionSet": "CACHED",
   "AWS::SageMaker::App": "CACHED",
-  "AWS::SageMaker::AppImageConfig": {
-   "Attributes": {
-    "AppImageConfigArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html",
-   "Properties": {
-    "AppImageConfigName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-appimageconfigname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SageMaker::AppImageConfig.AppImageConfigName"
-     }
-    },
-    "JupyterLabAppImageConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-jupyterlabappimageconfig",
-     "Required": false,
-     "Type": "JupyterLabAppImageConfig",
-     "UpdateType": "Mutable"
-    },
-    "KernelGatewayImageConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-kernelgatewayimageconfig",
-     "Required": false,
-     "Type": "KernelGatewayImageConfig",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-appimageconfig.html#cfn-sagemaker-appimageconfig-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::SageMaker::AppImageConfig": "CACHED",
   "AWS::SageMaker::Domain": "CACHED",
   "AWS::SageMaker::Image": "CACHED",
   "AWS::SageMaker::ImageVersion": "CACHED",
@@ -10539,6 +10556,9 @@
   "AWS::Transfer::Server": "CACHED",
   "AWS::Transfer::User": "CACHED",
   "AWS::Transfer::Workflow": "CACHED",
+  "AWS::VerifiedPermissions::Policy": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore": "CACHED",
+  "AWS::VerifiedPermissions::PolicyTemplate": "CACHED",
   "AWS::WAF::ByteMatchSet": "CACHED",
   "AWS::WAF::IPSet": "CACHED",
   "AWS::WAF::Rule": "CACHED",
@@ -11916,8 +11936,6 @@
   "AWS::Redshift::EventSubscription.Severity": "CACHED",
   "AWS::Redshift::EventSubscription.SourceType": "CACHED",
   "AWS::Redshift::EventSubscription.SubscriptionName": "CACHED",
-  "AWS::Redshift::ScheduledAction.ScheduledActionDescription": "CACHED",
-  "AWS::Redshift::ScheduledAction.ScheduledActionName": "CACHED",
   "AWS::ResilienceHub::App.AppAssessmentSchedule": "CACHED",
   "AWS::ResilienceHub::App.AppTemplateBody": "CACHED",
   "AWS::ResilienceHub::App.Description": "CACHED",
@@ -12313,6 +12331,12 @@
   "AWS::Transfer::Workflow.TagStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
+  "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.Description": "CACHED",
+  "AWS::VerifiedPermissions::PolicyStore.ValidationSettings.Mode": "CACHED",
+  "AWS::VerifiedPermissions::PolicyTemplate.Description": "CACHED",
+  "AWS::VerifiedPermissions::PolicyTemplate.PolicyStoreId": "CACHED",
+  "AWS::VerifiedPermissions::PolicyTemplate.Statement": "CACHED",
   "AWS::WAFRegional::RegexPatternSet.RegexPatternStrings": "CACHED",
   "AWS::WAFv2::IPSet.Addresses": "CACHED",
   "AWS::WAFv2::IPSet.Description": "CACHED",
