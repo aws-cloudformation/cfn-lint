@@ -1,3 +1,10 @@
+### v0.86.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `169.0.0` (pull #[3135](https://github.com/aws-cloudformation/cfn-lint/pull/3135))
+- Support `db2-ae` and `db2-se` RDS engines for `AWS::RDS::DBInstance.Engine` (pull #[3139](https://github.com/aws-cloudformation/cfn-lint/pull/3139))
+###### Fixes
+- Safely get `readOnlyProperties` (pull #[3141](https://github.com/aws-cloudformation/cfn-lint/pull/3141))
+
 ### v0.86.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `168.0.0` (pull #[3127](https://github.com/aws-cloudformation/cfn-lint/pull/3127))
