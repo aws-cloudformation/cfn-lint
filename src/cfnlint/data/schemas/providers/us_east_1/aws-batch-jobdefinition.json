@@ -308,6 +308,9 @@
   "EksContainerSecurityContext": {
    "additionalProperties": false,
    "properties": {
+    "AllowPrivilegeEscalation": {
+     "type": "boolean"
+    },
     "Privileged": {
      "type": "boolean"
     },
@@ -461,6 +464,18 @@
    },
    "type": "object"
   },
+  "ImagePullSecret": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
   "LinuxParameters": {
    "additionalProperties": false,
    "properties": {
@@ -612,6 +627,13 @@
     },
     "HostNetwork": {
      "type": "boolean"
+    },
+    "ImagePullSecrets": {
+     "items": {
+      "$ref": "#/definitions/ImagePullSecret"
+     },
+     "type": "array",
+     "uniqueItems": false
     },
     "InitContainers": {
      "items": {
