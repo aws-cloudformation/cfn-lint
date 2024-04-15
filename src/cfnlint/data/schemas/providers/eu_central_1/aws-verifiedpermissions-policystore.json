@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "SchemaDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "CedarJson": {
+     "$ref": "#/definitions/SchemaJson"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaJson": {
+   "type": "string"
+  },
+  "ValidationMode": {
+   "enum": [
+    "OFF",
+    "STRICT"
+   ],
+   "type": "string"
+  },
+  "ValidationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "$ref": "#/definitions/ValidationMode"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "verifiedpermissions:CreatePolicyStore",
+    "verifiedpermissions:GetPolicyStore",
+    "verifiedpermissions:PutSchema"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "verifiedpermissions:DeletePolicyStore",
+    "verifiedpermissions:GetPolicyStore"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "verifiedpermissions:ListPolicyStores",
+    "verifiedpermissions:GetPolicyStore",
+    "verifiedpermissions:GetSchema"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "verifiedpermissions:GetPolicyStore",
+    "verifiedpermissions:GetSchema"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "verifiedpermissions:UpdatePolicyStore",
+    "verifiedpermissions:GetPolicyStore",
+    "verifiedpermissions:GetSchema",
+    "verifiedpermissions:PutSchema"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyStoreId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2500,
+   "minLength": 1,
+   "pattern": "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 150,
+   "minLength": 0,
+   "type": "string"
+  },
+  "PolicyStoreId": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "Schema": {
+   "$ref": "#/definitions/SchemaDefinition"
+  },
+  "ValidationSettings": {
+   "$ref": "#/definitions/ValidationSettings"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Schema/CedarJson": "$join([CedarJson, \"{}\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/PolicyStoreId"
+ ],
+ "required": [
+  "ValidationSettings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::VerifiedPermissions::PolicyStore"
+}
