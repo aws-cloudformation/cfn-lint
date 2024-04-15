@@ -637,6 +637,7 @@ types = [
     "AWS::ResilienceHub::App",
     "AWS::SecurityHub::Standard",
     "AWS::RolesAnywhere::CRL",
+    "AWS::CleanRooms::PrivacyBudgetTemplate",
     "AWS::SNS::TopicInlinePolicy",
     "AWS::Connect::EvaluationForm",
     "AWS::Redshift::ClusterParameterGroup",
