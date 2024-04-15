@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Prefix"
+ ],
+ "definitions": {
+  "AppliedForItem": {
+   "enum": [
+    "REPLICATION",
+    "PULL_THROUGH_CACHE"
+   ],
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/EncryptionType"
+    },
+    "KmsKey": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "EncryptionType"
+   ],
+   "type": "object"
+  },
+  "EncryptionType": {
+   "enum": [
+    "AES256",
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "KmsKey": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:CreateRepositoryCreationTemplate",
+    "ecr:PutLifecyclePolicy",
+    "ecr:SetRepositoryPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:DeleteRepositoryCreationTemplate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:DescribeRepositoryCreationTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:DescribeRepositoryCreationTemplates"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:DescribeRepositoryCreationTemplates",
+    "ecr:UpdateRepositoryCreationTemplate",
+    "ecr:PutLifecyclePolicy",
+    "ecr:SetRepositoryPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Prefix"
+ ],
+ "properties": {
+  "AppliedFor": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AppliedForItem"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "ImageTagMutability": {
+   "enum": [
+    "MUTABLE",
+    "IMMUTABLE"
+   ],
+   "type": "string"
+  },
+  "LifecyclePolicy": {
+   "maxLength": 30720,
+   "minLength": 100,
+   "type": "string"
+  },
+  "Prefix": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
+   "type": "string"
+  },
+  "RepositoryPolicy": {
+   "type": "string"
+  },
+  "ResourceTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Prefix",
+  "AppliedFor"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ECR::RepositoryCreationTemplate"
+}
