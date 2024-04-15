@@ -50,6 +50,13 @@ class TestResourcePolicy(TestCase):
                         "cloudformation:*",
                     ],
                     "Resource": "*",
+                    "Principal": {
+                        "AWS": [
+                            "arn:aws:iam::123456789012:root",
+                            "999999999999",
+                        ],
+                        "CanonicalUser": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
+                    },
                 }
             ],
         }
@@ -107,14 +114,18 @@ class TestResourcePolicy(TestCase):
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
-        self.assertEqual(len(errs), 2, errs)
-        self.assertEqual(errs[0].message, "'NotAllow' is not one of ['Allow', 'Deny']")
-        self.assertListEqual(list(errs[0].path), ["Statement", 0, "Effect"])
+        self.assertEqual(len(errs), 3, errs)
         self.assertEqual(
-            errs[1].message,
+            errs[0].message,
+            "Only one of ['Principal', 'NotPrincipal'] is a required property",
+        )
+        self.assertEqual(errs[1].message, "'NotAllow' is not one of ['Allow', 'Deny']")
+        self.assertListEqual(list(errs[1].path), ["Statement", 0, "Effect"])
+        self.assertEqual(
+            errs[2].message,
             "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012:role/object-role']} is not of type 'string'",
         )
-        self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
+        self.assertListEqual(list(errs[2].path), ["Statement", 0, "Resource", 1])
 
     def test_string_statements(self):
         """Test Positive"""
@@ -146,13 +157,17 @@ class TestResourcePolicy(TestCase):
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
-        self.assertEqual(len(errs), 2, errs)
+        self.assertEqual(len(errs), 3, errs)
         self.assertEqual(
             errs[0].message,
+            "Only one of ['Principal', 'NotPrincipal'] is a required property",
+        )
+        self.assertEqual(
+            errs[1].message,
             "{'Fn::Sub': ['arn:${AWS::Partition}:iam::123456789012/role/string-role']} is not of type 'string'",
         )
-        self.assertListEqual(list(errs[0].path), ["Statement", 0, "Resource", 1])
+        self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
         self.assertEqual(
-            errs[1].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
+            errs[2].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
         )
-        self.assertListEqual(list(errs[1].path), ["Version"])
+        self.assertListEqual(list(errs[2].path), ["Version"])
