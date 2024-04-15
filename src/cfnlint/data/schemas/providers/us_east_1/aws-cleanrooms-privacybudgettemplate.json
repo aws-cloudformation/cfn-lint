@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MembershipIdentifier",
+  "/properties/PrivacyBudgetType",
+  "/properties/AutoRefresh"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cleanrooms:CreatePrivacyBudgetTemplate",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:GetPrivacyBudgetTemplate",
+    "cleanrooms:ListPrivacyBudgetTemplates"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cleanrooms:DeletePrivacyBudgetTemplate",
+    "cleanrooms:GetPrivacyBudgetTemplate",
+    "cleanrooms:ListPrivacyBudgetTemplates",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MembershipIdentifier": {
+      "$ref": "resource-schema.json#/properties/MembershipIdentifier"
+     }
+    },
+    "required": [
+     "MembershipIdentifier"
+    ]
+   },
+   "permissions": [
+    "cleanrooms:ListPrivacyBudgetTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cleanrooms:GetPrivacyBudgetTemplate",
+    "cleanrooms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cleanrooms:UpdatePrivacyBudgetTemplate",
+    "cleanrooms:GetPrivacyBudgetTemplate",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PrivacyBudgetTemplateIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "AutoRefresh": {
+   "enum": [
+    "CALENDAR_MONTH",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "MembershipArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Epsilon": {
+     "maximum": 20,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "UsersNoisePerQuery": {
+     "maximum": 100,
+     "minimum": 10,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Epsilon",
+    "UsersNoisePerQuery"
+   ],
+   "type": "object"
+  },
+  "PrivacyBudgetTemplateIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "PrivacyBudgetType": {
+   "enum": [
+    "DIFFERENTIAL_PRIVACY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CollaborationArn",
+  "/properties/CollaborationIdentifier",
+  "/properties/PrivacyBudgetTemplateIdentifier",
+  "/properties/Arn",
+  "/properties/MembershipArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "AutoRefresh",
+  "PrivacyBudgetType",
+  "Parameters",
+  "MembershipIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::PrivacyBudgetTemplate"
+}

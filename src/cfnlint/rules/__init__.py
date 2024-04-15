@@ -224,7 +224,7 @@ class CloudFormationLintRule:
         """Verbose output"""
         return f"{self.id}: {self.shortdesc}\n{self.description}"
 
-    def initialize(self, cfn):
+    def initialize(self, cfn: Template):
         """Initialize the rule"""
 
     def is_enabled(
@@ -280,7 +280,7 @@ class CloudFormationLintRule:
 
     @matching("match")
     # pylint: disable=W0613
-    def matchall(self, filename, cfn):
+    def matchall(self, filename: str, cfn: Template):
         """Match the entire file"""
         return self.match(cfn)  # pylint: disable=E1102
 

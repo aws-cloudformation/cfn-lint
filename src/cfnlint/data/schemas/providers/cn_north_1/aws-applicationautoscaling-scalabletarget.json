@@ -1,0 +1,188 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "definitions": {
+  "ScalableTargetAction": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduledAction": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "ScalableTargetAction": {
+     "$ref": "#/definitions/ScalableTargetAction"
+    },
+    "Schedule": {
+     "type": "string"
+    },
+    "ScheduledActionName": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "Timezone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduledActionName",
+    "Schedule"
+   ],
+   "type": "object"
+  },
+  "SuspendedState": {
+   "additionalProperties": false,
+   "properties": {
+    "DynamicScalingInSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingOutSuspended": {
+     "type": "boolean"
+    },
+    "ScheduledScalingSuspended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:RegisterScalableTarget",
+    "application-autoscaling:DescribeScheduledActions",
+    "application-autoscaling:PutScheduledAction",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "cloudwatch:PutMetricAlarm",
+    "cloudwatch:DeleteAlarms",
+    "cloudwatch:DescribeAlarms",
+    "lambda:GetProvisionedConcurrencyConfig",
+    "lambda:PutProvisionedConcurrencyConfig",
+    "lambda:DeleteProvisionedConcurrencyConfig"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "application-autoscaling:DeregisterScalableTarget"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "application-autoscaling:RegisterScalableTarget",
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:DescribeScheduledActions",
+    "application-autoscaling:DeleteScheduledAction",
+    "application-autoscaling:PutScheduledAction",
+    "cloudwatch:PutMetricAlarm",
+    "cloudwatch:DeleteAlarms",
+    "cloudwatch:DescribeAlarms",
+    "lambda:GetProvisionedConcurrencyConfig",
+    "lambda:PutProvisionedConcurrencyConfig",
+    "lambda:DeleteProvisionedConcurrencyConfig"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "integer"
+  },
+  "MinCapacity": {
+   "type": "integer"
+  },
+  "ResourceId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::MSK::Cluster"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/ServiceArn",
+      "typeName": "AWS::ECS::Service"
+     }
+    }
+   ],
+   "type": "string"
+  },
+  "RoleARN": {
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "type": "string"
+  },
+  "ScheduledActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScheduledAction"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceNamespace": {
+   "type": "string"
+  },
+  "SuspendedState": {
+   "$ref": "#/definitions/SuspendedState"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResourceId",
+  "ServiceNamespace",
+  "ScalableDimension",
+  "MinCapacity",
+  "MaxCapacity"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApplicationAutoScaling::ScalableTarget",
+ "writeOnlyProperties": [
+  "/properties/RoleARN"
+ ]
+}
