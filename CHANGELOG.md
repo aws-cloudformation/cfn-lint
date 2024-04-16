@@ -1,3 +1,13 @@
+### v1.2.5a6
+## What's Changed
+* Add a bunch of DynamoDB rules and schema changes by @kddejong in (pull #[3133](https://github.com/aws-cloudformation/cfn-lint/pull/3133))
+* Don't support resources in a FindInMap by @kddejong (pull #[3120](https://github.com/aws-cloudformation/cfn-lint/pull/3120))
+* Create rules W3689 and W3688 to do validation of AWS::RDS::DBCluster by @kddejong (pull #[3118](https://github.com/aws-cloudformation/cfn-lint/pull/3118))
+* Create rules E3660 to do validation of Rest API configuration with OpenAPI by @kddejong (pull #[3117](https://github.com/aws-cloudformation/cfn-lint/pull/3117))
+* Update specs to 2024/04/15 (pull #[3146](https://github.com/aws-cloudformation/cfn-lint/pull/3146))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a5...v1.2.5.a6
+
 ### v1.2.5a5
 ## What's Changed
 * Show all errors in a validation schema by @kddejong in (pull #[3097](https://github.com/aws-cloudformation/cfn-lint/pull/3097))
