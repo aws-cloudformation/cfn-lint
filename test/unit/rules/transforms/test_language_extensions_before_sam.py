@@ -20,6 +20,7 @@ class TestLanguageExtensionsBeforeSAM(BaseRuleTestCase):
         self.success_templates = [
             "test/fixtures/templates/good/transforms/language_extensions_with_sam.yaml",
             "test/fixtures/templates/good/transforms/string_transform.yaml",
+            "test/fixtures/templates/good/transforms/language_extensions_with_other.yaml",
         ]
 
     def test_file_positive(self):
