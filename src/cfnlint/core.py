@@ -73,7 +73,12 @@ def run_cli(
         for path in registry_schemas:
             if path and os.path.isdir(os.path.expanduser(path)):
                 for f in os.listdir(path):
-                    with open(os.path.join(path, f), encoding="utf-8") as schema:
+                    if not f.endswith(".json"):
+                        continue
+                    filename = os.path.join(path, f)                    
+                    if not os.path.isfile(filename):
+                        continue
+                    with open(filename, encoding="utf-8") as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
 
     return run_checks(filename, template, rules, regions, mandatory_rules)
