@@ -12,7 +12,7 @@ from cfnlint.jsonschema._keywords import (
 from cfnlint.rules import CloudFormationLintRule
 
 
-class MinMax(CloudFormationLintRule):
+class NumberRange(CloudFormationLintRule):
     """Check if a Number has a length within the limit"""
 
     id = "E3034"

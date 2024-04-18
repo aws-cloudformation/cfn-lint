@@ -14,7 +14,7 @@ from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 
 
-class MinMaxLength(CloudFormationLintRule):
+class StringLength(CloudFormationLintRule):
     """Check if a String has a length within the limit"""
 
     id = "E3033"

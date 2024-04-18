@@ -18,7 +18,7 @@ class Pattern(CloudFormationLintRule):
         "Check if properties have a valid value in case of a pattern (Regular"
         " Expression)"
     )
-    source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#pattern"
     tags = ["resources", "property", "allowed pattern", "regex"]
     child_rules = {
         "W2031": None,
