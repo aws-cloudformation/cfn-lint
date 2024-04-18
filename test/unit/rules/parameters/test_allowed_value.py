@@ -8,7 +8,7 @@ from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.AllowedValue import AllowedValue
+from cfnlint.rules.parameters.Enum import Enum
 
 
 class TestAllowedValue(BaseRuleTestCase):
@@ -16,7 +16,7 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def setUp(self):
         """Setup"""
-        self.rule = AllowedValue()
+        self.rule = Enum()
 
     def test_validate(self):
         validator = CfnTemplateValidator(

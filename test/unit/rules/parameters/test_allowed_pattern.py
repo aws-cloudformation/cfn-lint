@@ -8,7 +8,7 @@ from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.AllowedPattern import AllowedPattern
+from cfnlint.rules.parameters.Pattern import Pattern
 from cfnlint.template.template import Template
 
 
@@ -17,7 +17,7 @@ class TestAllowedPattern(BaseRuleTestCase):
 
     def setUp(self):
         """Setup"""
-        self.rule = AllowedPattern()
+        self.rule = Pattern()
         cfn = Template(
             "test.yaml",
             {

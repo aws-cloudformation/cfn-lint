@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules import CloudFormationLintRule
 
 
-class OnlyOne(CloudFormationLintRule):
+class OneOf(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
 
     id = "E3018"

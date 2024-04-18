@@ -41,7 +41,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
                     },
                 },
                 {
@@ -69,7 +69,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
                     },
                 },
                 {
@@ -126,7 +126,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
                     },
                 },
                 {
@@ -155,7 +155,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3030",
                         "ShortDescription": "Check if properties have a valid value",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum",
                     },
                 },
                 {
@@ -183,7 +183,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties",
                     },
                 },
                 {
@@ -241,7 +241,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3030",
                         "ShortDescription": "Check if properties have a valid value",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum",
                     },
                 },
             ],
