@@ -75,7 +75,7 @@ def run_cli(
                 for f in os.listdir(path):
                     if not f.endswith(".json"):
                         continue
-                    filename = os.path.join(path, f)                    
+                    filename = os.path.join(path, f)
                     if not os.path.isfile(filename):
                         continue
                     with open(filename, encoding="utf-8") as schema:
