@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules import CloudFormationLintRule
 
 
-class DependentExcluded(CloudFormationLintRule):
+class DependentRequired(CloudFormationLintRule):
     """Check Required Resource Configuration"""
 
     id = "E3021"
@@ -18,5 +18,5 @@ class DependentExcluded(CloudFormationLintRule):
         "When certain properties are specified it results "
         "in other properties to be required"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#pr"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#dependentrequired"
     tags = ["resources"]

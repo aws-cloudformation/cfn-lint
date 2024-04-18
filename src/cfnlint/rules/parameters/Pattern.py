@@ -7,7 +7,7 @@ from cfnlint.jsonschema._keywords import pattern
 from cfnlint.rules import CloudFormationLintRule
 
 
-class AllowedPattern(CloudFormationLintRule):
+class Pattern(CloudFormationLintRule):
     """Check if parameters have a valid value"""
 
     id = "W2031"
@@ -16,8 +16,8 @@ class AllowedPattern(CloudFormationLintRule):
         "Check if parameters have a valid value in a pattern. The Parameter's allowed"
         " pattern is based on the usages in property (Ref)"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
-    tags = ["parameters", "resources", "property", "allowed pattern"]
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#pattern"
+    tags = ["parameters", "resources", "property", "pattern"]
 
     # This rule is triggered from the equivalent rule E3031
     # the values are fed from there and we adjust the error outputs

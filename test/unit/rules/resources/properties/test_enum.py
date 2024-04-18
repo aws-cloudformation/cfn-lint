@@ -8,14 +8,14 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
+from cfnlint.rules.parameters.Enum import Enum as ParameterEnum
 from cfnlint.rules.resources.properties.Enum import Enum
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = Enum()
-    rule.child_rules["W2030"] = ParameterAllowedValue()
+    rule.child_rules["W2030"] = ParameterEnum()
     yield Enum()
 
 
@@ -44,7 +44,7 @@ def test_validate(rule, validator):
     )
     errs = list(rule.enum(evolved, ["foo"], "bar", {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterAllowedValue.id
+    assert errs[0].rule.id == ParameterEnum.id
 
     rule.child_rules["W2030"] = None
     errs = list(rule.enum(evolved, ["foo"], "bar", {}))

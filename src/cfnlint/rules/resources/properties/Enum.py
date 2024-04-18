@@ -13,7 +13,7 @@ class Enum(CloudFormationLintRule):
     id = "E3030"
     shortdesc = "Check if properties have a valid value"
     description = "Check if properties have a valid value in case of an enumator"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum"
     tags = ["resources", "property", "allowed value"]
     child_rules = {
         "W2030": None,
