@@ -20,7 +20,7 @@ class Properties(BaseJsonSchema):
     id = "E3002"
     shortdesc = "Resource properties are invalid"
     description = "Making sure that resources properties are properly configured"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#properties"
     tags = ["resources"]
 
     def __init__(self):

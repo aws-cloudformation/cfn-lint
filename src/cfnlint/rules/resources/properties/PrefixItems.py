@@ -12,5 +12,5 @@ class PrefixItems(CloudFormationLintRule):
     id = "E3008"
     shortdesc = "Validate an array in order"
     description = "Will validate arrays in order for schema validation"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required"
-    tags = ["resources"]
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#prefixitems"
+    tags = ["resources", "properties", "array", "prefixItems"]

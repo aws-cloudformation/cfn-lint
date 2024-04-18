@@ -8,15 +8,15 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.NumberSize import NumberSize as ParameterNumberSize
-from cfnlint.rules.resources.properties.MinMax import MinMax
+from cfnlint.rules.parameters.NumberRange import NumberRange as ParamaterNumberRange
+from cfnlint.rules.resources.properties.NumberRange import NumberRange
 
 
 @pytest.fixture
 def rule():
-    rule = MinMax()
-    rule.child_rules["W3034"] = ParameterNumberSize()
-    yield MinMax()
+    rule = NumberRange()
+    rule.child_rules["W3034"] = ParamaterNumberRange()
+    yield NumberRange()
 
 
 @pytest.fixture(scope="module")
@@ -36,7 +36,7 @@ def test_minimum(rule, validator):
     )
     errs = list(rule.minimum(evolved, 1, 0, {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterNumberSize.id
+    assert errs[0].rule.id == ParamaterNumberRange.id
 
     rule.child_rules["W3034"] = None
     errs = list(rule.minimum(evolved, 1, 0, {}))
@@ -55,7 +55,7 @@ def test_maximum(rule, validator):
     )
     errs = list(rule.maximum(evolved, 1, 2, {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterNumberSize.id
+    assert errs[0].rule.id == ParamaterNumberRange.id
 
     rule.child_rules["W3034"] = None
     errs = list(rule.maximum(evolved, 1, 2, {}))
@@ -74,7 +74,7 @@ def test_exclusive_minimum(rule, validator):
     )
     errs = list(rule.exclusiveMinimum(evolved, 1, 1, {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterNumberSize.id
+    assert errs[0].rule.id == ParamaterNumberRange.id
 
     rule.child_rules["W3034"] = None
     errs = list(rule.exclusiveMinimum(evolved, 1, 1, {}))
@@ -93,7 +93,7 @@ def test_exlusive_maximum(rule, validator):
     )
     errs = list(rule.exclusiveMaximum(evolved, 1, 1, {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterNumberSize.id
+    assert errs[0].rule.id == ParamaterNumberRange.id
 
     rule.child_rules["W3034"] = None
     errs = list(rule.exclusiveMaximum(evolved, 1, 1, {}))
