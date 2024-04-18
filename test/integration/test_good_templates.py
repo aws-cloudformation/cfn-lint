@@ -177,7 +177,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         ),
                         "Id": "E3012",
                         "ShortDescription": "Check resource properties values",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype",
+                        "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#type",
                     },
                 }
             ],
