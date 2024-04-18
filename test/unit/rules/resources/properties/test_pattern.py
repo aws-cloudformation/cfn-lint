@@ -8,16 +8,14 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.AllowedPattern import (
-    AllowedPattern as ParameterAllowedPattern,
-)
+from cfnlint.rules.parameters.Pattern import Pattern as ParameterPattern
 from cfnlint.rules.resources.properties.Pattern import Pattern
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = Pattern()
-    rule.child_rules["W2031"] = ParameterAllowedPattern()
+    rule.child_rules["W2031"] = ParameterPattern()
     yield rule
 
 
@@ -46,7 +44,7 @@ def test_validate(rule, validator):
     )
     errs = list(rule.pattern(evolved, "foo", "bar", {}))
     assert len(errs) == 1
-    assert errs[0].rule.id == ParameterAllowedPattern.id
+    assert errs[0].rule.id == ParameterPattern.id
 
     rule.child_rules["W2031"] = None
     errs = list(rule.pattern(evolved, "foo", "bar", {}))

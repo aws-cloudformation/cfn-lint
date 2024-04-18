@@ -7,7 +7,7 @@ from cfnlint.jsonschema._keywords import enum
 from cfnlint.rules import CloudFormationLintRule
 
 
-class AllowedValue(CloudFormationLintRule):
+class Enum(CloudFormationLintRule):
     """Check if parameters have a valid value"""
 
     id = "W2030"
@@ -16,7 +16,7 @@ class AllowedValue(CloudFormationLintRule):
         "Check if parameters have a valid value in case of an enumator. The Parameter's"
         " allowed values is based on the usages in property (Ref)"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#enum"
     tags = ["parameters", "resources", "property", "allowed value"]
 
     # This rule is triggered from the equivalent rule E3030

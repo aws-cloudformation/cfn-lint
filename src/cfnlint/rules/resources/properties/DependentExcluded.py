@@ -16,5 +16,5 @@ class DependentExcluded(CloudFormationLintRule):
     description = (
         "When certain properties are specified other properties should not be included"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#dependentexcluded"
     tags = ["resources"]

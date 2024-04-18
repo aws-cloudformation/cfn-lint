@@ -16,7 +16,7 @@ class UniqueItems(CloudFormationLintRule):
         "Certain lists don't support duplicate items. "
         "Check when duplicates are provided but not supported."
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#uniqueitems"
     tags = ["resources", "property", "list"]
     child_rules = {
         "I3037": None,
