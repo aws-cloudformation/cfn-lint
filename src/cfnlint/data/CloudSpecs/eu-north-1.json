@@ -2707,6 +2707,8 @@
   "AWS::OSIS::Pipeline.LogPublishingOptions": "CACHED",
   "AWS::OSIS::Pipeline.VpcEndpoint": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions": "CACHED",
+  "AWS::Oam::Link.LinkConfiguration": "CACHED",
+  "AWS::Oam::Link.LinkFilter": "CACHED",
   "AWS::OpenSearchService::Domain.AdvancedSecurityOptionsInput": "CACHED",
   "AWS::OpenSearchService::Domain.ClusterConfig": "CACHED",
   "AWS::OpenSearchService::Domain.CognitoOptions": "CACHED",
@@ -4365,29 +4367,7 @@
   "AWS::Redshift::ScheduledAction.ResumeClusterMessage": "CACHED",
   "AWS::Redshift::ScheduledAction.ScheduledActionType": "CACHED",
   "AWS::RedshiftServerless::Namespace.Namespace": "CACHED",
-  "AWS::RedshiftServerless::Namespace.SnapshotCopyConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshiftserverless-namespace-snapshotcopyconfiguration.html",
-   "Properties": {
-    "DestinationKmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshiftserverless-namespace-snapshotcopyconfiguration.html#cfn-redshiftserverless-namespace-snapshotcopyconfiguration-destinationkmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DestinationRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshiftserverless-namespace-snapshotcopyconfiguration.html#cfn-redshiftserverless-namespace-snapshotcopyconfiguration-destinationregion",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshiftserverless-namespace-snapshotcopyconfiguration.html#cfn-redshiftserverless-namespace-snapshotcopyconfiguration-snapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RedshiftServerless::Namespace.SnapshotCopyConfiguration": "CACHED",
   "AWS::RedshiftServerless::Workgroup.ConfigParameter": "CACHED",
   "AWS::RedshiftServerless::Workgroup.Endpoint": "CACHED",
   "AWS::RedshiftServerless::Workgroup.NetworkInterface": "CACHED",
@@ -4983,6 +4963,8 @@
   "AWS::Synthetics::Canary.VPCConfig": "CACHED",
   "AWS::Synthetics::Canary.VisualReference": "CACHED",
   "AWS::SystemsManagerSAP::Application.Credential": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.LogDeliveryConfiguration": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.S3Configuration": "CACHED",
   "AWS::Transfer::Connector.As2Config": "CACHED",
   "AWS::Transfer::Connector.SftpConfig": "CACHED",
   "AWS::Transfer::Server.As2Transport": "CACHED",
@@ -5197,7 +5179,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "169.0.0",
+ "ResourceSpecificationVersion": "170.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5555,7 +5537,60 @@
   "AWS::EC2::ClientVpnEndpoint": "CACHED",
   "AWS::EC2::ClientVpnRoute": "CACHED",
   "AWS::EC2::ClientVpnTargetNetworkAssociation": "CACHED",
-  "AWS::EC2::CustomerGateway": "CACHED",
+  "AWS::EC2::CustomerGateway": {
+   "Attributes": {
+    "CustomerGatewayId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html",
+   "Properties": {
+    "BgpAsn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-bgpasn",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "CertificateArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-certificatearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::CustomerGateway.CertificateArn"
+     }
+    },
+    "DeviceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-devicename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "IpAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-ipaddress",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-type",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CustomerGatewayType"
+     }
+    }
+   }
+  },
   "AWS::EC2::DHCPOptions": "CACHED",
   "AWS::EC2::EC2Fleet": "CACHED",
   "AWS::EC2::EIP": "CACHED",
@@ -6116,7 +6151,47 @@
   "AWS::LakeFormation::Resource": "CACHED",
   "AWS::LakeFormation::Tag": "CACHED",
   "AWS::LakeFormation::TagAssociation": "CACHED",
-  "AWS::Lambda::Alias": "CACHED",
+  "AWS::Lambda::Alias": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "FunctionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-functionname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FunctionVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-functionversion",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ProvisionedConcurrencyConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-provisionedconcurrencyconfig",
+     "Required": false,
+     "Type": "ProvisionedConcurrencyConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "RoutingConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html#cfn-lambda-alias-routingconfig",
+     "Required": false,
+     "Type": "AliasRoutingConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lambda::CodeSigningConfig": "CACHED",
   "AWS::Lambda::EventInvokeConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping": "CACHED",
@@ -6286,182 +6361,7 @@
   "AWS::Redshift::EndpointAuthorization": "CACHED",
   "AWS::Redshift::EventSubscription": "CACHED",
   "AWS::Redshift::ScheduledAction": "CACHED",
-  "AWS::RedshiftServerless::Namespace": {
-   "Attributes": {
-    "Namespace": {
-     "Type": "Namespace"
-    },
-    "Namespace.AdminPasswordSecretArn": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.AdminPasswordSecretKmsKeyId": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.AdminUsername": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.CreationDate": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.DbName": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.DefaultIamRoleArn": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.IamRoles": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "Namespace.KmsKeyId": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.LogExports": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "Namespace.NamespaceArn": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.NamespaceId": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.NamespaceName": {
-     "PrimitiveType": "String"
-    },
-    "Namespace.Status": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html",
-   "Properties": {
-    "AdminPasswordSecretKmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-adminpasswordsecretkmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AdminUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-adminuserpassword",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.AdminUserPassword"
-     }
-    },
-    "AdminUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-adminusername",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.AdminUsername"
-     }
-    },
-    "DbName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-dbname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.DbName"
-     }
-    },
-    "DefaultIamRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-defaultiamrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "FinalSnapshotName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-finalsnapshotname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.FinalSnapshotName"
-     }
-    },
-    "FinalSnapshotRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-finalsnapshotretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "IamRoles": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-iamroles",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.IamRoles"
-     }
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LogExports": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-logexports",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.LogExports"
-     }
-    },
-    "ManageAdminPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-manageadminpassword",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NamespaceName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-namespacename",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RedshiftServerless::Namespace.NamespaceName"
-     }
-    },
-    "NamespaceResourcePolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-namespaceresourcepolicy",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RedshiftIdcApplicationArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-redshiftidcapplicationarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnapshotCopyConfigurations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-snapshotcopyconfigurations",
-     "DuplicatesAllowed": true,
-     "ItemType": "SnapshotCopyConfiguration",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshiftserverless-namespace.html#cfn-redshiftserverless-namespace-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::RedshiftServerless::Namespace": "CACHED",
   "AWS::RedshiftServerless::Workgroup": "CACHED",
   "AWS::RefactorSpaces::Application": "CACHED",
   "AWS::RefactorSpaces::Environment": "CACHED",
@@ -6625,6 +6525,7 @@
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::Synthetics::Group": "CACHED",
   "AWS::SystemsManagerSAP::Application": "CACHED",
+  "AWS::Timestream::InfluxDBInstance": "CACHED",
   "AWS::Transfer::Agreement": "CACHED",
   "AWS::Transfer::Certificate": "CACHED",
   "AWS::Transfer::Connector": "CACHED",
@@ -8095,6 +7996,7 @@
   "AWS::KMS::Key.KeyUsage": "CACHED",
   "AWS::KMS::Key.Origin": "CACHED",
   "AWS::KMS::Key.PendingWindowInDays": "CACHED",
+  "AWS::KMS::Key.RotationPeriodInDays": "CACHED",
   "AWS::KMS::ReplicaKey.Description": "CACHED",
   "AWS::KMS::ReplicaKey.PendingWindowInDays": "CACHED",
   "AWS::KMS::ReplicaKey.PrimaryKeyArn": "CACHED",
@@ -8748,6 +8650,7 @@
   "AWS::OSIS::Pipeline.VpcOptions.SecurityGroupIds": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions.SubnetIds": "CACHED",
   "AWS::Oam::Link.LabelTemplate": "CACHED",
+  "AWS::Oam::Link.LinkFilter.Filter": "CACHED",
   "AWS::Oam::Link.ResourceTypes": "CACHED",
   "AWS::Oam::Link.SinkIdentifier": "CACHED",
   "AWS::Oam::Sink.Name": "CACHED",
@@ -11700,6 +11603,17 @@
   "AWS::SystemsManagerSAP::Application.Instances": "CACHED",
   "AWS::SystemsManagerSAP::Application.SapInstanceNumber": "CACHED",
   "AWS::SystemsManagerSAP::Application.Sid": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.AllocatedStorage": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Bucket": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbInstanceType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbParameterGroupIdentifier": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbStorageType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DeploymentType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Name": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Organization": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Password": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.S3Configuration.BucketName": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Username": "CACHED",
   "AWS::Transfer::Agreement.AccessRole": "CACHED",
   "AWS::Transfer::Agreement.BaseDirectory": "CACHED",
   "AWS::Transfer::Agreement.Description": "CACHED",
