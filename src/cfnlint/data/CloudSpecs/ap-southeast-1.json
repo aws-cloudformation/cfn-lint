@@ -1577,6 +1577,7 @@
   "AWS::ECR::Repository.EncryptionConfiguration": "CACHED",
   "AWS::ECR::Repository.ImageScanningConfiguration": "CACHED",
   "AWS::ECR::Repository.LifecyclePolicy": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.EncryptionConfiguration": "CACHED",
   "AWS::ECS::CapacityProvider.AutoScalingGroupProvider": "CACHED",
   "AWS::ECS::CapacityProvider.ManagedScaling": "CACHED",
   "AWS::ECS::Cluster.CapacityProviderStrategyItem": "CACHED",
@@ -4400,6 +4401,8 @@
   "AWS::OSIS::Pipeline.LogPublishingOptions": "CACHED",
   "AWS::OSIS::Pipeline.VpcEndpoint": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions": "CACHED",
+  "AWS::Oam::Link.LinkConfiguration": "CACHED",
+  "AWS::Oam::Link.LinkFilter": "CACHED",
   "AWS::Omics::AnnotationStore.ReferenceItem": "CACHED",
   "AWS::Omics::AnnotationStore.SseConfig": "CACHED",
   "AWS::Omics::AnnotationStore.StoreOptions": "CACHED",
@@ -6176,6 +6179,7 @@
   "AWS::Redshift::ScheduledAction.ResumeClusterMessage": "CACHED",
   "AWS::Redshift::ScheduledAction.ScheduledActionType": "CACHED",
   "AWS::RedshiftServerless::Namespace.Namespace": "CACHED",
+  "AWS::RedshiftServerless::Namespace.SnapshotCopyConfiguration": "CACHED",
   "AWS::RedshiftServerless::Workgroup.ConfigParameter": "CACHED",
   "AWS::RedshiftServerless::Workgroup.Endpoint": "CACHED",
   "AWS::RedshiftServerless::Workgroup.NetworkInterface": "CACHED",
@@ -6788,6 +6792,8 @@
   "AWS::Synthetics::Canary.VPCConfig": "CACHED",
   "AWS::Synthetics::Canary.VisualReference": "CACHED",
   "AWS::SystemsManagerSAP::Application.Credential": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.LogDeliveryConfiguration": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.S3Configuration": "CACHED",
   "AWS::Transfer::Connector.As2Config": "CACHED",
   "AWS::Transfer::Connector.SftpConfig": "CACHED",
   "AWS::Transfer::Server.As2Transport": "CACHED",
@@ -7017,7 +7023,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "169.0.0",
+ "ResourceSpecificationVersion": "170.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7443,6 +7449,7 @@
   "AWS::ECR::RegistryPolicy": "CACHED",
   "AWS::ECR::ReplicationConfiguration": "CACHED",
   "AWS::ECR::Repository": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate": "CACHED",
   "AWS::ECS::CapacityProvider": "CACHED",
   "AWS::ECS::Cluster": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations": "CACHED",
@@ -8188,7 +8195,54 @@
   "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::SecurityLake::AwsLogSource": "CACHED",
-  "AWS::SecurityLake::DataLake": "CACHED",
+  "AWS::SecurityLake::DataLake": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "S3BucketArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html",
+   "Properties": {
+    "EncryptionConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-encryptionconfiguration",
+     "Required": false,
+     "Type": "EncryptionConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "LifecycleConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-lifecycleconfiguration",
+     "Required": false,
+     "Type": "LifecycleConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "MetaStoreManagerRoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-metastoremanagerrolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SecurityLake::DataLake.MetaStoreManagerRoleArn"
+     }
+    },
+    "ReplicationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-replicationconfiguration",
+     "Required": false,
+     "Type": "ReplicationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::SecurityLake::Subscriber": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
@@ -8232,6 +8286,7 @@
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::Synthetics::Group": "CACHED",
   "AWS::SystemsManagerSAP::Application": "CACHED",
+  "AWS::Timestream::InfluxDBInstance": "CACHED",
   "AWS::Transfer::Agreement": "CACHED",
   "AWS::Transfer::Certificate": "CACHED",
   "AWS::Transfer::Connector": "CACHED",
@@ -8608,6 +8663,7 @@
   "AWS::AppIntegrations::Application.ExternalUrlConfig.ApprovedOrigins": "CACHED",
   "AWS::AppIntegrations::Application.Name": "CACHED",
   "AWS::AppIntegrations::Application.Namespace": "CACHED",
+  "AWS::AppIntegrations::Application.Permissions": "CACHED",
   "AWS::AppIntegrations::DataIntegration.Description": "CACHED",
   "AWS::AppIntegrations::DataIntegration.FileConfiguration.Folders": "CACHED",
   "AWS::AppIntegrations::DataIntegration.KmsKey": "CACHED",
@@ -9705,6 +9761,7 @@
   "AWS::EC2::CapacityReservationFleet.InstanceMatchCriteria": "CACHED",
   "AWS::EC2::CapacityReservationFleet.Tenancy": "CACHED",
   "AWS::EC2::CapacityReservationFleet.TotalTargetCapacity": "CACHED",
+  "AWS::EC2::CustomerGateway.BgpAsnExtended": "CACHED",
   "AWS::EC2::CustomerGateway.CertificateArn": "CACHED",
   "AWS::EC2::EC2Fleet.CapacityRebalance.ReplacementStrategy": "CACHED",
   "AWS::EC2::EC2Fleet.CapacityReservationOptionsRequest.UsageStrategy": "CACHED",
@@ -9792,6 +9849,13 @@
   "AWS::ECR::Repository.LifecyclePolicy.LifecyclePolicyText": "CACHED",
   "AWS::ECR::Repository.LifecyclePolicy.RegistryId": "CACHED",
   "AWS::ECR::Repository.RepositoryName": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.AppliedFor": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.Description": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.EncryptionConfiguration.EncryptionType": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.EncryptionConfiguration.KmsKey": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.ImageTagMutability": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.LifecyclePolicy": "CACHED",
+  "AWS::ECR::RepositoryCreationTemplate.Prefix": "CACHED",
   "AWS::ECS::CapacityProvider.AutoScalingGroupProvider.ManagedDraining": "CACHED",
   "AWS::ECS::CapacityProvider.AutoScalingGroupProvider.ManagedTerminationProtection": "CACHED",
   "AWS::ECS::CapacityProvider.ManagedScaling.Status": "CACHED",
@@ -10536,6 +10600,7 @@
   "AWS::KMS::Key.KeyUsage": "CACHED",
   "AWS::KMS::Key.Origin": "CACHED",
   "AWS::KMS::Key.PendingWindowInDays": "CACHED",
+  "AWS::KMS::Key.RotationPeriodInDays": "CACHED",
   "AWS::KMS::ReplicaKey.Description": "CACHED",
   "AWS::KMS::ReplicaKey.PendingWindowInDays": "CACHED",
   "AWS::KMS::ReplicaKey.PrimaryKeyArn": "CACHED",
@@ -11438,6 +11503,7 @@
   "AWS::OSIS::Pipeline.VpcOptions.SecurityGroupIds": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions.SubnetIds": "CACHED",
   "AWS::Oam::Link.LabelTemplate": "CACHED",
+  "AWS::Oam::Link.LinkFilter.Filter": "CACHED",
   "AWS::Oam::Link.ResourceTypes": "CACHED",
   "AWS::Oam::Link.SinkIdentifier": "CACHED",
   "AWS::Oam::Sink.Name": "CACHED",
@@ -14688,6 +14754,17 @@
   "AWS::SystemsManagerSAP::Application.Instances": "CACHED",
   "AWS::SystemsManagerSAP::Application.SapInstanceNumber": "CACHED",
   "AWS::SystemsManagerSAP::Application.Sid": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.AllocatedStorage": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Bucket": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbInstanceType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbParameterGroupIdentifier": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DbStorageType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.DeploymentType": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Name": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Organization": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Password": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.S3Configuration.BucketName": "CACHED",
+  "AWS::Timestream::InfluxDBInstance.Username": "CACHED",
   "AWS::Transfer::Agreement.AccessRole": "CACHED",
   "AWS::Transfer::Agreement.BaseDirectory": "CACHED",
   "AWS::Transfer::Agreement.Description": "CACHED",
