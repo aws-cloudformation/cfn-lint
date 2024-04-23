@@ -29,6 +29,7 @@ def main():
             sort_keys=True,
             separators=(",", ": "),
         )
+        f.write("\n")
 
 
 if __name__ == "__main__":
