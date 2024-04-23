@@ -43,6 +43,7 @@ def write_output(resource, filename, obj):
 
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(obj, f, indent=1, sort_keys=True, separators=(",", ": "))
+        f.write("\n")
 
 
 def write_db_cluster(results):
