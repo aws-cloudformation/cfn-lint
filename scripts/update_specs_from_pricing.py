@@ -324,6 +324,7 @@ def get_rds_pricing():
     )
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(specs, f, indent=1, sort_keys=True, separators=(",", ": "))
+        f.write("\n")
 
     filename = (
         "src/cfnlint/data/schemas/extensions/"
@@ -331,6 +332,7 @@ def get_rds_pricing():
     )
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(cluster_specs, f, indent=1, sort_keys=True, separators=(",", ": "))
+        f.write("\n")
 
 
 def get_results(service, product_families, default=None):
@@ -374,6 +376,7 @@ def write_output(resource, filename, obj):
 
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(output, f, indent=1, sort_keys=True, separators=(",", ": "))
+        f.write("\n")
 
 
 def main():
