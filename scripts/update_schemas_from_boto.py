@@ -1056,7 +1056,7 @@ def build_resource_type_patches(dir: str, resource_patches: ResourcePatch):
                 {
                     "op": "add",
                     "path": f"{patch.path}/enum",
-                    "value": enums,
+                    "value": sorted(enums),
                 }
             )
 
