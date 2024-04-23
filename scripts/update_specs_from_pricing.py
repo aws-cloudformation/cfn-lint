@@ -370,7 +370,7 @@ def write_output(resource, filename, obj):
         "_description": "Automatically updated using update_specs_from_pricing",
     }
     for region, values in obj.items():
-        output[region] = {"enum": list(values)}
+        output[region] = {"enum": sorted(list(values))}
 
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(output, f, indent=1, sort_keys=True, separators=(",", ": "))
