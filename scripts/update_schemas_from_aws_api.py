@@ -63,7 +63,7 @@ def write_db_cluster(results):
             "then": {
                 "properties": {
                     "Engine": {
-                        "enum": engines,
+                        "enum": sorted(engines),
                     }
                 }
             },
@@ -85,7 +85,9 @@ def write_db_cluster(results):
                     "required": ["Engine", "EngineVersion"],
                 },
                 "then": {
-                    "properties": {"EngineVersion": {"enum": results.get(engine)}}
+                    "properties": {
+                        "EngineVersion": {"enum": sorted(results.get(engine))}
+                    }
                 },
             }
         )
@@ -132,7 +134,7 @@ def write_db_instance(results):
             "then": {
                 "properties": {
                     "Engine": {
-                        "enum": engines,
+                        "enum": sorted(engines),
                     }
                 }
             },
@@ -156,7 +158,9 @@ def write_db_instance(results):
                     "required": ["Engine", "EngineVersion"],
                 },
                 "then": {
-                    "properties": {"EngineVersion": {"enum": results.get(engine)}}
+                    "properties": {
+                        "EngineVersion": {"enum": sorted(results.get(engine))}
+                    }
                 },
             }
         )
