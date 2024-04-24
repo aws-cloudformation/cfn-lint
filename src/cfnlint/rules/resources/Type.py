@@ -50,7 +50,7 @@ class Type(BaseJsonSchema):
                 ("Custom::", "AWS::Serverless::")
             ) and not resource_type.endswith("::MODULE"):
                 yield ValidationError(
-                    f"Resource type `{resource_type}` does not exist in '{region}'",
+                    f"Resource type {resource_type!r} does not exist in {region!r}",
                     path=deque(["Type"]),
                     rule=self,
                 )
