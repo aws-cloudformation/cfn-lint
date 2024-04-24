@@ -37,6 +37,20 @@
    "additionalProperties": false,
    "properties": {
     "Endpoint": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::Lambda::Function"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::SQS::Queue"
+       }
+      }
+     ],
      "type": "string"
     },
     "Protocol": {
@@ -142,6 +156,26 @@
    "type": "boolean"
   },
   "KmsMasterKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/AliasName",
+      "typeName": "AWS::KMS::Alias"
+     }
+    }
+   ],
    "type": "string"
   },
   "SignatureVersion": {
