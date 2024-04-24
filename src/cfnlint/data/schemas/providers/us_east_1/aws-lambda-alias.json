@@ -9,6 +9,7 @@
    "additionalProperties": false,
    "properties": {
     "AdditionalVersionWeights": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/VersionWeight"
      },
@@ -16,9 +17,6 @@
      "uniqueItems": true
     }
    },
-   "required": [
-    "AdditionalVersionWeights"
-   ],
    "type": "object"
   },
   "ProvisionedConcurrencyConfiguration": {
@@ -50,10 +48,65 @@
    "type": "object"
   }
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:CreateAlias",
+    "lambda:PutProvisionedConcurrencyConfig",
+    "lambda:GetProvisionedConcurrencyConfig"
+   ],
+   "timeoutInMinutes": 45
+  },
+  "delete": {
+   "permissions": [
+    "lambda:DeleteAlias",
+    "lambda:GetAlias"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "FunctionName": {
+      "$ref": "resource-schema.json#/properties/FunctionName"
+     }
+    },
+    "required": [
+     "FunctionName"
+    ]
+   },
+   "permissions": [
+    "lambda:ListAliases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetAlias",
+    "lambda:GetProvisionedConcurrencyConfig"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:UpdateAlias",
+    "lambda:GetAlias",
+    "lambda:PutProvisionedConcurrencyConfig",
+    "lambda:DeleteProvisionedConcurrencyConfig",
+    "lambda:GetProvisionedConcurrencyConfig",
+    "codedeploy:CreateDeployment",
+    "codedeploy:GetDeployment",
+    "codedeploy:GetDeploymentGroup",
+    "codedeploy:GetDeploymentConfig",
+    "codedeploy:StopDeployment"
+   ],
+   "timeoutInMinutes": 120
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/AliasArn"
  ],
  "properties": {
+  "AliasArn": {
+   "type": "string"
+  },
   "Description": {
    "type": "string"
   },
@@ -61,9 +114,6 @@
    "type": "string"
   },
   "FunctionVersion": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "Name": {
@@ -77,12 +127,16 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/AliasArn"
  ],
  "required": [
   "FunctionName",
   "FunctionVersion",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lambda",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::Lambda::Alias"
 }

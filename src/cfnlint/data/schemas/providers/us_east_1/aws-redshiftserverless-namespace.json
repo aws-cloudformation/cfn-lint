@@ -82,6 +82,24 @@
    ],
    "type": "string"
   },
+  "SnapshotCopyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationKmsKeyId": {
+     "type": "string"
+    },
+    "DestinationRegion": {
+     "type": "string"
+    },
+    "SnapshotRetentionPeriod": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DestinationRegion"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -122,6 +140,8 @@
     "kms:RetireGrant",
     "redshift-serverless:CreateNamespace",
     "redshift-serverless:GetNamespace",
+    "redshift-serverless:ListSnapshotCopyConfigurations",
+    "redshift-serverless:CreateSnapshotCopyConfiguration",
     "redshift:GetResourcePolicy",
     "redshift:PutResourcePolicy",
     "secretsmanager:CreateSecret",
@@ -151,7 +171,8 @@
    "permissions": [
     "iam:PassRole",
     "redshift-serverless:GetNamespace",
-    "redshift:GetResourcePolicy"
+    "redshift:GetResourcePolicy",
+    "redshift-serverless:ListSnapshotCopyConfigurations"
    ]
   },
   "update": {
@@ -172,6 +193,10 @@
     "kms:GenerateDataKey",
     "redshift-serverless:UpdateNamespace",
     "redshift-serverless:GetNamespace",
+    "redshift-serverless:ListSnapshotCopyConfigurations",
+    "redshift-serverless:CreateSnapshotCopyConfiguration",
+    "redshift-serverless:UpdateSnapshotCopyConfiguration",
+    "redshift-serverless:DeleteSnapshotCopyConfiguration",
     "redshift:GetResourcePolicy",
     "redshift:PutResourcePolicy",
     "redshift:DeleteResourcePolicy",
@@ -255,6 +280,15 @@
   },
   "RedshiftIdcApplicationArn": {
    "type": "string"
+  },
+  "SnapshotCopyConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SnapshotCopyConfiguration"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
   },
   "Tags": {
    "insertionOrder": false,

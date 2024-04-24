@@ -574,41 +574,37 @@ class TemplateArgs:
     def set_template_args(self, template):
         defaults = {}
         if isinstance(template, dict):
-            metadata = template.get("Metadata", {})
-            if metadata:
-                configs = (
-                    template.get("Metadata", {}).get("cfn-lint", {}).get("config", {})
-                )
+            configs = template.get("Metadata", {}).get("cfn-lint", {}).get("config", {})
 
-                if isinstance(configs, dict):
-                    for config_name, config_value in configs.items():
-                        if config_name == "ignore_checks":
-                            if isinstance(config_value, list):
-                                defaults["ignore_checks"] = config_value
-                        if config_name == "regions":
-                            if isinstance(config_value, list):
-                                defaults["regions"] = config_value
-                        if config_name == "append_rules":
-                            if isinstance(config_value, list):
-                                defaults["append_rules"] = config_value
-                        if config_name == "override_spec":
-                            if isinstance(config_value, (str)):
-                                defaults["override_spec"] = config_value
-                        if config_name == "custom_rules":
-                            if isinstance(config_value, (str)):
-                                defaults["custom_rules"] = config_value
-                        if config_name == "ignore_bad_template":
-                            if isinstance(config_value, bool):
-                                defaults["ignore_bad_template"] = config_value
-                        if config_name == "include_checks":
-                            if isinstance(config_value, list):
-                                defaults["include_checks"] = config_value
-                        if config_name == "configure_rules":
-                            if isinstance(config_value, dict):
-                                defaults["configure_rules"] = config_value
-                        if config_name == "include_experimental":
-                            if isinstance(config_value, bool):
-                                defaults["include_experimental"] = config_value
+            if isinstance(configs, dict):
+                for config_name, config_value in configs.items():
+                    if config_name == "ignore_checks":
+                        if isinstance(config_value, list):
+                            defaults["ignore_checks"] = config_value
+                    if config_name == "regions":
+                        if isinstance(config_value, list):
+                            defaults["regions"] = config_value
+                    if config_name == "append_rules":
+                        if isinstance(config_value, list):
+                            defaults["append_rules"] = config_value
+                    if config_name == "override_spec":
+                        if isinstance(config_value, (str)):
+                            defaults["override_spec"] = config_value
+                    if config_name == "custom_rules":
+                        if isinstance(config_value, (str)):
+                            defaults["custom_rules"] = config_value
+                    if config_name == "ignore_bad_template":
+                        if isinstance(config_value, bool):
+                            defaults["ignore_bad_template"] = config_value
+                    if config_name == "include_checks":
+                        if isinstance(config_value, list):
+                            defaults["include_checks"] = config_value
+                    if config_name == "configure_rules":
+                        if isinstance(config_value, dict):
+                            defaults["configure_rules"] = config_value
+                    if config_name == "include_experimental":
+                        if isinstance(config_value, bool):
+                            defaults["include_experimental"] = config_value
 
         self._template_args = defaults
 

@@ -521,7 +521,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -584,7 +584,7 @@
     "SectionId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Style": {
@@ -760,7 +760,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -930,10 +930,13 @@
     "Configuration": {
      "$ref": "#/definitions/CategoryFilterConfiguration"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -1327,7 +1330,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -1609,7 +1612,7 @@
      "type": "string"
     },
     "Symbol": {
-     "pattern": "[A-Z]{3}",
+     "pattern": "^[A-Z]{3}$",
      "type": "string"
     }
    },
@@ -1757,7 +1760,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -1905,7 +1908,7 @@
    "additionalProperties": false,
    "properties": {
     "Message": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     },
     "Type": {
@@ -2084,7 +2087,7 @@
      "items": {
       "$ref": "#/definitions/ColumnConfiguration"
      },
-     "maxItems": 200,
+     "maxItems": 2000,
      "minItems": 0,
      "type": "array"
     },
@@ -2427,7 +2430,7 @@
      "type": "string"
     },
     "DataSetPlaceholder": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     }
    },
@@ -2572,7 +2575,7 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     },
     "Values": {
@@ -2683,7 +2686,7 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     },
     "Values": {
@@ -2760,6 +2763,93 @@
    },
    "type": "object"
   },
+  "DefaultDateTimePickerControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/DateTimePickerControlDisplayOptions"
+    },
+    "Type": {
+     "$ref": "#/definitions/SheetControlDateTimePickerType"
+    }
+   },
+   "type": "object"
+  },
+  "DefaultFilterControlConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlOptions": {
+     "$ref": "#/definitions/DefaultFilterControlOptions"
+    },
+    "Title": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ControlOptions",
+    "Title"
+   ],
+   "type": "object"
+  },
+  "DefaultFilterControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultDateTimePickerOptions": {
+     "$ref": "#/definitions/DefaultDateTimePickerControlOptions"
+    },
+    "DefaultDropdownOptions": {
+     "$ref": "#/definitions/DefaultFilterDropDownControlOptions"
+    },
+    "DefaultListOptions": {
+     "$ref": "#/definitions/DefaultFilterListControlOptions"
+    },
+    "DefaultRelativeDateTimeOptions": {
+     "$ref": "#/definitions/DefaultRelativeDateTimeControlOptions"
+    },
+    "DefaultSliderOptions": {
+     "$ref": "#/definitions/DefaultSliderControlOptions"
+    },
+    "DefaultTextAreaOptions": {
+     "$ref": "#/definitions/DefaultTextAreaControlOptions"
+    },
+    "DefaultTextFieldOptions": {
+     "$ref": "#/definitions/DefaultTextFieldControlOptions"
+    }
+   },
+   "type": "object"
+  },
+  "DefaultFilterDropDownControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/DropDownControlDisplayOptions"
+    },
+    "SelectableValues": {
+     "$ref": "#/definitions/FilterSelectableValues"
+    },
+    "Type": {
+     "$ref": "#/definitions/SheetControlListType"
+    }
+   },
+   "type": "object"
+  },
+  "DefaultFilterListControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/ListControlDisplayOptions"
+    },
+    "SelectableValues": {
+     "$ref": "#/definitions/FilterSelectableValues"
+    },
+    "Type": {
+     "$ref": "#/definitions/SheetControlListType"
+    }
+   },
+   "type": "object"
+  },
   "DefaultFreeFormLayoutConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -2820,6 +2910,15 @@
    },
    "type": "object"
   },
+  "DefaultRelativeDateTimeControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/RelativeDateTimeControlDisplayOptions"
+    }
+   },
+   "type": "object"
+  },
   "DefaultSectionBasedLayoutConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -2830,6 +2929,58 @@
    "required": [
     "CanvasSizeOptions"
    ],
+   "type": "object"
+  },
+  "DefaultSliderControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/SliderControlDisplayOptions"
+    },
+    "MaximumValue": {
+     "default": 0,
+     "type": "number"
+    },
+    "MinimumValue": {
+     "default": 0,
+     "type": "number"
+    },
+    "StepSize": {
+     "default": 0,
+     "type": "number"
+    },
+    "Type": {
+     "$ref": "#/definitions/SheetControlSliderType"
+    }
+   },
+   "required": [
+    "MaximumValue",
+    "MinimumValue",
+    "StepSize"
+   ],
+   "type": "object"
+  },
+  "DefaultTextAreaControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Delimiter": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DisplayOptions": {
+     "$ref": "#/definitions/TextAreaControlDisplayOptions"
+    }
+   },
+   "type": "object"
+  },
+  "DefaultTextFieldControlOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayOptions": {
+     "$ref": "#/definitions/TextFieldControlDisplayOptions"
+    }
+   },
    "type": "object"
   },
   "DestinationParameterValueConfiguration": {
@@ -2958,7 +3109,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -2972,7 +3123,7 @@
    "additionalProperties": false,
    "properties": {
     "Path": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     }
    },
@@ -3310,7 +3461,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -3349,6 +3500,9 @@
   "FilterControl": {
    "additionalProperties": false,
    "properties": {
+    "CrossSheet": {
+     "$ref": "#/definitions/FilterCrossSheetControl"
+    },
     "DateTimePicker": {
      "$ref": "#/definitions/FilterDateTimePickerControl"
     },
@@ -3373,6 +3527,31 @@
    },
    "type": "object"
   },
+  "FilterCrossSheetControl": {
+   "additionalProperties": false,
+   "properties": {
+    "CascadingControlConfiguration": {
+     "$ref": "#/definitions/CascadingControlConfiguration"
+    },
+    "FilterControlId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\w\\-]+$",
+     "type": "string"
+    },
+    "SourceFilterId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\w\\-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FilterControlId",
+    "SourceFilterId"
+   ],
+   "type": "object"
+  },
   "FilterDateTimePickerControl": {
    "additionalProperties": false,
    "properties": {
@@ -3382,13 +3561,13 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3419,7 +3598,7 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SelectableValues": {
@@ -3428,7 +3607,7 @@
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3456,7 +3635,7 @@
     "FilterGroupId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Filters": {
@@ -3522,7 +3701,7 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SelectableValues": {
@@ -3531,7 +3710,7 @@
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3603,13 +3782,13 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3660,7 +3839,7 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "MaximumValue": {
@@ -3674,7 +3853,7 @@
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "StepSize": {
@@ -3714,13 +3893,13 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3745,13 +3924,13 @@
     "FilterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceFilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Title": {
@@ -3841,7 +4020,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "CustomSeasonalityValue": {
@@ -3978,7 +4157,7 @@
     "ElementId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "ElementType": {
@@ -4223,7 +4402,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -4369,7 +4548,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -4552,7 +4731,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -4688,7 +4867,7 @@
     "ElementId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "ElementType": {
@@ -4734,7 +4913,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -4767,7 +4946,7 @@
     "SectionId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Style": {
@@ -4908,7 +5087,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -5019,7 +5198,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -5113,7 +5292,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -5144,7 +5323,7 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     },
     "Values": {
@@ -5452,7 +5631,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -5852,7 +6031,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -5951,7 +6130,7 @@
     "TargetSheetId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -6019,7 +6198,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -6072,7 +6251,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "FromValue": {
@@ -6241,10 +6420,13 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "MatchOperator": {
@@ -6312,10 +6494,13 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "IncludeMaximum": {
@@ -6583,7 +6768,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceParameterName": {
@@ -6635,7 +6820,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SelectableValues": {
@@ -6675,7 +6860,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SelectableValues": {
@@ -6737,7 +6922,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceParameterName": {
@@ -6780,7 +6965,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceParameterName": {
@@ -6811,7 +6996,7 @@
     "ParameterControlId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "SourceParameterName": {
@@ -6941,7 +7126,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -6965,7 +7150,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -7128,7 +7313,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -7581,7 +7766,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -7859,7 +8044,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -7902,7 +8087,7 @@
    "additionalProperties": false,
    "properties": {
     "CustomLabel": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     }
    },
@@ -8084,13 +8269,16 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "ExcludePeriodConfiguration": {
      "$ref": "#/definitions/ExcludePeriodConfiguration"
     },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "MinimumGranularity": {
@@ -8228,7 +8416,7 @@
      "items": {
       "maxLength": 512,
       "minLength": 1,
-      "pattern": "[\\w\\-]+",
+      "pattern": "^[\\w\\-]+$",
       "type": "string"
      },
      "maxItems": 50,
@@ -8335,7 +8523,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -8512,7 +8700,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -8741,7 +8929,7 @@
     "SheetId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -8870,7 +9058,7 @@
     "SheetId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "TextBoxes": {
@@ -8947,7 +9135,7 @@
     "SheetTextBoxId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -8965,14 +9153,14 @@
     "SheetId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "VisualIds": {
      "items": {
       "maxLength": 512,
       "minLength": 1,
-      "pattern": "[\\w\\-]+",
+      "pattern": "^[\\w\\-]+$",
       "type": "string"
      },
      "maxItems": 50,
@@ -9174,7 +9362,7 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "pattern": ".*\\S.*",
+     "pattern": "\\S",
      "type": "string"
     },
     "Values": {
@@ -9783,7 +9971,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -9931,10 +10119,13 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "ParameterName": {
@@ -10006,13 +10197,16 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "ExcludePeriodConfiguration": {
      "$ref": "#/definitions/ExcludePeriodConfiguration"
     },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "IncludeMaximum": {
@@ -10117,10 +10311,13 @@
     "Column": {
      "$ref": "#/definitions/ColumnIdentifier"
     },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    },
     "FilterId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Limit": {
@@ -10153,7 +10350,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "MoverSize": {
@@ -10193,7 +10390,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -10231,7 +10428,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -10422,7 +10619,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -10478,7 +10675,7 @@
     "ComputationId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -10639,7 +10836,7 @@
     "CustomActionId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     },
     "Name": {
@@ -10870,7 +11067,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -11057,7 +11254,7 @@
     "VisualId": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "[\\w\\-]+",
+     "pattern": "^[\\w\\-]+$",
      "type": "string"
     }
    },
@@ -11177,7 +11374,7 @@
   "DashboardId": {
    "maxLength": 512,
    "minLength": 1,
-   "pattern": "[\\w\\-]+",
+   "pattern": "^[\\w\\-]+$",
    "type": "string"
   },
   "DashboardPublishOptions": {
@@ -11198,7 +11395,7 @@
    "items": {
     "maxLength": 1024,
     "minLength": 1,
-    "pattern": "^arn:aws[\\w\\-]*:quicksight:[\\w\\-]+:\\d+:analysis/[\\w\\-]{1,512}",
+    "pattern": "^arn:aws[\\w\\-]*:quicksight:[\\w\\-]+:\\d+:analysis/[\\w\\-]{1,512}$",
     "type": "string"
    },
    "maxItems": 5,

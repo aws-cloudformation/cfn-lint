@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/FunctionName"
+ ],
+ "definitions": {
+  "AliasRoutingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalVersionWeights": {
+     "items": {
+      "$ref": "#/definitions/VersionWeight"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "AdditionalVersionWeights"
+   ],
+   "type": "object"
+  },
+  "ProvisionedConcurrencyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ProvisionedConcurrentExecutions": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ProvisionedConcurrentExecutions"
+   ],
+   "type": "object"
+  },
+  "VersionWeight": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionVersion": {
+     "type": "string"
+    },
+    "FunctionWeight": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "FunctionVersion",
+    "FunctionWeight"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "FunctionName": {
+   "type": "string"
+  },
+  "FunctionVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ProvisionedConcurrencyConfig": {
+   "$ref": "#/definitions/ProvisionedConcurrencyConfiguration"
+  },
+  "RoutingConfig": {
+   "$ref": "#/definitions/AliasRoutingConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "FunctionName",
+  "FunctionVersion",
+  "Name"
+ ],
+ "typeName": "AWS::Lambda::Alias"
+}

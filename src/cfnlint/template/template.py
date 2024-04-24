@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import List
+from typing import Any, Dict, List
 
 import regex as re
 
@@ -26,11 +26,18 @@ LOGGER = logging.getLogger(__name__)
 class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attributes
     """Class for a CloudFormation template"""
 
-    # pylint: disable=dangerous-default-value
-    def __init__(self, filename, template, regions=["us-east-1"]):
+    def __init__(
+        self,
+        filename: str | None,
+        template: Dict[str, Any],
+        regions: List[str] | None = None,
+    ):
+        if regions is None:
+            self.regions = [cfnlint.helpers.REGION_PRIMARY]
+        else:
+            self.regions = regions
         self.filename = filename
         self.template = template
-        self.regions = regions
         self.sections = [
             "AWSTemplateFormatVersion",
             "Description",
@@ -44,7 +51,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             "Outputs",
             "Rules",
         ]
-        self.transform_pre = {}
+        self.transform_pre: Dict[str, Any] = {}
         self.transform_pre["Globals"] = {}
         self.transform_pre["Ref"] = self.search_deep_keys("Ref")
         self.transform_pre["Fn::Sub"] = self.search_deep_keys("Fn::Sub")
@@ -55,7 +62,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
 
         self.conditions = cfnlint.conditions.Conditions(self)
-        self.__cache_search_deep_class = {}
+        self.__cache_search_deep_class: Dict[str, Any] = {}
         self.graph = None
         try:
             self.graph = Graph(self)
