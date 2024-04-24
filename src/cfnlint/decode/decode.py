@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from json.decoder import JSONDecodeError
-from typing import Callable, List, Tuple, Union
+from typing import Any, Callable, Dict, List, Tuple, Union
 
 from yaml import YAMLError
 from yaml.parser import ParserError
@@ -19,7 +19,7 @@ from cfnlint.match import Match
 LOGGER = logging.getLogger(__name__)
 
 Matches = List[Match]
-Decode = Tuple[Union[str, None], Matches]
+Decode = Tuple[Union[Dict[str, Any], None], Matches]
 
 
 def decode_str(s: str) -> Decode:

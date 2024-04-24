@@ -5,6 +5,32 @@
   "/properties/LabelTemplate"
  ],
  "definitions": {
+  "LinkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupConfiguration": {
+     "$ref": "#/definitions/LinkFilter"
+    },
+    "MetricConfiguration": {
+     "$ref": "#/definitions/LinkFilter"
+    }
+   },
+   "type": "object"
+  },
+  "LinkFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Filter": {
+     "maxLength": 2000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Filter"
+   ],
+   "type": "object"
+  },
   "ResourceType": {
    "enum": [
     "AWS::CloudWatch::Metric",
@@ -73,6 +99,9 @@
    "maxLength": 64,
    "minLength": 1,
    "type": "string"
+  },
+  "LinkConfiguration": {
+   "$ref": "#/definitions/LinkConfiguration"
   },
   "ResourceTypes": {
    "insertionOrder": false,

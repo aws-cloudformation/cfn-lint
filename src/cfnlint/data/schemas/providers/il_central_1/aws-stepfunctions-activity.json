@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "states:CreateActivity",
+    "states:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "states:DescribeActivity",
+    "states:DeleteActivity"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "states:ListActivities"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "states:DescribeActivity",
+    "states:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "states:ListTagsForResource",
+    "states:TagResource",
+    "states:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 80,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::StepFunctions::Activity"
+}
