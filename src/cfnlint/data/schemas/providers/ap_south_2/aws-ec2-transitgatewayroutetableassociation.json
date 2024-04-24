@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayRouteTableId",
+  "/properties/TransitGatewayAttachmentId"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateTransitGatewayRouteTable",
+    "ec2:GetTransitGatewayRouteTableAssociations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:GetTransitGatewayRouteTableAssociations",
+    "ec2:DisassociateTransitGatewayRouteTable"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "TransitGatewayRouteTableId": {
+      "$ref": "resource-schema.json#/properties/TransitGatewayRouteTableId"
+     }
+    },
+    "required": [
+     "TransitGatewayRouteTableId"
+    ]
+   },
+   "permissions": [
+    "ec2:GetTransitGatewayRouteTableAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetTransitGatewayRouteTableAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayRouteTableId",
+  "/properties/TransitGatewayAttachmentId"
+ ],
+ "properties": {
+  "TransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TransitGatewayRouteTableId": {
+   "type": "string"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TransitGatewayRouteTableId",
+  "TransitGatewayAttachmentId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::TransitGatewayRouteTableAssociation"
+}

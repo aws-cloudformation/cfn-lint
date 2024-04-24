@@ -86,6 +86,20 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      }
+     ],
      "type": "string"
     },
     "SecretArn": {
@@ -333,6 +347,10 @@
   },
   "DBSecurityGroups": {
    "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/Id",
+     "typeName": "AWS::RDS::DBSecurityGroup"
+    },
     "type": "string"
    },
    "type": "array",
@@ -405,6 +423,20 @@
    "type": "integer"
   },
   "KmsKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
    "type": "string"
   },
   "LicenseModel": {
@@ -448,6 +480,20 @@
    "type": "string"
   },
   "PerformanceInsightsKMSKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
    "type": "string"
   },
   "PerformanceInsightsRetentionPeriod": {
@@ -561,6 +607,10 @@
   },
   "VPCSecurityGroups": {
    "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/GroupId",
+     "typeName": "AWS::EC2::SecurityGroup"
+    },
     "type": "string"
    },
    "type": "array",
