@@ -63,7 +63,7 @@ def validator():
                         "'custom-sqlserver-web', 'db2-ae', 'db2-se', 'mariadb', "
                         "'mysql', 'oracle-ee', 'oracle-ee-cdb', 'oracle-se2', "
                         "'oracle-se2-cdb', 'postgres', 'sqlserver-ee', "
-                        "'sqlserver-se', 'sqlserver-ex', 'sqlserver-web']"
+                        "'sqlserver-ex', 'sqlserver-se', 'sqlserver-web']"
                     ),
                     rule=DbInstanceEngineVersion(),
                     path=deque(["Engine"]),
@@ -79,8 +79,7 @@ def validator():
             [
                 ValidationError(
                     (
-                        "'foo' is not one of ['5.7.37', '5.7.38', '5.7.39', '5.7.40', "
-                        "'5.7.41', '5.7.42', '5.7.43', '5.7.44', '8.0.28', '8.0.31', "
+                        "'foo' is not one of ['5.7.44', '8.0.28', '8.0.31', "
                         "'8.0.32', '8.0.33', '8.0.34', '8.0.35', '8.0.36']"
                     ),
                     rule=DbInstanceEngineVersion(),
