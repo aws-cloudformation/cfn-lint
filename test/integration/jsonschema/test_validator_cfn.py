@@ -45,7 +45,10 @@ def build_template(patch: jsonpatch.JsonPatch | None) -> Template:
         jsonpatch.apply_patch(template_obj, patch, True)
 
     template, _ = decode_str(json.dumps(template_obj))
-    return Template("", template, regions=["us-east-1"])
+    if template:
+        return Template("", template, regions=["us-east-1"])
+
+    raise Exception("Template is invalid")
 
 
 def build_schema(patch: jsonpatch.JsonPatch | None):

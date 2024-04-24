@@ -9,7 +9,7 @@ import logging
 import os
 import sys
 from copy import deepcopy
-from typing import Dict, List, Sequence
+from typing import Any, Dict, List, Sequence
 
 import cfnlint.formatters
 import cfnlint.maintenance
@@ -44,12 +44,16 @@ def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
 
 class TemplateRunner:
     def __init__(
-        self, filename: str | None, template: str, config: ConfigMixIn, rules: Rules
+        self,
+        filename: str | None,
+        template: Dict[str, Any],
+        config: ConfigMixIn,
+        rules: Rules,
     ) -> None:
-        self.cfn = Template(filename, template, config.regions)
-        self.rules = rules
         self.config = deepcopy(config)
-        self.config.template_args = template
+        self.config.set_template_args(template)
+        self.cfn = Template(filename, template, self.config.regions)
+        self.rules = rules
 
     def _dedup(self, matches: Iterator[Match]) -> Iterator[Match]:
         """Deduplicate matches"""
@@ -162,7 +166,9 @@ class Runner:
                     continue
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
-    def validate_template(self, filename: str | None, template: str) -> Iterator[Match]:
+    def validate_template(
+        self, filename: str | None, template: Dict[str, Any]
+    ) -> Iterator[Match]:
         runner = TemplateRunner(filename, template, self.config, self.rules)
         yield from runner.run()
 

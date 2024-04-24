@@ -1,8 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/BucketName",
-  "/properties/ObjectLockEnabled"
+  "/properties/BucketName"
  ],
  "definitions": {
   "AbortIncompleteMultipartUpload": {
@@ -1039,7 +1038,7 @@
    "additionalProperties": false,
    "properties": {
     "Rules": {
-     "insertionOrder": true,
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/FilterRule"
      },
@@ -1056,6 +1055,26 @@
    "additionalProperties": false,
    "properties": {
     "KMSMasterKeyID": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/AliasName",
+        "typeName": "AWS::KMS::Alias"
+       }
+      }
+     ],
      "type": "string"
     },
     "SSEAlgorithm": {
@@ -1525,6 +1544,11 @@
    "format": "uri",
    "type": "string"
   }
+ },
+ "propertyTransform": {
+  "/properties/NotificationConfiguration/LambdaConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")",
+  "/properties/NotificationConfiguration/QueueConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")",
+  "/properties/NotificationConfiguration/TopicConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")"
  },
  "readOnlyProperties": [
   "/properties/Arn",

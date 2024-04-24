@@ -30,6 +30,14 @@
    },
    "type": "object"
   },
+  "InstanceType": {
+   "enum": [
+    "standard.regular",
+    "standard.large",
+    "standard.xlarge"
+   ],
+   "type": "string"
+  },
   "PortalStatus": {
    "enum": [
     "Incomplete",
@@ -199,11 +207,19 @@
    "pattern": "^.+$",
    "type": "string"
   },
+  "InstanceType": {
+   "$ref": "#/definitions/InstanceType"
+  },
   "IpAccessSettingsArn": {
    "maxLength": 2048,
    "minLength": 20,
    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
    "type": "string"
+  },
+  "MaxConcurrentSessions": {
+   "maximum": 5000,
+   "minimum": 1,
+   "type": "number"
   },
   "NetworkSettingsArn": {
    "maxLength": 2048,
@@ -286,9 +302,5 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::WorkSpacesWeb::Portal",
- "writeOnlyProperties": [
-  "/properties/AdditionalEncryptionContext",
-  "/properties/CustomerManagedKey"
- ]
+ "typeName": "AWS::WorkSpacesWeb::Portal"
 }

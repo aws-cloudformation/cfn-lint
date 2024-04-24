@@ -1,0 +1,207 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Days": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Expiration": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "$ref": "#/definitions/Days"
+    }
+   },
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Expiration": {
+     "$ref": "#/definitions/Expiration"
+    },
+    "Transitions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Transitions"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Regions": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(af|ap|ca|eu|me|sa|us)-(central|north|(north(?:east|west))|south|south(?:east|west)|east|west)-\\d+$",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Regions": {
+     "$ref": "#/definitions/Regions"
+    },
+    "RoleArn": {
+     "pattern": "^arn:.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Transitions": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StorageClass": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:*",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole",
+    "iam:ListAttachedRolePolicies",
+    "iam:PutRolePolicy",
+    "iam:PassRole",
+    "glue:*",
+    "organizations:*",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "lakeformation:*",
+    "lambda:*",
+    "s3:*",
+    "securitylake:CreateDataLake",
+    "securitylake:TagResource",
+    "securitylake:List*",
+    "sqs:*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:*",
+    "securitylake:DeleteDataLake",
+    "securitylake:List*"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securitylake:List*"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securitylake:List*"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:*",
+    "iam:CreateServiceLinkedRole",
+    "iam:DeleteRolePolicy",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:PutRolePolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "lakeformation:*",
+    "lambda:*",
+    "organizations:*",
+    "s3:*",
+    "securitylake:List*",
+    "securitylake:TagResource",
+    "securitylake:UntagResource",
+    "securitylake:UpdateDataLake",
+    "sqs:*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "MetaStoreManagerRoleArn": {
+   "pattern": "^arn:.*$",
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  },
+  "S3BucketArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/S3BucketArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityLake::DataLake",
+ "writeOnlyProperties": [
+  "/properties/MetaStoreManagerRoleArn"
+ ]
+}
