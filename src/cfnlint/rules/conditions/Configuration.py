@@ -26,8 +26,10 @@ class Configuration(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        conditions = cfn.template.get("Conditions", {})
-        if conditions:
+        if "Conditions" not in cfn.template:
+            return matches
+        conditions = cfn.template.get("Conditions", None)
+        if isinstance(conditions, dict):
             for condname, condobj in conditions.items():
                 if not isinstance(condobj, dict):
                     message = "Condition {0} has invalid property"
@@ -52,5 +54,12 @@ class Configuration(CloudFormationLintRule):
                                         message.format(condname, k),
                                     )
                                 )
+        else:
+            matches.append(
+                RuleMatch(
+                    ["Conditions"],
+                    "Condition must be an object",
+                )
+            )
 
         return matches
