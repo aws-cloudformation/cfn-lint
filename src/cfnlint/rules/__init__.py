@@ -83,9 +83,9 @@ def _rule_is_enabled(
 class RuleMatch:
     """Rules Error"""
 
-    def __init__(self, path, message, **kwargs):
+    def __init__(self, path: Sequence[str | int], message: str, **kwargs):
         """Init"""
-        self.path: Sequence[str, int] = path
+        self.path: Sequence[str | int] = path
         self.path_string: str = "/".join(map(str, path))
         self.message: str = message
         self.context: List[RuleMatch] = []

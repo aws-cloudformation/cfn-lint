@@ -83,6 +83,7 @@ AVAILABILITY_ZONES = {
     "eu-west-1": ["eu-west-1a", "eu-west-1b", "eu-west-1c"],
     "eu-west-2": ["eu-west-2a", "eu-west-2b", "eu-west-2c"],
     "eu-west-3": ["eu-west-3a", "eu-west-3b", "eu-west-3c"],
+    "il-central-1": ["il-central-1a", "il-central-1b", "il-central-1c"],
     "me-south-1": ["me-south-1a", "me-south-1b", "me-south-1c"],
     "me-central-1": [
         "me-central-1a",

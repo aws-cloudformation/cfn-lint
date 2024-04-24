@@ -7,15 +7,37 @@
   "/properties/ReportVersioning",
   "/properties/BillingViewArn"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "handlers": {
   "create": {
    "permissions": [
-    "cur:PutReportDefinition"
+    "cur:PutReportDefinition",
+    "cur:DescribeReportDefinitions"
    ]
   },
   "delete": {
    "permissions": [
-    "cur:DescribeReportDefinitions",
     "cur:DeleteReportDefinition"
    ]
   },
@@ -56,7 +78,9 @@
    "default": [],
    "items": {
     "enum": [
-     "RESOURCES"
+     "RESOURCES",
+     "SPLIT_COST_ALLOCATION_DATA",
+     "MANUAL_DISCOUNT_COMPATIBILITY"
     ],
     "type": "string"
    },
@@ -136,5 +160,8 @@
   "ReportVersioning"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cur.git",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::CUR::ReportDefinition"
 }
