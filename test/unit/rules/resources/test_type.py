@@ -51,7 +51,7 @@ class TestType(BaseRuleTestCase):
             errors,
             [
                 ValidationError(
-                    "Resource type `Foo::Bar::Type` does not exist in 'us-east-1'",
+                    "Resource type 'Foo::Bar::Type' does not exist in 'us-east-1'",
                     path=deque(["Type"]),
                     schema_path=deque([]),
                     rule=Type(),
