@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProfileId",
+  "/properties/Name",
+  "/properties/ResourceArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53profiles:AssociateResourceToProfile",
+    "route53profiles:GetProfileResourceAssociation",
+    "route53resolver:*",
+    "route53:*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53profiles:DisassociateResourceFromProfile",
+    "route53profiles:GetProfileResourceAssociation",
+    "route53resolver:*",
+    "route53:*"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ProfileId": {
+      "$ref": "resource-schema.json#/properties/ProfileId"
+     }
+    },
+    "required": [
+     "ProfileId"
+    ]
+   },
+   "permissions": [
+    "route53profiles:ListProfileResourceAssociations",
+    "route53resolver:*",
+    "route53:*"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53profiles:GetProfileResourceAssociation",
+    "route53resolver:*",
+    "route53:*"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53profiles:UpdateProfileResourceAssociation",
+    "route53profiles:GetProfileResourceAssociation",
+    "route53resolver:*",
+    "route53:*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ProfileId": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ResourceProperties": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceType"
+ ],
+ "required": [
+  "ProfileId",
+  "Name",
+  "ResourceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53profiles",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Route53Profiles::ProfileResourceAssociation"
+}
