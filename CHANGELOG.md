@@ -1,3 +1,10 @@
+### v1.2.5a7
+## What's Changed
+* Update CloudFormation schemas to 2024-04-24 by @kddejong in (pull #[3159](https://github.com/aws-cloudformation/cfn-lint/pull/3159))
+* Fix config of regions in TemplateRunner by @kddejong in (pull #[3164](https://github.com/aws-cloudformation/cfn-lint/pull/3164))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a6...v1.2.5.a7
+
 ### v1.2.5a6
 ## What's Changed
 * Add a bunch of DynamoDB rules and schema changes by @kddejong in (pull #[3133](https://github.com/aws-cloudformation/cfn-lint/pull/3133))
