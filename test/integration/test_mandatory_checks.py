@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from pathlib import Path
 from test.integration import BaseCliTestCase
 
 
@@ -11,11 +12,15 @@ class TestDirectives(BaseCliTestCase):
 
     scenarios = [
         {
-            "filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+            "filename": str(
+                Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+            ),
             "exit_code": 2,
             "results": [
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 17},
@@ -36,7 +41,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 28},
@@ -57,7 +64,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 32},
@@ -77,7 +86,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 35},
@@ -98,7 +109,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 37},
@@ -120,7 +133,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 13},
@@ -141,7 +156,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/mandatory_checks.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 19},
