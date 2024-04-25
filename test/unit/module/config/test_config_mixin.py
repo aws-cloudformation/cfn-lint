@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import logging
 import os
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
@@ -179,8 +180,20 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(
             config.templates,
             [
-                "test/fixtures/templates/public" + os.path.sep + "lambda-poller.yaml",
-                "test/fixtures/templates/public" + os.path.sep + "rds-cluster.yaml",
+                str(
+                    Path(
+                        "test/fixtures/templates/public"
+                        + os.path.sep
+                        + "lambda-poller.yaml"
+                    )
+                ),
+                str(
+                    Path(
+                        "test/fixtures/templates/public"
+                        + os.path.sep
+                        + "rds-cluster.yaml"
+                    )
+                ),
             ],
         )
 
@@ -188,6 +201,7 @@ class TestConfigMixIn(BaseTestCase):
     def test_config_expand_paths_failure(self, yaml_mock):
         """Test precedence in"""
 
+        filename = "test/fixtures/templates/badpath/*.yaml"
         yaml_mock.side_effect = [
             {"templates": ["test/fixtures/templates/badpath/*.yaml"]},
             {},
@@ -195,7 +209,7 @@ class TestConfigMixIn(BaseTestCase):
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
-        self.assertEqual(config.templates, ["test/fixtures/templates/badpath/*.yaml"])
+        self.assertEqual(config.templates, [str(Path(filename))])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_expand_ignore_templates(self, yaml_mock):
@@ -214,7 +228,7 @@ class TestConfigMixIn(BaseTestCase):
 
         # test defaults
         self.assertNotIn(
-            "test/fixtures/templates/bad/resources/iam/resource_policy.yaml",
+            str(Path("test/fixtures/templates/bad/resources/iam/resource_policy.yaml")),
             config.templates,
         )
         self.assertEqual(len(config.templates), 5)
