@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import logging
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
@@ -119,7 +120,7 @@ class TestCli(BaseTestCase):
             (_, filenames, _) = cfnlint.core.get_args_filenames(
                 ["--template", filename]
             )
-            assert filenames == [filename]
+            assert filenames == [str(Path(filename))]
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_template_config(self, yaml_mock):
@@ -146,9 +147,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.override_spec, None)
         self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ["us-east-1"])
-        self.assertEqual(
-            args.templates, ["test/fixtures/templates/good/core/config_parameters.yaml"]
-        )
+        self.assertEqual(args.templates, [str(Path(filename))])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
         self.assertEqual(args.output_file, None)
@@ -185,9 +184,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.override_spec, None)
         self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ["us-east-1"])
-        self.assertEqual(
-            args.templates, ["test/fixtures/templates/good/core/config_parameters.yaml"]
-        )
+        self.assertEqual(args.templates, [str(Path(filename))])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
 
@@ -217,9 +214,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.override_spec, None)
         self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ["us-east-1"])
-        self.assertEqual(
-            args.templates, ["test/fixtures/templates/good/core/config_parameters.yaml"]
-        )
+        self.assertEqual(args.templates, [str(Path(filename))])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
 
@@ -243,6 +238,6 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.override_spec, None)
         self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ["us-east-1"])
-        self.assertEqual(args.templates, [filename])
+        self.assertEqual(args.templates, [str(Path(filename))])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)

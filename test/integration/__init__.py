@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 import json
 import subprocess
 import sys
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 
 import cfnlint.core
@@ -32,6 +33,9 @@ class BaseCliTestCase(BaseTestCase):
             if results_filename and not expected_results:
                 with open(results_filename, encoding="utf-8") as json_data:
                     expected_results = json.load(json_data)
+
+            for result in expected_results:
+                result["Filename"] = str(Path(result.get("Filename")))
 
             try:
                 result = subprocess.check_output(
@@ -92,6 +96,9 @@ class BaseCliTestCase(BaseTestCase):
             if results_filename and not expected_results:
                 with open(results_filename, encoding="utf-8") as json_data:
                     expected_results = json.load(json_data)
+
+            for result in expected_results:
+                result["Filename"] = str(Path(result.get("Filename")))
 
             template = cfnlint.decode.cfn_yaml.load(filename)
 

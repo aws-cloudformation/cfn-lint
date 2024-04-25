@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Sequence
 
 import jsonschema
 
@@ -692,23 +692,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         if isinstance(filenames, str):
             filenames = [filenames]
 
-        # handle different shells and Config files
-        # some shells don't expand * and configparser won't expand wildcards
-        all_filenames = []
         ignore_templates = self._ignore_templates()
-        for filename in filenames:
-            add_filenames = glob.glob(filename, recursive=True)
-            # only way to know of the glob failed is to test it
-            # then add the filename as requested
-            if not add_filenames:
-                if filename not in ignore_templates:
-                    all_filenames.append(filename)
-            else:
-                for add_filename in add_filenames:
-                    if add_filename not in ignore_templates:
-                        all_filenames.append(add_filename)
+        all_filenames = self._glob_filenames(filenames)
 
-        return sorted(all_filenames)
+        return [i for i in all_filenames if i not in ignore_templates]
 
     def _ignore_templates(self):
         ignore_template_args = self._get_argument_value("ignore_templates", False, True)
@@ -721,9 +708,13 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         if isinstance(filenames, str):
             filenames = [filenames]
 
+        return self._glob_filenames(filenames)
+
+    def _glob_filenames(self, filenames: Sequence[str]) -> List[str]:
         # handle different shells and Config files
         # some shells don't expand * and configparser won't expand wildcards
         all_filenames = []
+
         for filename in filenames:
             add_filenames = glob.glob(filename, recursive=True)
             # only way to know of the glob failed is to test it
@@ -733,7 +724,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             else:
                 all_filenames.extend(add_filenames)
 
-        return all_filenames
+        return sorted(list(map(str, map(Path, all_filenames))))
 
     @property
     def append_rules(self):
