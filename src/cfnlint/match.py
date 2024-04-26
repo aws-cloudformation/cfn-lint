@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import uuid
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -56,7 +57,8 @@ class Match:
 
     def __repr__(self):
         """Represent"""
-        file_str = self.filename + ":" if self.filename else ""
+        # use the Posix path to keep things consistent across platforms
+        file_str = Path(self.filename).as_posix() + ":" if self.filename else ""
         return f"[{self.rule}] ({self.message}) matched {file_str}{self.linenumber}"
 
     def __eq__(self, item):
