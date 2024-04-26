@@ -5,8 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 import json
 import subprocess
-from pathlib import Path
 import unittest
+from pathlib import Path
 from typing import Any, Dict, List
 
 from cfnlint.config import configure_logging

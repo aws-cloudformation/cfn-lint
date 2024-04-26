@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 import json
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 
