@@ -13,7 +13,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, TypedDict, Sequence
+from typing import Any, Dict, List, Sequence, TypedDict
 
 from typing_extensions import Unpack
 
