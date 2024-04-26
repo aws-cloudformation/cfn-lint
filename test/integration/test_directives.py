@@ -22,14 +22,10 @@ class TestDirectives(BaseCliTestCase):
             "exit_code": 2,
             "results": [
                 {
-<<<<<<< HEAD
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/directives.yaml")
                     ),
-=======
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
                     "Id": "4d8d1fd7-496f-9420-44df-f053d372c3be",
->>>>>>> b819ff41a (V1 - cleanup/2024/03/14 (#3115))
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 17},
@@ -54,14 +50,10 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-<<<<<<< HEAD
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/directives.yaml")
                     ),
-=======
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
                     "Id": "dd126795-8106-b986-19ed-db769ee48fba",
->>>>>>> b819ff41a (V1 - cleanup/2024/03/14 (#3115))
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 28},
@@ -86,14 +78,10 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-<<<<<<< HEAD
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/directives.yaml")
                     ),
-=======
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
                     "Id": "431970a8-482e-2aca-af3f-5d4f819f0b45",
->>>>>>> b819ff41a (V1 - cleanup/2024/03/14 (#3115))
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 32},
@@ -119,14 +107,10 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-<<<<<<< HEAD
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/directives.yaml")
                     ),
-=======
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
                     "Id": "814e8b07-dcef-f3ac-4285-8032d1fb010e",
->>>>>>> b819ff41a (V1 - cleanup/2024/03/14 (#3115))
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 35},
@@ -151,14 +135,10 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-<<<<<<< HEAD
                     "Filename": str(
                         Path("test/fixtures/templates/bad/core/directives.yaml")
                     ),
-=======
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
                     "Id": "2637b826-b8a7-4e03-8b27-bf8e8d4d12ee",
->>>>>>> b819ff41a (V1 - cleanup/2024/03/14 (#3115))
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 37},
