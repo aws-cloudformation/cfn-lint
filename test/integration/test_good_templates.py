@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from pathlib import Path
 from test.integration import BaseCliTestCase
 
 from cfnlint import ConfigMixIn
@@ -39,8 +40,10 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "results": [
                 {
-                    "Filename": (
-                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    "Filename": str(
+                        Path(
+                            "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                        )
                     ),
                     "Id": "74181426-e865-10eb-96fd-908dfd30a358",
                     "Location": {
@@ -70,8 +73,10 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     ),
                 },
                 {
-                    "Filename": (
-                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    "Filename": str(
+                        Path(
+                            "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                        )
                     ),
                     "Id": "fd751fa3-7d1f-e194-7108-eb08352814c8",
                     "Location": {
@@ -100,8 +105,10 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     ),
                 },
                 {
-                    "Filename": (
-                        "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                    "Filename": str(
+                        Path(
+                            "test/fixtures/templates/bad/transform_serverless_template.yaml"
+                        )
                     ),
                     "Id": "9e05773a-b0d0-f157-2955-596d9bd54749",
                     "Location": {
@@ -152,7 +159,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
             "results": [
                 {
-                    "Filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
+                    "Filename": str(
+                        Path(
+                            "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml"
+                        )
+                    ),
                     "Id": "3732b0a0-6d44-72af-860a-88e5f8ca790c",
                     "Level": "Error",
                     "Location": {
@@ -201,8 +212,10 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "results": [
                 {
-                    "Filename": (
-                        "test/fixtures/templates/good/transform_serverless_globals.yaml"
+                    "Filename": str(
+                        Path(
+                            "test/fixtures/templates/good/transform_serverless_globals.yaml"
+                        )
                     ),
                     "Id": "fc9f2534-f4f8-092b-52d6-dafd2d429b67",
                     "Level": "Error",
