@@ -50,8 +50,13 @@ def validator():
     "name,instance,expected",
     [
         (
-            "Valid version",
+            "Valid retention period",
             {"MessageRetentionPeriod": "90"},
+            [],
+        ),
+        (
+            "Valid with SourceDBInstanceIdentifier",
+            {"SourceDBInstanceIdentifier": "source-db"},
             [],
         ),
         (
