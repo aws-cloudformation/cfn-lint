@@ -21,7 +21,7 @@ class NumberRange(CloudFormationLintRule):
         "Check numbers (integers and floats) for its value being between the minimum"
         " and maximum"
     )
-    source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#number-range"
     tags = ["resources", "property", "number", "size"]
     child_rules = {
         "W3034": None,
