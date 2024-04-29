@@ -76,7 +76,6 @@ def create_dict_node_class(cls):
         def __init__(
             self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
         ):
-            LOGGER.debug(type(start_mark))
             try:
                 cls.__init__(self, x)
             except TypeError:
