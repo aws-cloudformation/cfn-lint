@@ -1,3 +1,13 @@
+### v0.87.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `171.0.0` (pull #[3160](https://github.com/aws-cloudformation/cfn-lint/pull/3160))
+###### Fixes
+- When using a list param in foreach pass back select statements when no allowed value (pull #[3176](https://github.com/aws-cloudformation/cfn-lint/pull/3176))
+- Fix an issue with graphs and pydot and not quoting attrs (pull #[3177](https://github.com/aws-cloudformation/cfn-lint/pull/3177))
+- Update [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) as read replicas don't need backup period (pull #[3171](https://github.com/aws-cloudformation/cfn-lint/pull/3171))
+- Change filenames to be OS specific paths (pull #[3170](https://github.com/aws-cloudformation/cfn-lint/pull/3170))
+- Update [E8001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E8001) to validate null Condition section (pull #[3169](https://github.com/aws-cloudformation/cfn-lint/pull/3169))
+
 ### v0.86.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `170.0.0` (pull #[3149](https://github.com/aws-cloudformation/cfn-lint/pull/3149))
