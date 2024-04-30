@@ -5,6 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import hashlib
+import json
 import logging
 import random
 import string
@@ -193,7 +195,9 @@ class _Transform:
         return obj
 
     def _replace_string_params(
-        self, s: str, params: Mapping[str, Any]
+        self,
+        s: str,
+        params: Mapping[str, Any],
     ) -> Tuple[bool, str]:
         pattern = r"(\$|&){[a-zA-Z0-9\.:]+}"
         if not re.search(pattern, s):
@@ -201,6 +205,8 @@ class _Transform:
 
         new_s = deepcopy(s)
         for k, v in params.items():
+            if isinstance(v, dict):
+                v = hashlib.md5(json.dumps(v).encode("utf-8")).digest().hex()[0:4]
             new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
             new_s = re.sub(rf"\&\{{{k}\}}", re.sub("[^0-9a-zA-Z]+", "", v), new_s)
 
@@ -453,6 +459,9 @@ class _ForEachValueRef(_ForEachValue):
                 return [x.strip() for x in allowed_values[0].split(",")]
             return allowed_values[0]
 
+        if "List" in t:
+            return [{"Fn::Select": [0, {"Ref": v}]}, {"Fn::Select": [1, {"Ref": v}]}]
+
         raise _ResolveError("Can't resolve Fn::Ref", self._obj)
 
 
@@ -490,7 +499,7 @@ class _ForEachCollection:
                 if values:
                     if isinstance(values, list):
                         for value in values:
-                            if isinstance(value, str):
+                            if isinstance(value, (str, dict)):
                                 yield value
                             else:
                                 raise _ValueError(
