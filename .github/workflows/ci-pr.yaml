@@ -1,0 +1,73 @@
+name: "[CI] Test PR"
+
+on: [pull_request]
+
+jobs:
+  unitlint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [ 3.8, 3.9, "3.10", "3.11", "3.12" ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Tox and any other packages
+        run: pip install tox
+      - name: Run Tox
+        run: |
+          tox -e style
+          tox -e type
+          tox -e py
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.python }}"
+      - name: Store coverage file
+        uses: actions/upload-artifact@v4
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          name: coverage-${{ matrix.python }}
+          path: .coverage.${{ matrix.python }}
+  integration:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install cfn-lint
+        run: |
+          pip3 install -e .
+      - name: Run cfn-lint
+        run: |
+          cfn-lint test/fixtures/templates/good/generic.yaml
+          cat test/fixtures/templates/good/generic.yaml | cfn-lint
+  dependencies:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install cfn-lint
+        run: |
+          pip3 install -e .
+          pip install --upgrade pip
+          pip install --upgrade setuptools
+      - uses: pypa/gh-action-pip-audit@v1.0.8
+        with:
+          ignore-vulns: |
+            GHSA-r9hx-vwmv-q579
