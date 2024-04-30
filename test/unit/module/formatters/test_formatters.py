@@ -2,9 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import json
 import sys
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 
 import jsonschema
@@ -26,7 +28,7 @@ class TestFormatters(BaseTestCase):
     def setUp(self) -> None:
         super().setUp()
         cfnlint.core._reset_rule_cache()
-        self.filename = "test/fixtures/templates/bad/formatters.yaml"
+        self.filename = str(Path("test/fixtures/templates/bad/formatters.yaml"))
         self.results = [
             Match(
                 6,

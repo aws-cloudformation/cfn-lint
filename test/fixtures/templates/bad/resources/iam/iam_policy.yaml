@@ -40,3 +40,22 @@ Resources:
         - cCondition
         - Statement: {}
         - Statement: []
+  rIamPolicyExtraThings:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: test
+      Roles:
+      - MyRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+
+          Action:
+          - cloudwatch:*
+          NotAction:
+          - ec2:*
+          Resource:
+          - '*'
+          NotResource:
+          - 'arn'

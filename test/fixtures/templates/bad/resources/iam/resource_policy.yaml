@@ -16,6 +16,20 @@ Resources:
                 aws:Referer:
                   - "http://www.example.com/*"
                   - "http://example.com/*"
+  SampleBucketPolicy2:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: "myExampleBucket"
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:GetObject"
+            Effect: "Allow"
+            Resource:
+            - "*"
+            Principal: test
+            NotPrincipal: test
   mysnspolicy:
     Type: AWS::SNS::TopicPolicy
     Properties:

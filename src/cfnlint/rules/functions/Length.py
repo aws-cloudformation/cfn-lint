@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from cfnlint.languageExtensions import LanguageExtensions
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
@@ -25,8 +26,7 @@ class Length(CloudFormationLintRule):
         fn_length_objects = cfn.search_deep_keys(intrinsic_function)
         for fn_length_object in fn_length_objects:
             tree = fn_length_object[:-1]
-            LanguageExtensions.validate_transform_is_declared(
-                self,
+            LanguageExtensions().validate_transform_is_declared(
                 has_language_extensions_transform,
                 matches,
                 tree,

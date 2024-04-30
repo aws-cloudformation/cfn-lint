@@ -2,11 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import json
 import os
 from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
 
 from cfnlint.decode import cfn_yaml, convert_dict
+from cfnlint.helpers import REGISTRY_SCHEMAS
 from cfnlint.template import Template  # pylint: disable=E0401
 
 
@@ -37,19 +40,19 @@ class TestTemplate(BaseTestCase):
         dot = "test/fixtures/templates/good/generic.yaml.dot"
 
         expected_content = """digraph "template" {
-MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type=Resource];
-RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type=Resource];
-RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type=Resource];
-RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type=Resource];
-MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
-mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type=Resource];
-MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
-ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type=Resource];
-ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type=Resource];
-IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type=Resource];
-CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type=Resource];
-WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type=Resource];
-LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type=Resource];
+MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type="Resource"];
+RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type="Resource"];
+RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type="Resource"];
+RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type="Resource"];
+MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
+mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type="Resource"];
+MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
+ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type="Resource"];
+ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type="Resource"];
+IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type="Resource"];
+CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type="Resource"];
+WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type="Resource"];
+LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type="Resource"];
 RolePolicies -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, source_paths="['Properties', 'IamInstanceProfile']"];
@@ -1228,14 +1231,81 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
         )
         directives = template.get_directives()
         expected_result = {
-            "E3012": [
-                {"end": (23, 10), "start": (10, 9)},
-                {"end": (36, 10), "start": (24, 9)},
-            ],
-            "I1001": [{"end": (23, 10), "start": (10, 9)}],
+            "E3012": ["myBucket1", "myBucket2"],
+            "I1001": ["myBucket1"],
         }
-        self.assertEqual(len(expected_result), len(directives))
-        for key, items in directives.items():
-            self.assertIn(key, expected_result)
-            if key in expected_result:
-                self.assertEqualListOfDicts(items, expected_result.get(key))
+        self.assertDictEqual(directives, expected_result)
+
+    def test_schemas(self):
+        """Validate getAtt when using a registry schema"""
+        schema = self.load_template("test/fixtures/registry/custom/resource.json")
+
+        filename = "test/fixtures/templates/good/schema_resource.yaml"
+        template = self.load_template(filename)
+        self.template = Template(filename, template)
+
+        with patch("cfnlint.helpers.REGISTRY_SCHEMAS", [schema]):
+            self.assertDictEqual(
+                {
+                    "MyReport": {
+                        "TPSCode": {"PrimitiveType": "String"},
+                        "Authors": {"PrimitiveItemType": "String", "Type": "List"},
+                    }
+                },
+                self.template.get_valid_getatts(),
+            )
+
+    def test_is_cdk_bad_type(self):
+        template = {
+            "Resources": {
+                "CDK": {
+                    "Type": ["AWS::CDK::Metadata"],
+                    "Properties": {
+                        "AssumeRolePolicyDocument": {
+                            "Version": "2012-10-17",
+                        }
+                    },
+                }
+            },
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())
+
+    def test_is_cdk_bad_resources(self):
+        template = {
+            "Resources": [
+                {
+                    "CDK": {
+                        "Type": ["AWS::CDK::Metadata"],
+                        "Properties": {
+                            "AssumeRolePolicyDocument": {
+                                "Version": "2012-10-17",
+                            }
+                        },
+                    }
+                }
+            ],
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())
+
+    def test_is_cdk_bad_resource_props(self):
+        template = {
+            "Resources": {
+                "CDK": [
+                    {
+                        "Type": ["AWS::CDK::Metadata"],
+                        "Properties": {
+                            "AssumeRolePolicyDocument": {
+                                "Version": "2012-10-17",
+                            }
+                        },
+                    }
+                ]
+            },
+        }
+
+        template = Template("test.yaml", template)
+        self.assertFalse(template.is_cdk_template())

@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import logging
 from typing import List, Optional, Sequence, Union
 
@@ -56,22 +57,15 @@ class Runner:
                             return_matches.append(match)
                             break
                     else:
-                        for directive in directives.get(match.rule.id):
-                            start = directive.get("start")
-                            end = directive.get("end")
-                            if start[0] < match.linenumber < end[0]:
-                                break
-                            if (
-                                start[0] == match.linenumber
-                                and start[1] <= match.columnnumber
-                            ):
-                                break
-                            if (
-                                end[0] == match.linenumber
-                                and end[1] >= match.columnnumberend
-                            ):
-                                break
-                        else:
-                            return_matches.append(match)
+                        path = getattr(match, "path", None)
+                        if path:
+                            if len(path) >= 2:
+                                if path[0] != "Resources":
+                                    return_matches.append(match)
+                                    continue
+                                if path[1] not in directives[match.rule.id]:
+                                    return_matches.append(match)
+                            else:
+                                return_matches.append(match)
 
         return return_matches

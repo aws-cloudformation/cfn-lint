@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -61,6 +62,10 @@ class AvailabilityZone(CloudFormationLintRule):
     def check(self, properties, resource_type, path, cfn):
         """Check itself"""
         matches = []
+
+        # Skip rule if CDK
+        if cfn.is_cdk_template():
+            return matches
 
         matches.extend(
             cfn.check_value(

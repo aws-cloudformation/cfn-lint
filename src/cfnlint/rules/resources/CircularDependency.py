@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -22,8 +23,8 @@ class CircularDependency(CloudFormationLintRule):
         for cycle in cfn.graph.get_cycles(cfn):
             source, target = cycle[:2]
             if (
-                cfn.graph.graph.nodes[source].get("type") == "Resource"
-                and cfn.graph.graph.nodes[target].get("type") == "Resource"
+                cfn.graph.graph.nodes[source].get("type") == '"Resource"'
+                and cfn.graph.graph.nodes[target].get("type") == '"Resource"'
             ):
                 message = f"Circular Dependencies for resource {source}. Circular dependency with [{target}]"
                 path = ["Resources", source]

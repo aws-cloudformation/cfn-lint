@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import json
 import logging
 from test.testlib.testcase import BaseTestCase
@@ -10,7 +11,9 @@ from unittest.mock import MagicMock, patch
 import yaml
 from yaml.scanner import ScannerError
 
-import cfnlint.decode.decode  # pylint: disable=E0401
+import cfnlint.decode.cfn_json
+import cfnlint.decode.cfn_yaml
+import cfnlint.decode.decode
 
 
 class TestDecode(BaseTestCase):
@@ -124,3 +127,14 @@ class TestDecode(BaseTestCase):
         self.assertEqual(len(matches), 1)
         self.assertEqual(matches[0].rule.id, "E0000")
         self.assertEqual(matches[0].message, err_msg)
+
+    def test_decode_yaml_null_key(self):
+        err_msg = "Null key 'null' not supported (line 3)"
+        with self.assertRaises(cfnlint.decode.cfn_yaml.CfnParseError) as e:
+            cfnlint.decode.cfn_yaml.loads(
+                """
+                Parameters:
+                    null: test
+            """
+            )
+        self.assertEqual(str(e.exception), err_msg)

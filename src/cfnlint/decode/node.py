@@ -2,8 +2,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
+from __future__ import annotations
+
 import logging
+from collections import namedtuple
 from copy import deepcopy
+from typing import Any, Dict, Protocol, Set
 
 import regex as re
 
@@ -14,6 +19,14 @@ class TemplateAttributeError(AttributeError):
     """Custom error to capture Attribute Errors in the Template"""
 
 
+class Mark(Protocol):
+    line: int
+    column: int
+
+
+_mark = namedtuple("_mark", ["line", "column"])
+
+
 def create_str_node_class(cls):
     """
     Create string node class
@@ -22,13 +35,16 @@ def create_str_node_class(cls):
     class node_class(cls):
         """Node class created based on the input class"""
 
-        def __init__(self, x, start_mark, end_mark):
+        def __init__(
+            self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
+        ):
             try:
                 cls.__init__(self, x)
             except TypeError:
                 cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
+
+            self.start_mark = start_mark or _mark(0, 0)
+            self.end_mark = end_mark or _mark(0, 0)
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
@@ -57,13 +73,15 @@ def create_dict_node_class(cls):
     class node_class(cls):
         """Node class created based on the input class"""
 
-        def __init__(self, x, start_mark, end_mark):
+        def __init__(
+            self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
+        ):
             try:
                 cls.__init__(self, x)
             except TypeError:
                 cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
+            self.start_mark = start_mark or _mark(0, 0)
+            self.end_mark = end_mark or _mark(0, 0)
             self.condition_functions = ["Fn::If"]
 
         def __deepcopy__(self, memo):
@@ -206,12 +224,14 @@ def create_sub_node_class(cls):
     class sub_class(cls):
         """Node class created based on the input class"""
 
-        def __init__(self, x, start_mark, end_mark):
+        def __init__(
+            self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
+        ):
             cls.__init__(self, x, start_mark, end_mark)
             self.__cache_is_valid = False
             self.__cache_sub_string = ""
-            self.__cache_sub_string_vars = set()
-            self.__cache_sub_vars = {}
+            self.__cache_sub_string_vars: Set[str] = set()
+            self.__cache_sub_vars: Dict[str, Any] = {}
             self.__setup()
 
         def __setup_list_sub_string(self, s):
@@ -279,13 +299,15 @@ def create_dict_list_class(cls):
     class node_class(cls):
         """Node class created based on the input class"""
 
-        def __init__(self, x, start_mark, end_mark):
+        def __init__(
+            self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
+        ):
             try:
                 cls.__init__(self, x)
             except TypeError:
                 cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
+            self.start_mark = start_mark or _mark(0, 0)
+            self.end_mark = end_mark or _mark(0, 0)
             self.condition_functions = ["Fn::If"]
 
         def __deepcopy__(self, memo):

@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from copy import deepcopy
 from unittest import TestCase
 
@@ -9,9 +10,9 @@ from cfnlint.decode import convert_dict
 from cfnlint.template import Template
 from cfnlint.template.transforms._language_extensions import (
     _ForEach,
+    _ForEachCollection,
     _ForEachValue,
     _ForEachValueFnFindInMap,
-    _ForEachValueRef,
     _ResolveError,
     _Transform,
     _TypeError,
@@ -26,6 +27,7 @@ class TestForEach(TestCase):
         _ForEach(
             "key", [{"Ref": "Parameter"}, {"Ref": "AWS::NotificationArns"}, {}], {}
         )
+        _ForEach("key", ["AccountId", {"Ref": "AccountIds"}, {}], {})
 
     def test_wrong_type(self):
         with self.assertRaises(_TypeError):
@@ -53,6 +55,32 @@ class TestForEach(TestCase):
             _ForEach("key", ["foo", ["bar"], []], {})
 
 
+class TestForEach(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.cfn = Template(
+            "",
+            {
+                "Parameters": {
+                    "AccountIds": {
+                        "Type": "CommaDelimitedList",
+                    },
+                },
+            },
+            regions=["us-west-2"],
+        )
+
+    def test_valid(self):
+        fec = _ForEachCollection({"Ref": "AccountIds"})
+        self.assertListEqual(
+            list(fec.values(self.cfn, {})),
+            [
+                {"Fn::Select": [0, {"Ref": "AccountIds"}]},
+                {"Fn::Select": [1, {"Ref": "AccountIds"}]},
+            ],
+        )
+
+
 class TestRef(TestCase):
     def setUp(self) -> None:
         self.template_obj = convert_dict(
@@ -73,6 +101,9 @@ class TestRef(TestCase):
                     "SecurityGroups": {
                         "Type": "List<AWS::EC2::Subnet::Id>",
                         "AllowedValues": ["sg-12345678, sg-87654321"],
+                    },
+                    "AccountIds": {
+                        "Type": "CommaDelimitedList",
                     },
                 },
             }
@@ -113,6 +144,15 @@ class TestRef(TestCase):
 
         fe = _ForEachValue.create({"Ref": "SecurityGroups"})
         self.assertEqual(fe.value(self.cfn), ["sg-12345678", "sg-87654321"])
+
+        fe = _ForEachValue.create({"Ref": "AccountIds"})
+        self.assertEqual(
+            fe.value(self.cfn),
+            [
+                {"Fn::Select": [0, {"Ref": "AccountIds"}]},
+                {"Fn::Select": [1, {"Ref": "AccountIds"}]},
+            ],
+        )
 
 
 class TestFindInMap(TestCase):
@@ -181,6 +221,32 @@ class TestFindInMap(TestCase):
         with self.assertRaises(_ValueError):
             _ForEachValueFnFindInMap("", ["foo"])
 
+    def test_find_in_map_values_with_default(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Bucket", {"Ref": "Foo"}, "Key", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
+    def test_find_in_map_values_without_default(self):
+        map = _ForEachValueFnFindInMap("a", ["Bucket", {"Ref": "Foo"}, "Key"])
+
+        with self.assertRaises(_ResolveError):
+            self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
+    def test_mapping_not_found(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Foo", {"Ref": "Foo"}, "Key", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
     def test_two_mappings(self):
         template_obj = deepcopy(self.template_obj)
         template_obj["Mappings"]["Foo"] = {"Bar": {"Key": ["a", "b"]}}
@@ -241,7 +307,21 @@ class TestTransform(TestCase):
                                 },
                             }
                         },
-                    ]
+                    ],
+                    "Fn::ForEach::SpecialCharacters": [
+                        "Identifier",
+                        ["a-b", "c-d"],
+                        {
+                            "S3Bucket&{Identifier}": {
+                                "Type": "AWS::S3::Bucket",
+                                "Properties": {
+                                    "BucketName": {
+                                        "Fn::Sub": "bucket-name-&{Identifier}"
+                                    },
+                                },
+                            }
+                        },
+                    ],
                 },
                 "Outputs": {
                     "Fn::ForEach::BucketOutputs": [
@@ -318,6 +398,18 @@ class TestTransform(TestCase):
                     },
                     "Type": "AWS::S3::Bucket",
                 },
+                "S3Bucketab": {
+                    "Properties": {
+                        "BucketName": "bucket-name-ab",
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
+                "S3Bucketcd": {
+                    "Properties": {
+                        "BucketName": "bucket-name-cd",
+                    },
+                    "Type": "AWS::S3::Bucket",
+                },
             },
             "Transforms": ["AWS::LanguageExtensions"],
         }
@@ -331,6 +423,7 @@ class TestTransform(TestCase):
         self.assertDictEqual(
             template,
             self.result,
+            template,
         )
 
     def test_transform_findinmap_function(self):
@@ -362,6 +455,76 @@ class TestTransform(TestCase):
             result,
         )
 
+    def test_transform_list_parameter(self):
+        template_obj = deepcopy(self.template_obj)
+        parameters = {"AccountIds": {"Type": "CommaDelimitedList"}}
+        template_obj["Parameters"] = parameters
+
+        nested_set(
+            template_obj,
+            [
+                "Resources",
+                "Fn::ForEach::SpecialCharacters",
+                1,
+            ],
+            {"Ref": "AccountIds"},
+        )
+        nested_set(
+            template_obj,
+            [
+                "Resources",
+                "Fn::ForEach::SpecialCharacters",
+                2,
+            ],
+            {
+                "S3Bucket&{Identifier}": {
+                    "Type": "AWS::S3::Bucket",
+                    "Properties": {
+                        "BucketName": {"Ref": "Identifier"},
+                        "Tags": [
+                            {"Key": "Name", "Value": {"Fn::Sub": "Name-${Identifier}"}},
+                        ],
+                    },
+                }
+            },
+        )
+        cfn = Template(filename="", template=template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+
+        result = deepcopy(self.result)
+        result["Parameters"] = parameters
+        result["Resources"]["S3Bucket5096"] = {
+            "Properties": {
+                "BucketName": {"Fn::Select": [1, {"Ref": "AccountIds"}]},
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Name-5096",
+                    },
+                ],
+            },
+            "Type": "AWS::S3::Bucket",
+        }
+        result["Resources"]["S3Bucketa72a"] = {
+            "Properties": {
+                "BucketName": {"Fn::Select": [0, {"Ref": "AccountIds"}]},
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Name-a72a",
+                    },
+                ],
+            },
+            "Type": "AWS::S3::Bucket",
+        }
+        del result["Resources"]["S3Bucketab"]
+        del result["Resources"]["S3Bucketcd"]
+        self.assertDictEqual(
+            template,
+            result,
+        )
+
     def test_bad_collection_ref(self):
         template_obj = deepcopy(self.template_obj)
         nested_set(
@@ -373,7 +536,7 @@ class TestTransform(TestCase):
         cfn = Template(filename="", template=template_obj, regions=["us-east-1"])
         matches, template = language_extension(cfn)
         self.assertListEqual(matches, [])
-        self.assertTrue(len(template["Resources"]) == 2)
+        self.assertTrue(len(template["Resources"]) == 4)
         self.assertTrue("S3BucketA" in template["Resources"])
 
     def test_duplicate_key(self):

@@ -4,6 +4,7 @@ Helpers for loading resources, managing specs, constants, etc.
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import datetime
 import fnmatch
 import gzip
@@ -356,6 +357,7 @@ def load_resource(package, filename="us-east-1.json"):
             .joinpath(filename)
             .read_text(encoding="utf-8")
         )
+    # pylint: disable=W4902
     return json.loads(pkg_resources.read_text(package, filename, encoding="utf-8"))
 
 

@@ -42,7 +42,7 @@ _To get information about the [SAM Transformation](https://docs.aws.amazon.com/A
 
 ## Install
 
-Python 3.7+ is supported.
+Python 3.8+ is supported.
 
 ### Pip
 
@@ -325,7 +325,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.83.7  # The version of cfn-lint to use
+  rev: v0.87.0  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -335,7 +335,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.83.7  # The version of cfn-lint to use
+  rev: v0.87.0  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint-rc
 ```

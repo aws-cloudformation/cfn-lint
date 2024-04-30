@@ -13,5 +13,4 @@ from cfnlint.template.transforms._types import TransformResult
 
 
 class Transformer(Protocol):
-    def transform(self, cfn: Any) -> TransformResult:
-        ...
+    def transform(self, cfn: Any) -> TransformResult: ...  # noqa: E704

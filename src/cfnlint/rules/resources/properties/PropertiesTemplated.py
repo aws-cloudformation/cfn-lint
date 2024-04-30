@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -58,6 +59,9 @@ class PropertiesTemplated(CloudFormationLintRule):
     def match_resource_properties(self, properties, resourcetype, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
+        if cfn.has_serverless_transform():
+            return []
 
         for key in self.templated_exceptions.get(resourcetype, []):
             matches.extend(

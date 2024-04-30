@@ -1,6 +1,6 @@
-name: Testing
+name: "[CI] Test branch"
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   unitlint:
@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: [ 3.7, 3.8, 3.9, "3.10", "3.11", "3.12" ]
+        python: [ 3.8, 3.9, "3.10", "3.11", "3.12" ]
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
           tox -e style
           tox -e type
           tox -e py
-      - uses: codecov/codecov-action@v3.1.4
+      - uses: codecov/codecov-action@v4.3.0
         if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

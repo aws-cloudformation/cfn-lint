@@ -1,3 +1,91 @@
+### v0.87.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `171.0.0` (pull #[3160](https://github.com/aws-cloudformation/cfn-lint/pull/3160))
+###### Fixes
+- When using a list param in foreach pass back select statements when no allowed value (pull #[3176](https://github.com/aws-cloudformation/cfn-lint/pull/3176))
+- Fix an issue with graphs and pydot and not quoting attrs (pull #[3177](https://github.com/aws-cloudformation/cfn-lint/pull/3177))
+- Update [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) as read replicas don't need backup period (pull #[3171](https://github.com/aws-cloudformation/cfn-lint/pull/3171))
+- Change filenames to be OS specific paths (pull #[3170](https://github.com/aws-cloudformation/cfn-lint/pull/3170))
+- Update [E8001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E8001) to validate null Condition section (pull #[3169](https://github.com/aws-cloudformation/cfn-lint/pull/3169))
+
+### v0.86.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `170.0.0` (pull #[3149](https://github.com/aws-cloudformation/cfn-lint/pull/3149))
+###### Fixes
+- Only pick up `.json` files when using registry shcemas (pull #[3150](https://github.com/aws-cloudformation/cfn-lint/pull/3150))
+- Update IAM policy validation to not allow `Action` and `NotAction` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
+- Update IAM policy validation to not allow `Principal` and `NotPrincipal` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
+- Update IAM policy validation to not allow `Resource` and `NotResource` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
+
+### v0.86.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `169.0.0` (pull #[3135](https://github.com/aws-cloudformation/cfn-lint/pull/3135))
+- Support `db2-ae` and `db2-se` RDS engines for `AWS::RDS::DBInstance.Engine` (pull #[3139](https://github.com/aws-cloudformation/cfn-lint/pull/3139))
+###### Fixes
+- Safely get `readOnlyProperties` (pull #[3141](https://github.com/aws-cloudformation/cfn-lint/pull/3141))
+
+### v0.86.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `168.0.0` (pull #[3127](https://github.com/aws-cloudformation/cfn-lint/pull/3127))
+- Remove `AWS::RDS::DBCluster` from exclusive checks (pull #[3119](https://github.com/aws-cloudformation/cfn-lint/pull/3119))
+###### Fixes
+- When doing a transform pass back FindInMap when resolution failure (pull #[3131](https://github.com/aws-cloudformation/cfn-lint/pull/3131))
+- Update deprecated Lambda runtimes (pull #[3113](https://github.com/aws-cloudformation/cfn-lint/pull/3113))
+
+### v0.86.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `165.0.0` (pull #[3092](https://github.com/aws-cloudformation/cfn-lint/pull/3092))
+###### Fixes
+- RDS DB Cluster remove MasterUserPassword from exclusion with MasterUsername (pull #[3106](https://github.com/aws-cloudformation/cfn-lint/pull/3106))
+- fix an issue when searching for Ref in tojsonstring (pull #[3107](https://github.com/aws-cloudformation/cfn-lint/pull/3107))
+
+### v0.86.0
+###### Feature
+- Disable and configure certain rules when template is from CDK (pull #[2971](https://github.com/aws-cloudformation/cfn-lint/pull/2971))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `163.0.0` (pull #[3076](https://github.com/aws-cloudformation/cfn-lint/pull/3076))
+
+### v0.85.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `162.0.0` (pull #[3069](https://github.com/aws-cloudformation/cfn-lint/pull/3069))
+###### Fixes
+- Raise error if any key in a mapping is null (pull #[3073](https://github.com/aws-cloudformation/cfn-lint/pull/3073))
+- Add getatt support for registry schemas (pull #[3061](https://github.com/aws-cloudformation/cfn-lint/pull/3061))
+- Set Application location when its a string in SAM transform (pull #[3060](https://github.com/aws-cloudformation/cfn-lint/pull/3060))
+
+### v0.85.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `160.0.0` (pull #[3054](https://github.com/aws-cloudformation/cfn-lint/pull/3054))
+
+### v0.85.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `158.0.0` (pull #[3039](https://github.com/aws-cloudformation/cfn-lint/pull/3039))
+###### Fixes
+- Fix an issue with using SAM and a GetAtt (pull #[3042](https://github.com/aws-cloudformation/cfn-lint/pull/3042))
+
+### v0.85.0
+###### Feature
+- Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3027) to validate rate periods (pull #[3017](https://github.com/aws-cloudformation/cfn-lint/pull/3017))
+- Add support new language extension foreach capabilities `&{parameter}` (pull #[3033](https://github.com/aws-cloudformation/cfn-lint/pull/3033))
+- Passthrough metadata into SAM translator (pull #[3030](https://github.com/aws-cloudformation/cfn-lint/pull/3030))
+- Switch to using path and resource names for directives (pull #[3035](https://github.com/aws-cloudformation/cfn-lint/pull/3035))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `156.0.0` (pull #[3029](https://github.com/aws-cloudformation/cfn-lint/pull/3029))
+
+### v0.84.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `154.0.0` (pull #[3005](https://github.com/aws-cloudformation/cfn-lint/pull/3005))
+- Add db.serverless to neptune instance classes (pull #[3009](https://github.com/aws-cloudformation/cfn-lint/pull/3009))
+###### Fixes
+- Drop python 3.7 support (pull #[3005](https://github.com/aws-cloudformation/cfn-lint/pull/3005))
+
+### v0.83.8
+###### CloudFormation Specifications
+- Update CloudFormation specs to `153.0.0` (pull #[2986](https://github.com/aws-cloudformation/cfn-lint/pull/2986))
+###### Fixes
+- Remove rule [E2506](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2506) which results in false positive (pull #[3001](https://github.com/aws-cloudformation/cfn-lint/pull/3001))
+- Return dict str_node when doing transform (pull #[2996](https://github.com/aws-cloudformation/cfn-lint/pull/2996))
+
 ### v0.83.7
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `152.0.0` (pull #[2984](https://github.com/aws-cloudformation/cfn-lint/pull/2984))

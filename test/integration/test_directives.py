@@ -2,6 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
+from pathlib import Path
 from test.integration import BaseCliTestCase
 
 
@@ -10,16 +12,18 @@ class TestDirectives(BaseCliTestCase):
 
     scenarios = [
         {
-            "filename": "test/fixtures/templates/good/core/directives.yaml",
+            "filename": str(Path("test/fixtures/templates/good/core/directives.yaml")),
             "exit_code": 0,
             "results": [],
         },
         {
-            "filename": "test/fixtures/templates/bad/core/directives.yaml",
+            "filename": str(Path("test/fixtures/templates/bad/core/directives.yaml")),
             "exit_code": 2,
             "results": [
                 {
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/directives.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 18, "LineNumber": 17},
@@ -40,7 +44,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/directives.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 28},
@@ -61,7 +67,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/directives.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 16, "LineNumber": 32},
@@ -81,7 +89,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/directives.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 35},
@@ -102,7 +112,9 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    "Filename": "test/fixtures/templates/bad/core/directives.yaml",
+                    "Filename": str(
+                        Path("test/fixtures/templates/bad/core/directives.yaml")
+                    ),
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 15, "LineNumber": 37},

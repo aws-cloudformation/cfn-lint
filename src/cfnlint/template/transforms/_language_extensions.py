@@ -5,6 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import hashlib
+import json
 import logging
 import random
 import string
@@ -156,7 +158,7 @@ class _Transform:
                 elif k == "Fn::FindInMap":
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
-                        map_value = mapping.value(cfn, params, True)
+                        map_value = mapping.value(cfn, params, True, False)
                         # if we get None this means its all strings but couldn't be resolved
                         # we will pass this forward
                         if map_value is None:
@@ -193,15 +195,20 @@ class _Transform:
         return obj
 
     def _replace_string_params(
-        self, s: str, params: Mapping[str, Any]
+        self,
+        s: str,
+        params: Mapping[str, Any],
     ) -> Tuple[bool, str]:
-        pattern = r"\${[a-zA-Z0-9\.:]+}"
+        pattern = r"(\$|&){[a-zA-Z0-9\.:]+}"
         if not re.search(pattern, s):
             return (True, s)
 
         new_s = deepcopy(s)
         for k, v in params.items():
+            if isinstance(v, dict):
+                v = hashlib.md5(json.dumps(v).encode("utf-8")).digest().hex()[0:4]
             new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
+            new_s = re.sub(rf"\&\{{{k}\}}", re.sub("[^0-9a-zA-Z]+", "", v), new_s)
 
         if isinstance(s, str_node):
             new_s = str_node(new_s, s.start_mark, s.end_mark)
@@ -297,6 +304,7 @@ class _ForEachValueFnFindInMap(_ForEachValue):
         cfn: Any,
         params: Optional[Mapping[str, Any]] = None,
         only_params: bool = False,
+        default_on_resolver_failure: bool = True,
     ) -> Any:
         if params is None:
             params = {}
@@ -360,11 +368,11 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                     t_map[2].value(cfn, params, only_params)
                 )
             except _ResolveError as e:
-                if len(self._map) == 4:
+                if len(self._map) == 4 and default_on_resolver_failure:
                     return self._map[3].value(cfn, params, only_params)
                 raise _ResolveError("Can't resolve Fn::FindInMap", self._obj) from e
 
-        if len(self._map) == 4:
+        if len(self._map) == 4 and default_on_resolver_failure:
             return self._map[3].value(cfn, params, only_params)
         raise _ResolveError("Can't resolve Fn::FindInMap", self._obj)
 
@@ -451,6 +459,9 @@ class _ForEachValueRef(_ForEachValue):
                 return [x.strip() for x in allowed_values[0].split(",")]
             return allowed_values[0]
 
+        if "List" in t:
+            return [{"Fn::Select": [0, {"Ref": v}]}, {"Fn::Select": [1, {"Ref": v}]}]
+
         raise _ResolveError("Can't resolve Fn::Ref", self._obj)
 
 
@@ -488,7 +499,7 @@ class _ForEachCollection:
                 if values:
                     if isinstance(values, list):
                         for value in values:
-                            if isinstance(value, str):
+                            if isinstance(value, (str, dict)):
                                 yield value
                             else:
                                 raise _ValueError(
@@ -501,8 +512,7 @@ class _ForEachCollection:
                     )
             except _ResolveError:
                 if self._fn.hash in collection_cache:
-                    for item in collection_cache[self._fn.hash]:
-                        yield item
+                    yield from iter(collection_cache[self._fn.hash])
                 else:
                     collection_cache[self._fn.hash] = []
                     for _ in range(0, 2):
@@ -542,5 +552,4 @@ class _ForEach:
 
     def items(self, cfn: Any) -> Iterable[Tuple[str, str]]:
         items = self._collection.values(cfn, self._collection_cache)
-        for item in items:
-            yield item
+        yield from iter(items)

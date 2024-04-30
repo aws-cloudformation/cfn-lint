@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import logging
 
 from cfnlint.languageExtensions import LanguageExtensions
@@ -26,8 +27,7 @@ class ForEach(CloudFormationLintRule):
         for for_each in for_eaches:
             has_language_extensions_transform = cfn.has_language_extensions_transform()
 
-            LanguageExtensions.validate_transform_is_declared(
-                self,
+            LanguageExtensions().validate_transform_is_declared(
                 has_language_extensions_transform,
                 matches,
                 for_each[:-1],

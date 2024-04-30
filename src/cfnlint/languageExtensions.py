@@ -24,16 +24,24 @@ class LanguageExtensions:
             matches.append(RuleMatch(tree[:], message.format("/".join(map(str, tree)))))
         return matches
 
+    def _find_in_obj(self, obj):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if k == "Ref":
+                    yield v
+                    return
+                yield from self._find_in_obj(v)
+
+        if isinstance(obj, list):
+            for v in obj:
+                yield from self._find_in_obj(v)
+
     def validate_pseudo_parameters(
         self, fn_object_val, matches, tree, pseudo_params, intrinsic_function
     ):
         if isinstance(fn_object_val, dict):
             ref = "Ref"
-            ref_list = [
-                val[ref]
-                for _, val in fn_object_val.items()
-                if hasattr(val, "__iter__") and ref in val
-            ]
+            ref_list = self._find_in_obj(fn_object_val)
             for ref in ref_list:
                 if ref in pseudo_params:
                     message = (

@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import json
 import logging
 import os
@@ -72,7 +73,12 @@ def run_cli(
         for path in registry_schemas:
             if path and os.path.isdir(os.path.expanduser(path)):
                 for f in os.listdir(path):
-                    with open(os.path.join(path, f), encoding="utf-8") as schema:
+                    if not f.endswith(".json"):
+                        continue
+                    filename = os.path.join(path, f)
+                    if not os.path.isfile(filename):
+                        continue
+                    with open(filename, encoding="utf-8") as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
 
     return run_checks(filename, template, rules, regions, mandatory_rules)
@@ -180,12 +186,10 @@ def get_matches(filenames: str, args: cfnlint.config.ConfigMixIn) -> Iterator[Ma
                 args.registry_schemas,
                 args.mandatory_checks,
             )
-            for match in matches:
-                yield match
+            yield from iter(matches)
         else:
             if errors:
-                for match in errors:
-                    yield match
+                yield from iter(errors)
         LOGGER.debug("Completed linting of file: %s", str(filename))
 
 

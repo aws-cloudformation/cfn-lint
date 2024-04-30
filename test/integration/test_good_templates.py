@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from test.integration import BaseCliTestCase
 
 import cfnlint.core
@@ -148,7 +149,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "Path": ["Resources", "myFunction", "Properties", "Runtime"],
                         "Start": {"ColumnNumber": 3, "LineNumber": 10},
                     },
-                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12. Please consider updating to nodejs16.x",
+                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12. Please consider updating to nodejs20.x",
                     "Rule": {
                         "Description": "Check if an EOL Lambda Runtime is specified and give an error if used. ",
                         "Id": "E2531",

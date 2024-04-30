@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.rules.resources.events.RuleScheduleExpression import (
@@ -28,5 +29,5 @@ class TestRuleScheduleExpression(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/resources/events/rule_schedule_expression.yaml",
-            8,
+            11,
         )

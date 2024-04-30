@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import regex as re
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
@@ -72,6 +73,10 @@ class HardCodedArnProperties(CloudFormationLintRule):
 
     def match(self, cfn):
         matches = []
+
+        # Skip rule if CDK
+        if cfn.is_cdk_template():
+            return matches
 
         transforms = cfn.transform_pre["Transform"]
         transforms = transforms if isinstance(transforms, list) else [transforms]

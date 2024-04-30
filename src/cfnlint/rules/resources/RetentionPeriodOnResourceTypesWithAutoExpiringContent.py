@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import regex as re
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
@@ -65,8 +66,15 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
                 {
                     "Attribute": "BackupRetentionPeriod",
                     "SourceUrl": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod",
-                    "CheckAttribute": "Engine",
-                    "CheckAttributeRegex": re.compile("^((?!aurora).)*$"),
+                    "Checks": [
+                        {
+                            "CheckAttribute": "Engine",
+                            "CheckAttributeRegex": re.compile("aurora.*"),
+                        },
+                        {
+                            "CheckAttributeNotSet": "SourceDBInstanceIdentifier",
+                        },
+                    ],
                 }
             ],
             "AWS::RDS::DBCluster": [
@@ -93,14 +101,20 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
                             value = property_set.get(attr_def.get("Attribute"))
                             if not value:
                                 message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in error_path)}'
-                                if attr_def.get("CheckAttribute"):
-                                    if self._validate_property(
-                                        property_set.get(
-                                            attr_def.get("CheckAttribute")
-                                        ),
-                                        attr_def.get("CheckAttributeRegex"),
-                                    ):
-                                        matches.append(RuleMatch(error_path, message))
+                                for check in attr_def.get("Checks", []):
+                                    if "CheckAttribute" in check:
+                                        if self._validate_property(
+                                            property_set.get(
+                                                check.get("CheckAttribute")
+                                            ),
+                                            check.get("CheckAttributeRegex"),
+                                        ):
+                                            break
+                                    if "CheckAttributeNotSet" in check:
+                                        if property_set.get(
+                                            check.get("CheckAttributeNotSet")
+                                        ):
+                                            break
                                 else:
                                     matches.append(RuleMatch(error_path, message))
                             if isinstance(value, dict):

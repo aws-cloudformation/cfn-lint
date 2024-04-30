@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 import json
 from datetime import date
 
@@ -150,6 +151,10 @@ class Policy(CloudFormationLintRule):
         if "Action" not in statement and "NotAction" not in statement:
             message = "IAM Policy statement missing Action or NotAction"
             matches.append(RuleMatch(branch[:], message))
+        if "Action" in statement and "NotAction" in statement:
+            message = "IAM Policy statement should have only one of Action or NotAction"
+            matches.append(RuleMatch(branch[:] + ["Action"], message))
+            matches.append(RuleMatch(branch[:] + ["NotAction"], message))
         if is_identity_policy:
             if "Principal" in statement or "NotPrincipal" in statement:
                 message = "IAM Resource Policy statement shouldn't have Principal or NotPrincipal"
@@ -158,10 +163,18 @@ class Policy(CloudFormationLintRule):
             if "Principal" not in statement and "NotPrincipal" not in statement:
                 message = "IAM Resource Policy statement should have Principal or NotPrincipal"
                 matches.append(RuleMatch(branch[:] + ["Principal"], message))
+            if "Principal" in statement and "NotPrincipal" in statement:
+                message = "IAM Resource Policy statement should have only one of Principal or NotPrincipal"
+                matches.append(RuleMatch(branch[:] + ["Principal"], message))
+                matches.append(RuleMatch(branch[:] + ["NotPrincipal"], message))
         if not resource_exceptions:
             if "Resource" not in statement and "NotResource" not in statement:
                 message = "IAM Policy statement missing Resource or NotResource"
                 matches.append(RuleMatch(branch[:], message))
+            if "Resource" in statement and "NotResource" in statement:
+                message = "IAM Resource Policy statement should have only one of Resource or NotResource"
+                matches.append(RuleMatch(branch[:] + ["Resource"], message))
+                matches.append(RuleMatch(branch[:] + ["NotResource"], message))
 
         resources = statement.get("Resource", [])
         if isinstance(resources, str):

@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from test.testlib.testcase import BaseTestCase
 
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
@@ -27,6 +28,9 @@ class TestRunner(BaseTestCase):
             AWSTemplateFormatVersion: "2010-09-09"
             Description: >
                 Template with all error levels: Warning, Error and Informational
+            # Adding in an issue outside of the Resources for validating
+            Conditions: 
+                IsUsEast1: !Equals ["a", "b", "c"]
             Resources:
                 myTable:
                     Metadata:
@@ -35,6 +39,7 @@ class TestRunner(BaseTestCase):
                                 ignore_checks:
                                 - I3011
                                 - W1020
+                                - E8003 # condition error #
                     Type: "AWS::DynamoDB::Table"
                     Properties:
                         TableName: !Sub "TableName"
@@ -47,6 +52,21 @@ class TestRunner(BaseTestCase):
                         ProvisionedThroughput:
                             ReadCapacityUnits: 5
                             WriteCapacityUnits: "5"
+                myTable2:
+                    # With no ignore_checks so we 
+                    # should still get issues from this
+                    Type: "AWS::DynamoDB::Table"
+                    Properties:
+                        TableName: !Sub "TableName"
+                        AttributeDefinitions:
+                            - AttributeName: "Id"
+                              AttributeType: "S" # Valid AllowedValue
+                        KeySchema:
+                            - AttributeName: "Id"
+                              KeyType: "HASH"
+                        ProvisionedThroughput:
+                            ReadCapacityUnits: !If [IsUsEast1, 5, 5]
+                            WriteCapacityUnits: "5"
         """
         )
 
@@ -55,7 +75,7 @@ class TestRunner(BaseTestCase):
         runner = Runner(self.collection, "", self.template, ["us-east-1"], [])
         runner.transform()
         failures = runner.run()
-        assert [] == failures, "Got failures {}".format(failures)
+        self.assertEqual(len(failures), 3, "Got failures {}".format(failures))
 
     def test_runner_mandatory_rules(self):
         """Success test"""
@@ -64,11 +84,11 @@ class TestRunner(BaseTestCase):
         )
         runner.transform()
         failures = runner.run()
-        self.assertEqual(len(failures), 1)
+        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
 
         runner = Runner(
             self.collection, "", self.template, ["us-east-1"], mandatory_rules=["W9000"]
         )
         runner.transform()
         failures = runner.run()
-        self.assertEqual(len(failures), 0)
+        self.assertEqual(len(failures), 3, "Got failures {}".format(failures))

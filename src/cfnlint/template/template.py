@@ -2,11 +2,12 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import List, Union
+from typing import Any, Dict, List, Union
 
 import regex as re
 
@@ -17,6 +18,94 @@ from cfnlint.match import Match
 from cfnlint.template.transforms import Transform
 
 LOGGER = logging.getLogger(__name__)
+
+
+def resolve_pointer(obj, pointer) -> Dict:
+    """Find the elements at the end of a Cfn pointer
+
+    Args:
+        obj (dict): the root schema used for searching for the pointer
+        pointer (str): the pointer using / to separate levels
+    Returns:
+        Dict: returns the object from the pointer
+    """
+    json_pointer = _SchemaPointer(obj, pointer)
+    return json_pointer.resolve()
+
+
+class _SchemaPointer:
+    def __init__(self, obj: dict, pointer: str) -> None:
+        self.obj = obj
+        self.parts = pointer.split("/")[1:]
+
+    def resolve(self) -> Dict:
+        """Find the elements at the end of a Cfn pointer
+
+        Args:
+        Returns:
+            Dict: returns the object from the pointer
+        """
+        obj = self.obj
+        for part in self.parts:
+            try:
+                obj = self.walk(obj, part)
+            except KeyError as e:
+                raise e
+
+        if "*" in self.parts:
+            return {"type": "array", "items": obj}
+
+        return obj
+
+    # pylint: disable=too-many-return-statements
+    def walk(self, obj: Dict, part: str) -> Any:
+        """Walks one step in doc and returns the referenced part
+
+        Args:
+            obj (dict): the object to evaluate for the part
+            part (str): the string representation of the part
+        Returns:
+            Dict: returns the object at the part
+        """
+        assert hasattr(obj, "__getitem__"), f"invalid document type {type(obj)}"
+
+        try:
+            # using a test for typeName as that is a root schema property
+            if part == "properties" and obj.get("typeName"):
+                return obj[part]
+            if (
+                obj.get("properties")
+                and part != "definitions"
+                and not obj.get("typeName")
+            ):
+                return obj["properties"][part]
+            # arrays have a * in the path
+            if part == "*" and obj.get("type") == "array":
+                return obj.get("items")
+            return obj[part]
+
+        except KeyError as e:
+            # CFN JSON pointers can go down $ref paths so lets do that if we can
+            if obj.get("$ref"):
+                try:
+                    return resolve_pointer(self.obj, f"{obj.get('$ref')}/{part}")
+                except KeyError as ke:
+                    raise ke
+            if obj.get("items", {}).get("$ref"):
+                ref = obj.get("items", {}).get("$ref")
+                try:
+                    return resolve_pointer(self.obj, f"{ref}/{part}")
+                except KeyError as ke:
+                    raise ke
+            if obj.get("oneOf"):
+                for oneOf in obj.get("oneOf"):  # type: ignore
+                    try:
+                        return self.walk(oneOf, part)
+                    except KeyError:
+                        pass
+
+                raise KeyError(f"No oneOf matches for {part}") from e
+            raise e
 
 
 class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attributes
@@ -93,9 +182,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def has_language_extensions_transform(self):
         """Check if the template has language extensions transform declared"""
-        LOGGER.debug(
-            "Check if the template has language extensions transform declaration"
-        )
         lang_extensions_transform = "AWS::LanguageExtensions"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
@@ -104,6 +190,34 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             else [transform_declaration]
         )
         return bool(lang_extensions_transform in transform_type)
+
+    def has_serverless_transform(self):
+        """Check if the template has SAM transform declared"""
+        lang_extensions_transform = "AWS::Serverless-2016-10-31"
+        transform_declaration = self.transform_pre["Transform"]
+        transform_type = (
+            transform_declaration
+            if isinstance(transform_declaration, list)
+            else [transform_declaration]
+        )
+        return bool(lang_extensions_transform in transform_type)
+
+    def is_cdk_template(self) -> bool:
+        """Check if the template was created by CDK"""
+        resources = self.template.get("Resources")
+        if not isinstance(resources, dict):
+            return False
+
+        for _, properties in resources.items():
+            if not isinstance(properties, dict):
+                continue
+            resource_type = properties.get("Type")
+            if not isinstance(resource_type, str):
+                continue
+            if resource_type == "AWS::CDK::Metadata":
+                return True
+
+        return False
 
     def get_resources(self, resource_type=[]):
         """
@@ -237,6 +351,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             results[pseudoparam] = element
         return results
 
+    # pylint: disable=too-many-locals
     def get_valid_getatts(self):
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
         propertytypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
@@ -305,6 +420,44 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                                         element = {}
                                         element.update(attvalue)
                                         results[name][attname] = element
+                        for schema in cfnlint.helpers.REGISTRY_SCHEMAS:
+                            if value["Type"] == schema["typeName"]:
+                                results[name] = {}
+                                for ro_property in schema.get("readOnlyProperties", []):
+                                    try:
+                                        item = resolve_pointer(schema, ro_property)
+                                    except KeyError:
+                                        continue
+                                    item_type = item["type"]
+                                    _type = None
+                                    primitive_type = None
+                                    if item_type == "string":
+                                        primitive_type = "String"
+                                    elif item_type == "number":
+                                        primitive_type = "Double"
+                                    elif item_type == "integer":
+                                        primitive_type = "Integer"
+                                    elif item_type == "boolean":
+                                        primitive_type = "Boolean"
+                                    elif item_type == "array":
+                                        _type = "List"
+                                        primitive_type = "String"
+
+                                    ro_property = ro_property.replace(
+                                        "/properties/", ""
+                                    )
+                                    results[name][".".join(ro_property.split("/"))] = {}
+                                    if _type:
+                                        results[name][".".join(ro_property.split("/"))][
+                                            "Type"
+                                        ] = _type
+                                        results[name][".".join(ro_property.split("/"))][
+                                            "PrimitiveItemType"
+                                        ] = primitive_type
+                                    elif primitive_type:
+                                        results[name][".".join(ro_property.split("/"))][
+                                            "PrimitiveType"
+                                        ] = primitive_type
 
         return results
 
@@ -323,14 +476,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     for ignore_rule_id in ignore_rule_ids:
                         if ignore_rule_id not in results:
                             results[ignore_rule_id] = []
-                        value_location = self._loc(resource_values)
-                        name_location = self._loc(resource_name)
-                        results[ignore_rule_id].append(
-                            {
-                                "start": (name_location[0] + 1, name_location[1] + 1),
-                                "end": (value_location[2] + 1, value_location[3] + 1),
-                            }
-                        )
+                        results[ignore_rule_id].append(resource_name)
         return results
 
     # pylint: disable=too-many-locals
