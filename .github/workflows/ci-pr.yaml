@@ -24,13 +24,13 @@ jobs:
           tox -e type
           tox -e py
         env:
-          COVERAGE_FILE: ".coverage.${{ matrix.python }}"
+          COVERAGE_FILE: .coverage.${{ matrix.python }}.xml
       - name: Store coverage file
         uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest'
         with:
           name: coverage-${{ matrix.python }}
-          path: .coverage.${{ matrix.python }}
+          path: .coverage.${{ matrix.python }}.xml
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
