@@ -27,6 +27,13 @@
    ],
    "type": "string"
   },
+  "DataDeletionPolicy": {
+   "enum": [
+    "RETAIN",
+    "DELETE"
+   ],
+   "type": "string"
+  },
   "DataSourceConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -46,7 +53,8 @@
   "DataSourceStatus": {
    "enum": [
     "AVAILABLE",
-    "DELETING"
+    "DELETING",
+    "DELETE_UNSUCCESSFUL"
    ],
    "type": "string"
   },
@@ -82,6 +90,12 @@
      "maxLength": 2048,
      "minLength": 1,
      "pattern": "^arn:aws(|-cn|-us-gov):s3:::[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "BucketOwnerAccountId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
      "type": "string"
     },
     "InclusionPrefixes": {
@@ -172,6 +186,9 @@
   "CreatedAt": {
    "type": "string"
   },
+  "DataDeletionPolicy": {
+   "$ref": "#/definitions/DataDeletionPolicy"
+  },
   "DataSourceConfiguration": {
    "$ref": "#/definitions/DataSourceConfiguration"
   },
@@ -186,6 +203,15 @@
    "maxLength": 200,
    "minLength": 1,
    "type": "string"
+  },
+  "FailureReasons": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
   },
   "KnowledgeBaseId": {
    "pattern": "^[0-9a-zA-Z]{10}$",
@@ -209,7 +235,8 @@
   "/properties/DataSourceId",
   "/properties/DataSourceStatus",
   "/properties/CreatedAt",
-  "/properties/UpdatedAt"
+  "/properties/UpdatedAt",
+  "/properties/FailureReasons"
  ],
  "required": [
   "DataSourceConfiguration",

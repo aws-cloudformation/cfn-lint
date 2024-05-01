@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "DeploymentPreference": {
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 256,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Interval": {
+     "maximum": 2100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Percentage": {
+     "maximum": 99,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StateMachineVersionArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "LINEAR",
+      "ALL_AT_ONCE",
+      "CANARY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "StateMachineVersionArn",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RoutingConfiguration": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RoutingConfigurationVersion"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RoutingConfigurationVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "StateMachineVersionArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Weight": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StateMachineVersionArn",
+    "Weight"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "states:CreateStateMachineAlias",
+    "states:DescribeStateMachineAlias"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "states:DescribeStateMachineAlias",
+    "states:DeleteStateMachineAlias"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RoutingConfiguration": {
+      "$ref": "resource-schema.json#/properties/RoutingConfiguration"
+     }
+    },
+    "required": [
+     "RoutingConfiguration"
+    ]
+   },
+   "permissions": [
+    "states:ListStateMachineAliases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "states:DescribeStateMachineAlias"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "states:UpdateStateMachineAlias",
+    "states:DescribeStateMachineAlias"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "RoutingConfiguration"
+   ]
+  },
+  {
+   "required": [
+    "DeploymentPreference"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DeploymentPreference": {
+   "$ref": "#/definitions/DeploymentPreference"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 80,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoutingConfiguration": {
+   "$ref": "#/definitions/RoutingConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::StepFunctions::StateMachineAlias",
+ "writeOnlyProperties": [
+  "/properties/DeploymentPreference"
+ ]
+}

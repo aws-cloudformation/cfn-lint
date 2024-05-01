@@ -190,6 +190,13 @@
   "AudioDescription": {
    "additionalProperties": false,
    "properties": {
+    "AudioDashRoles": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "AudioNormalizationSettings": {
      "$ref": "#/definitions/AudioNormalizationSettings"
     },
@@ -207,6 +214,9 @@
     },
     "CodecSettings": {
      "$ref": "#/definitions/AudioCodecSettings"
+    },
+    "DvbDashAccessibility": {
+     "type": "string"
     },
     "LanguageCode": {
      "type": "string"
@@ -519,11 +529,21 @@
     "Accessibility": {
      "type": "string"
     },
+    "CaptionDashRoles": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
     "CaptionSelectorName": {
      "type": "string"
     },
     "DestinationSettings": {
      "$ref": "#/definitions/CaptionDestinationSettings"
+    },
+    "DvbDashAccessibility": {
+     "type": "string"
     },
     "LanguageCode": {
      "type": "string"
@@ -661,6 +681,39 @@
    "additionalProperties": false,
    "properties": {
     "Resolution": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CmafIngestGroupSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/OutputLocationRef"
+    },
+    "NielsenId3Behavior": {
+     "type": "string"
+    },
+    "Scte35Type": {
+     "type": "string"
+    },
+    "SegmentLength": {
+     "type": "integer"
+    },
+    "SegmentLengthUnits": {
+     "type": "string"
+    },
+    "SendDelayMs": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CmafIngestOutputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "NameModifier": {
      "type": "string"
     }
    },
@@ -1447,6 +1500,12 @@
     "MinIInterval": {
      "type": "integer"
     },
+    "MvOverPictureBoundaries": {
+     "type": "string"
+    },
+    "MvTemporalPredictor": {
+     "type": "string"
+    },
     "ParDenominator": {
      "type": "integer"
     },
@@ -1474,10 +1533,22 @@
     "Tier": {
      "type": "string"
     },
+    "TileHeight": {
+     "type": "integer"
+    },
+    "TilePadding": {
+     "type": "string"
+    },
+    "TileWidth": {
+     "type": "integer"
+    },
     "TimecodeBurninSettings": {
      "$ref": "#/definitions/TimecodeBurninSettings"
     },
     "TimecodeInsertion": {
+     "type": "string"
+    },
+    "TreeblockSize": {
      "type": "string"
     }
    },
@@ -2578,6 +2649,9 @@
     "ArchiveGroupSettings": {
      "$ref": "#/definitions/ArchiveGroupSettings"
     },
+    "CmafIngestGroupSettings": {
+     "$ref": "#/definitions/CmafIngestGroupSettings"
+    },
     "FrameCaptureGroupSettings": {
      "$ref": "#/definitions/FrameCaptureGroupSettings"
     },
@@ -2628,6 +2702,9 @@
    "properties": {
     "ArchiveOutputSettings": {
      "$ref": "#/definitions/ArchiveOutputSettings"
+    },
+    "CmafIngestOutputSettings": {
+     "$ref": "#/definitions/CmafIngestOutputSettings"
     },
     "FrameCaptureOutputSettings": {
      "$ref": "#/definitions/FrameCaptureOutputSettings"

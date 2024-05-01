@@ -1,0 +1,189 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WebExperienceSamplePromptsControlMode": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "WebExperienceStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "FAILED",
+    "PENDING_AUTH_CONFIG"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "qbusiness:CreateWebExperience",
+    "qbusiness:GetWebExperience",
+    "qbusiness:ListTagsForResource",
+    "qbusiness:TagResource",
+    "sso:PutApplicationGrant",
+    "sso:UpdateApplication"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "qbusiness:DeleteWebExperience",
+    "qbusiness:GetWebExperience"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApplicationId": {
+      "$ref": "resource-schema.json#/properties/ApplicationId"
+     }
+    },
+    "required": [
+     "ApplicationId"
+    ]
+   },
+   "permissions": [
+    "qbusiness:ListWebExperiences"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "qbusiness:GetWebExperience",
+    "qbusiness:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "qbusiness:GetWebExperience",
+    "qbusiness:ListTagsForResource",
+    "qbusiness:TagResource",
+    "qbusiness:UntagResource",
+    "qbusiness:UpdateWebExperience",
+    "sso:PutApplicationGrant",
+    "sso:UpdateApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/WebExperienceId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DefaultEndpoint": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(https?|ftp|file)://([^\\s]*)$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "SamplePromptsControlMode": {
+   "$ref": "#/definitions/WebExperienceSamplePromptsControlMode"
+  },
+  "Status": {
+   "$ref": "#/definitions/WebExperienceStatus"
+  },
+  "Subtitle": {
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Title": {
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "WebExperienceArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "WebExperienceId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "WelcomeMessage": {
+   "maxLength": 300,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DefaultEndpoint",
+  "/properties/Status",
+  "/properties/UpdatedAt",
+  "/properties/WebExperienceArn",
+  "/properties/WebExperienceId"
+ ],
+ "required": [
+  "ApplicationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::WebExperience"
+}

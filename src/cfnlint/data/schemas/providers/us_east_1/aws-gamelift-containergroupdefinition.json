@@ -1,0 +1,404 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/SchedulingStrategy",
+  "/properties/TotalMemoryLimit",
+  "/properties/TotalCpuLimit",
+  "/properties/ContainerDefinitions",
+  "/properties/OperatingSystem"
+ ],
+ "definitions": {
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "Cpu": {
+     "maximum": 10240,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DependsOn": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContainerDependency"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EntryPoint": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Environment": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerEnvironment"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Essential": {
+     "type": "boolean"
+    },
+    "HealthCheck": {
+     "$ref": "#/definitions/ContainerHealthCheck"
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_\\.@\\/:]+$",
+     "type": "string"
+    },
+    "MemoryLimits": {
+     "$ref": "#/definitions/MemoryLimits"
+    },
+    "PortConfiguration": {
+     "$ref": "#/definitions/PortConfiguration"
+    },
+    "ResolvedImageDigest": {
+     "pattern": "^sha256:[a-fA-F0-9]{64}$",
+     "type": "string"
+    },
+    "WorkingDirectory": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContainerName",
+    "ImageUri"
+   ],
+   "type": "object"
+  },
+  "ContainerDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "enum": [
+      "START",
+      "COMPLETE",
+      "SUCCESS",
+      "HEALTHY"
+     ],
+     "type": "string"
+    },
+    "ContainerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContainerName",
+    "Condition"
+   ],
+   "type": "object"
+  },
+  "ContainerEnvironment": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ContainerHealthCheck": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Interval": {
+     "maximum": 300,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "Retries": {
+     "maximum": 10,
+     "minimum": 5,
+     "type": "integer"
+    },
+    "StartPeriod": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Timeout": {
+     "maximum": 60,
+     "minimum": 30,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Command"
+   ],
+   "type": "object"
+  },
+  "ContainerPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "enum": [
+      "TCP",
+      "UDP"
+     ],
+     "type": "string"
+    },
+    "ToPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FromPort",
+    "Protocol",
+    "ToPort"
+   ],
+   "type": "object"
+  },
+  "MemoryLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "HardLimit": {
+     "maximum": 1024000,
+     "minimum": 4,
+     "type": "integer"
+    },
+    "SoftLimit": {
+     "maximum": 1024000,
+     "minimum": 4,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PortConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPortRanges": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerPortRange"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ContainerPortRanges"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "gamelift:CreateContainerGroupDefinition",
+    "gamelift:DescribeContainerGroupDefinition",
+    "gamelift:ListTagsForResource",
+    "gamelift:TagResource",
+    "ecr:BatchCheckLayerAvailability",
+    "ecr:BatchGetImage",
+    "ecr:GetDownloadUrlForLayer",
+    "ecr:DescribeImages"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "gamelift:DescribeContainerGroupDefinition",
+    "gamelift:DeleteContainerGroupDefinition"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "gamelift:ListContainerGroupDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "gamelift:DescribeContainerGroupDefinition",
+    "gamelift:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "gamelift:ListTagsForResource",
+    "gamelift:TagResource",
+    "gamelift:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "ContainerDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ContainerGroupDefinitionArn": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^arn:.*:containergroupdefinition/containergroupdefinition-[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "enum": [
+    "AMAZON_LINUX_2023"
+   ],
+   "type": "string"
+  },
+  "SchedulingStrategy": {
+   "enum": [
+    "REPLICA",
+    "DAEMON"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TotalCpuLimit": {
+   "maximum": 10240,
+   "minimum": 128,
+   "type": "integer"
+  },
+  "TotalMemoryLimit": {
+   "maximum": 1024000,
+   "minimum": 4,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContainerGroupDefinitionArn",
+  "/properties/CreationTime",
+  "/properties/ContainerDefinitions/*/ResolvedImageDigest"
+ ],
+ "required": [
+  "Name",
+  "TotalMemoryLimit",
+  "TotalCpuLimit",
+  "ContainerDefinitions",
+  "OperatingSystem"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::ContainerGroupDefinition"
+}
