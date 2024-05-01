@@ -351,6 +351,46 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             results[pseudoparam] = element
         return results
 
+    def _get_valid_getatts_from_schema(self, schema, pointer):
+        results = {}
+        try:
+            item = resolve_pointer(schema, pointer)
+        except KeyError:
+            return results
+
+        pointer = pointer.replace("/properties/", "").replace("#/definitions/", "")
+
+        item_type = item.get("type")
+        if item_type is None:
+            if "$ref" in item:
+                results.update(
+                    self._get_valid_getatts_from_schema(schema, item.get("$ref"))
+                )
+            else:
+                return results
+        _type = None
+        primitive_type = None
+        if item_type == "string":
+            primitive_type = "String"
+        elif item_type == "number":
+            primitive_type = "Double"
+        elif item_type == "integer":
+            primitive_type = "Integer"
+        elif item_type == "boolean":
+            primitive_type = "Boolean"
+        elif item_type == "array":
+            _type = "List"
+            primitive_type = "String"
+
+        results[".".join(pointer.split("/"))] = {}
+        if _type:
+            results[".".join(pointer.split("/"))]["Type"] = _type
+            results[".".join(pointer.split("/"))]["PrimitiveItemType"] = primitive_type
+        elif primitive_type:
+            results[".".join(pointer.split("/"))]["PrimitiveType"] = primitive_type
+
+        return results
+
     # pylint: disable=too-many-locals
     def get_valid_getatts(self):
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
@@ -424,40 +464,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                             if value["Type"] == schema["typeName"]:
                                 results[name] = {}
                                 for ro_property in schema.get("readOnlyProperties", []):
-                                    try:
-                                        item = resolve_pointer(schema, ro_property)
-                                    except KeyError:
-                                        continue
-                                    item_type = item["type"]
-                                    _type = None
-                                    primitive_type = None
-                                    if item_type == "string":
-                                        primitive_type = "String"
-                                    elif item_type == "number":
-                                        primitive_type = "Double"
-                                    elif item_type == "integer":
-                                        primitive_type = "Integer"
-                                    elif item_type == "boolean":
-                                        primitive_type = "Boolean"
-                                    elif item_type == "array":
-                                        _type = "List"
-                                        primitive_type = "String"
-
-                                    ro_property = ro_property.replace(
-                                        "/properties/", ""
+                                    results[name].update(
+                                        self._get_valid_getatts_from_schema(
+                                            schema, ro_property
+                                        )
                                     )
-                                    results[name][".".join(ro_property.split("/"))] = {}
-                                    if _type:
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "Type"
-                                        ] = _type
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "PrimitiveItemType"
-                                        ] = primitive_type
-                                    elif primitive_type:
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "PrimitiveType"
-                                        ] = primitive_type
 
         return results
 
