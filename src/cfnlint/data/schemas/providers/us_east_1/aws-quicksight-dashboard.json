@@ -5842,7 +5842,7 @@
      "items": {
       "$ref": "#/definitions/SeriesItem"
      },
-     "maxItems": 10,
+     "maxItems": 2000,
      "minItems": 0,
      "type": "array"
     },
@@ -7405,7 +7405,7 @@
      "items": {
       "$ref": "#/definitions/PivotTableConditionalFormattingOption"
      },
-     "maxItems": 100,
+     "maxItems": 500,
      "minItems": 0,
      "type": "array"
     }
@@ -9592,7 +9592,7 @@
      "items": {
       "$ref": "#/definitions/TableConditionalFormattingOption"
      },
-     "maxItems": 100,
+     "maxItems": 500,
      "minItems": 0,
      "type": "array"
     }
@@ -10965,6 +10965,15 @@
    },
    "type": "object"
   },
+  "WaterfallChartColorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupColorConfiguration": {
+     "$ref": "#/definitions/WaterfallChartGroupColorConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "WaterfallChartConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -10973,6 +10982,9 @@
     },
     "CategoryAxisLabelOptions": {
      "$ref": "#/definitions/ChartAxisLabelOptions"
+    },
+    "ColorConfiguration": {
+     "$ref": "#/definitions/WaterfallChartColorConfiguration"
     },
     "DataLabels": {
      "$ref": "#/definitions/DataLabelOptions"
@@ -11006,6 +11018,24 @@
    "properties": {
     "WaterfallChartAggregatedFieldWells": {
      "$ref": "#/definitions/WaterfallChartAggregatedFieldWells"
+    }
+   },
+   "type": "object"
+  },
+  "WaterfallChartGroupColorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NegativeBarColor": {
+     "pattern": "^#[A-F0-9]{6}$",
+     "type": "string"
+    },
+    "PositiveBarColor": {
+     "pattern": "^#[A-F0-9]{6}$",
+     "type": "string"
+    },
+    "TotalBarColor": {
+     "pattern": "^#[A-F0-9]{6}$",
+     "type": "string"
     }
    },
    "type": "object"
