@@ -12,8 +12,6 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -28,6 +26,9 @@ jobs:
             var fs = require('fs');
             return Number(fs.readFileSync('./NR'));
           result-encoding: string
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
       - name: Upload coverage report
         if: '!cancelled()'
         uses: codecov/codecov-action@v3
