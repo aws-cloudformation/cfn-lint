@@ -24,10 +24,12 @@ jobs:
 
       - name: Upload coverage report
         if: '!cancelled()'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           override_commit: ${{ github.event.workflow_run.head_sha }}
           override_pr: ${{ github.event.workflow_run.pull_requests[0].number }}
+          override_build: ${{ github.event.workflow_run.id }}
+          override_build_url: ${{ github.event.workflow_run.workflow_url }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           verbose: true
