@@ -1,0 +1,283 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "definitions": {
+  "Integration": {
+   "additionalProperties": false,
+   "properties": {
+    "CacheKeyParameters": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CacheNamespace": {
+     "type": "string"
+    },
+    "ConnectionId": {
+     "type": "string"
+    },
+    "ConnectionType": {
+     "enum": [
+      "INTERNET",
+      "VPC_LINK"
+     ],
+     "type": "string"
+    },
+    "ContentHandling": {
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "Credentials": {
+     "type": "string"
+    },
+    "IntegrationHttpMethod": {
+     "type": "string"
+    },
+    "IntegrationResponses": {
+     "items": {
+      "$ref": "#/definitions/IntegrationResponse"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PassthroughBehavior": {
+     "enum": [
+      "WHEN_NO_MATCH",
+      "WHEN_NO_TEMPLATES",
+      "NEVER"
+     ],
+     "type": "string"
+    },
+    "RequestParameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "RequestTemplates": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "TimeoutInMillis": {
+     "minimum": 50,
+     "type": "integer"
+    },
+    "Type": {
+     "enum": [
+      "AWS",
+      "AWS_PROXY",
+      "HTTP",
+      "HTTP_PROXY",
+      "MOCK"
+     ],
+     "type": "string"
+    },
+    "Uri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "IntegrationResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentHandling": {
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseTemplates": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SelectionPattern": {
+     "type": "string"
+    },
+    "StatusCode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "MethodResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "ResponseModels": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": [
+        "boolean",
+        "string"
+       ]
+      }
+     },
+     "type": "object"
+    },
+    "StatusCode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:PUT",
+    "apigateway:GET",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PUT",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "properties": {
+  "ApiKeyRequired": {
+   "type": "boolean"
+  },
+  "AuthorizationScopes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AuthorizationType": {
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "type": "string"
+  },
+  "HttpMethod": {
+   "type": "string"
+  },
+  "Integration": {
+   "$ref": "#/definitions/Integration"
+  },
+  "MethodResponses": {
+   "items": {
+    "$ref": "#/definitions/MethodResponse"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OperationName": {
+   "type": "string"
+  },
+  "RequestModels": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequestParameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": [
+      "boolean",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "RequestValidatorId": {
+   "type": "string"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "RestApiId": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "RestApiId",
+  "ResourceId",
+  "HttpMethod"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Method"
+}

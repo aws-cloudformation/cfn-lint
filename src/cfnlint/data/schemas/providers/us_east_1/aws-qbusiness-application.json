@@ -1,0 +1,211 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EncryptionConfiguration"
+ ],
+ "definitions": {
+  "ApplicationStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "FAILED",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "AttachmentsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentsControlMode": {
+     "$ref": "#/definitions/AttachmentsControlMode"
+    }
+   },
+   "required": [
+    "AttachmentsControlMode"
+   ],
+   "type": "object"
+  },
+  "AttachmentsControlMode": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "qbusiness:CreateApplication",
+    "qbusiness:GetApplication",
+    "qbusiness:ListTagsForResource",
+    "qbusiness:TagResource",
+    "sso:CreateApplication",
+    "sso:DeleteApplication",
+    "sso:PutApplicationAccessScope",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kms:RetireGrant",
+    "qbusiness:DeleteApplication",
+    "qbusiness:GetApplication",
+    "sso:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "qbusiness:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "qbusiness:GetApplication",
+    "qbusiness:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "qbusiness:GetApplication",
+    "qbusiness:ListTagsForResource",
+    "qbusiness:TagResource",
+    "qbusiness:UntagResource",
+    "qbusiness:UpdateApplication",
+    "sso:CreateApplication",
+    "sso:DeleteApplication",
+    "sso:PutApplicationAccessScope",
+    "sso:PutApplicationAuthenticationMethod",
+    "sso:PutApplicationGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "AttachmentsConfiguration": {
+   "$ref": "#/definitions/AttachmentsConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "IdentityCenterApplicationArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+   "type": "string"
+  },
+  "IdentityCenterInstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/ApplicationStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/ApplicationId",
+  "/properties/CreatedAt",
+  "/properties/IdentityCenterApplicationArn",
+  "/properties/Status",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "DisplayName"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::Application",
+ "writeOnlyProperties": [
+  "/properties/IdentityCenterInstanceArn"
+ ]
+}
