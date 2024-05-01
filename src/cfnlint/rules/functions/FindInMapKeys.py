@@ -18,7 +18,7 @@ class FindInMapKeys(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html"
     tags = ["functions", "findinmap"]
 
-    def check_keys(self, map_name, keys, mappings, tree):
+    def check_keys(self, map_name, keys, mappings, tree, cfn):
         """Check the validity of the first key"""
         matches = []
         first_key = keys[0]
@@ -58,20 +58,21 @@ class FindInMapKeys(CloudFormationLintRule):
                                     )
                                 )
                     else:
-                        for key, value in mapping.items():
-                            if value.get(second_key) is None:
-                                message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
-                                matches.append(
-                                    RuleMatch(
-                                        tree[:] + [2],
-                                        message.format(
-                                            second_key,
-                                            map_name,
-                                            key,
-                                            "/".join(map(str, tree)),
-                                        ),
+                        if not cfn.has_language_extensions_transform():
+                            for key, value in mapping.items():
+                                if value.get(second_key) is None:
+                                    message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
+                                    matches.append(
+                                        RuleMatch(
+                                            tree[:] + [2],
+                                            message.format(
+                                                second_key,
+                                                map_name,
+                                                key,
+                                                "/".join(map(str, tree)),
+                                            ),
+                                        )
                                     )
-                                )
 
         return matches
 
@@ -85,6 +86,8 @@ class FindInMapKeys(CloudFormationLintRule):
             map_obj = findinmap[-1]
 
             if len(map_obj) == 3:
-                matches.extend(self.check_keys(map_obj[0], map_obj[1:], mappings, tree))
+                matches.extend(
+                    self.check_keys(map_obj[0], map_obj[1:], mappings, tree, cfn)
+                )
 
         return matches
