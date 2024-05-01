@@ -38,32 +38,52 @@ Resource types may have complex rules to define what a valid resource configurat
 
 To make schema writing easier across hundereds of resources we have extend the schemas to include some additional keywords. While these keywords can be covered under the JSON schema they have to be done with a combination of `if`s, `onlyOne`s, `anyOf`s, etc. By using these keywords we can extend the schema for common scenarios when writing CloudFormation schemas.
 
-#### pattern
+#### type
 
-_pattern_ keyword is used to validate a string against a regular expression. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#regexp)
+_type_ specifies the data type for a schema. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/type)
 
 #### enum
 
 _enum_ is used to restrict a value to a fixed set of values. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#enum)
 
-#### number range
+#### Strings
+
+##### pattern
+
+_pattern_ keyword is used to validate a string against a regular expression. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#regexp)
+
+#### length
+
+_minLength_ and _maxLength_ are used to are used to constrain the size of a string. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/string#length)
+
+#### Numbers or Integers
+
+##### number range
 
 _minimum_ and _maximum_ is used to define the inclusive range for a number or integer.
 _exclusiveMinimum_ and _exclusiveMaximum_ is used to define the exlusive range for a number or integer.
 
-#### array length
+#### Arrays
+
+##### array length
 
 _minItems_ and _maxItems_ is used to provide the inclusive length of an array.
 
-#### properties
+##### prefixItems
+
+_prefixItems_ is similar to the definition of [prefixItems](https://json-schema.org/understanding-json-schema/reference/array#tupleValidation) but doesn't actually do the prefix. The current resource schema doesn't support [items](https://json-schema.org/understanding-json-schema/reference/array#items) being an array. We use `prefixItems` to validate array items where ordering matters.
+
+#### Objects
+
+##### properties
 
 _properties_ provides the key names and a value that represents the schema to validate the property for an object. [JSON Schema Docs](https://json-schema.org/understanding-json-schema/reference/object#properties)
 
-#### required
+##### required
 
 _required_ defines a list of required properties. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/object#required)
 
-#### requiredXor
+##### requiredXor
 
 _requiredXor_ is used to define when only one property from a set properties is required.
 
@@ -106,7 +126,7 @@ is equivalent to the JSON schema
 }
 ```
 
-#### propertiesNand
+##### propertiesNand
 
 _propertiesNand_ is used to define when none or only one property from a set properties can be defined.
 
@@ -156,11 +176,11 @@ is equivalent to the JSON schema
 }
 ```
 
-#### dependentRequired
+##### dependentRequired
 
 _dependentRequired_ has been backported into cfn-lint. You can read the definition [here](https://json-schema.org/understanding-json-schema/reference/conditionals#dependentRequired)
 
-#### dependentExcluded
+##### dependentExcluded
 
 _dependentExcluded_ is the opposite of dependentRequired. The list of properties should not be specified when the key property is specified.
 
@@ -201,11 +221,3 @@ is equivalent to the JSON schema
   }
 }
 ```
-
-#### prefixItems
-
-_prefixItems_ is similar to the definition of [prefixItems](https://json-schema.org/understanding-json-schema/reference/array#tupleValidation) but doesn't actually do the prefix. The current resource schema doesn't support [items](https://json-schema.org/understanding-json-schema/reference/array#items) being an array. We use `prefixItems` to validate array items where ordering matters.
-
-#### type
-
-_type_ specifies the data type for a schema. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/type)
