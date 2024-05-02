@@ -23,14 +23,13 @@ jobs:
           tox -e style
           tox -e type
           tox -e py
-        env:
-          COVERAGE_FILE: .coverage.${{ matrix.python }}.xml
+          mv coverage.xml coverage-${{ matrix.python }}.xml
       - name: Store coverage file
         uses: actions/upload-artifact@v4
         if: matrix.os == 'ubuntu-latest'
         with:
           name: coverage-${{ matrix.python }}
-          path: .coverage.${{ matrix.python }}.xml
+          path: coverage-${{ matrix.python }}.xml
       - name: Save PR number
         run: |
           mkdir -p ./pr
