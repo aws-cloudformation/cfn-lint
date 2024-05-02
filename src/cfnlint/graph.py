@@ -46,9 +46,15 @@ class GraphSettings:
     def subgraph_view(self, graph) -> networkx.MultiDiGraph:
         view = networkx.MultiDiGraph(name="template")
         resources: List[str] = [
-            n for n, v in graph.nodes.items() if v["type"] in ['"Resource"']
+            n for n, v in graph.nodes.items() if v["type"] in ["Resource"]
         ]
-        view.add_nodes_from((n, graph.nodes[n]) for n in resources)
+
+        # have to add quotes when outputing to dot
+        for resource in resources:
+            node = graph.nodes[resource]
+            node["type"] = f'"{node["type"]}"'
+            view.add_node(resource, **node)
+
         view.add_edges_from(
             (n, nbr, key, d)
             for n, nbrs in graph.adj.items()
@@ -251,7 +257,7 @@ class Graph:
             label=label,
             color=settings.color,
             shape=settings.shape,
-            type=f'"{settings.node_type}"',
+            type=settings.node_type,
         )
 
     def _add_edge(self, source_id, target_id, source_path, settings):

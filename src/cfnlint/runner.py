@@ -75,7 +75,10 @@ class TemplateRunner:
             ):
                 yield from iter(matches)
             return
+
         if self.cfn.template is not None:
+            if self.config.build_graph:
+                self.cfn.build_graph()
             yield from self._dedup(
                 self.check_metadata_directives(
                     self.rules.run(

@@ -488,7 +488,7 @@ class _ForEachCollection:
 
     def values(
         self, cfn: Any, collection_cache: MutableMapping[str, Any]
-    ) -> Iterator[str]:
+    ) -> Iterator[str | dict[Any, Any]]:
         if self._collection:
             for item in self._collection:
                 try:
@@ -558,6 +558,6 @@ class _ForEach:
         self._collection = _ForEachCollection(value[1])
         self._output = _ForEachOutput(value[2])
 
-    def items(self, cfn: Any) -> Iterator[str]:
+    def items(self, cfn: Any) -> Iterator[str | dict[str, str]]:
         items = self._collection.values(cfn, self._collection_cache)
         yield from iter(items)
