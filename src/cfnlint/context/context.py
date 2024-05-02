@@ -224,11 +224,13 @@ class Parameter(_Ref):
     type: str = field(init=False)
     default: Any = field(init=False)
     allowed_values: Any = field(init=False)
-    description: str = field(init=False)
+    description: str | None = field(init=False)
 
     parameter: InitVar[Any]
 
     def __post_init__(self, parameter) -> None:
+        if not isinstance(parameter, dict):
+            raise ValueError("Parameter must be a object")
         self.default = None
         self.allowed_values = []
         self.min_value = None
@@ -249,7 +251,7 @@ class Parameter(_Ref):
 
         if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
             if "Default" in parameter:
-                self.default = parameter.get("Default").split(",")
+                self.default = parameter.get("Default", "").split(",")
             for allowed_value in parameter.get("AllowedValues", []):
                 self.allowed_values.append(allowed_value.split(","))
         else:
@@ -294,6 +296,8 @@ class Resource(_Ref):
     resource: InitVar[Any]
 
     def __post_init__(self, resource) -> None:
+        if not isinstance(resource, dict):
+            raise ValueError("Resource must be a object")
         t = resource.get("Type")
         if not isinstance(t, str):
             raise ValueError("Type must be a string")
@@ -325,6 +329,8 @@ class _MappingSecondaryKey:
         for k, v in instance.items():
             if isinstance(v, (str, list, int, float)):
                 self.keys[k] = v
+            else:
+                raise ValueError("Third keys must not be an object")
 
     def value(self, secondary_key: str):
         if secondary_key not in self.keys:
