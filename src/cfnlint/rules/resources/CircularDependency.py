@@ -26,8 +26,8 @@ class CircularDependency(CloudFormationLintRule):
         for cycle in cfn.graph.get_cycles(cfn):
             source, target = cycle[:2]
             if (
-                cfn.graph.graph.nodes[source].get("type") == '"Resource"'
-                and cfn.graph.graph.nodes[target].get("type") == '"Resource"'
+                cfn.graph.graph.nodes[source].get("type") == "Resource"
+                and cfn.graph.graph.nodes[target].get("type") == "Resource"
             ):
                 message = (
                     f"Circular Dependencies for resource {source}. Circular dependency"
