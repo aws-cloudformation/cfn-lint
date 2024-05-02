@@ -29,6 +29,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+          path: repo_clone
       - name: Upload coverage report
         if: '!cancelled()'
         uses: codecov/codecov-action@v3
@@ -39,3 +40,4 @@ jobs:
           files: ".coverage.3.8.xml,.coverage.3.9.xml,.coverage.3.10.xml,.coverage.3.11.xml,.coverage.3.12.xml"
           fail_ci_if_error: true
           verbose: true
+          root_dir: ${{ github.workspace }}/repo_clone
