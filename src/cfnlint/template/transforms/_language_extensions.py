@@ -169,6 +169,9 @@ class _Transform:
                     except Exception as e:  # pylint: disable=broad-exception-caught
                         # We couldn't resolve the FindInMap so we are going to leave it as it is
                         LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
+                        for i, el in enumerate(v):
+                            v[i] = self._walk(el, params, cfn)
+                        obj[k] = v
                 elif k == "Ref":
                     if isinstance(v, str):
                         if v in params:
