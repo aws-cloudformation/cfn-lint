@@ -57,9 +57,9 @@ class ConfigFileArgs:
     """
 
     file_args: Dict = {}
-    __user_config_file = None
-    __project_config_file = None
-    __custom_config_file = None
+    _user_config_file = None
+    _project_config_file = None
+    _custom_config_file = None
 
     def __init__(self, schema=None, config_file=None):
         # self.file_args = self.get_config_file_defaults()
@@ -72,10 +72,10 @@ class ConfigFileArgs:
         self.schema = self.default_schema if not schema else schema
 
         if config_file:
-            self.__custom_config_file = config_file
+            self._custom_config_file = config_file
         else:
             LOGGER.debug("Looking for CFLINTRC before attempting to load")
-            self.__user_config_file, self.__project_config_file = self._find_config()
+            self._user_config_file, self._project_config_file = self._find_config()
 
         self.load()
 
@@ -91,24 +91,28 @@ class ConfigFileArgs:
             > user_config, project_config = self._find_config()
         """
         config_file_name = ".cfnlintrc"
-        self.__user_config_file = Path.home().joinpath(config_file_name)
-
-        self.__project_config_file = Path.cwd().joinpath(config_file_name)
-        if self._has_file(config_file_name + ".yaml"):
-            self.__project_config_file = Path.cwd().joinpath(config_file_name + ".yaml")
-        elif self._has_file(config_file_name + ".yml"):
-            self.__project_config_file = Path.cwd().joinpath(config_file_name + ".yml")
 
         user_config_path = ""
+        home_path = Path.home()
+        for path in [
+            home_path.joinpath(config_file_name),
+            home_path.joinpath(f"{config_file_name}.yaml"),
+            home_path.joinpath(f"{config_file_name}.yml"),
+        ]:
+            if self._has_file(path):
+                user_config_path = path
+                break
+
         project_config_path = ""
-
-        if self._has_file(self.__user_config_file):
-            LOGGER.debug("Found User CFNLINTRC")
-            user_config_path = self.__user_config_file
-
-        if self._has_file(self.__project_config_file):
-            LOGGER.debug("Found Project level CFNLINTRC")
-            project_config_path = self.__project_config_file
+        cwd_path = Path.cwd()
+        for path in [
+            cwd_path.joinpath(config_file_name),
+            cwd_path.joinpath(f"{config_file_name}.yaml"),
+            cwd_path.joinpath(f"{config_file_name}.yml"),
+        ]:
+            if self._has_file(path):
+                project_config_path = path
+                break
 
         return user_config_path, project_config_path
 
@@ -133,8 +137,8 @@ class ConfigFileArgs:
             CFLINTRC configuration
         """
 
-        if self.__custom_config_file:
-            custom_config = self._read_config(self.__custom_config_file)
+        if self._custom_config_file:
+            custom_config = self._read_config(self._custom_config_file)
             LOGGER.debug("Validating Custom CFNLINTRC")
             self.validate_config(custom_config, self.schema)
             LOGGER.debug("Custom configuration loaded as")
@@ -142,11 +146,11 @@ class ConfigFileArgs:
 
             self.file_args = custom_config
         else:
-            user_config = self._read_config(self.__user_config_file)
+            user_config = self._read_config(self._user_config_file)
             LOGGER.debug("Validating User CFNLINTRC")
             self.validate_config(user_config, self.schema)
 
-            project_config = self._read_config(self.__project_config_file)
+            project_config = self._read_config(self._project_config_file)
             LOGGER.debug("Validating Project CFNLINTRC")
             self.validate_config(project_config, self.schema)
 
@@ -577,34 +581,20 @@ class TemplateArgs:
             configs = template.get("Metadata", {}).get("cfn-lint", {}).get("config", {})
 
             if isinstance(configs, dict):
-                for config_name, config_value in configs.items():
-                    if config_name == "ignore_checks":
-                        if isinstance(config_value, list):
-                            defaults["ignore_checks"] = config_value
-                    if config_name == "regions":
-                        if isinstance(config_value, list):
-                            defaults["regions"] = config_value
-                    if config_name == "append_rules":
-                        if isinstance(config_value, list):
-                            defaults["append_rules"] = config_value
-                    if config_name == "override_spec":
-                        if isinstance(config_value, (str)):
-                            defaults["override_spec"] = config_value
-                    if config_name == "custom_rules":
-                        if isinstance(config_value, (str)):
-                            defaults["custom_rules"] = config_value
-                    if config_name == "ignore_bad_template":
-                        if isinstance(config_value, bool):
-                            defaults["ignore_bad_template"] = config_value
-                    if config_name == "include_checks":
-                        if isinstance(config_value, list):
-                            defaults["include_checks"] = config_value
-                    if config_name == "configure_rules":
-                        if isinstance(config_value, dict):
-                            defaults["configure_rules"] = config_value
-                    if config_name == "include_experimental":
-                        if isinstance(config_value, bool):
-                            defaults["include_experimental"] = config_value
+                for key, value in {
+                    "ignore_checks": (list),
+                    "regions": (list),
+                    "append_rules": (list),
+                    "override_spec": (str),
+                    "custom_rules": (str),
+                    "ignore_bad_template": (bool),
+                    "include_checks": (list),
+                    "configure_rules": (dict),
+                    "include_experimental": (bool),
+                }.items():
+                    if key in configs:
+                        if isinstance(configs[key], value):
+                            defaults[key] = configs[key]
 
         self._template_args = defaults
 
