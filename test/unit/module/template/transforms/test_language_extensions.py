@@ -55,7 +55,7 @@ class TestForEach(TestCase):
             _ForEach("key", ["foo", ["bar"], []], {})
 
 
-class TestForEach(TestCase):
+class TestForEachCollection(TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.cfn = Template(
