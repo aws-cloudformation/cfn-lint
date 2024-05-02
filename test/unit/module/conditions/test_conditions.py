@@ -289,3 +289,18 @@ class TestConditions(TestCase):
                 {h_region: "us-east-1", h_environment: "dev"}
             )
         )
+
+    def test_build_scenerios_on_region_with_condition_dne(self):
+        """Get condition and test"""
+        template = decode_str(
+            """
+        Conditions:
+          IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsProd", "us-east-1")),
+            [True, False],
+        )

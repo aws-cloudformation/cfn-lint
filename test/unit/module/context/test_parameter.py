@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Context
-from cfnlint.context.context import Parameter
+from cfnlint.context.context import Parameter, _init_parameters
 
 
 @pytest.mark.parametrize(
@@ -118,3 +118,8 @@ def test_no_echo(name, instance, expected):
 def test_errors(name, instance):
     with pytest.raises(ValueError):
         Parameter(instance)
+
+
+def test_parameters():
+    with pytest.raises(ValueError):
+        _init_parameters([])
