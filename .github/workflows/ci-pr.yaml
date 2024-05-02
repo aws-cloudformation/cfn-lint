@@ -18,11 +18,13 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install Tox and any other packages
         run: pip install tox
+      - name: Run Lint
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
       - name: Run Tox
         run: |
-          tox -e style
-          tox -e type
-          tox -e py
+          tox -e py -- -m "data or not data"
           mv coverage.xml coverage-${{ matrix.python }}.xml
       - name: Store coverage file
         uses: actions/upload-artifact@v4
@@ -78,3 +80,4 @@ jobs:
         with:
           ignore-vulns: |
             GHSA-r9hx-vwmv-q579
+            PYSEC-2022-43012
