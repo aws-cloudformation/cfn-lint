@@ -1,0 +1,231 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetType",
+  "/properties/ProtocolVersion",
+  "/properties/Port",
+  "/properties/Name",
+  "/properties/VpcId",
+  "/properties/Protocol",
+  "/properties/IpAddressType"
+ ],
+ "definitions": {
+  "Matcher": {
+   "additionalProperties": false,
+   "properties": {
+    "GrpcCode": {
+     "type": "string"
+    },
+    "HttpCode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetDescription": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "cfnLint": [
+      "AWS::ElasticLoadBalancingV2::TargetGroup/Properties/Targets/AvailabilityZone"
+     ],
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "TargetGroupAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:CreateTargetGroup",
+    "elasticloadbalancing:DescribeTargetGroups",
+    "elasticloadbalancing:RegisterTargets",
+    "elasticloadbalancing:ModifyTargetGroupAttributes",
+    "elasticloadbalancing:DescribeTargetHealth",
+    "elasticloadbalancing:AddTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DeleteTargetGroup",
+    "elasticloadbalancing:DescribeTargetGroups"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTargetGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTargetGroups",
+    "elasticloadbalancing:DescribeTargetGroupAttributes",
+    "elasticloadbalancing:DescribeTargetHealth",
+    "elasticloadbalancing:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticloadbalancing:DescribeTargetGroups",
+    "elasticloadbalancing:ModifyTargetGroup",
+    "elasticloadbalancing:ModifyTargetGroupAttributes",
+    "elasticloadbalancing:RegisterTargets",
+    "elasticloadbalancing:DescribeTargetHealth",
+    "elasticloadbalancing:DeregisterTargets",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RemoveTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetGroupArn"
+ ],
+ "properties": {
+  "HealthCheckEnabled": {
+   "type": "boolean"
+  },
+  "HealthCheckIntervalSeconds": {
+   "maximum": 300,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "HealthCheckPath": {
+   "type": "string"
+  },
+  "HealthCheckPort": {
+   "type": "string"
+  },
+  "HealthCheckProtocol": {
+   "type": "string"
+  },
+  "HealthCheckTimeoutSeconds": {
+   "type": "integer"
+  },
+  "HealthyThresholdCount": {
+   "type": "integer"
+  },
+  "IpAddressType": {
+   "type": "string"
+  },
+  "LoadBalancerArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Matcher": {
+   "$ref": "#/definitions/Matcher"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "type": "string"
+  },
+  "ProtocolVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetGroupArn": {
+   "type": "string"
+  },
+  "TargetGroupAttributes": {
+   "arrayType": "AttributeList",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TargetGroupAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetGroupFullName": {
+   "type": "string"
+  },
+  "TargetGroupName": {
+   "type": "string"
+  },
+  "TargetType": {
+   "type": "string"
+  },
+  "Targets": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TargetDescription"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UnhealthyThresholdCount": {
+   "maximum": 10,
+   "minimum": 2,
+   "type": "integer"
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerArns",
+  "/properties/TargetGroupArn",
+  "/properties/TargetGroupName",
+  "/properties/TargetGroupFullName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::TargetGroup"
+}

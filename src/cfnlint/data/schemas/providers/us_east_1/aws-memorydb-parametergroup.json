@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParameterGroupName",
+  "/properties/Family",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "memorydb:CreateParameterGroup",
+    "memorydb:DescribeParameterGroups",
+    "memorydb:TagResource",
+    "memorydb:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "memorydb:DeleteParameterGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "memorydb:DescribeParameterGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "memorydb:DescribeParameterGroups",
+    "memorydb:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "memorydb:UpdateParameterGroup",
+    "memorydb:DescribeParameterGroups",
+    "memorydb:DescribeParameters",
+    "memorydb:DescribeClusters",
+    "memorydb:ListTags",
+    "memorydb:TagResource",
+    "memorydb:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ParameterGroupName"
+ ],
+ "properties": {
+  "ARN": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Family": {
+   "type": "string"
+  },
+  "ParameterGroupName": {
+   "type": "string"
+  },
+  "Parameters": {
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ARN"
+ ],
+ "required": [
+  "ParameterGroupName",
+  "Family"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "taggable": true,
+ "typeName": "AWS::MemoryDB::ParameterGroup",
+ "writeOnlyProperties": [
+  "/properties/Parameters"
+ ]
+}

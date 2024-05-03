@@ -1,0 +1,116 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IdleConnectionAlert": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "MINUTES"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "default": 1,
+     "maximum": 60,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "IdleConnectionPreferences": {
+   "additionalProperties": false,
+   "properties": {
+    "Alert": {
+     "$ref": "#/definitions/IdleConnectionAlert"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/IdleConnectionTimeout"
+    }
+   },
+   "type": "object"
+  },
+  "IdleConnectionTimeout": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "MINUTES"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "default": 10,
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm-guiconnect:UpdatePreferences",
+    "ssm-guiconnect:GetPreferences"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm-guiconnect:GetPreferences",
+    "ssm-guiconnect:DeletePreferences"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm-guiconnect:GetPreferences"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm-guiconnect:GetPreferences"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm-guiconnect:UpdatePreferences",
+    "ssm-guiconnect:GetPreferences",
+    "ssm-guiconnect:DeletePreferences"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "\\d{12}",
+   "type": "string"
+  },
+  "IdleConnection": {
+   "items": {
+    "$ref": "#/definitions/IdleConnectionPreferences"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm-guiconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSMGuiConnect::Preferences"
+}

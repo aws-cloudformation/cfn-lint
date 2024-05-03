@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HttpUrlProperties",
+  "/properties/VpcProperties"
+ ],
+ "definitions": {
+  "HttpUrlDestinationSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfirmationUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TopicRuleDestinationStatus": {
+   "enum": [
+    "ENABLED",
+    "IN_PROGRESS",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "VpcDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecurityGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iot:CreateTopicRuleDestination",
+    "iot:GetTopicRuleDestination",
+    "iot:UpdateTopicRuleDestination"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:GetTopicRuleDestination",
+    "iot:DeleteTopicRuleDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListTopicRuleDestinations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:GetTopicRuleDestination"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iot:GetTopicRuleDestination",
+    "iot:UpdateTopicRuleDestination"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "HttpUrlProperties": {
+   "$ref": "#/definitions/HttpUrlDestinationSummary"
+  },
+  "Status": {
+   "$ref": "#/definitions/TopicRuleDestinationStatus"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "VpcProperties": {
+   "$ref": "#/definitions/VpcDestinationProperties"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/StatusReason"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IoT::TopicRuleDestination"
+}

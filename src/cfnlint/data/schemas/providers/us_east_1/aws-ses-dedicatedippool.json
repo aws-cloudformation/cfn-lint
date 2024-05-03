@@ -1,0 +1,55 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ScalingMode"
+ ],
+ "createOnlyProperties": [
+  "/properties/PoolName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateDedicatedIpPool",
+    "ses:GetDedicatedIpPool",
+    "ses:GetDedicatedIps"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteDedicatedIpPool"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListDedicatedIpPools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetDedicatedIpPool",
+    "ses:GetDedicatedIps"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:PutDedicatedIpPoolScalingAttributes",
+    "ses:GetDedicatedIpPool"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PoolName"
+ ],
+ "properties": {
+  "PoolName": {
+   "pattern": "^[a-z0-9_-]{0,64}$",
+   "type": "string"
+  },
+  "ScalingMode": {
+   "pattern": "^(STANDARD|MANAGED)$",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::DedicatedIpPool"
+}

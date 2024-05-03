@@ -1,0 +1,82 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApiId": {
+      "$ref": "resource-schema.json#/properties/ApiId"
+     }
+    },
+    "required": [
+     "ApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId",
+  "/properties/DeploymentId"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "DeploymentId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "StageName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeploymentId"
+ ],
+ "required": [
+  "ApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::Deployment",
+ "writeOnlyProperties": [
+  "/properties/StageName"
+ ]
+}

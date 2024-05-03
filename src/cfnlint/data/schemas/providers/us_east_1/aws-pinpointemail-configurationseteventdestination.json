@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationSetName",
+  "/properties/EventDestinationName"
+ ],
+ "definitions": {
+  "CloudWatchDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionConfigurations": {
+     "items": {
+      "$ref": "#/definitions/DimensionConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DimensionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultDimensionValue": {
+     "type": "string"
+    },
+    "DimensionName": {
+     "type": "string"
+    },
+    "DimensionValueSource": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DimensionValueSource",
+    "DefaultDimensionValue",
+    "DimensionName"
+   ],
+   "type": "object"
+  },
+  "EventDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchDestination": {
+     "$ref": "#/definitions/CloudWatchDestination"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "KinesisFirehoseDestination": {
+     "$ref": "#/definitions/KinesisFirehoseDestination"
+    },
+    "MatchingEventTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "PinpointDestination": {
+     "$ref": "#/definitions/PinpointDestination"
+    },
+    "SnsDestination": {
+     "$ref": "#/definitions/SnsDestination"
+    }
+   },
+   "required": [
+    "MatchingEventTypes"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamArn": {
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamArn",
+    "IamRoleArn"
+   ],
+   "type": "object"
+  },
+  "PinpointDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SnsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ConfigurationSetName": {
+   "type": "string"
+  },
+  "EventDestination": {
+   "$ref": "#/definitions/EventDestination"
+  },
+  "EventDestinationName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ConfigurationSetName",
+  "EventDestinationName"
+ ],
+ "typeName": "AWS::PinpointEmail::ConfigurationSetEventDestination"
+}

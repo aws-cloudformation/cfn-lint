@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PipelineName"
+ ],
+ "definitions": {
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "ETag": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "s3:GetObject",
+    "sagemaker:CreatePipeline",
+    "sagemaker:DescribePipeline",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeletePipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribePipeline",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "s3:GetObject",
+    "sagemaker:UpdatePipeline",
+    "sagemaker:DescribePipeline",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags",
+    "sagemaker:ListTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineName"
+ ],
+ "properties": {
+  "ParallelismConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxParallelExecutionSteps": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxParallelExecutionSteps"
+   ],
+   "type": "object"
+  },
+  "PipelineDefinition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PipelineDefinitionBody": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "PipelineDefinitionBody"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PipelineDefinitionS3Location": {
+       "$ref": "#/definitions/S3Location"
+      }
+     },
+     "required": [
+      "PipelineDefinitionS3Location"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "PipelineDescription": {
+   "maxLength": 3072,
+   "minLength": 0,
+   "type": "string"
+  },
+  "PipelineDisplayName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "PipelineName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "PipelineName",
+  "PipelineDefinition",
+  "RoleArn"
+ ],
+ "typeName": "AWS::SageMaker::Pipeline"
+}

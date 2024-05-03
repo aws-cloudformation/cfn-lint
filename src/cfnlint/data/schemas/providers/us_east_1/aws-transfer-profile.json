@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProfileType"
+ ],
+ "definitions": {
+  "CertificateId": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^cert-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateProfile",
+    "transfer:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "transfer:ListProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UpdateProfile",
+    "transfer:UnTagResource",
+    "transfer:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProfileId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "As2Id": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[\\u0020-\\u007E\\s]*$",
+   "type": "string"
+  },
+  "CertificateIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CertificateId"
+   },
+   "type": "array"
+  },
+  "ProfileId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^p-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "ProfileType": {
+   "enum": [
+    "LOCAL",
+    "PARTNER"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ProfileId"
+ ],
+ "required": [
+  "As2Id",
+  "ProfileType"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Profile"
+}

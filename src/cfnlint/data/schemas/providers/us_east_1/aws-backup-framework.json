@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FrameworkName"
+ ],
+ "definitions": {
+  "ControlInputParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterName",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "FrameworkControl": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlInputParameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ControlInputParameter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ControlName": {
+     "type": "string"
+    },
+    "ControlScope": {
+     "additionalProperties": false,
+     "properties": {
+      "ComplianceResourceIds": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "ComplianceResourceTypes": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "Tags": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/Tag"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "ControlName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "backup:CreateFramework",
+    "backup:DescribeFramework",
+    "backup:ListTags",
+    "backup:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "backup:DeleteFramework",
+    "backup:DescribeFramework"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "backup:ListFrameworks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "backup:DescribeFramework",
+    "backup:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "backup:DescribeFramework",
+    "backup:UpdateFramework",
+    "backup:ListTags",
+    "backup:TagResource",
+    "backup:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FrameworkArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "DeploymentStatus": {
+   "type": "string"
+  },
+  "FrameworkArn": {
+   "type": "string"
+  },
+  "FrameworkControls": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FrameworkControl"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "FrameworkDescription": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "FrameworkName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][_a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "FrameworkStatus": {
+   "type": "string"
+  },
+  "FrameworkTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FrameworkArn",
+  "/properties/CreationTime",
+  "/properties/FrameworkStatus",
+  "/properties/DeploymentStatus"
+ ],
+ "required": [
+  "FrameworkControls"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/FrameworkTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::Framework"
+}

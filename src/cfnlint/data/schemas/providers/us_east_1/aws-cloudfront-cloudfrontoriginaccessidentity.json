@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CloudFrontOriginAccessIdentityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Comment"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudfront:CreateCloudFrontOriginAccessIdentity"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudfront:DeleteCloudFrontOriginAccessIdentity",
+    "cloudfront:GetCloudFrontOriginAccessIdentity"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudfront:ListCloudFrontOriginAccessIdentities"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudfront:GetCloudFrontOriginAccessIdentity"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudfront:UpdateCloudFrontOriginAccessIdentity",
+    "cloudfront:GetCloudFrontOriginAccessIdentity"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CloudFrontOriginAccessIdentityConfig": {
+   "$ref": "#/definitions/CloudFrontOriginAccessIdentityConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "S3CanonicalUserId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/S3CanonicalUserId"
+ ],
+ "required": [
+  "CloudFrontOriginAccessIdentityConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+}

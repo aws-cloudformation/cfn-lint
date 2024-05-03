@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationName"
+ ],
+ "definitions": {
+  "ApplicationResourceLifecycleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceRole": {
+     "type": "string"
+    },
+    "VersionLifecycleConfig": {
+     "$ref": "#/definitions/ApplicationVersionLifecycleConfig"
+    }
+   },
+   "type": "object"
+  },
+  "ApplicationVersionLifecycleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxAgeRule": {
+     "$ref": "#/definitions/MaxAgeRule"
+    },
+    "MaxCountRule": {
+     "$ref": "#/definitions/MaxCountRule"
+    }
+   },
+   "type": "object"
+  },
+  "MaxAgeRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteSourceFromS3": {
+     "type": "boolean"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "MaxAgeInDays": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MaxCountRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteSourceFromS3": {
+     "type": "boolean"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "MaxCount": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ResourceLifecycleConfig": {
+   "$ref": "#/definitions/ApplicationResourceLifecycleConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::ElasticBeanstalk::Application"
+}

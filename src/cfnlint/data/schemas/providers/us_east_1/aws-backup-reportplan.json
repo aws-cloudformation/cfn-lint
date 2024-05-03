@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ReportPlanName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "backup:CreateReportPlan",
+    "backup:DescribeReportPlan",
+    "backup:ListTags",
+    "backup:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "backup:DeleteReportPlan",
+    "backup:DescribeReportPlan"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "backup:ListReportPlans"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "backup:DescribeReportPlan",
+    "backup:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "backup:DescribeReportPlan",
+    "backup:UpdateReportPlan",
+    "backup:ListTags",
+    "backup:UntagResource",
+    "backup:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReportPlanArn"
+ ],
+ "properties": {
+  "ReportDeliveryChannel": {
+   "additionalProperties": false,
+   "properties": {
+    "Formats": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "S3BucketName": {
+     "type": "string"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3BucketName"
+   ],
+   "type": "object"
+  },
+  "ReportPlanArn": {
+   "type": "string"
+  },
+  "ReportPlanDescription": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ReportPlanName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z][_a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "ReportPlanTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "ReportSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Accounts": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "FrameworkArns": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "OrganizationUnits": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ReportTemplate": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReportTemplate"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReportPlanArn"
+ ],
+ "required": [
+  "ReportDeliveryChannel",
+  "ReportSetting"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/ReportPlanTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::ReportPlan"
+}

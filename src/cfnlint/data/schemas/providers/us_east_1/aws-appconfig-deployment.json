@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyIdentifier",
+  "/properties/DeploymentStrategyId",
+  "/properties/ConfigurationVersion",
+  "/properties/ApplicationId",
+  "/properties/ConfigurationProfileId",
+  "/properties/Tags",
+  "/properties/EnvironmentId",
+  "/properties/Description",
+  "/properties/DynamicExtensionParameters"
+ ],
+ "definitions": {
+  "DynamicExtensionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ExtensionReference": {
+     "type": "string"
+    },
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "type": "string"
+  },
+  "ConfigurationProfileId": {
+   "type": "string"
+  },
+  "ConfigurationVersion": {
+   "type": "string"
+  },
+  "DeploymentStrategyId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DynamicExtensionParameters": {
+   "items": {
+    "$ref": "#/definitions/DynamicExtensionParameters"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnvironmentId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DeploymentStrategyId",
+  "ConfigurationProfileId",
+  "EnvironmentId",
+  "ConfigurationVersion",
+  "ApplicationId"
+ ],
+ "typeName": "AWS::AppConfig::Deployment"
+}

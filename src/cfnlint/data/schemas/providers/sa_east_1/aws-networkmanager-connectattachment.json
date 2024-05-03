@@ -1,0 +1,168 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/EdgeLocation",
+  "/properties/TransportAttachmentId",
+  "/properties/Options"
+ ],
+ "definitions": {
+  "ConnectAttachmentOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:CreateConnectAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:DeleteAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/ConnectAttachmentOptions"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransportAttachmentId": {
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/ProposedSegmentChange",
+  "/properties/SegmentName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-connectattachment",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::ConnectAttachment"
+}

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParentId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "organizations:CreateOrganizationalUnit",
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:DeleteOrganizationalUnit"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ParentId": {
+      "$ref": "resource-schema.json#/properties/ParentId"
+     }
+    },
+    "required": [
+     "ParentId"
+    ]
+   },
+   "permissions": [
+    "organizations:ListOrganizationalUnitsForParent"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource",
+    "organizations:UntagResource",
+    "organizations:UpdateOrganizationalUnit"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws.*:organizations::\\d{12}:ou/o-[a-z0-9]{10,32}/ou-[0-9a-z]{4,32}-[0-9a-z]{8,32}",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 68,
+   "pattern": "^ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "ParentId": {
+   "maxLength": 100,
+   "pattern": "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "ParentId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Organizations::OrganizationalUnit"
+}

@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeliverySourceName",
+  "/properties/DeliveryDestinationArn"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 16,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:CreateDelivery",
+    "logs:GetDelivery",
+    "logs:DescribeDeliveries",
+    "logs:ListTagsForResource",
+    "logs:TagResource",
+    "logs:GetDeliverySource",
+    "logs:GetDeliveryDestination"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteDelivery",
+    "logs:ListTagsForResource",
+    "logs:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:DescribeDeliveries",
+    "logs:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:GetDelivery",
+    "logs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:GetDelivery",
+    "logs:ListTagsForResource",
+    "logs:TagResource",
+    "logs:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DeliveryId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "DeliveryDestinationArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "DeliveryDestinationType": {
+   "maxLength": 12,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z]+$",
+   "type": "string"
+  },
+  "DeliveryId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z]+$",
+   "type": "string"
+  },
+  "DeliverySourceName": {
+   "maxLength": 60,
+   "minLength": 1,
+   "pattern": "[\\w-]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeliveryId",
+  "/properties/Arn",
+  "/properties/DeliveryDestinationType"
+ ],
+ "required": [
+  "DeliverySourceName",
+  "DeliveryDestinationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Logs::Delivery"
+}

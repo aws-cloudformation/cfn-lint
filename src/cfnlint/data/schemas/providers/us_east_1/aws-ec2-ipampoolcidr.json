@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamPoolId",
+  "/properties/Cidr",
+  "/properties/NetmaskLength"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:ProvisionIpamPoolCidr",
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeprovisionIpamPoolCidr",
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "IpamPoolId": {
+      "$ref": "resource-schema.json#/properties/IpamPoolId"
+     }
+    },
+    "required": [
+     "IpamPoolId"
+    ]
+   },
+   "permissions": [
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetIpamPoolCidrs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPoolId",
+  "/properties/IpamPoolCidrId"
+ ],
+ "properties": {
+  "Cidr": {
+   "type": "string"
+  },
+  "IpamPoolCidrId": {
+   "type": "string"
+  },
+  "IpamPoolId": {
+   "type": "string"
+  },
+  "NetmaskLength": {
+   "type": "integer"
+  },
+  "State": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamPoolCidrId",
+  "/properties/State"
+ ],
+ "required": [
+  "IpamPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::IPAMPoolCidr"
+}

@@ -3,49 +3,127 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.functions.Select import Select  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Context
+from cfnlint.context.context import Map
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.functions.Select import Select
 
 
-class TestRulesSelect(BaseRuleTestCase):
-    """Test Rules Get Att"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = Select()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestRulesSelect, self).setUp()
-        self.collection.register(Select())
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    context = Context(
+        regions=["us-east-1"],
+        path=deque([]),
+        resources={},
+        parameters={},
+        mappings={
+            "A": Map({"B": {"C": "D"}}),
+        },
+    )
+    yield CfnTemplateValidator(context=context)
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/functions_select.yaml", 4
-        )
 
-    def test_select_parts(self):
-        rule = Select()
-        # can't be a list
-        self.assertEqual(len(rule._test_index_obj([], [])), 1)
-        # can't be a string
-        self.assertEqual(len(rule._test_index_obj("a", [])), 1)
-        # can be a valid fn
-        self.assertEqual(len(rule._test_index_obj({"Ref": "Test"}, [])), 0)
-        # can't be an invalid fn
-        self.assertEqual(len(rule._test_index_obj({"Foo": "Bar"}, [])), 1)
-        # can't be a dict of many values
-        self.assertEqual(
-            len(rule._test_index_obj({"Ref": "Test", "Foo": "Bar"}, [])), 1
-        )
-
-        self.assertEqual(len(rule._test_index_obj({}, [])), 1)
-
-        # supported function
-        self.assertEqual(len(rule._test_list_obj({"Ref": "Test"}, [])), 0)
-        # Unsupported function
-        self.assertEqual(len(rule._test_list_obj({"Foo": "Bar"}, [])), 1)
-        # Unsupported type
-        self.assertEqual(len(rule._test_list_obj("foo", [])), 1)
+@pytest.mark.parametrize(
+    "name,instance,schema,expected",
+    [
+        (
+            "Valid Fn::Select with array",
+            {"Fn::Select": [1, ["bar"]]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Invalid Fn::Select is NOT a array",
+            {"Fn::Select": "foo"},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "'foo' is not of type 'array'",
+                    path=deque(["Fn::Select"]),
+                    schema_path=deque(["type"]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Select using an invalid function for index",
+            {"Fn::Select": [{"Fn::GetAtt": "MyResource"}, ["bar"]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "{'Fn::GetAtt': 'MyResource'} is not of type 'integer'",
+                    path=deque(["Fn::Select", 0]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Select using an invalid function for array",
+            {"Fn::Select": [1, {"foo": "bar"}]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "{'foo': 'bar'} is not of type 'array'",
+                    path=deque(["Fn::Select", 1]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Select using an invalid CFN function",
+            {"Fn::Select": [1, {"Fn::Join": ["-", "bar"]}]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "{'Fn::Join': ['-', 'bar']} is not of type 'array'",
+                    path=deque(["Fn::Select", 1]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+        (
+            "Valid Fn::Select with a valid function",
+            {"Fn::Select": [1, {"Fn::Split": ["-", "bar"]}]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid Fn::Select with a valid function (FindInMap)",
+            {"Fn::Select": [1, ["foo", {"Fn::FindInMap": ["A", "B", "C"]}]]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Invalid Fn::Select with an invalid function",
+            {"Fn::Select": [1, ["foo", {"foo": "bar"}]]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    (
+                        "{'Fn::Select': [1, ['foo', {'foo': 'bar'}]]} is not of type "
+                        "'string' when 'Fn::Select' is resolved"
+                    ),
+                    path=deque(["Fn::Select"]),
+                    schema_path=deque(["type"]),
+                    validator="fn_select",
+                ),
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, schema, expected, rule, validator):
+    errs = list(rule.fn_select(validator, schema, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"

@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetArns"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:PUT",
+    "apigateway:GET",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:ModifyVpcEndpointServicePermissions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PUT",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:ModifyVpcEndpointServicePermissions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:ModifyVpcEndpointServicePermissions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:ModifyVpcEndpointServicePermissions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT",
+    "ec2:CreateVpcEndpointServiceConfiguration",
+    "ec2:DeleteVpcEndpointServiceConfigurations",
+    "ec2:DescribeVpcEndpointServiceConfigurations",
+    "ec2:ModifyVpcEndpointServicePermissions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpcLinkId"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcLinkId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpcLinkId"
+ ],
+ "required": [
+  "Name",
+  "TargetArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::VpcLink"
+}

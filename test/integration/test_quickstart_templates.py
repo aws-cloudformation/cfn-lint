@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from test.integration import BaseCliTestCase
 
-import cfnlint.core
+from cfnlint import ConfigMixIn
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
@@ -29,12 +29,16 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_application.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_application.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_application.json"
+            ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_config_rules.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_config_rules.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_config_rules.json"
+            ),
             "exit_code": 6,
         },
         {
@@ -49,17 +53,23 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_vpc_management.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_vpc_management.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_vpc_management.json"
+            ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_vpc_production.yaml",
-            "results_filename": "test/fixtures/results/quickstart/nist_vpc_production.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/nist_vpc_production.json"
+            ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/openshift_master.yaml",
-            "results_filename": "test/fixtures/results/quickstart/openshift_master.json",
+            "results_filename": (
+                "test/fixtures/results/quickstart/openshift_master.json"
+            ),
             "exit_code": 8,
         },
         {
@@ -76,7 +86,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
 
     def test_templates(self):
         """Test same templates using integration approach"""
-        rules = cfnlint.core.get_rules(
-            [], [], ["I", "E", "W"], {"E3012": {"strict": True}}, True
+        self.run_module_integration_scenarios(
+            ConfigMixIn(
+                [],
+                include_checks=["I"],
+                configure_rules={"E3012": {"strict": True}},
+                include_experimental=True,
+            )
         )
-        self.run_module_integration_scenarios(rules)

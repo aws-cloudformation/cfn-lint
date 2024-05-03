@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/VPCId",
+  "/properties/ResolverRuleId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:AssociateResolverRule",
+    "route53resolver:GetResolverRuleAssociation",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DisassociateResolverRule",
+    "route53resolver:GetResolverRuleAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListResolverRuleAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetResolverRuleAssociation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverRuleAssociationId"
+ ],
+ "properties": {
+  "Name": {
+   "type": "string"
+  },
+  "ResolverRuleAssociationId": {
+   "type": "string"
+  },
+  "ResolverRuleId": {
+   "type": "string"
+  },
+  "VPCId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResolverRuleAssociationId"
+ ],
+ "required": [
+  "VPCId",
+  "ResolverRuleId"
+ ],
+ "taggable": false,
+ "typeName": "AWS::Route53Resolver::ResolverRuleAssociation"
+}

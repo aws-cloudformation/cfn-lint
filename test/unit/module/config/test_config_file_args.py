@@ -8,9 +8,8 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import jsonschema
-
 import cfnlint.config  # pylint: disable=E0401
+from cfnlint.jsonschema import ValidationError
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -72,12 +71,15 @@ class TestConfigFileArgs(BaseTestCase):
 
         yaml_mock.side_effect = [{"regions": True}, {}]
 
-        with self.assertRaises(jsonschema.exceptions.ValidationError):
+        with self.assertRaises(ValidationError):
             cfnlint.config.ConfigFileArgs()
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_parser_fail_on_config_rules(self, yaml_mock):
-        """test the read call to the config parser is parsing configure rules correctly"""
+        """
+        test the read call to the config parser is
+        parsing configure rules correctly
+        """
 
         yaml_mock.side_effect = [{"configure_rules": {"E3012": {"strict": False}}}, {}]
 
@@ -85,3 +87,51 @@ class TestConfigFileArgs(BaseTestCase):
         self.assertEqual(
             results.file_args, {"configure_rules": {"E3012": {"strict": False}}}
         )
+
+    @patch("pathlib.Path.is_file", create=True)
+    def test_config_parser_is_file_both(self, is_file_mock):
+        calls = [
+            True,
+            True,
+            False,
+            False,
+        ]
+        is_file_mock.side_effect = calls
+        my_config = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(my_config._user_config_file.name, ".cfnlintrc")
+        self.assertEqual(my_config._project_config_file.name, ".cfnlintrc")
+        self.assertEqual(is_file_mock.call_count, len(calls))
+
+    @patch("pathlib.Path.is_file", create=True)
+    def test_config_parser_is_file_both_yaml(self, is_file_mock):
+        calls = [
+            False,
+            True,
+            False,
+            True,
+            False,
+            False,
+        ]
+        is_file_mock.side_effect = calls
+        my_config = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(my_config._user_config_file.name, ".cfnlintrc.yaml")
+        self.assertEqual(my_config._project_config_file.name, ".cfnlintrc.yaml")
+        self.assertEqual(is_file_mock.call_count, len(calls))
+
+    @patch("pathlib.Path.is_file", create=True)
+    def test_config_parser_is_file_both_yml(self, is_file_mock):
+        calls = [
+            False,
+            False,
+            True,
+            False,
+            False,
+            True,
+            False,
+            False,
+        ]
+        is_file_mock.side_effect = calls
+        my_config = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(my_config._user_config_file.name, ".cfnlintrc.yml")
+        self.assertEqual(my_config._project_config_file.name, ".cfnlintrc.yml")
+        self.assertEqual(is_file_mock.call_count, len(calls))

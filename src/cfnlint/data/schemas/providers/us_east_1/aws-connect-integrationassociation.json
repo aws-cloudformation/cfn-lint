@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceId",
+  "/properties/IntegrationArn",
+  "/properties/IntegrationType"
+ ],
+ "definitions": {
+  "InstanceId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "maxLength": 140,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IntegrationAssociationId": {
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "IntegrationType": {
+   "enum": [
+    "LEX_BOT",
+    "LAMBDA_FUNCTION",
+    "APPLICATION"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "app-integrations:CreateEventIntegrationAssociation",
+    "mobiletargeting:GetApp",
+    "cases:GetDomain",
+    "wisdom:GetAssistant",
+    "wisdom:GetKnowledgeBase",
+    "wisdom:TagResource",
+    "voiceid:DescribeDomain",
+    "events:PutTargets",
+    "events:PutRule",
+    "connect:AssociateBot",
+    "connect:AssociateLambdaFunction",
+    "connect:CreateIntegrationAssociation",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "lambda:addPermission",
+    "lex:GetBot",
+    "lex:DescribeBotAlias",
+    "lex:CreateResourcePolicy",
+    "lex:UpdateResourcePolicy",
+    "lex:CreateResourcePolicyStatement",
+    "lambda:AddPermission",
+    "app-integrations:GetApplication",
+    "app-integrations:CreateApplicationAssociation",
+    "iam:AttachRolePolicy",
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRolePolicy",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DescribeInstance",
+    "ds:DescribeDirectories",
+    "app-integrations:DeleteEventIntegrationAssociation",
+    "app-integrations:DeleteApplicationAssociation",
+    "events:ListTargetsByRule",
+    "events:RemoveTargets",
+    "events:DeleteRule",
+    "connect:DisassociateBot",
+    "connect:DisassociateLambdaFunction",
+    "connect:DeleteIntegrationAssociation",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations",
+    "lex:DeleteResourcePolicy",
+    "lex:DeleteResourcePolicyStatement",
+    "lambda:RemovePermission",
+    "iam:GetRolePolicy",
+    "iam:DeleteRolePolicy",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceId": {
+      "$ref": "resource-schema.json#/properties/InstanceId"
+     }
+    },
+    "required": [
+     "InstanceId"
+    ]
+   },
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "connect:ListIntegrationAssociations"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceId",
+  "/properties/IntegrationType",
+  "/properties/IntegrationArn"
+ ],
+ "properties": {
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "IntegrationArn": {
+   "$ref": "#/definitions/IntegrationArn"
+  },
+  "IntegrationAssociationId": {
+   "$ref": "#/definitions/IntegrationAssociationId"
+  },
+  "IntegrationType": {
+   "$ref": "#/definitions/IntegrationType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationAssociationId"
+ ],
+ "required": [
+  "InstanceId",
+  "IntegrationType",
+  "IntegrationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::IntegrationAssociation"
+}

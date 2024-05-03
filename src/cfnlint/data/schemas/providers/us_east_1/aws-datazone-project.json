@@ -1,0 +1,123 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DomainIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateProject",
+    "datazone:GetProject"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteProject",
+    "datazone:GetProject"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListProjects"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetProject"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateProject",
+    "datazone:GetProject"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "GlossaryTerms": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[\\w -]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/LastUpdatedAt"
+ ],
+ "required": [
+  "DomainIdentifier",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::Project",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier"
+ ]
+}

@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FarmId",
+  "/properties/QueueId"
+ ],
+ "definitions": {
+  "EnvironmentTemplateType": {
+   "enum": [
+    "JSON",
+    "YAML"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "deadline:CreateQueueEnvironment",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "deadline:DeleteQueueEnvironment",
+    "deadline:GetQueueEnvironment",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "FarmId": {
+      "$ref": "resource-schema.json#/properties/FarmId"
+     },
+     "QueueId": {
+      "$ref": "resource-schema.json#/properties/QueueId"
+     }
+    },
+    "required": [
+     "FarmId",
+     "QueueId"
+    ]
+   },
+   "permissions": [
+    "deadline:ListQueueEnvironments",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "deadline:GetQueueEnvironment",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "deadline:UpdateQueueEnvironment",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FarmId",
+  "/properties/QueueId",
+  "/properties/QueueEnvironmentId"
+ ],
+ "properties": {
+  "FarmId": {
+   "pattern": "^farm-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Priority": {
+   "maximum": 10000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "QueueEnvironmentId": {
+   "pattern": "^queueenv-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "QueueId": {
+   "pattern": "^queue-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "Template": {
+   "maxLength": 15000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateType": {
+   "$ref": "#/definitions/EnvironmentTemplateType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Name",
+  "/properties/QueueEnvironmentId"
+ ],
+ "required": [
+  "FarmId",
+  "QueueId",
+  "Priority",
+  "Template",
+  "TemplateType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::QueueEnvironment"
+}

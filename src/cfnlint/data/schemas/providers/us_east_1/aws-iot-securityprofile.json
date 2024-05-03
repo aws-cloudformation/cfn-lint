@@ -1,0 +1,382 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecurityProfileName"
+ ],
+ "definitions": {
+  "AlertTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "AlertTargetArn": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlertTargetArn",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Behavior": {
+   "additionalProperties": false,
+   "properties": {
+    "Criteria": {
+     "$ref": "#/definitions/BehaviorCriteria"
+    },
+    "ExportMetric": {
+     "$ref": "#/definitions/ExportMetric"
+    },
+    "Metric": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    },
+    "MetricDimension": {
+     "$ref": "#/definitions/MetricDimension"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    },
+    "SuppressAlerts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "BehaviorCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "less-than",
+      "less-than-equals",
+      "greater-than",
+      "greater-than-equals",
+      "in-cidr-set",
+      "not-in-cidr-set",
+      "in-port-set",
+      "not-in-port-set",
+      "in-set",
+      "not-in-set"
+     ],
+     "type": "string"
+    },
+    "ConsecutiveDatapointsToAlarm": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ConsecutiveDatapointsToClear": {
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DurationSeconds": {
+     "type": "integer"
+    },
+    "MlDetectionConfig": {
+     "$ref": "#/definitions/MachineLearningDetectionConfig"
+    },
+    "StatisticalThreshold": {
+     "$ref": "#/definitions/StatisticalThreshold"
+    },
+    "Value": {
+     "$ref": "#/definitions/MetricValue"
+    }
+   },
+   "type": "object"
+  },
+  "ExportMetric": {
+   "type": "boolean"
+  },
+  "MachineLearningDetectionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfidenceLevel": {
+     "enum": [
+      "LOW",
+      "MEDIUM",
+      "HIGH"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    },
+    "Operator": {
+     "enum": [
+      "IN",
+      "NOT_IN"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "DimensionName"
+   ],
+   "type": "object"
+  },
+  "MetricToRetain": {
+   "additionalProperties": false,
+   "properties": {
+    "ExportMetric": {
+     "$ref": "#/definitions/ExportMetric"
+    },
+    "Metric": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    },
+    "MetricDimension": {
+     "$ref": "#/definitions/MetricDimension"
+    }
+   },
+   "required": [
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "MetricValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Count": {
+     "minimum": 0,
+     "type": "string"
+    },
+    "Number": {
+     "type": "number"
+    },
+    "Numbers": {
+     "insertionOrder": false,
+     "items": {
+      "type": "number"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Ports": {
+     "insertionOrder": false,
+     "items": {
+      "maximum": 65535,
+      "minimum": 0,
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Strings": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "StatisticalThreshold": {
+   "additionalProperties": false,
+   "properties": {
+    "Statistic": {
+     "enum": [
+      "Average",
+      "p0",
+      "p0.1",
+      "p0.01",
+      "p1",
+      "p10",
+      "p50",
+      "p90",
+      "p99",
+      "p99.9",
+      "p99.99",
+      "p100"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateSecurityProfile",
+    "iot:AttachSecurityProfile",
+    "iot:DescribeSecurityProfile",
+    "iot:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeSecurityProfile",
+    "iot:DeleteSecurityProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListSecurityProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeSecurityProfile",
+    "iot:ListTagsForResource",
+    "iot:ListTargetsForSecurityProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateSecurityProfile",
+    "iot:ListTargetsForSecurityProfile",
+    "iot:AttachSecurityProfile",
+    "iot:DetachSecurityProfile",
+    "iot:ListTagsForResource",
+    "iot:UntagResource",
+    "iot:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SecurityProfileName"
+ ],
+ "properties": {
+  "AdditionalMetricsToRetainV2": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MetricToRetain"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AlertTargets": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9:_-]+": {
+     "$ref": "#/definitions/AlertTarget"
+    }
+   },
+   "type": "object"
+  },
+  "Behaviors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Behavior"
+   },
+   "maxLength": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MetricsExportConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MqttTopic": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MqttTopic",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SecurityProfileArn": {
+   "type": "string"
+  },
+  "SecurityProfileDescription": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "SecurityProfileName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SecurityProfileArn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "typeName": "AWS::IoT::SecurityProfile"
+}

@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteResourcePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:DescribeResourcePolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeResourcePolicies"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DeleteResourcePolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyName"
+ ],
+ "properties": {
+  "PolicyDocument": {
+   "maxLength": 5120,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": "string"
+  },
+  "PolicyName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^([^:*\\/]+\\/?)*[^:*\\/]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "PolicyName",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::ResourcePolicy"
+}

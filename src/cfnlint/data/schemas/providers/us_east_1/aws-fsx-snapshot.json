@@ -1,0 +1,57 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VolumeId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ResourceARN": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VolumeId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceARN",
+  "/properties/Id"
+ ],
+ "required": [
+  "VolumeId",
+  "Name"
+ ],
+ "typeName": "AWS::FSx::Snapshot"
+}

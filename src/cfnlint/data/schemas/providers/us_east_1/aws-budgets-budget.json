@@ -1,0 +1,256 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NotificationsWithSubscribers"
+ ],
+ "definitions": {
+  "AutoAdjustData": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAdjustType": {
+     "type": "string"
+    },
+    "HistoricalOptions": {
+     "$ref": "#/definitions/HistoricalOptions"
+    }
+   },
+   "required": [
+    "AutoAdjustType"
+   ],
+   "type": "object"
+  },
+  "BudgetData": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAdjustData": {
+     "$ref": "#/definitions/AutoAdjustData"
+    },
+    "BudgetLimit": {
+     "$ref": "#/definitions/Spend"
+    },
+    "BudgetName": {
+     "type": "string"
+    },
+    "BudgetType": {
+     "enum": [
+      "USAGE",
+      "COST",
+      "RI_UTILIZATION",
+      "RI_COVERAGE",
+      "SAVINGS_PLANS_UTILIZATION",
+      "SAVINGS_PLANS_COVERAGE"
+     ],
+     "type": "string"
+    },
+    "CostFilters": {
+     "type": "object"
+    },
+    "CostTypes": {
+     "$ref": "#/definitions/CostTypes"
+    },
+    "PlannedBudgetLimits": {
+     "type": "object"
+    },
+    "TimePeriod": {
+     "$ref": "#/definitions/TimePeriod"
+    },
+    "TimeUnit": {
+     "enum": [
+      "DAILY",
+      "MONTHLY",
+      "QUARTERLY",
+      "ANNUALLY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeUnit",
+    "BudgetType"
+   ],
+   "type": "object"
+  },
+  "CostTypes": {
+   "additionalProperties": false,
+   "properties": {
+    "IncludeCredit": {
+     "type": "boolean"
+    },
+    "IncludeDiscount": {
+     "type": "boolean"
+    },
+    "IncludeOtherSubscription": {
+     "type": "boolean"
+    },
+    "IncludeRecurring": {
+     "type": "boolean"
+    },
+    "IncludeRefund": {
+     "type": "boolean"
+    },
+    "IncludeSubscription": {
+     "type": "boolean"
+    },
+    "IncludeSupport": {
+     "type": "boolean"
+    },
+    "IncludeTax": {
+     "type": "boolean"
+    },
+    "IncludeUpfront": {
+     "type": "boolean"
+    },
+    "UseAmortized": {
+     "type": "boolean"
+    },
+    "UseBlended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HistoricalOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "BudgetAdjustmentPeriod": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BudgetAdjustmentPeriod"
+   ],
+   "type": "object"
+  },
+  "Notification": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GREATER_THAN",
+      "LESS_THAN",
+      "EQUAL_TO"
+     ],
+     "type": "string"
+    },
+    "NotificationType": {
+     "enum": [
+      "ACTUAL",
+      "FORECASTED"
+     ],
+     "type": "string"
+    },
+    "Threshold": {
+     "maximum": 1000000000,
+     "minimum": 0.1,
+     "type": "number"
+    },
+    "ThresholdType": {
+     "enum": [
+      "PERCENTAGE",
+      "ABSOLUTE_VALUE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ComparisonOperator",
+    "NotificationType",
+    "Threshold"
+   ],
+   "type": "object"
+  },
+  "NotificationWithSubscribers": {
+   "additionalProperties": false,
+   "properties": {
+    "Notification": {
+     "$ref": "#/definitions/Notification"
+    },
+    "Subscribers": {
+     "items": {
+      "$ref": "#/definitions/Subscriber"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subscribers",
+    "Notification"
+   ],
+   "type": "object"
+  },
+  "Spend": {
+   "additionalProperties": false,
+   "properties": {
+    "Amount": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Amount",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "Subscriber": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "SubscriptionType": {
+     "enum": [
+      "SNS",
+      "EMAIL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubscriptionType",
+    "Address"
+   ],
+   "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "type": "string"
+    },
+    "Start": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Budget": {
+   "$ref": "#/definitions/BudgetData"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NotificationsWithSubscribers": {
+   "items": {
+    "$ref": "#/definitions/NotificationWithSubscribers"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Budget"
+ ],
+ "typeName": "AWS::Budgets::Budget"
+}

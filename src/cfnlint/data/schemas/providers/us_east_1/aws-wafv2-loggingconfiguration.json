@@ -1,0 +1,217 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionCondition": {
+     "additionalProperties": false,
+     "properties": {
+      "Action": {
+       "enum": [
+        "ALLOW",
+        "BLOCK",
+        "COUNT",
+        "CAPTCHA",
+        "CHALLENGE",
+        "EXCLUDED_AS_COUNT"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Action"
+     ],
+     "type": "object"
+    },
+    "LabelNameCondition": {
+     "additionalProperties": false,
+     "properties": {
+      "LabelName": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "LabelName"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "Method": {
+     "type": "object"
+    },
+    "QueryString": {
+     "type": "object"
+    },
+    "SingleHeader": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name"
+     ],
+     "type": "object"
+    },
+    "UriPath": {
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "enum": [
+      "KEEP",
+      "DROP"
+     ],
+     "type": "string"
+    },
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Requirement": {
+     "enum": [
+      "MEETS_ALL",
+      "MEETS_ANY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Behavior",
+    "Conditions",
+    "Requirement"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wafv2:PutLoggingConfiguration",
+    "wafv2:GetLoggingConfiguration",
+    "firehose:ListDeliveryStreams",
+    "iam:CreateServiceLinkedRole",
+    "iam:DescribeOrganization",
+    "logs:CreateLogDelivery",
+    "s3:PutBucketPolicy",
+    "s3:GetBucketPolicy",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wafv2:DeleteLoggingConfiguration",
+    "wafv2:GetLoggingConfiguration",
+    "logs:DeleteLogDelivery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "wafv2:ListLoggingConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wafv2:GetLoggingConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "wafv2:PutLoggingConfiguration",
+    "wafv2:GetLoggingConfiguration",
+    "firehose:ListDeliveryStreams",
+    "iam:CreateServiceLinkedRole",
+    "iam:DescribeOrganization",
+    "logs:CreateLogDelivery",
+    "s3:PutBucketPolicy",
+    "s3:GetBucketPolicy",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "LogDestinationConfigs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "LoggingFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultBehavior": {
+     "enum": [
+      "KEEP",
+      "DROP"
+     ],
+     "type": "string"
+    },
+    "Filters": {
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "DefaultBehavior",
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "ManagedByFirewallManager": {
+   "type": "boolean"
+  },
+  "RedactedFields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FieldToMatch"
+   },
+   "type": "array"
+  },
+  "ResourceArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ManagedByFirewallManager"
+ ],
+ "required": [
+  "ResourceArn",
+  "LogDestinationConfigs"
+ ],
+ "sourceUrl": "https://github.com/advaj/aws-cloudformation-resource-providers-wafv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::WAFv2::LoggingConfiguration"
+}

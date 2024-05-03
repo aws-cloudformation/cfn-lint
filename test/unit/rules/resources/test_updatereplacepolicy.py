@@ -3,30 +3,95 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.UpdateReplacePolicy import (
-    UpdateReplacePolicy,  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Context
+from cfnlint.context.context import Parameter, Resource
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.UpdateReplacePolicy import UpdateReplacePolicy
+
+
+@pytest.mark.parametrize(
+    "name, instance, path, expected",
+    [
+        ("Correct type", "Snapshot", deque(["Resources", "MyVolume"]), []),
+        (
+            "Incorrect type",
+            {"Foo": "Bar"},
+            deque(["Resources", "MyVolume"]),
+            [
+                ValidationError(
+                    "{'Foo': 'Bar'} is not of type 'string'",
+                    schema_path=deque(["type"]),
+                    validator="type",
+                    validator_value="string",
+                    rule=UpdateReplacePolicy(),
+                ),
+                ValidationError(
+                    "{'Foo': 'Bar'} is not one of ['Delete', 'Retain', 'Snapshot']",
+                    schema_path=deque(["enum"]),
+                    validator="enum",
+                    validator_value=[
+                        "Delete",
+                        "Retain",
+                        "Snapshot",
+                    ],
+                    rule=UpdateReplacePolicy(),
+                ),
+            ],
+        ),
+        (
+            "Snapshot not supported",
+            "Snapshot",
+            deque(["Resources", "MyInstance"]),
+            [
+                ValidationError(
+                    "'Snapshot' is not one of ['Delete', 'Retain']",
+                    schema_path=deque(["enum"]),
+                    validator="enum",
+                    validator_value=[
+                        "Delete",
+                        "Retain",
+                    ],
+                    rule=UpdateReplacePolicy(),
+                ),
+            ],
+        ),
+        (
+            "Success on a valid function",
+            {"Ref": "MyParameter"},
+            deque(["Resources", "MyInstance"]),
+            [],
+        ),
+    ],
 )
+def test_deletion_policy(name, instance, path, expected):
+    context = Context(
+        regions=["us-east-1"],
+        path=path,
+        resources={
+            "MyVolume": Resource({"Type": "AWS::EC2::Volume"}),
+            "MyInstance": Resource({"Type": "AWS::EC2::Instance"}),
+        },
+        parameters={"MyParameter": Parameter({"Type": "String"})},
+    )
+    validator = CfnTemplateValidator(context=context)
 
-
-class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
-    """Test base template"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestResourceUpdateReplacePolicy, self).setUp()
-        self.collection.register(UpdateReplacePolicy())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources_updatereplacepolicy.yaml"
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources_updatereplacepolicy.yaml", 5
+    rule = UpdateReplacePolicy()
+    errors = list(
+        rule.cfnresourceupdatereplacepolicy(
+            validator=validator,
+            uRp="deletionpolicy",
+            instance=instance,
+            schema={
+                "awsType": "cfnresourceupdatereplacepolicy",
+            },
         )
+    )
+
+    assert len(errors) == len(expected), name
+    for i, error in enumerate(expected):
+        error.instance = instance
+        assert errors[i] == error, name

@@ -1,0 +1,199 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkId",
+   "/properties/VpcArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/VpcArn"
+ ],
+ "definitions": {
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplianceModeSupport": {
+     "default": false,
+     "type": "boolean"
+    },
+    "Ipv6Support": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateVpcAttachment",
+    "networkmanager:GetVpcAttachment",
+    "networkmanager:TagResource",
+    "ec2:DescribeRegions",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteAttachment",
+    "networkmanager:GetVpcAttachment",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetVpcAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateVpcAttachment",
+    "networkmanager:GetVpcAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/VpcOptions"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "SubnetArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "type": "string"
+  },
+  "VpcArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName",
+  "/properties/ResourceArn"
+ ],
+ "required": [
+  "CoreNetworkId",
+  "VpcArn",
+  "SubnetArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-vpcattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::VpcAttachment"
+}

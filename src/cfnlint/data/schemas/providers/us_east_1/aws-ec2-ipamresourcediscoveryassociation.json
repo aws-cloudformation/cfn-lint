@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamId",
+  "/properties/IpamResourceDiscoveryId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateIpamResourceDiscovery",
+    "ec2:DescribeIpamResourceDiscoveryAssociations",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateIpamResourceDiscovery",
+    "ec2:DescribeIpamResourceDiscoveryAssociations",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeIpamResourceDiscoveryAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeIpamResourceDiscoveryAssociations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeIpamResourceDiscoveryAssociations",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamResourceDiscoveryAssociationId"
+ ],
+ "properties": {
+  "IpamArn": {
+   "type": "string"
+  },
+  "IpamId": {
+   "type": "string"
+  },
+  "IpamRegion": {
+   "type": "string"
+  },
+  "IpamResourceDiscoveryAssociationArn": {
+   "type": "string"
+  },
+  "IpamResourceDiscoveryAssociationId": {
+   "type": "string"
+  },
+  "IpamResourceDiscoveryId": {
+   "type": "string"
+  },
+  "IsDefault": {
+   "type": "boolean"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "ResourceDiscoveryStatus": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamArn",
+  "/properties/IpamRegion",
+  "/properties/IpamResourceDiscoveryAssociationId",
+  "/properties/IpamResourceDiscoveryAssociationArn",
+  "/properties/IsDefault",
+  "/properties/ResourceDiscoveryStatus",
+  "/properties/State",
+  "/properties/OwnerId"
+ ],
+ "required": [
+  "IpamId",
+  "IpamResourceDiscoveryId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAMResourceDiscoveryAssociation"
+}

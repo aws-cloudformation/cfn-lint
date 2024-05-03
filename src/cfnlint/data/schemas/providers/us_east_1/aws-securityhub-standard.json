@@ -1,0 +1,99 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/StandardsArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StandardsArn"
+ ],
+ "definitions": {
+  "StandardsControl": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "type": "string"
+    },
+    "StandardsControlArn": {
+     "pattern": "arn:aws\\S*:securityhub:\\S*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StandardsControlArn"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:GetEnabledStandards",
+    "securityhub:BatchEnableStandards",
+    "securityhub:UpdateStandardsControl"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:GetEnabledStandards",
+    "securityhub:BatchDisableStandards"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:GetEnabledStandards"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetEnabledStandards",
+    "securityhub:DescribeStandardsControls"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:GetEnabledStandards",
+    "securityhub:UpdateStandardsControl"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StandardsSubscriptionArn"
+ ],
+ "properties": {
+  "DisabledStandardsControls": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/StandardsControl"
+   },
+   "maxItems": 100,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StandardsArn": {
+   "pattern": "arn:aws\\S*:securityhub:\\S",
+   "type": "string"
+  },
+  "StandardsSubscriptionArn": {
+   "pattern": "arn:aws\\S*:securityhub:\\S*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StandardsSubscriptionArn"
+ ],
+ "required": [
+  "StandardsArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::Standard"
+}

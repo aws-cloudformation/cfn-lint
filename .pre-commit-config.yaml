@@ -1,0 +1,44 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-ast
+      - id: check-json
+        exclude: "(test/fixtures/templates/bad/json_parse.json|test/fixtures/templates/bad/core/config_invalid_json.json|test/fixtures/templates/bad/duplicate.json)"
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-yaml
+        exclude: "test/fixtures/templates/"
+        args: [--unsafe]
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix, auto]
+      - id: trailing-whitespace
+  - repo: https://github.com/psf/black
+    rev: 24.2.0
+    hooks:
+    - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+    - id: isort
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.2.2"
+    hooks:
+      - id: ruff
+  - repo: https://github.com/PyCQA/bandit
+    rev: "1.7.7"
+    hooks:
+      - id: bandit
+        additional_dependencies:
+        - "bandit[toml]"
+        args: ["-c", "pyproject.toml"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.8.0"
+    hooks:
+    - id: mypy
+      additional_dependencies:
+        - "types-PyYAML"
+        - "types-regex"
+        - "types-requests"

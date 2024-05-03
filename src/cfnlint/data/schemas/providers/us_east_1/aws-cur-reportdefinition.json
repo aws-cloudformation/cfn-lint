@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ReportName",
+  "/properties/AdditionalSchemaElements",
+  "/properties/TimeUnit",
+  "/properties/ReportVersioning",
+  "/properties/BillingViewArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cur:PutReportDefinition",
+    "cur:DescribeReportDefinitions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cur:DeleteReportDefinition"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cur:DescribeReportDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cur:DescribeReportDefinitions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cur:DescribeReportDefinitions",
+    "cur:ModifyReportDefinition"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReportName"
+ ],
+ "properties": {
+  "AdditionalArtifacts": {
+   "default": [],
+   "items": {
+    "enum": [
+     "REDSHIFT",
+     "QUICKSIGHT",
+     "ATHENA"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AdditionalSchemaElements": {
+   "default": [],
+   "items": {
+    "enum": [
+     "RESOURCES",
+     "SPLIT_COST_ALLOCATION_DATA",
+     "MANUAL_DISCOUNT_COMPATIBILITY"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "BillingViewArn": {
+   "default": null,
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "(arn:aws(-cn)?:billing::[0-9]{12}:billingview/)?[a-zA-Z0-9_\\+=\\.\\-@].{1,30}",
+   "type": "string"
+  },
+  "Compression": {
+   "enum": [
+    "ZIP",
+    "GZIP",
+    "Parquet"
+   ],
+   "type": "string"
+  },
+  "Format": {
+   "enum": [
+    "textORcsv",
+    "Parquet"
+   ],
+   "type": "string"
+  },
+  "RefreshClosedReports": {
+   "type": "boolean"
+  },
+  "ReportName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[0-9A-Za-z!\\-_.*\\'()]+",
+   "type": "string"
+  },
+  "ReportVersioning": {
+   "enum": [
+    "CREATE_NEW_REPORT",
+    "OVERWRITE_REPORT"
+   ],
+   "type": "string"
+  },
+  "S3Bucket": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[A-Za-z0-9_\\.\\-]+",
+   "type": "string"
+  },
+  "S3Prefix": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[0-9A-Za-z!\\-_.*\\'()/]*",
+   "type": "string"
+  },
+  "S3Region": {
+   "type": "string"
+  },
+  "TimeUnit": {
+   "enum": [
+    "HOURLY",
+    "DAILY",
+    "MONTHLY"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "ReportName",
+  "TimeUnit",
+  "Format",
+  "Compression",
+  "S3Bucket",
+  "S3Prefix",
+  "S3Region",
+  "RefreshClosedReports",
+  "ReportVersioning"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cur.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::CUR::ReportDefinition"
+}

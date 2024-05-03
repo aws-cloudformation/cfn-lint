@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkteamName",
+  "/properties/WorkforceName"
+ ],
+ "definitions": {
+  "CognitoMemberDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "CognitoClientId": {
+     "type": "string"
+    },
+    "CognitoUserGroup": {
+     "type": "string"
+    },
+    "CognitoUserPool": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CognitoUserPool",
+    "CognitoClientId",
+    "CognitoUserGroup"
+   ],
+   "type": "object"
+  },
+  "MemberDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "CognitoMemberDefinition": {
+     "$ref": "#/definitions/CognitoMemberDefinition"
+    },
+    "OidcMemberDefinition": {
+     "$ref": "#/definitions/OidcMemberDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NotificationTopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "NotificationTopicArn"
+   ],
+   "type": "object"
+  },
+  "OidcMemberDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "OidcGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "OidcGroups"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MemberDefinitions": {
+   "items": {
+    "$ref": "#/definitions/MemberDefinition"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WorkforceName": {
+   "type": "string"
+  },
+  "WorkteamName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::SageMaker::Workteam"
+}

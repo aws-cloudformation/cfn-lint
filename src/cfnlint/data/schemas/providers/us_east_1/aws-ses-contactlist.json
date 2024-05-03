@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactListName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Topic": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultSubscriptionStatus": {
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 500,
+     "minLength": 0,
+     "type": "string"
+    },
+    "DisplayName": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "TopicName": {
+     "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicName",
+    "DisplayName",
+    "DefaultSubscriptionStatus"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateContactList"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteContactList"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListContactLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetContactList"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:UpdateContactList",
+    "ses:UntagResource",
+    "ses:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactListName"
+ ],
+ "properties": {
+  "ContactListName": {
+   "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Topics": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Topic"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::ContactList"
+}

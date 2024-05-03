@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3
-      - 
+      -
         id: maintenance
         run: |
           latest_sam_cli=`curl -s https://api.github.com/repos/aws/aws-sam-cli/releases/latest | jq -r .tag_name | cut -c 2-`
@@ -26,6 +26,7 @@ jobs:
           scripts/update_specs_services_from_ssm.py
           scripts/update_specs_from_pricing.py
           scripts/update_serverless_aws_policies.py
+          scripts/update_schemas_from_aws_api.py
           cfn-lint --update-specs
           echo "specversion=$(jq -r .ResourceSpecificationVersion src/cfnlint/data/CloudSpecs/us-east-1.json)" >> $GITHUB_OUTPUT
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
@@ -40,7 +41,7 @@ jobs:
           body: |
             - Update CloudFormation specs to ${{ steps.maintenance.outputs.specversion }}
             - Update Specs from pricing data as of ${{ steps.maintenance.outputs.date }}
-            
+
             Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
           delete-branch: true
           title: chore(specs) - Update CloudFormation specs to ${{ steps.maintenance.outputs.specversion }}

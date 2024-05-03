@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ClusterEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Region": {
+     "maxLength": 32,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53-recovery-control-config:CreateCluster",
+    "route53-recovery-control-config:DescribeCluster",
+    "route53-recovery-control-config:ListTagsForResource",
+    "route53-recovery-control-config:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53-recovery-control-config:DescribeCluster",
+    "route53-recovery-control-config:DeleteCluster"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53-recovery-control-config:ListClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53-recovery-control-config:DescribeCluster",
+    "route53-recovery-control-config:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClusterEndpoints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterEndpoint"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "DEPLOYED",
+    "PENDING_DELETION"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/ClusterEndpoints",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+ "taggable": true,
+ "typeName": "AWS::Route53RecoveryControl::Cluster",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,481 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/DomainIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "DataAccessRole": {
+   "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]{1,128}$",
+   "type": "string"
+  },
+  "DataSourceConfigurationInput": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GlueRunConfiguration": {
+       "$ref": "#/definitions/GlueRunConfigurationInput"
+      }
+     },
+     "title": "GlueRunConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "RedshiftRunConfiguration": {
+       "$ref": "#/definitions/RedshiftRunConfigurationInput"
+      }
+     },
+     "title": "RedshiftRunConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "DataSourceStatus": {
+   "enum": [
+    "CREATING",
+    "FAILED_CREATION",
+    "READY",
+    "UPDATING",
+    "FAILED_UPDATE",
+    "RUNNING",
+    "DELETING",
+    "FAILED_DELETION"
+   ],
+   "type": "string"
+  },
+  "EnableSetting": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "FilterExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FilterExpressionType"
+    }
+   },
+   "required": [
+    "Expression",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FilterExpressionType": {
+   "enum": [
+    "INCLUDE",
+    "EXCLUDE"
+   ],
+   "type": "string"
+  },
+  "FormInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "maxLength": 75000,
+     "type": "string"
+    },
+    "FormName": {
+     "$ref": "#/definitions/FormName"
+    },
+    "TypeIdentifier": {
+     "maxLength": 385,
+     "minLength": 1,
+     "pattern": "^(?!\\.)[\\w\\.]*\\w$",
+     "type": "string"
+    },
+    "TypeRevision": {
+     "$ref": "#/definitions/TypeRevision"
+    }
+   },
+   "required": [
+    "FormName"
+   ],
+   "type": "object"
+  },
+  "FormName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
+   "type": "string"
+  },
+  "GlueRunConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoImportDataQualityResult": {
+     "type": "boolean"
+    },
+    "DataAccessRole": {
+     "$ref": "#/definitions/DataAccessRole"
+    },
+    "RelationalFilterConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RelationalFilterConfiguration"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "RelationalFilterConfigurations"
+   ],
+   "type": "object"
+  },
+  "RecommendationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableBusinessNameGeneration": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RedshiftClusterStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[0-9a-z].[a-z0-9\\-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterName"
+   ],
+   "type": "object"
+  },
+  "RedshiftCredentialConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecretManagerArn": {
+     "maxLength": 256,
+     "pattern": "^arn:aws[^:]*:secretsmanager:[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]:\\d{12}:secret:.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretManagerArn"
+   ],
+   "type": "object"
+  },
+  "RedshiftRunConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "DataAccessRole": {
+     "$ref": "#/definitions/DataAccessRole"
+    },
+    "RedshiftCredentialConfiguration": {
+     "$ref": "#/definitions/RedshiftCredentialConfiguration"
+    },
+    "RedshiftStorage": {
+     "$ref": "#/definitions/RedshiftStorage"
+    },
+    "RelationalFilterConfigurations": {
+     "$ref": "#/definitions/RelationalFilterConfigurations"
+    }
+   },
+   "required": [
+    "RedshiftCredentialConfiguration",
+    "RedshiftStorage",
+    "RelationalFilterConfigurations"
+   ],
+   "type": "object"
+  },
+  "RedshiftServerlessStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkgroupName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "WorkgroupName"
+   ],
+   "type": "object"
+  },
+  "RedshiftStorage": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "RedshiftClusterSource": {
+       "$ref": "#/definitions/RedshiftClusterStorage"
+      }
+     },
+     "required": [
+      "RedshiftClusterSource"
+     ],
+     "title": "RedshiftClusterSource",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "RedshiftServerlessSource": {
+       "$ref": "#/definitions/RedshiftServerlessStorage"
+      }
+     },
+     "required": [
+      "RedshiftServerlessSource"
+     ],
+     "title": "RedshiftServerlessSource",
+     "type": "object"
+    }
+   ]
+  },
+  "Region": {
+   "maxLength": 16,
+   "minLength": 4,
+   "pattern": "[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]",
+   "type": "string"
+  },
+  "RelationalFilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FilterExpressions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/FilterExpression"
+     },
+     "type": "array"
+    },
+    "SchemaName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DatabaseName"
+   ],
+   "type": "object"
+  },
+  "RelationalFilterConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RelationalFilterConfiguration"
+   },
+   "type": "array"
+  },
+  "ScheduleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Schedule": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "cron\\((\\b[0-5]?[0-9]\\b) (\\b2[0-3]\\b|\\b[0-1]?[0-9]\\b) (.*){1,5} (.*){1,5} (.*){1,5} (.*){1,5}\\)",
+     "type": "string"
+    },
+    "Timezone": {
+     "$ref": "#/definitions/Timezone"
+    }
+   },
+   "type": "object"
+  },
+  "Timezone": {
+   "type": "string"
+  },
+  "TypeRevision": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateDataSource",
+    "iam:PassRole",
+    "datazone:GetDataSource",
+    "datazone:DeleteDataSource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteDataSource",
+    "datazone:GetDataSource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "ProjectIdentifier": {
+      "$ref": "resource-schema.json#/properties/ProjectIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListDataSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:GetDataSource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:UpdateDataSource",
+    "datazone:GetDataSource",
+    "datazone:DeleteDataSource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "AssetFormsInput": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FormInput"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/DataSourceConfigurationInput"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnableSetting": {
+   "$ref": "#/definitions/EnableSetting"
+  },
+  "EnvironmentId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "LastRunAssetCount": {
+   "type": "number"
+  },
+  "LastRunAt": {
+   "type": "string"
+  },
+  "LastRunStatus": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "ProjectIdentifier": {
+   "type": "string"
+  },
+  "PublishOnImport": {
+   "type": "boolean"
+  },
+  "Recommendation": {
+   "$ref": "#/definitions/RecommendationConfiguration"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/ScheduleConfiguration"
+  },
+  "Status": {
+   "$ref": "#/definitions/DataSourceStatus"
+  },
+  "Type": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id",
+  "/properties/LastRunAssetCount",
+  "/properties/LastRunAt",
+  "/properties/LastRunStatus",
+  "/properties/ProjectId",
+  "/properties/Status",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "Name",
+  "DomainIdentifier",
+  "ProjectIdentifier",
+  "EnvironmentIdentifier",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::DataSource",
+ "writeOnlyProperties": [
+  "/properties/AssetFormsInput",
+  "/properties/EnvironmentIdentifier",
+  "/properties/DomainIdentifier",
+  "/properties/Configuration",
+  "/properties/ProjectIdentifier"
+ ]
+}

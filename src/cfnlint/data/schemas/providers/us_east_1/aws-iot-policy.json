@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreatePolicy",
+    "iot:GetPolicy",
+    "iot:TagResource",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeletePolicy",
+    "iot:GetPolicy",
+    "iot:ListPolicyVersions",
+    "iot:DeletePolicyVersion"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:GetPolicy",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:GetPolicy",
+    "iot:ListPolicyVersions",
+    "iot:CreatePolicyVersion",
+    "iot:DeletePolicyVersion",
+    "iot:SetDefaultPolicyVersion",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "maxLength": 404600,
+   "minLength": 1,
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "PolicyDocument"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::Policy"
+}

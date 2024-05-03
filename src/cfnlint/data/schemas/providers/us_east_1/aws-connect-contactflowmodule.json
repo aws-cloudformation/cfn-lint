@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateContactFlowModule",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteContactFlowModule",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListContactFlowModules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeContactFlowModule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateContactFlowModuleMetadata",
+    "connect:UpdateContactFlowModuleContent",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowModuleArn"
+ ],
+ "properties": {
+  "ContactFlowModuleArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/flow-module/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Content": {
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "State": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Status": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowModuleArn",
+  "/properties/Status"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::ContactFlowModule"
+}

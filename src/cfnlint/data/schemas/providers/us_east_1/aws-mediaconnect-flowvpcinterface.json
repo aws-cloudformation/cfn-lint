@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:AddFlowVpcInterfaces"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:RemoveFlowVpcInterface"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:AddFlowVpcInterfaces",
+    "mediaconnect:RemoveFlowVpcInterface"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "FlowArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SubnetId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds"
+ ],
+ "required": [
+  "FlowArn",
+  "Name",
+  "RoleArn",
+  "SubnetId",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowVpcInterface"
+}

@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LiveSourceName",
+  "/properties/SourceLocationName"
+ ],
+ "definitions": {
+  "HttpPackageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "type": "string"
+    },
+    "SourceGroup": {
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/Type"
+    }
+   },
+   "required": [
+    "Path",
+    "SourceGroup",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "DASH",
+    "HLS"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediatailor:CreateLiveSource",
+    "mediatailor:DescribeLiveSource",
+    "mediatailor:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediatailor:DeleteLiveSource",
+    "mediatailor:DescribeLiveSource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "SourceLocationName": {
+      "$ref": "resource-schema.json#/properties/SourceLocationName"
+     }
+    },
+    "required": [
+     "SourceLocationName"
+    ]
+   },
+   "permissions": [
+    "mediatailor:ListLiveSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediatailor:DescribeLiveSource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediatailor:UpdateLiveSource",
+    "mediatailor:DescribeLiveSource",
+    "mediatailor:TagResource",
+    "mediatailor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LiveSourceName",
+  "/properties/SourceLocationName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "HttpPackageConfigurations": {
+   "items": {
+    "$ref": "#/definitions/HttpPackageConfiguration"
+   },
+   "type": "array"
+  },
+  "LiveSourceName": {
+   "type": "string"
+  },
+  "SourceLocationName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "HttpPackageConfigurations",
+  "LiveSourceName",
+  "SourceLocationName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::LiveSource"
+}

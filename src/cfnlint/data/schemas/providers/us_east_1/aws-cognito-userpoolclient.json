@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GenerateSecret",
+  "/properties/UserPoolId"
+ ],
+ "definitions": {
+  "AnalyticsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArn": {
+     "type": "string"
+    },
+    "ApplicationId": {
+     "type": "string"
+    },
+    "ExternalId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "UserDataShared": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TokenValidityUnits": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessToken": {
+     "type": "string"
+    },
+    "IdToken": {
+     "type": "string"
+    },
+    "RefreshToken": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:CreateUserPoolClient",
+    "iam:PassRole",
+    "iam:PutRolePolicy",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:DeleteUserPoolClient",
+    "iam:PutRolePolicy",
+    "iam:DeleteRolePolicy"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "UserPoolId": {
+      "$ref": "resource-schema.json#/properties/UserPoolId"
+     }
+    },
+    "required": [
+     "UserPoolId"
+    ]
+   },
+   "permissions": [
+    "cognito-idp:ListUserPoolClients"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:DescribeUserPoolClient"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-idp:UpdateUserPoolClient",
+    "iam:PassRole",
+    "iam:PutRolePolicy"
+   ],
+   "timeoutInMinutes": 2
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserPoolId",
+  "/properties/ClientId"
+ ],
+ "properties": {
+  "AccessTokenValidity": {
+   "maximum": 86400,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "AllowedOAuthFlows": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AllowedOAuthFlowsUserPoolClient": {
+   "type": "boolean"
+  },
+  "AllowedOAuthScopes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AnalyticsConfiguration": {
+   "$ref": "#/definitions/AnalyticsConfiguration"
+  },
+  "AuthSessionValidity": {
+   "maximum": 15,
+   "minimum": 3,
+   "type": "integer"
+  },
+  "CallbackURLs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClientId": {
+   "type": "string"
+  },
+  "ClientName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ClientSecret": {
+   "type": "string"
+  },
+  "DefaultRedirectURI": {
+   "type": "string"
+  },
+  "EnablePropagateAdditionalUserContextData": {
+   "type": "boolean"
+  },
+  "EnableTokenRevocation": {
+   "type": "boolean"
+  },
+  "ExplicitAuthFlows": {
+   "items": {
+    "enum": [
+     "ADMIN_NO_SRP_AUTH",
+     "CUSTOM_AUTH_FLOW_ONLY",
+     "USER_PASSWORD_AUTH",
+     "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+     "ALLOW_CUSTOM_AUTH",
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "GenerateSecret": {
+   "type": "boolean"
+  },
+  "IdTokenValidity": {
+   "maximum": 86400,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "LogoutURLs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PreventUserExistenceErrors": {
+   "type": "string"
+  },
+  "ReadAttributes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "RefreshTokenValidity": {
+   "maximum": 3650,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SupportedIdentityProviders": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "TokenValidityUnits": {
+   "$ref": "#/definitions/TokenValidityUnits"
+  },
+  "UserPoolId": {
+   "type": "string"
+  },
+  "WriteAttributes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClientSecret",
+  "/properties/Name",
+  "/properties/ClientId"
+ ],
+ "required": [
+  "UserPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::UserPoolClient"
+}

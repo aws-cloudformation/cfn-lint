@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CognitoIdentityProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientId": {
+     "type": "string"
+    },
+    "ProviderName": {
+     "type": "string"
+    },
+    "ServerSideTokenCheck": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "CognitoStreams": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "type": "string"
+    },
+    "StreamName": {
+     "type": "string"
+    },
+    "StreamingStatus": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PushSync": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArns": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllowClassicFlow": {
+   "type": "boolean"
+  },
+  "AllowUnauthenticatedIdentities": {
+   "type": "boolean"
+  },
+  "CognitoEvents": {
+   "type": "object"
+  },
+  "CognitoIdentityProviders": {
+   "items": {
+    "$ref": "#/definitions/CognitoIdentityProvider"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CognitoStreams": {
+   "$ref": "#/definitions/CognitoStreams"
+  },
+  "DeveloperProviderName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IdentityPoolName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OpenIdConnectProviderARNs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PushSync": {
+   "$ref": "#/definitions/PushSync"
+  },
+  "SamlProviderARNs": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SupportedLoginProviders": {
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Name"
+ ],
+ "required": [
+  "AllowUnauthenticatedIdentities"
+ ],
+ "typeName": "AWS::Cognito::IdentityPool"
+}

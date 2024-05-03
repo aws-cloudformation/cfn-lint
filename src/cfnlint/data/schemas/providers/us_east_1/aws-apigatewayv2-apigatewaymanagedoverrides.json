@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "AccessLogSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationArn": {
+     "type": "string"
+    },
+    "Format": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IntegrationOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "IntegrationMethod": {
+     "type": "string"
+    },
+    "PayloadFormatVersion": {
+     "type": "string"
+    },
+    "TimeoutInMillis": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RouteOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationScopes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AuthorizationType": {
+     "type": "string"
+    },
+    "AuthorizerId": {
+     "type": "string"
+    },
+    "OperationName": {
+     "type": "string"
+    },
+    "Target": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RouteSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DataTraceEnabled": {
+     "type": "boolean"
+    },
+    "DetailedMetricsEnabled": {
+     "type": "boolean"
+    },
+    "LoggingLevel": {
+     "type": "string"
+    },
+    "ThrottlingBurstLimit": {
+     "type": "integer"
+    },
+    "ThrottlingRateLimit": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "StageOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessLogSettings": {
+     "$ref": "#/definitions/AccessLogSettings"
+    },
+    "AutoDeploy": {
+     "type": "boolean"
+    },
+    "DefaultRouteSettings": {
+     "$ref": "#/definitions/RouteSettings"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "RouteSettings": {
+     "type": "object"
+    },
+    "StageVariables": {
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Integration": {
+   "$ref": "#/definitions/IntegrationOverrides"
+  },
+  "Route": {
+   "$ref": "#/definitions/RouteOverrides"
+  },
+  "Stage": {
+   "$ref": "#/definitions/StageOverrides"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ApiId"
+ ],
+ "typeName": "AWS::ApiGatewayV2::ApiGatewayManagedOverrides"
+}

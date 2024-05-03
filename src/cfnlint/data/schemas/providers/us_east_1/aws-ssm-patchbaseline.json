@@ -1,0 +1,349 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OperatingSystem"
+ ],
+ "definitions": {
+  "PatchFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "enum": [
+      "ADVISORY_ID",
+      "ARCH",
+      "BUGZILLA_ID",
+      "CLASSIFICATION",
+      "CVE_ID",
+      "EPOCH",
+      "MSRC_SEVERITY",
+      "NAME",
+      "PATCH_ID",
+      "PATCH_SET",
+      "PRIORITY",
+      "PRODUCT",
+      "PRODUCT_FAMILY",
+      "RELEASE",
+      "REPOSITORY",
+      "SECTION",
+      "SECURITY",
+      "SEVERITY",
+      "VERSION"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "PatchFilterGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "PatchFilters": {
+     "items": {
+      "$ref": "#/definitions/PatchFilter"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "PatchSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z0-9_\\-.]{3,50}$",
+     "type": "string"
+    },
+    "Products": {
+     "items": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "ApproveAfterDays": {
+     "maximum": 360,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ApproveUntilDate": {
+     "maxLength": 10,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ComplianceLevel": {
+     "enum": [
+      "CRITICAL",
+      "HIGH",
+      "INFORMATIONAL",
+      "LOW",
+      "MEDIUM",
+      "UNSPECIFIED"
+     ],
+     "type": "string"
+    },
+    "EnableNonSecurity": {
+     "default": false,
+     "type": "boolean"
+    },
+    "PatchFilterGroup": {
+     "$ref": "#/definitions/PatchFilterGroup"
+    }
+   },
+   "type": "object"
+  },
+  "RuleGroup": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "PatchRules": {
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm:CreatePatchBaseline",
+    "ssm:RegisterPatchBaselineForPatchGroup",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:ListTagsForResource",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:RegisterDefaultPatchBaseline"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm:DeletePatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:DeregisterPatchBaselineForPatchGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm:DescribePatchBaselines",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:GetPatchBaseline",
+    "ssm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm:UpdatePatchBaseline",
+    "ssm:DeregisterPatchBaselineForPatchGroup",
+    "ssm:AddTagsToResource",
+    "ssm:RemoveTagsFromResource",
+    "ssm:ListTagsForResource",
+    "ssm:GetDefaultPatchBaseline",
+    "ssm:RegisterDefaultPatchBaseline"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApprovalRules": {
+   "$ref": "#/definitions/RuleGroup"
+  },
+  "ApprovedPatches": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 100,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ApprovedPatchesComplianceLevel": {
+   "default": "UNSPECIFIED",
+   "enum": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "INFORMATIONAL",
+    "UNSPECIFIED"
+   ],
+   "type": "string"
+  },
+  "ApprovedPatchesEnableNonSecurity": {
+   "default": false,
+   "type": "boolean"
+  },
+  "DefaultBaseline": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GlobalFilters": {
+   "$ref": "#/definitions/PatchFilterGroup"
+  },
+  "Id": {
+   "maxLength": 128,
+   "minLength": 20,
+   "pattern": "^[a-zA-Z0-9_\\-:/]{20,128}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-.]{3,128}$",
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "default": "WINDOWS",
+   "enum": [
+    "WINDOWS",
+    "AMAZON_LINUX",
+    "AMAZON_LINUX_2",
+    "AMAZON_LINUX_2022",
+    "AMAZON_LINUX_2023",
+    "UBUNTU",
+    "REDHAT_ENTERPRISE_LINUX",
+    "SUSE",
+    "CENTOS",
+    "ORACLE_LINUX",
+    "DEBIAN",
+    "MACOS",
+    "RASPBIAN",
+    "ROCKY_LINUX",
+    "ALMA_LINUX"
+   ],
+   "type": "string"
+  },
+  "PatchGroups": {
+   "items": {
+    "maxLength": 256,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RejectedPatches": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 100,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RejectedPatchesAction": {
+   "default": "ALLOW_AS_DEPENDENCY",
+   "enum": [
+    "ALLOW_AS_DEPENDENCY",
+    "BLOCK"
+   ],
+   "type": "string"
+  },
+  "Sources": {
+   "items": {
+    "$ref": "#/definitions/PatchSource"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 1000,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSM::PatchBaseline"
+}

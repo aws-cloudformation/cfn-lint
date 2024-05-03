@@ -1,0 +1,164 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ResourceArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/VpnConnectionArn"
+ ],
+ "definitions": {
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "type": "integer"
+    },
+    "SegmentName": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetSiteToSiteVpnAttachment",
+    "networkmanager:CreateSiteToSiteVpnAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetSiteToSiteVpnAttachment",
+    "networkmanager:DeleteAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetSiteToSiteVpnAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:GetSiteToSiteVpnAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "SegmentName": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  },
+  "VpnConnectionArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/ProposedSegmentChange",
+  "/properties/SegmentName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-sitetositevpnattachment",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::SiteToSiteVpnAttachment",
+ "writeOnlyProperties": [
+  "/properties/VpnConnectionArn"
+ ]
+}

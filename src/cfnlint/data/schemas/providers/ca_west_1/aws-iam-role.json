@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RoleName",
+  "/properties/Path"
+ ],
+ "definitions": {
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "cfnLint": [
+      "AWS::IAM::Role/Properties/Policies/PolicyDocument"
+     ],
+     "type": "object"
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyName",
+    "PolicyDocument"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RoleId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssumeRolePolicyDocument": {
+   "maxLength": 2048,
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "ManagedPolicyArns": {
+   "items": {
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MaxSessionDuration": {
+   "maximum": 43200,
+   "minimum": 3600,
+   "type": "integer"
+  },
+  "Path": {
+   "pattern": "^/(.+/)*$",
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "type": "string"
+  },
+  "Policies": {
+   "items": {
+    "$ref": "#/definitions/Policy"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RoleId": {
+   "type": "string"
+  },
+  "RoleName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RoleId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "AssumeRolePolicyDocument"
+ ],
+ "typeName": "AWS::IAM::Role"
+}

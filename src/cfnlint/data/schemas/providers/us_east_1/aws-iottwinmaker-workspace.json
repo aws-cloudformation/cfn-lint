@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceId"
+ ],
+ "definitions": {
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iottwinmaker:CreateWorkspace",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteWorkspace",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:ListWorkspaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource",
+    "iottwinmaker:UntagResource",
+    "iottwinmaker:UpdateWorkspace"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Role": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "S3Location": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "WorkspaceId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime"
+ ],
+ "required": [
+  "WorkspaceId",
+  "Role",
+  "S3Location"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::Workspace"
+}

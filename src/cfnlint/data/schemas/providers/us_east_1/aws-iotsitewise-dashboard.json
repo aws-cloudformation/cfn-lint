@@ -1,0 +1,116 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DashboardArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotsitewise:CreateDashboard",
+    "iotsitewise:DescribeDashboard",
+    "iotsitewise:ListTagsForResource",
+    "iotsitewise:TagResource",
+    "iotsitewise:DescribeAsset",
+    "iotsitewise:DescribeAssetModel",
+    "iotsitewise:ListAssetModelProperties",
+    "iotsitewise:ListAssetModelCompositeModels"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotsitewise:DescribeDashboard",
+    "iotsitewise:DeleteDashboard"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotsitewise:ListDashboards"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotsitewise:DescribeDashboard",
+    "iotsitewise:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotsitewise:DescribeDashboard",
+    "iotsitewise:UpdateDashboard",
+    "iotsitewise:TagResource",
+    "iotsitewise:UntagResource",
+    "iotsitewise:ListTagsForResource",
+    "iotsitewise:DescribeAsset",
+    "iotsitewise:DescribeAssetModel",
+    "iotsitewise:ListAssetModelProperties",
+    "iotsitewise:ListAssetModelCompositeModels"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DashboardId"
+ ],
+ "properties": {
+  "DashboardArn": {
+   "type": "string"
+  },
+  "DashboardDefinition": {
+   "type": "string"
+  },
+  "DashboardDescription": {
+   "type": "string"
+  },
+  "DashboardId": {
+   "type": "string"
+  },
+  "DashboardName": {
+   "type": "string"
+  },
+  "ProjectId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DashboardArn",
+  "/properties/DashboardId"
+ ],
+ "required": [
+  "DashboardDefinition",
+  "DashboardDescription",
+  "DashboardName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotsitewise.git",
+ "taggable": true,
+ "typeName": "AWS::IoTSiteWise::Dashboard"
+}

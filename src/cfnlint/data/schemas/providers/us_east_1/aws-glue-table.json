@@ -1,0 +1,287 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatabaseName",
+  "/properties/CatalogId"
+ ],
+ "definitions": {
+  "Column": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "IcebergInput": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataOperation": {
+     "$ref": "#/definitions/MetadataOperation"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetadataOperation": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "OpenTableFormatInput": {
+   "additionalProperties": false,
+   "properties": {
+    "IcebergInput": {
+     "$ref": "#/definitions/IcebergInput"
+    }
+   },
+   "type": "object"
+  },
+  "Order": {
+   "additionalProperties": false,
+   "properties": {
+    "Column": {
+     "type": "string"
+    },
+    "SortOrder": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Column",
+    "SortOrder"
+   ],
+   "type": "object"
+  },
+  "SchemaId": {
+   "additionalProperties": false,
+   "properties": {
+    "RegistryName": {
+     "type": "string"
+    },
+    "SchemaArn": {
+     "type": "string"
+    },
+    "SchemaName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaReference": {
+   "additionalProperties": false,
+   "properties": {
+    "SchemaId": {
+     "$ref": "#/definitions/SchemaId"
+    },
+    "SchemaVersionId": {
+     "type": "string"
+    },
+    "SchemaVersionNumber": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "SerdeInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "SerializationLibrary": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SkewedInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "SkewedColumnNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SkewedColumnValueLocationMaps": {
+     "type": "object"
+    },
+    "SkewedColumnValues": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "StorageDescriptor": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketColumns": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Columns": {
+     "items": {
+      "$ref": "#/definitions/Column"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Compressed": {
+     "type": "boolean"
+    },
+    "InputFormat": {
+     "type": "string"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "NumberOfBuckets": {
+     "type": "integer"
+    },
+    "OutputFormat": {
+     "type": "string"
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "SchemaReference": {
+     "$ref": "#/definitions/SchemaReference"
+    },
+    "SerdeInfo": {
+     "$ref": "#/definitions/SerdeInfo"
+    },
+    "SkewedInfo": {
+     "$ref": "#/definitions/SkewedInfo"
+    },
+    "SortColumns": {
+     "items": {
+      "$ref": "#/definitions/Order"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StoredAsSubDirectories": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TableIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TableInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "PartitionKeys": {
+     "items": {
+      "$ref": "#/definitions/Column"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Retention": {
+     "type": "integer"
+    },
+    "StorageDescriptor": {
+     "$ref": "#/definitions/StorageDescriptor"
+    },
+    "TableType": {
+     "enum": [
+      "EXTERNAL_TABLE",
+      "VIRTUAL_VIEW"
+     ],
+     "type": "string"
+    },
+    "TargetTable": {
+     "$ref": "#/definitions/TableIdentifier"
+    },
+    "ViewExpandedText": {
+     "type": "string"
+    },
+    "ViewOriginalText": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CatalogId": {
+   "type": "string"
+  },
+  "DatabaseName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "OpenTableFormatInput": {
+   "$ref": "#/definitions/OpenTableFormatInput"
+  },
+  "TableInput": {
+   "$ref": "#/definitions/TableInput"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "TableInput",
+  "DatabaseName",
+  "CatalogId"
+ ],
+ "typeName": "AWS::Glue::Table"
+}

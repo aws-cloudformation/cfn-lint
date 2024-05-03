@@ -1,0 +1,292 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZones",
+  "/properties/DBClusterIdentifier",
+  "/properties/DBSubnetGroupName",
+  "/properties/KmsKeyId",
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/StorageEncrypted",
+  "/properties/UseLatestRestorableTime"
+ ],
+ "definitions": {
+  "DBClusterRole": {
+   "additionalProperties": false,
+   "properties": {
+    "FeatureName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "ServerlessScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "maximum": 128,
+     "minimum": 2.5,
+     "type": "number"
+    },
+    "MinCapacity": {
+     "maximum": 128,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "MinCapacity",
+    "MaxCapacity"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "rds:AddRoleToDBCluster",
+    "rds:AddTagsToResource",
+    "rds:CreateDBCluster",
+    "rds:CreateDBInstance",
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBCluster",
+    "rds:RestoreDBClusterFromSnapshot",
+    "rds:RestoreDBClusterToPointInTime",
+    "kms:*"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBCluster",
+    "rds:DeleteDBInstance",
+    "rds:DescribeDBClusters",
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource",
+    "rds:RemoveFromGlobalCluster",
+    "rds:CreateDBClusterSnapshot",
+    "kms:*"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource",
+    "kms:*"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource",
+    "kms:*"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups",
+    "iam:PassRole",
+    "rds:AddRoleToDBCluster",
+    "rds:AddTagsToResource",
+    "rds:DescribeDBClusters",
+    "rds:DescribeDBInstances",
+    "rds:DescribeDBSubnetGroups",
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBCluster",
+    "rds:ModifyDBInstance",
+    "rds:RemoveFromGlobalCluster",
+    "rds:RemoveRoleFromDBCluster",
+    "rds:RemoveTagsFromResource",
+    "kms:*"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBClusterIdentifier"
+ ],
+ "properties": {
+  "AssociatedRoles": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/DBClusterRole"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AvailabilityZones": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BackupRetentionPeriod": {
+   "default": 1,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ClusterResourceId": {
+   "type": "string"
+  },
+  "CopyTagsToSnapshot": {
+   "type": "boolean"
+  },
+  "DBClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "DBClusterParameterGroupName": {
+   "type": "string"
+  },
+  "DBInstanceParameterGroupName": {
+   "type": "string"
+  },
+  "DBPort": {
+   "type": "integer"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "EnableCloudwatchLogsExports": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "IamAuthEnabled": {
+   "type": "boolean"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ReadEndpoint": {
+   "type": "string"
+  },
+  "RestoreToTime": {
+   "type": "string"
+  },
+  "RestoreType": {
+   "default": "full-copy",
+   "type": "string"
+  },
+  "ServerlessScalingConfiguration": {
+   "$ref": "#/definitions/ServerlessScalingConfiguration"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UseLatestRestorableTime": {
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
+  "/properties/SnapshotIdentifier": "$lowercase(SnapshotIdentifier)",
+  "/properties/SourceDBClusterIdentifier": "$lowercase(SourceDBClusterIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/Endpoint",
+  "/properties/ClusterResourceId",
+  "/properties/Port",
+  "/properties/ReadEndpoint"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBCluster",
+ "writeOnlyProperties": [
+  "/properties/DBInstanceParameterGroupName",
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/UseLatestRestorableTime"
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "definitions": {
+  "InstanceReusePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ReuseOnScaleIn": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "autoscaling:PutWarmPool",
+    "autoscaling:DescribeWarmPool",
+    "autoscaling:DescribeAutoScalingGroups"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "autoscaling:DeleteWarmPool",
+    "autoscaling:DescribeWarmPool"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "autoscaling:DescribeWarmPool"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "autoscaling:PutWarmPool",
+    "autoscaling:DescribeWarmPool",
+    "autoscaling:DescribeAutoScalingGroups"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "InstanceReusePolicy": {
+   "$ref": "#/definitions/InstanceReusePolicy"
+  },
+  "MaxGroupPreparedCapacity": {
+   "type": "integer"
+  },
+  "MinSize": {
+   "type": "integer"
+  },
+  "PoolState": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "AutoScalingGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-autoscaling",
+ "typeName": "AWS::AutoScaling::WarmPool"
+}

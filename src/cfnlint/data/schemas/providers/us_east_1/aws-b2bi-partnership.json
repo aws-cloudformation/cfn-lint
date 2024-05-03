@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Email",
+  "/properties/Phone",
+  "/properties/ProfileId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "b2bi:CreatePartnership",
+    "b2bi:TagResource",
+    "s3:PutObject"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "b2bi:DeletePartnership"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "b2bi:ListPartnerships"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "b2bi:GetPartnership",
+    "b2bi:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "b2bi:TagResource",
+    "b2bi:UntagResource",
+    "b2bi:UpdatePartnership"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PartnershipId"
+ ],
+ "properties": {
+  "Capabilities": {
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "pattern": "^[a-zA-Z0-9_-]+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Email": {
+   "maxLength": 254,
+   "minLength": 5,
+   "pattern": "^[\\w\\.\\-]+@[\\w\\.\\-]+$",
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 254,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PartnershipArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PartnershipId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Phone": {
+   "maxLength": 22,
+   "minLength": 7,
+   "pattern": "^\\+?([0-9 \\t\\-()\\/]{7,})(?:\\s*(?:#|x\\.?|ext\\.?|extension) \\t*(\\d+))?$",
+   "type": "string"
+  },
+  "ProfileId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TradingPartnerId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/PartnershipArn",
+  "/properties/PartnershipId",
+  "/properties/TradingPartnerId"
+ ],
+ "required": [
+  "Email",
+  "Name",
+  "ProfileId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::B2BI::Partnership"
+}

@@ -1,0 +1,121 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Workspace"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aps:CreateRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aps:DeleteRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Workspace"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "aps:ListRuleGroupsNamespaces",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aps:PutRuleGroupsNamespace",
+    "aps:DescribeRuleGroupsNamespace",
+    "aps:TagResource",
+    "aps:UntagResource",
+    "aps:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:rulegroupsnamespace/[a-zA-Z0-9-]+/[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+   "type": "string"
+  },
+  "Data": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Workspace": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Workspace",
+  "Data",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::RuleGroupsNamespace"
+}

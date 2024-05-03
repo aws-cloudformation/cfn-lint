@@ -1,0 +1,102 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks",
+    "networkmanager:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:DescribeGlobalNetworks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateGlobalNetwork",
+    "networkmanager:DescribeGlobalNetworks",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "networkmanager:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::GlobalNetwork"
+}

@@ -1,0 +1,306 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdditionalEncryptionContext",
+  "/properties/CustomerManagedKey"
+ ],
+ "definitions": {
+  "AuthenticationType": {
+   "enum": [
+    "Standard",
+    "IAM_Identity_Center"
+   ],
+   "type": "string"
+  },
+  "BrowserType": {
+   "enum": [
+    "Chrome"
+   ],
+   "type": "string"
+  },
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceType": {
+   "enum": [
+    "standard.regular",
+    "standard.large",
+    "standard.xlarge"
+   ],
+   "type": "string"
+  },
+  "PortalStatus": {
+   "enum": [
+    "Incomplete",
+    "Pending",
+    "Active"
+   ],
+   "type": "string"
+  },
+  "RendererType": {
+   "enum": [
+    "AppStream"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "workspaces-web:CreatePortal",
+    "workspaces-web:GetPortal",
+    "workspaces-web:GetPortalServiceProviderMetadata",
+    "workspaces-web:AssociateBrowserSettings",
+    "workspaces-web:AssociateIpAccessSettings",
+    "workspaces-web:AssociateNetworkSettings",
+    "workspaces-web:AssociateTrustStore",
+    "workspaces-web:AssociateUserAccessLoggingSettings",
+    "workspaces-web:AssociateUserSettings",
+    "workspaces-web:ListTagsForResource",
+    "workspaces-web:TagResource",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "ec2:CreateNetworkInterface",
+    "ec2:CreateNetworkInterfacePermission",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DeleteNetworkInterfacePermission",
+    "ec2:ModifyNetworkInterfaceAttribute",
+    "kinesis:PutRecord",
+    "kinesis:PutRecords",
+    "kinesis:DescribeStreamSummary",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DescribeRegisteredRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "workspaces-web:GetPortal",
+    "workspaces-web:DeletePortal",
+    "workspaces-web:DisassociateBrowserSettings",
+    "workspaces-web:DisassociateIpAccessSettings",
+    "workspaces-web:DisassociateNetworkSettings",
+    "workspaces-web:DisassociateTrustStore",
+    "workspaces-web:DisassociateUserAccessLoggingSettings",
+    "workspaces-web:DisassociateUserSettings",
+    "kms:Decrypt",
+    "sso:DeleteManagedApplicationInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "workspaces-web:ListPortals",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "workspaces-web:GetPortal",
+    "workspaces-web:GetPortalServiceProviderMetadata",
+    "workspaces-web:ListTagsForResource",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "workspaces-web:GetPortal",
+    "workspaces-web:GetPortalServiceProviderMetadata",
+    "workspaces-web:UpdatePortal",
+    "workspaces-web:AssociateBrowserSettings",
+    "workspaces-web:AssociateIpAccessSettings",
+    "workspaces-web:AssociateNetworkSettings",
+    "workspaces-web:AssociateTrustStore",
+    "workspaces-web:AssociateUserAccessLoggingSettings",
+    "workspaces-web:AssociateUserSettings",
+    "workspaces-web:DisassociateBrowserSettings",
+    "workspaces-web:DisassociateIpAccessSettings",
+    "workspaces-web:DisassociateNetworkSettings",
+    "workspaces-web:DisassociateTrustStore",
+    "workspaces-web:DisassociateUserAccessLoggingSettings",
+    "workspaces-web:DisassociateUserSettings",
+    "workspaces-web:ListTagsForResource",
+    "workspaces-web:TagResource",
+    "workspaces-web:UntagResource",
+    "kms:CreateGrant",
+    "kms:Encrypt",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "ec2:CreateNetworkInterface",
+    "ec2:CreateNetworkInterfacePermission",
+    "ec2:DeleteNetworkInterface",
+    "ec2:DeleteNetworkInterfacePermission",
+    "ec2:ModifyNetworkInterfaceAttribute",
+    "kinesis:PutRecord",
+    "kinesis:PutRecords",
+    "kinesis:DescribeStreamSummary",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DeleteManagedApplicationInstance",
+    "sso:DescribeRegisteredRegions",
+    "sso:GetApplicationInstance",
+    "sso:ListApplicationInstances"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PortalArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "AuthenticationType": {
+   "$ref": "#/definitions/AuthenticationType"
+  },
+  "BrowserSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "BrowserType": {
+   "$ref": "#/definitions/BrowserType"
+  },
+  "CreationDate": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerManagedKey": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "InstanceType": {
+   "$ref": "#/definitions/InstanceType"
+  },
+  "IpAccessSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "MaxConcurrentSessions": {
+   "maximum": 5000,
+   "minimum": 1,
+   "type": "number"
+  },
+  "NetworkSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "PortalArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "PortalEndpoint": {
+   "maxLength": 253,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]?((?!-)([A-Za-z0-9-]*[A-Za-z0-9])\\.)+[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "PortalStatus": {
+   "$ref": "#/definitions/PortalStatus"
+  },
+  "RendererType": {
+   "$ref": "#/definitions/RendererType"
+  },
+  "ServiceProviderSamlMetadata": {
+   "maxLength": 204800,
+   "minLength": 0,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "StatusReason": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TrustStoreArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "UserAccessLoggingSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "UserSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BrowserType",
+  "/properties/CreationDate",
+  "/properties/PortalArn",
+  "/properties/PortalEndpoint",
+  "/properties/PortalStatus",
+  "/properties/RendererType",
+  "/properties/ServiceProviderSamlMetadata",
+  "/properties/StatusReason"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::Portal"
+}

@@ -1,0 +1,493 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName",
+  "/properties/EncryptionConfiguration",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AuthenticationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessRoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "ConnectionArn": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\\\.]{0,63}:[a-z0-9-\\\\.]{0,63}:[0-9]{12}:(\\w|\\/|-){1,1011}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeConfigurationValues": {
+     "$ref": "#/definitions/CodeConfigurationValues"
+    },
+    "ConfigurationSource": {
+     "enum": [
+      "REPOSITORY",
+      "API"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConfigurationSource"
+   ],
+   "type": "object"
+  },
+  "CodeConfigurationValues": {
+   "additionalProperties": false,
+   "properties": {
+    "BuildCommand": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    },
+    "Runtime": {
+     "enum": [
+      "PYTHON_3",
+      "NODEJS_12",
+      "NODEJS_14",
+      "CORRETTO_8",
+      "CORRETTO_11",
+      "NODEJS_16",
+      "GO_1",
+      "DOTNET_6",
+      "PHP_81",
+      "RUBY_31",
+      "PYTHON_311",
+      "NODEJS_18"
+     ],
+     "type": "string"
+    },
+    "RuntimeEnvironmentSecrets": {
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "RuntimeEnvironmentVariables": {
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "StartCommand": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Runtime"
+   ],
+   "type": "object"
+  },
+  "CodeRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeConfiguration": {
+     "$ref": "#/definitions/CodeConfiguration"
+    },
+    "RepositoryUrl": {
+     "type": "string"
+    },
+    "SourceCodeVersion": {
+     "$ref": "#/definitions/SourceCodeVersion"
+    },
+    "SourceDirectory": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "pattern": "[^\\x00]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryUrl",
+    "SourceCodeVersion"
+   ],
+   "type": "object"
+  },
+  "EgressConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EgressType": {
+     "enum": [
+      "DEFAULT",
+      "VPC"
+     ],
+     "type": "string"
+    },
+    "VpcConnectorArn": {
+     "maxLength": 1011,
+     "minLength": 44,
+     "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\\\.]{0,63}:[a-z0-9-\\\\.]{0,63}:[0-9]{12}:(\\w|\\/|-){1,1011}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EgressType"
+   ],
+   "type": "object"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKey": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "arn:aws(-[\\w]+)*:kms:[a-z\\-]+-[0-9]{1}:[0-9]{12}:key\\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KmsKey"
+   ],
+   "type": "object"
+  },
+  "HealthCheckConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "HealthyThreshold": {
+     "maximum": 20,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Interval": {
+     "type": "integer"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "TCP",
+      "HTTP"
+     ],
+     "type": "string"
+    },
+    "Timeout": {
+     "maximum": 20,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "UnhealthyThreshold": {
+     "maximum": 20,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ImageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "string"
+    },
+    "RuntimeEnvironmentSecrets": {
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "RuntimeEnvironmentVariables": {
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array"
+    },
+    "StartCommand": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageConfiguration": {
+     "$ref": "#/definitions/ImageConfiguration"
+    },
+    "ImageIdentifier": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "([0-9]{12}.dkr.ecr.[a-z\\-]+-[0-9]{1}.amazonaws.com\\/.*)|(^public\\.ecr\\.aws\\/.+\\/.+)",
+     "type": "string"
+    },
+    "ImageRepositoryType": {
+     "enum": [
+      "ECR",
+      "ECR_PUBLIC"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ImageIdentifier",
+    "ImageRepositoryType"
+   ],
+   "type": "object"
+  },
+  "IngressConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IsPubliclyAccessible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsPubliclyAccessible"
+   ],
+   "type": "object"
+  },
+  "InstanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "maxLength": 9,
+     "minLength": 3,
+     "pattern": "256|512|1024|2048|4096|(0.25|0.5|1|2|4) vCPU",
+     "type": "string"
+    },
+    "InstanceRoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "Memory": {
+     "maxLength": 6,
+     "minLength": 3,
+     "pattern": "512|1024|2048|3072|4096|6144|8192|10240|12288|(0.5|1|2|3|4|6|8|10|12) GB",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EgressConfiguration": {
+     "$ref": "#/definitions/EgressConfiguration"
+    },
+    "IngressConfiguration": {
+     "$ref": "#/definitions/IngressConfiguration"
+    },
+    "IpAddressType": {
+     "enum": [
+      "IPV4",
+      "DUAL_STACK"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "maxLength": 1024,
+   "minLength": 29,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):iam::[0-9]{12}:role/[\\w+=,.@-]{1,64}",
+   "type": "string"
+  },
+  "ServiceObservabilityConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ObservabilityConfigurationArn": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+     "type": "string"
+    },
+    "ObservabilityEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ObservabilityEnabled"
+   ],
+   "type": "object"
+  },
+  "SourceCodeVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "BRANCH"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "SourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationConfiguration": {
+     "$ref": "#/definitions/AuthenticationConfiguration"
+    },
+    "AutoDeploymentsEnabled": {
+     "type": "boolean"
+    },
+    "CodeRepository": {
+     "$ref": "#/definitions/CodeRepository"
+    },
+    "ImageRepository": {
+     "$ref": "#/definitions/ImageRepository"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apprunner:CreateService",
+    "apprunner:TagResource",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "logs:CreateLogGroup",
+    "logs:PutRetentionPolicy",
+    "logs:CreateLogStream",
+    "logs:PutLogEvents",
+    "logs:DescribeLogStreams",
+    "events:PutRule",
+    "events:PutTargets"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apprunner:DeleteService"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apprunner:ListServices",
+    "iam:PassRole"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apprunner:DescribeService"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apprunner:UpdateService",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceArn"
+ ],
+ "properties": {
+  "AutoScalingConfigurationArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\\\.]{0,63}:[a-z0-9-\\\\.]{0,63}:[0-9]{12}:(\\w|\\/|-){1,1011}",
+   "type": "string"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "HealthCheckConfiguration": {
+   "$ref": "#/definitions/HealthCheckConfiguration"
+  },
+  "InstanceConfiguration": {
+   "$ref": "#/definitions/InstanceConfiguration"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "ObservabilityConfiguration": {
+   "$ref": "#/definitions/ServiceObservabilityConfiguration"
+  },
+  "ServiceArn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\\\.]{0,63}:[a-z0-9-\\\\.]{0,63}:[0-9]{12}:(\\w|\\/|-){1,1011}",
+   "type": "string"
+  },
+  "ServiceId": {
+   "maxLength": 32,
+   "minLength": 32,
+   "type": "string"
+  },
+  "ServiceName": {
+   "maxLength": 40,
+   "minLength": 4,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9-_]{3,39}",
+   "type": "string"
+  },
+  "ServiceUrl": {
+   "type": "string"
+  },
+  "SourceConfiguration": {
+   "$ref": "#/definitions/SourceConfiguration"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceArn",
+  "/properties/ServiceId",
+  "/properties/ServiceUrl",
+  "/properties/Status"
+ ],
+ "required": [
+  "SourceConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::Service",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/AutoScalingConfigurationArn"
+ ]
+}

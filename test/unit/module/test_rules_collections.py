@@ -8,10 +8,10 @@ from test.testlib.testcase import BaseTestCase
 import regex as re
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
-from cfnlint.template import Template
+from cfnlint.template.template import Template
 
 
 class TestRulesCollection(BaseTestCase):
@@ -21,7 +21,7 @@ class TestRulesCollection(BaseTestCase):
         """SetUp template object"""
         self.rules = RulesCollection()
         self.rules.include_rules = ["I", "W", "E"]
-        rulesdirs = [DEFAULT_RULESDIR]
+        rulesdirs = [_DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)
 
@@ -54,24 +54,12 @@ class TestRulesCollection(BaseTestCase):
         filename = "test/fixtures/templates/bad/generic.yaml"
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ["us-east-1"])
-        expected_err_count = 33
+        expected_err_count = 36
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert (
             len(matches) == expected_err_count
         ), "Expected {} failures, got {}".format(expected_err_count, len(matches))
-
-    def test_fail_sub_properties_run(self):
-        """Test failure run"""
-        filename = "test/fixtures/templates/bad/resources/properties/onlyone.yaml"
-        template = cfnlint.decode.cfn_yaml.load(filename)
-        cfn = Template(filename, template, ["us-east-1"])
-
-        matches = []
-        matches.extend(self.rules.run(filename, cfn))
-        self.assertEqual(
-            6, len(matches), "Expected {} failures, got {}".format(6, len(matches))
-        )
 
     def test_success_filtering_of_rules_default(self):
         """Test extend function"""
@@ -293,6 +281,15 @@ class TestRulesCollection(BaseTestCase):
         match = re.match(pattern, retval)
         assert match, f"{retval} does not match {pattern}"
 
+    def test_custom_rules(self):
+        rules = RulesCollection([], [])
+
+        rules.create_from_custom_rules_file(
+            "test/fixtures/custom_rules/good/custom_rule_perfect.txt"
+        )
+
+        self.assertEqual(len(rules), 15)
+
 
 class TestCreateFromModule(BaseTestCase):
     """Test loading a rules collection from a module"""
@@ -300,5 +297,5 @@ class TestCreateFromModule(BaseTestCase):
     def test_create_from_module(self):
         """Load rules from a module"""
         rules = RulesCollection()
-        rules.create_from_module("cfnlint.rules.templates.Base")
+        rules.create_from_module("cfnlint.rules.jsonschema.JsonSchema")
         self.assertIn("E1001", (r.id for r in rules))

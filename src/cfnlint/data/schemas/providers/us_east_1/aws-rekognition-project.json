@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectName"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 2048,
+   "pattern": "(^arn:[a-z\\d-]+:rekognition:[a-z\\d-]+:\\d{12}:project/[a-zA-Z0-9_.\\-]{1,255}/[0-9]+$)",
+   "type": "string"
+  },
+  "ProjectName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9_\\-]*",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rekognition:CreateProject"
+   ],
+   "timeoutInMinutes": 15
+  },
+  "delete": {
+   "permissions": [
+    "rekognition:DescribeProjects",
+    "rekognition:DeleteProject"
+   ],
+   "timeoutInMinutes": 15
+  },
+  "list": {
+   "permissions": [
+    "rekognition:DescribeProjects"
+   ],
+   "timeoutInMinutes": 15
+  },
+  "read": {
+   "permissions": [
+    "rekognition:DescribeProjects"
+   ],
+   "timeoutInMinutes": 15
+  },
+  "update": {
+   "permissions": [],
+   "timeoutInMinutes": 15
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProjectName"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ProjectName": {
+   "$ref": "#/definitions/ProjectName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ProjectName"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/rekognition/latest/customlabels-dg/cp-manage-project.html",
+ "typeName": "AWS::Rekognition::Project"
+}

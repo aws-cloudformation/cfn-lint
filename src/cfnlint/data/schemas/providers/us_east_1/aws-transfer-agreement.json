@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateAgreement",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteAgreement"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ServerId": {
+      "$ref": "resource-schema.json#/properties/ServerId"
+     }
+    },
+    "required": [
+     "ServerId"
+    ]
+   },
+   "permissions": [
+    "transfer:ListAgreements"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeAgreement"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UpdateAgreement",
+    "transfer:UnTagResource",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgreementId",
+  "/properties/ServerId"
+ ],
+ "properties": {
+  "AccessRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "AgreementId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^a-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "BaseDirectory": {
+   "maxLength": 1024,
+   "pattern": "^(|/.*)$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[\\u0021-\\u007E]+$",
+   "type": "string"
+  },
+  "LocalProfileId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^p-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "PartnerProfileId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^p-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "ServerId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^s-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgreementId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ServerId",
+  "LocalProfileId",
+  "PartnerProfileId",
+  "BaseDirectory",
+  "AccessRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Agreement"
+}

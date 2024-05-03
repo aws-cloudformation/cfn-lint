@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:CreateDestination",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListDestinations",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetDestination",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:UpdateDestination",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Expression": {
+   "type": "string"
+  },
+  "ExpressionType": {
+   "enum": [
+    "RuleName",
+    "MqttTopic",
+    "SnsTopic"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Expression",
+  "ExpressionType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTWireless::Destination"
+}

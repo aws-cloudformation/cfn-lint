@@ -1,0 +1,384 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationDomain",
+  "/properties/AttachmentType",
+  "/properties/DomainCertificateArn",
+  "/properties/EndpointDomainPrefix",
+  "/properties/EndpointType",
+  "/properties/SecurityGroupIds",
+  "/properties/NetworkInterfaceOptions/NetworkInterfaceId",
+  "/properties/LoadBalancerOptions/LoadBalancerArn"
+ ],
+ "definitions": {
+  "LoadBalancerOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "LoadBalancerArn": {
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "type": "string"
+  },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:CreateTags",
+    "ec2:DescribeTags",
+    "iam:CreateServiceLinkedRole",
+    "iam:ListRoles",
+    "acm:GetCertificateWithPK",
+    "acm:DescribeCertificate",
+    "acm:CreateCertificateRelation",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "sso:CreateManagedApplicationInstance",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeAccountAttributes",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeListenerCertificates",
+    "acm:DeleteCertificateRelation",
+    "ec2:DeleteTags",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "sso:DeleteManagedApplicationInstance",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:DescribeTags",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "ec2:DeleteTags",
+    "sso:DeleteManagedApplicationInstance",
+    "acm:DeleteCertificateRelation",
+    "acm:DescribeCertificate",
+    "acm:CreateCertificateRelation",
+    "acm:GetCertificateWithPK",
+    "ec2:CreateTags",
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "elasticloadbalancing:DescribeListenerCertificates",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "iam:CreateServiceLinkedRole",
+    "iam:ListRoles",
+    "sso:CreateManagedApplicationInstance",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:DescribeTags",
+    "acm:CreateCertificateRelation",
+    "acm:DeleteCertificateRelation",
+    "acm:DescribeCertificate",
+    "acm:GetCertificateWithPK",
+    "ec2:CreateTags",
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:DeleteTags",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "elasticloadbalancing:DescribeListenerCertificates",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "iam:CreateServiceLinkedRole",
+    "iam:ListRoles",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DeleteManagedApplicationInstance",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:DescribeTags",
+    "acm:CreateCertificateRelation",
+    "acm:DeleteCertificateRelation",
+    "acm:DescribeCertificate",
+    "acm:GetCertificateWithPK",
+    "ec2:CreateTags",
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:DeleteTags",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "ec2:DescribeAccountAttributes",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "elasticloadbalancing:DescribeListenerCertificates",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "iam:CreateServiceLinkedRole",
+    "iam:ListRoles",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DeleteManagedApplicationInstance",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:DescribeTags",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "acm:GetCertificateWithPK",
+    "acm:DescribeCertificate",
+    "acm:CreateCertificateRelation",
+    "acm:DeleteCertificateRelation",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DeleteManagedApplicationInstance",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeAccountAttributes",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeListenerCertificates",
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "iam:CreateServiceLinkedRole",
+    "iam:ListRoles",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessEndpointId"
+ ],
+ "properties": {
+  "ApplicationDomain": {
+   "type": "string"
+  },
+  "AttachmentType": {
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DeviceValidationDomain": {
+   "type": "string"
+  },
+  "DomainCertificateArn": {
+   "type": "string"
+  },
+  "EndpointDomain": {
+   "type": "string"
+  },
+  "EndpointDomainPrefix": {
+   "type": "string"
+  },
+  "EndpointType": {
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "LoadBalancerOptions": {
+   "$ref": "#/definitions/LoadBalancerOptions"
+  },
+  "NetworkInterfaceOptions": {
+   "$ref": "#/definitions/NetworkInterfaceOptions"
+  },
+  "PolicyDocument": {
+   "type": "string"
+  },
+  "PolicyEnabled": {
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessEndpointId": {
+   "type": "string"
+  },
+  "VerifiedAccessGroupId": {
+   "type": "string"
+  },
+  "VerifiedAccessInstanceId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessEndpointId",
+  "/properties/EndpointDomain",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Status",
+  "/properties/DeviceValidationDomain",
+  "/properties/VerifiedAccessInstanceId"
+ ],
+ "required": [
+  "ApplicationDomain",
+  "AttachmentType",
+  "DomainCertificateArn",
+  "EndpointType",
+  "VerifiedAccessGroupId",
+  "EndpointDomainPrefix"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessendpoint",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessEndpoint"
+}

@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DestinationName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutDestination",
+    "logs:PutDestinationPolicy",
+    "logs:DescribeDestinations",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:DescribeDestinations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeDestinations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutDestination",
+    "logs:PutDestinationPolicy",
+    "logs:DescribeDestinations",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DestinationName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DestinationName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,512}$",
+   "type": "string"
+  },
+  "DestinationPolicy": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "TargetArn": {
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "DestinationName",
+  "TargetArn",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::Destination"
+}

@@ -1,0 +1,177 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "HoursOfOperationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Day": {
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "EndTime": {
+     "$ref": "#/definitions/HoursOfOperationTimeSlice"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/HoursOfOperationTimeSlice"
+    }
+   },
+   "required": [
+    "Day",
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationTimeSlice": {
+   "additionalProperties": false,
+   "properties": {
+    "Hours": {
+     "maximum": 23,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Minutes": {
+     "maximum": 59,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Hours",
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateHoursOfOperation",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteHoursOfOperation",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListHoursOfOperations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeHoursOfOperation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateHoursOfOperation",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HoursOfOperationArn"
+ ],
+ "properties": {
+  "Config": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationConfig"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "HoursOfOperationArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/operating-hours/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeZone": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HoursOfOperationArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "TimeZone",
+  "Config"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::HoursOfOperation"
+}

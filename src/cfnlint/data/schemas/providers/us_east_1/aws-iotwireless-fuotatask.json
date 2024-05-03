@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LoRaWAN": {
+   "additionalProperties": false,
+   "properties": {
+    "RfRegion": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StartTime": {
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RfRegion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotwireless:CreateFuotaTask",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource",
+    "iam:GetRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteFuotaTask"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListFuotaTasks",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetFuotaTask",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "iotwireless:UpdateFuotaTask",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource",
+    "iotwireless:AssociateMulticastGroupWithFuotaTask",
+    "iotwireless:DisassociateMulticastGroupFromFuotaTask",
+    "iotwireless:AssociateWirelessDeviceWithFuotaTask",
+    "iotwireless:DisassociateWirelessDeviceFromFuotaTask"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssociateMulticastGroup": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "AssociateWirelessDevice": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DisassociateMulticastGroup": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "DisassociateWirelessDevice": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "FirmwareUpdateImage": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FirmwareUpdateRole": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FuotaTaskStatus": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWAN"
+  },
+  "Name": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/FuotaTaskStatus",
+  "/properties/LoRaWAN/StartTime"
+ ],
+ "required": [
+  "LoRaWAN",
+  "FirmwareUpdateImage",
+  "FirmwareUpdateRole"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTWireless::FuotaTask"
+}

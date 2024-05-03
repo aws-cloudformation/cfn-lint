@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "FailurePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "RpoInSecs": {
+     "type": "integer"
+    },
+    "RtoInSecs": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RtoInSecs",
+    "RpoInSecs"
+   ],
+   "type": "object"
+  },
+  "PolicyMap": {
+   "additionalProperties": false,
+   "properties": {
+    "AZ": {
+     "$ref": "#/definitions/FailurePolicy"
+    },
+    "Hardware": {
+     "$ref": "#/definitions/FailurePolicy"
+    },
+    "Region": {
+     "$ref": "#/definitions/FailurePolicy"
+    },
+    "Software": {
+     "$ref": "#/definitions/FailurePolicy"
+    }
+   },
+   "required": [
+    "AZ",
+    "Hardware",
+    "Software"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,128}": {
+     "$ref": "#/definitions/TagValue"
+    }
+   },
+   "type": "object"
+  },
+  "TagValue": {
+   "maxLength": 256,
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resiliencehub:CreateResiliencyPolicy",
+    "resiliencehub:DescribeResiliencyPolicy",
+    "resiliencehub:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resiliencehub:DeleteResiliencyPolicy",
+    "resiliencehub:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resiliencehub:ListResiliencyPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resiliencehub:DescribeResiliencyPolicy",
+    "resiliencehub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resiliencehub:DescribeResiliencyPolicy",
+    "resiliencehub:UpdateResiliencyPolicy",
+    "resiliencehub:TagResource",
+    "resiliencehub:UntagResource",
+    "resiliencehub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PolicyArn"
+ ],
+ "properties": {
+  "DataLocationConstraint": {
+   "enum": [
+    "AnyLocation",
+    "SameContinent",
+    "SameCountry"
+   ],
+   "type": "string"
+  },
+  "Policy": {
+   "$ref": "#/definitions/PolicyMap"
+  },
+  "PolicyArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "PolicyDescription": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "PolicyName": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "Tier": {
+   "enum": [
+    "MissionCritical",
+    "Critical",
+    "Important",
+    "CoreServices",
+    "NonCritical"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyArn"
+ ],
+ "required": [
+  "PolicyName",
+  "Tier",
+  "Policy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-resiliencehub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResilienceHub::ResiliencyPolicy"
+}

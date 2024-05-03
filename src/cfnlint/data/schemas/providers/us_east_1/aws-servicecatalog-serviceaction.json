@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DefinitionParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "servicecatalog:CreateServiceAction",
+    "ssm:DescribeDocument",
+    "iam:GetRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "servicecatalog:DeleteServiceAction"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "servicecatalog:ListServiceActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "servicecatalog:DescribeServiceAction"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "servicecatalog:UpdateServiceAction",
+    "iam:GetRole",
+    "ssm:DescribeDocument"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AcceptLanguage": {
+   "enum": [
+    "en",
+    "jp",
+    "zh"
+   ],
+   "type": "string"
+  },
+  "Definition": {
+   "items": {
+    "$ref": "#/definitions/DefinitionParameter"
+   },
+   "type": "array"
+  },
+  "DefinitionType": {
+   "enum": [
+    "SSM_AUTOMATION"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "DefinitionType",
+  "Definition"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::ServiceCatalog::ServiceAction",
+ "writeOnlyProperties": [
+  "/properties/AcceptLanguage"
+ ]
+}

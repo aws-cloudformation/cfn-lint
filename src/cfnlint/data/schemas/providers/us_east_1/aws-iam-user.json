@@ -1,0 +1,200 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserName"
+ ],
+ "definitions": {
+  "LoginProfile": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "type": "string"
+    },
+    "PasswordResetRequired": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Password"
+   ],
+   "type": "object"
+  },
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "cfnLint": [
+      "AWS::IAM::User/Properties/Policies/PolicyDocument"
+     ],
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyName",
+    "PolicyDocument"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateLoginProfile",
+    "iam:AddUserToGroup",
+    "iam:PutUserPolicy",
+    "iam:AttachUserPolicy",
+    "iam:CreateUser",
+    "iam:GetUser",
+    "iam:TagUser"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteAccessKey",
+    "iam:RemoveUserFromGroup",
+    "iam:DeleteUserPolicy",
+    "iam:DeleteUser",
+    "iam:DetachUserPolicy",
+    "iam:DeleteLoginProfile",
+    "iam:ListAccessKeys",
+    "iam:GetUserPolicy",
+    "iam:ListGroupsForUser",
+    "iam:ListAttachedUserPolicies",
+    "iam:ListUserPolicies",
+    "iam:GetUser",
+    "iam:GetLoginProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:listUsers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetUserPolicy",
+    "iam:ListGroupsForUser",
+    "iam:ListAttachedUserPolicies",
+    "iam:ListUserPolicies",
+    "iam:GetUser",
+    "iam:GetLoginProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:UpdateLoginProfile",
+    "iam:UpdateUser",
+    "iam:PutUserPermissionsBoundary",
+    "iam:AttachUserPolicy",
+    "iam:DeleteUserPolicy",
+    "iam:DeleteUserPermissionsBoundary",
+    "iam:TagUser",
+    "iam:UntagUser",
+    "iam:CreateLoginProfile",
+    "iam:RemoveUserFromGroup",
+    "iam:AddUserToGroup",
+    "iam:PutUserPolicy",
+    "iam:DetachUserPolicy",
+    "iam:GetLoginProfile",
+    "iam:DeleteLoginProfile",
+    "iam:GetUser",
+    "iam:ListUserTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Groups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LoginProfile": {
+   "$ref": "#/definitions/LoginProfile"
+  },
+  "ManagedPolicyArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Path": {
+   "pattern": "^/(.+/)*$",
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "type": "string"
+  },
+  "Policies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Policy"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IAM::User",
+ "writeOnlyProperties": [
+  "/properties/LoginProfile/Password"
+ ]
+}

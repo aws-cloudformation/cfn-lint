@@ -11,7 +11,10 @@ class CircularDependency(CloudFormationLintRule):
 
     id = "E3004"
     shortdesc = "Resource dependencies are not circular"
-    description = "Check that Resources are not circularly dependent by DependsOn, Ref, Sub, or GetAtt"
+    description = (
+        "Check that Resources are not circularly dependent by DependsOn, Ref, Sub, or"
+        " GetAtt"
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources", "circularly", "dependson", "ref", "sub", "getatt"]
 
@@ -23,10 +26,13 @@ class CircularDependency(CloudFormationLintRule):
         for cycle in cfn.graph.get_cycles(cfn):
             source, target = cycle[:2]
             if (
-                cfn.graph.graph.nodes[source].get("type") == '"Resource"'
-                and cfn.graph.graph.nodes[target].get("type") == '"Resource"'
+                cfn.graph.graph.nodes[source].get("type") == "Resource"
+                and cfn.graph.graph.nodes[target].get("type") == "Resource"
             ):
-                message = f"Circular Dependencies for resource {source}. Circular dependency with [{target}]"
+                message = (
+                    f"Circular Dependencies for resource {source}. Circular dependency"
+                    f" with [{target}]"
+                )
                 path = ["Resources", source]
                 matches.append(RuleMatch(path, message))
 

@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeliverCrossAccountRole",
+  "/properties/DeliverLogsPermissionArn",
+  "/properties/LogGroupName",
+  "/properties/LogDestination",
+  "/properties/ResourceId",
+  "/properties/TrafficType",
+  "/properties/LogDestinationType",
+  "/properties/ResourceType",
+  "/properties/LogFormat",
+  "/properties/MaxAggregationInterval",
+  "/properties/DestinationOptions"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateFlowLogs",
+    "ec2:DescribeFlowLogs",
+    "ec2:CreateTags",
+    "iam:PassRole",
+    "logs:CreateLogDelivery",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteFlowLogs",
+    "ec2:DescribeFlowLogs",
+    "logs:DeleteLogDelivery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeFlowLogs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeFlowLogs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeFlowLogs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DeliverCrossAccountRole": {
+   "type": "string"
+  },
+  "DeliverLogsPermissionArn": {
+   "type": "string"
+  },
+  "DestinationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "FileFormat": {
+     "enum": [
+      "plain-text",
+      "parquet"
+     ],
+     "type": "string"
+    },
+    "HiveCompatiblePartitions": {
+     "type": "boolean"
+    },
+    "PerHourPartition": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "FileFormat",
+    "HiveCompatiblePartitions",
+    "PerHourPartition"
+   ],
+   "type": "object"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LogDestination": {
+   "type": "string"
+  },
+  "LogDestinationType": {
+   "enum": [
+    "cloud-watch-logs",
+    "s3",
+    "kinesis-data-firehose"
+   ],
+   "type": "string"
+  },
+  "LogFormat": {
+   "type": "string"
+  },
+  "LogGroupName": {
+   "type": "string"
+  },
+  "MaxAggregationInterval": {
+   "type": "integer"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "NetworkInterface",
+    "Subnet",
+    "VPC",
+    "TransitGateway",
+    "TransitGatewayAttachment"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrafficType": {
+   "enum": [
+    "ACCEPT",
+    "ALL",
+    "REJECT"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResourceType",
+  "ResourceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-flowlog.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::FlowLog"
+}

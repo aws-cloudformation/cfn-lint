@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Resource",
+  "/properties/LFTags"
+ ],
+ "definitions": {
+  "CatalogIdString": {
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "CatalogResource": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "ColumnNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NameString"
+   },
+   "type": "array"
+  },
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "$ref": "#/definitions/DataLakePrincipalString"
+    }
+   },
+   "type": "object"
+  },
+  "DataLakePrincipalString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatabaseResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "LFTagKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LFTagPair": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "TagKey": {
+     "$ref": "#/definitions/LFTagKey"
+    },
+    "TagValues": {
+     "$ref": "#/definitions/TagValueList"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "TagKey",
+    "TagValues"
+   ],
+   "type": "object"
+  },
+  "LFTagValue": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LFTagsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTagPair"
+   },
+   "type": "array"
+  },
+  "NameString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Resource": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "$ref": "#/definitions/CatalogResource"
+    },
+    "Database": {
+     "$ref": "#/definitions/DatabaseResource"
+    },
+    "Table": {
+     "$ref": "#/definitions/TableResource"
+    },
+    "TableWithColumns": {
+     "$ref": "#/definitions/TableWithColumnsResource"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceType": {
+   "enum": [
+    "DATABASE",
+    "TABLE"
+   ],
+   "type": "string"
+  },
+  "TableResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "DatabaseName": {
+     "$ref": "#/definitions/NameString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    },
+    "TableWildcard": {
+     "$ref": "#/definitions/TableWildcard"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "DatabaseName"
+   ],
+   "type": "object"
+  },
+  "TableWildcard": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "TableWithColumnsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "ColumnNames": {
+     "$ref": "#/definitions/ColumnNames"
+    },
+    "DatabaseName": {
+     "$ref": "#/definitions/NameString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "DatabaseName",
+    "Name",
+    "ColumnNames"
+   ],
+   "type": "object"
+  },
+  "TagValueList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTagValue"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lakeformation:AddLFTagsToResource",
+    "glue:GetDatabase",
+    "glue:GetTable"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lakeformation:RemoveLFTagsFromResource",
+    "glue:GetDatabase",
+    "glue:GetTable"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lakeformation:GetResourceLFTags",
+    "glue:GetDatabase",
+    "glue:GetTable"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceIdentifier",
+  "/properties/TagsIdentifier"
+ ],
+ "properties": {
+  "LFTags": {
+   "$ref": "#/definitions/LFTagsList"
+  },
+  "Resource": {
+   "$ref": "#/definitions/Resource"
+  },
+  "ResourceIdentifier": {
+   "type": "string"
+  },
+  "TagsIdentifier": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceIdentifier",
+  "/properties/TagsIdentifier"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Resource",
+  "LFTags"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::LakeFormation::TagAssociation"
+}

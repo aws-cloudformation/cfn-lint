@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MeshName",
+  "/properties/VirtualServiceName",
+  "/properties/MeshOwner"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VirtualNodeServiceProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "VirtualNodeName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VirtualNodeName"
+   ],
+   "type": "object"
+  },
+  "VirtualRouterServiceProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "VirtualRouterName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VirtualRouterName"
+   ],
+   "type": "object"
+  },
+  "VirtualServiceProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "VirtualNode": {
+     "$ref": "#/definitions/VirtualNodeServiceProvider"
+    },
+    "VirtualRouter": {
+     "$ref": "#/definitions/VirtualRouterServiceProvider"
+    }
+   },
+   "type": "object"
+  },
+  "VirtualServiceSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "Provider": {
+     "$ref": "#/definitions/VirtualServiceProvider"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MeshName": {
+   "type": "string"
+  },
+  "MeshOwner": {
+   "type": "string"
+  },
+  "ResourceOwner": {
+   "type": "string"
+  },
+  "Spec": {
+   "$ref": "#/definitions/VirtualServiceSpec"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Uid": {
+   "type": "string"
+  },
+  "VirtualServiceName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceOwner",
+  "/properties/Arn",
+  "/properties/Uid"
+ ],
+ "required": [
+  "MeshName",
+  "VirtualServiceName",
+  "Spec"
+ ],
+ "typeName": "AWS::AppMesh::VirtualService"
+}

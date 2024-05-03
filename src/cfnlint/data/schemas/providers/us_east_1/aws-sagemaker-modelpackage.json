@@ -1,0 +1,1002 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ModelPackageGroupName",
+  "/properties/ModelPackageDescription",
+  "/properties/InferenceSpecification",
+  "/properties/ValidationSpecification",
+  "/properties/SourceAlgorithmSpecification",
+  "/properties/MetadataProperties",
+  "/properties/ModelMetrics",
+  "/properties/ClientToken",
+  "/properties/DriftCheckBaselines",
+  "/properties/Domain",
+  "/properties/Task",
+  "/properties/SamplePayloadUrl"
+ ],
+ "definitions": {
+  "AdditionalInferenceSpecificationDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Containers": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ModelPackageContainerDefinition"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Description": {
+     "maxLength": 1024,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "SupportedContentTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContentType"
+     },
+     "type": "array"
+    },
+    "SupportedRealtimeInferenceInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/InferenceInstanceType"
+     },
+     "type": "array"
+    },
+    "SupportedResponseMIMETypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ResponseMIMEType"
+     },
+     "type": "array"
+    },
+    "SupportedTransformInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TransformInstanceType"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Containers",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "AdditionalInferenceSpecifications": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AdditionalInferenceSpecificationDefinition"
+   },
+   "maxItems": 15,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ApprovalDescription": {
+   "maxLength": 1024,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "Bias": {
+   "additionalProperties": false,
+   "properties": {
+    "PostTrainingReport": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "PreTrainingReport": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "Report": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "CertifyForMarketplace": {
+   "type": "boolean"
+  },
+  "ClientToken": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ContentType": {
+   "maxLength": 256,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "CustomerMetadataProperties": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "minProperties": 1,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*)${1,128}": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "^([\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]*)${1,256}": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3DataSource"
+    }
+   },
+   "required": [
+    "S3DataSource"
+   ],
+   "type": "object"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "DriftCheckBaselines": {
+   "additionalProperties": false,
+   "properties": {
+    "Bias": {
+     "$ref": "#/definitions/DriftCheckBias"
+    },
+    "Explainability": {
+     "$ref": "#/definitions/DriftCheckExplainability"
+    },
+    "ModelDataQuality": {
+     "$ref": "#/definitions/DriftCheckModelDataQuality"
+    },
+    "ModelQuality": {
+     "$ref": "#/definitions/DriftCheckModelQuality"
+    }
+   },
+   "type": "object"
+  },
+  "DriftCheckBias": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigFile": {
+     "$ref": "#/definitions/FileSource"
+    },
+    "PostTrainingConstraints": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "PreTrainingConstraints": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "DriftCheckExplainability": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigFile": {
+     "$ref": "#/definitions/FileSource"
+    },
+    "Constraints": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "DriftCheckModelDataQuality": {
+   "additionalProperties": false,
+   "properties": {
+    "Constraints": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "Statistics": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "DriftCheckModelQuality": {
+   "additionalProperties": false,
+   "properties": {
+    "Constraints": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "Statistics": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "Environment": {
+   "additionalProperties": false,
+   "maxProperties": 16,
+   "patternProperties": {
+    "[\\S\\s]*": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "[a-zA-Z_][a-zA-Z0-9_]*": {
+     "maxLength": 1024,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Explainability": {
+   "additionalProperties": false,
+   "properties": {
+    "Report": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "FileSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentDigest": {
+     "maxLength": 72,
+     "pattern": "^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$",
+     "type": "string"
+    },
+    "ContentType": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "InferenceInstanceType": {
+   "type": "string"
+  },
+  "InferenceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Containers": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ModelPackageContainerDefinition"
+     },
+     "maxItems": 15,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SupportedContentTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContentType"
+     },
+     "type": "array"
+    },
+    "SupportedRealtimeInferenceInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/InferenceInstanceType"
+     },
+     "type": "array"
+    },
+    "SupportedResponseMIMETypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ResponseMIMEType"
+     },
+     "type": "array"
+    },
+    "SupportedTransformInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TransformInstanceType"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Containers",
+    "SupportedContentTypes",
+    "SupportedResponseMIMETypes"
+   ],
+   "type": "object"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "MetadataProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "CommitId": {
+     "maxLength": 1024,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "GeneratedBy": {
+     "maxLength": 1024,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ProjectId": {
+     "maxLength": 1024,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "Repository": {
+     "maxLength": 1024,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricsSource": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentDigest": {
+     "maxLength": 72,
+     "pattern": "^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$",
+     "type": "string"
+    },
+    "ContentType": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContentType",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "ModelApprovalStatus": {
+   "enum": [
+    "Approved",
+    "Rejected",
+    "PendingManualApproval"
+   ],
+   "type": "string"
+  },
+  "ModelDataQuality": {
+   "additionalProperties": false,
+   "properties": {
+    "Constraints": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "Statistics": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "ModelMetrics": {
+   "additionalProperties": false,
+   "properties": {
+    "Bias": {
+     "$ref": "#/definitions/Bias"
+    },
+    "Explainability": {
+     "$ref": "#/definitions/Explainability"
+    },
+    "ModelDataQuality": {
+     "$ref": "#/definitions/ModelDataQuality"
+    },
+    "ModelQuality": {
+     "$ref": "#/definitions/ModelQuality"
+    }
+   },
+   "type": "object"
+  },
+  "ModelPackageArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-cn|-us-gov)?:sagemaker:[a-z0-9\\-]{9,16}:[0-9]{12}:model-package/[\\S]{1,2048}$",
+   "type": "string"
+  },
+  "ModelPackageContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerHostname": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+     "type": "string"
+    },
+    "Environment": {
+     "$ref": "#/definitions/Environment"
+    },
+    "Framework": {
+     "type": "string"
+    },
+    "FrameworkVersion": {
+     "maxLength": 10,
+     "minLength": 3,
+     "pattern": "[0-9]\\.[A-Za-z0-9.]+",
+     "type": "string"
+    },
+    "Image": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[\\S]{1,255}",
+     "type": "string"
+    },
+    "ImageDigest": {
+     "maxLength": 72,
+     "pattern": "^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$",
+     "type": "string"
+    },
+    "ModelDataUrl": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    },
+    "ModelInput": {
+     "additionalProperties": false,
+     "properties": {
+      "DataInputConfig": {
+       "maxLength": 1024,
+       "minLength": 1,
+       "pattern": "[\\S\\s]+",
+       "type": "string"
+      }
+     },
+     "required": [
+      "DataInputConfig"
+     ],
+     "type": "object"
+    },
+    "NearestModelName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Image"
+   ],
+   "type": "object"
+  },
+  "ModelPackageDescription": {
+   "maxLength": 1024,
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*",
+   "type": "string"
+  },
+  "ModelPackageGroupName": {
+   "maxLength": 170,
+   "minLength": 1,
+   "pattern": "(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$",
+   "type": "string"
+  },
+  "ModelPackageName": {
+   "type": "string"
+  },
+  "ModelPackageStatus": {
+   "enum": [
+    "Pending",
+    "Deleting",
+    "InProgress",
+    "Completed",
+    "Failed"
+   ],
+   "type": "string"
+  },
+  "ModelPackageStatusDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ValidationStatuses": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ModelPackageStatusItem"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ModelPackageStatusItem": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureReason": {
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "NotStarted",
+      "Failed",
+      "InProgress",
+      "Completed"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ModelPackageVersion": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ModelQuality": {
+   "additionalProperties": false,
+   "properties": {
+    "Constraints": {
+     "$ref": "#/definitions/MetricsSource"
+    },
+    "Statistics": {
+     "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseMIMEType": {
+   "maxLength": 1024,
+   "pattern": "^[-\\w]+\\/.+$",
+   "type": "string"
+  },
+  "S3DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataType": {
+     "enum": [
+      "ManifestFile",
+      "S3Prefix",
+      "AugmentedManifestFile"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3DataType",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "SamplePayloadUrl": {
+   "maxLength": 1024,
+   "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+   "type": "string"
+  },
+  "SkipModelValidation": {
+   "enum": [
+    "None",
+    "All"
+   ],
+   "type": "string"
+  },
+  "SourceAlgorithm": {
+   "additionalProperties": false,
+   "properties": {
+    "AlgorithmName": {
+     "maxLength": 170,
+     "minLength": 1,
+     "pattern": "(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$",
+     "type": "string"
+    },
+    "ModelDataUrl": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlgorithmName"
+   ],
+   "type": "object"
+  },
+  "SourceAlgorithmSpecification": {
+   "additionalProperties": false,
+   "insertionOrder": true,
+   "properties": {
+    "SourceAlgorithms": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SourceAlgorithm"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SourceAlgorithms"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Task": {
+   "type": "string"
+  },
+  "TransformInput": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionType": {
+     "enum": [
+      "None",
+      "Gzip"
+     ],
+     "type": "string"
+    },
+    "ContentType": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "DataSource": {
+     "$ref": "#/definitions/DataSource"
+    },
+    "SplitType": {
+     "enum": [
+      "None",
+      "TFRecord",
+      "Line",
+      "RecordIO"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataSource"
+   ],
+   "type": "object"
+  },
+  "TransformInstanceType": {
+   "type": "string"
+  },
+  "TransformJobDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchStrategy": {
+     "enum": [
+      "MultiRecord",
+      "SingleRecord"
+     ],
+     "type": "string"
+    },
+    "Environment": {
+     "$ref": "#/definitions/Environment"
+    },
+    "MaxConcurrentTransforms": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxPayloadInMB": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "TransformInput": {
+     "$ref": "#/definitions/TransformInput"
+    },
+    "TransformOutput": {
+     "$ref": "#/definitions/TransformOutput"
+    },
+    "TransformResources": {
+     "$ref": "#/definitions/TransformResources"
+    }
+   },
+   "required": [
+    "TransformResources",
+    "TransformOutput",
+    "TransformInput"
+   ],
+   "type": "object"
+  },
+  "TransformOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "Accept": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "AssembleWith": {
+     "enum": [
+      "None",
+      "Line"
+     ],
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3OutputPath": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3OutputPath"
+   ],
+   "type": "object"
+  },
+  "TransformResources": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceCount": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "VolumeKmsKeyId": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstanceCount",
+    "InstanceType"
+   ],
+   "type": "object"
+  },
+  "ValidationProfile": {
+   "additionalProperties": false,
+   "properties": {
+    "ProfileName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "TransformJobDefinition": {
+     "$ref": "#/definitions/TransformJobDefinition"
+    }
+   },
+   "required": [
+    "TransformJobDefinition",
+    "ProfileName"
+   ],
+   "type": "object"
+  },
+  "ValidationSpecification": {
+   "additionalProperties": false,
+   "insertionOrder": true,
+   "properties": {
+    "ValidationProfiles": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ValidationProfile"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ValidationRole": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValidationProfiles",
+    "ValidationRole"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:BatchGetImage",
+    "ecr:DescribeImages",
+    "ecr:StartImageScan",
+    "ecr:DescribeImageScanFindings",
+    "sagemaker:AddTags",
+    "sagemaker:CreateModel",
+    "sagemaker:CreateModelPackage",
+    "sagemaker:CreateTrainingJob",
+    "sagemaker:CreateTransformJob",
+    "sagemaker:DescribeTransformJob",
+    "sagemaker:DescribeModelPackage",
+    "sagemaker:ListTags",
+    "iam:PassRole",
+    "s3:GetObject"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteModelPackage",
+    "sagemaker:DescribeModelPackage"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ModelPackageGroupName": {
+      "$ref": "resource-schema.json#/properties/ModelPackageGroupName"
+     }
+    }
+   },
+   "permissions": [
+    "sagemaker:ListModelPackages"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModelPackage",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateModelPackage",
+    "sagemaker:DescribeModelPackage",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelPackageArn"
+ ],
+ "properties": {
+  "AdditionalInferenceSpecifications": {
+   "$ref": "#/definitions/AdditionalInferenceSpecifications"
+  },
+  "AdditionalInferenceSpecificationsToAdd": {
+   "$ref": "#/definitions/AdditionalInferenceSpecifications"
+  },
+  "ApprovalDescription": {
+   "$ref": "#/definitions/ApprovalDescription"
+  },
+  "CertifyForMarketplace": {
+   "$ref": "#/definitions/CertifyForMarketplace"
+  },
+  "ClientToken": {
+   "$ref": "#/definitions/ClientToken"
+  },
+  "CreationTime": {
+   "$ref": "#/definitions/CreationTime"
+  },
+  "CustomerMetadataProperties": {
+   "$ref": "#/definitions/CustomerMetadataProperties"
+  },
+  "Domain": {
+   "$ref": "#/definitions/Domain"
+  },
+  "DriftCheckBaselines": {
+   "$ref": "#/definitions/DriftCheckBaselines"
+  },
+  "InferenceSpecification": {
+   "$ref": "#/definitions/InferenceSpecification"
+  },
+  "LastModifiedTime": {
+   "$ref": "#/definitions/LastModifiedTime"
+  },
+  "MetadataProperties": {
+   "$ref": "#/definitions/MetadataProperties"
+  },
+  "ModelApprovalStatus": {
+   "$ref": "#/definitions/ModelApprovalStatus"
+  },
+  "ModelMetrics": {
+   "$ref": "#/definitions/ModelMetrics"
+  },
+  "ModelPackageArn": {
+   "$ref": "#/definitions/ModelPackageArn"
+  },
+  "ModelPackageDescription": {
+   "$ref": "#/definitions/ModelPackageDescription"
+  },
+  "ModelPackageGroupName": {
+   "$ref": "#/definitions/ModelPackageGroupName"
+  },
+  "ModelPackageName": {
+   "$ref": "#/definitions/ModelPackageName"
+  },
+  "ModelPackageStatus": {
+   "$ref": "#/definitions/ModelPackageStatus"
+  },
+  "ModelPackageStatusDetails": {
+   "$ref": "#/definitions/ModelPackageStatusDetails"
+  },
+  "ModelPackageVersion": {
+   "$ref": "#/definitions/ModelPackageVersion"
+  },
+  "SamplePayloadUrl": {
+   "$ref": "#/definitions/SamplePayloadUrl"
+  },
+  "SkipModelValidation": {
+   "$ref": "#/definitions/SkipModelValidation"
+  },
+  "SourceAlgorithmSpecification": {
+   "$ref": "#/definitions/SourceAlgorithmSpecification"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Task": {
+   "$ref": "#/definitions/Task"
+  },
+  "ValidationSpecification": {
+   "$ref": "#/definitions/ValidationSpecification"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelPackageArn",
+  "/properties/CreationTime",
+  "/properties/ModelPackageStatus"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::ModelPackage",
+ "writeOnlyProperties": [
+  "/properties/ClientToken",
+  "/properties/AdditionalInferenceSpecificationsToAdd"
+ ]
+}

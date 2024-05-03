@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KafkaVersionsList",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "KafkaVersionsList": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "LatestRevision": {
+   "additionalProperties": false,
+   "properties": {
+    "CreationTime": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kafka:CreateConfiguration",
+    "Kafka:DescribeConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kafka:DeleteConfiguration",
+    "kafka:DescribeConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kafka:ListConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kafka:DescribeConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kafka:UpdateConfiguration",
+    "kafka:DescribeConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "KafkaVersionsList": {
+   "$ref": "#/definitions/KafkaVersionsList"
+  },
+  "LatestRevision": {
+   "$ref": "#/definitions/LatestRevision"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ServerProperties": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/LatestRevision/CreationTime",
+  "/properties/LatestRevision/Revision",
+  "/properties/LatestRevision/Description"
+ ],
+ "required": [
+  "ServerProperties",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::MSK::Configuration",
+ "writeOnlyProperties": [
+  "/properties/ServerProperties"
+ ]
+}

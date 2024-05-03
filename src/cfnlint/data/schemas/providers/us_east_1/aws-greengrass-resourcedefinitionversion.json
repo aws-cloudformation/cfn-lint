@@ -1,0 +1,198 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Resources",
+  "/properties/ResourceDefinitionId"
+ ],
+ "definitions": {
+  "GroupOwnerSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAddGroupOwner": {
+     "type": "boolean"
+    },
+    "GroupOwner": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AutoAddGroupOwner"
+   ],
+   "type": "object"
+  },
+  "LocalDeviceResourceData": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupOwnerSetting": {
+     "$ref": "#/definitions/GroupOwnerSetting"
+    },
+    "SourcePath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourcePath"
+   ],
+   "type": "object"
+  },
+  "LocalVolumeResourceData": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationPath": {
+     "type": "string"
+    },
+    "GroupOwnerSetting": {
+     "$ref": "#/definitions/GroupOwnerSetting"
+    },
+    "SourcePath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourcePath",
+    "DestinationPath"
+   ],
+   "type": "object"
+  },
+  "ResourceDataContainer": {
+   "additionalProperties": false,
+   "properties": {
+    "LocalDeviceResourceData": {
+     "$ref": "#/definitions/LocalDeviceResourceData"
+    },
+    "LocalVolumeResourceData": {
+     "$ref": "#/definitions/LocalVolumeResourceData"
+    },
+    "S3MachineLearningModelResourceData": {
+     "$ref": "#/definitions/S3MachineLearningModelResourceData"
+    },
+    "SageMakerMachineLearningModelResourceData": {
+     "$ref": "#/definitions/SageMakerMachineLearningModelResourceData"
+    },
+    "SecretsManagerSecretResourceData": {
+     "$ref": "#/definitions/SecretsManagerSecretResourceData"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceDownloadOwnerSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupOwner": {
+     "type": "string"
+    },
+    "GroupPermission": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupOwner",
+    "GroupPermission"
+   ],
+   "type": "object"
+  },
+  "ResourceInstance": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "ResourceDataContainer": {
+     "$ref": "#/definitions/ResourceDataContainer"
+    }
+   },
+   "required": [
+    "ResourceDataContainer",
+    "Id",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "S3MachineLearningModelResourceData": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationPath": {
+     "type": "string"
+    },
+    "OwnerSetting": {
+     "$ref": "#/definitions/ResourceDownloadOwnerSetting"
+    },
+    "S3Uri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationPath",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "SageMakerMachineLearningModelResourceData": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationPath": {
+     "type": "string"
+    },
+    "OwnerSetting": {
+     "$ref": "#/definitions/ResourceDownloadOwnerSetting"
+    },
+    "SageMakerJobArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationPath",
+    "SageMakerJobArn"
+   ],
+   "type": "object"
+  },
+  "SecretsManagerSecretResourceData": {
+   "additionalProperties": false,
+   "properties": {
+    "ARN": {
+     "type": "string"
+    },
+    "AdditionalStagingLabelsToDownload": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "ARN"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "ResourceDefinitionId": {
+   "type": "string"
+  },
+  "Resources": {
+   "items": {
+    "$ref": "#/definitions/ResourceInstance"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Resources",
+  "ResourceDefinitionId"
+ ],
+ "typeName": "AWS::Greengrass::ResourceDefinitionVersion"
+}

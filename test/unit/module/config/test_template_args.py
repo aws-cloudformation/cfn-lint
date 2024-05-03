@@ -91,3 +91,15 @@ class TestTempalteArgs(BaseTestCase):
         )
 
         self.assertEqual(config.template_args.get("configure_rules"), None)
+
+    def test_bad_template_structure(self):
+        """test template args"""
+        config = cfnlint.config.TemplateArgs([])
+
+        self.assertEqual(config._template_args, {})
+
+    def test_bad_config_structure(self):
+        """test template args"""
+        config = cfnlint.config.TemplateArgs({"Metadata": {"cfn-lint": {"config": []}}})
+
+        self.assertEqual(config._template_args, {})

@@ -1,6 +1,203 @@
+[build-system]
+requires = [
+  "setuptools >= 65.5.1",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "cfnlint.version.__version__"}
+readme = {file = ["README.md"], content-type = "text/markdown"}
+
+[project]
+name = "cfn-lint"
+description = "Checks CloudFormation templates for practices and behaviour that could potentially be improved"
+requires-python = ">=3.8"
+license = {text = "MIT no attribution"}
+keywords = ["aws", "lint"]
+authors = [
+  {email = "kddejong@amazon.com"},
+  {name = "Kevin DeJong"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dynamic = ["version", "readme"]
+dependencies = [
+    "pyyaml>5.4",
+    "aws-sam-translator>=1.87.0",
+    "jsonpatch",
+    "networkx>=2.4,<4",
+    "sympy>=1.0.0",
+    "regex",
+    "typing_extensions",
+]
+
+[project.optional-dependencies]
+graph = [
+    "pydot"
+]
+junit = [
+    "junit-xml~=1.9"
+]
+sarif = [
+    "jschema_to_python~=1.2.3",
+    "sarif-om~=1.0.4",
+]
+
+[project.scripts]
+cfn-lint = "cfnlint.runner:main"
+
+[tool.setuptools.package-data]
+cfnlint = ["data/**/*.json"]
+
+[project.urls]
+Homepage = "https://github.com/aws-cloudformation/cfn-lint"
+Documentation = "https://github.com/aws-cloudformation/cfn-lint"
+Issues = "https://github.com/aws-cloudformation/cfn-lint/issues"
+Changelog = "https://github.com/aws-cloudformation/cfn-lint/blob/main/CHANGELOG.md"
+Source = "https://github.com/aws-cloudformation/cfn-lint"
+
+[tool.isort]
+profile = "black"
 
 [tool.black]
 skip-string-normalization = false
+line-length = 88
 
 [tool.bandit]
 skips = ["B101", "B303", "B310", "B110", "B112", "B324", "B404", "B603", "B607"]
+exclude_dirs = ["tests", "scripts"]
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+lint.select = ["E", "F"]
+lint.ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+lint.fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+lint.unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+# Same as Black.
+line-length = 88
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+addopts = [
+  "-m not data"
+]
+markers = [
+  "data: marks tests as slow (deselect with '-m \"not data\"')",
+]
+testpaths = [
+    "test",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+  "src/cfnlint"
+]
+
+[tool.coverage.report]
+skip_empty = true
+skip_covered = true
+show_missing = true
+sort = "Cover"
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:"
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+files = [
+  "src/cfnlint/**/*.py"
+]
+exclude = [
+  "src/cfnlint/data/"
+]
+
+# Per-module options:
+[[tool.mypy.overrides]]
+module = "networkx.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pydot.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pygraphviz.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "importlib_resources.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "samtranslator.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "sarif_om.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "jschema_to_python.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "junit_xml.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "jsonpatch.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "urllib2.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "json.*"
+ignore_missing_imports = true

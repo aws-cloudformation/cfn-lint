@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Oidc",
+  "/properties/Type",
+  "/properties/IdentityProviderConfigName",
+  "/properties/ClusterName"
+ ],
+ "definitions": {
+  "OidcIdentityProviderConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientId": {
+     "type": "string"
+    },
+    "GroupsClaim": {
+     "type": "string"
+    },
+    "GroupsPrefix": {
+     "type": "string"
+    },
+    "IssuerUrl": {
+     "type": "string"
+    },
+    "RequiredClaims": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RequiredClaim"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "UsernameClaim": {
+     "type": "string"
+    },
+    "UsernamePrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientId",
+    "IssuerUrl"
+   ],
+   "type": "object"
+  },
+  "RequiredClaim": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 253,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:DescribeUpdate",
+    "eks:AssociateIdentityProviderConfig",
+    "eks:DescribeIdentityProviderConfig",
+    "eks:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DisassociateIdentityProviderConfig",
+    "eks:DescribeIdentityProviderConfig"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListIdentityProviderConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeIdentityProviderConfig"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "eks:DescribeIdentityProviderConfig",
+    "eks:TagResource",
+    "eks:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdentityProviderConfigName",
+  "/properties/ClusterName",
+  "/properties/Type"
+ ],
+ "properties": {
+  "ClusterName": {
+   "type": "string"
+  },
+  "IdentityProviderConfigArn": {
+   "type": "string"
+  },
+  "IdentityProviderConfigName": {
+   "type": "string"
+  },
+  "Oidc": {
+   "$ref": "#/definitions/OidcIdentityProviderConfig"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "oidc"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdentityProviderConfigArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Type",
+  "ClusterName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::IdentityProviderConfig"
+}

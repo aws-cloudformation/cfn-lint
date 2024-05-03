@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlertName",
+  "/properties/AlertDescription",
+  "/properties/AnomalyDetectorArn",
+  "/properties/AlertSensitivityThreshold",
+  "/properties/Action"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaConfiguration": {
+     "$ref": "#/definitions/LambdaConfiguration"
+    },
+    "SNSConfiguration": {
+     "$ref": "#/definitions/SNSConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):.*:.*:.*:.+",
+   "type": "string"
+  },
+  "LambdaConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "SNSConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "SnsTopicArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SnsTopicArn"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lookoutmetrics:CreateAlert",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lookoutmetrics:DeleteAlert"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lookoutmetrics:ListAlerts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lookoutmetrics:DescribeAlert"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/Action"
+  },
+  "AlertDescription": {
+   "maxLength": 256,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "AlertName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "AlertSensitivityThreshold": {
+   "maximum": 100,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "AnomalyDetectorArn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):.*:.*:.*:.+",
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AnomalyDetectorArn",
+  "AlertSensitivityThreshold",
+  "Action"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lookout-for-metrics.git",
+ "typeName": "AWS::LookoutMetrics::Alert"
+}

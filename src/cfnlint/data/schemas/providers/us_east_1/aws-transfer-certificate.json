@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Certificate",
+  "/properties/CertificateChain",
+  "/properties/PrivateKey"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:ImportCertificate",
+    "transfer:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteCertificate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "transfer:ListCertificates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeCertificate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UpdateCertificate",
+    "transfer:UnTagResource",
+    "transfer:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CertificateId"
+ ],
+ "properties": {
+  "ActiveDate": {
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "Certificate": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "^[\\t\\n\\r\\u0020-\\u00FF]+$",
+   "type": "string"
+  },
+  "CertificateChain": {
+   "maxLength": 2097152,
+   "minLength": 1,
+   "pattern": "^[\\t\\n\\r\\u0020-\\u00FF]+$",
+   "type": "string"
+  },
+  "CertificateId": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^cert-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[\\u0021-\\u007E]+$",
+   "type": "string"
+  },
+  "InactiveDate": {
+   "type": "string"
+  },
+  "NotAfterDate": {
+   "type": "string"
+  },
+  "NotBeforeDate": {
+   "type": "string"
+  },
+  "PrivateKey": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "^[\\t\\n\\r\\u0020-\\u00FF]+$",
+   "type": "string"
+  },
+  "Serial": {
+   "maxLength": 48,
+   "minLength": 0,
+   "pattern": "^[0-9a-fA-F{}:?]*$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "PENDING",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "CERTIFICATE",
+    "CERTIFICATE_WITH_PRIVATE_KEY"
+   ],
+   "type": "string"
+  },
+  "Usage": {
+   "enum": [
+    "SIGNING",
+    "ENCRYPTION",
+    "TLS"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CertificateId",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/Serial",
+  "/properties/NotAfterDate",
+  "/properties/NotBeforeDate"
+ ],
+ "required": [
+  "Certificate",
+  "Usage"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Certificate",
+ "writeOnlyProperties": [
+  "/properties/PrivateKey"
+ ]
+}

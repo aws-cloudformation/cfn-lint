@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrList": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "LocationName": {
+     "maxLength": 16,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LocationName",
+    "CidrList"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:CreateCidrCollection",
+    "route53:ChangeCidrCollection"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:DeleteCidrCollection",
+    "route53:ChangeCidrCollection"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:ListCidrCollections",
+    "route53:ListCidrBlocks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:ListCidrCollections",
+    "route53:ListCidrBlocks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53:ChangeCidrCollection"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Locations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Location"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z_\\-]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53.git",
+ "tagging": {
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Route53::CidrCollection"
+}

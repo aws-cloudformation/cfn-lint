@@ -1,0 +1,62 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Actions",
+  "/properties/CertificateAuthorityArn",
+  "/properties/Principal",
+  "/properties/SourceAccount"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm-pca:CreatePermission",
+    "acm-pca:ListPermissions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm-pca:DeletePermission"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm-pca:ListPermissions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CertificateAuthorityArn",
+  "/properties/Principal"
+ ],
+ "properties": {
+  "Actions": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CertificateAuthorityArn": {
+   "type": "string"
+  },
+  "Principal": {
+   "type": "string"
+  },
+  "SourceAccount": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "Actions",
+  "CertificateAuthorityArn",
+  "Principal"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ACMPCA::Permission"
+}

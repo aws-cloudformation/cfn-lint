@@ -1,0 +1,285 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName",
+  "/properties/OutpostId"
+ ],
+ "definitions": {
+  "AbortIncompleteMultipartUpload": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterInitiation": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ],
+   "type": "object"
+  },
+  "FilterAndOperator": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Prefix": {
+       "$ref": "#/definitions/FilterPrefix"
+      },
+      "Tags": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/FilterTag"
+       },
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "required": [
+      "Tags"
+     ],
+     "type": "object"
+    }
+   ]
+  },
+  "FilterPrefix": {
+   "type": "string"
+  },
+  "FilterTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "Status",
+      "AbortIncompleteMultipartUpload"
+     ]
+    },
+    {
+     "required": [
+      "Status",
+      "ExpirationDate"
+     ]
+    },
+    {
+     "required": [
+      "Status",
+      "ExpirationInDays"
+     ]
+    }
+   ],
+   "properties": {
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    },
+    "ExpirationDate": {
+     "$ref": "#/definitions/iso8601UTC"
+    },
+    "ExpirationInDays": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Filter": {
+     "additionalProperties": false,
+     "oneOf": [
+      {
+       "required": [
+        "Prefix"
+       ]
+      },
+      {
+       "required": [
+        "Tag"
+       ]
+      },
+      {
+       "required": [
+        "AndOperator"
+       ]
+      }
+     ],
+     "properties": {
+      "AndOperator": {
+       "$ref": "#/definitions/FilterAndOperator"
+      },
+      "Prefix": {
+       "$ref": "#/definitions/FilterPrefix"
+      },
+      "Tag": {
+       "$ref": "#/definitions/FilterTag"
+      }
+     },
+     "type": "object"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:=+\\/\\-@%]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3-outposts:CreateBucket",
+    "s3-outposts:PutBucketTagging",
+    "s3-outposts:PutLifecycleConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3-outposts:DeleteBucket"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "OutpostId": {
+      "$ref": "resource-schema.json#/properties/OutpostId"
+     }
+    },
+    "required": [
+     "OutpostId"
+    ]
+   },
+   "permissions": [
+    "s3-outposts:ListRegionalBuckets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3-outposts:GetBucket",
+    "s3-outposts:GetBucketTagging",
+    "s3-outposts:GetLifecycleConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3-outposts:PutBucketTagging",
+    "s3-outposts:DeleteBucketTagging",
+    "s3-outposts:PutLifecycleConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/bucket\\/[^:]+$",
+   "type": "string"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "(?=^.{3,63}$)(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+   "type": "string"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "OutpostId": {
+   "pattern": "^(op-[a-f0-9]{17}|\\d{12}|ec2)$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "BucketName",
+  "OutpostId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3Outposts::Bucket"
+}

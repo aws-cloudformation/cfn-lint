@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParentGroupArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UserHierarchyGroupArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent-group/[-a-zA-Z0-9]*$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateUserHierarchyGroup",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteUserHierarchyGroup",
+    "connect:UntagResource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListUserHierarchyGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeUserHierarchyGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateUserHierarchyGroupName",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserHierarchyGroupArn"
+ ],
+ "properties": {
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ParentGroupArn": {
+   "$ref": "#/definitions/UserHierarchyGroupArn"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserHierarchyGroupArn": {
+   "$ref": "#/definitions/UserHierarchyGroupArn"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/UserHierarchyGroupArn"
+ ],
+ "required": [
+  "Name",
+  "InstanceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::UserHierarchyGroup"
+}

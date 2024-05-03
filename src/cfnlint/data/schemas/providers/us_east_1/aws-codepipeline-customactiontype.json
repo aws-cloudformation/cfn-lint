@@ -1,0 +1,201 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Category",
+  "/properties/ConfigurationProperties",
+  "/properties/InputArtifactDetails",
+  "/properties/OutputArtifactDetails",
+  "/properties/Provider",
+  "/properties/Settings",
+  "/properties/Version"
+ ],
+ "definitions": {
+  "ArtifactDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumCount": {
+     "type": "integer"
+    },
+    "MinimumCount": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaximumCount",
+    "MinimumCount"
+   ],
+   "type": "object"
+  },
+  "ConfigurationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Queryable": {
+     "type": "boolean"
+    },
+    "Required": {
+     "type": "boolean"
+    },
+    "Secret": {
+     "type": "boolean"
+    },
+    "Type": {
+     "enum": [
+      "String",
+      "Number",
+      "Boolean"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Name",
+    "Required",
+    "Secret"
+   ],
+   "type": "object"
+  },
+  "Settings": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityUrlTemplate": {
+     "type": "string"
+    },
+    "ExecutionUrlTemplate": {
+     "type": "string"
+    },
+    "RevisionUrlTemplate": {
+     "type": "string"
+    },
+    "ThirdPartyConfigurationUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codepipeline:CreateCustomActionType",
+    "codepipeline:TagResource",
+    "codepipeline:ListActionTypes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codepipeline:DeleteCustomActionType",
+    "codepipeline:ListActionTypes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codepipeline:ListActionTypes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codepipeline:ListActionTypes",
+    "codepipeline:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codepipeline:ListActionTypes",
+    "codepipeline:TagResource",
+    "codepipeline:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Category",
+  "/properties/Provider",
+  "/properties/Version"
+ ],
+ "properties": {
+  "Category": {
+   "type": "string"
+  },
+  "ConfigurationProperties": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigurationProperties"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InputArtifactDetails": {
+   "$ref": "#/definitions/ArtifactDetails"
+  },
+  "OutputArtifactDetails": {
+   "$ref": "#/definitions/ArtifactDetails"
+  },
+  "Provider": {
+   "type": "string"
+  },
+  "Settings": {
+   "$ref": "#/definitions/Settings"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Category",
+  "InputArtifactDetails",
+  "OutputArtifactDetails",
+  "Provider",
+  "Version"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodePipeline::CustomActionType",
+ "writeOnlyProperties": [
+  "/properties/ConfigurationProperties/*/Type"
+ ]
+}

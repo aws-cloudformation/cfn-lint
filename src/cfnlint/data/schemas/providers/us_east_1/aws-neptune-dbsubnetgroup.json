@@ -1,0 +1,60 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DBSubnetGroupDescription": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DBSubnetGroupDescription",
+  "SubnetIds"
+ ],
+ "typeName": "AWS::Neptune::DBSubnetGroup"
+}

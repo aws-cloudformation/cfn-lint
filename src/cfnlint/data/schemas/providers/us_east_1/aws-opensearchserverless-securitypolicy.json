@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "SecurityPolicyType": {
+   "enum": [
+    "encryption",
+    "network"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:GetSecurityPolicy",
+    "aoss:CreateSecurityPolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:GetSecurityPolicy",
+    "aoss:DeleteSecurityPolicy"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Type": {
+      "$ref": "resource-schema.json#/properties/Type"
+     }
+    },
+    "required": [
+     "Type"
+    ]
+   },
+   "permissions": [
+    "aoss:ListSecurityPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:GetSecurityPolicy",
+    "kms:DescribeKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:GetSecurityPolicy",
+    "aoss:UpdateSecurityPolicy",
+    "kms:DescribeKey",
+    "kms:CreateGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Type",
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "Policy": {
+   "maxLength": 20480,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+",
+   "type": "string"
+  },
+  "Type": {
+   "$ref": "#/definitions/SecurityPolicyType"
+  }
+ },
+ "required": [
+  "Type",
+  "Name",
+  "Policy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::SecurityPolicy"
+}

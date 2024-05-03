@@ -1,0 +1,85 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGatewayRouteTable",
+    "ec2:CreateTags",
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGatewayRouteTable",
+    "ec2:DescribeTransitGatewayRouteTables",
+    "ec2:GetTransitGatewayRouteTableAssociations",
+    "ec2:DisassociateTransitGatewayRouteTable"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayRouteTables"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayRouteTableId"
+ ],
+ "properties": {
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "TransitGatewayRouteTableId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayRouteTableId"
+ ],
+ "required": [
+  "TransitGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayRouteTable"
+}

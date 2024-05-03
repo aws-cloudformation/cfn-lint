@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codebuild:BatchGetFleets",
+    "codebuild:CreateFleet"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codebuild:BatchGetFleets",
+    "codebuild:DeleteFleet"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codebuild:ListFleets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codebuild:BatchGetFleets"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codebuild:BatchGetFleets",
+    "codebuild:UpdateFleet"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "BaseCapacity": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ComputeType": {
+   "enum": [
+    "BUILD_GENERAL1_SMALL",
+    "BUILD_GENERAL1_MEDIUM",
+    "BUILD_GENERAL1_LARGE",
+    "BUILD_GENERAL1_2XLARGE"
+   ],
+   "type": "string"
+  },
+  "EnvironmentType": {
+   "enum": [
+    "WINDOWS_SERVER_2019_CONTAINER",
+    "WINDOWS_SERVER_2022_CONTAINER",
+    "LINUX_CONTAINER",
+    "LINUX_GPU_CONTAINER",
+    "ARM_CONTAINER"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeBuild::Fleet"
+}

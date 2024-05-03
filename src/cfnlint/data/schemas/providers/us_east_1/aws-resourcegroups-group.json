@@ -1,0 +1,205 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Configuration": {
+   "items": {
+    "$ref": "#/definitions/ConfigurationItem"
+   },
+   "type": "array"
+  },
+  "ConfigurationItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Parameters": {
+     "items": {
+      "$ref": "#/definitions/ConfigurationParameter"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigurationParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Query": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTypeFilters": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "StackIdentifier": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "Query": {
+     "$ref": "#/definitions/Query"
+    },
+    "Type": {
+     "enum": [
+      "TAG_FILTERS_1_0",
+      "CLOUDFORMATION_STACK_1_0"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resource-groups:CreateGroup",
+    "resource-groups:Tag",
+    "cloudformation:DescribeStacks",
+    "cloudformation:ListStackResources",
+    "resource-groups:ListGroupResources",
+    "resource-groups:GroupResources"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resource-groups:DeleteGroup",
+    "resource-groups:UnGroupResources"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resource-groups:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resource-groups:GetGroup",
+    "resource-groups:GetGroupQuery",
+    "resource-groups:GetTags",
+    "resource-groups:GetGroupConfiguration",
+    "resource-groups:ListGroupResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resource-groups:UpdateGroup",
+    "resource-groups:GetTags",
+    "resource-groups:GetGroupQuery",
+    "resource-groups:UpdateGroupQuery",
+    "resource-groups:Tag",
+    "resource-groups:Untag",
+    "resource-groups:PutGroupConfiguration",
+    "resource-groups:GetGroupConfiguration",
+    "resource-groups:ListGroupResources",
+    "resource-groups:GroupResources",
+    "resource-groups:UnGroupResources"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/Configuration"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "ResourceQuery": {
+   "$ref": "#/definitions/ResourceQuery"
+  },
+  "Resources": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResourceGroups::Group"
+}

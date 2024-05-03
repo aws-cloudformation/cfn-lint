@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "CampaignHook": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaFunctionName": {
+     "type": "string"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "WebUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Limits": {
+   "additionalProperties": false,
+   "properties": {
+    "Daily": {
+     "type": "integer"
+    },
+    "MaximumDuration": {
+     "type": "integer"
+    },
+    "MessagesPerSecond": {
+     "type": "integer"
+    },
+    "Total": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "QuietTime": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "type": "string"
+    },
+    "Start": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Start",
+    "End"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "type": "string"
+  },
+  "CampaignHook": {
+   "$ref": "#/definitions/CampaignHook"
+  },
+  "CloudWatchMetricsEnabled": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Limits": {
+   "$ref": "#/definitions/Limits"
+  },
+  "QuietTime": {
+   "$ref": "#/definitions/QuietTime"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ApplicationId"
+ ],
+ "typeName": "AWS::Pinpoint::ApplicationSettings"
+}

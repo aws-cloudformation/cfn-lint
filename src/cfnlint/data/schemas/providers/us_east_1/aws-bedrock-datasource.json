@@ -1,0 +1,252 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseId",
+  "/properties/VectorIngestionConfiguration"
+ ],
+ "definitions": {
+  "ChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChunkingStrategy": {
+     "$ref": "#/definitions/ChunkingStrategy"
+    },
+    "FixedSizeChunkingConfiguration": {
+     "$ref": "#/definitions/FixedSizeChunkingConfiguration"
+    }
+   },
+   "required": [
+    "ChunkingStrategy"
+   ],
+   "type": "object"
+  },
+  "ChunkingStrategy": {
+   "enum": [
+    "FIXED_SIZE",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "DataDeletionPolicy": {
+   "enum": [
+    "RETAIN",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "DataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Configuration": {
+     "$ref": "#/definitions/S3DataSourceConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSourceType"
+    }
+   },
+   "required": [
+    "Type",
+    "S3Configuration"
+   ],
+   "type": "object"
+  },
+  "DataSourceStatus": {
+   "enum": [
+    "AVAILABLE",
+    "DELETING",
+    "DELETE_UNSUCCESSFUL"
+   ],
+   "type": "string"
+  },
+  "DataSourceType": {
+   "enum": [
+    "S3"
+   ],
+   "type": "string"
+  },
+  "FixedSizeChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "OverlapPercentage": {
+     "maximum": 99,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTokens",
+    "OverlapPercentage"
+   ],
+   "type": "object"
+  },
+  "S3DataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(|-cn|-us-gov):s3:::[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "BucketOwnerAccountId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "InclusionPrefixes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 300,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "BucketArn"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VectorIngestionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChunkingConfiguration": {
+     "$ref": "#/definitions/ChunkingConfiguration"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "bedrock:CreateDataSource",
+    "bedrock:GetDataSource",
+    "bedrock:GetKnowledgeBase"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "bedrock:GetDataSource",
+    "bedrock:DeleteDataSource"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "KnowledgeBaseId": {
+      "$ref": "resource-schema.json#/properties/KnowledgeBaseId"
+     }
+    },
+    "required": [
+     "KnowledgeBaseId"
+    ]
+   },
+   "permissions": [
+    "bedrock:ListDataSources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "bedrock:GetDataSource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "bedrock:GetDataSource",
+    "bedrock:UpdateDataSource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KnowledgeBaseId",
+  "/properties/DataSourceId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DataDeletionPolicy": {
+   "$ref": "#/definitions/DataDeletionPolicy"
+  },
+  "DataSourceConfiguration": {
+   "$ref": "#/definitions/DataSourceConfiguration"
+  },
+  "DataSourceId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "DataSourceStatus": {
+   "$ref": "#/definitions/DataSourceStatus"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FailureReasons": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
+  },
+  "KnowledgeBaseId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  },
+  "VectorIngestionConfiguration": {
+   "$ref": "#/definitions/VectorIngestionConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataSourceId",
+  "/properties/DataSourceStatus",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/FailureReasons"
+ ],
+ "required": [
+  "DataSourceConfiguration",
+  "Name",
+  "KnowledgeBaseId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "taggable": false
+ },
+ "typeName": "AWS::Bedrock::DataSource"
+}

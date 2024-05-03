@@ -1,0 +1,193 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/MigrationProjectName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "DataProviderDescriptor": {
+   "additionalProperties": false,
+   "properties": {
+    "DataProviderArn": {
+     "type": "string"
+    },
+    "DataProviderIdentifier": {
+     "type": "string"
+    },
+    "DataProviderName": {
+     "type": "string"
+    },
+    "SecretsManagerAccessRoleArn": {
+     "type": "string"
+    },
+    "SecretsManagerSecretId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/MigrationProjectCreationTime"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "dms:CreateMigrationProject",
+    "dms:ListMigrationProjects",
+    "dms:DescribeMigrationProjects",
+    "dms:AddTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "dms:DeleteMigrationProject"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "dms:ListMigrationProjects",
+    "dms:DescribeMigrationProjects",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "dms:DescribeMigrationProjects",
+    "dms:ListMigrationProjects",
+    "dms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "dms:UpdateMigrationProject",
+    "dms:ModifyMigrationProject",
+    "dms:AddTagsToResource",
+    "dms:RemoveTagsToResource",
+    "dms:ListTagsForResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MigrationProjectArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectCreationTime": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MigrationProjectName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SchemaConversionApplicationAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "S3BucketPath": {
+     "type": "string"
+    },
+    "S3BucketRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceDataProviderDescriptors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataProviderDescriptor"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetDataProviderDescriptors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataProviderDescriptor"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransformationRules": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MigrationProjectArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-csf.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::MigrationProject",
+ "writeOnlyProperties": [
+  "/properties/MigrationProjectIdentifier",
+  "/properties/InstanceProfileIdentifier",
+  "/properties/SourceDataProviderDescriptors/*/DataProviderIdentifier",
+  "/properties/TargetDataProviderDescriptors/*/DataProviderIdentifier"
+ ]
+}

@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccessPolicyIdentity": {
+   "additionalProperties": false,
+   "properties": {
+    "IamRole": {
+     "$ref": "#/definitions/IamRole"
+    },
+    "IamUser": {
+     "$ref": "#/definitions/IamUser"
+    },
+    "User": {
+     "$ref": "#/definitions/User"
+    }
+   },
+   "type": "object"
+  },
+  "AccessPolicyResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Portal": {
+     "$ref": "#/definitions/Portal"
+    },
+    "Project": {
+     "$ref": "#/definitions/Project"
+    }
+   },
+   "type": "object"
+  },
+  "IamRole": {
+   "additionalProperties": false,
+   "properties": {
+    "arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IamUser": {
+   "additionalProperties": false,
+   "properties": {
+    "arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Portal": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Project": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "User": {
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotsitewise:CreateAccessPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy",
+    "iotsitewise:DeleteAccessPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotsitewise:ListAccessPolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotsitewise:DescribeAccessPolicy",
+    "iotsitewise:UpdateAccessPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessPolicyId"
+ ],
+ "properties": {
+  "AccessPolicyArn": {
+   "type": "string"
+  },
+  "AccessPolicyId": {
+   "type": "string"
+  },
+  "AccessPolicyIdentity": {
+   "$ref": "#/definitions/AccessPolicyIdentity"
+  },
+  "AccessPolicyPermission": {
+   "type": "string"
+  },
+  "AccessPolicyResource": {
+   "$ref": "#/definitions/AccessPolicyResource"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessPolicyArn",
+  "/properties/AccessPolicyId"
+ ],
+ "required": [
+  "AccessPolicyIdentity",
+  "AccessPolicyPermission",
+  "AccessPolicyResource"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "taggable": false,
+ "typeName": "AWS::IoTSiteWise::AccessPolicy"
+}

@@ -1,0 +1,54 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthorizedAwsRegion",
+  "/properties/AuthorizedAccountId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AuthorizedAccountId": {
+   "type": "string"
+  },
+  "AuthorizedAwsRegion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "AuthorizedAccountId",
+  "AuthorizedAwsRegion"
+ ],
+ "typeName": "AWS::Config::AggregationAuthorization"
+}

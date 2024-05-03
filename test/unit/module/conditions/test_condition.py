@@ -3,18 +3,15 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import string
 from unittest import TestCase
 
-from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.condition import (
+from cfnlint.conditions._condition import (
     ConditionAnd,
     ConditionNot,
     ConditionOr,
     ConditionUnnammed,
 )
-from cfnlint.decode import decode_str
-from cfnlint.template import Template
+from cfnlint.conditions._utils import get_hash
 
 
 class TestCondition(TestCase):
@@ -40,6 +37,18 @@ class TestCondition(TestCase):
                 "equals",  # not a string
                 {},
             )
+
+    def test_not_a_list(self):
+        """Test condition failures"""
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"Fn::And": {}}, {})
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"Condition": {}}, {})
+
+        with self.assertRaises(ValueError):
+            ConditionUnnammed({"BadKey": {}}, {})
 
     def test_condition_test(self):
         equals = {"Ref": "AWS::Region"}

@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags",
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags",
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DescribeTags",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:DeleteTags",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeTags",
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayAttachments",
+    "ec2:DescribeTransitGatewayVpcAttachments",
+    "ec2:DescribeTags",
+    "ec2:CreateTransitGatewayVpcAttachment",
+    "ec2:CreateTags",
+    "ec2:DeleteTransitGatewayVpcAttachment",
+    "ec2:DeleteTags",
+    "ec2:ModifyTransitGatewayVpcAttachment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplianceModeSupport": {
+     "type": "string"
+    },
+    "DnsSupport": {
+     "type": "string"
+    },
+    "Ipv6Support": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "VpcId",
+  "SubnetIds",
+  "TransitGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::TransitGatewayAttachment"
+}

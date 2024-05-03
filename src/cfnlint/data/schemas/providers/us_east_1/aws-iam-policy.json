@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "anyOf": [
+  {
+   "required": [
+    "Users"
+   ]
+  },
+  {
+   "required": [
+    "Groups"
+   ]
+  },
+  {
+   "required": [
+    "Roles"
+   ]
+  }
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetUserPolicy",
+    "iam:GetRolePolicy",
+    "iam:GetGroupPolicy",
+    "iam:PutUserPolicy",
+    "iam:PutRolePolicy",
+    "iam:PutGroupPolicy"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteRolePolicy",
+    "iam:DeleteUserPolicy",
+    "iam:DeleteGroupPolicy"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "update": {
+   "permissions": [
+    "iam:PutUserPolicy",
+    "iam:PutRolePolicy",
+    "iam:PutGroupPolicy",
+    "iam:DeleteRolePolicy",
+    "iam:DeleteUserPolicy",
+    "iam:DeleteGroupPolicy"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Groups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument"
+   ],
+   "maxLength": 131072,
+   "minLength": 1,
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9+=,.@\\-_]+$",
+   "type": "string"
+  },
+  "Roles": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "PolicyDocument",
+  "PolicyName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
+ "taggable": false,
+ "typeName": "AWS::IAM::Policy"
+}

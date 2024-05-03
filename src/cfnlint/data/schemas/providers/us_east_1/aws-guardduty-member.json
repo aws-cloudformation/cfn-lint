@@ -1,0 +1,96 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorId",
+  "/properties/MemberId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateMembers",
+    "guardduty:GetMembers"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:GetMembers",
+    "guardduty:DisassociateMembers",
+    "guardduty:DeleteMembers"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DetectorId": {
+      "type": "string"
+     }
+    }
+   },
+   "permissions": [
+    "guardduty:ListMembers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetMembers"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:GetMembers",
+    "guardduty:CreateMembers",
+    "guardduty:DisassociateMembers",
+    "guardduty:StartMonitoringMembers",
+    "guardduty:StopMonitoringMembers",
+    "guardduty:InviteMembers"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorId",
+  "/properties/MemberId"
+ ],
+ "properties": {
+  "DetectorId": {
+   "type": "string"
+  },
+  "DisableEmailNotification": {
+   "type": "boolean"
+  },
+  "Email": {
+   "type": "string"
+  },
+  "MemberId": {
+   "type": "string"
+  },
+  "Message": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "Created",
+    "Disabled",
+    "Enabled",
+    "Invited",
+    "Removed",
+    "Resigned"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "Email"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-guardduty",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::GuardDuty::Member",
+ "writeOnlyProperties": [
+  "/properties/DisableEmailNotification",
+  "/properties/Message"
+ ]
+}

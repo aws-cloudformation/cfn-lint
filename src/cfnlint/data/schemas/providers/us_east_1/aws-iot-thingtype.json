@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ThingTypeName",
+  "/properties/ThingTypeProperties"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:ListTagsForResource",
+    "iot:CreateThingType",
+    "iot:DeprecateThingType",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:DeleteThingType",
+    "iot:DeprecateThingType"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListThingTypes",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:UpdateThingType",
+    "iot:ListTagsForResource",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:DeprecateThingType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ThingTypeName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeprecateThingType": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingTypeName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "ThingTypeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "SearchableAttributes": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 128,
+      "pattern": "[a-zA-Z0-9_.,@/:#-]+",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ThingTypeDescription": {
+     "maxLength": 2028,
+     "pattern": "[\\p{Graph}\\x20]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ThingType"
+}

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/SimulationSoftwareSuite",
+  "/properties/RenderingEngine",
+  "/properties/RobotSoftwareSuite"
+ ],
+ "definitions": {
+  "RenderingEngine": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RobotSoftwareSuite": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SimulationSoftwareSuite": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Architecture": {
+     "type": "string"
+    },
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "Architecture",
+    "S3Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CurrentRevisionId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RenderingEngine": {
+   "$ref": "#/definitions/RenderingEngine"
+  },
+  "RobotSoftwareSuite": {
+   "$ref": "#/definitions/RobotSoftwareSuite"
+  },
+  "SimulationSoftwareSuite": {
+   "$ref": "#/definitions/SimulationSoftwareSuite"
+  },
+  "Sources": {
+   "items": {
+    "$ref": "#/definitions/SourceConfig"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "RenderingEngine",
+  "SimulationSoftwareSuite",
+  "RobotSoftwareSuite",
+  "Sources"
+ ],
+ "typeName": "AWS::RoboMaker::SimulationApplication"
+}

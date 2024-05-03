@@ -3,33 +3,129 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.functions.Split import Split  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Context
+from cfnlint.context.context import Resource
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.functions.Split import Split
 
 
-class TestRulesSplit(BaseRuleTestCase):
-    """Test Rules Get Att"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = Split()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestRulesSplit, self).setUp()
-        self.collection.register(Split())
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    context = Context(
+        regions=["us-east-1"],
+        path=deque([]),
+        resources={
+            "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
+        },
+        parameters={},
+    )
+    yield CfnTemplateValidator(context=context)
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/functions_split.yaml", 4)
 
-    def test_split_parts(self):
-        rule = Split()
-        self.assertEqual(len(rule._test_delimiter({}, [])), 1)
-        self.assertEqual(len(rule._test_string({}, [])), 1)
-
-        # supported function
-        self.assertEqual(len(rule._test_string({"Ref": "Test"}, [])), 0)
-        # Unsupported function
-        self.assertEqual(len(rule._test_string({"Foo": "Bar"}, [])), 1)
+@pytest.mark.parametrize(
+    "name,instance,schema,expected",
+    [
+        (
+            "Valid Fn::Split with array",
+            {"Fn::Split": ["foo", "bar"]},
+            {"type": "array"},
+            [],
+        ),
+        (
+            "Invalid Fn::Split with wrong output type",
+            {"Fn::Split": ["foo", "bar"]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "{'Fn::Split': ['foo', 'bar']} is not of type 'string'",
+                    path=deque([]),
+                    schema_path=deque([]),
+                    validator="fn_split",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Split is NOT a array",
+            {"Fn::Split": "foo"},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "'foo' is not of type 'array'",
+                    path=deque(["Fn::Split"]),
+                    schema_path=deque(["type"]),
+                    validator="fn_split",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Split using a function for delimiter",
+            {"Fn::Split": [{"foo": "bar"}, "bar"]},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "{'foo': 'bar'} is not of type 'string'",
+                    path=deque(["Fn::Split", 0]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_split",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Split using an invalid function",
+            {"Fn::Split": ["-", {"foo": "bar"}]},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "{'foo': 'bar'} is not of type 'string'",
+                    path=deque(["Fn::Split", 1]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_split",
+                ),
+            ],
+        ),
+        (
+            "Invalid Fn::Split using an invalid CFN function",
+            {"Fn::Split": ["-", {"Fn::Split": ["-", "bar"]}]},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "{'Fn::Split': ['-', 'bar']} is not of type 'string'",
+                    path=deque(["Fn::Split", 1]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_split",
+                )
+            ],
+        ),
+        (
+            "Valid Fn::Split with a valid function",
+            {"Fn::Split": ["foo", {"Fn::Sub": "bar"}]},
+            {"type": "array"},
+            [],
+        ),
+        (
+            "Invalid Fn::Split with a dynamic reference",
+            {"Fn::Split": ["foo", "{{resolve:ssm:Foo:1}}"]},
+            {"type": "array"},
+            [
+                ValidationError(
+                    "'Fn::Split' does not support dynamic references",
+                    path=deque(["Fn::Split", 1]),
+                    validator="fn_split",
+                )
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, schema, expected, rule, validator):
+    errs = list(rule.fn_split(validator, schema, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"

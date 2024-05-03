@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Scope",
+  "/properties/ViewName"
+ ],
+ "definitions": {
+  "IncludedProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 1011,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SearchFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterString": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FilterString"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resource-explorer-2:CreateView",
+    "resource-explorer-2:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resource-explorer-2:DeleteView",
+    "resource-explorer-2:GetView",
+    "resource-explorer-2:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resource-explorer-2:ListViews"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resource-explorer-2:GetView"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "resource-explorer-2:UpdateView",
+    "resource-explorer-2:TagResource",
+    "resource-explorer-2:UntagResource",
+    "resource-explorer-2:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ViewArn"
+ ],
+ "properties": {
+  "Filters": {
+   "$ref": "#/definitions/SearchFilter"
+  },
+  "IncludedProperties": {
+   "items": {
+    "$ref": "#/definitions/IncludedProperty"
+   },
+   "type": "array"
+  },
+  "Scope": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "ViewArn": {
+   "type": "string"
+  },
+  "ViewName": {
+   "pattern": "^[a-zA-Z0-9\\-]{1,64}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ViewArn"
+ ],
+ "required": [
+  "ViewName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResourceExplorer2::View"
+}

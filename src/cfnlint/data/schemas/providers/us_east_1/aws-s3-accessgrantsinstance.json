@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AccessGrantsInstanceArn": {
+   "type": "string"
+  },
+  "IdentityCenterArn": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:CreateAccessGrantsInstance",
+    "s3:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:DeleteAccessGrantsInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3:ListAccessGrantsInstances"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3:GetAccessGrantsInstance"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessGrantsInstanceArn"
+ ],
+ "properties": {
+  "AccessGrantsInstanceArn": {
+   "$ref": "#/definitions/AccessGrantsInstanceArn",
+   "examples": [
+    "arn:aws:s3:us-east-2:479290226168:access-grants/default"
+   ]
+  },
+  "AccessGrantsInstanceId": {
+   "type": "string"
+  },
+  "IdentityCenterArn": {
+   "$ref": "#/definitions/IdentityCenterArn",
+   "examples": [
+    "arn:aws:sso:::instance/ssoins-6987e6a2fc43873b"
+   ]
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessGrantsInstanceArn",
+  "/properties/AccessGrantsInstanceId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3",
+ "tagging": {
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::AccessGrantsInstance",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,354 @@
+{
+ "additionalProperties": false,
+ "cfnLint": [
+  "AWS::CloudWatch::Alarm/Properties"
+ ],
+ "createOnlyProperties": [
+  "/properties/AlarmName"
+ ],
+ "definitions": {
+  "Dimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Metric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/MetricStat"
+    },
+    "Period": {
+     "type": "integer"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Period": {
+     "type": "integer"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Period",
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentExcluded": {
+  "ExtendedStatistic": [
+   "Statistic"
+  ],
+  "Metrics": [
+   "MetricName",
+   "Dimensions",
+   "Period",
+   "Namespace",
+   "Statistic",
+   "ExtendedStatistic",
+   "Unit"
+  ],
+  "Statistic": [
+   "ExtendedStatistic"
+  ],
+  "Threshold": [
+   "ThresholdMetricId"
+  ],
+  "ThresholdMetricId": [
+   "Threshold"
+  ]
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudwatch:PutMetricAlarm",
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudwatch:DeleteAlarms",
+    "cloudwatch:DescribeAlarms"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudwatch:PutMetricAlarm",
+    "cloudwatch:DescribeAlarms",
+    "cloudwatch:TagResource",
+    "cloudwatch:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmName"
+ ],
+ "properties": {
+  "ActionsEnabled": {
+   "default": true,
+   "type": "boolean"
+  },
+  "AlarmActions": {
+   "items": {
+    "maximum": 1024,
+    "minimum": 1,
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AlarmDescription": {
+   "type": "string"
+  },
+  "AlarmName": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "ComparisonOperator": {
+   "enum": [
+    "GreaterThanOrEqualToThreshold",
+    "GreaterThanThreshold",
+    "LessThanThreshold",
+    "LessThanOrEqualToThreshold",
+    "LessThanLowerOrGreaterThanUpperThreshold",
+    "LessThanLowerThreshold",
+    "GreaterThanUpperThreshold"
+   ],
+   "type": "string"
+  },
+  "DatapointsToAlarm": {
+   "type": "integer"
+  },
+  "Dimensions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Dimension"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EvaluateLowSampleCountPercentile": {
+   "type": "string"
+  },
+  "EvaluationPeriods": {
+   "type": "integer"
+  },
+  "ExtendedStatistic": {
+   "type": "string"
+  },
+  "InsufficientDataActions": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MetricName": {
+   "type": "string"
+  },
+  "Metrics": {
+   "items": {
+    "$ref": "#/definitions/MetricDataQuery"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Namespace": {
+   "type": "string"
+  },
+  "OKActions": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Period": {
+   "type": "integer"
+  },
+  "Statistic": {
+   "enum": [
+    "SampleCount",
+    "Average",
+    "Sum",
+    "Minimum",
+    "Maximum"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Threshold": {
+   "type": "number"
+  },
+  "ThresholdMetricId": {
+   "type": "string"
+  },
+  "TreatMissingData": {
+   "enum": [
+    "breaching",
+    "ignore",
+    "missing",
+    "notBreaching"
+   ],
+   "type": "string"
+  },
+  "Unit": {
+   "enum": [
+    "Seconds",
+    "Microseconds",
+    "Milliseconds",
+    "Bytes",
+    "Kilobytes",
+    "Megabytes",
+    "Gigabytes",
+    "Terabytes",
+    "Bits",
+    "Kilobits",
+    "Megabits",
+    "Gigabits",
+    "Terabits",
+    "Percent",
+    "Count",
+    "Bytes/Second",
+    "Kilobytes/Second",
+    "Megabytes/Second",
+    "Gigabytes/Second",
+    "Terabytes/Second",
+    "Bits/Second",
+    "Kilobits/Second",
+    "Megabits/Second",
+    "Gigabits/Second",
+    "Terabits/Second",
+    "Count/Second",
+    "None"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ComparisonOperator",
+  "EvaluationPeriods"
+ ],
+ "requiredXor": [
+  "Metrics",
+  "MetricName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudWatch::Alarm"
+}

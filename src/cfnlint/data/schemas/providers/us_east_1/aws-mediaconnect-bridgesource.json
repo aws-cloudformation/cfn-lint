@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BridgeArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "BridgeFlowSource": {
+   "additionalProperties": false,
+   "properties": {
+    "FlowArn": {
+     "type": "string"
+    },
+    "FlowVpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment"
+    }
+   },
+   "required": [
+    "FlowArn"
+   ],
+   "type": "object"
+  },
+  "BridgeNetworkSource": {
+   "additionalProperties": false,
+   "properties": {
+    "MulticastIp": {
+     "type": "string"
+    },
+    "NetworkName": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/ProtocolEnum"
+    }
+   },
+   "required": [
+    "Protocol",
+    "MulticastIp",
+    "Port",
+    "NetworkName"
+   ],
+   "type": "object"
+  },
+  "ProtocolEnum": {
+   "enum": [
+    "rtp-fec",
+    "rtp",
+    "udp"
+   ],
+   "type": "string"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediaconnect:AddBridgeSources",
+    "mediaconnect:DescribeBridge"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:RemoveBridgeSource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeBridge"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeBridge",
+    "mediaconnect:UpdateBridgeSource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BridgeArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "BridgeArn": {
+   "type": "string"
+  },
+  "FlowSource": {
+   "$ref": "#/definitions/BridgeFlowSource"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NetworkSource": {
+   "$ref": "#/definitions/BridgeNetworkSource"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "$join([\"Source:\",Name])"
+ },
+ "required": [
+  "Name",
+  "BridgeArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaConnect::BridgeSource"
+}

@@ -1,0 +1,69 @@
+{
+ "additionalProperties": false,
+ "anyOf": [
+  {
+   "required": [
+    "Users"
+   ]
+  },
+  {
+   "required": [
+    "Groups"
+   ]
+  },
+  {
+   "required": [
+    "Roles"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Groups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "cfnLint": [
+    "AWS::IAM::Policy/Properties/PolicyDocument"
+   ],
+   "type": "object"
+  },
+  "PolicyName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9+=,.@\\-_]+$",
+   "type": "string"
+  },
+  "Roles": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "PolicyName",
+  "PolicyDocument"
+ ],
+ "typeName": "AWS::IAM::Policy"
+}

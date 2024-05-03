@@ -1,0 +1,330 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ContainerImage": {
+   "maxLength": 255,
+   "pattern": "[\\S]+",
+   "type": "string"
+  },
+  "DeployedImage": {
+   "additionalProperties": false,
+   "properties": {
+    "ResolutionTime": {
+     "$ref": "#/definitions/Timestamp"
+    },
+    "ResolvedImage": {
+     "$ref": "#/definitions/ContainerImage"
+    },
+    "SpecifiedImage": {
+     "$ref": "#/definitions/ContainerImage"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EndpointName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "EnvironmentMap": {
+   "additionalProperties": false,
+   "maxProperties": 16,
+   "patternProperties": {
+    "^[a-zA-Z_][a-zA-Z0-9_]{1,1024}$": {
+     "maxLength": 1024,
+     "pattern": "^[\\S\\s]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FailureReason": {
+   "maxLength": 63,
+   "type": "string"
+  },
+  "InferenceComponentArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InferenceComponentComputeResourceRequirements": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxMemoryRequiredInMb": {
+     "$ref": "#/definitions/MemoryInMb"
+    },
+    "MinMemoryRequiredInMb": {
+     "$ref": "#/definitions/MemoryInMb"
+    },
+    "NumberOfAcceleratorDevicesRequired": {
+     "$ref": "#/definitions/NumberOfAcceleratorDevices"
+    },
+    "NumberOfCpuCoresRequired": {
+     "$ref": "#/definitions/NumberOfCpuCores"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceComponentContainerSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactUrl": {
+     "$ref": "#/definitions/Url"
+    },
+    "DeployedImage": {
+     "$ref": "#/definitions/DeployedImage"
+    },
+    "Environment": {
+     "$ref": "#/definitions/EnvironmentMap"
+    },
+    "Image": {
+     "$ref": "#/definitions/ContainerImage"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceComponentCopyCount": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "InferenceComponentName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "InferenceComponentRuntimeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CopyCount": {
+     "$ref": "#/definitions/InferenceComponentCopyCount"
+    },
+    "CurrentCopyCount": {
+     "$ref": "#/definitions/InferenceComponentCopyCount"
+    },
+    "DesiredCopyCount": {
+     "$ref": "#/definitions/InferenceComponentCopyCount"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceComponentSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeResourceRequirements": {
+     "$ref": "#/definitions/InferenceComponentComputeResourceRequirements"
+    },
+    "Container": {
+     "$ref": "#/definitions/InferenceComponentContainerSpecification"
+    },
+    "ModelName": {
+     "$ref": "#/definitions/ModelName"
+    },
+    "StartupParameters": {
+     "$ref": "#/definitions/InferenceComponentStartupParameters"
+    }
+   },
+   "required": [
+    "ComputeResourceRequirements"
+   ],
+   "type": "object"
+  },
+  "InferenceComponentStartupParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerStartupHealthCheckTimeoutInSeconds": {
+     "$ref": "#/definitions/StartupParameterTimeoutInSeconds"
+    },
+    "ModelDataDownloadTimeoutInSeconds": {
+     "$ref": "#/definitions/StartupParameterTimeoutInSeconds"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceComponentStatus": {
+   "enum": [
+    "InService",
+    "Creating",
+    "Updating",
+    "Failed",
+    "Deleting"
+   ],
+   "type": "string"
+  },
+  "MemoryInMb": {
+   "minimum": 128,
+   "type": "integer"
+  },
+  "ModelName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "NumberOfAcceleratorDevices": {
+   "minimum": 1,
+   "type": "number"
+  },
+  "NumberOfCpuCores": {
+   "minimum": 0.25,
+   "type": "number"
+  },
+  "StartupParameterTimeoutInSeconds": {
+   "maximum": 3600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Timestamp": {
+   "type": "string"
+  },
+  "Url": {
+   "maxLength": 1024,
+   "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+   "type": "string"
+  },
+  "VariantName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:AddTags",
+    "sagemaker:ListTags",
+    "sagemaker:CreateInferenceComponent",
+    "sagemaker:DescribeInferenceComponent"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DescribeInferenceComponent",
+    "sagemaker:DeleteInferenceComponent",
+    "sagemaker:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListInferenceComponents",
+    "sagemaker:DescribeInferenceComponent",
+    "sagemaker:ListTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeInferenceComponent",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateInferenceComponent",
+    "sagemaker:UpdateInferenceComponentRuntimeConfig",
+    "sagemaker:DescribeInferenceComponent",
+    "sagemaker:AddTags",
+    "sagemaker:ListTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InferenceComponentArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "EndpointArn": {
+   "$ref": "#/definitions/EndpointArn"
+  },
+  "EndpointName": {
+   "$ref": "#/definitions/EndpointName"
+  },
+  "FailureReason": {
+   "$ref": "#/definitions/FailureReason"
+  },
+  "InferenceComponentArn": {
+   "$ref": "#/definitions/InferenceComponentArn"
+  },
+  "InferenceComponentName": {
+   "$ref": "#/definitions/InferenceComponentName"
+  },
+  "InferenceComponentStatus": {
+   "$ref": "#/definitions/InferenceComponentStatus"
+  },
+  "LastModifiedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "RuntimeConfig": {
+   "$ref": "#/definitions/InferenceComponentRuntimeConfig"
+  },
+  "Specification": {
+   "$ref": "#/definitions/InferenceComponentSpecification"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList"
+  },
+  "VariantName": {
+   "$ref": "#/definitions/VariantName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InferenceComponentArn",
+  "/properties/Specification/Container/DeployedImage",
+  "/properties/RuntimeConfig/DesiredCopyCount",
+  "/properties/RuntimeConfig/CurrentCopyCount",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime",
+  "/properties/FailureReason",
+  "/properties/InferenceComponentStatus"
+ ],
+ "required": [
+  "EndpointName",
+  "VariantName",
+  "Specification",
+  "RuntimeConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::InferenceComponent",
+ "writeOnlyProperties": [
+  "/properties/Specification/Container/Image",
+  "/properties/RuntimeConfig/CopyCount"
+ ]
+}

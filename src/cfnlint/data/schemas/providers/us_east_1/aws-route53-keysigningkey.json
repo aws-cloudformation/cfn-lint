@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneId",
+  "/properties/Name",
+  "/properties/KeyManagementServiceArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:CreateKeySigningKey",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:DeactivateKeySigningKey",
+    "route53:DeleteKeySigningKey",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:ListHostedZones"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:GetDNSSEC"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:ActivateKeySigningKey",
+    "route53:DeactivateKeySigningKey",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HostedZoneId",
+  "/properties/Name"
+ ],
+ "properties": {
+  "HostedZoneId": {
+   "pattern": "^[A-Z0-9]{1,32}$",
+   "type": "string"
+  },
+  "KeyManagementServiceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9_]{3,128}$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "Status",
+  "HostedZoneId",
+  "Name",
+  "KeyManagementServiceArn"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53::KeySigningKey"
+}

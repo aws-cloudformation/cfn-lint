@@ -1,0 +1,69 @@
+{
+ "$id": "identity",
+ "additionalProperties": false,
+ "definitions": {
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "requiredXor": [
+      "Action",
+      "NotAction"
+     ]
+    },
+    {
+     "requiredXor": [
+      "Resource",
+      "NotResource"
+     ]
+    },
+    {
+     "required": [
+      "Effect"
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "policy#/definitions/Condition"
+    },
+    "Effect": {
+     "$ref": "policy#/definitions/Statement/properties/Effect"
+    },
+    "NotAction": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "NotResource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Resource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Sid": {
+     "$ref": "policy#/definitions/Statement/properties/Sid"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Id": {
+   "$ref": "policy#/properties/Id"
+  },
+  "Statement": {
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
+   }
+  },
+  "Version": {
+   "$ref": "policy#/properties/Version"
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

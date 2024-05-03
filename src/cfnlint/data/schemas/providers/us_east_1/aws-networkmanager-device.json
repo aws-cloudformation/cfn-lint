@@ -1,0 +1,171 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DeviceArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "AWSLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "SubnetArn": {
+     "type": "string"
+    },
+    "Zone": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Latitude": {
+     "type": "string"
+    },
+    "Longitude": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateDevice",
+    "networkmanager:GetDevices",
+    "networkmanager:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetDevices",
+    "networkmanager:DeleteDevice"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GlobalNetworkId": {
+      "$ref": "resource-schema.json#/properties/GlobalNetworkId"
+     }
+    },
+    "required": [
+     "GlobalNetworkId"
+    ]
+   },
+   "permissions": [
+    "networkmanager:GetDevices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetDevices"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateDevice",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:GetDevices",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/DeviceId"
+ ],
+ "properties": {
+  "AWSLocation": {
+   "$ref": "#/definitions/AWSLocation"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DeviceArn": {
+   "type": "string"
+  },
+  "DeviceId": {
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "Model": {
+   "type": "string"
+  },
+  "SerialNumber": {
+   "type": "string"
+  },
+  "SiteId": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "type": "string"
+  },
+  "Vendor": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeviceId",
+  "/properties/DeviceArn",
+  "/properties/State",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::Device"
+}

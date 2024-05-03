@@ -1,0 +1,177 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SceneId",
+  "/properties/WorkspaceId"
+ ],
+ "definitions": {
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iottwinmaker:CreateScene",
+    "iottwinmaker:GetScene",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteScene",
+    "iottwinmaker:GetScene",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "WorkspaceId": {
+      "$ref": "resource-schema.json#/properties/WorkspaceId",
+      "type": "string"
+     }
+    },
+    "required": [
+     "WorkspaceId"
+    ]
+   },
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:ListScenes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:GetScene",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iottwinmaker:GetScene",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource",
+    "iottwinmaker:UntagResource",
+    "iottwinmaker:UpdateScene"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId",
+  "/properties/SceneId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "Capabilities": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 0,
+    "pattern": ".*",
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ContentLocation": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "[sS]3://[A-Za-z0-9._/-]+",
+   "type": "string"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "GeneratedSceneMetadata": {
+   "additionalProperties": false,
+   "maxLength": 50,
+   "minLength": 0,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SceneId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  },
+  "SceneMetadata": {
+   "additionalProperties": false,
+   "maxLength": 50,
+   "minLength": 0,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "WorkspaceId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime",
+  "/properties/GeneratedSceneMetadata"
+ ],
+ "required": [
+  "WorkspaceId",
+  "SceneId",
+  "ContentLocation"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iottwinmaker",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::Scene"
+}

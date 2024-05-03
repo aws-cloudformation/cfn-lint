@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WALWorkspaceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "emrwal:CreateWorkspace",
+    "emrwal:TagResource",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "emrwal:DeleteWorkspace"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "emrwal:ListWorkspaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "emrwal:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "emrwal:TagResource",
+    "emrwal:UntagResource",
+    "emrwal:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WALWorkspaceName"
+ ],
+ "properties": {
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WALWorkspaceName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-emrwal",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EMR::WALWorkspace"
+}

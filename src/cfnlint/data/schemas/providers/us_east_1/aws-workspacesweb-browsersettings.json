@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdditionalEncryptionContext",
+  "/properties/CustomerManagedKey"
+ ],
+ "definitions": {
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "workspaces-web:CreateBrowserSettings",
+    "workspaces-web:GetBrowserSettings",
+    "workspaces-web:ListTagsForResource",
+    "workspaces-web:TagResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "workspaces-web:GetBrowserSettings",
+    "workspaces-web:DeleteBrowserSettings",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "workspaces-web:ListBrowserSettings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "workspaces-web:GetBrowserSettings",
+    "workspaces-web:ListBrowserSettings",
+    "workspaces-web:ListTagsForResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "workspaces-web:UpdateBrowserSettings",
+    "workspaces-web:TagResource",
+    "workspaces-web:UntagResource",
+    "workspaces-web:GetBrowserSettings",
+    "workspaces-web:ListBrowserSettings",
+    "workspaces-web:ListTagsForResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BrowserSettingsArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "AssociatedPortalArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "BrowserPolicy": {
+   "maxLength": 131072,
+   "minLength": 2,
+   "pattern": "\\{[\\S\\s]*\\}\\s*",
+   "type": "string"
+  },
+  "BrowserSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "CustomerManagedKey": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociatedPortalArns",
+  "/properties/BrowserSettingsArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::BrowserSettings"
+}

@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LoadBalancerName",
+  "/properties/InstancePort",
+  "/properties/IpAddressType"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:CreateLoadBalancer",
+    "lightsail:GetLoadBalancer",
+    "lightsail:GetLoadBalancers",
+    "lightsail:GetInstance",
+    "lightsail:AttachInstancesToLoadBalancer",
+    "lightsail:DetachInstancesFromLoadBalancer",
+    "lightsail:UpdateLoadBalancerAttribute",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:DeleteLoadBalancer",
+    "lightsail:GetLoadBalancer",
+    "lightsail:GetLoadBalancers"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetLoadBalancers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetLoadBalancer",
+    "lightsail:GetLoadBalancers"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:GetLoadBalancer",
+    "lightsail:GetLoadBalancers",
+    "lightsail:GetInstance",
+    "lightsail:AttachInstancesToLoadBalancer",
+    "lightsail:DetachInstancesFromLoadBalancer",
+    "lightsail:UpdateLoadBalancerAttribute",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LoadBalancerName"
+ ],
+ "properties": {
+  "AttachedInstances": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "HealthCheckPath": {
+   "type": "string"
+  },
+  "InstancePort": {
+   "type": "integer"
+  },
+  "IpAddressType": {
+   "type": "string"
+  },
+  "LoadBalancerArn": {
+   "type": "string"
+  },
+  "LoadBalancerName": {
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "SessionStickinessEnabled": {
+   "type": "boolean"
+  },
+  "SessionStickinessLBCookieDurationSeconds": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TlsPolicyName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerArn"
+ ],
+ "required": [
+  "LoadBalancerName",
+  "InstancePort"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "taggable": true,
+ "typeName": "AWS::Lightsail::LoadBalancer"
+}

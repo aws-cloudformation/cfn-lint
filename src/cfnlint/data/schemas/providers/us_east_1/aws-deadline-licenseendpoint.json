@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SecurityGroupIds",
+  "/properties/SubnetIds",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "LicenseEndpointStatus": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "DELETE_IN_PROGRESS",
+    "READY",
+    "NOT_READY"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "deadline:CreateLicenseEndpoint",
+    "deadline:GetLicenseEndpoint",
+    "ec2:CreateTags",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "deadline:GetLicenseEndpoint",
+    "deadline:DeleteLicenseEndpoint",
+    "ec2:DeleteVpcEndpoints",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "deadline:ListLicenseEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "deadline:GetLicenseEndpoint"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}",
+   "type": "string"
+  },
+  "DnsName": {
+   "type": "string"
+  },
+  "LicenseEndpointId": {
+   "pattern": "^le-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/LicenseEndpointStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "maxLength": 32,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DnsName",
+  "/properties/LicenseEndpointId",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/Arn"
+ ],
+ "required": [
+  "SecurityGroupIds",
+  "SubnetIds",
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::LicenseEndpoint"
+}

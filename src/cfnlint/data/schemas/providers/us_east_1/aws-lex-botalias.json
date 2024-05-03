@@ -1,0 +1,374 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BotId"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "AudioLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "$ref": "#/definitions/S3BucketLogDestination"
+    }
+   },
+   "required": [
+    "S3Bucket"
+   ],
+   "type": "object"
+  },
+  "AudioLogSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/AudioLogDestination"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Destination",
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "AudioLogSettings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AudioLogSetting"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BotAliasLocaleSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeHookSpecification": {
+     "$ref": "#/definitions/CodeHookSpecification"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "BotAliasLocaleSettingsItem": {
+   "additionalProperties": false,
+   "properties": {
+    "BotAliasLocaleSetting": {
+     "$ref": "#/definitions/BotAliasLocaleSettings"
+    },
+    "LocaleId": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "LocaleId",
+    "BotAliasLocaleSetting"
+   ],
+   "type": "object"
+  },
+  "BotAliasLocaleSettingsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BotAliasLocaleSettingsItem"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BotAliasStatus": {
+   "enum": [
+    "Creating",
+    "Available",
+    "Deleting",
+    "Failed"
+   ],
+   "type": "string"
+  },
+  "BotVersion": {
+   "maxLength": 5,
+   "minLength": 1,
+   "pattern": "^(DRAFT|[0-9]+)$",
+   "type": "string"
+  },
+  "CloudWatchLogGroupLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogGroupArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LogPrefix": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "CloudWatchLogGroupArn",
+    "LogPrefix"
+   ],
+   "type": "object"
+  },
+  "CodeHookSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaCodeHook": {
+     "$ref": "#/definitions/LambdaCodeHook"
+    }
+   },
+   "required": [
+    "LambdaCodeHook"
+   ],
+   "type": "object"
+  },
+  "ConversationLogSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AudioLogSettings": {
+     "$ref": "#/definitions/AudioLogSettings"
+    },
+    "TextLogSettings": {
+     "$ref": "#/definitions/TextLogSettings"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 10,
+   "minLength": 10,
+   "pattern": "^[0-9a-zA-Z]+$",
+   "type": "string"
+  },
+  "LambdaCodeHook": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeHookInterfaceVersion": {
+     "maxLength": 5,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LambdaArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "CodeHookInterfaceVersion",
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "LocaleId": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z][_-]?)+$",
+   "type": "string"
+  },
+  "S3BucketLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:[\\w\\-]+:kms:[\\w\\-]+:[\\d]{12}:(?:key\\/[\\w\\-]+|alias\\/[a-zA-Z0-9:\\/_\\-]{1,256})$",
+     "type": "string"
+    },
+    "LogPrefix": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[\\w\\-]+:s3:::[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogPrefix",
+    "S3BucketArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TextLogDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatch": {
+     "$ref": "#/definitions/CloudWatchLogGroupLogDestination"
+    }
+   },
+   "required": [
+    "CloudWatch"
+   ],
+   "type": "object"
+  },
+  "TextLogSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/TextLogDestination"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Destination",
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "TextLogSettings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TextLogSetting"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lex:CreateBotAlias",
+    "lex:DescribeBot"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lex:DeleteBotAlias"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lex:ListBotAliases"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lex:DescribeBotAlias"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lex:UpdateBotAlias",
+    "lex:DescribeBotAlias",
+    "lex:ListTagsForResource",
+    "lex:TagResource",
+    "lex:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BotAliasId",
+  "/properties/BotId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "BotAliasId": {
+   "$ref": "#/definitions/Id"
+  },
+  "BotAliasLocaleSettings": {
+   "$ref": "#/definitions/BotAliasLocaleSettingsList"
+  },
+  "BotAliasName": {
+   "$ref": "#/definitions/Name"
+  },
+  "BotAliasStatus": {
+   "$ref": "#/definitions/BotAliasStatus"
+  },
+  "BotAliasTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BotId": {
+   "$ref": "#/definitions/Id"
+  },
+  "BotVersion": {
+   "$ref": "#/definitions/BotVersion"
+  },
+  "ConversationLogSettings": {
+   "$ref": "#/definitions/ConversationLogSettings"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "SentimentAnalysisSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DetectSentiment": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "DetectSentiment"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BotAliasId",
+  "/properties/Arn",
+  "/properties/BotAliasStatus"
+ ],
+ "required": [
+  "BotId",
+  "BotAliasName"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/lexv2/latest/dg/API_CreateBotAlias.html",
+ "taggable": false,
+ "typeName": "AWS::Lex::BotAlias",
+ "writeOnlyProperties": [
+  "/properties/BotAliasTags"
+ ]
+}

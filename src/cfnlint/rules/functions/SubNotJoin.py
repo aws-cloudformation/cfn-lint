@@ -3,7 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from collections import deque
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, ValidationResult
+from cfnlint.jsonschema.protocols import Validator
+from cfnlint.rules import CloudFormationLintRule
 
 
 class SubNotJoin(CloudFormationLintRule):
@@ -36,23 +41,18 @@ class SubNotJoin(CloudFormationLintRule):
 
         return True
 
-    def match(self, cfn):
-        matches = []
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        key = list(instance.keys())[0]
+        value = instance.get(key)
 
-        join_objs = cfn.search_deep_keys("Fn::Join")
+        if value[0] != "":
+            return
 
-        for join_obj in join_objs:
-            if isinstance(join_obj[-1], list):
-                join_operator = join_obj[-1][0]
-                join_elements = join_obj[-1][1]
-                if isinstance(join_operator, str):
-                    if join_operator == "":
-                        if isinstance(join_elements, list):
-                            if self._check_elements(join_elements):
-                                matches.append(
-                                    RuleMatch(
-                                        join_obj[0:-1],
-                                        "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
-                                    )
-                                )
-        return matches
+        if self._check_elements(value[1]):
+            yield ValidationError(
+                ("Prefer using Fn::Sub over Fn::Join with an" " empty delimiter"),
+                path=deque([key, 0]),
+                rule=self,
+            )

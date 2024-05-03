@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "SseSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVerifiedAccessGroup",
+    "ec2:DescribeVerifiedAccessGroups",
+    "ec2:GetVerifiedAccessGroupPolicy",
+    "ec2:CreateTags",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVerifiedAccessGroup",
+    "ec2:DeleteTags",
+    "ec2:DescribeVerifiedAccessGroups",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessGroups",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessGroups",
+    "ec2:GetVerifiedAccessGroupPolicy",
+    "ec2:DescribeTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVerifiedAccessGroup",
+    "ec2:ModifyVerifiedAccessGroupPolicy",
+    "ec2:DescribeVerifiedAccessGroups",
+    "ec2:GetVerifiedAccessGroupPolicy",
+    "ec2:DescribeTags",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "kms:DescribeKey",
+    "kms:RetireGrant",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessGroupId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "Owner": {
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "type": "string"
+  },
+  "PolicyEnabled": {
+   "type": "boolean"
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessGroupArn": {
+   "type": "string"
+  },
+  "VerifiedAccessGroupId": {
+   "type": "string"
+  },
+  "VerifiedAccessInstanceId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessGroupId",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Owner",
+  "/properties/VerifiedAccessGroupArn"
+ ],
+ "required": [
+  "VerifiedAccessInstanceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessgroup",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessGroup"
+}

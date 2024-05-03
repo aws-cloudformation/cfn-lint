@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EcrRepositoryPrefix",
+  "/properties/UpstreamRegistryUrl",
+  "/properties/CredentialArn",
+  "/properties/UpstreamRegistry"
+ ],
+ "definitions": {
+  "CredentialArn": {
+   "maxLength": 612,
+   "minLength": 50,
+   "pattern": "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$",
+   "type": "string"
+  },
+  "EcrRepositoryPrefix": {
+   "maxLength": 30,
+   "minLength": 2,
+   "pattern": "(?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*",
+   "type": "string"
+  },
+  "PullThroughCacheRule": {
+   "additionalProperties": false,
+   "maxItems": 50,
+   "minItems": 0,
+   "properties": {
+    "CredentialArn": {
+     "$ref": "#/definitions/CredentialArn"
+    },
+    "EcrRepositoryPrefix": {
+     "$ref": "#/definitions/EcrRepositoryPrefix"
+    },
+    "RegistryId": {
+     "$ref": "#/definitions/RegistryId"
+    },
+    "UpstreamRegistry": {
+     "$ref": "#/definitions/UpstreamRegistry"
+    },
+    "UpstreamRegistryUrl": {
+     "$ref": "#/definitions/UpstreamRegistryUrl"
+    }
+   },
+   "required": [
+    "EcrRepositoryPrefix",
+    "UpstreamRegistryUrl"
+   ],
+   "type": "object"
+  },
+  "RegistryId": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "UpstreamRegistry": {
+   "type": "string"
+  },
+  "UpstreamRegistryUrl": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:DescribePullThroughCacheRules",
+    "ecr:CreatePullThroughCacheRule",
+    "ecr:DeletePullThroughCacheRule",
+    "iam:CreateServiceLinkedRole",
+    "secretsmanager:GetSecretValue"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:DescribePullThroughCacheRules",
+    "ecr:DeletePullThroughCacheRule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:DescribePullThroughCacheRules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:DescribePullThroughCacheRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:DescribePullThroughCacheRules",
+    "ecr:CreatePullThroughCacheRule",
+    "ecr:DeletePullThroughCacheRule",
+    "iam:CreateServiceLinkedRole",
+    "secretsmanager:GetSecretValue"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EcrRepositoryPrefix"
+ ],
+ "properties": {
+  "CredentialArn": {
+   "maxLength": 612,
+   "minLength": 50,
+   "pattern": "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$",
+   "type": "string"
+  },
+  "EcrRepositoryPrefix": {
+   "maxLength": 30,
+   "minLength": 2,
+   "pattern": "(?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*",
+   "type": "string"
+  },
+  "UpstreamRegistry": {
+   "type": "string"
+  },
+  "UpstreamRegistryUrl": {
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ECR::PullThroughCacheRule",
+ "writeOnlyProperties": [
+  "/properties/CredentialArn",
+  "/properties/UpstreamRegistry"
+ ]
+}

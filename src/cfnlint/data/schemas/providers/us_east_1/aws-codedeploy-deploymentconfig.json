@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeploymentConfigName",
+  "/properties/MinimumHealthyHosts",
+  "/properties/ComputePlatform",
+  "/properties/ZonalConfig",
+  "/properties/TrafficRoutingConfig"
+ ],
+ "definitions": {
+  "MinimumHealthyHosts": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "HOST_COUNT",
+      "FLEET_PERCENT"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "MinimumHealthyHostsPerZone": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeBasedCanary": {
+   "additionalProperties": false,
+   "properties": {
+    "CanaryInterval": {
+     "type": "integer"
+    },
+    "CanaryPercentage": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CanaryPercentage",
+    "CanaryInterval"
+   ],
+   "type": "object"
+  },
+  "TimeBasedLinear": {
+   "additionalProperties": false,
+   "properties": {
+    "LinearInterval": {
+     "type": "integer"
+    },
+    "LinearPercentage": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LinearInterval",
+    "LinearPercentage"
+   ],
+   "type": "object"
+  },
+  "TrafficRoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TimeBasedCanary": {
+     "$ref": "#/definitions/TimeBasedCanary"
+    },
+    "TimeBasedLinear": {
+     "$ref": "#/definitions/TimeBasedLinear"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ZonalConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FirstZoneMonitorDurationInSeconds": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "MinimumHealthyHostsPerZone": {
+     "$ref": "#/definitions/MinimumHealthyHostsPerZone"
+    },
+    "MonitorDurationInSeconds": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codedeploy:CreateDeploymentConfig"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codedeploy:GetDeploymentConfig",
+    "codedeploy:DeleteDeploymentConfig"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codedeploy:ListDeploymentConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codedeploy:GetDeploymentConfig"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DeploymentConfigName"
+ ],
+ "properties": {
+  "ComputePlatform": {
+   "type": "string"
+  },
+  "DeploymentConfigName": {
+   "type": "string"
+  },
+  "MinimumHealthyHosts": {
+   "$ref": "#/definitions/MinimumHealthyHosts"
+  },
+  "TrafficRoutingConfig": {
+   "$ref": "#/definitions/TrafficRoutingConfig"
+  },
+  "ZonalConfig": {
+   "$ref": "#/definitions/ZonalConfig"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codedeploy",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CodeDeploy::DeploymentConfig"
+}

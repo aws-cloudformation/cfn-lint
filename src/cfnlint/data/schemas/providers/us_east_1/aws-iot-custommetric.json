@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MetricName",
+  "/properties/MetricType"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateCustomMetric",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeCustomMetric",
+    "iot:DeleteCustomMetric"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListCustomMetrics"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeCustomMetric",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateCustomMetric",
+    "iot:ListTagsForResource",
+    "iot:UntagResource",
+    "iot:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MetricName"
+ ],
+ "properties": {
+  "DisplayName": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "MetricArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "MetricName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "MetricType": {
+   "enum": [
+    "string-list",
+    "ip-address-list",
+    "number-list",
+    "number"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MetricArn"
+ ],
+ "required": [
+  "MetricType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "typeName": "AWS::IoT::CustomMetric"
+}

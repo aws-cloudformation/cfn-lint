@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SlackWorkspaceId",
+  "/properties/ConfigurationName"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "chatbot:CreateSlackChannelConfiguration",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "chatbot:DeleteSlackChannelConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "chatbot:DescribeSlackChannelConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "chatbot:DescribeSlackChannelConfigurations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "chatbot:UpdateSlackChannelConfiguration",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "ConfigurationName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-_]+$",
+   "type": "string"
+  },
+  "GuardrailPolicies": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^(^$|arn:aws:iam:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9_\\/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_\\/+=,@.-]{0,1023})$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "IamRoleArn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "LoggingLevel": {
+   "default": "NONE",
+   "pattern": "^(ERROR|INFO|NONE)$",
+   "type": "string"
+  },
+  "SlackChannelId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "SlackWorkspaceId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[0-9A-Z]{1,255}$",
+   "type": "string"
+  },
+  "SnsTopicArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:(aws[a-zA-Z-]*)?:[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "UserRoleRequired": {
+   "default": false,
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "SlackWorkspaceId",
+  "SlackChannelId",
+  "ConfigurationName",
+  "IamRoleArn"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-chatbot-slackchannelconfiguration.html",
+ "typeName": "AWS::Chatbot::SlackChannelConfiguration"
+}

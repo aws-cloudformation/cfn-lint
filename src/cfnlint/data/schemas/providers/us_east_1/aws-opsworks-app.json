@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Shortname",
+  "/properties/StackId"
+ ],
+ "definitions": {
+  "DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Secure": {
+     "type": "boolean"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "string"
+    },
+    "SshKey": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SslConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Certificate": {
+     "type": "string"
+    },
+    "Chain": {
+     "type": "string"
+    },
+    "PrivateKey": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AppSource": {
+   "$ref": "#/definitions/Source"
+  },
+  "Attributes": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataSources": {
+   "items": {
+    "$ref": "#/definitions/DataSource"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Domains": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableSsl": {
+   "type": "boolean"
+  },
+  "Environment": {
+   "items": {
+    "$ref": "#/definitions/EnvironmentVariable"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Shortname": {
+   "type": "string"
+  },
+  "SslConfiguration": {
+   "$ref": "#/definitions/SslConfiguration"
+  },
+  "StackId": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Type",
+  "Name",
+  "StackId"
+ ],
+ "typeName": "AWS::OpsWorks::App"
+}

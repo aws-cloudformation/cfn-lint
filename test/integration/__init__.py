@@ -5,17 +5,19 @@ SPDX-License-Identifier: MIT-0
 
 import json
 import subprocess
-import sys
+import unittest
 from pathlib import Path
-from test.testlib.testcase import BaseTestCase
+from typing import Any, Dict, List
 
-import cfnlint.core
+from cfnlint.config import configure_logging
+from cfnlint.decode import cfn_yaml
+from cfnlint.runner import Runner
 
 
-class BaseCliTestCase(BaseTestCase):
+class BaseCliTestCase(unittest.TestCase):
     """Used for Testing CLI"""
 
-    scenarios = []
+    scenarios: List[Dict[str, Any]] = []
 
     def setUp(self):
         """Common Settings"""
@@ -83,11 +85,11 @@ class BaseCliTestCase(BaseTestCase):
                     ),
                 )
 
-    def run_module_integration_scenarios(self, rules):
+    def run_module_integration_scenarios(self, config):
         """Test using cfnlint as a module integrated into another package"""
 
-        cfnlint.core.configure_logging(None)
-        regions = ["us-east-1"]
+        configure_logging(None, False)
+
         for scenario in self.scenarios:
             filename = scenario.get("filename")
             results_filename = scenario.get("results_filename")
@@ -100,9 +102,10 @@ class BaseCliTestCase(BaseTestCase):
             for result in expected_results:
                 result["Filename"] = str(Path(result.get("Filename")))
 
-            template = cfnlint.decode.cfn_yaml.load(filename)
+            template = cfn_yaml.load(filename)
 
-            matches = cfnlint.core.run_checks(filename, template, rules, regions)
+            runner = Runner(config)
+            matches = list(runner.validate_template(filename, template))
 
             # Only check that the error count matches as the formats are different
             self.assertEqual(

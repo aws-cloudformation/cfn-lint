@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "And": {
+   "additionalProperties": false,
+   "minProperties": 2,
+   "properties": {
+    "MatchAnyPrefix": {
+     "$ref": "#/definitions/MatchAnyPrefix"
+    },
+    "MatchAnySuffix": {
+     "$ref": "#/definitions/MatchAnySuffix"
+    },
+    "MatchAnyTag": {
+     "$ref": "#/definitions/MatchAnyTag"
+    },
+    "MatchObjectAge": {
+     "$ref": "#/definitions/MatchObjectAge"
+    },
+    "MatchObjectSize": {
+     "$ref": "#/definitions/MatchObjectSize"
+    }
+   },
+   "type": "object",
+   "uniqueItems": true
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "And": {
+     "$ref": "#/definitions/And"
+    },
+    "MatchAnyPrefix": {
+     "$ref": "#/definitions/MatchAnyPrefix"
+    },
+    "MatchAnySuffix": {
+     "$ref": "#/definitions/MatchAnySuffix"
+    },
+    "MatchAnyTag": {
+     "$ref": "#/definitions/MatchAnyTag"
+    },
+    "MatchObjectAge": {
+     "$ref": "#/definitions/MatchObjectAge"
+    },
+    "MatchObjectSize": {
+     "$ref": "#/definitions/MatchObjectSize"
+    },
+    "Or": {
+     "$ref": "#/definitions/Or"
+    }
+   },
+   "type": "object"
+  },
+  "MatchAnyPrefix": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 1024,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MatchAnySuffix": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 1024,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MatchAnyTag": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MatchObjectAge": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysGreaterThan": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "DaysLessThan": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MatchObjectSize": {
+   "additionalProperties": false,
+   "properties": {
+    "BytesGreaterThan": {
+     "format": "int64",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "BytesLessThan": {
+     "format": "int64",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-_]+$",
+   "type": "string"
+  },
+  "Or": {
+   "additionalProperties": false,
+   "minProperties": 2,
+   "properties": {
+    "MatchAnyPrefix": {
+     "$ref": "#/definitions/MatchAnyPrefix"
+    },
+    "MatchAnySuffix": {
+     "$ref": "#/definitions/MatchAnySuffix"
+    },
+    "MatchAnyTag": {
+     "$ref": "#/definitions/MatchAnyTag"
+    },
+    "MatchObjectAge": {
+     "$ref": "#/definitions/MatchObjectAge"
+    },
+    "MatchObjectSize": {
+     "$ref": "#/definitions/MatchObjectSize"
+    }
+   },
+   "type": "object",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:CreateStorageLensGroup",
+    "s3:GetStorageLensGroup",
+    "s3:TagResource",
+    "s3:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:DeleteStorageLensGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3:ListStorageLensGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3:GetStorageLensGroup",
+    "s3:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:GetStorageLensGroup",
+    "s3:UpdateStorageLensGroup",
+    "s3:TagResource",
+    "s3:UntagResource",
+    "s3:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Filter": {
+   "$ref": "#/definitions/Filter"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "StorageLensGroupArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StorageLensGroupArn"
+ ],
+ "required": [
+  "Name",
+  "Filter"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3-storagelensgroup",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::StorageLensGroup"
+}

@@ -3,9 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import logging
 from json.decoder import JSONDecodeError
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Tuple, Union
 
 from yaml import YAMLError
 from yaml.parser import ParserError
@@ -17,7 +19,7 @@ from cfnlint.match import Match
 LOGGER = logging.getLogger(__name__)
 
 Matches = List[Match]
-Decode = Tuple[Union[str, None], Matches]
+Decode = Tuple[Union[Dict[str, Any], None], Matches]
 
 
 def decode_str(s: str) -> Decode:
@@ -25,13 +27,13 @@ def decode_str(s: str) -> Decode:
     return _decode(cfn_yaml.loads, cfn_json.loads, s, None)
 
 
-def decode(filename: str) -> Decode:
+def decode(filename: str | None) -> Decode:
     """Decode filename into an object."""
     return _decode(cfn_yaml.load, cfn_json.load, filename, filename)
 
 
 def _decode(
-    yaml_f: Callable, json_f: Callable, payload: str, filename: Optional[str]
+    yaml_f: Callable, json_f: Callable, payload: str | None, filename: str | None
 ) -> Decode:
     """Decode payload using yaml_f and json_f, using filename for log output."""
     template = None
@@ -64,7 +66,7 @@ def _decode(
 
         if matches:
             return (None, matches)
-    except UnicodeDecodeError as _:
+    except UnicodeDecodeError:
         LOGGER.error("Cannot read file contents: %s", filename)
         matches.append(
             create_match_file_error(filename, "Cannot read file contents: {filename}")
@@ -109,7 +111,10 @@ def _decode(
                     [
                         create_match_file_error(
                             filename,
-                            f"Tried to parse {filename} as JSON but got error: {str(json_err)}",
+                            (
+                                f"Tried to parse {filename} as JSON but got error:"
+                                f" {str(json_err)}"
+                            ),
                         )
                     ],
                 )
@@ -124,13 +129,9 @@ def _decode(
 
         # Template isn't a dict which means nearly nothing will work
         matches = [
-            Match(
-                1,
-                1,
-                1,
-                1,
-                filename,
-                ParseError(),
+            Match.create(
+                filename=filename or "",
+                rule=ParseError(),
                 message="Template needs to be an object.",
             )
         ]
@@ -145,7 +146,13 @@ def create_match_yaml_parser_error(parser_error, filename):
     lineno = parser_error.problem_mark.line + 1
     colno = parser_error.problem_mark.column + 1
     msg = parser_error.problem
-    return Match(lineno, colno, lineno, colno + 1, filename, ParseError(), message=msg)
+    return Match.create(
+        message=msg,
+        rule=ParseError(),
+        filename=filename,
+        linenumber=lineno,
+        columnnumber=colno,
+    )
 
 
 def create_match_file_error(filename, msg):
@@ -153,11 +160,7 @@ def create_match_file_error(filename, msg):
     # pylint: disable=import-outside-toplevel
     from cfnlint.rules import ParseError
 
-    return Match(
-        linenumber=1,
-        columnnumber=1,
-        linenumberend=1,
-        columnnumberend=2,
+    return Match.create(
         filename=filename,
         rule=ParseError(),
         message=msg,
@@ -172,4 +175,10 @@ def create_match_json_parser_error(parser_error, filename):
     lineno = parser_error.lineno
     colno = parser_error.colno
     msg = parser_error.msg
-    return Match(lineno, colno, lineno, colno + 1, filename, ParseError(), message=msg)
+    return Match.create(
+        filename=filename,
+        rule=ParseError(),
+        message=msg,
+        linenumber=lineno,
+        columnnumber=colno,
+    )

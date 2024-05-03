@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ResourceArn"
+ ],
+ "definitions": {
+  "ApplicationLayerAutomaticResponseConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "oneOf": [
+      {
+       "additionalProperties": false,
+       "properties": {
+        "Count": {
+         "additionalProperties": false,
+         "type": "object"
+        }
+       },
+       "type": "object"
+      },
+      {
+       "additionalProperties": false,
+       "properties": {
+        "Block": {
+         "additionalProperties": false,
+         "type": "object"
+        }
+       },
+       "type": "object"
+      }
+     ],
+     "type": "object"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "shield:CreateProtection",
+    "shield:DeleteProtection",
+    "shield:DescribeProtection",
+    "shield:ListProtections",
+    "shield:EnableApplicationLayerAutomaticResponse",
+    "shield:AssociateHealthCheck",
+    "shield:TagResource",
+    "ec2:DescribeAddresses",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "route53:GetHealthCheck",
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "wafv2:GetWebACLForResource",
+    "wafv2:GetWebACL"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "shield:DeleteProtection",
+    "shield:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "shield:ListProtections"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "shield:DescribeProtection",
+    "shield:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "shield:DescribeProtection",
+    "shield:AssociateHealthCheck",
+    "shield:DisassociateHealthCheck",
+    "shield:EnableApplicationLayerAutomaticResponse",
+    "shield:UpdateApplicationLayerAutomaticResponse",
+    "shield:DisableApplicationLayerAutomaticResponse",
+    "shield:ListTagsForResource",
+    "shield:TagResource",
+    "shield:UntagResource",
+    "route53:GetHealthCheck",
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "wafv2:GetWebACLForResource",
+    "wafv2:GetWebACL"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProtectionArn"
+ ],
+ "properties": {
+  "ApplicationLayerAutomaticResponseConfiguration": {
+   "$ref": "#/definitions/ApplicationLayerAutomaticResponseConfiguration"
+  },
+  "HealthCheckArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[ a-zA-Z0-9_\\.\\-]*",
+   "type": "string"
+  },
+  "ProtectionArn": {
+   "type": "string"
+  },
+  "ProtectionId": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProtectionId",
+  "/properties/ProtectionArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Name",
+  "ResourceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-shield.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagProperty": "/properties/Tags",
+  "taggable": true
+ },
+ "typeName": "AWS::Shield::Protection"
+}

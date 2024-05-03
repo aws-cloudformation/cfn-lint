@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Cores",
+  "/properties/CoreDefinitionId"
+ ],
+ "definitions": {
+  "Core": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "SyncShadow": {
+     "type": "boolean"
+    },
+    "ThingArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThingArn",
+    "Id",
+    "CertificateArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CoreDefinitionId": {
+   "type": "string"
+  },
+  "Cores": {
+   "items": {
+    "$ref": "#/definitions/Core"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Cores",
+  "CoreDefinitionId"
+ ],
+ "typeName": "AWS::Greengrass::CoreDefinitionVersion"
+}

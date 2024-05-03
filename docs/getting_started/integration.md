@@ -4,13 +4,10 @@ Besides using cfn-lint through the command line, cfn-lint is built as a standalo
 ## Getting Started
 A simplified api is exposed by `cfnlint.api` which allows you to validate string CloudFormation templates on the fly.
 
-We can use either `lint(s, rules, regions)` which validates a string `s` against the specified `rules` and `regions`, or we can use `lint_all(s)` which simply validates `s` against all rules and regions:
+We can use either `lint(s, config)` which validates a string `s` against the specified `config`, or we can use `lint_all(s)` which simply validates `s` against all rules and regions:
 
 ```python
-from cfnlint.api import lint, lint_all
-# Note the following two imports wouldn't be required if you were just using lint_all
-from cfnlint.core import get_rules
-from cfnlint.helpers import REGIONS
+from cfnlint.api import lint, lint_all, ManualArgs
 
 # Note ServiceName is not defined anywhere here
 s = '''AWSTemplateFormatVersion: 2010-09-09
@@ -21,11 +18,9 @@ Resources:
     Properties:
       ClusterName: !Join ['', [!Ref ServiceName, Cluster]]'''
 
-# We specify only ['W', 'I'] for ignore_rules so warnings and informationals are not returned
-rules = get_rules([], ['W', 'I'], [])
-# Only validate against us-east-1
-regions = ['us-east-1']
-print(lint(s, rules, regions))
+config = ManualArgs(regions=["us-east-1"])
+
+print(lint(s, config=config))
 # [[E1012: Check if Refs exist] (Ref ServiceName not found as a resource or parameter) matched 7]
 
 print(lint_all(s))

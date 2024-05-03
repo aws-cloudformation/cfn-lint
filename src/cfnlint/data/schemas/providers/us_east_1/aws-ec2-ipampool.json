@@ -1,0 +1,253 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamScopeId",
+  "/properties/SourceIpamPoolId",
+  "/properties/Locale",
+  "/properties/AddressFamily",
+  "/properties/PubliclyAdvertisable",
+  "/properties/PublicIpSource",
+  "/properties/AwsService",
+  "/properties/SourceResource"
+ ],
+ "definitions": {
+  "Cidr": {
+   "type": "string"
+  },
+  "ProvisionedCidr": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "$ref": "#/definitions/Cidr"
+    }
+   },
+   "required": [
+    "Cidr"
+   ],
+   "type": "object"
+  },
+  "SourceResource": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceId": {
+     "type": "string"
+    },
+    "ResourceOwner": {
+     "type": "string"
+    },
+    "ResourceRegion": {
+     "type": "string"
+    },
+    "ResourceType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceId",
+    "ResourceType",
+    "ResourceRegion",
+    "ResourceOwner"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateIpamPool",
+    "ec2:DescribeIpamPools",
+    "ec2:ProvisionIpamPoolCidr",
+    "ec2:GetIpamPoolCidrs",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteIpamPool",
+    "ec2:DescribeIpamPools",
+    "ec2:GetIpamPoolCidrs",
+    "ec2:DeprovisionIpamPoolCidr",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeIpamPools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeIpamPools",
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyIpamPool",
+    "ec2:DescribeIpamPools",
+    "ec2:GetIpamPoolCidrs",
+    "ec2:ProvisionIpamPoolCidr",
+    "ec2:DeprovisionIpamPoolCidr",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPoolId"
+ ],
+ "properties": {
+  "AddressFamily": {
+   "type": "string"
+  },
+  "AllocationDefaultNetmaskLength": {
+   "type": "integer"
+  },
+  "AllocationMaxNetmaskLength": {
+   "type": "integer"
+  },
+  "AllocationMinNetmaskLength": {
+   "type": "integer"
+  },
+  "AllocationResourceTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AutoImport": {
+   "type": "boolean"
+  },
+  "AwsService": {
+   "enum": [
+    "ec2"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IpamArn": {
+   "type": "string"
+  },
+  "IpamPoolId": {
+   "type": "string"
+  },
+  "IpamScopeArn": {
+   "type": "string"
+  },
+  "IpamScopeId": {
+   "type": "string"
+  },
+  "IpamScopeType": {
+   "enum": [
+    "public",
+    "private"
+   ],
+   "type": "string"
+  },
+  "Locale": {
+   "type": "string"
+  },
+  "PoolDepth": {
+   "type": "integer"
+  },
+  "ProvisionedCidrs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ProvisionedCidr"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PublicIpSource": {
+   "enum": [
+    "byoip",
+    "amazon"
+   ],
+   "type": "string"
+  },
+  "PubliclyAdvertisable": {
+   "type": "boolean"
+  },
+  "SourceIpamPoolId": {
+   "type": "string"
+  },
+  "SourceResource": {
+   "$ref": "#/definitions/SourceResource"
+  },
+  "State": {
+   "enum": [
+    "create-in-progress",
+    "create-complete",
+    "modify-in-progress",
+    "modify-complete",
+    "delete-in-progress",
+    "delete-complete"
+   ],
+   "type": "string"
+  },
+  "StateMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/AddressFamily": "$lowercase(AddressFamily)"
+ },
+ "readOnlyProperties": [
+  "/properties/IpamPoolId",
+  "/properties/Arn",
+  "/properties/IpamScopeArn",
+  "/properties/IpamScopeType",
+  "/properties/IpamArn",
+  "/properties/PoolDepth",
+  "/properties/State",
+  "/properties/StateMessage"
+ ],
+ "required": [
+  "IpamScopeId",
+  "AddressFamily"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAMPool"
+}

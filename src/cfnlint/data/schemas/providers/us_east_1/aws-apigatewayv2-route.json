@@ -1,0 +1,128 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "ParameterConstraints": {
+   "additionalProperties": false,
+   "properties": {
+    "Required": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Required"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ApiId": {
+      "$ref": "resource-schema.json#/properties/ApiId"
+     }
+    },
+    "required": [
+     "ApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId",
+  "/properties/RouteId"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "ApiKeyRequired": {
+   "type": "boolean"
+  },
+  "AuthorizationScopes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AuthorizationType": {
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "type": "string"
+  },
+  "ModelSelectionExpression": {
+   "type": "string"
+  },
+  "OperationName": {
+   "type": "string"
+  },
+  "RequestModels": {
+   "type": "object"
+  },
+  "RequestParameters": {
+   "items": {
+    "$ref": "#/definitions/ParameterConstraints"
+   },
+   "type": "object"
+  },
+  "RouteId": {
+   "type": "string"
+  },
+  "RouteKey": {
+   "type": "string"
+  },
+  "RouteResponseSelectionExpression": {
+   "type": "string"
+  },
+  "Target": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RouteId"
+ ],
+ "required": [
+  "RouteKey",
+  "ApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigatewayv2",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::Route",
+ "writeOnlyProperties": [
+  "/properties/AuthorizerId",
+  "/properties/RequestParameters"
+ ]
+}

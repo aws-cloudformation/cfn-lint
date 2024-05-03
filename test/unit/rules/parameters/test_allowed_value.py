@@ -3,9 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.parameters.AllowedValue import AllowedValue  # pylint: disable=E0401
+from cfnlint.context import Context
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.parameters.Enum import Enum
 
 
 class TestAllowedValue(BaseRuleTestCase):
@@ -13,18 +16,25 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def setUp(self):
         """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/allowed_values.yaml"
-        ]
+        self.rule = Enum()
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/allowed_values.yaml", 2
+    def test_validate(self):
+        validator = CfnTemplateValidator(
+            schema={"type": "string"},
+            context=Context(
+                "us-east-1",
+                {},
+                deque(["Property", "Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "Default"]),
+            ),
         )
+
+        errs = list(self.rule.enum(validator, "1", ["A", "B"], {}))
+        self.assertEqual(len(errs), 1)
+        self.assertEqual(len(errs), 1)
+        for err in errs:
+            self.assertEqual(err.message, "['A', 'B'] is not one of '1'")
+            self.assertEqual(err.rule, self.rule)
+            self.assertEqual(
+                err.path_override, deque(["Parameters", "MyParameter", "Default"])
+            )

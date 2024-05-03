@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Database",
+  "/properties/Description",
+  "/properties/QueryString",
+  "/properties/WorkGroup"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "athena:CreateNamedQuery"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "athena:DeleteNamedQuery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "athena:ListNamedQueries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "athena:GetNamedQuery"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NamedQueryId"
+ ],
+ "properties": {
+  "Database": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NamedQueryId": {
+   "type": "string"
+  },
+  "QueryString": {
+   "maxLength": 262144,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WorkGroup": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NamedQueryId"
+ ],
+ "required": [
+  "Database",
+  "QueryString"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+ "taggable": false,
+ "typeName": "AWS::Athena::NamedQuery"
+}

@@ -1,0 +1,557 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/JobDefinitionName",
+  "/properties/ModelBiasAppSpecification",
+  "/properties/ModelBiasBaselineConfig",
+  "/properties/ModelBiasJobInput",
+  "/properties/ModelBiasJobOutputConfig",
+  "/properties/JobResources",
+  "/properties/NetworkConfig",
+  "/properties/RoleArn",
+  "/properties/StoppingCondition",
+  "/properties/Tags",
+  "/properties/EndpointName"
+ ],
+ "definitions": {
+  "BatchTransformInput": {
+   "additionalProperties": false,
+   "properties": {
+    "DataCapturedDestinationS3Uri": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    },
+    "DatasetFormat": {
+     "$ref": "#/definitions/DatasetFormat"
+    },
+    "EndTimeOffset": {
+     "$ref": "#/definitions/MonitoringTimeOffsetString"
+    },
+    "FeaturesAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "InferenceAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ProbabilityAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "ProbabilityThresholdAttribute": {
+     "format": "double",
+     "type": "number"
+    },
+    "S3DataDistributionType": {
+     "enum": [
+      "FullyReplicated",
+      "ShardedByS3Key"
+     ],
+     "type": "string"
+    },
+    "S3InputMode": {
+     "enum": [
+      "Pipe",
+      "File"
+     ],
+     "type": "string"
+    },
+    "StartTimeOffset": {
+     "$ref": "#/definitions/MonitoringTimeOffsetString"
+    }
+   },
+   "required": [
+    "DataCapturedDestinationS3Uri",
+    "DatasetFormat",
+    "LocalPath"
+   ],
+   "type": "object"
+  },
+  "ClusterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceCount": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "VolumeKmsKeyId": {
+     "maximum": 2048,
+     "minimum": 1,
+     "type": "string"
+    },
+    "VolumeSizeInGB": {
+     "maximum": 16384,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "InstanceCount",
+    "InstanceType",
+    "VolumeSizeInGB"
+   ],
+   "type": "object"
+  },
+  "ConstraintsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Uri": {
+     "$ref": "#/definitions/S3Uri"
+    }
+   },
+   "type": "object"
+  },
+  "Csv": {
+   "properties": {
+    "Header": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DatasetFormat": {
+   "properties": {
+    "Csv": {
+     "$ref": "#/definitions/Csv"
+    },
+    "Json": {
+     "$ref": "#/definitions/Json"
+    },
+    "Parquet": {
+     "$ref": "#/definitions/Parquet"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointInput": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTimeOffset": {
+     "$ref": "#/definitions/MonitoringTimeOffsetString"
+    },
+    "EndpointName": {
+     "$ref": "#/definitions/EndpointName"
+    },
+    "FeaturesAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "InferenceAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ProbabilityAttribute": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "ProbabilityThresholdAttribute": {
+     "format": "double",
+     "type": "number"
+    },
+    "S3DataDistributionType": {
+     "enum": [
+      "FullyReplicated",
+      "ShardedByS3Key"
+     ],
+     "type": "string"
+    },
+    "S3InputMode": {
+     "enum": [
+      "Pipe",
+      "File"
+     ],
+     "type": "string"
+    },
+    "StartTimeOffset": {
+     "$ref": "#/definitions/MonitoringTimeOffsetString"
+    }
+   },
+   "required": [
+    "EndpointName",
+    "LocalPath"
+   ],
+   "type": "object"
+  },
+  "EndpointName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "JobDefinitionName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "Json": {
+   "properties": {
+    "Line": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ModelBiasAppSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigUri": {
+     "$ref": "#/definitions/S3Uri"
+    },
+    "Environment": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[\\S\\s]*": {
+       "maxLength": 256,
+       "type": "string"
+      },
+      "[a-zA-Z_][a-zA-Z0-9_]*": {
+       "maxLength": 256,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ImageUri",
+    "ConfigUri"
+   ],
+   "type": "object"
+  },
+  "ModelBiasBaselineConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseliningJobName": {
+     "$ref": "#/definitions/ProcessingJobName"
+    },
+    "ConstraintsResource": {
+     "$ref": "#/definitions/ConstraintsResource"
+    }
+   },
+   "type": "object"
+  },
+  "ModelBiasJobInput": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchTransformInput": {
+     "$ref": "#/definitions/BatchTransformInput"
+    },
+    "EndpointInput": {
+     "$ref": "#/definitions/EndpointInput"
+    },
+    "GroundTruthS3Input": {
+     "$ref": "#/definitions/MonitoringGroundTruthS3Input"
+    }
+   },
+   "required": [
+    "GroundTruthS3Input"
+   ],
+   "type": "object"
+  },
+  "MonitoringGroundTruthS3Input": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Uri": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "MonitoringOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Output": {
+     "$ref": "#/definitions/S3Output"
+    }
+   },
+   "required": [
+    "S3Output"
+   ],
+   "type": "object"
+  },
+  "MonitoringOutputConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "MonitoringOutputs": {
+     "items": {
+      "$ref": "#/definitions/MonitoringOutput"
+     },
+     "maxLength": 1,
+     "minLength": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "MonitoringOutputs"
+   ],
+   "type": "object"
+  },
+  "MonitoringResources": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterConfig": {
+     "$ref": "#/definitions/ClusterConfig"
+    }
+   },
+   "required": [
+    "ClusterConfig"
+   ],
+   "type": "object"
+  },
+  "MonitoringTimeOffsetString": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^.?P.*",
+   "type": "string"
+  },
+  "NetworkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableInterContainerTrafficEncryption": {
+     "type": "boolean"
+    },
+    "EnableNetworkIsolation": {
+     "type": "boolean"
+    },
+    "VpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Parquet": {
+   "type": "boolean"
+  },
+  "ProcessingJobName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "S3Output": {
+   "additionalProperties": false,
+   "properties": {
+    "LocalPath": {
+     "maxLength": 256,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3UploadMode": {
+     "enum": [
+      "Continuous",
+      "EndOfJob"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 512,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LocalPath",
+    "S3Uri"
+   ],
+   "type": "object"
+  },
+  "S3Uri": {
+   "maxLength": 1024,
+   "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+   "type": "string"
+  },
+  "StoppingCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRuntimeInSeconds": {
+     "maximum": 86400,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxRuntimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Subnets": {
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "Subnets"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateModelBiasJobDefinition",
+    "sagemaker:DescribeModelBiasJobDefinition",
+    "iam:PassRole",
+    "sagemaker:AddTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteModelBiasJobDefinition"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListModelBiasJobDefinitions",
+    "sagemaker:ListTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModelBiasJobDefinition"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/JobDefinitionArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "EndpointName": {
+   "$ref": "#/definitions/EndpointName"
+  },
+  "JobDefinitionArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "JobDefinitionName": {
+   "$ref": "#/definitions/JobDefinitionName"
+  },
+  "JobResources": {
+   "$ref": "#/definitions/MonitoringResources"
+  },
+  "ModelBiasAppSpecification": {
+   "$ref": "#/definitions/ModelBiasAppSpecification"
+  },
+  "ModelBiasBaselineConfig": {
+   "$ref": "#/definitions/ModelBiasBaselineConfig"
+  },
+  "ModelBiasJobInput": {
+   "$ref": "#/definitions/ModelBiasJobInput"
+  },
+  "ModelBiasJobOutputConfig": {
+   "$ref": "#/definitions/MonitoringOutputConfig"
+  },
+  "NetworkConfig": {
+   "$ref": "#/definitions/NetworkConfig"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "StoppingCondition": {
+   "$ref": "#/definitions/StoppingCondition"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/JobDefinitionArn"
+ ],
+ "required": [
+  "ModelBiasAppSpecification",
+  "ModelBiasJobInput",
+  "ModelBiasJobOutputConfig",
+  "JobResources",
+  "RoleArn"
+ ],
+ "typeName": "AWS::SageMaker::ModelBiasJobDefinition",
+ "writeOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

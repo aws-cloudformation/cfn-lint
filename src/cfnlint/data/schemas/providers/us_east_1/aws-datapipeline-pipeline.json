@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "RefValue": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ParameterAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "StringValue"
+   ],
+   "type": "object"
+  },
+  "ParameterObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ParameterAttribute"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id",
+    "StringValue"
+   ],
+   "type": "object"
+  },
+  "PipelineObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Fields": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Field"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Fields",
+    "Id",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datapipeline:CreatePipeline",
+    "datapipeline:PutPipelineDefinition",
+    "datapipeline:GetPipelineDefinition",
+    "datapipeline:DescribePipelines",
+    "datapipeline:ValidatePipelineDefinition",
+    "datapipeline:ActivatePipeline",
+    "datapipeline:AddTags",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datapipeline:DeletePipeline",
+    "datapipeline:DescribePipelines",
+    "datapipeline:GetPipelineDefinition",
+    "datapipeline:RemoveTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datapipeline:ListPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datapipeline:GetPipelineDefinition",
+    "datapipeline:DescribePipelines"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datapipeline:PutPipelineDefinition",
+    "datapipeline:AddTags",
+    "datapipeline:RemoveTags",
+    "datapipeline:DeactivatePipeline",
+    "datapipeline:GetPipelineDefinition",
+    "datapipeline:ActivatePipeline",
+    "datapipeline:ValidatePipelineDefinition",
+    "datapipeline:DescribePipelines",
+    "datapipeline:AddTags",
+    "datapipeline:RemoveTags",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineId"
+ ],
+ "properties": {
+  "Activate": {
+   "type": "boolean"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ParameterObjects": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParameterObject"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ParameterValues": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParameterValue"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PipelineId": {
+   "type": "string"
+  },
+  "PipelineObjects": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PipelineObject"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PipelineTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PipelineTag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PipelineId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datapipeline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/PipelineTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataPipeline::Pipeline"
+}

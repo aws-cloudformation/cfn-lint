@@ -1,0 +1,500 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/ComponentTypeId"
+ ],
+ "definitions": {
+  "CompositeComponentType": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentTypeId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataConnector": {
+   "additionalProperties": false,
+   "properties": {
+    "IsNative": {
+     "type": "boolean"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/LambdaFunction"
+    }
+   },
+   "type": "object"
+  },
+  "DataType": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedValues": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DataValue"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NestedType": {
+     "$ref": "#/definitions/DataType"
+    },
+    "Relationship": {
+     "$ref": "#/definitions/Relationship"
+    },
+    "Type": {
+     "enum": [
+      "RELATIONSHIP",
+      "STRING",
+      "LONG",
+      "BOOLEAN",
+      "INTEGER",
+      "DOUBLE",
+      "LIST",
+      "MAP"
+     ],
+     "type": "string"
+    },
+    "UnitOfMeasure": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DataValue": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "type": "number"
+    },
+    "Expression": {
+     "maxLength": 316,
+     "minLength": 1,
+     "pattern": "(^\\$\\{Parameters\\.[a-zA-z]+([a-zA-z_0-9]*)}$)",
+     "type": "string"
+    },
+    "IntegerValue": {
+     "type": "integer"
+    },
+    "ListValue": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DataValue"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LongValue": {
+     "type": "number"
+    },
+    "MapValue": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z_\\-0-9]+": {
+       "$ref": "#/definitions/DataValue"
+      }
+     },
+     "type": "object"
+    },
+    "RelationshipValue": {
+     "additionalProperties": false,
+     "properties": {
+      "TargetComponentName": {
+       "maxLength": 256,
+       "minLength": 1,
+       "pattern": "[a-zA-Z_\\-0-9]+",
+       "type": "string"
+      },
+      "TargetEntityId": {
+       "maxLength": 128,
+       "minLength": 1,
+       "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|^[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "StringValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Function": {
+   "additionalProperties": false,
+   "properties": {
+    "ImplementedBy": {
+     "$ref": "#/definitions/DataConnector"
+    },
+    "RequiredProperties": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RequiredProperty"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Scope": {
+     "enum": [
+      "ENTITY",
+      "WORKSPACE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaFunction": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):lambda:[a-z0-9-]+:[0-9]{12}:function:[\\/a-zA-Z0-9_-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "ParentComponentType": {
+   "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+   "type": "string"
+  },
+  "PropertyDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Configurations": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z_\\-0-9]+": {
+       "maxLength": 256,
+       "minLength": 1,
+       "pattern": "[a-zA-Z_\\-0-9]+",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DataType": {
+     "$ref": "#/definitions/DataType"
+    },
+    "DefaultValue": {
+     "$ref": "#/definitions/DataValue"
+    },
+    "IsExternalId": {
+     "type": "boolean"
+    },
+    "IsRequiredInEntity": {
+     "type": "boolean"
+    },
+    "IsStoredExternally": {
+     "type": "boolean"
+    },
+    "IsTimeSeries": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupType": {
+     "enum": [
+      "TABULAR"
+     ],
+     "type": "string"
+    },
+    "PropertyNames": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PropertyName"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "PropertyName": {
+   "pattern": "[a-zA-Z_\\-0-9]+",
+   "type": "string"
+  },
+  "Relationship": {
+   "additionalProperties": false,
+   "properties": {
+    "RelationshipType": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "TargetComponentTypeId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequiredProperty": {
+   "pattern": "[a-zA-Z_\\-0-9]+",
+   "type": "string"
+  },
+  "Status": {
+   "additionalProperties": false,
+   "properties": {
+    "Error": {
+     "anyOf": [
+      {
+       "additionalProperties": false,
+       "type": "object"
+      },
+      {
+       "additionalProperties": false,
+       "properties": {
+        "Code": {
+         "enum": [
+          "VALIDATION_ERROR",
+          "INTERNAL_FAILURE"
+         ],
+         "type": "string"
+        },
+        "Message": {
+         "maxLength": 2048,
+         "minLength": 0,
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     ],
+     "type": "object"
+    },
+    "State": {
+     "enum": [
+      "CREATING",
+      "UPDATING",
+      "DELETING",
+      "ACTIVE",
+      "ERROR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iottwinmaker:CreateComponentType",
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteComponentType",
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "WorkspaceId": {
+      "$ref": "resource-schema.json#/properties/WorkspaceId",
+      "type": "string"
+     }
+    },
+    "required": [
+     "WorkspaceId"
+    ]
+   },
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListComponentTypes",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource",
+    "iottwinmaker:UntagResource",
+    "iottwinmaker:UpdateComponentType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId",
+  "/properties/ComponentTypeId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "ComponentTypeId": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+   "type": "string"
+  },
+  "CompositeComponentTypes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/CompositeComponentType"
+    }
+   },
+   "type": "object"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExtendsFrom": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParentComponentType"
+   },
+   "maxItems": 256,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Functions": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/Function"
+    }
+   },
+   "type": "object"
+  },
+  "IsAbstract": {
+   "type": "boolean"
+  },
+  "IsSchemaInitialized": {
+   "type": "boolean"
+  },
+  "IsSingleton": {
+   "type": "boolean"
+  },
+  "PropertyDefinitions": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/PropertyDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyGroups": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/PropertyGroup"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat"
+  },
+  "WorkspaceId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime",
+  "/properties/Status",
+  "/properties/IsAbstract",
+  "/properties/IsSchemaInitialized"
+ ],
+ "required": [
+  "WorkspaceId",
+  "ComponentTypeId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iottwinmaker",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::ComponentType"
+}

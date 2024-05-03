@@ -1,0 +1,137 @@
+{
+ "additionalProperties": {
+  "$ref": "#/definitions/ResourceConfiguration"
+ },
+ "definitions": {
+  "CloudFormationInitConfig": {
+   "properties": {
+    "config": {
+     "properties": {
+      "commands": {
+       "awsType": "CfnInitCommands"
+      },
+      "files": {
+       "awsType": "CfnInitFiles"
+      },
+      "groups": {
+       "awsType": "CfnInitGroups"
+      },
+      "packages": {
+       "awsType": "CfnInitPackages"
+      },
+      "services": {
+       "awsType": "CfnInitServices"
+      },
+      "sources": {
+       "awsType": "CfnInitSources"
+      },
+      "users": {
+       "awsType": "CfnInitUsers"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceConfiguration": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "awsType": "CfnResourceType"
+    },
+    {
+     "awsType": "CfnResourceProperties"
+    },
+    {
+     "awsType": "CfnResourceUpdatePolicy"
+    }
+   ],
+   "else": {
+    "cfnLint": [
+     "Resource/UpdatePolicyDelete"
+    ],
+    "not": {
+     "required": [
+      "Version"
+     ]
+    },
+    "properties": {
+     "CreationPolicy": {
+      "type": "object"
+     },
+     "UpdatePolicy": {
+      "type": "object"
+     }
+    }
+   },
+   "if": {
+    "properties": {
+     "Type": {
+      "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
+     }
+    }
+   },
+   "properties": {
+    "Condition": {
+     "awsType": "CfnCondition",
+     "type": "string"
+    },
+    "CreationPolicy": {
+     "type": "object"
+    },
+    "DeletionPolicy": {
+     "awsType": "CfnDeletionPolicy"
+    },
+    "DependsOn": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    },
+    "Metadata": {
+     "awsType": "CfnResourceMetadata"
+    },
+    "Properties": {},
+    "Type": {
+     "type": "string"
+    },
+    "UpdatePolicy": {
+     "type": "object"
+    },
+    "UpdateReplacePolicy": {
+     "awsType": "CfnResourceUpdateReplacePolicy"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "then": {
+    "not": {
+     "required": [
+      "CreationPolicy",
+      "UpdatePolicy"
+     ]
+    },
+    "properties": {
+     "Version": {
+      "type": "string"
+     }
+    }
+   },
+   "type": "object"
+  }
+ },
+ "maxProperties": 500,
+ "propertyNames": {
+  "maxLength": 255,
+  "pattern": "^[a-zA-Z0-9]+$"
+ },
+ "type": "object"
+}

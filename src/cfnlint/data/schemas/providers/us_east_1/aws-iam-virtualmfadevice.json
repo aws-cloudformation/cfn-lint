@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VirtualMfaDeviceName",
+  "/properties/Path"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateVirtualMFADevice",
+    "iam:EnableMFADevice",
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteVirtualMFADevice",
+    "iam:DeactivateMFADevice"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:TagMFADevice",
+    "iam:UntagMFADevice"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SerialNumber"
+ ],
+ "properties": {
+  "Path": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "(\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F)",
+   "type": "string"
+  },
+  "SerialNumber": {
+   "maxLength": 256,
+   "minLength": 9,
+   "pattern": "[\\w+=/:,.@-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VirtualMfaDeviceName": {
+   "maxLength": 226,
+   "minLength": 1,
+   "pattern": "[\\w+=,.@-]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SerialNumber"
+ ],
+ "required": [
+  "Users"
+ ],
+ "typeName": "AWS::IAM::VirtualMFADevice"
+}

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RoleArn",
+  "/properties/SchemaS3Location",
+  "/properties/SnapshotS3Location",
+  "/properties/MaximumDuration"
+ ],
+ "definitions": {
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "[a-zA-Z0-9_\\-]{3,63}$",
+     "type": "string"
+    },
+    "ObjectKey": {
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "ObjectKey"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "simspaceweaver:StartSimulation",
+    "simspaceweaver:DescribeSimulation",
+    "iam:GetRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "simspaceweaver:StopSimulation",
+    "simspaceweaver:DeleteSimulation",
+    "simspaceweaver:DescribeSimulation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "simspaceweaver:ListSimulations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "simspaceweaver:DescribeSimulation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "simspaceweaver:StartSimulation",
+    "simspaceweaver:StopSimulation",
+    "simspaceweaver:DeleteSimulation",
+    "simspaceweaver:DescribeSimulation"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "SchemaS3Location"
+   ]
+  },
+  {
+   "required": [
+    "SnapshotS3Location"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "DescribePayload": {
+   "type": "string"
+  },
+  "MaximumDuration": {
+   "maxLength": 6,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\-]{1,2048}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "SchemaS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "SnapshotS3Location": {
+   "$ref": "#/definitions/S3Location"
+  }
+ },
+ "propertyTransform": {
+  "properties/MaximumDuration": "$uppercase(MaximumDuration)"
+ },
+ "readOnlyProperties": [
+  "/properties/DescribePayload"
+ ],
+ "required": [
+  "Name",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SimSpaceWeaver::Simulation"
+}

@@ -1,0 +1,150 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/LinkArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId",
+  "/properties/SiteId"
+ ],
+ "definitions": {
+  "Bandwidth": {
+   "additionalProperties": false,
+   "properties": {
+    "DownloadSpeed": {
+     "type": "integer"
+    },
+    "UploadSpeed": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateLink",
+    "networkmanager:GetLinks",
+    "networkmanager:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetLinks",
+    "networkmanager:DeleteLink"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GlobalNetworkId": {
+      "$ref": "resource-schema.json#/properties/GlobalNetworkId"
+     }
+    },
+    "required": [
+     "GlobalNetworkId"
+    ]
+   },
+   "permissions": [
+    "networkmanager:GetLinks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetLinks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:GetLinks",
+    "networkmanager:UntagResource",
+    "networkmanager:UpdateLink"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/LinkId"
+ ],
+ "properties": {
+  "Bandwidth": {
+   "$ref": "#/definitions/Bandwidth"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "type": "string"
+  },
+  "LinkArn": {
+   "type": "string"
+  },
+  "LinkId": {
+   "type": "string"
+  },
+  "Provider": {
+   "type": "string"
+  },
+  "SiteId": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LinkId",
+  "/properties/LinkArn",
+  "/properties/CreatedAt",
+  "/properties/State"
+ ],
+ "required": [
+  "GlobalNetworkId",
+  "SiteId",
+  "Bandwidth"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::Link"
+}

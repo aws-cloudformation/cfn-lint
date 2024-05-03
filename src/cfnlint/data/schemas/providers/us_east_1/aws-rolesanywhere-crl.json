@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rolesanywhere:ImportCrl",
+    "rolesanywhere:TagResource",
+    "rolesanywhere:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rolesanywhere:DeleteCrl"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rolesanywhere:ListCrls",
+    "rolesanywhere:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rolesanywhere:GetCrl",
+    "rolesanywhere:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rolesanywhere:EnableCrl",
+    "rolesanywhere:DisableCrl",
+    "rolesanywhere:UpdateCrl",
+    "rolesanywhere:TagResource",
+    "rolesanywhere:UntagResource",
+    "rolesanywhere:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CrlId"
+ ],
+ "properties": {
+  "CrlData": {
+   "type": "string"
+  },
+  "CrlId": {
+   "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TrustAnchorArn": {
+   "pattern": "^arn:aws(-[^:]+)?:rolesanywhere(:.*){2}(:trust-anchor.*)$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CrlId"
+ ],
+ "required": [
+  "Name",
+  "CrlData"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RolesAnywhere::CRL"
+}

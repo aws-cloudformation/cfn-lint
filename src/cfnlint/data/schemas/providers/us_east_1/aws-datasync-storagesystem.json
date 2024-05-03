@@ -1,0 +1,196 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ServerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerHostname": {
+     "maxLength": 255,
+     "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+     "type": "string"
+    },
+    "ServerPort": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ServerHostname"
+   ],
+   "type": "object"
+  },
+  "ServerCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 1024,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:AddStorageSystem",
+    "datasync:DescribeStorageSystem",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:DescribeSecret",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DescribeStorageSystem",
+    "datasync:RemoveStorageSystem",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:DeleteSecret"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListStorageSystems"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeStorageSystem",
+    "datasync:ListTagsForResource",
+    "secretsmanager:DescribeSecret"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:UpdateStorageSystem",
+    "datasync:DescribeStorageSystem",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource",
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:PutSecretValue"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StorageSystemArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "CloudWatchLogGroupArn": {
+   "maxLength": 562,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):logs:[a-z\\-0-9]+:[0-9]{12}:log-group:([^:\\*]*)(:\\*)?$",
+   "type": "string"
+  },
+  "ConnectivityStatus": {
+   "enum": [
+    "PASS",
+    "FAIL",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+   "type": "string"
+  },
+  "SecretsManagerArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z\\-0-9]+:[0-9]{12}:secret:.*",
+   "type": "string"
+  },
+  "ServerConfiguration": {
+   "$ref": "#/definitions/ServerConfiguration"
+  },
+  "ServerCredentials": {
+   "$ref": "#/definitions/ServerCredentials"
+  },
+  "StorageSystemArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:system/storage-system-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "SystemType": {
+   "enum": [
+    "NetAppONTAP"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StorageSystemArn",
+  "/properties/ConnectivityStatus",
+  "/properties/SecretsManagerArn"
+ ],
+ "required": [
+  "ServerConfiguration",
+  "SystemType",
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::StorageSystem",
+ "writeOnlyProperties": [
+  "/properties/ServerCredentials"
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/CertificateArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "appsync:CreateDomainName",
+    "appsync:GetDomainName",
+    "acm:DescribeCertificate",
+    "cloudfront:UpdateDistribution"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appsync:GetDomainName",
+    "appsync:DeleteDomainName"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "appsync:ListDomainNames"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appsync:GetDomainName"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appsync:UpdateDomainName"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName"
+ ],
+ "properties": {
+  "AppSyncDomainName": {
+   "type": "string"
+  },
+  "CertificateArn": {
+   "maxLength": 2048,
+   "minLength": 3,
+   "pattern": "^arn:[a-z-]*:acm:[a-z0-9-]*:\\d{12}:certificate/[0-9A-Za-z_/-]*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 253,
+   "minLength": 1,
+   "pattern": "^(\\*[a-z\\d-]*\\.)?([a-z\\d-]+\\.)+[a-z\\d-]+$",
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppSyncDomainName",
+  "/properties/HostedZoneId"
+ ],
+ "required": [
+  "DomainName",
+  "CertificateArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::AppSync::DomainName"
+}

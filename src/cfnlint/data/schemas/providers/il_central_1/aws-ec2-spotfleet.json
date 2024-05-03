@@ -1,0 +1,549 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "BlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsBlockDevice"
+    },
+    "NoDevice": {
+     "type": "string"
+    },
+    "VirtualName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeviceName"
+   ],
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
+   ],
+   "type": "object"
+  },
+  "ClassicLoadBalancer": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ClassicLoadBalancersConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClassicLoadBalancers": {
+     "items": {
+      "$ref": "#/definitions/ClassicLoadBalancer"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ClassicLoadBalancers"
+   ],
+   "type": "object"
+  },
+  "EbsBlockDevice": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "sc1",
+      "st1",
+      "gp3"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FleetLaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "type": "object"
+  },
+  "GroupIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupId"
+   ],
+   "type": "object"
+  },
+  "IamInstanceProfileSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceIpv6Address": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Address": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv6Address"
+   ],
+   "type": "object"
+  },
+  "InstanceNetworkInterfaceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociatePublicIpAddress": {
+     "type": "boolean"
+    },
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "DeviceIndex": {
+     "type": "integer"
+    },
+    "Groups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Ipv6AddressCount": {
+     "type": "integer"
+    },
+    "Ipv6Addresses": {
+     "items": {
+      "$ref": "#/definitions/InstanceIpv6Address"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "PrivateIpAddresses": {
+     "items": {
+      "$ref": "#/definitions/PrivateIpAddressSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecondaryPrivateIpAddressCount": {
+     "type": "integer"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateSpecification": {
+     "$ref": "#/definitions/FleetLaunchTemplateSpecification"
+    },
+    "Overrides": {
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateOverrides"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchTemplateConfigs/Overrides/AvailabilityZone"
+     ],
+     "type": "string"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "Priority": {
+     "type": "number"
+    },
+    "SpotPrice": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    },
+    "WeightedCapacity": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "LoadBalancersConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClassicLoadBalancersConfig": {
+     "$ref": "#/definitions/ClassicLoadBalancersConfig"
+    },
+    "TargetGroupsConfig": {
+     "$ref": "#/definitions/TargetGroupsConfig"
+    }
+   },
+   "type": "object"
+  },
+  "PrivateIpAddressSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Primary": {
+     "type": "boolean"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrivateIpAddress"
+   ],
+   "type": "object"
+  },
+  "SpotCapacityRebalance": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplacementStrategy": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SpotFleetLaunchSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockDeviceMappings": {
+     "items": {
+      "$ref": "#/definitions/BlockDeviceMapping"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EbsOptimized": {
+     "type": "boolean"
+    },
+    "IamInstanceProfile": {
+     "$ref": "#/definitions/IamInstanceProfileSpecification"
+    },
+    "ImageId": {
+     "type": "string"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "KernelId": {
+     "type": "string"
+    },
+    "KeyName": {
+     "type": "string"
+    },
+    "Monitoring": {
+     "$ref": "#/definitions/SpotFleetMonitoring"
+    },
+    "NetworkInterfaces": {
+     "items": {
+      "$ref": "#/definitions/InstanceNetworkInterfaceSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Placement": {
+     "$ref": "#/definitions/SpotPlacement"
+    },
+    "RamdiskId": {
+     "type": "string"
+    },
+    "SecurityGroups": {
+     "items": {
+      "$ref": "#/definitions/GroupIdentifier"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SpotPrice": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    },
+    "TagSpecifications": {
+     "items": {
+      "$ref": "#/definitions/SpotFleetTagSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "UserData": {
+     "type": "string"
+    },
+    "WeightedCapacity": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "ImageId",
+    "InstanceType"
+   ],
+   "type": "object"
+  },
+  "SpotFleetMonitoring": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SpotFleetRequestConfigData": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "type": "string"
+    },
+    "ExcessCapacityTerminationPolicy": {
+     "type": "string"
+    },
+    "IamFleetRole": {
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/IamFleetRole"
+     ],
+     "type": "string"
+    },
+    "InstanceInterruptionBehavior": {
+     "type": "string"
+    },
+    "InstancePoolsToUseCount": {
+     "type": "integer"
+    },
+    "LaunchSpecifications": {
+     "items": {
+      "$ref": "#/definitions/SpotFleetLaunchSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "LaunchTemplateConfigs": {
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateConfig"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "LoadBalancersConfig": {
+     "$ref": "#/definitions/LoadBalancersConfig"
+    },
+    "OnDemandAllocationStrategy": {
+     "type": "string"
+    },
+    "OnDemandMaxTotalPrice": {
+     "type": "string"
+    },
+    "OnDemandTargetCapacity": {
+     "type": "integer"
+    },
+    "ReplaceUnhealthyInstances": {
+     "type": "boolean"
+    },
+    "SpotMaintenanceStrategies": {
+     "$ref": "#/definitions/SpotMaintenanceStrategies"
+    },
+    "SpotMaxTotalPrice": {
+     "type": "string"
+    },
+    "SpotPrice": {
+     "type": "string"
+    },
+    "TargetCapacity": {
+     "type": "integer"
+    },
+    "TerminateInstancesWithExpiration": {
+     "type": "boolean"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "ValidFrom": {
+     "type": "string"
+    },
+    "ValidUntil": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IamFleetRole",
+    "TargetCapacity"
+   ],
+   "type": "object"
+  },
+  "SpotFleetTagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "SpotMaintenanceStrategies": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityRebalance": {
+     "$ref": "#/definitions/SpotCapacityRebalance"
+    }
+   },
+   "type": "object"
+  },
+  "SpotPlacement": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "cfnLint": [
+      "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/Placement/AvailabilityZone"
+     ],
+     "type": "string"
+    },
+    "GroupName": {
+     "type": "string"
+    },
+    "Tenancy": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "TargetGroupsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroups": {
+     "items": {
+      "$ref": "#/definitions/TargetGroup"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "TargetGroups"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "SpotFleetRequestConfigData": {
+   "$ref": "#/definitions/SpotFleetRequestConfigData"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SpotFleetRequestConfigData"
+ ],
+ "requiredXor": [
+  "LaunchSpecifications",
+  "LaunchTemplateConfigs"
+ ],
+ "typeName": "AWS::EC2::SpotFleet"
+}

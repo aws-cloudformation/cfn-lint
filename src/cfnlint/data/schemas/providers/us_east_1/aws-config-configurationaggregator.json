@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationAggregatorName"
+ ],
+ "definitions": {
+  "AccountAggregationSource": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AllAwsRegions": {
+     "type": "boolean"
+    },
+    "AwsRegions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "AccountIds"
+   ],
+   "type": "object"
+  },
+  "OrganizationAggregationSource": {
+   "additionalProperties": false,
+   "properties": {
+    "AllAwsRegions": {
+     "type": "boolean"
+    },
+    "AwsRegions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:PutConfigurationAggregator",
+    "config:DescribeConfigurationAggregators",
+    "config:TagResource",
+    "iam:PassRole",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListDelegatedAdministrators"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DeleteConfigurationAggregator",
+    "config:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeConfigurationAggregators"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeConfigurationAggregators",
+    "config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:PutConfigurationAggregator",
+    "config:DescribeConfigurationAggregators",
+    "config:TagResource",
+    "config:UntagResource",
+    "config:ListTagsForResource",
+    "iam:PassRole",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListDelegatedAdministrators"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConfigurationAggregatorName"
+ ],
+ "properties": {
+  "AccountAggregationSources": {
+   "items": {
+    "$ref": "#/definitions/AccountAggregationSource"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ConfigurationAggregatorArn": {
+   "type": "string"
+  },
+  "ConfigurationAggregatorName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[\\w\\-]+",
+   "type": "string"
+  },
+  "OrganizationAggregationSource": {
+   "$ref": "#/definitions/OrganizationAggregationSource"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigurationAggregatorArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Config::ConfigurationAggregator"
+}

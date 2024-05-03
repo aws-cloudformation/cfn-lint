@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Bucket"
+ ],
+ "definitions": {},
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3-outposts:PutBucketPolicy",
+    "s3-outposts:GetBucketPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3-outposts:DeleteBucketPolicy",
+    "s3-outposts:GetBucketPolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3-outposts:GetBucketPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3-outposts:PutBucketPolicy",
+    "s3-outposts:GetBucketPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Bucket"
+ ],
+ "properties": {
+  "Bucket": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/bucket\\/[^:]+$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "Bucket",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Outposts::BucketPolicy"
+}

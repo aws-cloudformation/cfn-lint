@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateArn",
+  "/properties/RoleArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateEnclaveCertificateIamRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DisassociateEnclaveCertificateIamRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:GetAssociatedEnclaveCertificateIamRoles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetAssociatedEnclaveCertificateIamRoles"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CertificateArn",
+  "/properties/RoleArn"
+ ],
+ "properties": {
+  "CertificateArn": {
+   "maxLength": 1283,
+   "minLength": 1,
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:acm:[A-Za-z0-9-]{1,64}:([0-9]{12})?:certificate/.+$",
+   "type": "string"
+  },
+  "CertificateS3BucketName": {
+   "type": "string"
+  },
+  "CertificateS3ObjectKey": {
+   "type": "string"
+  },
+  "EncryptionKmsKeyId": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 1283,
+   "minLength": 1,
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:iam:.*:([0-9]{12})?:role/.+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CertificateS3BucketName",
+  "/properties/CertificateS3ObjectKey",
+  "/properties/EncryptionKmsKeyId"
+ ],
+ "required": [
+  "CertificateArn",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-acmcerts.git",
+ "typeName": "AWS::EC2::EnclaveCertificateIamRoleAssociation"
+}

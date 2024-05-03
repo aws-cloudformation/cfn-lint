@@ -1,0 +1,232 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ImageRecipeArn",
+  "/properties/ContainerRecipeArn",
+  "/properties/InfrastructureConfigurationArn",
+  "/properties/Workflows",
+  "/properties/DistributionConfigurationArn",
+  "/properties/ImageTestsConfiguration",
+  "/properties/ImageScanningConfiguration",
+  "/properties/EnhancedImageMetadataEnabled",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EcrConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RepositoryName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageScanningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EcrConfiguration": {
+     "$ref": "#/definitions/EcrConfiguration"
+    },
+    "ImageScanningEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ImageTestsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageTestsEnabled": {
+     "type": "boolean"
+    },
+    "TimeoutMinutes": {
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "enum": [
+      "CONTINUE",
+      "ABORT"
+     ],
+     "type": "string"
+    },
+    "ParallelGroup": {
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameter"
+     },
+     "type": "array"
+    },
+    "WorkflowArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameterValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterValue": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:BatchGetRepositoryScanningConfiguration",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "imagebuilder:GetImageRecipe",
+    "imagebuilder:GetInfrastructureConfiguration",
+    "imagebuilder:GetDistributionConfiguration",
+    "imagebuilder:GetWorkflow",
+    "imagebuilder:GetImage",
+    "imagebuilder:CreateImage",
+    "imagebuilder:TagResource",
+    "inspector2:BatchGetAccountStatus"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:GetImage",
+    "imagebuilder:DeleteImage",
+    "imagebuilder:UnTagResource",
+    "imagebuilder:CancelImageCreation"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Arn"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "imagebuilder:ListImages"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetImage"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "ContainerRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  },
+  {
+   "required": [
+    "ImageRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerRecipeArn": {
+   "type": "string"
+  },
+  "DistributionConfigurationArn": {
+   "type": "string"
+  },
+  "EnhancedImageMetadataEnabled": {
+   "type": "boolean"
+  },
+  "ExecutionRole": {
+   "type": "string"
+  },
+  "ImageId": {
+   "type": "string"
+  },
+  "ImageRecipeArn": {
+   "type": "string"
+  },
+  "ImageScanningConfiguration": {
+   "$ref": "#/definitions/ImageScanningConfiguration"
+  },
+  "ImageTestsConfiguration": {
+   "$ref": "#/definitions/ImageTestsConfiguration"
+  },
+  "ImageUri": {
+   "type": "string"
+  },
+  "InfrastructureConfigurationArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Workflows": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowConfiguration"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Name",
+  "/properties/ImageId",
+  "/properties/ImageUri"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::Image"
+}

@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityStoreId",
+  "/properties/GroupId",
+  "/properties/MemberId"
+ ],
+ "definitions": {
+  "MemberId": {
+   "additionalProperties": false,
+   "properties": {
+    "UserId": {
+     "maxLength": 47,
+     "minLength": 1,
+     "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserId"
+   ],
+   "title": "UserId",
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "identitystore:CreateGroupMembership",
+    "identitystore:DescribeGroupMembership"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "identitystore:DeleteGroupMembership",
+    "identitystore:DescribeGroupMembership"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GroupId": {
+      "$ref": "resource-schema.json#/properties/GroupId"
+     },
+     "IdentityStoreId": {
+      "$ref": "resource-schema.json#/properties/IdentityStoreId"
+     }
+    },
+    "required": [
+     "IdentityStoreId",
+     "GroupId"
+    ]
+   },
+   "permissions": [
+    "identitystore:ListGroupMemberships"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "identitystore:DescribeGroupMembership"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MembershipId",
+  "/properties/IdentityStoreId"
+ ],
+ "properties": {
+  "GroupId": {
+   "maxLength": 47,
+   "minLength": 1,
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "IdentityStoreId": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^d-[0-9a-f]{10}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "MemberId": {
+   "$ref": "#/definitions/MemberId"
+  },
+  "MembershipId": {
+   "maxLength": 47,
+   "minLength": 1,
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MembershipId"
+ ],
+ "required": [
+  "IdentityStoreId",
+  "GroupId",
+  "MemberId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-identitystore",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IdentityStore::GroupMembership"
+}

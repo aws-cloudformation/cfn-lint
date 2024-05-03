@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/AddonName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreateAddon",
+    "eks:DescribeAddon",
+    "eks:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeleteAddon",
+    "eks:DescribeAddon"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListAddons"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeAddon"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "eks:UpdateAddon",
+    "eks:DescribeAddon",
+    "eks:DescribeUpdate",
+    "eks:ListTagsForResource",
+    "eks:TagResource",
+    "eks:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName",
+  "/properties/AddonName"
+ ],
+ "properties": {
+  "AddonName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "AddonVersion": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "ConfigurationValues": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "PreserveOnDelete": {
+   "type": "boolean"
+  },
+  "ResolveConflicts": {
+   "enum": [
+    "NONE",
+    "OVERWRITE",
+    "PRESERVE"
+   ],
+   "minLength": 1,
+   "type": "string"
+  },
+  "ServiceAccountRoleArn": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "AddonName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::Addon",
+ "writeOnlyProperties": [
+  "/properties/ResolveConflicts",
+  "/properties/PreserveOnDelete"
+ ]
+}

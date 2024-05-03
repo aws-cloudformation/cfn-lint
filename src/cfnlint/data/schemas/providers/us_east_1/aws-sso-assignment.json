@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/TargetId",
+  "/properties/TargetType",
+  "/properties/PermissionSetArn",
+  "/properties/PrincipalType",
+  "/properties/PrincipalId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sso:CreateAccountAssignment",
+    "sso:DescribeAccountAssignmentCreationStatus",
+    "sso:ListAccountAssignments",
+    "iam:GetSAMLProvider",
+    "iam:CreateSAMLProvider",
+    "iam:AttachRolePolicy",
+    "iam:PutRolePolicy",
+    "iam:CreateRole",
+    "iam:ListRolePolicies"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sso:ListAccountAssignments",
+    "sso:DeleteAccountAssignment",
+    "sso:DescribeAccountAssignmentDeletionStatus",
+    "iam:GetSAMLProvider",
+    "iam:ListRolePolicies"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sso:ListAccountAssignments",
+    "iam:ListRolePolicies"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sso:ListAccountAssignments",
+    "iam:GetSAMLProvider",
+    "iam:ListRolePolicies"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/TargetId",
+  "/properties/TargetType",
+  "/properties/PermissionSetArn",
+  "/properties/PrincipalType",
+  "/properties/PrincipalId"
+ ],
+ "properties": {
+  "InstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+   "type": "string"
+  },
+  "PermissionSetArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::permissionSet/(sso)?ins-[a-zA-Z0-9-.]{16}/ps-[a-zA-Z0-9-./]{16}",
+   "type": "string"
+  },
+  "PrincipalId": {
+   "maxLength": 47,
+   "minLength": 1,
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "PrincipalType": {
+   "enum": [
+    "USER",
+    "GROUP"
+   ],
+   "type": "string"
+  },
+  "TargetId": {
+   "pattern": "\\d{12}",
+   "type": "string"
+  },
+  "TargetType": {
+   "enum": [
+    "AWS_ACCOUNT"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "InstanceArn",
+  "TargetId",
+  "TargetType",
+  "PermissionSetArn",
+  "PrincipalType",
+  "PrincipalId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-assignment",
+ "tagging": {
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SSO::Assignment"
+}

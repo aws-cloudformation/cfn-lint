@@ -3,21 +3,147 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import importlib
 import logging
 import os
 import traceback
+from collections import UserDict
 from datetime import datetime
-from typing import Any, Dict, List, MutableSet, Optional, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    MutableSet,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 import cfnlint.helpers
 import cfnlint.rules.custom
-from cfnlint.decode.node import TemplateAttributeError
+from cfnlint.decode.exceptions import TemplateAttributeError
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.match import Match
 from cfnlint.template import Template
 
+if TYPE_CHECKING:
+    from cfnlint.config import ConfigMixIn
+
+    TypedRules = UserDict[str, "CloudFormationLintRule"]
+else:
+    TypedRules = UserDict
+
+
 LOGGER = logging.getLogger(__name__)
+
+
+def _rule_is_enabled(
+    rule: "CloudFormationLintRule",
+    include_experimental: bool = False,
+    ignore_rules: List[str] | None = None,
+    include_rules: List[str] | None = None,
+    mandatory_rules: List[str] | None = None,
+):
+    """Is the rule enabled based on the configuration"""
+    ignore_rules = ignore_rules or []
+    include_rules = include_rules or []
+    mandatory_rules = mandatory_rules or []
+
+    # Evaluate experimental rules
+    if rule.experimental and not include_experimental:
+        return False
+
+    # Evaluate includes first:
+    include_filter = False
+    for include_rule in include_rules:
+        if rule.id.startswith(include_rule):
+            include_filter = True
+    if not include_filter:
+        return False
+
+    # Enable mandatory rules without checking for if they are ignored
+    for mandatory_rule in mandatory_rules:
+        if rule.id.startswith(mandatory_rule):
+            return True
+
+    # Allowing ignoring of rules based on prefix to ignore checks
+    for ignore_rule in ignore_rules:
+        if rule.id.startswith(ignore_rule) and ignore_rule:
+            return False
+
+    return True
+
+
+class RuleMatch:
+    """Rules Error"""
+
+    def __init__(self, path: Sequence[str | int], message: str, **kwargs):
+        """Init"""
+        self.path: Sequence[str | int] = path
+        self.path_string: str = "/".join(map(str, path))
+        self.message: str = message
+        self.context: List[RuleMatch] = []
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+    def __eq__(self, item):
+        """Override unique"""
+        return (self.path, self.message) == (item.path, item.message)
+
+    def __hash__(self):
+        """Hash for comparisons"""
+        return hash((self.path, self.message))
+
+
+def _rule_match_to_match(
+    rule: CloudFormationLintRule,
+    filename: str,
+    cfn: Template,
+    match: RuleMatch,
+    parent_id: str | None = None,
+) -> Iterator[Match]:
+    error_rule = rule
+    if hasattr(match, "rule"):
+        error_rule = match.rule
+    linenumbers: Union[Tuple[int, int, int, int], None] = None
+    if hasattr(match, "location"):
+        linenumbers = match.location
+    else:
+        linenumbers = cfn.get_location_yaml(cfn.template, match.path)
+    if linenumbers:
+        result = Match.create(
+            linenumber=linenumbers[0] + 1,
+            columnnumber=linenumbers[1] + 1,
+            linenumberend=linenumbers[2] + 1,
+            columnnumberend=linenumbers[3] + 1,
+            filename=filename,
+            rule=error_rule,
+            message=match.message,
+            rulematch_obj=match,
+            parent_id=parent_id,
+        )
+    else:
+        result = Match.create(
+            filename=filename,
+            rule=error_rule,
+            message=match.message,
+            rulematch_obj=match,
+            parent_id=parent_id,
+        )
+
+    yield result
+
+    for sub_match in match.context:
+        sub_match.path = list(match.path) + list(sub_match.path)
+        yield from _rule_match_to_match(
+            rule=rule, filename=filename, cfn=cfn, match=sub_match, parent_id=result.id
+        )
 
 
 def matching(match_type: Any):
@@ -28,61 +154,25 @@ def matching(match_type: Any):
 
         def wrapper(self, filename: str, cfn: Template, *args, **kwargs):
             """Wrapper"""
-            matches = []
-
             if not getattr(self, match_type):
-                return []
+                return
 
             if match_type == "match_resource_properties":
                 if args[1] not in self.resource_property_types:
-                    return []
-            elif match_type == "match_resource_sub_properties":
-                if args[1] not in self.resource_sub_property_types:
-                    return []
+                    return
 
             start = datetime.now()
             LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
             # pylint: disable=E1102
-            results = match_function(self, filename, cfn, *args, **kwargs)
+            for result in match_function(self, filename, cfn, *args, **kwargs):
+                yield from _rule_match_to_match(self, filename, cfn, result)
+
             LOGGER.debug(
                 "Complete match function for rule %s at %s.  Ran in %s",
                 self.id,
                 datetime.now(),
                 datetime.now() - start,
             )
-            LOGGER.debug("Results from rule %s are %s: ", self.id, results)
-
-            if results:
-                for result in results:
-                    error_rule = self
-                    if hasattr(result, "rule"):
-                        error_rule = result.rule
-                    linenumbers: Union[Tuple[int, int, int, int], None] = None
-                    if hasattr(result, "location"):
-                        linenumbers = result.location
-                    else:
-                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                    if linenumbers:
-                        matches.append(
-                            Match(
-                                linenumbers[0] + 1,
-                                linenumbers[1] + 1,
-                                linenumbers[2] + 1,
-                                linenumbers[3] + 1,
-                                filename,
-                                error_rule,
-                                result.message,
-                                result,
-                            )
-                        )
-                    else:
-                        matches.append(
-                            Match(
-                                1, 1, 1, 1, filename, error_rule, result.message, result
-                            )
-                        )
-
-            return matches
 
         return wrapper
 
@@ -98,18 +188,27 @@ class CloudFormationLintRule:
     source_url: str = ""
     tags: List[str] = []
     experimental: bool = False
-    child_rules: Dict[str, Any] = {}
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self):
-        self.resource_property_types = []
-        self.resource_sub_property_types = []
-        self.config = {}  # `-X E3012:strict=false`... Show more
-        self.config_definition = {}
+    def __init__(self) -> None:
+        self.resource_property_types: List[str] = []
+        self.resource_sub_property_types: List[str] = []
+        self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
+        self.config_definition: Dict[str, Any] = {}
+        self._child_rules: Dict[str, "CloudFormationLintRule"] = {}
+        super().__init__()
 
     def __repr__(self):
         return f"{self.id}: {self.shortdesc}"
+
+    @property
+    def child_rules(self):
+        return self._child_rules
+
+    @child_rules.setter
+    def child_rules(self, rules: Dict[str, "CloudFormationLintRule"]):
+        self._child_rules = rules
 
     @property
     def severity(self):
@@ -125,7 +224,7 @@ class CloudFormationLintRule:
         """Verbose output"""
         return f"{self.id}: {self.shortdesc}\n{self.description}"
 
-    def initialize(self, cfn):
+    def initialize(self, cfn: Template):
         """Initialize the rule"""
 
     def is_enabled(
@@ -135,42 +234,24 @@ class CloudFormationLintRule:
         include_rules=None,
         mandatory_rules=None,
     ):
-        """Is the rule enabled based on the configuration"""
-        ignore_rules = ignore_rules or []
-        include_rules = include_rules or []
-        mandatory_rules = mandatory_rules or []
+        return _rule_is_enabled(
+            self, include_experimental, ignore_rules, include_rules, mandatory_rules
+        )
 
-        # Evaluate experimental rules
-        if self.experimental and not include_experimental:
-            return False
-
-        # Evaluate includes first:
-        include_filter = False
-        for include_rule in include_rules:
-            if self.id.startswith(include_rule):
-                include_filter = True
-        if not include_filter:
-            return False
-
-        # Enable mandatory rules without checking for if they are ignored
-        for mandatory_rule in mandatory_rules:
-            if self.id.startswith(mandatory_rule):
-                return True
-
-        # Allowing ignoring of rules based on prefix to ignore checks
-        for ignore_rule in ignore_rules:
-            if self.id.startswith(ignore_rule) and ignore_rule:
-                return False
-
-        return True
-
-    def configure(self, configs=None):
+    def configure(self, configs=None, experimental=False):
         """Set the configuration"""
 
         # set defaults
         if isinstance(self.config_definition, dict):
             for config_name, config_values in self.config_definition.items():
                 self.config[config_name] = config_values["default"]
+
+        # set experimental if the rule is asking for it
+        if "experimental" in self.config_definition:
+            if self.config_definition["experimental"]["type"] == "boolean":
+                self.config["experimental"] = cfnlint.helpers.bool_compare(
+                    experimental, True
+                )
 
         if isinstance(configs, dict):
             for key, value in configs.items():
@@ -193,13 +274,13 @@ class CloudFormationLintRule:
                             elif self.config_definition[key]["itemtype"] == "integer":
                                 self.config[key].append(int(l_value))
 
-    match = None
-    match_resource_properties = None
-    match_resource_sub_properties = None
+    match: Callable[[Template], List[RuleMatch]] = None  # type: ignore
+    # ruff: noqa: E501
+    match_resource_properties: Callable[[Dict, str, List[str], Template], List[RuleMatch]] = None  # type: ignore
 
     @matching("match")
     # pylint: disable=W0613
-    def matchall(self, filename, cfn):
+    def matchall(self, filename: str, cfn: Template):
         """Match the entire file"""
         return self.match(cfn)  # pylint: disable=E1102
 
@@ -213,15 +294,191 @@ class CloudFormationLintRule:
             resource_properties, property_type, path, cfn
         )
 
-    @matching("match_resource_sub_properties")
-    # pylint: disable=W0613
-    def matchall_resource_sub_properties(
-        self, filename, cfn, resource_properties, property_type, path
+
+class Rules(TypedRules):
+    def __init__(
+        self, dict: Dict[str, CloudFormationLintRule] | None = None, /, **kwargs
     ):
-        """Check for resource properties type"""
-        return self.match_resource_sub_properties(  # pylint: disable=E1102
-            resource_properties, property_type, path, cfn
-        )
+        super().__init__()
+        self.data: Dict[str, CloudFormationLintRule] = {}
+        self._used_rules: Dict[str, CloudFormationLintRule] = {}
+        if dict is not None:
+            self.update(dict)
+        if kwargs:
+            self.update(kwargs)
+
+    def __repr__(self):
+        return "\n".join([self.data[id].verbose() for id in sorted(self.data)])
+
+    def __delitem__(self, i: str) -> None:
+        raise RuntimeError("Deletion is not allowed")
+
+    def __setitem__(self, key: str, item: CloudFormationLintRule) -> None:
+        if not key:
+            return
+        if key in self.data:
+            raise DuplicateRuleError(rule_id=key)
+        return super().__setitem__(key, item)
+
+    def register(self, rule: CloudFormationLintRule) -> None:
+        self[rule.id] = rule
+
+    def filter(
+        self,
+        func: Callable[[Dict[str, CloudFormationLintRule], ConfigMixIn], Rules],
+        config: ConfigMixIn,
+    ):
+        return func(self.data, config)
+
+    def is_rule_enabled(
+        self, rule: str | CloudFormationLintRule, config: ConfigMixIn
+    ) -> bool:
+        if isinstance(rule, str):
+            if rule not in self.data:
+                return False
+            rule = self.data[rule]
+        if rule.is_enabled(
+            include_experimental=config.include_experimental,
+            ignore_rules=config.ignore_checks,
+            include_rules=config.include_checks,
+            mandatory_rules=config.mandatory_checks,
+        ):
+            return True
+        return False
+
+    def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
+        for rule in self.data.values():
+            if rule.is_enabled(
+                config.include_experimental,
+                ignore_rules=config.ignore_checks,
+                include_rules=config.include_checks,
+                mandatory_rules=config.mandatory_checks,
+            ):
+                self._used_rules[rule.id] = rule
+            # rules that have children need to be run
+            # we will remove the results later
+            if self.is_rule_enabled(rule.id, config):
+                yield rule
+                continue
+            if rule.child_rules:
+                yield rule
+
+    def extend(self, rules: List[CloudFormationLintRule]):
+        for rule in rules:
+            self.register(rule)
+
+    @property
+    def used_rules(self) -> Dict[str, CloudFormationLintRule]:
+        return self._used_rules
+
+    # pylint: disable=inconsistent-return-statements
+    def run_check(self, check, filename, rule_id, config, *args) -> Iterator[Match]:
+        """Run a check"""
+        try:
+            yield from iter(check(*args))
+        except Exception as err:  # pylint: disable=W0703
+            if self.is_rule_enabled(RuleError(), config):
+                # In debug mode, print the error include complete stack trace
+                if LOGGER.getEffectiveLevel() == logging.DEBUG:
+                    error_message = traceback.format_exc()
+                else:
+                    error_message = str(err)
+                yield Match.create(
+                    filename=filename,
+                    rule=RuleError(),
+                    message=f"Unknown exception while processing rule {rule_id}: {error_message!r}",
+                )
+
+    def _filter_matches(
+        self, config: ConfigMixIn, matches: Iterator[Match]
+    ) -> Iterator[Match]:
+        """Filter matches by config"""
+        for match in matches:
+            if self.is_rule_enabled(match.rule, config):
+                yield match
+
+    def run(
+        self, filename: Optional[str], cfn: Template, config: ConfigMixIn
+    ) -> Iterator[Match]:
+        """Run rules"""
+        runable_rules = list(self.runable_rules(config))
+        for rule in runable_rules:
+            rule.configure(
+                config.configure_rules.get(rule.id, None), config.include_experimental
+            )
+            rule.initialize(cfn)
+
+        for rule in runable_rules:
+            for key in rule.child_rules.keys():
+                if not any(key == r.id for r in runable_rules):
+                    continue
+                rule.child_rules[key] = self.data.get(key)
+
+        for rule in runable_rules:
+            yield from self._filter_matches(
+                config,
+                self.run_check(rule.matchall, filename, rule.id, config, filename, cfn),
+            )
+
+        for resource_name, resource_attributes in cfn.get_resources().items():
+            resource_type = resource_attributes.get("Type")
+            resource_properties = resource_attributes.get("Properties")
+            if isinstance(resource_type, str) and isinstance(resource_properties, dict):
+                path = ["Resources", resource_name, "Properties"]
+                for rule in self.runable_rules(config):
+                    yield from self._filter_matches(
+                        config,
+                        self.run_check(
+                            rule.matchall_resource_properties,
+                            filename,
+                            rule.id,
+                            config,
+                            filename,
+                            cfn,
+                            resource_properties,
+                            resource_type,
+                            path,
+                        ),
+                    )
+
+    @classmethod
+    def _from_list(cls, items: List[CloudFormationLintRule]) -> Rules:
+        rules = Rules()
+        for item in items:
+            rules[item.id] = item
+
+        return rules
+
+    @classmethod
+    def create_from_module(cls, modpath: str) -> Rules:
+        """Create rules from a module import path"""
+        mod = importlib.import_module(modpath)
+        return cls._from_list(cfnlint.helpers.create_rules(mod))
+
+    @classmethod
+    def create_from_directory(cls, rulesdir: str) -> Rules:
+        if rulesdir != "":
+            return cls._from_list(
+                cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
+            )
+
+        return cls({})
+
+    @classmethod
+    def create_from_custom_rules_file(cls, custom_rules_file) -> Rules:
+        """Create rules from custom rules file"""
+        custom_rules = cls({})
+        if custom_rules_file:
+            with open(custom_rules_file, encoding="utf-8") as customRules:
+                line_number = 1
+                for line in customRules:
+                    LOGGER.debug("Processing Custom Rule Line %d", line_number)
+                    custom_rule = cfnlint.rules.custom.make_rule(line, line_number)
+                    if custom_rule:
+                        custom_rules[custom_rule.id] = custom_rule
+                    line_number += 1
+
+        return custom_rules
 
 
 # pylint: disable=too-many-instance-attributes
@@ -277,10 +534,12 @@ class RulesCollection:
 
     def __register(self, rule: CloudFormationLintRule):
         """Register and configure the rule"""
-        if self.is_rule_enabled(rule):
+        if self.is_rule_enabled(rule) or rule.child_rules:
             self.used_rules.add(rule.id)
             self.rules[rule.id] = rule
-            rule.configure(self.configure_rules.get(rule.id, None))
+            rule.configure(
+                self.configure_rules.get(rule.id, None), self.include_experimental
+            )
 
     def register(self, rule: CloudFormationLintRule):
         """Register rules"""
@@ -332,215 +591,14 @@ class RulesCollection:
                     error_message = str(err)
                 message = "Unknown exception while processing rule {}: {}"
                 return [
-                    Match(
-                        1,
-                        1,
-                        1,
-                        1,
-                        filename,
-                        RuleError(),
-                        message.format(rule_id, error_message),
+                    Match.create(
+                        filename=filename,
+                        rule=RuleError(),
+                        message=message.format(rule_id, error_message),
                     )
                 ]
 
-    def resource_property(
-        self, filename, cfn, path, properties, resource_type, property_type
-    ):
-        """Run loops in resource checks for embedded properties"""
-        matches = []
-        property_spec = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
-        if property_type == "Tag":
-            property_spec_name = "Tag"
-        else:
-            property_spec_name = f"{resource_type}.{property_type}"
-
-        if property_spec_name in property_spec:
-            for rule in self.rules.values():
-                if isinstance(properties, dict):
-                    if len(properties) == 1:
-                        for k, _ in properties.items():
-                            if k != "Fn::If":
-                                matches.extend(
-                                    self.run_check(
-                                        rule.matchall_resource_sub_properties,
-                                        filename,
-                                        rule.id,
-                                        filename,
-                                        cfn,
-                                        properties,
-                                        property_spec_name,
-                                        path,
-                                    )
-                                )
-                    else:
-                        matches.extend(
-                            self.run_check(
-                                rule.matchall_resource_sub_properties,
-                                filename,
-                                rule.id,
-                                filename,
-                                cfn,
-                                properties,
-                                property_spec_name,
-                                path,
-                            )
-                        )
-                else:
-                    matches.extend(
-                        self.run_check(
-                            rule.matchall_resource_sub_properties,
-                            filename,
-                            rule.id,
-                            filename,
-                            cfn,
-                            properties,
-                            property_spec_name,
-                            path,
-                        )
-                    )
-
-            resource_spec_properties = property_spec.get(property_spec_name, {}).get(
-                "Properties"
-            )
-            if not resource_spec_properties:
-                if property_spec.get(property_spec_name, {}).get("Type") == "List":
-                    if isinstance(properties, list):
-                        property_type = property_spec.get(property_spec_name, {}).get(
-                            "ItemType"
-                        )
-                        for index, item in enumerate(properties):
-                            matches.extend(
-                                self.resource_property(
-                                    filename,
-                                    cfn,
-                                    path[:] + [index],
-                                    item,
-                                    resource_type,
-                                    property_type,
-                                )
-                            )
-                return matches
-            if isinstance(properties, dict):
-                for resource_property, resource_property_value in properties.items():
-                    property_path = path[:] + [resource_property]
-                    resource_spec_property = resource_spec_properties.get(
-                        resource_property, {}
-                    )
-                    if resource_property not in resource_spec_properties:
-                        if resource_property == "Fn::If":
-                            if isinstance(resource_property_value, list):
-                                if len(resource_property_value) == 3:
-                                    for index, c_value in enumerate(
-                                        resource_property_value[1:]
-                                    ):
-                                        if isinstance(c_value, list):
-                                            for s_i, c_l_value in enumerate(c_value):
-                                                matches.extend(
-                                                    self.resource_property(
-                                                        filename,
-                                                        cfn,
-                                                        property_path[:]
-                                                        + [index + 1]
-                                                        + [s_i],
-                                                        c_l_value,
-                                                        resource_type,
-                                                        property_type,
-                                                    )
-                                                )
-                                        else:
-                                            matches.extend(
-                                                self.resource_property(
-                                                    filename,
-                                                    cfn,
-                                                    property_path[:] + [index + 1],
-                                                    c_value,
-                                                    resource_type,
-                                                    property_type,
-                                                )
-                                            )
-                        continue
-                    if resource_spec_property.get(
-                        "Type"
-                    ) == "List" and not resource_spec_properties.get(
-                        "PrimitiveItemType"
-                    ):
-                        if isinstance(resource_property_value, (list)):
-                            for index, value in enumerate(resource_property_value):
-                                matches.extend(
-                                    self.resource_property(
-                                        filename,
-                                        cfn,
-                                        property_path[:] + [index],
-                                        value,
-                                        resource_type,
-                                        resource_spec_property.get("ItemType"),
-                                    )
-                                )
-                    elif resource_spec_property.get("Type"):
-                        if isinstance(resource_property_value, (dict)):
-                            matches.extend(
-                                self.resource_property(
-                                    filename,
-                                    cfn,
-                                    property_path,
-                                    resource_property_value,
-                                    resource_type,
-                                    resource_spec_property.get("Type"),
-                                )
-                            )
-
-        return matches
-
-    def run_resource(self, filename, cfn, resource_type, resource_properties, path):
-        """Run loops in resource checks for embedded properties"""
-        matches = []
-        resource_spec = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
-        if resource_properties is not None and resource_type in resource_spec:
-            resource_spec_properties = resource_spec.get(resource_type, {}).get(
-                "Properties"
-            )
-            items_safe = resource_properties.items_safe(path, type_t=dict)
-            for resource_properties_safe, path_safe in items_safe:
-                for (
-                    resource_property,
-                    resource_property_value,
-                ) in resource_properties_safe.items():
-                    resource_spec_property = resource_spec_properties.get(
-                        resource_property, {}
-                    )
-                    if resource_spec_property.get(
-                        "Type"
-                    ) == "List" and not resource_spec_properties.get(
-                        "PrimitiveItemType"
-                    ):
-                        if isinstance(resource_property_value, (list)):
-                            for index, value in enumerate(resource_property_value):
-                                matches.extend(
-                                    self.resource_property(
-                                        filename,
-                                        cfn,
-                                        path_safe[:] + [resource_property, index],
-                                        value,
-                                        resource_type,
-                                        resource_spec_property.get("ItemType"),
-                                    )
-                                )
-                    elif resource_spec_property.get("Type"):
-                        if isinstance(resource_property_value, (dict)):
-                            matches.extend(
-                                self.resource_property(
-                                    filename,
-                                    cfn,
-                                    path_safe[:] + [resource_property],
-                                    resource_property_value,
-                                    resource_type,
-                                    resource_spec_property.get("Type"),
-                                )
-                            )
-
-        return matches
-
-    def run(self, filename: Optional[str], cfn: Template):
+    def run(self, filename: Optional[str], cfn: Template, config=None):
         """Run rules"""
         matches = []
         for rule in self.rules.values():
@@ -574,12 +632,6 @@ class RulesCollection:
                         )
                     )
 
-                matches.extend(
-                    self.run_resource(
-                        filename, cfn, resource_type, resource_properties, path
-                    )
-                )
-
         return matches
 
     def create_from_module(self, modpath):
@@ -608,26 +660,6 @@ class RulesCollection:
                     line_number += 1
 
         self.extend(custom_rules)
-
-
-class RuleMatch:
-    """Rules Error"""
-
-    def __init__(self, path, message, **kwargs):
-        """Init"""
-        self.path = path
-        self.path_string = "/".join(map(str, path))
-        self.message = message
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-    def __eq__(self, item):
-        """Override unique"""
-        return (self.path, self.message) == (item.path, item.message)
-
-    def __hash__(self):
-        """Hash for comparisons"""
-        return hash((self.path, self.message))
 
 
 class ParseError(CloudFormationLintRule):

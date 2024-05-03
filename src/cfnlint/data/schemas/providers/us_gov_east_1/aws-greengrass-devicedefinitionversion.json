@@ -1,0 +1,58 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeviceDefinitionId",
+  "/properties/Devices"
+ ],
+ "definitions": {
+  "Device": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "SyncShadow": {
+     "type": "boolean"
+    },
+    "ThingArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThingArn",
+    "Id",
+    "CertificateArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DeviceDefinitionId": {
+   "type": "string"
+  },
+  "Devices": {
+   "items": {
+    "$ref": "#/definitions/Device"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DeviceDefinitionId",
+  "Devices"
+ ],
+ "typeName": "AWS::Greengrass::DeviceDefinitionVersion"
+}

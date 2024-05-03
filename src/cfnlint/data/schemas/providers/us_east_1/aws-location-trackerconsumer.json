@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TrackerName",
+  "/properties/ConsumerArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:AssociateTrackerConsumer",
+    "geo:ListTrackerConsumers"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DisassociateTrackerConsumer",
+    "geo:ListTrackerConsumers"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListTrackerConsumers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:ListTrackerConsumers"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrackerName",
+  "/properties/ConsumerArn"
+ ],
+ "properties": {
+  "ConsumerArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "TrackerName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ConsumerArn",
+  "TrackerName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Location::TrackerConsumer"
+}

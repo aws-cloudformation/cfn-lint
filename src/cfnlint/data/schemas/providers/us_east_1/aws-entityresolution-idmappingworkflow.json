@@ -1,0 +1,272 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkflowName"
+ ],
+ "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EntityName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "IdMappingTechniques": {
+   "additionalProperties": false,
+   "properties": {
+    "IdMappingType": {
+     "enum": [
+      "PROVIDER"
+     ],
+     "type": "string"
+    },
+    "ProviderProperties": {
+     "$ref": "#/definitions/ProviderProperties"
+    }
+   },
+   "type": "object"
+  },
+  "IdMappingWorkflowArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(idmappingworkflow/.*)$",
+   "type": "string"
+  },
+  "IdMappingWorkflowInputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "InputSourceARN": {
+     "pattern": "arn:(aws|aws-us-gov|aws-cn):.*:.*:[0-9]+:.*$",
+     "type": "string"
+    },
+    "SchemaArn": {
+     "$ref": "#/definitions/SchemaMappingArn",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SOURCE",
+      "TARGET"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputSourceARN"
+   ],
+   "type": "object"
+  },
+  "IdMappingWorkflowOutputSource": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSArn": {
+     "$ref": "#/definitions/KMSArn"
+    },
+    "OutputS3Path": {
+     "pattern": "^s3://([^/]+)/?(.*?([^/]+)/?)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OutputS3Path"
+   ],
+   "type": "object"
+  },
+  "IntermediateSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateS3Path": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "IntermediateS3Path"
+   ],
+   "type": "object"
+  },
+  "KMSArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):kms:.*:[0-9]+:.*$",
+   "type": "string"
+  },
+  "ProviderProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateSourceConfiguration": {
+     "$ref": "#/definitions/IntermediateSourceConfiguration"
+    },
+    "ProviderConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ProviderServiceArn": {
+     "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:([A-Za-z0-9]+(-[A-Za-z0-9]+)+)::providerservice/[A-Za-z0-9]+/[A-Za-z0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderServiceArn"
+   ],
+   "type": "object"
+  },
+  "SchemaMappingArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "entityresolution:CreateIdMappingWorkflow",
+    "entityresolution:GetIdMappingWorkflow",
+    "entityresolution:TagResource",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "entityresolution:DeleteIdMappingWorkflow",
+    "entityresolution:GetIdMappingWorkflow",
+    "entityresolution:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "entityresolution:ListIdMappingWorkflows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "entityresolution:GetIdMappingWorkflow",
+    "entityresolution:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "entityresolution:GetIdMappingWorkflow",
+    "entityresolution:UpdateIdMappingWorkflow",
+    "entityresolution:ListTagsForResource",
+    "entityresolution:TagResource",
+    "entityresolution:UntagResource",
+    "iam:PassRole",
+    "kms:CreateGrant",
+    "kms:DescribeKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkflowName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "IdMappingTechniques": {
+   "$ref": "#/definitions/IdMappingTechniques"
+  },
+  "InputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IdMappingWorkflowInputSource"
+   },
+   "maxItems": 20,
+   "minItems": 1,
+   "type": "array"
+  },
+  "OutputSourceConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IdMappingWorkflowOutputSource"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "RoleArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdatedAt": {
+   "$ref": "#/definitions/UpdatedAt"
+  },
+  "WorkflowArn": {
+   "$ref": "#/definitions/IdMappingWorkflowArn"
+  },
+  "WorkflowName": {
+   "$ref": "#/definitions/EntityName"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkflowArn",
+  "/properties/UpdatedAt",
+  "/properties/CreatedAt"
+ ],
+ "required": [
+  "WorkflowName",
+  "InputSourceConfig",
+  "IdMappingTechniques",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EntityResolution::IdMappingWorkflow"
+}

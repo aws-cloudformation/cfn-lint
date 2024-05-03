@@ -3,19 +3,25 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 from typing import List
 
-from cfnlint.config import configure_logging
-from cfnlint.core import get_rules
-from cfnlint.decode import decode_str
-from cfnlint.helpers import REGIONS
+from cfnlint.config import ConfigMixIn, ManualArgs, configure_logging
+from cfnlint.decode.decode import decode_str
+from cfnlint.helpers import REGION_PRIMARY, REGIONS
 from cfnlint.rules import Match, RulesCollection
-from cfnlint.runner import Runner
+from cfnlint.runner import Runner, TemplateRunner
 
 Matches = List[Match]
 
 
-def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
+def lint(
+    s: str,
+    rules: RulesCollection | None = None,
+    regions: List[str] | None = None,
+    config: ManualArgs | None = None,
+) -> List[Match]:
     """Validate a string template using the specified rules and regions.
 
     Parameters
@@ -40,19 +46,25 @@ def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
     if template is None:
         return []
 
-    runner = Runner(
-        rules=rules,
-        filename=None,
-        template=template,
-        regions=regions,
-        verbosity=0,
-        mandatory_rules=None,
-    )
-    runner.transform()
-    return runner.run()
+    if not regions:
+        regions = [REGION_PRIMARY]
+
+    if not config:
+        config_mixin = ConfigMixIn(
+            regions=regions,
+        )
+    else:
+        config_mixin = ConfigMixIn(**config)
+
+    if isinstance(rules, RulesCollection):
+        template_runner = TemplateRunner(None, template, config_mixin, rules)  # type: ignore # noqa: E501
+        return list(template_runner.run())
+
+    runner = Runner(config_mixin)
+    return list(runner.validate_template(None, template))
 
 
-def lint_all(s: str) -> Matches:
+def lint_all(s: str) -> List[Match]:
     """Validate a string template against all regions and rules.
 
     Parameters
@@ -67,6 +79,7 @@ def lint_all(s: str) -> Matches:
     """
     return lint(
         s=s,
-        rules=get_rules([], [], ["I", "W", "E"], include_experimental=True),
-        regions=REGIONS,
+        config=ManualArgs(
+            include_checks=["I"], include_experimental=True, regions=REGIONS
+        ),
     )

@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/InstanceTenancy"
+ ],
+ "createOnlyProperties": [
+  "/properties/CidrBlock",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentRequired": {
+  "Ipv4IpamPoolId": [
+   "Ipv4NetmaskLength"
+  ]
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVpc",
+    "ec2:DescribeVpcs",
+    "ec2:ModifyVpcAttribute",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVpc",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeNetworkAcls",
+    "ec2:DescribeVpcAttribute"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:ModifyVpcAttribute",
+    "ec2:DeleteTags",
+    "ec2:ModifyVpcTenancy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpcId"
+ ],
+ "properties": {
+  "CidrBlock": {
+   "type": "string"
+  },
+  "CidrBlockAssociations": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DefaultNetworkAcl": {
+   "insertionOrder": false,
+   "type": "string"
+  },
+  "DefaultSecurityGroup": {
+   "insertionOrder": false,
+   "type": "string"
+  },
+  "EnableDnsHostnames": {
+   "type": "boolean"
+  },
+  "EnableDnsSupport": {
+   "type": "boolean"
+  },
+  "InstanceTenancy": {
+   "type": "string"
+  },
+  "Ipv4IpamPoolId": {
+   "type": "string"
+  },
+  "Ipv4NetmaskLength": {
+   "type": "integer"
+  },
+  "Ipv6CidrBlocks": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CidrBlockAssociations",
+  "/properties/DefaultNetworkAcl",
+  "/properties/DefaultSecurityGroup",
+  "/properties/Ipv6CidrBlocks",
+  "/properties/VpcId"
+ ],
+ "requiredXor": [
+  "CidrBlock",
+  "Ipv4IpamPoolId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPC",
+ "writeOnlyProperties": [
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength"
+ ]
+}

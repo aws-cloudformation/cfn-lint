@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotfleethub:CreateApplication",
+    "iotfleethub:TagResource",
+    "iam:PassRole",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DescribeRegisteredRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotfleethub:DeleteApplication",
+    "iotfleethub:DescribeApplication",
+    "sso:DeleteManagedApplicationInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotfleethub:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotfleethub:DescribeApplication"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotfleethub:UpdateApplication",
+    "iotfleethub:DescribeApplication",
+    "iotfleethub:TagResource",
+    "iotfleethub:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:[!-~]+$",
+   "type": "string"
+  },
+  "ApplicationCreationDate": {
+   "type": "integer"
+  },
+  "ApplicationDescription": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[ -~]*$",
+   "type": "string"
+  },
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ApplicationLastUpdateDate": {
+   "type": "integer"
+  },
+  "ApplicationName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[ -~]*$",
+   "type": "string"
+  },
+  "ApplicationState": {
+   "type": "string"
+  },
+  "ApplicationUrl": {
+   "type": "string"
+  },
+  "ErrorMessage": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:[!-~]+$",
+   "type": "string"
+  },
+  "SsoClientId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/ApplicationId",
+  "/properties/ApplicationUrl",
+  "/properties/ApplicationState",
+  "/properties/ApplicationCreationDate",
+  "/properties/ApplicationLastUpdateDate",
+  "/properties/SsoClientId",
+  "/properties/ErrorMessage"
+ ],
+ "required": [
+  "ApplicationName",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotfleethub.git",
+ "typeName": "AWS::IoTFleetHub::Application"
+}

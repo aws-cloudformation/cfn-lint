@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApprovedOrigins": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^\\w+\\:\\/\\/.*$",
+   "type": "string"
+  },
+  "ExternalUrlConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessUrl": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "^\\w+\\:\\/\\/.*$",
+     "type": "string"
+    },
+    "ApprovedOrigins": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ApprovedOrigins"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AccessUrl"
+   ],
+   "type": "object"
+  },
+  "Permissions": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\/\\._\\-\\*]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "app-integrations:CreateApplication",
+    "app-integrations:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "app-integrations:DeleteApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "app-integrations:ListApplications",
+    "app-integrations:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "app-integrations:GetApplication"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "app-integrations:GetApplication",
+    "app-integrations:UpdateApplication",
+    "app-integrations:TagResource",
+    "app-integrations:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationArn"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:app-integrations:[-a-z0-9]*:[0-9]{12}:application/[-a-zA-Z0-9]*",
+   "type": "string"
+  },
+  "ApplicationSourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExternalUrlConfig": {
+     "$ref": "#/definitions/ExternalUrlConfig"
+    }
+   },
+   "required": [
+    "ExternalUrlConfig"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\/\\._ \\-]+$",
+   "type": "string"
+  },
+  "Namespace": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
+   "type": "string"
+  },
+  "Permissions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Permissions"
+   },
+   "maxItems": 150,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "Description",
+  "ApplicationSourceConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppIntegrations::Application"
+}

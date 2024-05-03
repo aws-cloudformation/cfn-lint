@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityStoreId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "identitystore:CreateGroup",
+    "identitystore:DescribeGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "identitystore:DescribeGroup",
+    "identitystore:DeleteGroup"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "IdentityStoreId": {
+      "$ref": "resource-schema.json#/properties/IdentityStoreId"
+     }
+    },
+    "required": [
+     "IdentityStoreId"
+    ]
+   },
+   "permissions": [
+    "identitystore:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "identitystore:DescribeGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "identitystore:DescribeGroup",
+    "identitystore:UpdateGroup"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupId",
+  "/properties/IdentityStoreId"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  \u3000]+$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+$",
+   "type": "string"
+  },
+  "GroupId": {
+   "maxLength": 47,
+   "minLength": 1,
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "IdentityStoreId": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^d-[0-9a-f]{10}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GroupId"
+ ],
+ "required": [
+  "IdentityStoreId",
+  "DisplayName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-identitystore",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IdentityStore::Group"
+}

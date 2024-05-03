@@ -1,0 +1,155 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BackupVaultName",
+  "/properties/EncryptionKeyArn"
+ ],
+ "definitions": {
+  "BackupVaultNamePattern": {
+   "pattern": "^[a-zA-Z0-9\\-\\_]{2,50}$",
+   "type": "string"
+  },
+  "LockConfigurationType": {
+   "additionalProperties": false,
+   "properties": {
+    "ChangeableForDays": {
+     "type": "integer"
+    },
+    "MaxRetentionDays": {
+     "type": "integer"
+    },
+    "MinRetentionDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MinRetentionDays"
+   ],
+   "type": "object"
+  },
+  "NotificationObjectType": {
+   "additionalProperties": false,
+   "properties": {
+    "BackupVaultEvents": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SNSTopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SNSTopicArn",
+    "BackupVaultEvents"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "backup:TagResource",
+    "backup:CreateBackupVault",
+    "backup:PutBackupVaultAccessPolicy",
+    "backup:PutBackupVaultNotifications",
+    "backup:PutBackupVaultLockConfiguration",
+    "backup-storage:Mount",
+    "backup-storage:MountCapsule",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "kms:RetireGrant",
+    "kms:DescribeKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "backup:DeleteBackupVault"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "backup:ListBackupVaults"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "backup:DescribeBackupVault",
+    "backup:GetBackupVaultNotifications",
+    "backup:GetBackupVaultAccessPolicy",
+    "backup:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "backup:DescribeBackupVault",
+    "backup:DeleteBackupVaultAccessPolicy",
+    "backup:DeleteBackupVaultNotifications",
+    "backup:DeleteBackupVaultLockConfiguration",
+    "backup:ListTags",
+    "backup:TagResource",
+    "backup:UntagResource",
+    "backup:PutBackupVaultAccessPolicy",
+    "backup:PutBackupVaultNotifications",
+    "backup:PutBackupVaultLockConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BackupVaultName"
+ ],
+ "properties": {
+  "AccessPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "BackupVaultArn": {
+   "type": "string"
+  },
+  "BackupVaultName": {
+   "$ref": "#/definitions/BackupVaultNamePattern"
+  },
+  "BackupVaultTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{1,128}$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionKeyArn": {
+   "type": "string"
+  },
+  "LockConfiguration": {
+   "$ref": "#/definitions/LockConfigurationType"
+  },
+  "Notifications": {
+   "$ref": "#/definitions/NotificationObjectType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BackupVaultArn"
+ ],
+ "required": [
+  "BackupVaultName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/BackupVaultTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::BackupVault",
+ "writeOnlyProperties": [
+  "/properties/LockConfiguration/ChangeableForDays"
+ ]
+}

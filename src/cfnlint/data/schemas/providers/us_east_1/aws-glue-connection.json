@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CatalogId"
+ ],
+ "definitions": {
+  "ConnectionInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionProperties": {
+     "type": "object"
+    },
+    "ConnectionType": {
+     "enum": [
+      "JDBC",
+      "SFTP",
+      "MONGODB",
+      "KAFKA",
+      "NETWORK",
+      "MARKETPLACE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "MatchCriteria": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "type": "string"
+    },
+    "PhysicalConnectionRequirements": {
+     "$ref": "#/definitions/PhysicalConnectionRequirements"
+    }
+   },
+   "required": [
+    "ConnectionType"
+   ],
+   "type": "object"
+  },
+  "PhysicalConnectionRequirements": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "cfnLint": [
+      "AWS::Glue::Connection/Properties/ConnectionInput/PhysicalConnectionRequirements/AvailabilityZone"
+     ],
+     "type": "string"
+    },
+    "SecurityGroupIdList": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CatalogId": {
+   "type": "string"
+  },
+  "ConnectionInput": {
+   "$ref": "#/definitions/ConnectionInput"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ConnectionInput",
+  "CatalogId"
+ ],
+ "typeName": "AWS::Glue::Connection"
+}

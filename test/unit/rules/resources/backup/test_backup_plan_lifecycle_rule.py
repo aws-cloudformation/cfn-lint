@@ -3,31 +3,75 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.backup.BackupPlanLifecycleRule import (
-    BackupPlanLifecycleRule,  # pylint: disable=E0401
+    BackupPlanLifecycleRule,
 )
 
 
-class TestBackupPlanLifecycleRule(BaseRuleTestCase):
-    """Check Backup Plan rules with lifecycle has minimum 90 day period between cold and delete"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = BackupPlanLifecycleRule()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestBackupPlanLifecycleRule, self).setUp()
-        self.collection.register(BackupPlanLifecycleRule())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/backup/test_backup_plan_lifecycle_rule.yml",
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={})
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/backup/test_backup_plan_lifecycle_rule.yml",
-            1,
-        )
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        (
+            {},
+            [],
+        ),
+        (
+            {
+                "DeleteAfterDays": 100,
+                "MoveToColdStorageAfterDays": 10,
+            },
+            [],
+        ),
+        (
+            {
+                "DeleteAfterDays": "foo",
+                "MoveToColdStorageAfterDays": 10,
+            },
+            [],
+        ),
+        (
+            {
+                "DeleteAfterDays": 100,
+                "MoveToColdStorageAfterDays": "foo",
+            },
+            [],
+        ),
+        (
+            {
+                "DeleteAfterDays": 10,
+                "MoveToColdStorageAfterDays": 30,
+            },
+            [
+                ValidationError(
+                    (
+                        "DeleteAfterDays 10 must be at least 90 "
+                        "days after MoveToColdStorageAfterDays 30"
+                    ),
+                    rule=BackupPlanLifecycleRule(),
+                    path=deque(["DeleteAfterDays"]),
+                )
+            ],
+        ),
+    ],
+)
+def test_backup_lifecycle(instance, expected, rule, validator):
+    errs = list(
+        rule.backupbackupplanlifecycle(validator, "LambdaRuntime", instance, {})
+    )
+    assert errs == expected, f"Expected {expected} got {errs}"

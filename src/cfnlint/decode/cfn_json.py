@@ -7,17 +7,14 @@ import fileinput
 import json
 import logging
 import sys
-from json.decoder import (  # type: ignore
-    BACKSLASH,
-    STRINGCHUNK,
-    WHITESPACE,
-    WHITESPACE_STR,
-)
+from json.decoder import WHITESPACE  # type: ignore
+from json.decoder import BACKSLASH, STRINGCHUNK, WHITESPACE_STR  # type: ignore
 from json.scanner import NUMBER_RE
 
-import cfnlint
 from cfnlint.decode.mark import Mark
-from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
+from cfnlint.decode.node import dict_node, list_node, str_node
+from cfnlint.match import Match
+from cfnlint.rules import ParseError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -58,9 +55,6 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     if err is not None:
         raise err
 
-    if len(mapping) == 1:
-        if "Fn::Sub" in mapping:
-            return sub_node(ordered_pairs, beg_mark, end_mark)
     return mapping
 
 
@@ -76,10 +70,13 @@ class JSONDecodeError(ValueError):
     # Note that this exception is used from _json
 
     def __init__(self, doc, pos, errors):
-        if isinstance(errors, cfnlint.rules.Match):
+        if isinstance(errors, Match):
             errors = [errors]
 
-        errmsg = f"{errors[0].message}: line {errors[0].linenumber} column {errors[0].linenumber} (char {pos})"
+        errmsg = (
+            f"{errors[0].message}: line {errors[0].linenumber} column"
+            f" {errors[0].linenumber} (char {pos})"
+        )
         ValueError.__init__(self, errmsg)
         self.msg = errors[0].message
         self.doc = doc
@@ -96,26 +93,26 @@ def build_match(message, doc, pos, key=" "):
     lineno = doc.count("\n", 0, pos) + 1
     colno = pos - doc.rfind("\n", 0, pos)
 
-    return cfnlint.rules.Match(
-        lineno,
-        colno + 1,
-        lineno,
-        colno + 1 + len(key),
-        "",
-        cfnlint.rules.ParseError(),
+    return Match.create(
         message=message,
+        filename="",
+        rule=ParseError(),
+        linenumber=lineno,
+        columnnumber=colno + 1,
+        linenumberend=lineno,
+        columnnumberend=colno + 1 + len(key),
     )
 
 
 def build_match_from_key(message, key):
-    return cfnlint.rules.Match(
-        key.start_mark.line,
-        key.start_mark.column + 1,
-        key.end_mark.line,
-        key.end_mark.column + 1 + len(key),
-        "",
-        cfnlint.rules.ParseError(),
+    return Match.create(
         message=message,
+        filename="",
+        rule=ParseError(),
+        linenumber=key.start_mark.line,
+        columnnumber=key.start_mark.column + 1,
+        linenumberend=key.end_mark.line,
+        columnnumberend=key.end_mark.column + 1 + len(key),
     )
 
 
@@ -487,8 +484,6 @@ class CfnJSONDecoder(json.JSONDecoder):
         while True:
             begin = end - 1
             key, end = py_scanstring(s, end, strict)
-            # print(lineno, colno, obj)
-            # print(key, lineno, colno)
             key = memo_get(key, key)
             # To skip some function call overhead we optimize the fast paths where
             # the JSON key separator is ": " or just ":".

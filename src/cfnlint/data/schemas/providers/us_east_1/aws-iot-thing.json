@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ThingName"
+ ],
+ "definitions": {
+  "AttributePayload": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9_.,@/:#-]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateThing",
+    "iot:DescribeThing"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeleteThing",
+    "iot:DescribeThing"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListThings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeThing"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateThing",
+    "iot:DescribeThing"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ThingName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AttributePayload": {
+   "$ref": "#/definitions/AttributePayload"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ThingName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IoT::Thing"
+}

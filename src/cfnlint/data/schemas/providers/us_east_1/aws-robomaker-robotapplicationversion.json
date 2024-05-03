@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Application",
+  "/properties/CurrentRevisionId"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "robomaker:CreateRobotApplicationVersion",
+    "s3:GetObject",
+    "ecr:BatchGetImage",
+    "ecr:GetAuthorizationToken",
+    "ecr:BatchCheckLayerAvailability",
+    "ecr-public:GetAuthorizationToken",
+    "sts:GetServiceBearerToken"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "robomaker:DeleteRobotApplication",
+    "robomaker:DescribeRobotApplication"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "robomaker:DescribeRobotApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Application": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ApplicationVersion": {
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CurrentRevisionId": {
+   "maxLength": 40,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_.\\-]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationVersion",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Application"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": false,
+ "typeName": "AWS::RoboMaker::RobotApplicationVersion"
+}

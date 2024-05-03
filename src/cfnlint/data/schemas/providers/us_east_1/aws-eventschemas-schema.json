@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SchemaName",
+  "/properties/RegistryName"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:CreateSchema",
+    "schemas:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:DeleteSchema",
+    "schemas:DeleteSchemaVersion"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RegistryName": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "RegistryName"
+    ]
+   },
+   "permissions": [
+    "schemas:ListSchemas",
+    "schemas:ListSchemaVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "schemas:DescribeSchema"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "schemas:DescribeSchema",
+    "schemas:UpdateSchema",
+    "schemas:TagResource",
+    "schemas:UntagResource",
+    "schemas:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SchemaArn"
+ ],
+ "properties": {
+  "Content": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "LastModified": {
+   "type": "string"
+  },
+  "RegistryName": {
+   "type": "string"
+  },
+  "SchemaArn": {
+   "type": "string"
+  },
+  "SchemaName": {
+   "type": "string"
+  },
+  "SchemaVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "type": "string"
+  },
+  "VersionCreatedDate": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SchemaArn",
+  "/properties/LastModified",
+  "/properties/VersionCreatedDate",
+  "/properties/SchemaVersion"
+ ],
+ "required": [
+  "Type",
+  "Content",
+  "RegistryName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eventschemas",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EventSchemas::Schema"
+}

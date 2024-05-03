@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "definitions": {
+  "IamPolicyArn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:iam::([0-9]{12})?:policy\\/[^.]+$",
+   "type": "string"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/cli/latest/reference/emr/create-studio-session-mapping.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticmapreduce:CreateStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:ListDirectoryAssociations",
+    "sso:GetProfile",
+    "sso:ListProfiles",
+    "sso:AssociateProfile"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "elasticmapreduce:DeleteStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance",
+    "sso:ListDirectoryAssociations",
+    "sso:GetProfile",
+    "sso:ListProfiles",
+    "sso:DisassociateProfile"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticmapreduce:ListStudioSessionMappings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticmapreduce:GetStudioSessionMapping",
+    "elasticmapreduce:UpdateStudioSessionMapping",
+    "sso-directory:SearchUsers",
+    "sso-directory:SearchGroups",
+    "sso-directory:DescribeUser",
+    "sso-directory:DescribeGroup",
+    "sso:GetManagedApplicationInstance",
+    "sso:DescribeInstance"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "properties": {
+  "IdentityName": {
+   "type": "string"
+  },
+  "IdentityType": {
+   "enum": [
+    "USER",
+    "GROUP"
+   ],
+   "type": "string"
+  },
+  "SessionPolicyArn": {
+   "$ref": "#/definitions/IamPolicyArn"
+  },
+  "StudioId": {
+   "maxLength": 256,
+   "minLength": 4,
+   "pattern": "^es-[0-9A-Z]+",
+   "type": "string"
+  }
+ },
+ "required": [
+  "StudioId",
+  "IdentityName",
+  "IdentityType",
+  "SessionPolicyArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::EMR::StudioSessionMapping"
+}

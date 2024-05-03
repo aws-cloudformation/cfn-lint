@@ -1,0 +1,95 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DurationInSeconds",
+  "/properties/AssessmentTemplateName",
+  "/properties/UserAttributesForFindings",
+  "/properties/AssessmentTargetArn",
+  "/properties/RulesPackageArns"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "inspector:CreateAssessmentTemplate",
+    "inspector:ListAssessmentTemplates",
+    "inspector:DescribeAssessmentTemplates"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "inspector:DeleteAssessmentTemplate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "inspector:ListAssessmentTemplates"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "inspector:DescribeAssessmentTemplates"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AssessmentTargetArn": {
+   "type": "string"
+  },
+  "AssessmentTemplateName": {
+   "type": "string"
+  },
+  "DurationInSeconds": {
+   "maximum": 86400,
+   "minimum": 180,
+   "type": "integer"
+  },
+  "RulesPackageArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserAttributesForFindings": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AssessmentTargetArn",
+  "DurationInSeconds",
+  "RulesPackageArns"
+ ],
+ "taggable": false,
+ "typeName": "AWS::Inspector::AssessmentTemplate"
+}

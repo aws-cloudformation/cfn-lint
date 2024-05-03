@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetIdentifier",
+  "/properties/BaselineIdentifier"
+ ],
+ "definitions": {
+  "AnyType": {
+   "anyOf": [
+    {
+     "type": "string"
+    },
+    {
+     "type": "object"
+    },
+    {
+     "type": "number"
+    },
+    {
+     "insertionOrder": false,
+     "items": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "number"
+       },
+       {
+        "type": "object"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     },
+     "type": "array"
+    },
+    {
+     "type": "boolean"
+    }
+   ]
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/AnyType"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "controltower:EnableBaseline",
+    "controltower:TagResource",
+    "controltower:GetBaselineOperation",
+    "controltower:GetEnabledBaseline",
+    "controltower:ListTagsForResource",
+    "organizations:CreateOrganizationalUnit",
+    "organizations:CreateOrganization",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:EnablePolicyType",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListRoots",
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:CreatePortfolio",
+    "servicecatalog:CreateProduct",
+    "servicecatalog:CreateProvisioningArtifact",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:UpdatePortfolio",
+    "servicecatalog:UpdateProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "servicecatalog:DeleteProvisioningArtifact"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "controltower:DisableBaseline",
+    "controltower:GetBaselineOperation",
+    "organizations:CreateOrganizationalUnit",
+    "organizations:CreateOrganization",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:EnablePolicyType",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListRoots",
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:CreatePortfolio",
+    "servicecatalog:CreateProduct",
+    "servicecatalog:CreateProvisioningArtifact",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:UpdatePortfolio",
+    "servicecatalog:UpdateProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "servicecatalog:DeleteProvisioningArtifact"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "controltower:ListEnabledBaselines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controltower:GetEnabledBaseline",
+    "controltower:ListEnabledBaselines",
+    "controltower:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "controltower:UpdateEnabledBaseline",
+    "controltower:GetBaselineOperation",
+    "organizations:CreateOrganizationalUnit",
+    "organizations:CreateOrganization",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:EnablePolicyType",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListRoots",
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:CreatePortfolio",
+    "servicecatalog:CreateProduct",
+    "servicecatalog:CreateProvisioningArtifact",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:UpdatePortfolio",
+    "servicecatalog:UpdateProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "servicecatalog:DeleteProvisioningArtifact",
+    "controltower:TagResource",
+    "controltower:ListTagsForResource",
+    "controltower:GetEnabledBaseline"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnabledBaselineIdentifier"
+ ],
+ "properties": {
+  "BaselineIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  },
+  "BaselineVersion": {
+   "pattern": "^\\d+(?:\\.\\d+){0,2}$",
+   "type": "string"
+  },
+  "EnabledBaselineIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  },
+  "Parameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Parameter"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TargetIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnabledBaselineIdentifier"
+ ],
+ "required": [
+  "BaselineIdentifier",
+  "TargetIdentifier",
+  "BaselineVersion"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ControlTower::EnabledBaseline"
+}

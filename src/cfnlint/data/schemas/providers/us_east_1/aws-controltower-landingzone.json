@@ -1,0 +1,204 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LandingZoneDriftStatus": {
+   "enum": [
+    "DRIFTED",
+    "IN_SYNC"
+   ],
+   "type": "string"
+  },
+  "LandingZoneStatus": {
+   "enum": [
+    "ACTIVE",
+    "PROCESSING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "controltower:CreateLandingZone",
+    "controltower:GetLandingZoneOperation",
+    "controltower:ListTagsForResource",
+    "controltower:TagResource",
+    "controltower:GetLandingZone",
+    "cloudformation:DescribeOrganizationsAccess",
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:CreatePortfolio",
+    "servicecatalog:CreateProduct",
+    "servicecatalog:CreateProvisioningArtifact",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:UpdatePortfolio",
+    "servicecatalog:UpdateProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "organizations:CreateOrganizationalUnit",
+    "organizations:CreateOrganization",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:EnablePolicyType",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListRoots",
+    "sso:GetPeregrineStatus",
+    "sso:ListDirectoryAssociations",
+    "sso:StartPeregrine",
+    "sso:RegisterRegion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "controltower:DeleteLandingZone",
+    "controltower:GetLandingZone",
+    "controltower:GetLandingZoneOperation",
+    "cloudformation:DescribeOrganizationsAccess",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:DeleteProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "servicecatalog:DeleteProduct",
+    "servicecatalog:DisassociatePrincipalFromPortfolio",
+    "servicecatalog:DisassociateProductFromPortfolio",
+    "servicecatalog:DeletePortfolio",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:ListRoots",
+    "sso:GetPeregrineStatus",
+    "sso:ListDirectoryAssociations",
+    "iam:DeleteRolePolicy",
+    "iam:DetachRolePolicy",
+    "iam:DeleteRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "controltower:ListLandingZones"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controltower:GetLandingZone",
+    "controltower:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "controltower:UpdateLandingZone",
+    "controltower:GetLandingZoneOperation",
+    "controltower:ListTagsForResource",
+    "controltower:TagResource",
+    "controltower:GetLandingZone",
+    "controltower:UntagResource",
+    "cloudformation:DescribeOrganizationsAccess",
+    "servicecatalog:AssociatePrincipalWithPortfolio",
+    "servicecatalog:AssociateProductWithPortfolio",
+    "servicecatalog:CreatePortfolio",
+    "servicecatalog:CreateProduct",
+    "servicecatalog:CreateProvisioningArtifact",
+    "servicecatalog:ListPortfolios",
+    "servicecatalog:ListProvisioningArtifacts",
+    "servicecatalog:SearchProductsAsAdmin",
+    "servicecatalog:UpdatePortfolio",
+    "servicecatalog:UpdateProvisioningArtifact",
+    "servicecatalog:ListPrincipalsForPortfolio",
+    "organizations:CreateOrganizationalUnit",
+    "organizations:CreateOrganization",
+    "organizations:UpdatePolicy",
+    "organizations:CreatePolicy",
+    "organizations:AttachPolicy",
+    "organizations:DetachPolicy",
+    "organizations:DeletePolicy",
+    "organizations:EnablePolicyType",
+    "organizations:EnableAWSServiceAccess",
+    "organizations:ListRoots",
+    "sso:GetPeregrineStatus",
+    "sso:ListDirectoryAssociations",
+    "sso:StartPeregrine",
+    "sso:RegisterRegion"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LandingZoneIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "type": "string"
+  },
+  "DriftStatus": {
+   "$ref": "#/definitions/LandingZoneDriftStatus"
+  },
+  "LandingZoneIdentifier": {
+   "type": "string"
+  },
+  "LatestAvailableVersion": {
+   "maxLength": 10,
+   "minLength": 3,
+   "pattern": "\\d+.\\d+",
+   "type": "string"
+  },
+  "Manifest": {},
+  "Status": {
+   "$ref": "#/definitions/LandingZoneStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Version": {
+   "maxLength": 10,
+   "minLength": 3,
+   "pattern": "\\d+.\\d+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LandingZoneIdentifier",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/LatestAvailableVersion",
+  "/properties/DriftStatus"
+ ],
+ "required": [
+  "Manifest",
+  "Version"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ControlTower::LandingZone"
+}

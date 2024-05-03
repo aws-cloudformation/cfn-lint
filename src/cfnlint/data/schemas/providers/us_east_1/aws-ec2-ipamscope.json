@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateIpamScope",
+    "ec2:DescribeIpamScopes",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteIpamScope",
+    "ec2:DescribeIpamScopes",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeIpamScopes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeIpamScopes"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyIpamScope",
+    "ec2:DescribeIpamScopes",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamScopeId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IpamArn": {
+   "type": "string"
+  },
+  "IpamId": {
+   "type": "string"
+  },
+  "IpamScopeId": {
+   "type": "string"
+  },
+  "IpamScopeType": {
+   "enum": [
+    "public",
+    "private"
+   ],
+   "type": "string"
+  },
+  "IsDefault": {
+   "type": "boolean"
+  },
+  "PoolCount": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamScopeId",
+  "/properties/Arn",
+  "/properties/IpamArn",
+  "/properties/IsDefault",
+  "/properties/PoolCount",
+  "/properties/IpamScopeType"
+ ],
+ "required": [
+  "IpamId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::IPAMScope"
+}

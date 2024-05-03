@@ -1,0 +1,95 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ModuleName",
+  "/properties/ModulePackage"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudformation:DescribeType",
+    "cloudformation:DescribeTypeRegistration",
+    "cloudformation:ListTypeVersions",
+    "cloudformation:RegisterType",
+    "s3:GetObject",
+    "s3:ListBucket"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cloudformation:DeregisterType",
+    "cloudformation:DescribeType"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cloudformation:DescribeType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/module/.+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DocumentationUrl": {
+   "maxLength": 4096,
+   "type": "string"
+  },
+  "IsDefaultVersion": {
+   "type": "boolean"
+  },
+  "ModuleName": {
+   "pattern": "^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::MODULE",
+   "type": "string"
+  },
+  "ModulePackage": {
+   "type": "string"
+  },
+  "Schema": {
+   "maxLength": 16777216,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TimeCreated": {
+   "type": "string"
+  },
+  "VersionId": {
+   "pattern": "^[0-9]{8}$",
+   "type": "string"
+  },
+  "Visibility": {
+   "enum": [
+    "PRIVATE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Description",
+  "/properties/DocumentationUrl",
+  "/properties/IsDefaultVersion",
+  "/properties/Schema",
+  "/properties/TimeCreated",
+  "/properties/VersionId",
+  "/properties/Visibility"
+ ],
+ "required": [
+  "ModuleName",
+  "ModulePackage"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudformation",
+ "typeName": "AWS::CloudFormation::ModuleVersion",
+ "writeOnlyProperties": [
+  "/properties/ModulePackage"
+ ]
+}

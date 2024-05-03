@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Bucket",
+  "/properties/Name",
+  "/properties/VpcConfiguration"
+ ],
+ "definitions": {
+  "VpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcId": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3-outposts:CreateAccessPoint",
+    "s3-outposts:GetAccessPoint",
+    "s3-outposts:PutAccessPointPolicy",
+    "s3-outposts:GetAccessPointPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3-outposts:DeleteAccessPoint",
+    "s3-outposts:DeleteAccessPointPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3-outposts:ListAccessPoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3-outposts:GetAccessPoint",
+    "s3-outposts:GetAccessPointPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3-outposts:GetAccessPoint",
+    "s3-outposts:PutAccessPointPolicy",
+    "s3-outposts:GetAccessPointPolicy",
+    "s3-outposts:DeleteAccessPointPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/accesspoint\\/[^:]+$",
+   "type": "string"
+  },
+  "Bucket": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/bucket\\/[^:]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/VpcConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Bucket",
+  "Name",
+  "VpcConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Outposts::AccessPoint"
+}

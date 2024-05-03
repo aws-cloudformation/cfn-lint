@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamPoolId",
+  "/properties/Cidr",
+  "/properties/Description",
+  "/properties/NetmaskLength"
+ ],
+ "definitions": {
+  "Cidr": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AllocateIpamPoolCidr",
+    "ec2:GetIpamPoolAllocations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:ReleaseIpamPoolAllocation"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "IpamPoolId": {
+      "$ref": "resource-schema.json#/properties/IpamPoolId"
+     }
+    },
+    "required": [
+     "IpamPoolId"
+    ]
+   },
+   "permissions": [
+    "ec2:GetIpamPoolAllocations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetIpamPoolAllocations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPoolId",
+  "/properties/IpamPoolAllocationId",
+  "/properties/Cidr"
+ ],
+ "properties": {
+  "Cidr": {
+   "$ref": "#/definitions/Cidr"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IpamPoolAllocationId": {
+   "type": "string"
+  },
+  "IpamPoolId": {
+   "type": "string"
+  },
+  "NetmaskLength": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamPoolAllocationId"
+ ],
+ "required": [
+  "IpamPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::IPAMAllocation",
+ "writeOnlyProperties": [
+  "/properties/NetmaskLength"
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "default": {
+     "type": "string"
+    }
+   }
+  },
+  "ParameterGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Label": {
+     "$ref": "#/definitions/Label"
+    },
+    "Parameters": {
+     "items": {
+      "cfnLint": [
+       "cfnParameter"
+      ]
+     },
+     "type": "array"
+    }
+   }
+  },
+  "ParameterLabel": {
+   "additionalProperties": {
+    "$ref": "#/definitions/Label"
+   },
+   "propertyNames": {
+    "cfnLint": [
+     "cfnParameter"
+    ]
+   }
+  }
+ },
+ "properties": {
+  "ParameterGroups": {
+   "items": {
+    "$ref": "#/definitions/ParameterGroup"
+   },
+   "type": "array"
+  },
+  "ParameterLabels": {
+   "$ref": "#/definitions/ParameterLabel"
+  }
+ },
+ "type": "object"
+}

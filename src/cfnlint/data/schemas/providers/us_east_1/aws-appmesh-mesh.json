@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MeshName"
+ ],
+ "definitions": {
+  "EgressFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "MeshServiceDiscovery": {
+   "additionalProperties": false,
+   "properties": {
+    "IpPreference": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MeshSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "EgressFilter": {
+     "$ref": "#/definitions/EgressFilter"
+    },
+    "ServiceDiscovery": {
+     "$ref": "#/definitions/MeshServiceDiscovery"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MeshName": {
+   "type": "string"
+  },
+  "MeshOwner": {
+   "type": "string"
+  },
+  "ResourceOwner": {
+   "type": "string"
+  },
+  "Spec": {
+   "$ref": "#/definitions/MeshSpec"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Uid": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceOwner",
+  "/properties/MeshOwner",
+  "/properties/Arn",
+  "/properties/Uid"
+ ],
+ "typeName": "AWS::AppMesh::Mesh"
+}

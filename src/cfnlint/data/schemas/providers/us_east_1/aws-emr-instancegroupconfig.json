@@ -1,0 +1,311 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceRole",
+  "/properties/JobFlowId",
+  "/properties/Name",
+  "/properties/InstanceType",
+  "/properties/CustomAmiId",
+  "/properties/Configurations",
+  "/properties/EbsConfiguration",
+  "/properties/Market",
+  "/properties/BidPrice"
+ ],
+ "definitions": {
+  "AutoScalingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Constraints": {
+     "$ref": "#/definitions/ScalingConstraints"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/ScalingRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Constraints",
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "CloudWatchAlarmDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "type": "string"
+    },
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EvaluationPeriods": {
+     "type": "integer"
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "Period": {
+     "type": "integer"
+    },
+    "Statistic": {
+     "type": "string"
+    },
+    "Threshold": {
+     "type": "number"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "ComparisonOperator",
+    "Period",
+    "Threshold"
+   ],
+   "type": "object"
+  },
+  "Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "Classification": {
+     "type": "string"
+    },
+    "ConfigurationProperties": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Configurations": {
+     "items": {
+      "$ref": "#/definitions/Configuration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "EbsBlockDeviceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "VolumeSpecification": {
+     "$ref": "#/definitions/VolumeSpecification"
+    },
+    "VolumesPerInstance": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "VolumeSpecification"
+   ],
+   "type": "object"
+  },
+  "EbsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EbsBlockDeviceConfigs": {
+     "items": {
+      "$ref": "#/definitions/EbsBlockDeviceConfig"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EbsOptimized": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ScalingAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Market": {
+     "type": "string"
+    },
+    "SimpleScalingPolicyConfiguration": {
+     "$ref": "#/definitions/SimpleScalingPolicyConfiguration"
+    }
+   },
+   "required": [
+    "SimpleScalingPolicyConfiguration"
+   ],
+   "type": "object"
+  },
+  "ScalingConstraints": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MinCapacity",
+    "MaxCapacity"
+   ],
+   "type": "object"
+  },
+  "ScalingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/ScalingAction"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Trigger": {
+     "$ref": "#/definitions/ScalingTrigger"
+    }
+   },
+   "required": [
+    "Action",
+    "Trigger",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ScalingTrigger": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchAlarmDefinition": {
+     "$ref": "#/definitions/CloudWatchAlarmDefinition"
+    }
+   },
+   "required": [
+    "CloudWatchAlarmDefinition"
+   ],
+   "type": "object"
+  },
+  "SimpleScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdjustmentType": {
+     "type": "string"
+    },
+    "CoolDown": {
+     "type": "integer"
+    },
+    "ScalingAdjustment": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScalingAdjustment"
+   ],
+   "type": "object"
+  },
+  "VolumeSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Iops": {
+     "type": "integer"
+    },
+    "SizeInGB": {
+     "type": "integer"
+    },
+    "Throughput": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SizeInGB",
+    "VolumeType"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AutoScalingPolicy": {
+   "$ref": "#/definitions/AutoScalingPolicy"
+  },
+  "BidPrice": {
+   "type": "string"
+  },
+  "Configurations": {
+   "items": {
+    "$ref": "#/definitions/Configuration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CustomAmiId": {
+   "type": "string"
+  },
+  "EbsConfiguration": {
+   "$ref": "#/definitions/EbsConfiguration"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceCount": {
+   "type": "integer"
+  },
+  "InstanceRole": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "JobFlowId": {
+   "type": "string"
+  },
+  "Market": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "JobFlowId",
+  "InstanceCount",
+  "InstanceRole",
+  "InstanceType"
+ ],
+ "typeName": "AWS::EMR::InstanceGroupConfig"
+}

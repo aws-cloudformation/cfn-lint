@@ -1,0 +1,291 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BillingGroupArn",
+  "/properties/AccountId",
+  "/properties/BillingPeriodRange/InclusiveStartBillingPeriod",
+  "/properties/BillingPeriodRange/ExclusiveEndBillingPeriod",
+  "/properties/CustomLineItemChargeDetails/Type"
+ ],
+ "definitions": {
+  "BillingPeriodRange": {
+   "additionalProperties": false,
+   "properties": {
+    "ExclusiveEndBillingPeriod": {
+     "$ref": "#/definitions/ExclusiveEndBillingPeriod"
+    },
+    "InclusiveStartBillingPeriod": {
+     "$ref": "#/definitions/InclusiveStartBillingPeriod"
+    }
+   },
+   "type": "object"
+  },
+  "CustomLineItemChargeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Flat": {
+     "$ref": "#/definitions/CustomLineItemFlatChargeDetails"
+    },
+    "LineItemFilters": {
+     "$ref": "#/definitions/LineItemFilters"
+    },
+    "Percentage": {
+     "$ref": "#/definitions/CustomLineItemPercentageChargeDetails"
+    },
+    "Type": {
+     "$ref": "#/definitions/Type"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CustomLineItemFlatChargeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ChargeValue": {
+     "maximum": 1000000,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ChargeValue"
+   ],
+   "type": "object"
+  },
+  "CustomLineItemPercentageChargeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ChildAssociatedResources": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "(arn:aws(-cn)?:billingconductor::[0-9]{12}:(customlineitem|billinggroup)/)?[a-zA-Z0-9]{10,12}",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PercentageValue": {
+     "maximum": 10000,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "PercentageValue"
+   ],
+   "type": "object"
+  },
+  "ExclusiveEndBillingPeriod": {
+   "pattern": "\\d{4}-(0?[1-9]|1[012])",
+   "type": "string"
+  },
+  "InclusiveStartBillingPeriod": {
+   "pattern": "\\d{4}-(0?[1-9]|1[012])",
+   "type": "string"
+  },
+  "LineItemFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Attribute": {
+     "enum": [
+      "LINE_ITEM_TYPE"
+     ],
+     "type": "string"
+    },
+    "MatchOption": {
+     "enum": [
+      "NOT_EQUAL"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LineItemFilterValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Attribute",
+    "MatchOption",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "LineItemFilterValue": {
+   "enum": [
+    "SAVINGS_PLAN_NEGATION"
+   ],
+   "type": "string"
+  },
+  "LineItemFilters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LineItemFilter"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "FEE",
+    "CREDIT"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "billingconductor:CreateCustomLineItem",
+    "billingconductor:BatchAssociateResourcesToCustomLineItem",
+    "billingconductor:ListCustomLineItems",
+    "billingconductor:TagResource",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "billingconductor:DeleteCustomLineItem",
+    "billingconductor:ListCustomLineItems",
+    "billingconductor:BatchDisassociateResourcesFromCustomLineItem",
+    "billingconductor:ListResourcesAssociatedToCustomLineItem",
+    "billingconductor:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "billingconductor:ListCustomLineItems",
+    "billingconductor:ListResourcesAssociatedToCustomLineItem",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "billingconductor:ListCustomLineItems",
+    "billingconductor:ListCustomLineItemVersions",
+    "billingconductor:ListResourcesAssociatedToCustomLineItem",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "billingconductor:UpdateCustomLineItem",
+    "billingconductor:ListCustomLineItems",
+    "billingconductor:ListResourcesAssociatedToCustomLineItem",
+    "billingconductor:BatchAssociateResourcesToCustomLineItem",
+    "billingconductor:BatchDisassociateResourcesFromCustomLineItem",
+    "billingconductor:TagResource",
+    "billingconductor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "(arn:aws(-cn)?:billingconductor::[0-9]{12}:customlineitem/)?[a-zA-Z0-9]{10}",
+   "type": "string"
+  },
+  "AssociationSize": {
+   "type": "integer"
+  },
+  "BillingGroupArn": {
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[0-9]{12}",
+   "type": "string"
+  },
+  "BillingPeriodRange": {
+   "$ref": "#/definitions/BillingPeriodRange"
+  },
+  "CreationTime": {
+   "type": "integer"
+  },
+  "CurrencyCode": {
+   "enum": [
+    "USD",
+    "CNY"
+   ],
+   "type": "string"
+  },
+  "CustomLineItemChargeDetails": {
+   "$ref": "#/definitions/CustomLineItemChargeDetails"
+  },
+  "Description": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "ProductCode": {
+   "maxLength": 29,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime",
+  "/properties/AssociationSize",
+  "/properties/CurrencyCode",
+  "/properties/ProductCode"
+ ],
+ "required": [
+  "Name",
+  "BillingGroupArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BillingConductor::CustomLineItem"
+}

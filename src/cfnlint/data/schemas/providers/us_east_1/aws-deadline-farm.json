@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "deadline:CreateFarm",
+    "deadline:GetFarm",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "deadline:DeleteFarm",
+    "deadline:GetFarm",
+    "identitystore:ListGroupMembershipsForMember",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "deadline:ListFarms",
+    "identitystore:ListGroupMembershipsForMember"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "deadline:GetFarm",
+    "identitystore:ListGroupMembershipsForMember",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "deadline:UpdateFarm",
+    "deadline:GetFarm",
+    "identitystore:ListGroupMembershipsForMember",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/.+?",
+   "type": "string"
+  },
+  "Description": {
+   "default": "",
+   "maxLength": 100,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FarmId": {
+   "pattern": "^farm-[0-9a-f]{32}$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "pattern": "^arn:aws[-a-z]*:kms:.*:key/.*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FarmId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "DisplayName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Deadline::Farm"
+}

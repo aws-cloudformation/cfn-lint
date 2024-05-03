@@ -1,0 +1,73 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Device",
+  "/properties/InstanceId",
+  "/properties/VolumeId"
+ ],
+ "definitions": {
+  "Device": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "VolumeId": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AttachVolume",
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DetachVolume",
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId",
+  "/properties/InstanceId"
+ ],
+ "properties": {
+  "Device": {
+   "$ref": "#/definitions/Device"
+  },
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "VolumeId": {
+   "$ref": "#/definitions/VolumeId"
+  }
+ },
+ "required": [
+  "VolumeId",
+  "InstanceId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::VolumeAttachment"
+}

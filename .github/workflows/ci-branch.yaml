@@ -18,12 +18,14 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install Tox and any other packages
         run: pip install tox
+      - name: Run Lint
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
       - name: Run Tox
         run: |
-          tox -e style
-          tox -e type
-          tox -e py
-      - uses: codecov/codecov-action@v4.3.0
+          tox -e py -- -m "data or not data"
+      - uses: codecov/codecov-action@v4.1.0
         if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -71,3 +73,4 @@ jobs:
         with:
           ignore-vulns: |
             GHSA-r9hx-vwmv-q579
+            PYSEC-2022-43012

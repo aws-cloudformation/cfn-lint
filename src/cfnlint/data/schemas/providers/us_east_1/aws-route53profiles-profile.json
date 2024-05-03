@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53profiles:CreateProfile",
+    "route53profiles:GetProfile",
+    "route53profiles:TagResource",
+    "route53profiles:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53profiles:DeleteProfile",
+    "route53profiles:GetProfile",
+    "route53profiles:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53profiles:ListProfiles",
+    "route53profiles:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53profiles:GetProfile",
+    "route53profiles:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53profiles:GetProfile",
+    "route53profiles:TagResource",
+    "route53profiles:UntagResource",
+    "route53profiles:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/ClientToken"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Profiles::Profile",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

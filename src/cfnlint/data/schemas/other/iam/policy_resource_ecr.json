@@ -1,0 +1,75 @@
+{
+ "$id": "resource",
+ "additionalProperties": false,
+ "definitions": {
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "requiredXor": [
+      "Action",
+      "NotAction"
+     ]
+    },
+    {
+     "requiredXor": [
+      "Principal",
+      "NotPrincipal"
+     ]
+    },
+    {
+     "required": [
+      "Effect"
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "policy#/definitions/Condition"
+    },
+    "Effect": {
+     "$ref": "policy#/definitions/Statement/properties/Effect"
+    },
+    "NotAction": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "NotPrincipal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "NotResource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Principal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "Resource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Sid": {
+     "$ref": "policy#/definitions/Statement/properties/Sid"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Id": {
+   "$ref": "policy#/properties/Id"
+  },
+  "Statement": {
+   "scalarOrArray": {
+    "$ref": "#/definitions/Statement"
+   }
+  },
+  "Version": {
+   "$ref": "policy#/properties/Version"
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

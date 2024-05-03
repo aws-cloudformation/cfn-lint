@@ -1,0 +1,242 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EcrConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RepositoryName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageScanningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EcrConfiguration": {
+     "$ref": "#/definitions/EcrConfiguration"
+    },
+    "ImageScanningEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ImageTestsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageTestsEnabled": {
+     "type": "boolean"
+    },
+    "TimeoutMinutes": {
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "PipelineExecutionStartCondition": {
+     "enum": [
+      "EXPRESSION_MATCH_ONLY",
+      "EXPRESSION_MATCH_AND_DEPENDENCY_UPDATES_AVAILABLE"
+     ],
+     "type": "string"
+    },
+    "ScheduleExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "enum": [
+      "CONTINUE",
+      "ABORT"
+     ],
+     "type": "string"
+    },
+    "ParallelGroup": {
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameter"
+     },
+     "type": "array"
+    },
+    "WorkflowArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameterValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterValue": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:BatchGetRepositoryScanningConfiguration",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetImagePipeline",
+    "imagebuilder:GetImageRecipe",
+    "imagebuilder:GetInfrastructureConfiguration",
+    "imagebuilder:GetDistributionConfiguration",
+    "imagebuilder:CreateImagePipeline",
+    "imagebuilder:GetWorkflow",
+    "inspector2:BatchGetAccountStatus"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:UnTagResource",
+    "imagebuilder:GetImagePipeline",
+    "imagebuilder:DeleteImagePipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "imagebuilder:ListImagePipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetImagePipeline"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "imagebuilder:GetImagePipeline",
+    "imagebuilder:UpdateImagePipeline",
+    "imagebuilder:GetWorkflow"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Name",
+    "ContainerRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  },
+  {
+   "required": [
+    "Name",
+    "ImageRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerRecipeArn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DistributionConfigurationArn": {
+   "type": "string"
+  },
+  "EnhancedImageMetadataEnabled": {
+   "type": "boolean"
+  },
+  "ExecutionRole": {
+   "type": "string"
+  },
+  "ImageRecipeArn": {
+   "type": "string"
+  },
+  "ImageScanningConfiguration": {
+   "$ref": "#/definitions/ImageScanningConfiguration"
+  },
+  "ImageTestsConfiguration": {
+   "$ref": "#/definitions/ImageTestsConfiguration"
+  },
+  "InfrastructureConfigurationArn": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "Status": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Workflows": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowConfiguration"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::ImagePipeline"
+}

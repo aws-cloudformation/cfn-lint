@@ -46,9 +46,15 @@ class GraphSettings:
     def subgraph_view(self, graph) -> networkx.MultiDiGraph:
         view = networkx.MultiDiGraph(name="template")
         resources: List[str] = [
-            n for n, v in graph.nodes.items() if v["type"] in ['"Resource"']
+            n for n, v in graph.nodes.items() if v["type"] in ["Resource"]
         ]
-        view.add_nodes_from((n, graph.nodes[n]) for n in resources)
+
+        # have to add quotes when outputing to dot
+        for resource in resources:
+            node = graph.nodes[resource]
+            node["type"] = f'"{node["type"]}"'
+            view.add_node(resource, **node)
+
         view.add_edges_from(
             (n, nbr, key, d)
             for n, nbrs in graph.adj.items()
@@ -77,8 +83,10 @@ class Graph:
     __supported_types: List[str] = ["Resources", "Parameters", "Outputs"]
 
     def __init__(self, cfn):
-        """Builds a graph where resources are nodes and edges are explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
-        relationships between resources"""
+        """Builds a graph where resources are nodes and edges are
+        explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
+        relationships between resources
+        """
 
         self.settings = DefaultGraphSettings()
 
@@ -158,7 +166,7 @@ class Graph:
             ref_type, source_id = ref_path[:2]
             source_path = ref_path[2:-2]
             target_id = ref_path[-1]
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -171,13 +179,14 @@ class Graph:
 
     def _add_getatts(self, cfn: Any) -> None:
         # add edges for "Fn::GetAtt" tags.
-        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] } or { "!GetAtt" : "logicalNameOfResource.attributeName" }
+        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] }
+        # or { "!GetAtt" : "logicalNameOfResource.attributeName" }
         getatt_paths = cfn.search_deep_keys("Fn::GetAtt")
         for getatt_path in getatt_paths:
             ref_type, source_id = getatt_path[:2]
             source_path = getatt_path[2:-2]
             value = getatt_path[-1]
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -201,7 +210,8 @@ class Graph:
                     )
 
     def _add_subs(self, cfn: Any) -> None:
-        # add edges for "Fn::Sub" tags. E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
+        # add edges for "Fn::Sub" tags.
+        # E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
         sub_objs = cfn.search_deep_keys("Fn::Sub")
         for sub_obj in sub_objs:
             sub_parameters = []
@@ -210,7 +220,7 @@ class Graph:
             source_path = sub_obj[2:-2]
             ref_type, source_id = sub_obj[:2]
 
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -247,7 +257,7 @@ class Graph:
             label=label,
             color=settings.color,
             shape=settings.shape,
-            type=f'"{settings.node_type}"',
+            type=settings.node_type,
         )
 
     def _add_edge(self, source_id, target_id, source_path, settings):
@@ -261,6 +271,8 @@ class Graph:
 
     def _is_resource(self, cfn, identifier):
         """Check if the identifier is that of a Resource"""
+        if not isinstance(identifier, str):
+            return {}
         return cfn.template.get("Resources", {}).get(identifier, {})
 
     def _find_parameter(self, string):
@@ -276,15 +288,12 @@ class Graph:
         """Export the graph to a file with DOT format"""
         view = self.settings.subgraph_view(self.graph)
         try:
-            import pygraphviz  # pylint: disable=unused-import
-
             networkx.drawing.nx_agraph.write_dot(view, path)
         except ImportError:
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore", category=PendingDeprecationWarning)
                     warnings.simplefilter("ignore", category=DeprecationWarning)
-                    import pydot  # pylint: disable=unused-import
 
                     networkx.drawing.nx_pydot.write_dot(view, path)
             except ImportError as e:

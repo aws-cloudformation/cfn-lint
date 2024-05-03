@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreatePrompt",
+    "connect:TagResource",
+    "s3:GetObject",
+    "kms:Decrypt",
+    "s3:GetObjectAcl"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeletePrompt"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "connect:ListPrompts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribePrompt"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdatePrompt",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PromptArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PromptArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/prompt/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "S3Uri": {
+   "maxLength": 2000,
+   "minLength": 1,
+   "pattern": "s3://\\S+/.+|https://\\S+\\.s3(\\.\\S+)?\\.amazonaws\\.com/\\S+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PromptArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::Prompt",
+ "writeOnlyProperties": [
+  "/properties/S3Uri"
+ ]
+}

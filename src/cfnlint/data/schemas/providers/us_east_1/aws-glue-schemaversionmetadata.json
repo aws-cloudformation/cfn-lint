@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SchemaVersionId",
+  "/properties/Key",
+  "/properties/Value"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:putSchemaVersionMetadata"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:removeSchemaVersionMetadata"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "SchemaVersionId": {
+      "$ref": "resource-schema.json#/properties/SchemaVersionId"
+     }
+    },
+    "required": [
+     "SchemaVersionId"
+    ]
+   },
+   "permissions": [
+    "glue:querySchemaVersionMetadata"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:querySchemaVersionMetadata"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SchemaVersionId",
+  "/properties/Key",
+  "/properties/Value"
+ ],
+ "properties": {
+  "Key": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SchemaVersionId": {
+   "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "type": "string"
+  },
+  "Value": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "required": [
+  "SchemaVersionId",
+  "Key",
+  "Value"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "typeName": "AWS::Glue::SchemaVersionMetadata"
+}
