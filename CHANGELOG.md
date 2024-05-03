@@ -1,3 +1,11 @@
+### v1.2.5a8
+## What's Changed
+* Update CloudFormation schemas to 2024-05-03 by @kddejong in (pull #[3192](https://github.com/aws-cloudformation/cfn-lint/pull/3192))
+* Fix issue in [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) with multiple resources (#) by @kddejong (pull #[3212](https://github.com/aws-cloudformation/cfn-lint/pull/3212))
+* Allow `Fn::Transform` inside a `Fn::Sub` (pull #[3213](https://github.com/aws-cloudformation/cfn-lint/pull/3213))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a7...v1.2.5.a8
+
 ### v1.2.5a7
 ## What's Changed
 * Update CloudFormation schemas to 2024-04-24 by @kddejong in (pull #[3159](https://github.com/aws-cloudformation/cfn-lint/pull/3159))
