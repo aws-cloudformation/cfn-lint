@@ -1382,6 +1382,7 @@
   "AWS::DynamoDB::GlobalTable.LocalSecondaryIndex": "CACHED",
   "AWS::DynamoDB::GlobalTable.PointInTimeRecoverySpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.Projection": "CACHED",
+  "AWS::DynamoDB::GlobalTable.ReadOnDemandThroughputSettings": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReadProvisionedThroughputSettings": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaGlobalSecondaryIndexSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.ReplicaSSESpecification": "CACHED",
@@ -1392,6 +1393,7 @@
   "AWS::DynamoDB::GlobalTable.StreamSpecification": "CACHED",
   "AWS::DynamoDB::GlobalTable.TargetTrackingScalingPolicyConfiguration": "CACHED",
   "AWS::DynamoDB::GlobalTable.TimeToLiveSpecification": "CACHED",
+  "AWS::DynamoDB::GlobalTable.WriteOnDemandThroughputSettings": "CACHED",
   "AWS::DynamoDB::GlobalTable.WriteProvisionedThroughputSettings": "CACHED",
   "AWS::DynamoDB::Table.AttributeDefinition": "CACHED",
   "AWS::DynamoDB::Table.ContributorInsightsSpecification": "CACHED",
@@ -1402,6 +1404,7 @@
   "AWS::DynamoDB::Table.KeySchema": "CACHED",
   "AWS::DynamoDB::Table.KinesisStreamSpecification": "CACHED",
   "AWS::DynamoDB::Table.LocalSecondaryIndex": "CACHED",
+  "AWS::DynamoDB::Table.OnDemandThroughput": "CACHED",
   "AWS::DynamoDB::Table.PointInTimeRecoverySpecification": "CACHED",
   "AWS::DynamoDB::Table.Projection": "CACHED",
   "AWS::DynamoDB::Table.ProvisionedThroughput": "CACHED",
@@ -1463,6 +1466,23 @@
   "AWS::EC2::Instance.PrivateDnsNameOptions": "CACHED",
   "AWS::EC2::Instance.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::Instance.SsmAssociation": "CACHED",
+  "AWS::EC2::Instance.State": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-state.html",
+   "Properties": {
+    "Code": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-state.html#cfn-ec2-instance-state-code",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-state.html#cfn-ec2-instance-state-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::Instance.Volume": "CACHED",
   "AWS::EC2::LaunchTemplate.AcceleratorCount": "CACHED",
   "AWS::EC2::LaunchTemplate.AcceleratorTotalMemoryMiB": "CACHED",
@@ -1945,9 +1965,14 @@
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateTargetFilter": "CACHED",
   "AWS::FIS::ExperimentTemplate.S3Configuration": "CACHED",
   "AWS::FMS::Policy.IEMap": "CACHED",
+  "AWS::FMS::Policy.IcmpTypeCode": "CACHED",
+  "AWS::FMS::Policy.NetworkAclCommonPolicy": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntry": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntrySet": "CACHED",
   "AWS::FMS::Policy.NetworkFirewallPolicy": "CACHED",
   "AWS::FMS::Policy.PolicyOption": "CACHED",
   "AWS::FMS::Policy.PolicyTag": "CACHED",
+  "AWS::FMS::Policy.PortRange": "CACHED",
   "AWS::FMS::Policy.ResourceTag": "CACHED",
   "AWS::FMS::Policy.SecurityServicePolicyData": "CACHED",
   "AWS::FMS::Policy.ThirdPartyFirewallPolicy": "CACHED",
@@ -4009,121 +4034,10 @@
   "AWS::QuickSight::Analysis.VisualSubtitleLabelOptions": "CACHED",
   "AWS::QuickSight::Analysis.VisualTitleLabelOptions": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallChartAggregatedFieldWells": "CACHED",
-  "AWS::QuickSight::Analysis.WaterfallChartColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartcolorconfiguration.html",
-   "Properties": {
-    "GroupColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartcolorconfiguration.html#cfn-quicksight-analysis-waterfallchartcolorconfiguration-groupcolorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartGroupColorConfiguration",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::QuickSight::Analysis.WaterfallChartConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html",
-   "Properties": {
-    "CategoryAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-categoryaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "CategoryAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-categoryaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "ColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-colorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartColorConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "DataLabels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-datalabels",
-     "Required": false,
-     "Type": "DataLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "FieldWells": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-fieldwells",
-     "Required": false,
-     "Type": "WaterfallChartFieldWells",
-     "UpdateType": "Mutable"
-    },
-    "Legend": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-legend",
-     "Required": false,
-     "Type": "LegendOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-primaryyaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-primaryyaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "SortConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-sortconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartSortConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "VisualPalette": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-visualpalette",
-     "Required": false,
-     "Type": "VisualPalette",
-     "UpdateType": "Mutable"
-    },
-    "WaterfallChartOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartconfiguration.html#cfn-quicksight-analysis-waterfallchartconfiguration-waterfallchartoptions",
-     "Required": false,
-     "Type": "WaterfallChartOptions",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::QuickSight::Analysis.WaterfallChartColorConfiguration": "CACHED",
+  "AWS::QuickSight::Analysis.WaterfallChartConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallChartFieldWells": "CACHED",
-  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartgroupcolorconfiguration.html",
-   "Properties": {
-    "NegativeBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-analysis-waterfallchartgroupcolorconfiguration-negativebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.NegativeBarColor"
-     }
-    },
-    "PositiveBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-analysis-waterfallchartgroupcolorconfiguration-positivebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.PositiveBarColor"
-     }
-    },
-    "TotalBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-analysis-waterfallchartgroupcolorconfiguration-totalbarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.TotalBarColor"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallChartOptions": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallChartSortConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallVisual": "CACHED",
@@ -4618,121 +4532,10 @@
   "AWS::QuickSight::Dashboard.VisualSubtitleLabelOptions": "CACHED",
   "AWS::QuickSight::Dashboard.VisualTitleLabelOptions": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallChartAggregatedFieldWells": "CACHED",
-  "AWS::QuickSight::Dashboard.WaterfallChartColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartcolorconfiguration.html",
-   "Properties": {
-    "GroupColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartcolorconfiguration.html#cfn-quicksight-dashboard-waterfallchartcolorconfiguration-groupcolorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartGroupColorConfiguration",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::QuickSight::Dashboard.WaterfallChartConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html",
-   "Properties": {
-    "CategoryAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-categoryaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "CategoryAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-categoryaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "ColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-colorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartColorConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "DataLabels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-datalabels",
-     "Required": false,
-     "Type": "DataLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "FieldWells": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-fieldwells",
-     "Required": false,
-     "Type": "WaterfallChartFieldWells",
-     "UpdateType": "Mutable"
-    },
-    "Legend": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-legend",
-     "Required": false,
-     "Type": "LegendOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-primaryyaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-primaryyaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "SortConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-sortconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartSortConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "VisualPalette": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-visualpalette",
-     "Required": false,
-     "Type": "VisualPalette",
-     "UpdateType": "Mutable"
-    },
-    "WaterfallChartOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartconfiguration.html#cfn-quicksight-dashboard-waterfallchartconfiguration-waterfallchartoptions",
-     "Required": false,
-     "Type": "WaterfallChartOptions",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::QuickSight::Dashboard.WaterfallChartColorConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.WaterfallChartConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallChartFieldWells": "CACHED",
-  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartgroupcolorconfiguration.html",
-   "Properties": {
-    "NegativeBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-dashboard-waterfallchartgroupcolorconfiguration-negativebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.NegativeBarColor"
-     }
-    },
-    "PositiveBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-dashboard-waterfallchartgroupcolorconfiguration-positivebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.PositiveBarColor"
-     }
-    },
-    "TotalBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-dashboard-waterfallchartgroupcolorconfiguration-totalbarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.TotalBarColor"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallChartOptions": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallChartSortConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallVisual": "CACHED",
@@ -5290,121 +5093,10 @@
   "AWS::QuickSight::Template.VisualSubtitleLabelOptions": "CACHED",
   "AWS::QuickSight::Template.VisualTitleLabelOptions": "CACHED",
   "AWS::QuickSight::Template.WaterfallChartAggregatedFieldWells": "CACHED",
-  "AWS::QuickSight::Template.WaterfallChartColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartcolorconfiguration.html",
-   "Properties": {
-    "GroupColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartcolorconfiguration.html#cfn-quicksight-template-waterfallchartcolorconfiguration-groupcolorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartGroupColorConfiguration",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::QuickSight::Template.WaterfallChartConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html",
-   "Properties": {
-    "CategoryAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-categoryaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "CategoryAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-categoryaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "ColorConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-colorconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartColorConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "DataLabels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-datalabels",
-     "Required": false,
-     "Type": "DataLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "FieldWells": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-fieldwells",
-     "Required": false,
-     "Type": "WaterfallChartFieldWells",
-     "UpdateType": "Mutable"
-    },
-    "Legend": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-legend",
-     "Required": false,
-     "Type": "LegendOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisDisplayOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-primaryyaxisdisplayoptions",
-     "Required": false,
-     "Type": "AxisDisplayOptions",
-     "UpdateType": "Mutable"
-    },
-    "PrimaryYAxisLabelOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-primaryyaxislabeloptions",
-     "Required": false,
-     "Type": "ChartAxisLabelOptions",
-     "UpdateType": "Mutable"
-    },
-    "SortConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-sortconfiguration",
-     "Required": false,
-     "Type": "WaterfallChartSortConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "VisualPalette": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-visualpalette",
-     "Required": false,
-     "Type": "VisualPalette",
-     "UpdateType": "Mutable"
-    },
-    "WaterfallChartOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartconfiguration.html#cfn-quicksight-template-waterfallchartconfiguration-waterfallchartoptions",
-     "Required": false,
-     "Type": "WaterfallChartOptions",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::QuickSight::Template.WaterfallChartColorConfiguration": "CACHED",
+  "AWS::QuickSight::Template.WaterfallChartConfiguration": "CACHED",
   "AWS::QuickSight::Template.WaterfallChartFieldWells": "CACHED",
-  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartgroupcolorconfiguration.html",
-   "Properties": {
-    "NegativeBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-template-waterfallchartgroupcolorconfiguration-negativebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.NegativeBarColor"
-     }
-    },
-    "PositiveBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-template-waterfallchartgroupcolorconfiguration-positivebarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.PositiveBarColor"
-     }
-    },
-    "TotalBarColor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-waterfallchartgroupcolorconfiguration.html#cfn-quicksight-template-waterfallchartgroupcolorconfiguration-totalbarcolor",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.TotalBarColor"
-     }
-    }
-   }
-  },
+  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration": "CACHED",
   "AWS::QuickSight::Template.WaterfallChartOptions": "CACHED",
   "AWS::QuickSight::Template.WaterfallChartSortConfiguration": "CACHED",
   "AWS::QuickSight::Template.WaterfallVisual": "CACHED",
@@ -5443,10 +5135,292 @@
   "AWS::QuickSight::Topic.RangeConstant": "CACHED",
   "AWS::QuickSight::Topic.SemanticEntityType": "CACHED",
   "AWS::QuickSight::Topic.SemanticType": "CACHED",
-  "AWS::QuickSight::Topic.TopicCalculatedField": "CACHED",
+  "AWS::QuickSight::Topic.TopicCalculatedField": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html",
+   "Properties": {
+    "Aggregation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-aggregation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.Aggregation"
+     }
+    },
+    "AllowedAggregations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-allowedaggregations",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.AllowedAggregations"
+     }
+    },
+    "CalculatedFieldDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-calculatedfielddescription",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.CalculatedFieldDescription"
+     }
+    },
+    "CalculatedFieldName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-calculatedfieldname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.CalculatedFieldName"
+     }
+    },
+    "CalculatedFieldSynonyms": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-calculatedfieldsynonyms",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.CalculatedFieldSynonyms"
+     }
+    },
+    "CellValueSynonyms": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-cellvaluesynonyms",
+     "DuplicatesAllowed": true,
+     "ItemType": "CellValueSynonym",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ColumnDataRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-columndatarole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.ColumnDataRole"
+     }
+    },
+    "ComparativeOrder": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-comparativeorder",
+     "Required": false,
+     "Type": "ComparativeOrder",
+     "UpdateType": "Mutable"
+    },
+    "DefaultFormatting": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-defaultformatting",
+     "Required": false,
+     "Type": "DefaultFormatting",
+     "UpdateType": "Mutable"
+    },
+    "DisableIndexing": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-disableindexing",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Expression": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-expression",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.Expression"
+     }
+    },
+    "IsIncludedInTopic": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-isincludedintopic",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NeverAggregateInFilter": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-neveraggregateinfilter",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NonAdditive": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-nonadditive",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NotAllowedAggregations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-notallowedaggregations",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.NotAllowedAggregations"
+     }
+    },
+    "SemanticType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-semantictype",
+     "Required": false,
+     "Type": "SemanticType",
+     "UpdateType": "Mutable"
+    },
+    "TimeGranularity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccalculatedfield.html#cfn-quicksight-topic-topiccalculatedfield-timegranularity",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicCalculatedField.TimeGranularity"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Topic.TopicCategoryFilter": "CACHED",
   "AWS::QuickSight::Topic.TopicCategoryFilterConstant": "CACHED",
-  "AWS::QuickSight::Topic.TopicColumn": "CACHED",
+  "AWS::QuickSight::Topic.TopicColumn": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html",
+   "Properties": {
+    "Aggregation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-aggregation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.Aggregation"
+     }
+    },
+    "AllowedAggregations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-allowedaggregations",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.AllowedAggregations"
+     }
+    },
+    "CellValueSynonyms": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-cellvaluesynonyms",
+     "DuplicatesAllowed": true,
+     "ItemType": "CellValueSynonym",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ColumnDataRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-columndatarole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.ColumnDataRole"
+     }
+    },
+    "ColumnDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-columndescription",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.ColumnDescription"
+     }
+    },
+    "ColumnFriendlyName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-columnfriendlyname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.ColumnFriendlyName"
+     }
+    },
+    "ColumnName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-columnname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.ColumnName"
+     }
+    },
+    "ColumnSynonyms": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-columnsynonyms",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.ColumnSynonyms"
+     }
+    },
+    "ComparativeOrder": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-comparativeorder",
+     "Required": false,
+     "Type": "ComparativeOrder",
+     "UpdateType": "Mutable"
+    },
+    "DefaultFormatting": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-defaultformatting",
+     "Required": false,
+     "Type": "DefaultFormatting",
+     "UpdateType": "Mutable"
+    },
+    "DisableIndexing": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-disableindexing",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IsIncludedInTopic": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-isincludedintopic",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NeverAggregateInFilter": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-neveraggregateinfilter",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NonAdditive": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-nonadditive",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NotAllowedAggregations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-notallowedaggregations",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.NotAllowedAggregations"
+     }
+    },
+    "SemanticType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-semantictype",
+     "Required": false,
+     "Type": "SemanticType",
+     "UpdateType": "Mutable"
+    },
+    "TimeGranularity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-topic-topiccolumn.html#cfn-quicksight-topic-topiccolumn-timegranularity",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Topic.TopicColumn.TimeGranularity"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Topic.TopicDateRangeFilter": "CACHED",
   "AWS::QuickSight::Topic.TopicFilter": "CACHED",
   "AWS::QuickSight::Topic.TopicNamedEntity": "CACHED",
@@ -5549,7 +5523,83 @@
   "AWS::Route53::RecordSetGroup.GeoLocation": "CACHED",
   "AWS::Route53::RecordSetGroup.GeoProximityLocation": "CACHED",
   "AWS::Route53::RecordSetGroup.RecordSet": "CACHED",
-  "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule": "CACHED",
+  "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html",
+   "Properties": {
+    "Action": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-action",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.Action"
+     }
+    },
+    "BlockOverrideDnsType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-blockoverridednstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.BlockOverrideDnsType"
+     }
+    },
+    "BlockOverrideDomain": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-blockoverridedomain",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.BlockOverrideDomain"
+     }
+    },
+    "BlockOverrideTtl": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-blockoverridettl",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "BlockResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-blockresponse",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.BlockResponse"
+     }
+    },
+    "FirewallDomainListId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-firewalldomainlistid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.FirewallDomainListId"
+     }
+    },
+    "FirewallDomainRedirectionAction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-firewalldomainredirectionaction",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Priority": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-priority",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Qtype": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53resolver-firewallrulegroup-firewallrule.html#cfn-route53resolver-firewallrulegroup-firewallrule-qtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Route53Resolver::FirewallRuleGroup.FirewallRule.Qtype"
+     }
+    }
+   }
+  },
   "AWS::Route53Resolver::ResolverEndpoint.IpAddressRequest": "CACHED",
   "AWS::Route53Resolver::ResolverRule.TargetAddress": "CACHED",
   "AWS::S3::AccessGrant.AccessGrantsLocationConfiguration": "CACHED",
@@ -6360,7 +6410,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "171.0.0",
+ "ResourceSpecificationVersion": "172.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -6764,66 +6814,7 @@
   "AWS::EC2::ClientVpnEndpoint": "CACHED",
   "AWS::EC2::ClientVpnRoute": "CACHED",
   "AWS::EC2::ClientVpnTargetNetworkAssociation": "CACHED",
-  "AWS::EC2::CustomerGateway": {
-   "Attributes": {
-    "CustomerGatewayId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html",
-   "Properties": {
-    "BgpAsn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-bgpasn",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "BgpAsnExtended": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-bgpasnextended",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "CertificateArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-certificatearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::CustomerGateway.CertificateArn"
-     }
-    },
-    "DeviceName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-devicename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "IpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-ipaddress",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "CustomerGatewayType"
-     }
-    }
-   }
-  },
+  "AWS::EC2::CustomerGateway": "CACHED",
   "AWS::EC2::DHCPOptions": "CACHED",
   "AWS::EC2::EC2Fleet": "CACHED",
   "AWS::EC2::EIP": "CACHED",
@@ -6840,7 +6831,340 @@
   "AWS::EC2::IPAMResourceDiscovery": "CACHED",
   "AWS::EC2::IPAMResourceDiscoveryAssociation": "CACHED",
   "AWS::EC2::IPAMScope": "CACHED",
-  "AWS::EC2::Instance": "CACHED",
+  "AWS::EC2::Instance": {
+   "Attributes": {
+    "AvailabilityZone": {
+     "PrimitiveType": "String"
+    },
+    "InstanceId": {
+     "PrimitiveType": "String"
+    },
+    "PrivateDnsName": {
+     "PrimitiveType": "String"
+    },
+    "PrivateIp": {
+     "PrimitiveType": "String"
+    },
+    "PublicDnsName": {
+     "PrimitiveType": "String"
+    },
+    "PublicIp": {
+     "PrimitiveType": "String"
+    },
+    "State": {
+     "Type": "State"
+    },
+    "State.Code": {
+     "PrimitiveType": "String"
+    },
+    "State.Name": {
+     "PrimitiveType": "String"
+    },
+    "VpcId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html",
+   "Properties": {
+    "AdditionalInfo": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-additionalinfo",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "Affinity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-affinity",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional",
+     "Value": {
+      "ValueType": "AWS::EC2::Instance.Affinity"
+     }
+    },
+    "AvailabilityZone": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-availabilityzone",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AvailabilityZone"
+     }
+    },
+    "BlockDeviceMappings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-blockdevicemappings",
+     "DuplicatesAllowed": true,
+     "ItemType": "BlockDeviceMapping",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Conditional"
+    },
+    "CpuOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-cpuoptions",
+     "Required": false,
+     "Type": "CpuOptions",
+     "UpdateType": "Immutable"
+    },
+    "CreditSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-creditspecification",
+     "Required": false,
+     "Type": "CreditSpecification",
+     "UpdateType": "Mutable"
+    },
+    "DisableApiTermination": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-disableapitermination",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EbsOptimized": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-ebsoptimized",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "ElasticGpuSpecifications": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-elasticgpuspecifications",
+     "DuplicatesAllowed": true,
+     "ItemType": "ElasticGpuSpecification",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "ElasticInferenceAccelerators": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-elasticinferenceaccelerators",
+     "DuplicatesAllowed": true,
+     "ItemType": "ElasticInferenceAccelerator",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "EnclaveOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-enclaveoptions",
+     "Required": false,
+     "Type": "EnclaveOptions",
+     "UpdateType": "Immutable"
+    },
+    "HibernationOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-hibernationoptions",
+     "Required": false,
+     "Type": "HibernationOptions",
+     "UpdateType": "Immutable"
+    },
+    "HostId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-hostid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "HostResourceGroupArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-hostresourcegrouparn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "IamInstanceProfile": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-iaminstanceprofile",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::IAM::InstanceProfile.Name"
+     }
+    },
+    "ImageId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-imageid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "InstanceInitiatedShutdownBehavior": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-instanceinitiatedshutdownbehavior",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "InstanceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-instancetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional",
+     "Value": {
+      "ValueType": "Ec2InstanceType"
+     }
+    },
+    "Ipv6AddressCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-ipv6addresscount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Ipv6Addresses": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-ipv6addresses",
+     "DuplicatesAllowed": true,
+     "ItemType": "InstanceIpv6Address",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "KernelId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-kernelid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "KeyName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-keyname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "KeyPair"
+     }
+    },
+    "LaunchTemplate": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-launchtemplate",
+     "Required": false,
+     "Type": "LaunchTemplateSpecification",
+     "UpdateType": "Immutable"
+    },
+    "LicenseSpecifications": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-licensespecifications",
+     "DuplicatesAllowed": true,
+     "ItemType": "LicenseSpecification",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "Monitoring": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-monitoring",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NetworkInterfaces": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-networkinterfaces",
+     "DuplicatesAllowed": true,
+     "ItemType": "NetworkInterface",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "PlacementGroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-placementgroupname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "PlacementGroup"
+     }
+    },
+    "PrivateDnsNameOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-privatednsnameoptions",
+     "Required": false,
+     "Type": "PrivateDnsNameOptions",
+     "UpdateType": "Conditional"
+    },
+    "PrivateIpAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-privateipaddress",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "PrivateIpAddress"
+     }
+    },
+    "PropagateTagsToVolumeOnCreation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-propagatetagstovolumeoncreation",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RamdiskId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-ramdiskid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Conditional",
+     "Value": {
+      "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+      "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
+     }
+    },
+    "SecurityGroups": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-securitygroups",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable",
+     "Value": {
+      "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+      "ValueType": "AWS::EC2::SecurityGroup.GroupId"
+     }
+    },
+    "SourceDestCheck": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-sourcedestcheck",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SsmAssociations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-ssmassociations",
+     "DuplicatesAllowed": true,
+     "ItemType": "SsmAssociation",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SubnetId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-subnetid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "SubnetId"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tenancy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-tenancy",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional",
+     "Value": {
+      "ValueType": "Ec2Tenancy"
+     }
+    },
+    "UserData": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-userdata",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Conditional"
+    },
+    "Volumes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-instance.html#cfn-ec2-instance-volumes",
+     "DuplicatesAllowed": true,
+     "ItemType": "Volume",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::InstanceConnectEndpoint": "CACHED",
   "AWS::EC2::InternetGateway": "CACHED",
   "AWS::EC2::KeyPair": "CACHED",
@@ -7515,531 +7839,7 @@
   "AWS::RDS::CustomDBEngineVersion": "CACHED",
   "AWS::RDS::DBCluster": "CACHED",
   "AWS::RDS::DBClusterParameterGroup": "CACHED",
-  "AWS::RDS::DBInstance": {
-   "Attributes": {
-    "CertificateDetails.CAIdentifier": {
-     "PrimitiveType": "String"
-    },
-    "CertificateDetails.ValidTill": {
-     "PrimitiveType": "String"
-    },
-    "DBInstanceArn": {
-     "PrimitiveType": "String"
-    },
-    "DBSystemId": {
-     "PrimitiveType": "String"
-    },
-    "DbiResourceId": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Address": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.HostedZoneId": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Port": {
-     "PrimitiveType": "String"
-    },
-    "MasterUserSecret.SecretArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html",
-   "Properties": {
-    "AllocatedStorage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-allocatedstorage",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.AllocatedStorage"
-     }
-    },
-    "AllowMajorVersionUpgrade": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-allowmajorversionupgrade",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AssociatedRoles": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-associatedroles",
-     "DuplicatesAllowed": true,
-     "ItemType": "DBInstanceRole",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "AutoMinorVersionUpgrade": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-autominorversionupgrade",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "AutomaticBackupReplicationRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-automaticbackupreplicationregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZone": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-availabilityzone",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AvailabilityZone"
-     }
-    },
-    "BackupRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-backupretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.BackupRetentionPeriod"
-     }
-    },
-    "CACertificateIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-cacertificateidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "CertificateDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-certificatedetails",
-     "Required": false,
-     "Type": "CertificateDetails",
-     "UpdateType": "Mutable"
-    },
-    "CertificateRotationRestart": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-certificaterotationrestart",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "CharacterSetName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-charactersetname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "CopyTagsToSnapshot": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-copytagstosnapshot",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "CustomIAMInstanceProfile": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-customiaminstanceprofile",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DBClusterSnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbclustersnapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "DBInstanceClass": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbinstanceclass",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.DBInstanceClass"
-     }
-    },
-    "DBInstanceIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbinstanceidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.DBInstanceIdentifier"
-     }
-    },
-    "DBName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DBParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "DBSecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbsecuritygroups",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "DBSnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbsnapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "DBSubnetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dbsubnetgroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DedicatedLogVolume": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-dedicatedlogvolume",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeleteAutomatedBackups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-deleteautomatedbackups",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DeletionProtection": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-deletionprotection",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Domain": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domain",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainAuthSecretArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domainauthsecretarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainDnsIps": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domaindnsips",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "DomainFqdn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domainfqdn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainIAMRoleName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domainiamrolename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainOu": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-domainou",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableCloudwatchLogsExports": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-enablecloudwatchlogsexports",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "EnableIAMDatabaseAuthentication": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-enableiamdatabaseauthentication",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnablePerformanceInsights": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-enableperformanceinsights",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Endpoint": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-endpoint",
-     "Required": false,
-     "Type": "Endpoint",
-     "UpdateType": "Mutable"
-    },
-    "Engine": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-engine",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.Engine"
-     }
-    },
-    "EngineVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-engineversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Iops": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-iops",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LicenseModel": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-licensemodel",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ManageMasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-managemasteruserpassword",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-masteruserpassword",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserSecret": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-masterusersecret",
-     "Required": false,
-     "Type": "MasterUserSecret",
-     "UpdateType": "Mutable"
-    },
-    "MasterUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-masterusername",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.MasterUsername"
-     }
-    },
-    "MaxAllocatedStorage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-maxallocatedstorage",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MonitoringInterval": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-monitoringinterval",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RdsInstanceMonitoringInterval"
-     }
-    },
-    "MonitoringRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-monitoringrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MultiAZ": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-multiaz",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "NcharCharacterSetName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-ncharcharactersetname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "NetworkType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-networktype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "OptionGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-optiongroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PerformanceInsightsKMSKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-performanceinsightskmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "PerformanceInsightsRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-performanceinsightsretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "PerformanceInsightsRetentionPeriod"
-     }
-    },
-    "Port": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-port",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.Port"
-     }
-    },
-    "PreferredBackupWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-preferredbackupwindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredMaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-preferredmaintenancewindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "ProcessorFeatures": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-processorfeatures",
-     "DuplicatesAllowed": true,
-     "ItemType": "ProcessorFeature",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "PromotionTier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-promotiontier",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBInstance.PromotionTier"
-     }
-    },
-    "PubliclyAccessible": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-publiclyaccessible",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ReplicaMode": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-replicamode",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RestoreTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-restoretime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "SourceDBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-sourcedbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "SourceDBInstanceAutomatedBackupsArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-sourcedbinstanceautomatedbackupsarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "SourceDBInstanceIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-sourcedbinstanceidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "SourceDbiResourceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-sourcedbiresourceid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "SourceRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-sourceregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageEncrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-storageencrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageThroughput": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-storagethroughput",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "StorageType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-storagetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Timezone": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-timezone",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "UseDefaultProcessorFeatures": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-usedefaultprocessorfeatures",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "UseLatestRestorableTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-uselatestrestorabletime",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "VPCSecurityGroups": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-vpcsecuritygroups",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RDS::DBInstance": "CACHED",
   "AWS::RDS::DBParameterGroup": "CACHED",
   "AWS::RDS::DBProxy": "CACHED",
   "AWS::RDS::DBProxyEndpoint": "CACHED",
@@ -8463,70 +8263,7 @@
   "AWS::Timestream::Table": "CACHED",
   "AWS::Transfer::Agreement": "CACHED",
   "AWS::Transfer::Certificate": "CACHED",
-  "AWS::Transfer::Connector": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "ConnectorId": {
-     "PrimitiveType": "String"
-    },
-    "ServiceManagedEgressIpAddresses": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html",
-   "Properties": {
-    "AccessRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-accessrole",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Connector.AccessRole"
-     }
-    },
-    "As2Config": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-as2config",
-     "Required": false,
-     "Type": "As2Config",
-     "UpdateType": "Mutable"
-    },
-    "LoggingRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-loggingrole",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Connector.LoggingRole"
-     }
-    },
-    "SftpConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-sftpconfig",
-     "Required": false,
-     "Type": "SftpConfig",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Url": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-url",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Connector.Url"
-     }
-    }
-   }
-  },
+  "AWS::Transfer::Connector": "CACHED",
   "AWS::Transfer::Profile": "CACHED",
   "AWS::Transfer::Server": "CACHED",
   "AWS::Transfer::User": "CACHED",
@@ -10312,6 +10049,10 @@
   "AWS::FMS::NotificationChannel.SnsTopicArn": "CACHED",
   "AWS::FMS::Policy.IEMap.ACCOUNT": "CACHED",
   "AWS::FMS::Policy.IEMap.ORGUNIT": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntry.CidrBlock": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntry.Ipv6CidrBlock": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntry.Protocol": "CACHED",
+  "AWS::FMS::Policy.NetworkAclEntry.RuleAction": "CACHED",
   "AWS::FMS::Policy.NetworkFirewallPolicy.FirewallDeploymentModel": "CACHED",
   "AWS::FMS::Policy.PolicyDescription": "CACHED",
   "AWS::FMS::Policy.PolicyName": "CACHED",
@@ -12539,15 +12280,9 @@
   "AWS::QuickSight::Analysis.VisualPalette.ChartColor": "CACHED",
   "AWS::QuickSight::Analysis.VisualSubtitleLabelOptions.Visibility": "CACHED",
   "AWS::QuickSight::Analysis.VisualTitleLabelOptions.Visibility": "CACHED",
-  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.NegativeBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.PositiveBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.TotalBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
+  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.NegativeBarColor": "CACHED",
+  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.PositiveBarColor": "CACHED",
+  "AWS::QuickSight::Analysis.WaterfallChartGroupColorConfiguration.TotalBarColor": "CACHED",
   "AWS::QuickSight::Analysis.WaterfallVisual.VisualId": "CACHED",
   "AWS::QuickSight::Analysis.WordCloudOptions.CloudLayout": "CACHED",
   "AWS::QuickSight::Analysis.WordCloudOptions.MaximumStringLength": "CACHED",
@@ -13063,15 +12798,9 @@
   "AWS::QuickSight::Dashboard.VisualPalette.ChartColor": "CACHED",
   "AWS::QuickSight::Dashboard.VisualSubtitleLabelOptions.Visibility": "CACHED",
   "AWS::QuickSight::Dashboard.VisualTitleLabelOptions.Visibility": "CACHED",
-  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.NegativeBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.PositiveBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.TotalBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
+  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.NegativeBarColor": "CACHED",
+  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.PositiveBarColor": "CACHED",
+  "AWS::QuickSight::Dashboard.WaterfallChartGroupColorConfiguration.TotalBarColor": "CACHED",
   "AWS::QuickSight::Dashboard.WaterfallVisual.VisualId": "CACHED",
   "AWS::QuickSight::Dashboard.WordCloudOptions.CloudLayout": "CACHED",
   "AWS::QuickSight::Dashboard.WordCloudOptions.MaximumStringLength": "CACHED",
@@ -13677,15 +13406,9 @@
   "AWS::QuickSight::Template.VisualPalette.ChartColor": "CACHED",
   "AWS::QuickSight::Template.VisualSubtitleLabelOptions.Visibility": "CACHED",
   "AWS::QuickSight::Template.VisualTitleLabelOptions.Visibility": "CACHED",
-  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.NegativeBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.PositiveBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
-  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.TotalBarColor": {
-   "AllowedPatternRegex": "^#[A-F0-9]{6}$"
-  },
+  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.NegativeBarColor": "CACHED",
+  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.PositiveBarColor": "CACHED",
+  "AWS::QuickSight::Template.WaterfallChartGroupColorConfiguration.TotalBarColor": "CACHED",
   "AWS::QuickSight::Template.WaterfallVisual.VisualId": "CACHED",
   "AWS::QuickSight::Template.WordCloudOptions.CloudLayout": "CACHED",
   "AWS::QuickSight::Template.WordCloudOptions.MaximumStringLength": "CACHED",
@@ -15154,7 +14877,10 @@
   "AWS::Transfer::Agreement.PartnerProfileId": "CACHED",
   "AWS::Transfer::Agreement.ServerId": "CACHED",
   "AWS::Transfer::Agreement.Status": "CACHED",
+  "AWS::Transfer::Certificate.Certificate": "CACHED",
+  "AWS::Transfer::Certificate.CertificateChain": "CACHED",
   "AWS::Transfer::Certificate.Description": "CACHED",
+  "AWS::Transfer::Certificate.PrivateKey": "CACHED",
   "AWS::Transfer::Certificate.Usage": "CACHED",
   "AWS::Transfer::Connector.AccessRole": "CACHED",
   "AWS::Transfer::Connector.As2Config.BasicAuthSecretId": "CACHED",
@@ -15167,6 +14893,7 @@
   "AWS::Transfer::Connector.As2Config.PartnerProfileId": "CACHED",
   "AWS::Transfer::Connector.As2Config.SigningAlgorithm": "CACHED",
   "AWS::Transfer::Connector.LoggingRole": "CACHED",
+  "AWS::Transfer::Connector.SecurityPolicyName": "CACHED",
   "AWS::Transfer::Connector.SftpConfig.TrustedHostKeys": "CACHED",
   "AWS::Transfer::Connector.SftpConfig.UserSecretId": "CACHED",
   "AWS::Transfer::Connector.Url": "CACHED",
