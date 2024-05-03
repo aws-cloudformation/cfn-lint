@@ -1,3 +1,11 @@
+### v0.87.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `172.0.0` (pull #[3181](https://github.com/aws-cloudformation/cfn-lint/pull/3181))
+###### Fixes
+- Continue to walk the FindInMap components in transform (pull #[3203](https://github.com/aws-cloudformation/cfn-lint/pull/3203))
+- Fix an issue with refs in registry schemas (pull #[3189](https://github.com/aws-cloudformation/cfn-lint/pull/3189))
+- Add `AWS::Kinesis::Stream` to be a stateful resource (pull #[3188](https://github.com/aws-cloudformation/cfn-lint/pull/3188))
+
 ### v0.87.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `171.0.0` (pull #[3160](https://github.com/aws-cloudformation/cfn-lint/pull/3160))
