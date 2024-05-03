@@ -43,6 +43,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
                 filename="backupretentionperiod.json",
             ),
         )
+        self._rds_schema = self._schema
         self._properties: Dict[str, List[Dict[str, str]]] = {
             "AWS::Kinesis::Stream": [
                 {
@@ -118,5 +119,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
                     required.append(property)
 
             self._schema = {"required": required}
+        else:
+            self._schema = self._rds_schema
 
         return super().validate(validator, keywords, instance, schema)
