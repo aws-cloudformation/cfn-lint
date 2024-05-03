@@ -134,21 +134,22 @@ REGEX_SUB_PARAMETERS = re.compile(r"\${([^!].*?)}")
 FUNCTIONS = frozenset(
     [
         "Fn::Base64",
+        "Fn::Cidr",
+        "Fn::Contains",
+        "Fn::FindInMap",
+        "Fn::ForEach::[a-zA-Z0-9]+",
         "Fn::GetAtt",
         "Fn::GetAZs",
+        "Fn::If",
         "Fn::ImportValue",
         "Fn::Join",
-        "Fn::Split",
-        "Fn::FindInMap",
-        "Fn::Select",
-        "Ref",
-        "Fn::If",
-        "Fn::Contains",
-        "Fn::Sub",
-        "Fn::Cidr",
         "Fn::Length",
+        "Fn::Select",
+        "Fn::Split",
+        "Fn::Sub",
         "Fn::ToJsonString",
-        "Fn::ForEach::[a-zA-Z0-9]+",
+        "Fn::Transform",
+        "Ref",
     ]
 )
 

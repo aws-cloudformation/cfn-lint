@@ -32,15 +32,16 @@ class Sub(BaseFn):
         self._functions = [
             "Fn::Base64",
             "Fn::FindInMap",
-            "Fn::GetAZs",
             "Fn::GetAtt",
+            "Fn::GetAZs",
             "Fn::If",
             "Fn::ImportValue",
             "Fn::Join",
             "Fn::Select",
             "Fn::Sub",
-            "Ref",
             "Fn::ToJsonString",
+            "Fn::Transform",
+            "Ref",
         ]
 
     def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
