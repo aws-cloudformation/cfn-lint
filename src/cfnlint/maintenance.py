@@ -81,7 +81,6 @@ def update_documentation(rules):
             cfnlint.rules.TransformError(),
             cfnlint.rules.RuleError(),
         ] + sorted_rules:
-            print(rule)
             rule_source_code_file = (
                 "../"
                 + subprocess.check_output(

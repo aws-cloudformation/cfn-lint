@@ -20,7 +20,7 @@ class StringLength(CloudFormationLintRule):
     id = "E3033"
     shortdesc = "Check if a string has between min and max number of values specified"
     description = "Check strings for its length between the minimum and maximum"
-    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/v1/docs/cfn-schema-specification.md#length"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#length"
     tags = ["resources", "property", "string", "size"]
 
     def _serialize_date(self, obj):
