@@ -62,7 +62,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
 
         self.conditions = cfnlint.conditions.Conditions(self)
-        self.__cache_search_deep_class: Dict[str, Any] = {}
         self.graph = None
         try:
             self.graph = Graph(self)
@@ -154,7 +153,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Get Resources
         Filter on type when specified
         """
-        LOGGER.debug("Get resources from template...")
         resources = self.template.get("Resources", {})
         if not isinstance(resources, dict):
             return {}
@@ -171,16 +169,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_parameters(self):
-        LOGGER.debug("Get parameters from template...")
-        parameters = self.template.get("Parameters", {})
-        if not parameters:
-            return {}
-
-        return parameters
-
     def get_parameters_valid(self):
-        LOGGER.debug("Get parameters from template...")
         result = {}
         if isinstance(self.template.get("Parameters"), dict):
             parameters = self.template.get("Parameters")
@@ -191,21 +180,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return result
 
-    def get_outputs_valid(self):
-        LOGGER.debug("Get outputs from template...")
-        result = {}
-        if isinstance(self.template.get("Outputs"), dict):
-            parameters = self.template.get("Outputs")
-            for parameter_name, parameter_value in parameters.items():
-                if isinstance(parameter_value, dict):
-                    if isinstance(parameter_value.get("Value"), (str, dict)):
-                        result[parameter_name] = parameter_value
-
-        return result
-
     def get_modules(self):
         """Get Modules"""
-        LOGGER.debug("Get modules from template...")
         resources = self.template.get("Resources", {})
         if not resources:
             return {}
@@ -217,24 +193,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     "::MODULE"
                 ):
                     results[k] = v
-
-        return results
-
-    def get_mappings(self):
-        LOGGER.debug("Get mapping from template...")
-        mappings = self.template.get("Mappings", {})
-        if not mappings:
-            return {}
-
-        return mappings
-
-    def get_parameter_names(self):
-        LOGGER.debug("Get names of all parameters from template...")
-        results = []
-        parameters = self.template.get("Parameters", {})
-        if isinstance(parameters, dict):
-            for parametername, _ in parameters.items():
-                results.append(parametername)
 
         return results
 
@@ -374,49 +332,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 matches.extend(results)
 
         return matches
-
-    # pylint: disable=dangerous-default-value
-    def _search_deep_class(self, searchClass, cfndict, path):
-        """Search deep for keys and get their values"""
-        keys = []
-        if isinstance(cfndict, searchClass):
-            keys.append((path[:], cfndict))
-
-        if isinstance(cfndict, dict):
-            for key in cfndict:
-                keys.extend(
-                    self._search_deep_class(searchClass, cfndict[key], path[:] + [key])
-                )
-        elif isinstance(cfndict, list):
-            for index, item in enumerate(cfndict):
-                keys.extend(
-                    self._search_deep_class(searchClass, item, path[:] + [index])
-                )
-
-        return keys
-
-    def search_deep_class(self, searchClass, includeGlobals=True):
-        """
-        Search for a key in all parts of the template.
-        :return if searchText is "Ref", an array like
-        ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
-        """
-        results = []
-        if searchClass in self.__cache_search_deep_class:
-            results = self.__cache_search_deep_class[searchClass]
-        else:
-            results.extend(self._search_deep_class(searchClass, self.template, []))
-            self.__cache_search_deep_class[searchClass] = results
-
-        # Globals are removed during a transform.  They need to be checked manually
-        if includeGlobals:
-            pre_results = self._search_deep_keys(
-                searchClass, self.transform_pre.get("Globals"), []
-            )
-            for pre_result in pre_results:
-                results.append(["Globals"] + pre_result)
-
-        return results
 
     # pylint: disable=dangerous-default-value
     def _search_deep_keys(self, searchText: str | re.Pattern, cfndict, path):
@@ -727,7 +642,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         pass_if_null=False,
         **kwargs,
     ):
-        LOGGER.debug("Check value %s for %s", key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
@@ -767,7 +681,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                                             check_ref(
                                                 value=value.get("Ref"),
                                                 path=new_path[:] + child_path + ["Ref"],
-                                                parameters=self.get_parameters(),
+                                                parameters=self.template.get(
+                                                    "Parameters", {}
+                                                ),
                                                 resources=self.get_resources(),
                                                 **kwargs,
                                             )

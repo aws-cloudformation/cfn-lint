@@ -17,7 +17,10 @@ patches: List[ResourcePatch] = []
 
 
 common_patches = {
-    "BlockDeviceMapping": {"requiredXor": ["VirtualName", "Ebs", "NoDevice"]},
+    "BlockDeviceMapping": {
+        "requiredXor": ["VirtualName", "Ebs", "NoDevice"],
+        "cfnLint": "",
+    },
 }
 
 patches.extend(
@@ -74,6 +77,10 @@ patches.extend(
                 Patch(
                     values={"requiredXor": ["LaunchTemplateID", "LaunchTemplateName"]},
                     path="/definitions/LaunchTemplateSpecification",
+                ),
+                Patch(
+                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
+                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
                 Patch(
                     values={
@@ -709,6 +716,10 @@ patches.extend(
                     path="/definitions/BlockDeviceMapping",
                 ),
                 Patch(
+                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
+                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
+                ),
+                Patch(
                     values={
                         "requiredXor": [
                             "ImageId",
@@ -729,6 +740,10 @@ patches.extend(
                 Patch(
                     values=common_patches.get("BlockDeviceMapping"),
                     path="/definitions/BlockDeviceMapping",
+                ),
+                Patch(
+                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
+                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
                 Patch(
                     values={
@@ -852,6 +867,10 @@ patches.extend(
                 Patch(
                     path="/definitions/BlockDeviceMapping",
                     values=common_patches.get("BlockDeviceMapping"),
+                ),
+                Patch(
+                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
+                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
                 Patch(
                     path="/",
@@ -1280,6 +1299,10 @@ patches.extend(
         ResourcePatch(
             resource_type="AWS::OpsWorks::Instance",
             patches=[
+                Patch(
+                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
+                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
+                ),
                 Patch(
                     values=common_patches.get("BlockDeviceMapping"),
                     path="/definitions/BlockDeviceMapping",

@@ -36,7 +36,7 @@ class Password(CloudFormationLintRule):
             "PasswordParam",
         ]
 
-        parameters = cfn.get_parameter_names()
+        parameters = list(cfn.template.get("Parameters", {}).keys())
         fix_params = []
         for password_property in password_properties:
             # Build the list of refs
