@@ -1,0 +1,184 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/ApplicationProviderArn"
+ ],
+ "definitions": {
+  "PortalOptionsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SignInOptions": {
+     "$ref": "#/definitions/SignInOptions"
+    },
+    "Visibility": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "SignInOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationUrl": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^http(s)?:\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&bb@#\\/%?=~_|]$",
+     "type": "string"
+    },
+    "Origin": {
+     "enum": [
+      "IDENTITY_CENTER",
+      "APPLICATION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Origin"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w+=,.@-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\w+=,.@-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sso:CreateApplication",
+    "sso:DescribeApplication",
+    "sso:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sso:DeleteApplication"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "InstanceArn": {
+      "$ref": "resource-schema.json#/properties/InstanceArn"
+     }
+    },
+    "required": [
+     "InstanceArn"
+    ]
+   },
+   "permissions": [
+    "sso:ListApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sso:DescribeApplication",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sso:UpdateApplication",
+    "sso:TagResource",
+    "sso:UntagResource",
+    "sso:ListTagsForResource",
+    "sso:DescribeApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationArn"
+ ],
+ "properties": {
+  "ApplicationArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+   "type": "string"
+  },
+  "ApplicationProviderArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::aws:applicationProvider/[a-zA-Z0-9-/]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "PortalOptions": {
+   "$ref": "#/definitions/PortalOptionsConfiguration"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 75,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationArn"
+ ],
+ "required": [
+  "Name",
+  "InstanceArn",
+  "ApplicationProviderArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-application",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSO::Application"
+}

@@ -41,7 +41,7 @@ class Used(CloudFormationLintRule):
             elif isinstance(subtree[-1], str):
                 subs.extend(cfn.get_sub_parameters(subtree[-1]))
 
-        for paramname, _ in cfn.get_parameters().items():
+        for paramname in cfn.template.get("Parameters", {}).keys():
             if paramname not in refs:
                 if paramname not in subs:
                     message = "Parameter {0} not used."

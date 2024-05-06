@@ -1,0 +1,48 @@
+{
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "enum": [
+       "io1",
+       "io2"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "required": [
+     "Iops"
+    ]
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "VolumeType": {
+      "enum": [
+       "gp2",
+       "st1",
+       "sc1",
+       "standard"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "VolumeType"
+    ]
+   },
+   "then": {
+    "properties": {
+     "Iops": false
+    }
+   }
+  }
+ ]
+}

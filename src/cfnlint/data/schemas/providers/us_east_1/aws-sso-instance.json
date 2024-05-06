@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sso:CreateInstance",
+    "sso:DescribeInstance",
+    "sso:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "sso:TagInstance",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sso:DeleteInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sso:ListInstances"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sso:DescribeInstance",
+    "sso:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sso:UpdateInstance",
+    "sso:TagResource",
+    "sso:UntagResource",
+    "sso:ListTagsForResource",
+    "sso:TagInstance",
+    "sso:DescribeInstance"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn"
+ ],
+ "properties": {
+  "IdentityStoreId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[\\w+=,.@-]+$",
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^\\d{12}?$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "DELETE_IN_PROGRESS",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 75,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/OwnerAccountId",
+  "/properties/IdentityStoreId",
+  "/properties/Status"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instance",
+ "tagging": {
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSO::Instance"
+}
