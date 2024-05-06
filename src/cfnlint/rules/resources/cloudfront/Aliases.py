@@ -5,11 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
-from cfnlint.helpers import FUNCTIONS, REGEX_DYN_REF
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.helpers import REGEX_DYN_REF
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class Aliases(CloudFormationLintRule):
+class Aliases(CfnLintKeyword):
     """Check if CloudFront Aliases are valid domain names"""
 
     id = "E3013"
@@ -18,39 +18,34 @@ class Aliases(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases"
     tags = ["properties", "cloudfront"]
 
-    def match(self, cfn):
-        """Check cloudfront Resource Parameters"""
-
-        matches = []
-
-        valid_domain = re.compile(
-            r"^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$"
+    def __init__(self):
+        """Init"""
+        super().__init__(
+            keywords=[
+                "AWS::CloudFront::Distribution/Properties/DistributionConfig/Aliases/Alias"
+            ]
         )
 
-        results = cfn.get_resource_properties(
-            ["AWS::CloudFront::Distribution", "DistributionConfig"]
-        )
-        for result in results:
-            aliases = result["Value"].get("Aliases")
-            if aliases:
-                for alias in aliases:
-                    if isinstance(alias, str) and alias not in FUNCTIONS:
-                        wildcard = alias.split(".")
-                        if re.match(REGEX_DYN_REF, alias):
-                            continue
-                        if "*" in wildcard[1:]:
-                            path = result["Path"] + ["Aliases"]
-                            message = (
-                                f"Invalid use of wildcards: {alias} at"
-                                f" {'/'.join(result['Path'])}"
-                            )
-                            matches.append(RuleMatch(path, message))
-                        if not re.match(valid_domain, alias):
-                            path = result["Path"] + ["Aliases"]
-                            message = (
-                                f"Invalid alias found: {alias} at"
-                                f" {'/'.join(result['Path'])}"
-                            )
-                            matches.append(RuleMatch(path, message))
+    def validate(self, validator, _, instance, schema):
 
-        return matches
+        if isinstance(instance, str):
+            if re.match(REGEX_DYN_REF, instance):
+                return
+            for err in validator.descend(
+                instance=instance,
+                schema={
+                    "pattern": "^(?!.*(?:\\.\\*\\.)).*",
+                },
+            ):
+                err.rule = self
+                yield err
+
+            for err in validator.descend(
+                instance=instance,
+                schema={
+                    # ruff: noqa: E501
+                    "pattern": "^(?:[a-z0-9\\*](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$",
+                },
+            ):
+                err.rule = self
+                yield err

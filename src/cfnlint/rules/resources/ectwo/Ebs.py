@@ -22,7 +22,6 @@ class Ebs(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::AutoScaling::AutoScalingGroup/Properties/BlockDeviceMappings/Ebs",
                 "AWS::AutoScaling::LaunchConfiguration/Properties/BlockDeviceMappings/Ebs",
                 "AWS::EC2::Instance/Properties/BlockDeviceMappings/Ebs",
                 "AWS::EC2::LaunchTemplate/Properties/BlockDeviceMappings/Ebs",
