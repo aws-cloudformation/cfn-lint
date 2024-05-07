@@ -19,7 +19,6 @@ patches: List[ResourcePatch] = []
 common_patches = {
     "BlockDeviceMapping": {
         "requiredXor": ["VirtualName", "Ebs", "NoDevice"],
-        "cfnLint": "",
     },
 }
 
@@ -1172,6 +1171,57 @@ patches.extend(
                         "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
                     },
                     path="/definitions/MemberId/properties/UserId",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::ElasticLoadBalancing::LoadBalancer",
+            patches=[
+                Patch(
+                    values={
+                        "enum": ["HTTP", "HTTPS", "TCP", "SSL"],
+                    },
+                    path="/definitions/Listeners/properties/Protocol",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::ElasticLoadBalancingV2::Listener",
+            patches=[
+                Patch(
+                    values={
+                        "enum": [
+                            "GENEVE",
+                            "HTTP",
+                            "HTTPS",
+                            "TCP",
+                            "TCP_UDP",
+                            "TLS",
+                            "UDP",
+                        ]
+                    },
+                    path="/properties/Protocol",
+                ),
+                Patch(
+                    values={"pattern": "^(HTTPS?|#\\{protocol\\})$"},
+                    path="/definitions/RedirectConfig/properties/Protocol",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::ElasticLoadBalancingV2::LoadBalancer",
+            patches=[
+                Patch(
+                    values={
+                        "enum": ["application", "network", "gateway"],
+                    },
+                    path="/properties/Type",
+                ),
+                Patch(
+                    values={
+                        "requiredXor": ["Subnets", "SubnetMappings"],
+                    },
+                    path="/",
                 ),
             ],
         ),

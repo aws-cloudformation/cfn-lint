@@ -576,6 +576,7 @@ cached: List[str] = [
     "aws-ecr-replicationconfiguration.json",
     "aws-appconfig-extensionassociation.json",
     "aws-ec2-ipampoolcidr.json",
+    "aws-rds-dbinstance.json",
     "aws-ec2-vpcdhcpoptionsassociation.json",
     "aws-ec2-networkacl.json",
     "aws-logs-resourcepolicy.json",

@@ -1,5 +1,8 @@
 {
  "additionalProperties": false,
+ "cfnLint": [
+  "AWS::ElasticLoadBalancingV2::LoadBalancer/Properties"
+ ],
  "createOnlyProperties": [
   "/properties/Name",
   "/properties/Type",
@@ -168,6 +171,11 @@
    "uniqueItems": false
   },
   "Type": {
+   "enum": [
+    "application",
+    "network",
+    "gateway"
+   ],
    "type": "string"
   }
  },
@@ -179,8 +187,8 @@
   "/properties/DNSName"
  ],
  "requiredXor": [
-  "SubnetMappings",
-  "Subnets"
+  "Subnets",
+  "SubnetMappings"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
  "tagging": {

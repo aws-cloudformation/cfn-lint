@@ -1308,6 +1308,7 @@ cached: List[str] = [
     "aws-logs-deliverydestination.json",
     "aws-imagebuilder-imagerecipe.json",
     "aws-iot-softwarepackage.json",
+    "aws-apigateway-restapi.json",
     "aws-opsworks-elasticloadbalancerattachment.json",
     "aws-mediaconvert-jobtemplate.json",
     "aws-appmesh-virtualservice.json",

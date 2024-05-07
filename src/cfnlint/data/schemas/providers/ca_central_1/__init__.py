@@ -1981,6 +1981,7 @@ cached: List[str] = [
     "aws-ce-anomalymonitor.json",
     "aws-servicecatalogappregistry-resourceassociation.json",
     "aws-ec2-vpngateway.json",
+    "aws-location-apikey.json",
     "aws-cloudformation-stack.json",
     "aws-resourcegroups-group.json",
     "aws-cloudformation-resourcedefaultversion.json",
