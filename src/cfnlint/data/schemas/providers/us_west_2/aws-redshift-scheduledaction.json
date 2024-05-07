@@ -1,0 +1,210 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ScheduledActionName"
+ ],
+ "definitions": {
+  "PauseClusterMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterIdentifier": {
+     "relationshipRef": {
+      "propertyPath": "/properties/ClusterIdentifier",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ResizeClusterMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "Classic": {
+     "type": "boolean"
+    },
+    "ClusterIdentifier": {
+     "relationshipRef": {
+      "propertyPath": "/properties/ClusterIdentifier",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "string"
+    },
+    "ClusterType": {
+     "relationshipRef": {
+      "propertyPath": "/properties/ClusterType",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "string"
+    },
+    "NodeType": {
+     "relationshipRef": {
+      "propertyPath": "/properties/NodeType",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "string"
+    },
+    "NumberOfNodes": {
+     "relationshipRef": {
+      "propertyPath": "/properties/NumberOfNodes",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ResumeClusterMessage": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterIdentifier": {
+     "relationshipRef": {
+      "propertyPath": "/properties/ClusterIdentifier",
+      "typeName": "AWS::Redshift::Cluster"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ScheduledActionType": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ResizeCluster": {
+       "$ref": "#/definitions/ResizeClusterMessage"
+      }
+     }
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PauseCluster": {
+       "$ref": "#/definitions/PauseClusterMessage"
+      }
+     }
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ResumeCluster": {
+       "$ref": "#/definitions/ResumeClusterMessage"
+      }
+     }
+    }
+   ],
+   "type": "object"
+  },
+  "timestamp": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateScheduledAction",
+    "redshift:DescribeScheduledActions",
+    "redshift:DescribeTags",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:ResizeCluster",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeScheduledActions",
+    "redshift:DeleteScheduledAction"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeScheduledActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeScheduledActions",
+    "redshift:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:DescribeScheduledActions",
+    "redshift:ModifyScheduledAction",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:ResizeCluster",
+    "redshift:DescribeTags",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ScheduledActionName"
+ ],
+ "properties": {
+  "Enable": {
+   "type": "boolean"
+  },
+  "EndTime": {
+   "$ref": "#/definitions/timestamp"
+  },
+  "IamRole": {
+   "type": "string"
+  },
+  "NextInvocations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/timestamp"
+   },
+   "type": "array"
+  },
+  "Schedule": {
+   "type": "string"
+  },
+  "ScheduledActionDescription": {
+   "type": "string"
+  },
+  "ScheduledActionName": {
+   "type": "string"
+  },
+  "StartTime": {
+   "$ref": "#/definitions/timestamp"
+  },
+  "State": {
+   "enum": [
+    "ACTIVE",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "TargetAction": {
+   "$ref": "#/definitions/ScheduledActionType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/State",
+  "/properties/NextInvocations"
+ ],
+ "required": [
+  "ScheduledActionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::ScheduledAction"
+}

@@ -1,0 +1,226 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointName",
+  "/properties/ClusterIdentifier",
+  "/properties/ResourceOwner",
+  "/properties/SubnetGroupName"
+ ],
+ "definitions": {
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "NetworkInterfaceId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "relationshipRef": {
+      "propertyPath": "/properties/PrivateIpAddress",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    },
+    "SubnetId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/SubnetId",
+      "typeName": "AWS::EC2::NetworkInterface"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "VpcSecurityGroupId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::SecurityGroup"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateEndpointAccess",
+    "redshift:DescribeEndpointAccess",
+    "ec2:CreateClientVpnEndpoint",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DeleteEndpointAccess",
+    "redshift:DescribeEndpointAccess",
+    "ec2:DeleteClientVpnEndpoint",
+    "ec2:DeleteVpcEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcEndpoint"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeEndpointAccess",
+    "ec2:DescribeClientVpnEndpoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeEndpointAccess",
+    "ec2:DescribeClientVpnEndpoints",
+    "ec2:DescribeVpcEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:DescribeEndpointAccess",
+    "redshift:ModifyEndpointAccess",
+    "ec2:ModifyClientVpnEndpoint",
+    "ec2:ModifyVpcEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointName"
+ ],
+ "properties": {
+  "Address": {
+   "type": "string"
+  },
+  "ClusterIdentifier": {
+   "type": "string"
+  },
+  "EndpointCreateTime": {
+   "type": "string"
+  },
+  "EndpointName": {
+   "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,30}$",
+   "type": "string"
+  },
+  "EndpointStatus": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "ResourceOwner": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "SubnetGroupName": {
+   "pattern": "^(?=^[a-zA-Z0-9-]+$).{1,255}$",
+   "type": "string"
+  },
+  "VpcEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkInterfaces": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NetworkInterface"
+     },
+     "type": "array"
+    },
+    "VpcEndpointId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::EC2::VPCEndpoint"
+     },
+     "type": "string"
+    },
+    "VpcId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/VpcId",
+      "typeName": "AWS::EC2::VPCEndpoint"
+     },
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "VpcSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcSecurityGroup"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Address",
+  "/properties/EndpointStatus",
+  "/properties/EndpointCreateTime",
+  "/properties/Port",
+  "/properties/VpcSecurityGroups",
+  "/properties/VpcSecurityGroups/*/VpcSecurityGroupId",
+  "/properties/VpcSecurityGroups/*/Status",
+  "/properties/VpcEndpoint",
+  "/properties/VpcEndpoint/VpcEndpointId",
+  "/properties/VpcEndpoint/VpcId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/NetworkInterfaceId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/PrivateIpAddress",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/SubnetId",
+  "/properties/VpcEndpoint/NetworkInterfaces/*/AvailabilityZone"
+ ],
+ "required": [
+  "ClusterIdentifier",
+  "SubnetGroupName",
+  "EndpointName",
+  "VpcSecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::EndpointAccess"
+}
