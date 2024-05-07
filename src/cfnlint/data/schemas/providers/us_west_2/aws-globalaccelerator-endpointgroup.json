@@ -1,0 +1,166 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EndpointGroupRegion",
+  "/properties/ListenerArn"
+ ],
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentArn": {
+     "type": "string"
+    },
+    "ClientIPPreservationEnabled": {
+     "default": true,
+     "type": "boolean"
+    },
+    "EndpointId": {
+     "type": "string"
+    },
+    "Weight": {
+     "default": 100,
+     "maximum": 255,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "EndpointId"
+   ],
+   "type": "object"
+  },
+  "Port": {
+   "maximum": 65535,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "PortOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointPort": {
+     "$ref": "#/definitions/Port"
+    },
+    "ListenerPort": {
+     "$ref": "#/definitions/Port"
+    }
+   },
+   "required": [
+    "ListenerPort",
+    "EndpointPort"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "globalaccelerator:CreateEndpointGroup",
+    "globalaccelerator:DescribeEndpointGroup",
+    "globalaccelerator:DescribeAccelerator",
+    "globalaccelerator:DescribeListener",
+    "globalaccelerator:ListAccelerators",
+    "globalaccelerator:ListListeners"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "globalaccelerator:DeleteEndpointGroup",
+    "globalaccelerator:DescribeEndpointGroup",
+    "globalaccelerator:DescribeAccelerator"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "globalaccelerator:ListEndpointGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "globalaccelerator:DescribeEndpointGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "globalaccelerator:UpdateEndpointGroup",
+    "globalaccelerator:DescribeEndpointGroup",
+    "globalaccelerator:DescribeListener",
+    "globalaccelerator:DescribeAccelerator"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EndpointGroupArn"
+ ],
+ "properties": {
+  "EndpointConfigurations": {
+   "items": {
+    "$ref": "#/definitions/EndpointConfiguration"
+   },
+   "type": "array"
+  },
+  "EndpointGroupArn": {
+   "type": "string"
+  },
+  "EndpointGroupRegion": {
+   "type": "string"
+  },
+  "HealthCheckIntervalSeconds": {
+   "default": 30,
+   "type": "integer"
+  },
+  "HealthCheckPath": {
+   "default": "/",
+   "type": "string"
+  },
+  "HealthCheckPort": {
+   "default": -1,
+   "maximum": 65535,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "HealthCheckProtocol": {
+   "default": "TCP",
+   "enum": [
+    "TCP",
+    "HTTP",
+    "HTTPS"
+   ],
+   "type": "string"
+  },
+  "ListenerArn": {
+   "type": "string"
+  },
+  "PortOverrides": {
+   "items": {
+    "$ref": "#/definitions/PortOverride"
+   },
+   "type": "array"
+  },
+  "ThresholdCount": {
+   "default": 3,
+   "type": "integer"
+  },
+  "TrafficDialPercentage": {
+   "default": 100,
+   "maximum": 100,
+   "minimum": 0,
+   "type": "number"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EndpointGroupArn"
+ ],
+ "required": [
+  "ListenerArn",
+  "EndpointGroupRegion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::GlobalAccelerator::EndpointGroup",
+ "writeOnlyProperties": [
+  "/properties/EndpointConfigurations/*/AttachmentArn"
+ ]
+}

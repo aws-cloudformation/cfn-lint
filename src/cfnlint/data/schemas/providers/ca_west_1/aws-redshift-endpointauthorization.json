@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterIdentifier",
+  "/properties/Account"
+ ],
+ "definitions": {
+  "AwsAccount": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "VpcId": {
+   "pattern": "^vpc-[A-Za-z0-9]{1,17}$",
+   "relationshipRef": {
+    "propertyPath": "/properties/VpcId",
+    "typeName": "AWS::EC2::VPC"
+   },
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:AuthorizeEndpointAccess",
+    "redshift:DescribeEndpointAuthorization"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "redshift:RevokeEndpointAccess",
+    "redshift:DeleteEndpointAccess",
+    "redshift:DescribeEndpointAuthorization",
+    "ec2:DeleteClientVpnEndpoint",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeAddresses",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSubnets"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeEndpointAuthorization"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeEndpointAuthorization"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:AuthorizeEndpointAccess",
+    "redshift:DescribeEndpointAuthorization",
+    "redshift:RevokeEndpointAccess"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterIdentifier",
+  "/properties/Account"
+ ],
+ "properties": {
+  "Account": {
+   "$ref": "#/definitions/AwsAccount"
+  },
+  "AllowedAllVPCs": {
+   "type": "boolean"
+  },
+  "AllowedVPCs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcId"
+   },
+   "type": "array"
+  },
+  "AuthorizeTime": {
+   "type": "string"
+  },
+  "ClusterIdentifier": {
+   "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,63}$",
+   "type": "string"
+  },
+  "ClusterStatus": {
+   "type": "string"
+  },
+  "EndpointCount": {
+   "type": "integer"
+  },
+  "Force": {
+   "type": "boolean"
+  },
+  "Grantee": {
+   "$ref": "#/definitions/AwsAccount"
+  },
+  "Grantor": {
+   "$ref": "#/definitions/AwsAccount"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "VpcIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpcId"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Grantor",
+  "/properties/Grantee",
+  "/properties/AuthorizeTime",
+  "/properties/ClusterStatus",
+  "/properties/Status",
+  "/properties/AllowedAllVPCs",
+  "/properties/AllowedVPCs",
+  "/properties/EndpointCount"
+ ],
+ "required": [
+  "ClusterIdentifier",
+  "Account"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::EndpointAuthorization",
+ "writeOnlyProperties": [
+  "/properties/Force"
+ ]
+}
