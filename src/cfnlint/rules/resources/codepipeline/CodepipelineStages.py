@@ -138,10 +138,11 @@ class CodepipelineStages(CloudFormationLintRule):
         """Check CodePipeline stages"""
         matches = []
 
-        resources = cfn.get_resource_properties(["AWS::CodePipeline::Pipeline"])
-        for resource in resources:
-            path = resource["Path"] + ["Stages"]
-            properties = resource["Value"]
+        for resource_name, resource_value in cfn.get_resources(
+            "AWS::CodePipeline::Pipeline"
+        ).items():
+            path = ["Resources", resource_name, "Properties", "Stages"]
+            properties = resource_value.get("Properties")
 
             s_stages = cfn.get_object_without_nested_conditions(
                 properties.get("Stages"), path
