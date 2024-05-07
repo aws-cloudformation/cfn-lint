@@ -128,19 +128,23 @@ def is_email(instance: object) -> bool:
     return "@" in instance
 
 
-# raises ipaddress.AddressValueError
 def is_ipv4(instance: object) -> bool:
     if not isinstance(instance, str):
         return True
-    return bool(ipaddress.IPv4Address(instance))
+    try:
+        return bool(ipaddress.IPv4Address(instance))
+    except ipaddress.AddressValueError:
+        return False
 
 
-# raises=ipaddress.AddressValueError
 def is_ipv6(instance: object) -> bool:
     if not isinstance(instance, str):
         return True
-    address = ipaddress.IPv6Address(instance)
-    return not getattr(address, "scope_id", "")
+    try:
+        address = ipaddress.IPv6Address(instance)
+        return not getattr(address, "scope_id", "")
+    except ipaddress.AddressValueError:
+        return False
 
 
 def is_datetime(instance: object) -> bool:

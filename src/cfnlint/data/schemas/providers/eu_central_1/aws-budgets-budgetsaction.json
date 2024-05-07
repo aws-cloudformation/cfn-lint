@@ -1,0 +1,279 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ActionType",
+  "/properties/BudgetName"
+ ],
+ "definitions": {
+  "ActionThreshold": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "PERCENTAGE",
+      "ABSOLUTE_VALUE"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Value",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Definition": {
+   "additionalProperties": false,
+   "properties": {
+    "IamActionDefinition": {
+     "$ref": "#/definitions/IamActionDefinition"
+    },
+    "ScpActionDefinition": {
+     "$ref": "#/definitions/ScpActionDefinition"
+    },
+    "SsmActionDefinition": {
+     "$ref": "#/definitions/SsmActionDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "IamActionDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Groups": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PolicyArn": {
+     "type": "string"
+    },
+    "Roles": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Users": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "PolicyArn"
+   ],
+   "type": "object"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ScpActionDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyId": {
+     "type": "string"
+    },
+    "TargetIds": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "PolicyId",
+    "TargetIds"
+   ],
+   "type": "object"
+  },
+  "SsmActionDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceIds": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "Subtype": {
+     "enum": [
+      "STOP_EC2_INSTANCES",
+      "STOP_RDS_INSTANCES"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Subtype",
+    "Region",
+    "InstanceIds"
+   ],
+   "type": "object"
+  },
+  "Subscriber": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SNS",
+      "EMAIL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Address"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "budgets:CreateBudgetAction",
+    "iam:PassRole",
+    "budgets:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "budgets:DeleteBudgetAction"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "budgets:DescribeBudgetActionsForAccount",
+    "budgets:DescribeBudgetActionsForBudget"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "budgets:DescribeBudgetAction",
+    "budgets:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "budgets:UpdateBudgetAction",
+    "iam:PassRole",
+    "budgets:TagResource",
+    "budgets:UntagResource",
+    "budgets:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ActionId",
+  "/properties/BudgetName"
+ ],
+ "properties": {
+  "ActionId": {
+   "type": "string"
+  },
+  "ActionThreshold": {
+   "$ref": "#/definitions/ActionThreshold"
+  },
+  "ActionType": {
+   "enum": [
+    "APPLY_IAM_POLICY",
+    "APPLY_SCP_POLICY",
+    "RUN_SSM_DOCUMENTS"
+   ],
+   "type": "string"
+  },
+  "ApprovalModel": {
+   "enum": [
+    "AUTOMATIC",
+    "MANUAL"
+   ],
+   "type": "string"
+  },
+  "BudgetName": {
+   "type": "string"
+  },
+  "Definition": {
+   "$ref": "#/definitions/Definition"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "NotificationType": {
+   "enum": [
+    "ACTUAL",
+    "FORECASTED"
+   ],
+   "type": "string"
+  },
+  "ResourceTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "type": "array"
+  },
+  "Subscribers": {
+   "items": {
+    "$ref": "#/definitions/Subscriber"
+   },
+   "maxItems": 11,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ActionId"
+ ],
+ "required": [
+  "BudgetName",
+  "NotificationType",
+  "ActionType",
+  "ActionThreshold",
+  "ExecutionRoleArn",
+  "Definition",
+  "Subscribers"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/ResourceTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Budgets::BudgetsAction"
+}

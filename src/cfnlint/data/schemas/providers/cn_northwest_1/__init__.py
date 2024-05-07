@@ -650,6 +650,7 @@ cached: List[str] = [
     "aws-appconfig-extensionassociation.json",
     "aws-iot-topicruledestination.json",
     "aws-redshift-clustersubnetgroup.json",
+    "aws-rds-dbinstance.json",
     "aws-ec2-vpcdhcpoptionsassociation.json",
     "aws-apigateway-model.json",
     "aws-apigatewayv2-integrationresponse.json",

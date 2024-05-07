@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CacheParameterGroupFamily"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ElastiCache:CreateCacheParameterGroup",
+    "ElastiCache:DescribeCacheParameterGroups",
+    "ElastiCache:AddTagsToResource",
+    "ElastiCache:ModifyCacheParameterGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ElastiCache:DescribeCacheParameterGroups",
+    "ElastiCache:DeleteCacheParameterGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ElastiCache:DescribeCacheParameterGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ElastiCache:DescribeCacheParameterGroups",
+    "ElastiCache:DescribeCacheParameters",
+    "ElastiCache:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ElastiCache:ModifyCacheParameterGroup",
+    "ElastiCache:DescribeCacheParameterGroups",
+    "ElastiCache:DescribeCacheParameters",
+    "ElastiCache:DescribeEngineDefaultParameters",
+    "ElastiCache:AddTagsToResource",
+    "ElastiCache:RemoveTagsFromResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CacheParameterGroupName"
+ ],
+ "properties": {
+  "CacheParameterGroupFamily": {
+   "type": "string"
+  },
+  "CacheParameterGroupName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Properties": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CacheParameterGroupName"
+ ],
+ "required": [
+  "Description",
+  "CacheParameterGroupFamily"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::ParameterGroup"
+}

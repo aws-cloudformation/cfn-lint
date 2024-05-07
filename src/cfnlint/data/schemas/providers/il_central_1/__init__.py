@@ -634,6 +634,7 @@ cached: List[str] = [
     "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
     "aws-glue-partition.json",
+    "aws-ec2-transitgatewayroutetablepropagation.json",
     "aws-shield-proactiveengagement.json",
     "aws-s3-accessgrantslocation.json",
     "aws-guardduty-filter.json",

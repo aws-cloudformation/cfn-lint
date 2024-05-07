@@ -296,15 +296,15 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that stage actions are set up properly."""
         matches = []
 
-        resources = cfn.get_resource_properties(["AWS::CodePipeline::Pipeline"])
-
-        for resource in resources:
-            scenarios = cfn.get_object_without_nested_conditions(
-                resource["Value"], resource["Path"]
-            )
+        for resource_name, resource_value in cfn.get_resources(
+            "AWS::CodePipeline::Pipeline"
+        ).items():
+            path = ["Resources", resource_name, "Properties"]
+            properties = resource_value.get("Properties")
+            scenarios = cfn.get_object_without_nested_conditions(properties, path)
             for scenario in scenarios:
                 conditions = scenario.get("Scenario")
-                path = resource["Path"] + ["Stages"]
+                path = path + ["Stages"]
                 properties = scenario.get("Object")
                 artifact_names = set()
 

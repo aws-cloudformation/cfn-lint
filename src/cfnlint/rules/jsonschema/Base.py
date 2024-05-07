@@ -10,6 +10,7 @@ from typing import Any, Dict, List
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import V, ValidationError, Validator
+from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 LOGGER = logging.getLogger("cfnlint.rules.jsonschema")
@@ -123,10 +124,15 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return validators
 
-    # ToDo Do we really need this?
     def extend_validator(
         self, validator: Validator, schema: Any, context: Context
     ) -> Validator:
         return validator.extend(validators=self._get_validators())(
             schema=schema
-        ).evolve(cfn=validator.cfn, context=context)
+        ).evolve(
+            cfn=validator.cfn,
+            context=context,
+            resolver=RefResolver.from_schema(
+                schema,
+            ),
+        )
