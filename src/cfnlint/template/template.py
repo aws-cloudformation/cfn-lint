@@ -108,9 +108,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def has_language_extensions_transform(self):
         """Check if the template has language extensions transform declared"""
-        LOGGER.debug(
-            "Check if the template has language extensions transform declaration"
-        )
         lang_extensions_transform = "AWS::LanguageExtensions"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
@@ -324,7 +321,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_condition_values(self, template, path=[]):
         """Evaluates conditions and brings back the values"""
-        LOGGER.debug("Get condition values...")
         matches = []
         if not isinstance(template, list):
             return matches
@@ -377,7 +373,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Returns the value if its just a string, int, boolean, etc.
 
         """
-        LOGGER.debug("Get the value for key %s in %s", key, obj)
         matches = []
 
         if not isinstance(obj, dict):
@@ -455,7 +450,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def _loc(self, obj):
         """Return location of object"""
-        LOGGER.debug("Get location of object...")
         return (
             obj.start_mark.line,
             obj.start_mark.column,
@@ -480,7 +474,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         """
         Get the location information
         """
-        LOGGER.debug("Get location of path %s", path)
         result = None
         if not path:
             result = self._loc(text)
@@ -531,7 +524,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         **kwargs,
     ):
         """Check Resource Properties"""
-        LOGGER.debug("Check property %s for %s", resource_property, resource_type)
         matches = []
         resources = self.get_resources(resource_type=resource_type)
         for resource_name, resource_object in resources.items():
@@ -1012,7 +1004,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if its in the True or False part of the path.
                 {'condition': {True}}
         """
-        LOGGER.debug("Get conditions for path %s", path)
         results = {}
 
         def get_condition_name(value, num=None):
