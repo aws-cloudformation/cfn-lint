@@ -26,7 +26,7 @@ class UpdateReplacePolicyDeletionPolicy(CfnLintJsonSchema):
         self,
     ) -> None:
         super().__init__(
-            ["Resource/UpdatePolicyDelete"],
+            ["Resources/*"],
             SchemaDetails(resources_schemas, "update_policy_delete.json"),
             False,
         )

@@ -45,6 +45,11 @@ class FunctionFilter:
         ],
     )
 
+    add_cfn_lint_keyword: bool = field(
+        init=True,
+        default=True,
+    )
+
     def _filter_schemas(self, schema, validator: Any) -> Tuple[Any, Any]:
         """
         Filter the schemas to only include the ones that are required
@@ -68,25 +73,28 @@ class FunctionFilter:
             else:
                 standard_schema[key] = value
 
+        if self.add_cfn_lint_keyword and "$ref" not in standard_schema:
+            standard_schema["cfnLint"] = ensure_list(standard_schema.get("cfnLint", []))
+            standard_schema["cfnLint"].append("/".join(validator.cfn_path))
+
         # some times CloudFormation dumps to standard nested "json".
         # it will do by using {"type": "object"} with no properties
         # Adding these items to the schema
         # will allow us to continue to check the nested elements
         # If we have the cfnLint keyword we assume that another check will
         # take care of this for us
-        if "cfnLint" not in standard_schema:
-            if "object" in ensure_list(standard_schema.get("type", [])) and all(
-                p not in standard_schema
-                for p in ["properties", "additionalProperties", "patternProperties"]
-            ):
-                standard_schema["patternProperties"] = {
-                    ".*": {"type": _all_types},
-                }
-            if (
-                "array" in standard_schema.get("type", [])
-                and "items" not in standard_schema
-            ):
-                standard_schema["items"] = {"type": _all_types}
+        if "object" in ensure_list(standard_schema.get("type", [])) and all(
+            p not in standard_schema
+            for p in ["properties", "additionalProperties", "patternProperties"]
+        ):
+            standard_schema["patternProperties"] = {
+                ".*": {"type": _all_types},
+            }
+        if (
+            "array" in standard_schema.get("type", [])
+            and "items" not in standard_schema
+        ):
+            standard_schema["items"] = {"type": _all_types}
 
         return standard_schema, group_schema
 

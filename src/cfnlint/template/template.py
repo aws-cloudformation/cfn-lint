@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import functools
 import logging
 from copy import deepcopy
 from typing import Any, Dict, List
@@ -76,6 +77,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             LOGGER.info("Encountered unknown error while building graph: %s", err)
 
         self.context = create_context_for_template(self)
+        self.search_deep_keys = functools.lru_cache()(self.search_deep_keys)  # type: ignore
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -85,12 +87,17 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             setattr(result, k, deepcopy(v, memo))
         return result
 
+    def _cache_clear(self):
+        self.search_deep_keys.cache_clear()
+
     def transform(self) -> List[Match]:
         """
         Transform the template
         """
         transform = Transform()
-        return transform.transform(self)
+        results = transform.transform(self)
+        self._cache_clear()
+        return results
 
     def build_graph(self):
         """Generates a DOT representation of the template"""
@@ -510,40 +517,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     LOGGER.debug(err)
 
         return result
-
-    def check_resource_property(
-        self,
-        resource_type,
-        resource_property,
-        check_value=None,
-        check_ref=None,
-        check_find_in_map=None,
-        check_split=None,
-        check_join=None,
-        check_sub=None,
-        **kwargs,
-    ):
-        """Check Resource Properties"""
-        matches = []
-        resources = self.get_resources(resource_type=resource_type)
-        for resource_name, resource_object in resources.items():
-            properties = resource_object.get("Properties", {})
-            if properties:
-                matches.extend(
-                    self.check_value(
-                        obj=properties,
-                        key=resource_property,
-                        path=["Resources", resource_name, "Properties"],
-                        check_value=check_value,
-                        check_ref=check_ref,
-                        check_find_in_map=check_find_in_map,
-                        check_split=check_split,
-                        check_join=check_join,
-                        check_sub=check_sub,
-                        **kwargs,
-                    )
-                )
-        return matches
 
     # pylint: disable=W0613,too-many-locals
     def check_value(

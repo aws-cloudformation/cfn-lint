@@ -19,7 +19,9 @@ class CacheClusterCacheNodeTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::ElastiCache::CacheCluster/Properties/CacheNodeType"],
+            keywords=[
+                "Resources/AWS::ElastiCache::CacheCluster/Properties/CacheNodeType"
+            ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_elasticache_cachecluster,
                 filename="cachenodetype_enum.json",

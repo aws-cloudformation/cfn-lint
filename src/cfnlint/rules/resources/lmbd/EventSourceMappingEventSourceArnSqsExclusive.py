@@ -24,7 +24,7 @@ class EventSourceMappingEventSourceArnSqsExclusive(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::Lambda::EventSourceMapping/Properties"],
+            keywords=["Resources/AWS::Lambda::EventSourceMapping/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_lambda_eventsourcemapping,
                 filename="eventsourcearn_sqs_exclusive.json",

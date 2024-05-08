@@ -19,8 +19,8 @@ class RecordSet(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::Route53::RecordSet/Properties",
-                "AWS::Route53::RecordSetGroup/Properties/RecordSets",
+                "Resources/AWS::Route53::RecordSet/Properties",
+                "Resources/AWS::Route53::RecordSetGroup/Properties/RecordSets/*",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_route53_recordset,

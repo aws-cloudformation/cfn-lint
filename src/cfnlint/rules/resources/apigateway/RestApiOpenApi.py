@@ -23,7 +23,7 @@ class RestApiOpenApi(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::ApiGateway::RestApi/Properties"],
+            keywords=["Resources/AWS::ApiGateway::RestApi/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_apigateway_restapi,
                 filename="openapi_properties.json",

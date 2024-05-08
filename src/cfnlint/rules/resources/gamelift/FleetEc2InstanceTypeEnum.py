@@ -19,7 +19,7 @@ class FleetEc2InstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::GameLift::Fleet/EC2InstanceType"],
+            keywords=["Resources/AWS::GameLift::Fleet/EC2InstanceType"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_gamelift_fleet,
                 filename="ec2instancetype_enum.json",

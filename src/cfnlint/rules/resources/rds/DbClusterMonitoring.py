@@ -25,7 +25,7 @@ class DbClusterMonitoring(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::RDS::DBCluster/Properties"],
+            keywords=["Resources/AWS::RDS::DBCluster/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_rds_dbcluster,
                 filename="monitoring.json",

@@ -24,7 +24,7 @@ class LogConfiguration(CfnLintJsonSchema):
     ) -> None:
         super().__init__(
             keywords=[
-                "AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/LogConfiguration"
+                "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/LogConfiguration"
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ecs_taskdefinition,

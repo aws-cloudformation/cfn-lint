@@ -19,7 +19,7 @@ class ClusterNodeTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::Redshift::Cluster/Properties/NodeType"],
+            keywords=["Resources/AWS::Redshift::Cluster/Properties/NodeType"],
             schema_details=SchemaDetails(
                 cfnlint.data.schemas.extensions.aws_redshift_cluster,
                 "nodetype_enum.json",

@@ -22,7 +22,7 @@ class AlarmAwsNamespacePeriod(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::CloudWatch::Alarm/Properties"],
+            keywords=["Resources/AWS::CloudWatch::Alarm/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_cloudwatch_alarm,
                 filename="aws_namespace_period.json",

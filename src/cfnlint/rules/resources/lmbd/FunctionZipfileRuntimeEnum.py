@@ -23,7 +23,7 @@ class FunctionZipfileRuntimeEnum(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::Lambda::Function/Properties"],
+            keywords=["Resources/AWS::Lambda::Function/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_lambda_function,
                 filename="zipfile_runtime_enum.json",

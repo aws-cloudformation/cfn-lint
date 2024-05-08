@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "oam:CreateSink",
+    "oam:PutSinkPolicy",
+    "oam:GetSinkPolicy",
+    "oam:GetSink"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "oam:DeleteSink",
+    "oam:GetSinkPolicy",
+    "oam:GetSink"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "oam:ListSinks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "oam:GetSinkPolicy",
+    "oam:GetSink"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "oam:PutSinkPolicy",
+    "oam:GetSinkPolicy",
+    "oam:GetSink",
+    "oam:TagResource",
+    "oam:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:.*).{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^(?!aws:.*).{0,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Oam::Sink"
+}

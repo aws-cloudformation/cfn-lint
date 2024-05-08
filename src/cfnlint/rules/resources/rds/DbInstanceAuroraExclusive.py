@@ -25,7 +25,7 @@ class DbInstanceAuroraExclusive(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::RDS::DBInstance/Properties"],
+            keywords=["Resources/AWS::RDS::DBInstance/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,
                 filename="aurora_exclusive.json",

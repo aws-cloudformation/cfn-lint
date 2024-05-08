@@ -22,7 +22,7 @@ class TableBillingModeProvisioned(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::DynamoDB::Table/Properties"],
+            keywords=["Resources/AWS::DynamoDB::Table/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_dynamodb_table,
                 filename="billingmode_provisioned_dependent.json",

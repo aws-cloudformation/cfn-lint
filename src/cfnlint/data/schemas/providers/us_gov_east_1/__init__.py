@@ -663,7 +663,6 @@ cached: List[str] = [
     "aws-s3outposts-accesspoint.json",
     "aws-ec2-ipampoolcidr.json",
     "aws-iot-topicruledestination.json",
-    "aws-redshift-clustersubnetgroup.json",
     "aws-ec2-vpcdhcpoptionsassociation.json",
     "aws-ec2-networkacl.json",
     "aws-logs-resourcepolicy.json",

@@ -21,12 +21,12 @@ class IdentityPolicy(Policy):
     def __init__(self):
         super().__init__(
             [
-                "AWS::IAM::Group/Properties/Policies/PolicyDocument",
-                "AWS::IAM::ManagedPolicy/Properties/PolicyDocument",
-                "AWS::IAM::Policy/Properties/PolicyDocument",
-                "AWS::IAM::Role/Properties/Policies/PolicyDocument",
-                "AWS::IAM::User/Properties/Policies/PolicyDocument",
-                "AWS::SSO::PermissionSet/Properties/InlinePolicy",
+                "Resources/AWS::IAM::Group/Properties/Policies/*/PolicyDocument",
+                "Resources/AWS::IAM::ManagedPolicy/Properties/PolicyDocument",
+                "Resources/AWS::IAM::Policy/Properties/PolicyDocument",
+                "Resources/AWS::IAM::Role/Properties/Policies/*/PolicyDocument",
+                "Resources/AWS::IAM::User/Properties/Policies/*/PolicyDocument",
+                "Resources/AWS::SSO::PermissionSet/Properties/InlinePolicy",
             ],
             "identity",
             "policy_identity.json",

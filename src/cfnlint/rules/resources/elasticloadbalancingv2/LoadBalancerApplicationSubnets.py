@@ -16,7 +16,7 @@ class LoadBalancerApplicationSubnets(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::ElasticLoadBalancingV2::LoadBalancer/Properties",
+                "Resources/AWS::ElasticLoadBalancingV2::LoadBalancer/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_elasticloadbalancingv2_loadbalancer,

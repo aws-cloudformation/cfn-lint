@@ -22,7 +22,9 @@ class HealthCheckHealthCheckConfigTypeInclusive(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::Route53::HealthCheck/Properties/HealthCheckConfig"],
+            keywords=[
+                "Resources/AWS::Route53::HealthCheck/Properties/HealthCheckConfig"
+            ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_route53_healthcheck,
                 filename="healthcheckconfig_type_inclusive.json",

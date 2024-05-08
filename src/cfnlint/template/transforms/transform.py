@@ -56,5 +56,4 @@ class Transform:
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
         cfn.context = create_context_for_template(cfn)
-        LOGGER.info("Transformed template: %s", cfn.template)
         return matches

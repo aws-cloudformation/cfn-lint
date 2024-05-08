@@ -19,7 +19,7 @@ class BrokerInstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::AmazonMQ::Broker/Properties/HostInstanceType"],
+            keywords=["Resources/AWS::AmazonMQ::Broker/Properties/HostInstanceType"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_amazonmq_broker,
                 filename="instancetype_enum.json",
