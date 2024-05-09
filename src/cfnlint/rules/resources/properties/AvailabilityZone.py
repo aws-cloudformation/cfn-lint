@@ -22,22 +22,22 @@ class AvailabilityZone(CfnLintKeyword):
         """Init"""
         super().__init__(
             keywords=[
-                "Resources/AWS::AutoScaling::AutoScalingGroup/Properties/AvailabilityZones",
-                "Resources/AWS::DAX::Cluster/Properties/AvailabilityZones",
+                "Resources/AWS::AutoScaling::AutoScalingGroup/Properties/AvailabilityZones/*",
+                "Resources/AWS::DAX::Cluster/Properties/AvailabilityZones/*",
                 "Resources/AWS::DMS::ReplicationInstance/Properties/AvailabilityZone",
                 "Resources/AWS::EC2::Host/Properties/AvailabilityZone",
                 "Resources/AWS::EC2::Instance/Properties/AvailabilityZone",
                 "Resources/AWS::EC2::LaunchTemplate/LaunchTemplateData/Placement/AvailabilityZone",
-                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/Placement/AvailabilityZone",
-                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchTemplateConfigs/Overrides/AvailabilityZone",
+                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/*/Placement/AvailabilityZone",
+                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchTemplateConfigs/*/Overrides/AvailabilityZone",
                 "Resources/AWS::EC2::Subnet/Properties/AvailabilityZone",
                 "Resources/AWS::EC2::Volume/Properties/AvailabilityZone",
-                "Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/AvailabilityZones",
-                "Resources/AWS::ElasticLoadBalancingV2::TargetGroup/Properties/Targets/AvailabilityZone",
+                "Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/AvailabilityZones/*",
+                "Resources/AWS::ElasticLoadBalancingV2::TargetGroup/Properties/Targets/*/AvailabilityZone",
                 "Resources/AWS::EMR::Cluster/Properties/Instances/Placement/AvailabilityZone",
                 "Resources/AWS::Glue::Connection/Properties/ConnectionInput/PhysicalConnectionRequirements/AvailabilityZone",
                 "Resources/AWS::OpsWorks::Instance/Properties/AvailabilityZone",
-                "Resources/AWS::RDS::DBCluster/Properties/AvailabilityZones",
+                "Resources/AWS::RDS::DBCluster/Properties/AvailabilityZones/*",
                 "Resources/AWS::RDS::DBInstance/Properties/AvailabilityZone",
             ]
         )

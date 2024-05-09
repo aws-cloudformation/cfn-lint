@@ -22,7 +22,7 @@ class Aliases(CfnLintKeyword):
         """Init"""
         super().__init__(
             keywords=[
-                "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig/Aliases/Alias"
+                "Resources/AWS::CloudFront::Distribution/Properties/DistributionConfig/Aliases/*"
             ]
         )
 

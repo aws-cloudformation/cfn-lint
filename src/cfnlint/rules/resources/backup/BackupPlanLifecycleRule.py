@@ -27,7 +27,7 @@ class BackupPlanLifecycleRule(CfnLintKeyword):
     def __init__(self) -> None:
         super().__init__(
             [
-                "Resources/AWS::Backup::BackupPlan/Properties/BackupPlanResourceType/BackupRuleResourceType/Lifecycle"
+                "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle"
             ]
         )
 

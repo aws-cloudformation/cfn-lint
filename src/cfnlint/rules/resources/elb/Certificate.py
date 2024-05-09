@@ -21,7 +21,7 @@ class Certificate(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/Listeners",
+                "Resources/AWS::ElasticLoadBalancing::LoadBalancer/Properties/Listeners/*",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_elasticloadbalancing_loadbalancer,

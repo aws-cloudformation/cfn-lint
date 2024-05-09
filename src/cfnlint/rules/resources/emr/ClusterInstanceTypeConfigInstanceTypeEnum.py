@@ -20,10 +20,10 @@ class ClusterInstanceTypeConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "Resources/AWS::EMR::Cluster/Properties/CoreInstanceFleet/InstanceTypeConfigs/InstanceType",
-                "Resources/AWS::EMR::Cluster/Properties/TaskInstanceFleets/InstanceTypeConfigs/InstanceType",
-                "Resources/AWS::EMR::Cluster/Properties/CoreInstanceGroup/InstanceType",
-                "Resources/AWS::EMR::Cluster/Properties/TaskInstanceGroups/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/CoreInstanceFleet/InstanceTypeConfigs/*/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/CoreInstanceGroup/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/TaskInstanceFleets/*/InstanceTypeConfigs/*/InstanceType",
+                "Resources/AWS::EMR::Cluster/Properties/Instances/TaskInstanceGroups/*/InstanceType",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_emr_cluster,

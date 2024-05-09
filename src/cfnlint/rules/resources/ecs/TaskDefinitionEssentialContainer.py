@@ -29,7 +29,7 @@ class TaskDefinitionEssentialContainer(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions"
+                "Resources/AWS::ECS::TaskDefinition/Properties/ContainerDefinitions/*"
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ecs_taskdefinition,
