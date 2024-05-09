@@ -1,3 +1,10 @@
+### v0.87.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `173.0.0` (pull #[3215](https://github.com/aws-cloudformation/cfn-lint/pull/3215))
+###### Fixes
+- Ignore_bad_template and E0000 based ignore checks (pull #[3226](https://github.com/aws-cloudformation/cfn-lint/pull/3226))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to validate GetAtts are to a list when being used for a list (pull #[3224](https://github.com/aws-cloudformation/cfn-lint/pull/3224))
+
 ### v0.87.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `172.0.0` (pull #[3181](https://github.com/aws-cloudformation/cfn-lint/pull/3181))
