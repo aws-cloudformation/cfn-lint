@@ -493,6 +493,26 @@ class Properties(CloudFormationLintRule):
                                                 message.format(prop, resourcename),
                                             )
                                         )
+                                elif "Fn::GetAtt" in text[prop]:
+                                    getatt = text[prop]["Fn::GetAtt"]
+                                    if isinstance(getatt, str):
+                                        getatt = getatt.split(".", 1)
+                                    valid_getatts = self.cfn.get_valid_getatts()
+                                    if getatt[0] in valid_getatts:
+                                        if getatt[1] in valid_getatts[getatt[0]]:
+                                            getatt_prop = valid_getatts[getatt[0]][
+                                                getatt[1]
+                                            ]
+                                            if getatt_prop.get("Type") != "List":
+                                                message = "Property {0} should be of type List for resource {1}"
+                                                matches.append(
+                                                    RuleMatch(
+                                                        proppath,
+                                                        message.format(
+                                                            prop, resourcename
+                                                        ),
+                                                    )
+                                                )
                                 else:
                                     if len(text[prop]) == 1:
                                         for k in text[prop].keys():
