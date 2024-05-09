@@ -423,16 +423,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 valtype = value["Type"]
                 if isinstance(valtype, str):
                     if valtype.startswith(astrik_string_types):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
                         results[name] = {"*": {"PrimitiveItemType": "String"}}
                     elif valtype.startswith(astrik_unknown_types) or valtype.endswith(
                         "::MODULE"
                     ):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
                         results[name] = {"*": {}}
                     else:
                         if value["Type"] in resourcetypes:
