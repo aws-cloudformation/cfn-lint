@@ -45,7 +45,9 @@ def additionalProperties(
     extras = set(find_additional_properties(validator, instance, schema))
     if validator.is_type(aP, "object"):
         for extra in extras:
-            yield from validator.descend(instance[extra], aP, path=extra)
+            yield from validator.descend(
+                instance[extra], aP, path=extra, property_path="*"
+            )
     elif not aP and extras:
         if "patternProperties" in schema:
             patterns = ", ".join(
@@ -264,10 +266,11 @@ def items(
                 subschema,
                 path=index,
                 schema_path=index,
+                property_path="*",
             )
     else:
         for index, item in enumerate(instance):
-            yield from validator.descend(item, items, path=index)
+            yield from validator.descend(item, items, path=index, property_path="*")
 
 
 def maxItems(
@@ -441,6 +444,7 @@ def patternProperties(
                     subschema,
                     path=k,
                     schema_path=pattern,
+                    property_path=k,
                 )
 
 
@@ -459,6 +463,7 @@ def properties(
                 subschema,
                 path=k[0] if len(k) > 0 else p,
                 schema_path=p,
+                property_path=k[0] if len(k) > 0 else p,
             )
 
 
@@ -470,7 +475,10 @@ def propertyNames(
 
     for property in instance:
         yield from validator.descend(
-            instance=property, schema=propertyNames, path=property
+            instance=property,
+            schema=propertyNames,
+            path=property,
+            property_path="*",
         )
 
 
@@ -545,4 +553,5 @@ def prefixItems(validator, prefixItems, instance, schema):
             schema=subschema,
             schema_path=index,
             path=index,
+            property_path="*",
         )

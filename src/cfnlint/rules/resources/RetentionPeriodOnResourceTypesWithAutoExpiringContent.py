@@ -29,14 +29,14 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             [
-                "AWS::RDS::DBInstance/Properties",
-                "AWS::Kinesis::Stream/Properties",
-                "AWS::SQS::Queue/Properties",
-                "AWS::DocDB::DBCluster/Properties",
-                "AWS::Synthetics::Canary/Properties",
-                "AWS::Redshift::Cluster/Properties",
-                "AWS::RDS::DBInstance/Properties",
-                "AWS::RDS::DBCluster/Properties",
+                "Resources/AWS::RDS::DBInstance/Properties",
+                "Resources/AWS::Kinesis::Stream/Properties",
+                "Resources/AWS::SQS::Queue/Properties",
+                "Resources/AWS::DocDB::DBCluster/Properties",
+                "Resources/AWS::Synthetics::Canary/Properties",
+                "Resources/AWS::Redshift::Cluster/Properties",
+                "Resources/AWS::RDS::DBInstance/Properties",
+                "Resources/AWS::RDS::DBCluster/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_rds_dbinstance,

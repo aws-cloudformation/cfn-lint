@@ -18,6 +18,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+from collections import deque
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, Protocol, Type, runtime_checkable
 
@@ -61,6 +62,7 @@ class Validator(Protocol):
     cfn: Template | None
     context: Context
     function_filter: FunctionFilter
+    cfn_path: deque[str | int]
 
     def __init__(
         self,
@@ -123,6 +125,7 @@ class Validator(Protocol):
         schema: Any,
         path: str | int | None = None,
         schema_path: str | int | None = None,
+        property_path: str | int | None = None,
     ) -> ValidationResult:
         """
         Descend into the schema validating the schema for True/False.

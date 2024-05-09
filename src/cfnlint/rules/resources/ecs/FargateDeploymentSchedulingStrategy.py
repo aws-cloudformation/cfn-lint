@@ -27,7 +27,7 @@ class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::ECS::Service/Properties"],
+            keywords=["Resources/AWS::ECS::Service/Properties"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ecs_service,
                 filename="fargate.json",

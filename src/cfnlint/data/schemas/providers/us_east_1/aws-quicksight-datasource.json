@@ -7,6 +7,7 @@
  ],
  "definitions": {
   "AmazonElasticsearchParameters": {
+   "additionalProperties": false,
    "properties": {
     "Domain": {
      "maxLength": 64,
@@ -20,6 +21,7 @@
    "type": "object"
   },
   "AmazonOpenSearchParameters": {
+   "additionalProperties": false,
    "properties": {
     "Domain": {
      "maxLength": 64,
@@ -33,6 +35,7 @@
    "type": "object"
   },
   "AthenaParameters": {
+   "additionalProperties": false,
    "properties": {
     "RoleArn": {
      "maxLength": 2048,
@@ -48,6 +51,7 @@
    "type": "object"
   },
   "AuroraParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -60,6 +64,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -73,6 +78,7 @@
    "type": "object"
   },
   "AuroraPostgreSqlParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -85,6 +91,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -98,6 +105,7 @@
    "type": "object"
   },
   "AwsIotAnalyticsParameters": {
+   "additionalProperties": false,
    "properties": {
     "DataSetName": {
      "maxLength": 128,
@@ -111,6 +119,7 @@
    "type": "object"
   },
   "CredentialPair": {
+   "additionalProperties": false,
    "properties": {
     "AlternateDataSourceParameters": {
      "items": {
@@ -138,9 +147,10 @@
    "type": "object"
   },
   "DataSourceCredentials": {
+   "additionalProperties": false,
    "properties": {
     "CopySourceArn": {
-     "pattern": "^arn:[-a-z0-9]*:quicksight:[-a-z0-9]*:[0-9]{12}:datasource/.+",
+     "pattern": "^arn:[-a-z0-9]*:quicksight:[-a-z0-9]*:[0-9]{12}:datasource/.+$",
      "type": "string"
     },
     "CredentialPair": {
@@ -149,13 +159,14 @@
     "SecretArn": {
      "maxLength": 2048,
      "minLength": 1,
-     "pattern": "^arn:[-a-z0-9]*:secretsmanager:[-a-z0-9]*:[0-9]{12}:secret:.+",
+     "pattern": "^arn:[-a-z0-9]*:secretsmanager:[-a-z0-9]*:[0-9]{12}:secret:.+$",
      "type": "string"
     }
    },
    "type": "object"
   },
   "DataSourceErrorInfo": {
+   "additionalProperties": false,
    "properties": {
     "Message": {
      "type": "string"
@@ -180,6 +191,7 @@
    "type": "string"
   },
   "DataSourceParameters": {
+   "additionalProperties": false,
    "properties": {
     "AmazonElasticsearchParameters": {
      "$ref": "#/definitions/AmazonElasticsearchParameters"
@@ -254,6 +266,13 @@
     "AURORA_POSTGRESQL",
     "AWS_IOT_ANALYTICS",
     "DATABRICKS",
+    "DENODO",
+    "DREMIO",
+    "DYNAMODB",
+    "SAPHANA",
+    "DB2_AS400",
+    "EXASOL",
+    "FILE",
     "GITHUB",
     "JIRA",
     "MARIADB",
@@ -269,14 +288,21 @@
     "SPARK",
     "SQLSERVER",
     "TERADATA",
-    "TWITTER",
     "TIMESTREAM",
+    "TWITTER",
+    "BIGQUERY",
+    "GOOGLE_ANALYTICS",
+    "TRINO",
     "STARBURST",
-    "TRINO"
+    "MONGO",
+    "MONGO_ATLAS",
+    "DOCUMENTDB",
+    "APPFLOW"
    ],
    "type": "string"
   },
   "DatabricksParameters": {
+   "additionalProperties": false,
    "properties": {
     "Host": {
      "maxLength": 256,
@@ -284,6 +310,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -301,7 +328,18 @@
    ],
    "type": "object"
   },
+  "IdentityCenterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableIdentityPropagation": {
+     "default": null,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "ManifestFileLocation": {
+   "additionalProperties": false,
    "properties": {
     "Bucket": {
      "maxLength": 1024,
@@ -321,6 +359,7 @@
    "type": "object"
   },
   "MariaDbParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -333,6 +372,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -346,6 +386,7 @@
    "type": "object"
   },
   "MySqlParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -358,6 +399,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -371,6 +413,7 @@
    "type": "object"
   },
   "OracleParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -383,6 +426,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -396,6 +440,7 @@
    "type": "object"
   },
   "PostgreSqlParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -408,6 +453,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -421,6 +467,7 @@
    "type": "object"
   },
   "PrestoParameters": {
+   "additionalProperties": false,
    "properties": {
     "Catalog": {
      "maxLength": 128,
@@ -433,6 +480,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -446,6 +494,7 @@
    "type": "object"
   },
   "RdsParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -465,6 +514,7 @@
    "type": "object"
   },
   "RedshiftParameters": {
+   "additionalProperties": false,
    "properties": {
     "ClusterId": {
      "maxLength": 64,
@@ -481,7 +531,11 @@
      "minLength": 1,
      "type": "string"
     },
+    "IdentityCenterConfiguration": {
+     "$ref": "#/definitions/IdentityCenterConfiguration"
+    },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 0,
      "type": "number"
@@ -493,6 +547,7 @@
    "type": "object"
   },
   "ResourcePermission": {
+   "additionalProperties": false,
    "properties": {
     "Actions": {
      "items": {
@@ -505,6 +560,9 @@
     "Principal": {
      "maxLength": 256,
      "minLength": 1,
+     "type": "string"
+    },
+    "Resource": {
      "type": "string"
     }
    },
@@ -527,6 +585,7 @@
    "type": "string"
   },
   "S3Parameters": {
+   "additionalProperties": false,
    "properties": {
     "ManifestFileLocation": {
      "$ref": "#/definitions/ManifestFileLocation"
@@ -543,6 +602,7 @@
    "type": "object"
   },
   "SnowflakeParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -568,6 +628,7 @@
    "type": "object"
   },
   "SparkParameters": {
+   "additionalProperties": false,
    "properties": {
     "Host": {
      "maxLength": 256,
@@ -575,6 +636,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -587,6 +649,7 @@
    "type": "object"
   },
   "SqlServerParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -599,6 +662,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -612,14 +676,17 @@
    "type": "object"
   },
   "SslProperties": {
+   "additionalProperties": false,
    "properties": {
     "DisableSsl": {
+     "default": false,
      "type": "boolean"
     }
    },
    "type": "object"
   },
   "StarburstParameters": {
+   "additionalProperties": false,
    "properties": {
     "Catalog": {
      "maxLength": 128,
@@ -632,6 +699,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -641,9 +709,9 @@
     }
    },
    "required": [
+    "Catalog",
     "Host",
-    "Port",
-    "Catalog"
+    "Port"
    ],
    "type": "object"
   },
@@ -655,6 +723,7 @@
    "type": "string"
   },
   "Tag": {
+   "additionalProperties": false,
    "properties": {
     "Key": {
      "maxLength": 128,
@@ -674,6 +743,7 @@
    "type": "object"
   },
   "TeradataParameters": {
+   "additionalProperties": false,
    "properties": {
     "Database": {
      "maxLength": 128,
@@ -686,6 +756,7 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
@@ -699,6 +770,7 @@
    "type": "object"
   },
   "TrinoParameters": {
+   "additionalProperties": false,
    "properties": {
     "Catalog": {
      "maxLength": 128,
@@ -711,19 +783,21 @@
      "type": "string"
     },
     "Port": {
+     "default": 0,
      "maximum": 65535,
      "minimum": 1,
      "type": "number"
     }
    },
    "required": [
+    "Catalog",
     "Host",
-    "Port",
-    "Catalog"
+    "Port"
    ],
    "type": "object"
   },
   "VpcConnectionProperties": {
+   "additionalProperties": false,
    "properties": {
     "VpcConnectionArn": {
      "type": "string"
@@ -860,6 +934,11 @@
   "/properties/LastUpdatedTime",
   "/properties/Status"
  ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
  "typeName": "AWS::QuickSight::DataSource",
  "writeOnlyProperties": [
   "/properties/Credentials"

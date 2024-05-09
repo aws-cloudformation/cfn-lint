@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 import pathlib
 
 from cfnlint.helpers import load_plugins
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -37,7 +36,11 @@ class CfnLint(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def cfnLint(self, validator, keywords, instance, schema):
-        keywords = ensure_list(keywords)
+        validator = validator.evolve(
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
+            )
+        )
         for keyword in keywords:
             for rule in self.child_rules.values():
                 if rule is None:

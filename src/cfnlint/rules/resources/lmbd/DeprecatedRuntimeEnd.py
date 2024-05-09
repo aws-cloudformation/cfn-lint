@@ -26,7 +26,7 @@ class DeprecatedRuntimeEnd(CfnLintKeyword):
 
     def __init__(self):
         """Init"""
-        super().__init__(["AWS::Lambda::Function/Properties/Runtime"])
+        super().__init__(["Resources/AWS::Lambda::Function/Properties/Runtime"])
         self.child_rules = {
             "W2531": None,
         }

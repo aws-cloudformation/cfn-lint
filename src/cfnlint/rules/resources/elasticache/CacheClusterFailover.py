@@ -24,7 +24,7 @@ class CacheClusterFailover(CfnLintKeyword):
         """Init"""
         super().__init__(
             keywords=[
-                "AWS::ElastiCache::ReplicationGroup/Properties/CacheParameterGroupName"
+                "Resources/AWS::ElastiCache::ReplicationGroup/Properties/CacheParameterGroupName"
             ]
         )
         self.resource_property_types.append("AWS::ElastiCache::ReplicationGroup")

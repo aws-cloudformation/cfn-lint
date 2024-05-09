@@ -20,7 +20,7 @@ class DomainClusterConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::Elasticsearch::Domain/Properties/ElasticsearchClusterConfig/InstanceType"
+                "Resources/AWS::Elasticsearch::Domain/Properties/ElasticsearchClusterConfig/InstanceType"
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_elasticsearch_domain,

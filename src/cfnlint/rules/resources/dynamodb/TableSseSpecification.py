@@ -22,7 +22,7 @@ class TableSseSpecification(CfnLintJsonSchema):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::DynamoDB::Table/Properties/SSESpecification"],
+            keywords=["Resources/AWS::DynamoDB::Table/Properties/SSESpecification"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_dynamodb_table,
                 filename="ssespecification_kms.json",

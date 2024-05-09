@@ -19,7 +19,7 @@ class ClusterNodeTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::DAX::Cluster/Properties/NodeType"],
+            keywords=["Resources/AWS::DAX::Cluster/Properties/NodeType"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_dax_cluster,
                 filename="nodetype_enum.json",

@@ -19,7 +19,7 @@ class DBInstanceClassEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::DocDB::DBInstance/Properties/DBInstanceClass"],
+            keywords=["Resources/AWS::DocDB::DBInstance/Properties/DBInstanceClass"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_docdb_dbinstance,
                 filename="dbinstanceclass_enum.json",

@@ -140,7 +140,10 @@ class BaseFn(CloudFormationLintRule):
             list(
                 self.fix_errors(
                     self.validator(validator).descend(
-                        value, self.schema(validator, instance), path=key
+                        value,
+                        self.schema(validator, instance),
+                        path=key,
+                        property_path=key,
                     )
                 )
             )

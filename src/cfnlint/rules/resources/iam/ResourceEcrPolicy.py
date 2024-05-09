@@ -20,7 +20,7 @@ class ResourceEcrPolicy(Policy):
     def __init__(self):
         super().__init__(
             [
-                "AWS::ECR::Repository/Properties/RepositoryPolicyText",
+                "Resources/AWS::ECR::Repository/Properties/RepositoryPolicyText",
             ],
             "resource",
             "policy_resource_ecr.json",

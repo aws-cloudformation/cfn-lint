@@ -23,12 +23,12 @@ class RoleArnPattern(CfnLintKeyword):
     def __init__(self) -> None:
         super().__init__(
             [
-                "AWS::Backup::BackupSelection/Properties/BackupSelection/IamRoleArn",
-                "AWS::Batch::ComputeEnvironment/Properties/ComputeResources/SpotIamFleetRole",
-                "AWS::Batch::ComputeEnvironment/Properties/ServiceRole",
-                "AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/IamFleetRole",
-                "AWS::ECS::TaskDefinition/Properties/ExecutionRoleArn",
-                "AWS::S3::Bucket/Properties/ReplicationConfiguration/Role",
+                "Resources/AWS::Backup::BackupSelection/Properties/BackupSelection/IamRoleArn",
+                "Resources/AWS::Batch::ComputeEnvironment/Properties/ComputeResources/SpotIamFleetRole",
+                "Resources/AWS::Batch::ComputeEnvironment/Properties/ServiceRole",
+                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/IamFleetRole",
+                "Resources/AWS::ECS::TaskDefinition/Properties/ExecutionRoleArn",
+                "Resources/AWS::S3::Bucket/Properties/ReplicationConfiguration/Role",
             ]
         )
 

@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import logging
+from collections import deque
 from typing import Any
 
 from cfnlint.helpers import FUNCTIONS, REGION_PRIMARY
@@ -89,7 +90,8 @@ class Properties(BaseJsonSchema):
                         region_validator = validator.evolve(
                             context=validator.context.evolve(
                                 regions=[region], path="Properties"
-                            )
+                            ),
+                            cfn_path=deque(["Resources", t, "Properties"]),
                         )
                         for err in self.validate(
                             region_validator, t, properties, schema.json_schema
@@ -106,7 +108,8 @@ class Properties(BaseJsonSchema):
             region_validator = validator.evolve(
                 context=validator.context.evolve(
                     regions=cached_regions, path="Properties"
-                )
+                ),
+                cfn_path=deque(["Resources", t, "Properties"]),
             )
             for err in self.validate(
                 region_validator, t, properties, schema.json_schema

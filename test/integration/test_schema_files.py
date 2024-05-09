@@ -3,11 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import fnmatch
 import json
 import os
 import pathlib
-from typing import List
+from typing import Any, List
 from unittest import TestCase
 
 import pytest
@@ -24,7 +26,10 @@ from cfnlint.schema._pointer import resolve_pointer
 class TestSchemaFiles(TestCase):
     """Test schema files"""
 
-    _found_keywords: List[str] = []
+    _found_keywords: List[str] = [
+        "Resources/*",
+        "Parameters/*",
+    ]
 
     def setUp(self) -> None:
         schema_path = os.path.join(os.path.dirname(cfnlint.__file__), "data", "schemas")
@@ -81,6 +86,48 @@ class TestSchemaFiles(TestCase):
                 except KeyError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
+    def _build_keywords(self, obj: Any, spec: Any, refs: list[str] | None = None):
+        if refs is None:
+            refs = []
+        if not isinstance(obj, dict):
+            yield []
+            return
+
+        if "type" in obj:
+            if "object" in ensure_list(obj["type"]):
+                if "properties" in obj:
+                    for k, v in obj["properties"].items():
+                        for item in self._build_keywords(v, spec, refs):
+                            yield [k] + item
+            if "array" in ensure_list(obj["type"]):
+                if "items" in obj:
+                    for item in self._build_keywords(obj["items"], spec, refs):
+                        print(obj["items"])
+                        yield ["*"] + item
+
+        if "$ref" in obj:
+            ref = obj["$ref"]
+            if ref in refs:
+                yield []
+                return
+            for item in self._build_keywords(
+                resolve_pointer(spec, ref), spec, refs + [ref]
+            ):
+                yield item
+
+        yield []
+
+    def build_keywords(self, spec):
+        self._found_keywords.append(
+            "/".join(["Resources", spec["typeName"], "Properties"])
+        )
+        for k, v in spec.get("properties").items():
+            for item in self._build_keywords(v, spec):
+                print(["Resources", spec["typeName"], "Properties", k] + item)
+                self._found_keywords.append(
+                    "/".join(["Resources", spec["typeName"], "Properties", k] + item)
+                )
+
     def test_data_module_specs(self):
         """Test data file formats"""
 
@@ -125,6 +172,7 @@ class TestSchemaFiles(TestCase):
                         errs, [], f"Error with {dirpath}/{filename}: {errs}"
                     )
                     self.validate_basic_schema_details(d, f"{dirpath}/{filename}")
+                    self.build_keywords(d)
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)
@@ -161,7 +209,6 @@ class TestSchemaFiles(TestCase):
             dir = self.paths[dir_name]
 
             for dirpath, filename in self.get_files(dir):
-                self._found_keywords.append(filename)
                 with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
                     d = json.load(fh)
                     errs = list(validator.iter_errors(d))
@@ -187,4 +234,4 @@ class TestSchemaFiles(TestCase):
 
         for rule in rules:
             for keyword in rule.keywords:
-                self.assertIn(keyword, self._found_keywords)
+                self.assertIn(keyword, self._found_keywords, f"{keyword} not found")

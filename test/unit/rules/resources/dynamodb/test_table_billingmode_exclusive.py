@@ -39,6 +39,22 @@ def validator():
         ),
         (
             {
+                "BillingMode": "PROVISIONED",
+                "KeySchema": [
+                    {
+                        "AttributeName": "foo",
+                        "KeyType": "HASH",
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "WriteCapacityUnits": 5,
+                    "ReadCapacityUnits": 5,
+                },
+            },
+            [],
+        ),
+        (
+            {
                 "BillingMode": "PAY_PER_REQUEST",
                 "ProvisionedThroughput": "Foo",
             },

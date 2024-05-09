@@ -20,7 +20,7 @@ class NodeNodeConfigurationInstanceTypeEnum(CfnLintJsonSchemaRegional):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::ManagedBlockchain::Node/Properties/NodeConfiguration/InstanceType"
+                "Resources/AWS::ManagedBlockchain::Node/Properties/NodeConfiguration/InstanceType"
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_managedblockchain_node,

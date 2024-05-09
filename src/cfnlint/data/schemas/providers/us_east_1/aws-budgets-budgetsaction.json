@@ -76,6 +76,22 @@
    ],
    "type": "object"
   },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "ScpActionDefinition": {
    "additionalProperties": false,
    "properties": {
@@ -151,7 +167,8 @@
   "create": {
    "permissions": [
     "budgets:CreateBudgetAction",
-    "iam:PassRole"
+    "iam:PassRole",
+    "budgets:TagResource"
    ]
   },
   "delete": {
@@ -167,13 +184,17 @@
   },
   "read": {
    "permissions": [
-    "budgets:DescribeBudgetAction"
+    "budgets:DescribeBudgetAction",
+    "budgets:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
     "budgets:UpdateBudgetAction",
-    "iam:PassRole"
+    "iam:PassRole",
+    "budgets:TagResource",
+    "budgets:UntagResource",
+    "budgets:ListTagsForResource"
    ]
   }
  },
@@ -219,6 +240,12 @@
    ],
    "type": "string"
   },
+  "ResourceTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "type": "array"
+  },
   "Subscribers": {
    "items": {
     "$ref": "#/definitions/Subscriber"
@@ -241,5 +268,12 @@
   "Subscribers"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/ResourceTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Budgets::BudgetsAction"
 }

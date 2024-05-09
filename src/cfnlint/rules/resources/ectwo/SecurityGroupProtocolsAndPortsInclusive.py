@@ -24,10 +24,10 @@ class SecurityGroupProtocolsAndPortsInclusive(CfnLintJsonSchema):
     def __init__(self) -> None:
         super().__init__(
             keywords=[
-                "AWS::EC2::SecurityGroup/Properties/Ingress",
-                "AWS::EC2::SecurityGroup/Properties/Egress",
-                "AWS::EC2::SecurityGroupEgress/Properties",
-                "AWS::EC2::SecurityGroupIngress/Properties",
+                "Resources/AWS::EC2::SecurityGroup/Properties/SecurityGroupIngress/*",
+                "Resources/AWS::EC2::SecurityGroup/Properties/SecurityGroupEgress/*",
+                "Resources/AWS::EC2::SecurityGroupEgress/Properties",
+                "Resources/AWS::EC2::SecurityGroupIngress/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ec2_securitygroup,

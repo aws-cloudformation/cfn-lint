@@ -49,6 +49,7 @@ types = [
     "AWS::CloudFront::ContinuousDeploymentPolicy",
     "AWS::QuickSight::Analysis",
     "AWS::Kendra::Faq",
+    "AWS::Bedrock::GuardrailVersion",
     "AWS::ECR::ReplicationConfiguration",
     "AWS::AppConfig::ExtensionAssociation",
     "AWS::VpcLattice::Service",

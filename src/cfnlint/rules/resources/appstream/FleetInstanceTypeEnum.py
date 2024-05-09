@@ -19,7 +19,7 @@ class FleetInstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::AppStream::Fleet/Properties/InstanceType"],
+            keywords=["Resources/AWS::AppStream::Fleet/Properties/InstanceType"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_appstream_fleet,
                 filename="instancetype_enum.json",

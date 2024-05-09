@@ -19,7 +19,7 @@ class DBInstanceDBInstanceClassEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::Neptune::DBInstance/Properties/DBInstanceClass"],
+            keywords=["Resources/AWS::Neptune::DBInstance/Properties/DBInstanceClass"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_neptune_dbinstance,
                 filename="dbinstanceclass_enum.json",

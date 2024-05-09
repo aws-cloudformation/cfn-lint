@@ -14,7 +14,7 @@
      "type": "string"
     },
     "ColumnName": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
@@ -35,7 +35,7 @@
    "additionalProperties": false,
    "properties": {
     "ColumnName": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
@@ -48,7 +48,7 @@
      "$ref": "#/definitions/ColumnDataType"
     },
     "SubType": {
-     "$ref": "#/definitions/ColumnSubDataType"
+     "$ref": "#/definitions/ColumnDataSubType"
     }
    },
    "required": [
@@ -56,6 +56,13 @@
     "NewColumnType"
    ],
    "type": "object"
+  },
+  "ColumnDataSubType": {
+   "enum": [
+    "FLOAT",
+    "FIXED"
+   ],
+   "type": "string"
   },
   "ColumnDataType": {
    "enum": [
@@ -107,13 +114,6 @@
    },
    "type": "object"
   },
-  "ColumnSubDataType": {
-   "enum": [
-    "FIXED",
-    "FLOAT"
-   ],
-   "type": "string"
-  },
   "ColumnTag": {
    "additionalProperties": false,
    "properties": {
@@ -125,6 +125,13 @@
     }
    },
    "type": "object"
+  },
+  "ColumnTagName": {
+   "enum": [
+    "COLUMN_GEOGRAPHIC_ROLE",
+    "COLUMN_DESCRIPTION"
+   ],
+   "type": "string"
   },
   "CreateColumnsOperation": {
    "additionalProperties": false,
@@ -163,7 +170,7 @@
      "type": "string"
     },
     "SqlQuery": {
-     "maxLength": 65536,
+     "maxLength": 168000,
      "minLength": 1,
      "type": "string"
     }
@@ -190,15 +197,20 @@
      "$ref": "#/definitions/RefreshConfiguration"
     }
    },
+   "required": [
+    "RefreshConfiguration"
+   ],
    "type": "object"
   },
   "DataSetUsageConfiguration": {
    "additionalProperties": false,
    "properties": {
     "DisableUseAsDirectQuerySource": {
+     "default": false,
      "type": "boolean"
     },
     "DisableUseAsImportedSource": {
+     "default": false,
      "type": "boolean"
     }
    },
@@ -222,18 +234,6 @@
    },
    "type": "object"
   },
-  "DatasetParameterId": {
-   "maxLength": 128,
-   "minLength": 1,
-   "pattern": "^[a-zA-Z0-9-]+$",
-   "type": "string"
-  },
-  "DatasetParameterName": {
-   "maxLength": 2048,
-   "minLength": 1,
-   "pattern": "^[a-zA-Z0-9]+$",
-   "type": "string"
-  },
   "DatasetParameterValueType": {
    "enum": [
     "MULTI_VALUED",
@@ -248,10 +248,16 @@
      "$ref": "#/definitions/DateTimeDatasetParameterDefaultValues"
     },
     "Id": {
-     "$ref": "#/definitions/DatasetParameterId"
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
     },
     "Name": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     },
     "TimeGranularity": {
      "$ref": "#/definitions/TimeGranularity"
@@ -271,18 +277,15 @@
    "additionalProperties": false,
    "properties": {
     "StaticValues": {
-     "$ref": "#/definitions/DateTimeDatasetParameterValueList"
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
-  },
-  "DateTimeDatasetParameterValueList": {
-   "items": {
-    "type": "string"
-   },
-   "maxItems": 32,
-   "minItems": 1,
-   "type": "array"
   },
   "DecimalDatasetParameter": {
    "additionalProperties": false,
@@ -291,10 +294,16 @@
      "$ref": "#/definitions/DecimalDatasetParameterDefaultValues"
     },
     "Id": {
-     "$ref": "#/definitions/DatasetParameterId"
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
     },
     "Name": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     },
     "ValueType": {
      "$ref": "#/definitions/DatasetParameterValueType"
@@ -311,18 +320,16 @@
    "additionalProperties": false,
    "properties": {
     "StaticValues": {
-     "$ref": "#/definitions/DecimalDatasetParameterValueList"
+     "items": {
+      "default": 0,
+      "type": "number"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
-  },
-  "DecimalDatasetParameterValueList": {
-   "items": {
-    "type": "number"
-   },
-   "maxItems": 32,
-   "minItems": 1,
-   "type": "array"
   },
   "FieldFolder": {
    "additionalProperties": false,
@@ -382,7 +389,7 @@
    "properties": {
     "Columns": {
      "items": {
-      "maxLength": 128,
+      "maxLength": 127,
       "minLength": 1,
       "type": "string"
      },
@@ -420,7 +427,10 @@
     "POSTCODE",
     "LONGITUDE",
     "LATITUDE",
-    "POLITICAL1"
+    "POLITICAL1",
+    "CENSUS_TRACT",
+    "CENSUS_BLOCK_GROUP",
+    "CENSUS_BLOCK"
    ],
    "type": "string"
   },
@@ -431,6 +441,9 @@
      "$ref": "#/definitions/LookbackWindow"
     }
    },
+   "required": [
+    "LookbackWindow"
+   ],
    "type": "object"
   },
   "IngestionWaitPolicy": {
@@ -453,12 +466,12 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
     "SubType": {
-     "$ref": "#/definitions/ColumnSubDataType"
+     "$ref": "#/definitions/ColumnDataSubType"
     },
     "Type": {
      "$ref": "#/definitions/InputColumnDataType"
@@ -489,10 +502,16 @@
      "$ref": "#/definitions/IntegerDatasetParameterDefaultValues"
     },
     "Id": {
-     "$ref": "#/definitions/DatasetParameterId"
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
     },
     "Name": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     },
     "ValueType": {
      "$ref": "#/definitions/DatasetParameterValueType"
@@ -509,18 +528,16 @@
    "additionalProperties": false,
    "properties": {
     "StaticValues": {
-     "$ref": "#/definitions/IntegerDatasetParameterValueList"
+     "items": {
+      "default": 0,
+      "type": "number"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
-  },
-  "IntegerDatasetParameterValueList": {
-   "items": {
-    "type": "number"
-   },
-   "maxItems": 32,
-   "minItems": 1,
-   "type": "array"
   },
   "JoinInstruction": {
    "additionalProperties": false,
@@ -531,7 +548,7 @@
     "LeftOperand": {
      "maxLength": 64,
      "minLength": 1,
-     "pattern": "[0-9a-zA-Z-]*",
+     "pattern": "^[0-9a-zA-Z-]*$",
      "type": "string"
     },
     "OnClause": {
@@ -545,7 +562,7 @@
     "RightOperand": {
      "maxLength": 64,
      "minLength": 1,
-     "pattern": "[0-9a-zA-Z-]*",
+     "pattern": "^[0-9a-zA-Z-]*$",
      "type": "string"
     },
     "Type": {
@@ -609,7 +626,7 @@
    "maxProperties": 64,
    "minProperties": 1,
    "patternProperties": {
-    "[0-9a-zA-Z-]*": {
+    "^[0-9a-zA-Z-]*$": {
      "$ref": "#/definitions/LogicalTable"
     }
    },
@@ -627,7 +644,7 @@
     "PhysicalTableId": {
      "maxLength": 64,
      "minLength": 1,
-     "pattern": "[0-9a-zA-Z-]*",
+     "pattern": "^[0-9a-zA-Z-]*$",
      "type": "string"
     }
    },
@@ -640,29 +657,67 @@
      "type": "string"
     },
     "Size": {
+     "default": 0,
      "minimum": 1,
      "type": "number"
     },
     "SizeUnit": {
-     "$ref": "#/definitions/SizeUnit"
+     "$ref": "#/definitions/LookbackWindowSizeUnit"
     }
    },
+   "required": [
+    "ColumnName",
+    "Size",
+    "SizeUnit"
+   ],
    "type": "object"
+  },
+  "LookbackWindowSizeUnit": {
+   "enum": [
+    "HOUR",
+    "DAY",
+    "WEEK"
+   ],
+   "type": "string"
   },
   "NewDefaultValues": {
    "additionalProperties": false,
    "properties": {
     "DateTimeStaticValues": {
-     "$ref": "#/definitions/DateTimeDatasetParameterValueList"
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     },
     "DecimalStaticValues": {
-     "$ref": "#/definitions/DecimalDatasetParameterValueList"
+     "items": {
+      "default": 0,
+      "type": "number"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     },
     "IntegerStaticValues": {
-     "$ref": "#/definitions/IntegerDatasetParameterValueList"
+     "items": {
+      "default": 0,
+      "type": "number"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     },
     "StringStaticValues": {
-     "$ref": "#/definitions/StringDatasetParameterValueList"
+     "items": {
+      "maxLength": 512,
+      "minLength": 0,
+      "type": "string"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
@@ -676,12 +731,12 @@
      "type": "string"
     },
     "Name": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
     "SubType": {
-     "$ref": "#/definitions/ColumnSubDataType"
+     "$ref": "#/definitions/ColumnDataSubType"
     },
     "Type": {
      "$ref": "#/definitions/ColumnDataType"
@@ -696,10 +751,16 @@
      "$ref": "#/definitions/NewDefaultValues"
     },
     "NewParameterName": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     },
     "ParameterName": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     }
    },
    "required": [
@@ -727,7 +788,7 @@
    "maxProperties": 32,
    "minProperties": 0,
    "patternProperties": {
-    "[0-9a-zA-Z-]*": {
+    "^[0-9a-zA-Z-]*$": {
      "$ref": "#/definitions/PhysicalTable"
     }
    },
@@ -757,6 +818,9 @@
      "$ref": "#/definitions/IncrementalRefresh"
     }
    },
+   "required": [
+    "IncrementalRefresh"
+   ],
    "type": "object"
   },
   "RelationalTable": {
@@ -779,12 +843,12 @@
      "type": "array"
     },
     "Name": {
-     "maxLength": 64,
+     "maxLength": 256,
      "minLength": 1,
      "type": "string"
     },
     "Schema": {
-     "maxLength": 64,
+     "maxLength": 256,
      "minLength": 0,
      "type": "string"
     }
@@ -800,12 +864,12 @@
    "additionalProperties": false,
    "properties": {
     "ColumnName": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
     "NewColumnName": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     }
@@ -889,7 +953,14 @@
     },
     "TagRuleConfigurations": {
      "items": {
-      "$ref": "#/definitions/RowLevelPermissionTagRuleConfiguration"
+      "items": {
+       "maxLength": 128,
+       "minLength": 1,
+       "type": "string"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "type": "array"
      },
      "maxItems": 50,
      "minItems": 1,
@@ -927,6 +998,7 @@
     },
     "TagMultiValueDelimiter": {
      "maxLength": 10,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -935,16 +1007,6 @@
     "TagKey"
    ],
    "type": "object"
-  },
-  "RowLevelPermissionTagRuleConfiguration": {
-   "items": {
-    "maxLength": 128,
-    "minLength": 1,
-    "type": "string"
-   },
-   "maxItems": 50,
-   "minItems": 1,
-   "type": "array"
   },
   "S3Source": {
    "additionalProperties": false,
@@ -970,14 +1032,6 @@
    ],
    "type": "object"
   },
-  "SizeUnit": {
-   "enum": [
-    "HOUR",
-    "DAY",
-    "WEEK"
-   ],
-   "type": "string"
-  },
   "Status": {
    "enum": [
     "ENABLED",
@@ -992,10 +1046,16 @@
      "$ref": "#/definitions/StringDatasetParameterDefaultValues"
     },
     "Id": {
-     "$ref": "#/definitions/DatasetParameterId"
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
     },
     "Name": {
-     "$ref": "#/definitions/DatasetParameterName"
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
     },
     "ValueType": {
      "$ref": "#/definitions/DatasetParameterValueType"
@@ -1012,18 +1072,17 @@
    "additionalProperties": false,
    "properties": {
     "StaticValues": {
-     "$ref": "#/definitions/StringDatasetParameterValueList"
+     "items": {
+      "maxLength": 512,
+      "minLength": 0,
+      "type": "string"
+     },
+     "maxItems": 32,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
-  },
-  "StringDatasetParameterValueList": {
-   "items": {
-    "type": "string"
-   },
-   "maxItems": 32,
-   "minItems": 1,
-   "type": "array"
   },
   "Tag": {
    "additionalProperties": false,
@@ -1049,7 +1108,7 @@
    "additionalProperties": false,
    "properties": {
     "ColumnName": {
-     "maxLength": 128,
+     "maxLength": 127,
      "minLength": 1,
      "type": "string"
     },
@@ -1112,8 +1171,32 @@
     },
     "TagColumnOperation": {
      "$ref": "#/definitions/TagColumnOperation"
+    },
+    "UntagColumnOperation": {
+     "$ref": "#/definitions/UntagColumnOperation"
     }
    },
+   "type": "object"
+  },
+  "UntagColumnOperation": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TagNames": {
+     "items": {
+      "$ref": "#/definitions/ColumnTagName"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "ColumnName",
+    "TagNames"
+   ],
    "type": "object"
   },
   "UploadSettings": {
@@ -1231,6 +1314,7 @@
    "type": "array"
   },
   "ConsumedSpiceCapacityInBytes": {
+   "default": 0,
    "type": "number"
   },
   "CreatedTime": {
@@ -1251,7 +1335,7 @@
     "$ref": "#/definitions/DatasetParameter"
    },
    "maxItems": 32,
-   "minItems": 1,
+   "minItems": 0,
    "type": "array"
   },
   "FieldFolders": {
@@ -1314,6 +1398,13 @@
   "/properties/LastUpdatedTime",
   "/properties/OutputColumns"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::QuickSight::DataSet",
  "writeOnlyProperties": [
   "/properties/FieldFolders",

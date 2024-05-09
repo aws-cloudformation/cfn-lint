@@ -19,7 +19,7 @@ class InstanceInstanceTypeEnum(CfnLintJsonSchemaRegional):
 
     def __init__(self) -> None:
         super().__init__(
-            keywords=["AWS::EC2::Instance/Properties/InstanceType"],
+            keywords=["Resources/AWS::EC2::Instance/Properties/InstanceType"],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ec2_instance,
                 filename="instancetype_enum.json",
