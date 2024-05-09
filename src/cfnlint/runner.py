@@ -160,13 +160,16 @@ class Runner:
         for filename in filenames:
             (template, matches) = decode(filename)
             if matches:
-                if not (
-                    len(matches) == 1
-                    and ignore_bad_template
-                    and matches[0].rule.id == "E0000"
+                if ignore_bad_template or any(
+                    "E0000".startswith(x) for x in self.config.ignore_checks
                 ):
+                    matches = [match for match in matches if match.rule.id != "E0000"]
+                    if matches:
+                        yield from iter(matches)
+                        return
+                else:
                     yield from iter(matches)
-                    continue
+                    return
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
     def validate_template(
