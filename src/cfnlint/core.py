@@ -305,9 +305,14 @@ def get_template_rules(
 
     if errors:
         _build_rule_cache(args)
-        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == "E0000":
-            return (template, __CACHED_RULES, [])
-        return (template, __CACHED_RULES, errors)
+        if ignore_bad_template or any(
+            "E0000".startswith(x) for x in args.ignore_checks
+        ):
+            errors = [err for err in errors if err.rule.id != "E0000"]
+            if errors:
+                return (template, __CACHED_RULES, errors)
+        else:
+            return (template, __CACHED_RULES, errors)
 
     args.template_args = template
 
