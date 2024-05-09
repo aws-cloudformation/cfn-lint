@@ -677,3 +677,19 @@ Resources:
         - - AttributeName: !Ref PartitionKeyName
             KeyType: HASH
           - "String2"
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: XXXXXXXXXXXXXXXXXXXXX
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
+  SSMAssociation:
+    Type: AWS::SSM::Association
+    Properties:
+      Name: "SSM Document Name"
+      ScheduleExpression: rate(2 days)
+      Targets:
+        - Key: InstanceIds
+          Values: !GetAtt EC2Instance.InstanceId

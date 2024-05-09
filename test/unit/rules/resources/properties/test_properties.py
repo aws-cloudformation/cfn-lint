@@ -37,7 +37,7 @@ class TestResourceProperties(BaseRuleTestCase):
     def test_file_negative_2(self):
         """Failure test"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/object_should_be_list.yaml", 4
+            "test/fixtures/templates/bad/object_should_be_list.yaml", 5
         )
 
     def test_file_negative_3(self):
