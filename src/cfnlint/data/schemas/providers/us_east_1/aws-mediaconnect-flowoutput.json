@@ -4,6 +4,45 @@
   "/properties/Name"
  ],
  "definitions": {
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationIp": {
+     "type": "string"
+    },
+    "DestinationPort": {
+     "type": "integer"
+    },
+    "Interface": {
+     "$ref": "#/definitions/Interface"
+    }
+   },
+   "required": [
+    "DestinationIp",
+    "DestinationPort",
+    "Interface"
+   ],
+   "type": "object"
+  },
+  "EncodingParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionFactor": {
+     "type": "number"
+    },
+    "EncoderProfile": {
+     "enum": [
+      "main",
+      "high"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "CompressionFactor"
+   ],
+   "type": "object"
+  },
   "Encryption": {
    "additionalProperties": false,
    "properties": {
@@ -33,6 +72,49 @@
    "required": [
     "RoleArn",
     "SecretArn"
+   ],
+   "type": "object"
+  },
+  "Interface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MediaStreamOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationConfigurations": {
+     "items": {
+      "$ref": "#/definitions/DestinationConfiguration"
+     },
+     "type": "array"
+    },
+    "EncodingName": {
+     "enum": [
+      "jxsv",
+      "raw",
+      "smpte291",
+      "pcm"
+     ],
+     "type": "string"
+    },
+    "EncodingParameters": {
+     "$ref": "#/definitions/EncodingParameters"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncodingName",
+    "MediaStreamName"
    ],
    "type": "object"
   },
@@ -101,6 +183,12 @@
   "MaxLatency": {
    "type": "integer"
   },
+  "MediaStreamOutputConfigurations": {
+   "items": {
+    "$ref": "#/definitions/MediaStreamOutputConfiguration"
+   },
+   "type": "array"
+  },
   "MinLatency": {
    "type": "integer"
   },
@@ -122,7 +210,9 @@
     "rist",
     "fujitsu-qos",
     "srt-listener",
-    "srt-caller"
+    "srt-caller",
+    "st2110-jpegxs",
+    "cdi"
    ],
    "type": "string"
   },
