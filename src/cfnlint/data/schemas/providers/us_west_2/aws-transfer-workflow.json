@@ -1,0 +1,357 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Steps",
+  "/properties/OnExceptionSteps",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "EfsInputFileLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "^(arn:aws[-a-z]*:elasticfilesystem:[0-9a-z-:]+:(access-point/fsap|file-system/fs)-[0-9a-f]{8,40}|fs(ap)?-[0-9a-f]{8,40})$",
+     "type": "string"
+    },
+    "Path": {
+     "maxLength": 65536,
+     "minLength": 1,
+     "pattern": "^[^\\x00]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputFileLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "EfsFileLocation": {
+     "$ref": "#/definitions/EfsInputFileLocation"
+    },
+    "S3FileLocation": {
+     "$ref": "#/definitions/S3InputFileLocation"
+    }
+   },
+   "type": "object"
+  },
+  "S3FileLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "S3FileLocation": {
+     "$ref": "#/definitions/S3InputFileLocation"
+    }
+   },
+   "type": "object"
+  },
+  "S3InputFileLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WorkflowStep": {
+   "additionalProperties": false,
+   "properties": {
+    "CopyStepDetails": {
+     "additionalProperties": false,
+     "properties": {
+      "DestinationFileLocation": {
+       "$ref": "#/definitions/S3FileLocation"
+      },
+      "Name": {
+       "maxLength": 30,
+       "minLength": 0,
+       "pattern": "^[\\w-]*$",
+       "type": "string"
+      },
+      "OverwriteExisting": {
+       "enum": [
+        "TRUE",
+        "FALSE"
+       ],
+       "type": "string"
+      },
+      "SourceFileLocation": {
+       "maxLength": 256,
+       "minLength": 0,
+       "pattern": "^\\$\\{(\\w+.)+\\w+\\}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "CustomStepDetails": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 30,
+       "minLength": 0,
+       "pattern": "^[\\w-]*$",
+       "type": "string"
+      },
+      "SourceFileLocation": {
+       "maxLength": 256,
+       "minLength": 0,
+       "pattern": "^\\$\\{(\\w+.)+\\w+\\}$",
+       "type": "string"
+      },
+      "Target": {
+       "maxLength": 170,
+       "minLength": 0,
+       "pattern": "arn:[a-z-]+:lambda:.*$",
+       "type": "string"
+      },
+      "TimeoutSeconds": {
+       "maximum": 1800,
+       "minimum": 1,
+       "type": "integer"
+      }
+     },
+     "type": "object"
+    },
+    "DecryptStepDetails": {
+     "additionalProperties": false,
+     "properties": {
+      "DestinationFileLocation": {
+       "$ref": "#/definitions/InputFileLocation"
+      },
+      "Name": {
+       "maxLength": 30,
+       "minLength": 0,
+       "pattern": "^[\\w-]*$",
+       "type": "string"
+      },
+      "OverwriteExisting": {
+       "enum": [
+        "TRUE",
+        "FALSE"
+       ],
+       "type": "string"
+      },
+      "SourceFileLocation": {
+       "maxLength": 256,
+       "minLength": 0,
+       "pattern": "^\\$\\{(\\w+.)+\\w+\\}$",
+       "type": "string"
+      },
+      "Type": {
+       "enum": [
+        "PGP"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "DestinationFileLocation",
+      "Type"
+     ],
+     "type": "object"
+    },
+    "DeleteStepDetails": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 30,
+       "minLength": 0,
+       "pattern": "^[\\w-]*$",
+       "type": "string"
+      },
+      "SourceFileLocation": {
+       "maxLength": 256,
+       "minLength": 0,
+       "pattern": "^\\$\\{(\\w+.)+\\w+\\}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "TagStepDetails": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 30,
+       "minLength": 0,
+       "pattern": "^[\\w-]*$",
+       "type": "string"
+      },
+      "SourceFileLocation": {
+       "maxLength": 256,
+       "minLength": 0,
+       "pattern": "^\\$\\{(\\w+.)+\\w+\\}$",
+       "type": "string"
+      },
+      "Tags": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/S3Tag"
+       },
+       "maxItems": 10,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "enum": [
+      "COPY",
+      "CUSTOM",
+      "DECRYPT",
+      "DELETE",
+      "TAG"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateWorkflow",
+    "transfer:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteWorkflow"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "transfer:ListWorkflows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeWorkflow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UnTagResource",
+    "transfer:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkflowId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[\\w\\- ]*$",
+   "type": "string"
+  },
+  "OnExceptionSteps": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowStep"
+   },
+   "maxItems": 8,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Steps": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowStep"
+   },
+   "maxItems": 8,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkflowId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^w-([a-z0-9]{17})$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/WorkflowId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Steps"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Workflow"
+}

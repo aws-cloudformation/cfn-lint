@@ -32,19 +32,36 @@
    ]
   },
   "ActionGroupExecutor": {
-   "additionalProperties": false,
-   "properties": {
-    "Lambda": {
-     "maxLength": 2048,
-     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
-     "type": "string"
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Lambda": {
+       "maxLength": 2048,
+       "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Lambda"
+     ],
+     "title": "Lambda",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CustomControl": {
+       "$ref": "#/definitions/CustomControlMethod"
+      }
+     },
+     "required": [
+      "CustomControl"
+     ],
+     "title": "CustomControl",
+     "type": "object"
     }
-   },
-   "required": [
-    "Lambda"
-   ],
-   "title": "Lambda",
-   "type": "object"
+   ]
   },
   "ActionGroupSignature": {
    "enum": [
@@ -79,6 +96,9 @@
      "maxLength": 200,
      "minLength": 1,
      "type": "string"
+    },
+    "FunctionSchema": {
+     "$ref": "#/definitions/FunctionSchema"
     },
     "ParentActionGroupSignature": {
      "$ref": "#/definitions/ActionGroupSignature"
@@ -135,6 +155,49 @@
    ],
    "type": "string"
   },
+  "CustomControlMethod": {
+   "enum": [
+    "RETURN_CONTROL"
+   ],
+   "type": "string"
+  },
+  "Function": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "Parameters": {
+     "$ref": "#/definitions/ParameterMap"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FunctionSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "Functions": {
+     "items": {
+      "$ref": "#/definitions/Function"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Functions"
+   ],
+   "title": "Functions",
+   "type": "object"
+  },
   "InferenceConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -176,6 +239,35 @@
     "DISABLED"
    ],
    "type": "string"
+  },
+  "ParameterDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Required": {
+     "type": "boolean"
+    },
+    "Type": {
+     "$ref": "#/definitions/Type"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ParameterMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^([0-9a-zA-Z][_-]?){1,100}$": {
+     "$ref": "#/definitions/ParameterDetail"
+    }
+   },
+   "type": "object"
   },
   "PromptConfiguration": {
    "additionalProperties": false,
@@ -270,6 +362,16 @@
     }
    },
    "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "string",
+    "number",
+    "integer",
+    "boolean",
+    "array"
+   ],
+   "type": "string"
   }
  },
  "handlers": {

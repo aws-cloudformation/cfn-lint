@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:CreateEventBus",
+    "events:DescribeEventBus",
+    "events:PutPermission",
+    "events:ListTagsForResource",
+    "events:TagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "events:ListTagsForResource",
+    "events:UntagResource",
+    "events:RemovePermission",
+    "events:DeleteEventBus"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListEventBuses",
+    "events:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "events:DescribeEventBus",
+    "events:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:TagResource",
+    "events:UntagResource",
+    "events:PutPermission",
+    "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EventSourceName": {
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Events::EventBus",
+ "writeOnlyProperties": [
+  "/properties/EventSourceName"
+ ]
+}

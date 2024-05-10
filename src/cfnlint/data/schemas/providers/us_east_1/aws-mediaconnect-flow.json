@@ -88,6 +88,63 @@
    },
    "type": "object"
   },
+  "Fmtp": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelOrder": {
+     "type": "string"
+    },
+    "Colorimetry": {
+     "enum": [
+      "BT601",
+      "BT709",
+      "BT2020",
+      "BT2100",
+      "ST2065-1",
+      "ST2065-3",
+      "XYZ"
+     ],
+     "type": "string"
+    },
+    "ExactFramerate": {
+     "type": "string"
+    },
+    "Par": {
+     "type": "string"
+    },
+    "Range": {
+     "enum": [
+      "NARROW",
+      "FULL",
+      "FULLPROTECT"
+     ],
+     "type": "string"
+    },
+    "ScanMode": {
+     "enum": [
+      "progressive",
+      "interlace",
+      "progressive-segmented-frame"
+     ],
+     "type": "string"
+    },
+    "Tcs": {
+     "enum": [
+      "SDR",
+      "PQ",
+      "HLG",
+      "LINEAR",
+      "BT2100LINPQ",
+      "BT2100LINHLG",
+      "ST2065-1",
+      "ST428-1",
+      "DENSITY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "GatewayBridgeSource": {
    "additionalProperties": false,
    "properties": {
@@ -100,6 +157,146 @@
    },
    "required": [
     "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "InputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputPort": {
+     "type": "integer"
+    },
+    "Interface": {
+     "$ref": "#/definitions/Interface"
+    }
+   },
+   "required": [
+    "InputPort",
+    "Interface"
+   ],
+   "type": "object"
+  },
+  "Interface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Maintenance": {
+   "additionalProperties": false,
+   "properties": {
+    "MaintenanceDay": {
+     "enum": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+     ],
+     "type": "string"
+    },
+    "MaintenanceStartHour": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MaintenanceDay",
+    "MaintenanceStartHour"
+   ],
+   "type": "object"
+  },
+  "MediaStream": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/MediaStreamAttributes"
+    },
+    "ClockRate": {
+     "type": "integer"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Fmt": {
+     "type": "integer"
+    },
+    "MediaStreamId": {
+     "type": "integer"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    },
+    "MediaStreamType": {
+     "enum": [
+      "video",
+      "audio",
+      "ancillary-data"
+     ],
+     "type": "string"
+    },
+    "VideoFormat": {
+     "enum": [
+      "2160p",
+      "1080p",
+      "1080i",
+      "720p",
+      "480p"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "MediaStreamId",
+    "MediaStreamType",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "MediaStreamAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Fmtp": {
+     "$ref": "#/definitions/Fmtp"
+    },
+    "Lang": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MediaStreamSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncodingName": {
+     "enum": [
+      "jxsv",
+      "raw",
+      "smpte291",
+      "pcm"
+     ],
+     "type": "string"
+    },
+    "InputConfigurations": {
+     "items": {
+      "$ref": "#/definitions/InputConfiguration"
+     },
+     "type": "array"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncodingName",
+    "MediaStreamName"
    ],
    "type": "object"
   },
@@ -131,6 +328,15 @@
      "default": 2000,
      "type": "integer"
     },
+    "MaxSyncBuffer": {
+     "type": "integer"
+    },
+    "MediaStreamSourceConfigurations": {
+     "items": {
+      "$ref": "#/definitions/MediaStreamSourceConfiguration"
+     },
+     "type": "array"
+    },
     "MinLatency": {
      "default": 2000,
      "type": "integer"
@@ -146,7 +352,9 @@
       "rist",
       "fujitsu-qos",
       "srt-listener",
-      "srt-caller"
+      "srt-caller",
+      "st2110-jpegxs",
+      "cdi"
      ],
      "type": "string"
     },
@@ -178,6 +386,46 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "VpcInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "NetworkInterfaceIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "NetworkInterfaceType": {
+     "enum": [
+      "ena",
+      "efa"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "RoleArn",
+    "SecurityGroupIds",
+    "SubnetId"
+   ],
    "type": "object"
   },
   "VpcInterfaceAttachment": {
@@ -217,7 +465,12 @@
    "permissions": [
     "mediaconnect:DescribeFlow",
     "mediaconnect:UpdateFlow",
-    "mediaconnect:UpdateFlowSource"
+    "mediaconnect:UpdateFlowSource",
+    "mediaconnect:UpdateFlowMediaStream",
+    "mediaconnect:AddFlowMediaStreams",
+    "mediaconnect:RemoveFlowMediaStream",
+    "mediaconnect:AddFlowVpcInterfaces",
+    "mediaconnect:RemoveFlowVpcInterface"
    ]
   }
  },
@@ -228,11 +481,23 @@
   "AvailabilityZone": {
    "type": "string"
   },
+  "EgressIp": {
+   "type": "string"
+  },
   "FlowArn": {
    "type": "string"
   },
   "FlowAvailabilityZone": {
    "type": "string"
+  },
+  "Maintenance": {
+   "$ref": "#/definitions/Maintenance"
+  },
+  "MediaStreams": {
+   "items": {
+    "$ref": "#/definitions/MediaStream"
+   },
+   "type": "array"
   },
   "Name": {
    "type": "string"
@@ -242,6 +507,12 @@
   },
   "SourceFailoverConfig": {
    "$ref": "#/definitions/FailoverConfig"
+  },
+  "VpcInterfaces": {
+   "items": {
+    "$ref": "#/definitions/VpcInterface"
+   },
+   "type": "array"
   }
  },
  "readOnlyProperties": [
@@ -249,12 +520,21 @@
   "/properties/FlowAvailabilityZone",
   "/properties/Source/SourceArn",
   "/properties/Source/IngestIp",
-  "/properties/Source/SourceIngestPort"
+  "/properties/Source/SourceIngestPort",
+  "/properties/VpcInterfaces/*/NetworkInterfaceIds",
+  "/properties/MediaStreams/*/Fmt",
+  "/properties/EgressIp"
  ],
  "required": [
   "Name",
   "Source"
  ],
+ "resourceLink": {
+  "mappings": {
+   "flowArn": "/FlowArn"
+  },
+  "templateUri": "/mediaconnect/home?region=${awsRegion}#/flows/${flowArn}"
+ },
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
  "typeName": "AWS::MediaConnect::Flow"
 }

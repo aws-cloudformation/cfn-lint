@@ -1395,12 +1395,20 @@
     "DescribeBudgetActionsForAccount",
     "DescribeBudgetActionsForBudget",
     "ExecuteBudgetAction",
+    "ListTagsForResource",
     "ModifyBudget",
+    "TagResource",
+    "UntagResource",
     "UpdateBudgetAction",
     "ViewBudget"
    ],
    "HasResource": true,
-   "StringPrefix": "budgets"
+   "StringPrefix": "budgets",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS BugBust": {
    "ARNFormat": "arn:aws:bugbust:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -7447,6 +7455,7 @@
     "ListApplications",
     "ListBatchJobDefinitions",
     "ListBatchJobExecutions",
+    "ListBatchJobRestartPoints",
     "ListDataSetImportHistory",
     "ListDataSets",
     "ListDeployments",
@@ -8689,6 +8698,7 @@
     "ImportResourcesToDraftAppVersion",
     "ListAlarmRecommendations",
     "ListAppAssessmentComplianceDrifts",
+    "ListAppAssessmentResourceDrifts",
     "ListAppAssessments",
     "ListAppComponentCompliances",
     "ListAppComponentRecommendations",
@@ -10200,12 +10210,15 @@
     "ListApplications",
     "ListComponents",
     "ListDatabases",
+    "ListOperationEvents",
     "ListOperations",
     "ListTagsForResource",
     "PutResourcePermission",
     "RegisterApplication",
     "RestoreDatabase",
+    "StartApplication",
     "StartApplicationRefresh",
+    "StopApplication",
     "TagResource",
     "UntagResource",
     "UpdateApplicationSettings",
@@ -10345,6 +10358,7 @@
     "ListUsers",
     "ListWorkflows",
     "SendWorkflowStepState",
+    "StartDirectoryListing",
     "StartFileTransfer",
     "StartServer",
     "StopServer",
@@ -10373,6 +10387,7 @@
    "ARNFormat": "arn:aws:trustedadvisor:${Region}:${Account}:checks/${Category}/${CheckId}",
    "ARNRegex": "^arn:aws:trustedadvisor:.*",
    "Actions": [
+    "BatchUpdateRecommendationResourceExclusion",
     "CreateEngagement",
     "CreateEngagementAttachment",
     "CreateEngagementCommunication",
@@ -13047,6 +13062,7 @@
    "ARNRegex": "^arn:aws:connect:.+:.+:instance/.+",
    "Actions": [
     "ActivateEvaluationForm",
+    "AdminGetEmergencyAccessToken",
     "AssociateApprovedOrigin",
     "AssociateBot",
     "AssociateCustomerProfilesDomain",
@@ -13156,7 +13172,6 @@
     "GetCurrentMetricData",
     "GetCurrentUserData",
     "GetFederationToken",
-    "GetFederationTokens",
     "GetFlowAssociation",
     "GetMetricData",
     "GetMetricDataV2",
@@ -17964,7 +17979,9 @@
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
+    "aws:TagKeys",
+    "memorydb:TLSEnabled",
+    "memorydb:UserAuthenticationMode"
    ]
   },
   "Amazon Message Delivery Service": {
@@ -18436,6 +18453,7 @@
     "CreateBatchInferenceJob",
     "CreateBatchSegmentJob",
     "CreateCampaign",
+    "CreateDataDeletionJob",
     "CreateDataInsightsJob",
     "CreateDataset",
     "CreateDatasetExportJob",
@@ -18461,6 +18479,7 @@
     "DescribeBatchInferenceJob",
     "DescribeBatchSegmentJob",
     "DescribeCampaign",
+    "DescribeDataDeletionJob",
     "DescribeDataInsightsJob",
     "DescribeDataset",
     "DescribeDatasetExportJob",
@@ -18483,6 +18502,7 @@
     "ListBatchInferenceJobs",
     "ListBatchSegmentJobs",
     "ListCampaigns",
+    "ListDataDeletionJobs",
     "ListDataInsightsJobs",
     "ListDatasetExportJobs",
     "ListDatasetGroups",
@@ -18842,6 +18862,8 @@
   },
   "Amazon Q": {
    "Actions": [
+    "CreateAssignment",
+    "DeleteAssignment",
     "GetConversation",
     "GetIdentityMetadata",
     "GetTroubleshootingResults",
@@ -21831,6 +21853,7 @@
    "ARNFormat": "arn:aws:vpc-lattice:${Region}:${Account}:${ResourceType}/${RelativeId}",
    "ARNRegex": "^arn:aws:vpc-lattice:.+",
    "Actions": [
+    "Connect",
     "Invoke"
    ],
    "HasResource": true,

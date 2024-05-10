@@ -14,10 +14,6 @@
      "maxLength": 63,
      "minLength": 3,
      "pattern": "^[0-9A-Za-z\\.\\-_]*(?<!\\.)$",
-     "relationshipRef": {
-      "propertyPath": "/properties/BucketName",
-      "typeName": "AWS::S3::Bucket"
-     },
      "type": "string"
     },
     "S3Key": {
@@ -40,20 +36,6 @@
    "additionalProperties": false,
    "properties": {
     "TargetArn": {
-     "anyOf": [
-      {
-       "relationshipRef": {
-        "propertyPath": "/properties/Arn",
-        "typeName": "AWS::SQS::Queue"
-       }
-      },
-      {
-       "relationshipRef": {
-        "propertyPath": "/properties/TopicArn",
-        "typeName": "AWS::SNS::Topic"
-       }
-      }
-     ],
      "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
      "type": "string"
     }
@@ -275,26 +257,6 @@
     },
     "SecurityGroupIds": {
      "items": {
-      "anyOf": [
-       {
-        "relationshipRef": {
-         "propertyPath": "/properties/GroupId",
-         "typeName": "AWS::EC2::SecurityGroup"
-        }
-       },
-       {
-        "relationshipRef": {
-         "propertyPath": "/properties/Id",
-         "typeName": "AWS::EC2::SecurityGroup"
-        }
-       },
-       {
-        "relationshipRef": {
-         "propertyPath": "/properties/DefaultSecurityGroup",
-         "typeName": "AWS::EC2::VPC"
-        }
-       }
-      ],
       "type": "string"
      },
      "maxItems": 5,
@@ -303,10 +265,6 @@
     },
     "SubnetIds": {
      "items": {
-      "relationshipRef": {
-       "propertyPath": "/properties/SubnetId",
-       "typeName": "AWS::EC2::Subnet"
-      },
       "type": "string"
      },
      "maxItems": 16,
@@ -468,10 +426,6 @@
   },
   "Layers": {
    "items": {
-    "relationshipRef": {
-     "propertyPath": "/properties/LayerVersionArn",
-     "typeName": "AWS::Lambda::LayerVersion"
-    },
     "type": "string"
    },
    "type": "array",
