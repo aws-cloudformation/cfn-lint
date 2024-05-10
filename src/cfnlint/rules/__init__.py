@@ -197,6 +197,9 @@ class CloudFormationLintRule:
         self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
         self.config_definition: Dict[str, Any] = {}
         self._child_rules: Dict[str, "CloudFormationLintRule"] = {}
+        self._parent_rules: List[str] = (
+            []
+        )  # Parent IDs to do the opposite of child rules
         super().__init__()
 
     def __repr__(self):
@@ -209,6 +212,14 @@ class CloudFormationLintRule:
     @child_rules.setter
     def child_rules(self, rules: Dict[str, "CloudFormationLintRule"]):
         self._child_rules = rules
+
+    @property
+    def parent_rules(self):
+        return self._parent_rules
+
+    @parent_rules.setter
+    def parent_rules(self, rules: List[str]):
+        self._parent_rules = rules
 
     @property
     def severity(self):
@@ -297,13 +308,13 @@ class CloudFormationLintRule:
 
 class Rules(TypedRules):
     def __init__(
-        self, dict: Dict[str, CloudFormationLintRule] | None = None, /, **kwargs
+        self, rules: dict[str, CloudFormationLintRule] | None = None, /, **kwargs
     ):
         super().__init__()
         self.data: Dict[str, CloudFormationLintRule] = {}
         self._used_rules: Dict[str, CloudFormationLintRule] = {}
-        if dict is not None:
-            self.update(dict)
+        if rules is not None:
+            self.update(rules)
         if kwargs:
             self.update(kwargs)
 
@@ -346,23 +357,6 @@ class Rules(TypedRules):
             return True
         return False
 
-    def runable_rules(self, config: ConfigMixIn) -> Iterator[CloudFormationLintRule]:
-        for rule in self.data.values():
-            if rule.is_enabled(
-                config.include_experimental,
-                ignore_rules=config.ignore_checks,
-                include_rules=config.include_checks,
-                mandatory_rules=config.mandatory_checks,
-            ):
-                self._used_rules[rule.id] = rule
-            # rules that have children need to be run
-            # we will remove the results later
-            if self.is_rule_enabled(rule.id, config):
-                yield rule
-                continue
-            if rule.child_rules:
-                yield rule
-
     def extend(self, rules: List[CloudFormationLintRule]):
         for rule in rules:
             self.register(rule)
@@ -374,6 +368,8 @@ class Rules(TypedRules):
     # pylint: disable=inconsistent-return-statements
     def run_check(self, check, filename, rule_id, config, *args) -> Iterator[Match]:
         """Run a check"""
+        if self.is_rule_enabled(rule_id, config):
+            self._used_rules[rule_id] = self.data[rule_id]
         try:
             yield from iter(check(*args))
         except Exception as err:  # pylint: disable=W0703
@@ -401,23 +397,25 @@ class Rules(TypedRules):
         self, filename: Optional[str], cfn: Template, config: ConfigMixIn
     ) -> Iterator[Match]:
         """Run rules"""
-        runable_rules = list(self.runable_rules(config))
-        for rule in runable_rules:
+        for rule_id, rule in self.data.items():
             rule.configure(
-                config.configure_rules.get(rule.id, None), config.include_experimental
+                config.configure_rules.get(rule_id, None), config.include_experimental
             )
             rule.initialize(cfn)
 
-        for rule in runable_rules:
+        for rule_id, rule in self.data.items():
             for key in rule.child_rules.keys():
-                if not any(key == r.id for r in runable_rules):
+                if not any(key == r for r in self.data.keys()):
                     continue
                 rule.child_rules[key] = self.data.get(key)
+            for parent_rule in rule.parent_rules:
+                if parent_rule in self.data:
+                    self.data[parent_rule].child_rules[rule_id] = rule
 
-        for rule in runable_rules:
+        for rule_id, rule in self.data.items():
             yield from self._filter_matches(
                 config,
-                self.run_check(rule.matchall, filename, rule.id, config, filename, cfn),
+                self.run_check(rule.matchall, filename, rule_id, config, filename, cfn),
             )
 
         for resource_name, resource_attributes in cfn.get_resources().items():
@@ -425,13 +423,13 @@ class Rules(TypedRules):
             resource_properties = resource_attributes.get("Properties")
             if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ["Resources", resource_name, "Properties"]
-                for rule in self.runable_rules(config):
+                for rule_id, rule in self.data.items():
                     yield from self._filter_matches(
                         config,
                         self.run_check(
                             rule.matchall_resource_properties,
                             filename,
-                            rule.id,
+                            rule_id,
                             config,
                             filename,
                             cfn,
