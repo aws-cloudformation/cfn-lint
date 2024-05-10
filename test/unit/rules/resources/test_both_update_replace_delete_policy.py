@@ -46,6 +46,7 @@ def validator():
         (
             "Valid both update and replacy policy",
             {
+                "Type": "AWS::S3::Bucket",
                 "DeletionPolicy": "Retain",
                 "UpdateReplacePolicy": "Retain",
             },
@@ -54,7 +55,7 @@ def validator():
         ),
         (
             "Invalid with just UpdatePolicy",
-            {"DeletionPolicy": "Retain"},
+            {"Type": "AWS::S3::Bucket", "DeletionPolicy": "Retain"},
             deque(["Resources", "MyResource"]),
             [
                 ValidationError(
@@ -72,7 +73,7 @@ def validator():
         ),
         (
             "Invalid with just UpdateReplacePolicy",
-            {"UpdateReplacePolicy": "Retain"},
+            {"Type": "AWS::S3::Bucket", "UpdateReplacePolicy": "Retain"},
             deque(["Resources", "MyResource"]),
             [
                 ValidationError(
