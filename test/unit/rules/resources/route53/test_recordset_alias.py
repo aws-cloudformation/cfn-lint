@@ -34,6 +34,12 @@ def validator():
         ),
         (
             {
+                "TTL": 10,
+            },
+            [],
+        ),
+        (
+            {
                 "AliasTarget": ["Foo"],
                 "TTL": 10,
             },
