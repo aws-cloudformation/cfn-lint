@@ -38,13 +38,8 @@ class UpdateReplacePolicyDeletionPolicy(CfnLintJsonSchema):
         )
 
     def validate(self, validator, keywords, instance, schema):
-        if len(validator.context.path) < 2:
-            return
-
-        if validator.context.path[0] != "Resources":
-            return
-
-        if validator.context.resources[validator.context.path[1]].type in [
+        resource_type = instance.get("Type")
+        if resource_type in [
             "AWS::Lambda::Version",
             "AWS::Lambda::LayerVersion",
         ]:
