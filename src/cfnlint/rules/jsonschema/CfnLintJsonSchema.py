@@ -26,6 +26,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
     ) -> None:
         super().__init__()
         self.keywords = keywords or []
+        self.parent_rules = ["E1101"]
         self.all_matches = all_matches
         self._use_schema_arg = True
         self._schema: Any = {}

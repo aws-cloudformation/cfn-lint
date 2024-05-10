@@ -3,9 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import pathlib
-
-from cfnlint.helpers import load_plugins
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -14,25 +11,6 @@ class CfnLint(CloudFormationLintRule):
     shortdesc = "Validate an item against additional checks"
     description = "Use supplemental logic to validate properties against"
     tags = []
-
-    def __init__(self) -> None:
-        super().__init__()
-        # relative path to the parent of cfnlint.rules
-        root_dir = pathlib.Path(__file__).parent.parent
-        rules = load_plugins(
-            str(root_dir),
-            "CfnLintKeyword",
-            "cfnlint.rules.jsonschema.CfnLintKeyword",
-        )
-        rules.extend(
-            load_plugins(
-                str(root_dir),
-                "CfnLintJsonSchema",
-                "cfnlint.rules.jsonschema.CfnLintJsonSchema",
-            )
-        )
-        for rule in rules:
-            self.child_rules[rule.id] = None
 
     # pylint: disable=unused-argument
     def cfnLint(self, validator, keywords, instance, schema):

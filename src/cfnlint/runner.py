@@ -166,7 +166,7 @@ class Runner:
                     matches = [match for match in matches if match.rule.id != "E0000"]
                     if matches:
                         yield from iter(matches)
-                        return
+                    return
                 else:
                     yield from iter(matches)
                     return

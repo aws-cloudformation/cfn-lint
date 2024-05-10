@@ -29,6 +29,11 @@ class Tagging(CloudFormationLintRule):
         if not t.get("taggable"):
             return
 
+        validator = validator.evolve(
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
+            )
+        )
         for err in validator.descend(
             instance,
             self._schema,
