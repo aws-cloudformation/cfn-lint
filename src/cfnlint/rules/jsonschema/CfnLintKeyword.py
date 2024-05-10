@@ -15,6 +15,7 @@ class CfnLintKeyword(CloudFormationLintRule):
     def __init__(self, keywords: Sequence[str] | None = None) -> None:
         super().__init__()
         self.keywords = keywords or []
+        self.parent_rules = ["E1101"]
 
     def message(self, instance: Any, err: ValidationError) -> str:
         return self.shortdesc

@@ -197,9 +197,8 @@ class CloudFormationLintRule:
         self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
         self.config_definition: Dict[str, Any] = {}
         self._child_rules: Dict[str, "CloudFormationLintRule"] = {}
-        self._parent_rules: List[str] = (
-            []
-        )  # Parent IDs to do the opposite of child rules
+        # Parent IDs to do the opposite of child rules
+        self._parent_rules: List[str] = []
         super().__init__()
 
     def __repr__(self):
