@@ -54,21 +54,23 @@ Regular Text
                     "| -------- | ----- | ----------- | ---------- | ------ | ---- |\n"
                 ),
                 call(
-                    '| [E0000<a name="E0000"></a>](../src/cfnlint/rules/__init__.py) |'
+                    '| [E0000<a name="E0000"></a>]'
+                    "(../src/cfnlint/rules/ParseError.py) |"
                     " Parsing error found when parsing the template | Checks for"
                     " JSON/YAML formatting errors in your template |  |"
                     " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"
                     " `base` |\n"
                 ),
                 call(
-                    '| [E0001<a name="E0001"></a>](../src/cfnlint/rules/__init__.py) |'
+                    '| [E0001<a name="E0001"></a>]'
+                    "(../src/cfnlint/rules/TransformError.py) |"
                     " Error found when transforming the template | Errors found when"
                     " performing transformation on the template |  |"
                     " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"
                     " `base`,`transform` |\n"
                 ),
                 call(
-                    '| [E0002<a name="E0002"></a>](../src/cfnlint/rules/__init__.py) |'
+                    '| [E0002<a name="E0002"></a>](../src/cfnlint/rules/RuleError.py) |'
                     " Error processing rule on the template | Errors found when"
                     " processing a rule on the template |  |"
                     " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"

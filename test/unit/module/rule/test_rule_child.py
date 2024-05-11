@@ -8,8 +8,7 @@ from typing import Any, Dict
 
 from cfnlint import ConfigMixIn
 from cfnlint.decode.decode import decode_str
-from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
-from cfnlint.rules import Match, RuleMatch, Rules
+from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, Rules
 from cfnlint.runner import TemplateRunner
 
 

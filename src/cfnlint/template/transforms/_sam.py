@@ -164,7 +164,9 @@ class Transform:
         except InvalidDocumentException as e:
             # pylint: disable=import-outside-toplevel
             from cfnlint.match import Match  # pylint: disable=cyclic-import
-            from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
+            from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
+                TransformError,
+            )
 
             message = "Error transforming template: {0}"
             for cause in e.causes:
@@ -178,7 +180,9 @@ class Transform:
         except Exception as e:  # pylint: disable=W0703
             # pylint: disable=import-outside-toplevel
             from cfnlint.match import Match  # pylint: disable=cyclic-import
-            from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
+            from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
+                TransformError,
+            )
 
             LOGGER.debug("Error transforming template: %s", str(e))
             LOGGER.debug("Stack trace: %s", e, exc_info=True)

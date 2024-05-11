@@ -7,7 +7,7 @@ from typing import List
 
 from cfnlint.formatters.BaseFormatter import BaseFormatter
 from cfnlint.match import Match
-from cfnlint.rules import ParseError, RuleError, Rules, TransformError
+from cfnlint.rules import Rules
 from cfnlint.version import __version__
 
 Matches = List[Match]
@@ -49,9 +49,6 @@ class SARIFFormatter(BaseFormatter):
 
         if not rules:
             rules = Rules()
-
-        # These "base" rules are not passed into formatters
-        rules.extend([ParseError(), TransformError(), RuleError()])
 
         results = []
         for match in matches:

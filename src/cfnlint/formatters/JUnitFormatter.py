@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.formatters.BaseFormatter import BaseFormatter
-from cfnlint.rules import ParseError, RuleError, TransformError
 
 
 class JUnitFormatter(BaseFormatter):
@@ -27,10 +26,6 @@ class JUnitFormatter(BaseFormatter):
 
         if not rules:
             return None
-
-        if rules is not None:
-            # These "base" rules are not passed into formatters
-            rules.extend([ParseError(), TransformError(), RuleError()])
 
         test_cases = []
         for rule in rules.values():

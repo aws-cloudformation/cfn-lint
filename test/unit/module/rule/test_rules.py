@@ -8,14 +8,9 @@ from test.testlib.testcase import BaseTestCase
 from cfnlint import ConfigMixIn, Template
 from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node
-from cfnlint.rules import (
-    CloudFormationLintRule,
-    DuplicateRuleError,
-    Match,
-    RuleError,
-    RuleMatch,
-    Rules,
-)
+from cfnlint.exceptions import DuplicateRuleError
+from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, Rules
+from cfnlint.rules._Rules import RuleError
 
 
 class Rule(CloudFormationLintRule):
