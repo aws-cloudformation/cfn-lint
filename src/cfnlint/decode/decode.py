@@ -125,7 +125,7 @@ def _decode(
 
     if not isinstance(template, dict) and not matches:
         # pylint: disable=import-outside-toplevel
-        from cfnlint.rules import ParseError
+        from cfnlint.rules.ParseError import ParseError
 
         # Template isn't a dict which means nearly nothing will work
         matches = [
@@ -141,7 +141,7 @@ def _decode(
 def create_match_yaml_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
     # pylint: disable=import-outside-toplevel
-    from cfnlint.rules import ParseError
+    from cfnlint.rules.ParseError import ParseError
 
     lineno = parser_error.problem_mark.line + 1
     colno = parser_error.problem_mark.column + 1
@@ -158,7 +158,7 @@ def create_match_yaml_parser_error(parser_error, filename):
 def create_match_file_error(filename, msg):
     """Create a Match for a parser error"""
     # pylint: disable=import-outside-toplevel
-    from cfnlint.rules import ParseError
+    from cfnlint.rules.ParseError import ParseError
 
     return Match.create(
         filename=filename,
@@ -170,7 +170,7 @@ def create_match_file_error(filename, msg):
 def create_match_json_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
     # pylint: disable=import-outside-toplevel
-    from cfnlint.rules import ParseError
+    from cfnlint.rules.ParseError import ParseError
 
     lineno = parser_error.lineno
     colno = parser_error.colno

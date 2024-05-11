@@ -9,7 +9,7 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class StateMachine(CloudFormationLintRule):
-    """Check State Machine Definition"""
+    """Check State Ma chine Definition"""
 
     id = "E2532"
     shortdesc = "Check State Machine Definition for proper syntax"

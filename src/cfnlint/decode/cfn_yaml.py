@@ -15,7 +15,8 @@ from yaml.resolver import Resolver
 from yaml.scanner import Scanner
 
 from cfnlint.decode.node import dict_node, list_node, str_node
-from cfnlint.rules import Match, ParseError
+from cfnlint.rules import Match
+from cfnlint.rules.ParseError import ParseError
 
 try:
     from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,

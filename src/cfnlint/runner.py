@@ -9,13 +9,15 @@ import logging
 import os
 import sys
 from copy import deepcopy
-from typing import Any, Dict, List, Sequence
+from typing import Any, Dict, Iterator, List, Sequence
 
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn
 from cfnlint.decode.decode import decode
-from cfnlint.rules import Iterator, Match, ParseError, Rules, TransformError
+from cfnlint.rules import Match, Rules
+from cfnlint.rules.ParseError import ParseError
+from cfnlint.rules.TransformError import TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 

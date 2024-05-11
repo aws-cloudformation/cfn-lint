@@ -488,7 +488,9 @@ def format_json_string(json_string):
 
 
 def create_rules(
-    mod, name="CloudFormationLintRule", modules=("cfnlint", "cfnlint.rules")
+    mod,
+    name="CloudFormationLintRule",
+    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._Rule"),
 ):
     """Create and return an instance of each CloudFormationLintRule subclass
     from the given module."""
@@ -534,7 +536,9 @@ def import_filename(pluginname, root):
 
 
 def load_plugins(
-    directory, name="CloudFormationLintRule", modules=("cfnlint", "cfnlint.rules")
+    directory,
+    name="CloudFormationLintRule",
+    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._Rule"),
 ):
     """Load plugins"""
     result = []

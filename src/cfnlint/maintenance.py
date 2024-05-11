@@ -77,9 +77,9 @@ def update_documentation(rules):
         )
 
         for rule in [
-            cfnlint.rules.ParseError(),
-            cfnlint.rules.TransformError(),
-            cfnlint.rules.RuleError(),
+            cfnlint.rules.ParseError.ParseError(),
+            cfnlint.rules.TransformError.TransformError(),
+            cfnlint.rules.RuleError.RuleError(),
         ] + sorted_rules:
             rule_source_code_file = (
                 "../"

@@ -14,7 +14,7 @@ from json.scanner import NUMBER_RE
 from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.match import Match
-from cfnlint.rules import ParseError
+from cfnlint.rules.ParseError import ParseError
 
 LOGGER = logging.getLogger(__name__)
 

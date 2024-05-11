@@ -6,7 +6,8 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from typing import Any
 
-from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, matching
+from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch
+from cfnlint.rules._Rule import matching
 
 
 class rule(CloudFormationLintRule):

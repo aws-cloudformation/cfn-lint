@@ -53,7 +53,9 @@ def language_extension(cfn: Any) -> TransformResult:
     except (_ValueError, _TypeError, _ResolveError) as e:
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
+            TransformError,
+        )
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
@@ -83,7 +85,9 @@ def language_extension(cfn: Any) -> TransformResult:
     except Exception as e:  # pylint: disable=broad-exception-caught
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
+        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
+            TransformError,
+        )
 
         message = "Error transforming template: {0}"
         return [
