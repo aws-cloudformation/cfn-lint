@@ -3,30 +3,89 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.route53.RecordSetName import (
-    RecordSetName,  # pylint: disable=E0401
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.route53.RecordSetName import RecordSetName
+from cfnlint.template import Template
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = RecordSetName()
+    yield rule
+
+
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={}).evolve(cfn=Template("", {}))
+
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        (
+            {
+                "HostedZoneName": "bar.",
+                "Name": "foo.bar",
+            },
+            [],
+        ),
+        (
+            {
+                "HostedZoneName": "bar.",
+                "Name": {"Ref": "pName"},
+            },
+            [],
+        ),
+        (
+            {
+                "HostedZoneName": {"Ref": "pHostedZoneName"},
+                "Name": "foo.bar",
+            },
+            [],
+        ),
+        (
+            {
+                "HostedZoneName": "bar",
+                "Name": "foo.bar.",
+            },
+            [
+                ValidationError(
+                    "'bar' must end in a dot",
+                    path=deque(["HostedZoneName"]),
+                )
+            ],
+        ),
+        (
+            {
+                "HostedZoneName": "bar.",
+                "Name": "bar.foo.",
+            },
+            [
+                ValidationError(
+                    "'bar.foo.' must be a subdomain of 'bar.'",
+                    path=deque(["Name"]),
+                )
+            ],
+        ),
+        (
+            {
+                "HostedZoneName": "bar.",
+                "Name": "foobar.",
+            },
+            [
+                ValidationError(
+                    "'foobar.' must be a subdomain of 'bar.'",
+                    path=deque(["Name"]),
+                )
+            ],
+        ),
+    ],
 )
+def test_validate(instance, expected, rule, validator):
+    errs = list(rule.validate(validator, "", instance, {}))
 
-
-class TestRoute53RecordSetName(BaseRuleTestCase):
-    """Test CloudFront Aliases Configuration"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestRoute53RecordSetName, self).setUp()
-        self.collection.register(RecordSetName())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/route53/recordset_name.yaml"
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/route53/recordset_name.yaml", 4
-        )
+    assert errs == expected, f"Expected {expected} got {errs}"
