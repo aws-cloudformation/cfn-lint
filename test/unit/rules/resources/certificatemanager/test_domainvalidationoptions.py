@@ -36,6 +36,17 @@ def validator():
             [],
         ),
         (
+            [],  # wrong type
+            [],
+        ),
+        (
+            {
+                "DomainName": "foo.bar",
+                "ValidationDomain": "foo.bar",
+            },
+            [],
+        ),
+        (
             {
                 "DomainName": "foo.bar",
                 "ValidationDomain": {"Ref": "pValidationDomain"},
