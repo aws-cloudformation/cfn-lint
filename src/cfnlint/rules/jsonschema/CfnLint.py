@@ -28,4 +28,7 @@ class CfnLint(CloudFormationLintRule):
 
                 for rule_keyword in rule.keywords:
                     if rule_keyword == keyword:
-                        yield from rule.validate(validator, keyword, instance, schema)
+                        for err in rule.validate(validator, keyword, instance, schema):
+                            if err.rule is None:
+                                err.rule = rule
+                            yield err
