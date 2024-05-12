@@ -35,6 +35,20 @@ def validator():
         ),
         (
             {
+                "HostedZoneName": "bar.",
+                "Name": {"Ref": "pName"},
+            },
+            [],
+        ),
+        (
+            {
+                "HostedZoneName": {"Ref": "pHostedZoneName"},
+                "Name": "foo.bar",
+            },
+            [],
+        ),
+        (
+            {
                 "HostedZoneName": "bar",
                 "Name": "foo.bar.",
             },
