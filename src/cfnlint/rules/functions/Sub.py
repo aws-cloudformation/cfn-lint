@@ -78,23 +78,27 @@ class Sub(BaseFn):
         err.validator = self.fn.py
         return err
 
-    def _validate_string(self, validator: Validator, instance: Any) -> ValidationResult:
+    def _validate_string(
+        self, validator: Validator, key: str, instance: Any
+    ) -> ValidationResult:
         params = re.findall(REGEX_SUB_PARAMETERS, instance)
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=self._functions,
-            )
+            ),
+            cfn_path=deque([key]),
         )
         for param in params:
             param = param.strip()
             if "." in param:
                 for err in validator.descend(
-                    {"Fn::GetAtt": param},
-                    {"type": ["string"]},
+                    instance={"Fn::GetAtt": param},
+                    schema={"type": ["string"]},
+                    path=key,
                 ):
                     yield self._clean_error(err, {"Fn::GetAtt": param}, param)
             else:
-                for err in validator.descend({"Ref": param}, {"type": ["string"]}):
+                for err in validator.descend({"Ref": param}, {"type": ["string"]}, key):
                     yield self._clean_error(err, {"Ref": param}, param)
 
     def fn_sub(
@@ -105,7 +109,7 @@ class Sub(BaseFn):
         )
         yield from super().validate(validator, s, instance, schema)
 
-        _, value = self.key_value(instance)
+        key, value = self.key_value(instance)
         if validator.is_type(value, "array"):
             if len(value) != 2:
                 return
@@ -121,7 +125,7 @@ class Sub(BaseFn):
         else:
             return
 
-        errs = list(self._validate_string(validator_string, value))
+        errs = list(self._validate_string(validator_string, key, value))
         if errs:
             yield from iter(errs)
             return

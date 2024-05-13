@@ -3,31 +3,68 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.properties.PropertiesTemplated import (
-    PropertiesTemplated,  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Context
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.properties.PropertiesTemplated import PropertiesTemplated
+from cfnlint.template import Template
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = PropertiesTemplated()
+    yield rule
+
+
+@pytest.fixture(scope="module")
+def validator():
+    context = Context(
+        regions=["us-east-1"],
+        path=deque(["Resources/AWS::CloudFormation::Template/Properties/TemplateURL"]),
+        resources={},
+        parameters={},
+    )
+    yield CfnTemplateValidator(context=context)
+
+
+@pytest.mark.parametrize(
+    "name,instance,transforms,expected",
+    [
+        (
+            "A s3 string should be fine",
+            "s3://my-bucket/key/value.yaml",
+            [],
+            [],
+        ),
+        (
+            "An object isn't a string so we skip",
+            {"foo": "bar"},
+            [],
+            [],
+        ),
+        (
+            "A transform will result in non failure",
+            "./folder",
+            "AWS::Serverless-2016-10-31",
+            [],
+        ),
+        (
+            "String with no transform",
+            "./folder",
+            [],
+            [
+                ValidationError(
+                    ("This code may only work with 'package' cli command"),
+                )
+            ],
+        ),
+    ],
 )
+def test_validate(name, instance, transforms, expected, rule, validator):
+    validator = validator.evolve(cfn=Template("", {"Transform": transforms}))
 
-
-class TestPropertiesTemplated(BaseRuleTestCase):
-    """Test Resource Properties"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestPropertiesTemplated, self).setUp()
-        self.collection.register(PropertiesTemplated())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/templated_code.yaml",
-            "test/fixtures/templates/good/resources/properties/templated_code_sam.yaml",
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative_4(self):
-        """Failure test"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/templated_code.yaml", 1
-        )
+    errs = list(rule.validate(validator, {}, instance, {}))
+    assert errs == expected, f"Test {name!r} got {errs!r}"

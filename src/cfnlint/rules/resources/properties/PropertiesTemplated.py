@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.helpers import FUNCTIONS, TEMPLATED_PROPERTY_CFN_PATHS
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class PropertiesTemplated(CloudFormationLintRule):
+class PropertiesTemplated(CfnLintKeyword):
     """Check Base Resource Configuration"""
 
     id = "W3002"
@@ -22,55 +24,20 @@ class PropertiesTemplated(CloudFormationLintRule):
     )
     tags = ["resources"]
 
-    templated_exceptions = {
-        "AWS::ApiGateway::RestApi": ["BodyS3Location"],
-        "AWS::Lambda::Function": ["Code"],
-        "AWS::Lambda::LayerVersion": ["Content"],
-        "AWS::ElasticBeanstalk::ApplicationVersion": ["SourceBundle"],
-        "AWS::StepFunctions::StateMachine": ["DefinitionS3Location"],
-        "AWS::AppSync::GraphQLSchema": ["DefinitionS3Location"],
-        "AWS::AppSync::Resolver": [
-            "RequestMappingTemplateS3Location",
-            "ResponseMappingTemplateS3Location",
-        ],
-        "AWS::AppSync::FunctionConfiguration": [
-            "RequestMappingTemplateS3Location",
-            "ResponseMappingTemplateS3Location",
-        ],
-        "AWS::CloudFormation::Stack": ["TemplateURL"],
-        "AWS::CodeCommit::Repository": ["S3"],
-    }
-
     def __init__(self):
         """Init"""
-        super().__init__()
-        self.resource_property_types.extend(self.templated_exceptions.keys())
+        super().__init__(TEMPLATED_PROPERTY_CFN_PATHS)
+        # self.resource_property_types.extend(self.templated_exceptions.keys())
 
-    def check_value(self, value, path):
-        """Check the value"""
-        matches = []
-        if isinstance(value, str):
-            if not value.startswith("s3://") and not value.startswith("https://"):
-                message = (
-                    "This code may only work with `package` cli command as the"
-                    f" property ({'/'.join(map(str, path))}) is a string"
-                )
-                matches.append(RuleMatch(path, message))
+    def validate(self, validator, keywords, instance, schema):
+        if not isinstance(instance, str):
+            return
 
-        return matches
-
-    def match_resource_properties(self, properties, resourcetype, path, cfn):
-        """Check CloudFormation Properties"""
-        matches = []
-
-        if cfn.has_serverless_transform():
+        if validator.cfn.has_serverless_transform():
             return []
 
-        for key in self.templated_exceptions.get(resourcetype, []):
-            matches.extend(
-                cfn.check_value(
-                    obj=properties, key=key, path=path[:], check_value=self.check_value
-                )
-            )
+        if validator.context.path[-1] in FUNCTIONS:
+            return
 
-        return matches
+        if not instance.startswith("s3://") and not instance.startswith("https://"):
+            yield ValidationError("This code may only work with 'package' cli command")

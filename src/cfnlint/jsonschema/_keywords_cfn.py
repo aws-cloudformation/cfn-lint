@@ -23,6 +23,7 @@ from typing import Any, Dict
 import regex as re
 
 import cfnlint.jsonschema._keywords as validators_standard
+from cfnlint.helpers import BOOLEAN_STRINGS_FALSE, BOOLEAN_STRINGS_TRUE
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 from cfnlint.jsonschema._utils import ensure_list
@@ -108,7 +109,7 @@ def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:
     if "boolean" == tS:
         if validator.is_type(instance, "boolean"):
             return True
-        if instance in ["true", "false", "True", "False"]:
+        if instance in list(BOOLEAN_STRINGS_TRUE) + list(BOOLEAN_STRINGS_FALSE):
             return True
     return False
 

@@ -243,8 +243,7 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
     sub_regex = re.compile(r"(\${([^!].*?)})")
 
     def _replace(matchobj):
-        if matchobj.group(2) in validator.context.ref_values:
-            value = validator.context.ref_values[matchobj.group(2)]
+        for value, _ in validator.context.ref_value(matchobj.group(2).strip()):
             if not isinstance(value, (str, int, float, bool)):
                 raise ValueError(f"Parameter {matchobj.group(2)!r} has wrong type")
             return value
@@ -254,6 +253,7 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
         yield re.sub(sub_regex, _replace, string), validator.evolve(), None
     except ValueError:
         return
+        yield string, validator, ValidationError(f"Unable to resolve {string!r}")
 
 
 def sub(validator: Validator, instance: Any) -> ResolutionResult:

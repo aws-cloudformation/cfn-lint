@@ -280,6 +280,21 @@ VALID_PARAMETER_TYPES_LIST = [
     "AWS::SSM::Parameter::Value<List<String>>",
 ]
 
+TEMPLATED_PROPERTY_CFN_PATHS = [
+    "Resources/AWS::ApiGateway::RestApi/Properties/BodyS3Location",
+    "Resources/AWS::Lambda::Function/Properties/Code",
+    "Resources/AWS::Lambda::LayerVersion/Properties/Content",
+    "Resources/AWS::ElasticBeanstalk::ApplicationVersion/Properties/SourceBundle",
+    "Resources/AWS::StepFunctions::StateMachine/Properties/DefinitionS3Location",
+    "Resources/AWS::AppSync::GraphQLSchema/Properties/DefinitionS3Location",
+    "Resources/AWS::AppSync::Resolver/Properties/RequestMappingTemplateS3Location",
+    "Resources/AWS::AppSync::Resolver/Properties/ResponseMappingTemplateS3Location",
+    "Resources/AWS::AppSync::FunctionConfiguration/Properties/RequestMappingTemplateS3Location",
+    "Resources/AWS::AppSync::FunctionConfiguration/Properties/ResponseMappingTemplateS3Location",
+    "Resources/AWS::CloudFormation::Stack/Properties/TemplateURL",
+    "Resources/AWS::CodeCommit::Repository/Properties/Code/S3",
+]
+
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
 
 BOOLEAN_STRINGS_TRUE = frozenset(["true", "True"])
