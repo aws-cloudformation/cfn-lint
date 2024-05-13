@@ -3,28 +3,119 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.s3.AccessControlOwnership import AccessControlOwnership
+from cfnlint.template import Template
 
 
-class TestAccessControlOwnership(BaseRuleTestCase):
-    """Test Lambda Trigger Events CloudWatchLogs Property Configuration"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = AccessControlOwnership()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestAccessControlOwnership, self).setUp()
-        self.collection.register(AccessControlOwnership())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/s3/access-control-ownership.yaml"
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(schema={}).evolve(cfn=Template("", {}))
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/s3/access-control-ownership.yaml", 4
-        )
+
+@pytest.mark.parametrize(
+    "instance,expected",
+    [
+        (
+            {},
+            [],
+        ),
+        (
+            {"AccessControl": "Private"},
+            [],
+        ),
+        (
+            {
+                "AccessControl": {"Ref": "AWS::NoValue"},
+            },
+            [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {"Rules": [{"ObjectOwnership": "BucketOwner"}]},
+            },
+            [],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+            },
+            [
+                ValidationError(
+                    (
+                        "A bucket with 'AccessControl' set should also "
+                        "have at least one 'OwnershipControl' configured"
+                    ),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "required"]),
+                    rule=AccessControlOwnership(),
+                )
+            ],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {},
+            },
+            [
+                ValidationError(
+                    (
+                        "A bucket with 'AccessControl' set should also "
+                        "have at least one 'OwnershipControl' configured"
+                    ),
+                    path=deque(["OwnershipControls"]),
+                    validator="required",
+                    schema_path=deque(
+                        ["then", "properties", "OwnershipControls", "required"]
+                    ),
+                    rule=AccessControlOwnership(),
+                )
+            ],
+        ),
+        (
+            {
+                "AccessControl": "AuthenticatedRead",
+                "OwnershipControls": {
+                    "Rules": [],
+                },
+            },
+            [
+                ValidationError(
+                    (
+                        "A bucket with 'AccessControl' set should also "
+                        "have at least one 'OwnershipControl' configured"
+                    ),
+                    path=deque(["OwnershipControls", "Rules"]),
+                    validator="minItems",
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "OwnershipControls",
+                            "properties",
+                            "Rules",
+                            "minItems",
+                        ]
+                    ),
+                    rule=AccessControlOwnership(),
+                )
+            ],
+        ),
+    ],
+)
+def test_validate(instance, expected, rule, validator):
+    errs = list(rule.validate(validator, "", instance, {}))
+
+    assert errs == expected, f"Expected {expected} got {errs}"

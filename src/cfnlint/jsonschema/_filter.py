@@ -32,6 +32,9 @@ class FunctionFilter:
         init=False,
         default_factory=lambda: [
             "dependencies",
+            "if",
+            "then",
+            "else",
             "required",
             "requiredXor",
             "requiredAtLeastOne",
