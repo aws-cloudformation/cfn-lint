@@ -253,7 +253,6 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
         yield re.sub(sub_regex, _replace, string), validator.evolve(), None
     except ValueError:
         return
-        yield string, validator, ValidationError(f"Unable to resolve {string!r}")
 
 
 def sub(validator: Validator, instance: Any) -> ResolutionResult:

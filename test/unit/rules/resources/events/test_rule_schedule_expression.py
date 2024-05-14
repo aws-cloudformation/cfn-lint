@@ -33,6 +33,11 @@ def validator():
     "name,instance,expected",
     [
         (
+            "wrong format",
+            [],
+            [],
+        ),
+        (
             "10:15 AM (UTC) every day",
             "cron(15 10 * * ? *)",
             [],
