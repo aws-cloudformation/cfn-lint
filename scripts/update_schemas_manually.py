@@ -74,7 +74,7 @@ patches.extend(
                     path="/properties/HealthCheckType",
                 ),
                 Patch(
-                    values={"requiredXor": ["LaunchTemplateID", "LaunchTemplateName"]},
+                    values={"requiredXor": ["LaunchTemplateId", "LaunchTemplateName"]},
                     path="/definitions/LaunchTemplateSpecification",
                 ),
                 Patch(
