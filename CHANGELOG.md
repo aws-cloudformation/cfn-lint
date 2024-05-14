@@ -1,3 +1,16 @@
+### v1.2.5a9
+## What's Changed
+* Update CloudFormation schemas to 2024-05-14 by @kddejong in (pull #[3234](https://github.com/aws-cloudformation/cfn-lint/pull/3234))
+* Upgrade more rules to v1 by @kddejong (pull #[3243](https://github.com/aws-cloudformation/cfn-lint/pull/3243)), (pull #[3237](https://github.com/aws-cloudformation/cfn-lint/pull/3237)), (pull #[3222](https://github.com/aws-cloudformation/cfn-lint/pull/3222))
+* Enumerate FindInMap when can't be resolved (pull #[3247](https://github.com/aws-cloudformation/cfn-lint/pull/3247))
+* Cleanup Rules from ` __init__` by @kddejong (pull #[3235](https://github.com/aws-cloudformation/cfn-lint/pull/3235))
+* Add ability for child rule to claim who their parent is by @kddejong (pull #[3231](https://github.com/aws-cloudformation/cfn-lint/pull/3231))
+* Make `cfnLint` keyword dynamic by @kddejong (pull #[3225](https://github.com/aws-cloudformation/cfn-lint/pull/3225))
+* Remove rule [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2504) and add back in [E3671](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3671) by @kddejong (pull #[3220](https://github.com/aws-cloudformation/cfn-lint/pull/3220))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a8...v1.2.5.a9
+
+
 ### v1.2.5a8
 ## What's Changed
 * Update CloudFormation schemas to 2024-05-03 by @kddejong in (pull #[3192](https://github.com/aws-cloudformation/cfn-lint/pull/3192))
