@@ -1131,6 +1131,7 @@ types = [
     "AWS::AutoScaling::LifecycleHook",
     "AWS::ElasticLoadBalancingV2::ListenerRule",
     "AWS::AppFlow::Connector",
+    "AWS::Neptune::EventSubscription",
     "AWS::Transfer::User",
     "AWS::RolesAnywhere::Profile",
     "AWS::AppStream::AppBlockBuilder",
