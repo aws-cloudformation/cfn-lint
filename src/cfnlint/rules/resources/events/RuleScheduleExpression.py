@@ -3,10 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class RuleScheduleExpression(CloudFormationLintRule):
+class RuleScheduleExpression(CfnLintKeyword):
     """Validate AWS Events Schedule expression format"""
 
     id = "E3027"
@@ -17,41 +18,54 @@ class RuleScheduleExpression(CloudFormationLintRule):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        self.resource_property_types = ["AWS::Events::Rule"]
+        self.__init__(["Resources/AWS::Events::Rule/Properties/ScheduleExpression"])
 
-    def check_rate(self, value, path):
+    def validate(self, validator, keywords, instance, schema):
+        # Value is either "cron()" or "rate()"
+        if not validator.is_type(instance, "string"):
+            return
+
+        if instance.startswith("rate(") and instance.endswith(")"):
+            yield from self._check_rate(instance)
+        elif instance.startswith("cron(") and instance.endswith(")"):
+            yield from self._check_cron(instance)
+        else:
+            yield ValidationError(f"{instance!r} has to be either 'cron()' or 'rate()'")
+
+    def _check_rate(self, value):
         """Check Rate configuration"""
-        matches = []
         # Extract the expression from rate(XXX)
         rate_expression = value[value.find("(") + 1 : value.find(")")]
 
         if not rate_expression:
-            return [RuleMatch(path, "Rate value of ScheduleExpression cannot be empty")]
+            yield ValidationError(
+                message=f"{rate_expression!r} is not of type 'string'",
+            )
+            return
 
         # Rate format: rate(Value Unit)
         items = rate_expression.split(" ")
 
         if len(items) != 2:
-            message = (
-                "Rate expression must contain 2 elements "
-                "(Value Unit), rate contains {} elements"
+            yield ValidationError(
+                f"{rate_expression!r} has to be of format rate(Value Unit)"
             )
-            matches.append(RuleMatch(path, message.format(len(items))))
-            return [RuleMatch(path, message.format(len(items)))]
+            return
 
         # Check the Value
         if not items[0].isdigit():
-            message = "Rate Value ({}) should be of type Integer."
             extra_args = {
                 "actual_type": type(items[0]).__name__,
                 "expected_type": int.__name__,
             }
-            return [RuleMatch(path, message.format(items[0]), **extra_args)]
+            yield ValidationError(
+                message=f"{items[0]!r} is not of type 'integer'",
+                extra_args=extra_args,
+            )
+            return
 
         if float(items[0]) <= 0:
-            return [
-                RuleMatch(path, f"Rate Value {items[0]!r} should be greater than 0.")
-            ]
+            yield ValidationError(f"{items[0]!r} is less than the minimum of {0!r}")
 
         if float(items[0]) <= 1:
             valid_periods = ["minute", "hour", "day"]
@@ -59,79 +73,37 @@ class RuleScheduleExpression(CloudFormationLintRule):
             valid_periods = ["minutes", "hours", "days"]
         # Check the Unit
         if items[1] not in valid_periods:
-            return [
-                RuleMatch(
-                    path, f"Rate Unit {items[1]!r} should be one of {valid_periods!r}."
-                )
-            ]
+            yield ValidationError(f"{items[1]!r} is not one of {valid_periods!r}")
 
-        return []
-
-    def check_cron(self, value, path):
+    def _check_cron(self, value):
         """Check Cron configuration"""
-        matches = []
         # Extract the expression from cron(XXX)
         cron_expression = value[value.find("(") + 1 : value.find(")")]
 
         if not cron_expression:
-            matches.append(
-                RuleMatch(path, "Cron value of ScheduleExpression cannot be empty")
+            yield ValidationError(
+                message=f"{cron_expression!r} is not of type 'string'",
             )
+            return
         else:
             # Rate format: cron(Minutes Hours Day-of-month Month Day-of-week Year)
             items = cron_expression.split(" ")
 
             if len(items) != 6:
-                message = (
-                    "Cron expression must contain 6 elements (Minutes Hours"
-                    " Day-of-month Month Day-of-week Year), cron contains {} elements"
+                yield ValidationError(
+                    message=(
+                        f"{items[0]!r} is not of length {6!r}. "
+                        "(Minutes Hours Day-of-month Month Day-of-week Year)"
+                    ),
                 )
-                matches.append(RuleMatch(path, message.format(len(items))))
-                return matches
+                return
 
             _, _, day_of_month, _, day_of_week, _ = cron_expression.split(" ")
             if day_of_month != "?" and day_of_week != "?":
-                matches.append(
-                    RuleMatch(
-                        path,
-                        (
-                            "Don't specify the Day-of-month and Day-of-week fields in"
-                            " the same cron expression"
-                        ),
-                    )
+                yield ValidationError(
+                    message=(
+                        f"{cron_expression[0]!r} specifies both "
+                        "Day-of-month and Day-of-week. "
+                        "(Minutes Hours Day-of-month Month Day-of-week Year)"
+                    ),
                 )
-
-        return matches
-
-    def check_value(self, value, path):
-        """Count ScheduledExpression value"""
-        matches = []
-
-        # Value is either "cron()" or "rate()"
-        if value.startswith("rate(") and value.endswith(")"):
-            matches.extend(self.check_rate(value, path))
-        elif value.startswith("cron(") and value.endswith(")"):
-            matches.extend(self.check_cron(value, path))
-        else:
-            message = (
-                "Invalid ScheduledExpression specified ({}). Value has to be either"
-                " cron() or rate()"
-            )
-            matches.append(RuleMatch(path, message.format(value)))
-
-        return matches
-
-    def match_resource_properties(self, properties, _, path, cfn):
-        """Check CloudFormation Properties"""
-        matches = []
-
-        matches.extend(
-            cfn.check_value(
-                obj=properties,
-                key="ScheduleExpression",
-                path=path[:],
-                check_value=self.check_value,
-            )
-        )
-
-        return matches

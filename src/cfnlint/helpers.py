@@ -180,22 +180,30 @@ FUNCTION_EQUALS = "Fn::Equals"
 FUNCTION_BASE64 = "Fn::Base64"
 FUNCTION_FOR_EACH = re.compile(r"^Fn::ForEach::[a-zA-Z0-9]+$")
 
-FUNCTION_CONDITIONS = [FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, FUNCTION_EQUALS]
+FUNCTION_CONDITIONS = frozenset(
+    [FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, FUNCTION_EQUALS]
+)
 
-PSEUDOPARAMS_SINGLE = [
-    "AWS::AccountId",
-    "AWS::Partition",
-    "AWS::Region",
-    "AWS::StackId",
-    "AWS::StackName",
-    "AWS::URLSuffix",
-]
+PSEUDOPARAMS_SINGLE = frozenset(
+    [
+        "AWS::AccountId",
+        "AWS::Partition",
+        "AWS::Region",
+        "AWS::StackId",
+        "AWS::StackName",
+        "AWS::URLSuffix",
+    ]
+)
 
-PSEUDOPARAMS_MULTIPLE = [
-    "AWS::NotificationARNs",
-]
+PSEUDOPARAMS_MULTIPLE = frozenset(
+    [
+        "AWS::NotificationARNs",
+    ]
+)
 
-PSEUDOPARAMS = ["AWS::NoValue"] + PSEUDOPARAMS_SINGLE + PSEUDOPARAMS_MULTIPLE
+PSEUDOPARAMS = frozenset(
+    ["AWS::NoValue"] + list(PSEUDOPARAMS_SINGLE) + list(PSEUDOPARAMS_MULTIPLE)
+)
 
 LIMITS = {
     "Mappings": {"number": 200, "attributes": 200, "name": 255},  # in characters
@@ -214,73 +222,98 @@ LIMITS = {
     "threshold": 0.9,  # for rules about approaching the other limit values
 }
 
-valid_snapshot_types = [
-    "AWS::EC2::Volume",
-    "AWS::ElastiCache::CacheCluster",
-    "AWS::ElastiCache::ReplicationGroup",
-    "AWS::Neptune::DBCluster",
-    "AWS::RDS::DBCluster",
-    "AWS::RDS::DBInstance",
-    "AWS::Redshift::Cluster",
-]
+valid_snapshot_types = frozenset(
+    [
+        "AWS::EC2::Volume",
+        "AWS::ElastiCache::CacheCluster",
+        "AWS::ElastiCache::ReplicationGroup",
+        "AWS::Neptune::DBCluster",
+        "AWS::RDS::DBCluster",
+        "AWS::RDS::DBInstance",
+        "AWS::Redshift::Cluster",
+    ]
+)
 
-VALID_PARAMETER_TYPES_SINGLE = [
-    "AWS::EC2::AvailabilityZone::Name",
-    "AWS::EC2::Image::Id",
-    "AWS::EC2::Instance::Id",
-    "AWS::EC2::KeyPair::KeyName",
-    "AWS::EC2::SecurityGroup::GroupName",
-    "AWS::EC2::SecurityGroup::Id",
-    "AWS::EC2::Subnet::Id",
-    "AWS::EC2::VPC::Id",
-    "AWS::EC2::Volume::Id",
-    "AWS::Route53::HostedZone::Id",
-    "AWS::SSM::Parameter::Name",
-    "Number",
-    "String",
-    "AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::Instance::Id>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::GroupName>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
-    "AWS::SSM::Parameter::Value<AWS::EC2::Volume::Id>",
-    "AWS::SSM::Parameter::Value<AWS::Route53::HostedZone::Id>",
-    "AWS::SSM::Parameter::Value<AWS::SSM::Parameter::Name>",
-    "AWS::SSM::Parameter::Value<Number>",
-    "AWS::SSM::Parameter::Value<String>",
-]
+VALID_PARAMETER_TYPES_SINGLE = frozenset(
+    [
+        "AWS::EC2::AvailabilityZone::Name",
+        "AWS::EC2::Image::Id",
+        "AWS::EC2::Instance::Id",
+        "AWS::EC2::KeyPair::KeyName",
+        "AWS::EC2::SecurityGroup::GroupName",
+        "AWS::EC2::SecurityGroup::Id",
+        "AWS::EC2::Subnet::Id",
+        "AWS::EC2::VPC::Id",
+        "AWS::EC2::Volume::Id",
+        "AWS::Route53::HostedZone::Id",
+        "AWS::SSM::Parameter::Name",
+        "Number",
+        "String",
+        "AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::Instance::Id>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::GroupName>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
+        "AWS::SSM::Parameter::Value<AWS::EC2::Volume::Id>",
+        "AWS::SSM::Parameter::Value<AWS::Route53::HostedZone::Id>",
+        "AWS::SSM::Parameter::Value<AWS::SSM::Parameter::Name>",
+        "AWS::SSM::Parameter::Value<Number>",
+        "AWS::SSM::Parameter::Value<String>",
+    ]
+)
 
-VALID_PARAMETER_TYPES_LIST = [
-    "CommaDelimitedList",
-    "List<AWS::EC2::AvailabilityZone::Name>",
-    "List<AWS::EC2::Image::Id>",
-    "List<AWS::EC2::Instance::Id>",
-    "List<AWS::EC2::SecurityGroup::GroupName>",
-    "List<AWS::EC2::SecurityGroup::Id>",
-    "List<AWS::EC2::Subnet::Id>",
-    "List<AWS::EC2::VPC::Id>",
-    "List<AWS::EC2::Volume::Id>",
-    "List<AWS::Route53::HostedZone::Id>",
-    "List<Number>",
-    "List<String>",
-    "AWS::SSM::Parameter::Value<CommaDelimitedList>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::Image::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::Instance::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::GroupName>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::VPC::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::EC2::Volume::Id>>",
-    "AWS::SSM::Parameter::Value<List<AWS::Route53::HostedZone::Id>>",
-    "AWS::SSM::Parameter::Value<List<Number>>",
-    "AWS::SSM::Parameter::Value<List<String>>",
-]
+VALID_PARAMETER_TYPES_LIST = frozenset(
+    [
+        "CommaDelimitedList",
+        "List<AWS::EC2::AvailabilityZone::Name>",
+        "List<AWS::EC2::Image::Id>",
+        "List<AWS::EC2::Instance::Id>",
+        "List<AWS::EC2::SecurityGroup::GroupName>",
+        "List<AWS::EC2::SecurityGroup::Id>",
+        "List<AWS::EC2::Subnet::Id>",
+        "List<AWS::EC2::VPC::Id>",
+        "List<AWS::EC2::Volume::Id>",
+        "List<AWS::Route53::HostedZone::Id>",
+        "List<Number>",
+        "List<String>",
+        "AWS::SSM::Parameter::Value<CommaDelimitedList>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::Image::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::Instance::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::GroupName>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::VPC::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::EC2::Volume::Id>>",
+        "AWS::SSM::Parameter::Value<List<AWS::Route53::HostedZone::Id>>",
+        "AWS::SSM::Parameter::Value<List<Number>>",
+        "AWS::SSM::Parameter::Value<List<String>>",
+    ]
+)
 
-VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
+TEMPLATED_PROPERTY_CFN_PATHS = frozenset(
+    [
+        "Resources/AWS::ApiGateway::RestApi/Properties/BodyS3Location",
+        "Resources/AWS::Lambda::Function/Properties/Code",
+        "Resources/AWS::Lambda::LayerVersion/Properties/Content",
+        "Resources/AWS::ElasticBeanstalk::ApplicationVersion/Properties/SourceBundle",
+        "Resources/AWS::StepFunctions::StateMachine/Properties/DefinitionS3Location",
+        "Resources/AWS::AppSync::GraphQLSchema/Properties/DefinitionS3Location",
+        "Resources/AWS::AppSync::Resolver/Properties/RequestMappingTemplateS3Location",
+        "Resources/AWS::AppSync::Resolver/Properties/ResponseMappingTemplateS3Location",
+        "Resources/AWS::AppSync::FunctionConfiguration/Properties/RequestMappingTemplateS3Location",
+        "Resources/AWS::AppSync::FunctionConfiguration/Properties/ResponseMappingTemplateS3Location",
+        "Resources/AWS::CloudFormation::Stack/Properties/TemplateURL",
+        "Resources/AWS::CodeCommit::Repository/Properties/Code/S3",
+    ]
+)
+
+VALID_PARAMETER_TYPES = list(VALID_PARAMETER_TYPES_SINGLE) + list(
+    VALID_PARAMETER_TYPES_LIST
+)
 
 BOOLEAN_STRINGS_TRUE = frozenset(["true", "True"])
 BOOLEAN_STRINGS_FALSE = frozenset(["false", "False"])
