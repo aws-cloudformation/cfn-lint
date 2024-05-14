@@ -144,10 +144,19 @@ def create(
         def resolve_value(self, instance: Any) -> ResolutionResult:
             if self.is_type(instance, "object"):
                 if len(instance) == 1:
-                    for k, v in instance.items():
-                        if k in self.fn_resolvers:
-                            for value, v, _ in self.resolve_value(v):
-                                yield from self.fn_resolvers[k](v, value)
+                    for key, value in instance.items():
+                        if key in self.fn_resolvers:
+                            for (
+                                resolved_value,
+                                validator,
+                                resolve_errs,
+                            ) in self.resolve_value(value):
+                                if resolve_errs:
+                                    continue
+                                yield from self.fn_resolvers[key](
+                                    validator, resolved_value  # type: ignore
+                                )
+
                             return
 
             # The return type is a Protocol and we are returning an instance
@@ -242,15 +251,12 @@ def create(
             schema_path: str | None = None,
             property_path: str | int | None = None,
         ) -> ValidationResult:
-            cfn_path = self.cfn_path.copy()
-            if property_path:
-                cfn_path.append(property_path)
             for error in self.evolve(
                 schema=schema,
                 context=self.context.evolve(
                     path=path,
                 ),
-                cfn_path=cfn_path,
+                cfn_path=deque([property_path]) if property_path else deque([]),
             ).iter_errors(instance):
                 if path is not None:
                     error.path.appendleft(path)
@@ -273,7 +279,12 @@ def create(
             cls = self.__class__
             for f in fields(Validator):
                 if f.init:
-                    kwargs.setdefault(f.name, getattr(self, f.name))
+                    if f.name == "cfn_path":
+                        cfn_path = self.cfn_path.copy()
+                        cfn_path.extend(kwargs.get(f.name, []))
+                        kwargs["cfn_path"] = cfn_path
+                    else:
+                        kwargs.setdefault(f.name, getattr(self, f.name))
 
             return cls(**kwargs)
 

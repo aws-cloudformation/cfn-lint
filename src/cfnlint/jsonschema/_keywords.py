@@ -227,7 +227,7 @@ def exclusiveMinimum(
 
     if t_instance <= m:
         yield ValidationError(
-            f"{instance!r} is less than or equal to " f"the minimum of {m!r}",
+            f"{instance!r} is less than or equal to the minimum of {m!r}",
         )
 
 

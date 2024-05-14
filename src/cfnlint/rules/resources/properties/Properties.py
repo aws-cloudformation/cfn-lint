@@ -91,7 +91,9 @@ class Properties(BaseJsonSchema):
                             context=validator.context.evolve(
                                 regions=[region], path="Properties"
                             ),
-                            cfn_path=deque(["Resources", t, "Properties"]),
+                        )
+                        region_validator.cfn_path = deque(
+                            ["Resources", t, "Properties"]
                         )
                         for err in self.validate(
                             region_validator, t, properties, schema.json_schema
@@ -109,8 +111,8 @@ class Properties(BaseJsonSchema):
                 context=validator.context.evolve(
                     regions=cached_regions, path="Properties"
                 ),
-                cfn_path=deque(["Resources", t, "Properties"]),
             )
+            region_validator.cfn_path = deque(["Resources", t, "Properties"])
             for err in self.validate(
                 region_validator, t, properties, schema.json_schema
             ):

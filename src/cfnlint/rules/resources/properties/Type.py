@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint.helpers import TEMPLATED_PROPERTY_CFN_PATHS
 from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules import CloudFormationLintRule
@@ -35,6 +36,11 @@ class Type(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
+        if validator.cfn_path:
+            if validator.is_type(instance, "string"):
+                if "/".join(validator.cfn_path) in TEMPLATED_PROPERTY_CFN_PATHS:
+                    return
+
         if self.config.get("strict") or validator.context.strict_types:
             validator = validator.evolve(
                 context=validator.context.evolve(strict_types=True)
