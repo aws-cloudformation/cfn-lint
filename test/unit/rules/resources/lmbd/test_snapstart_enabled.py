@@ -3,31 +3,52 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
+import pytest
+
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.SnapStartEnabled import SnapStartEnabled
-from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
 
 
-class TestSnapStartEnabled(BaseRuleTestCase):
-    """Test Lambda SnapStart enabled"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = SnapStartEnabled()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestSnapStartEnabled, self).setUp()
-        self.collection.register(SnapStartEnabled())
-        self.collection.register(SnapStartSupported())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/lambda/snapstart-enabled.yaml"
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.mark.parametrize(
+    "name,instance,expected",
+    [
+        (
+            "python doesn't need SnapStart",
+            "python3.11",
+            [],
+        ),
+        (
+            "wrong type",
+            [],
+            [],
+        ),
+        (
+            "java 8 doesn't need SnapStart",
+            "java8",
+            [],
+        ),
+        (
+            "java 17 should have SnapStart",
+            "java17",
+            [
+                ValidationError(
+                    "'java17' runtime should consider using 'SnapStart'",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                    rule=SnapStartEnabled(),
+                )
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, expected, rule):
+    errs = list(rule.validate(instance))
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/snapstart-enabled.yaml",
-            1,
-        )
+    assert errs == expected, f"{name!r}: expected {expected!r} got {errs!r}"

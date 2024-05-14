@@ -173,6 +173,20 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
+    def get_resource_children(self, resource_name: str, types: list[str] | None = None):
+        types = types or []
+
+        if self.graph:
+            for edge in self.graph.graph.in_edges(resource_name):
+                child_name, child_type = self.graph.graph.nodes[edge[0]]["label"].split(
+                    "\\n"
+                )
+                if types and child_type in types:
+                    yield child_name
+                else:
+                    yield child_name
+        return
+
     def get_parameters_valid(self):
         result = {}
         if isinstance(self.template.get("Parameters"), dict):
