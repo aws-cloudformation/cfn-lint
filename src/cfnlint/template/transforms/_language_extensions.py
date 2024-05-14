@@ -159,10 +159,6 @@ class _Transform:
                     try:
                         mapping = _ForEachValueFnFindInMap(get_hash(v), v)
                         map_value = mapping.value(cfn, params, True, False)
-                        # if we get None this means its all strings
-                        # but couldn't be resolved we will pass this forward
-                        if map_value is None:
-                            continue
                         # if we can resolve it we will return it
                         if isinstance(map_value, tuple([list]) + _SCALAR_TYPES):
                             return map_value
@@ -170,9 +166,9 @@ class _Transform:
                         # We couldn't resolve the FindInMap so we are going to
                         # leave it as it is
                         LOGGER.debug("Transform and Fn::FindInMap error: %s", {str(e)})
-                        for i, el in enumerate(v):
-                            v[i] = self._walk(el, params, cfn)
-                        obj[k] = v
+                    for i, el in enumerate(v):
+                        v[i] = self._walk(el, params, cfn)
+                    obj[k] = v
                 elif k == "Ref":
                     if isinstance(v, str):
                         if v in params:
