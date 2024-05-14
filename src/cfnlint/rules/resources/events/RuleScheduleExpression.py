@@ -50,10 +50,9 @@ class RuleScheduleExpression(CloudFormationLintRule):
                 RuleMatch(path, f"Rate Value {items[0]!r} should be greater than 0.")
             ]
 
+        valid_periods = ["minutes", "hours", "days"]
         if float(items[0]) <= 1:
             valid_periods = ["minute", "hour", "day"]
-        elif float(items[0]) > 1:
-            valid_periods = ["minutes", "hours", "days"]
         # Check the Unit
         if items[1] not in valid_periods:
             return [

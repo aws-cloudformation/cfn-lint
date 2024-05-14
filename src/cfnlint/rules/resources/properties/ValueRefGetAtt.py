@@ -132,6 +132,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         property_type = kwargs.get("property_type")
         property_name = kwargs.get("property_name")
         # You can sometimes get a list or a string with . in it
+        resource_name = ""
+        resource_attribute = []
         if isinstance(value, list):
             resource_name = value[0]
             if len(value[1:]) == 1:
