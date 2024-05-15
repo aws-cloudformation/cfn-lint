@@ -20,13 +20,6 @@ def rule():
 
 
 @pytest.fixture(scope="module")
-def child_rule():
-    rule = mock.MagicMock()
-
-    yield rule
-
-
-@pytest.fixture(scope="module")
 def validator():
     yield CfnTemplateValidator(
         schema={},
@@ -35,7 +28,7 @@ def validator():
 
 
 @pytest.mark.parametrize(
-    "name,instance,regions,child_rule_called,expected",
+    "name,instance,regions,add_child_rule,child_rule_called,expected",
     [
         (
             "SnapStart enabled on appropriate java version",
@@ -46,6 +39,20 @@ def validator():
                 },
             },
             ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart enabled with ref for runtime",
+            {
+                "Runtime": {"Ref": "Runtime"},
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
             False,
             [],
         ),
@@ -58,6 +65,7 @@ def validator():
                 },
             },
             ["us-east-1", "foo-bar-1"],
+            True,
             False,
             [
                 ValidationError(
@@ -73,6 +81,27 @@ def validator():
             },
             ["us-east-1"],
             True,
+            True,
+            [],
+        ),
+        (
+            "SnapStart not enabled on java runtime in a bad region",
+            {
+                "Runtime": "python3.11",
+            },
+            ["foo-bar-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart not enabled and no child rule",
+            {
+                "Runtime": "java17",
+            },
+            ["us-east-1"],
+            False,
+            False,
             [],
         ),
         (
@@ -84,6 +113,7 @@ def validator():
                 },
             },
             ["us-east-1"],
+            True,
             False,
             [],
         ),
@@ -96,6 +126,7 @@ def validator():
                 },
             },
             ["us-east-1"],
+            True,
             False,
             [
                 ValidationError(
@@ -107,12 +138,25 @@ def validator():
     ],
 )
 def test_validate(
-    name, instance, regions, child_rule_called, expected, rule, validator, child_rule
+    name,
+    instance,
+    regions,
+    add_child_rule,
+    child_rule_called,
+    expected,
+    rule,
+    validator,
 ):
     validator = validator.evolve(
         context=validator.context.evolve(regions=regions),
     )
-    rule.child_rules["I2530"] = child_rule
+
+    child_rule = mock.MagicMock()
+    if add_child_rule:
+        rule.child_rules["I2530"] = child_rule
+    else:
+        rule.child_rules["I2530"] = None
+
     errs = list(rule.validate(validator, "", instance, {}))
 
     if child_rule_called:
@@ -120,6 +164,6 @@ def test_validate(
             instance.get("Runtime")
         ), f"{name!r}: child rule not called"
     else:
-        child_rule.assert_not_called(), f"{name!r}: child rule called"
+        child_rule.validate.assert_not_called(), f"{name!r}: child rule called"
 
     assert errs == expected, f"{name!r}: expected {expected!r} got {errs!r}"
