@@ -177,15 +177,16 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         types = types or []
 
         if self.graph:
-            for edge in self.graph.graph.in_edges(resource_name):
-                child_name, child_type = self.graph.graph.nodes[edge[0]]["label"].split(
-                    "\\n"
-                )
-                if types and child_type in types:
-                    yield child_name
+            for node_name in self.graph.graph.predecessors(resource_name):
+                node = self.graph.graph.nodes[node_name]
+                if node["type"] != "Resource":
+                    continue
+
+                if types:
+                    if node["resource_type"] in types:
+                        yield node_name
                 else:
-                    yield child_name
-        return
+                    yield node_name
 
     def get_parameters_valid(self):
         result = {}
