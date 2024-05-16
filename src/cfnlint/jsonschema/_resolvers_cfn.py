@@ -47,7 +47,11 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             if "DefaultValue" in options:
                 for value, v, _ in validator.resolve_value(options["DefaultValue"]):
                     yield value, v.evolve(
-                        context=v.context.evolve(value_path=deque([4, "DefaultValue"]))
+                        context=v.context.evolve(
+                            path=v.context.path.evolve(
+                                value_path=deque([4, "DefaultValue"])
+                            )
+                        ),
                     ), None
                     default_value = value
 
@@ -66,7 +70,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         not (equal(map_name, each)) for each in mappings
                     ):
                         yield None, map_v.evolve(
-                            context=map_v.context.evolve(value_path=[0])
+                            context=map_v.context.evolve(
+                                path=map_v.context.path.evolve(value_path=deque([0])),
+                            ),
                         ), ValidationError(
                             f"{map_name!r} is not one of {mappings!r}", path=[0]
                         )
@@ -79,7 +85,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         not (equal(top_level_key, each)) for each in top_level_keys
                     ):
                         yield None, top_v.evolve(
-                            context=top_v.context.evolve(value_path=[1])
+                            context=top_v.context.evolve(
+                                path=top_v.context.path.evolve(value_path=deque([1])),
+                            ),
                         ), ValidationError(
                             f"{top_level_key!r} is not one of {top_level_keys!r}",
                             path=[0],
@@ -96,7 +104,11 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         for each in second_level_keys
                     ):
                         yield None, second_v.evolve(
-                            context=second_v.context.evolve(value_path=[2])
+                            context=second_v.context.evolve(
+                                path=second_v.context.path.evolve(
+                                    value_path=deque([2])
+                                ),
+                            ),
                         ), ValidationError(
                             f"{second_level_key!r} is not one of {second_level_keys!r}",
                             path=[0],
@@ -111,12 +123,16 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                             value,
                             validator.evolve(
                                 context=validator.context.evolve(
-                                    value_path=[
-                                        "Mappings",
-                                        map_name,
-                                        top_level_key,
-                                        second_level_key,
-                                    ]
+                                    path=validator.context.path.evolve(
+                                        value_path=deque(
+                                            [
+                                                "Mappings",
+                                                map_name,
+                                                top_level_key,
+                                                second_level_key,
+                                            ]
+                                        )
+                                    )
                                 )
                             ),
                             None,
@@ -298,7 +314,9 @@ def if_(validator: Validator, instance: Any) -> ResolutionResult:
             yield (
                 value,
                 v.evolve(
-                    context=v.context.evolve(value_path=deque([i])),
+                    context=v.context.evolve(
+                        path=v.context.path.evolve(value_path=deque([i])),
+                    ),
                 ),
                 err,
             )

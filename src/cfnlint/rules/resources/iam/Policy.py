@@ -6,15 +6,15 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import json
-from typing import List
+from typing import Any, List
 
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import RefResolver
+from cfnlint.jsonschema import RefResolver, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
 # pylint: disable=unused-argument
-def _scalar_or_array(validator, subschema, instance, schema):
+def _scalar_or_array(validator: Validator, subschema: Any, instance: Any, schema: Any):
     if validator.is_type(instance, "array"):
         for index, i in enumerate(instance):
             yield from validator.descend(i, subschema, path=index)

@@ -26,5 +26,5 @@ class Enum(CloudFormationLintRule):
     def enum(self, validator, enums, instance, schema):
         for err in enum(validator, enums, instance, schema):
             err.rule = self
-            err.path_override = validator.context.value_path
+            err.path_override = validator.context.path.value_path
             yield err

@@ -104,8 +104,8 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
         if validator.cfn is None:
             return
         resource_type = (
-            validator.cfn.template.get(validator.context.path[0], {})
-            .get(validator.context.path[1], {})
+            validator.cfn.template.get(validator.context.path.path[0], {})
+            .get(validator.context.path.path[1], {})
             .get("Type", None)
         )
         if not validator.is_type(resource_type, "string"):
@@ -122,4 +122,4 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
         else:
             self._schema = self._rds_schema
 
-        return super().validate(validator, keywords, instance, schema)
+        yield from super().validate(validator, keywords, instance, schema)

@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, Sequence
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import V, ValidationError, Validator
@@ -28,14 +28,14 @@ class BaseJsonSchema(CloudFormationLintRule):
 
     def _convert_validation_errors_to_matches(
         self,
-        path: List[str],
+        path: Sequence[str],
         e: ValidationError,
     ):
         matches = []
         kwargs: Dict[Any, Any] = {}
         if e.extra_args:
             kwargs = e.extra_args
-        e_path = path + list(e.path)
+        e_path = list(path) + list(e.path)
         if len(e.path) > 0:
             e_path_override = e.path_override
             if e_path_override:
@@ -79,7 +79,9 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
-    def json_schema_validate(self, validator, properties, path):
+    def json_schema_validate(
+        self, validator: Validator, properties: dict[str, Any], path: Sequence[str]
+    ):
         matches = []
         for err in validator.iter_errors(properties):
             matches.extend(self._convert_validation_errors_to_matches(path, err))

@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.properties.PropertiesTemplated import PropertiesTemplated
 from cfnlint.template import Template
@@ -23,7 +23,11 @@ def rule():
 def validator():
     context = Context(
         regions=["us-east-1"],
-        path=deque(["Resources/AWS::CloudFormation::Template/Properties/TemplateURL"]),
+        path=Path(
+            path=deque(
+                ["Resources/AWS::CloudFormation::Template/Properties/TemplateURL"]
+            )
+        ),
         resources={},
         parameters={},
     )

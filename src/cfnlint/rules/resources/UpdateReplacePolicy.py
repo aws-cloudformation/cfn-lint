@@ -33,9 +33,10 @@ class UpdateReplacePolicy(CloudFormationLintRule):
             )
         )
         enum = ["Delete", "Retain"]
+        resource_name = validator.context.path.path[1]
         if (
-            validator.context.resources[validator.context.path[1]].type
-            in valid_snapshot_types
+            isinstance(resource_name, str)
+            and validator.context.resources[resource_name].type in valid_snapshot_types
         ):
             enum.append("Snapshot")
 

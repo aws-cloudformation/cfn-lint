@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.Enum import Enum
 
@@ -24,8 +24,10 @@ class TestAllowedValue(BaseRuleTestCase):
             context=Context(
                 "us-east-1",
                 {},
-                deque(["Property", "Ref"]),
-                value_path=deque(["Parameters", "MyParameter", "Default"]),
+                path=Path(
+                    path=deque(["Property", "Ref"]),
+                    value_path=deque(["Parameters", "MyParameter", "Default"]),
+                ),
             ),
         )
 

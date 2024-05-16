@@ -5,6 +5,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import logging
 import warnings
 from typing import Any, List
@@ -43,6 +45,14 @@ class GraphSettings:
     parameter: NodeSetting
     output: NodeSetting
 
+    def _pydot_string_convert(self, value: str | int) -> str | int:
+        if not isinstance(value, str):
+            return value
+        if ":" in value:
+            return f'"{value}"'
+
+        return value
+
     def subgraph_view(self, graph) -> networkx.MultiDiGraph:
         view = networkx.MultiDiGraph(name="template")
         resources: List[str] = [
@@ -52,17 +62,22 @@ class GraphSettings:
         # have to add quotes when outputing to dot
         for resource in resources:
             node = graph.nodes[resource]
-            node["type"] = f'"{node["type"]}"'
+            node["label"] = self._pydot_string_convert(node["label"])
+            node["type"] = self._pydot_string_convert(node["type"])
+            del node["resource_type"]
             view.add_node(resource, **node)
 
-        view.add_edges_from(
-            (n, nbr, key, d)
-            for n, nbrs in graph.adj.items()
-            if n in resources
-            for nbr, keydict in nbrs.items()
-            if nbr in resources
-            for key, d in keydict.items()
-        )
+        for edge_1, edge_2, edge_data in graph.edges(data=True):
+            if edge_1 in resources and edge_2 in resources:
+                edge_data["source_paths"] = [
+                    self._pydot_string_convert(p) for p in edge_data["source_paths"]
+                ]
+                view.add_edge(
+                    edge_1,
+                    edge_2,
+                    **edge_data,
+                )
+
         view.graph.update(graph.graph)
         return view
 
@@ -131,7 +146,7 @@ class Graph:
         # add all outputs in the template as nodes
         for output_id in cfn.template.get("Outputs", {}).keys():
             graph_label = str.format(f'"{output_id}"')
-            self._add_node(output_id, label=graph_label, settings=self.settings.output)
+            self._add_node(output_id, settings=self.settings.output, label=graph_label)
 
     def _add_resources(self, cfn: Any):
         # add all resources in the template as nodes
@@ -141,9 +156,12 @@ class Graph:
             type_val = resourceVals.get("Type", "")
             if not isinstance(type_val, str):
                 continue
-            graph_label = str.format(f'"{resourceId}\\n<{type_val}>"')
+            graph_label = str.format(f"{resourceId}\\n<{type_val}>")
             self._add_node(
-                resourceId, label=graph_label, settings=self.settings.resource
+                resourceId,
+                settings=self.settings.resource,
+                label=graph_label,
+                resource_type=type_val,
             )
             target_ids = resourceVals.get("DependsOn", [])
             if isinstance(target_ids, (list, str)):
@@ -248,17 +266,14 @@ class Graph:
                             source_id, sub_parameter, source_path, self.settings.ref
                         )
 
-    def _add_node(self, node_id, label, settings):
+    def _add_node(self, node_id, settings, **attr):
         if settings.node_type in ["Parameter", "Output"]:
             node_id = f"{settings.node_type}-{node_id}"
 
-        self.graph.add_node(
-            node_id,
-            label=label,
-            color=settings.color,
-            shape=settings.shape,
-            type=settings.node_type,
-        )
+        attr.setdefault("color", settings.color)
+        attr.setdefault("shape", settings.shape)
+        attr.setdefault("type", settings.node_type)
+        self.graph.add_node(node_id, **attr)
 
     def _add_edge(self, source_id, target_id, source_path, settings):
         self.graph.add_edge(

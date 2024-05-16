@@ -57,16 +57,16 @@ class If(BaseFn):
             return
 
         for err in validator.descend(
-            value[0], {"enum": list(validator.context.conditions.keys())}, 0
+            instance=value[0],
+            schema={"enum": list(validator.context.conditions.keys())},
+            path=0,
         ):
             err.path.appendleft(key)
             err.rule = self
             err.validator = self.fn.py
             yield err
 
-        for err in validator.descend(value[1], s, 1):
-            err.path.appendleft(key)
-            yield err
-        for err in validator.descend(value[2], s, 2):
-            err.path.appendleft(key)
-            yield err
+        for i in [1, 2]:
+            for err in validator.descend(instance=value[i], schema=s, path=i):
+                err.path.appendleft(key)
+                yield err

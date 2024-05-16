@@ -21,5 +21,5 @@ class NumberRange(CloudFormationLintRule):
     def validate(self, validator, m, instance, schema, fn):
         for err in fn(validator, m, instance, schema):
             err.rule = self
-            err.path_override = validator.context.value_path
+            err.path_override = validator.context.path.value_path
             yield err

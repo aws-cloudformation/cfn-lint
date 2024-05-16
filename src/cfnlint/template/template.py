@@ -173,6 +173,21 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
+    def get_resource_children(self, resource_name: str, types: list[str] | None = None):
+        types = types or []
+
+        if self.graph:
+            for node_name in self.graph.graph.predecessors(resource_name):
+                node = self.graph.graph.nodes[node_name]
+                if node["type"] != "Resource":
+                    continue
+
+                if types:
+                    if node["resource_type"] in types:
+                        yield node_name
+                else:
+                    yield node_name
+
     def get_parameters_valid(self):
         result = {}
         if isinstance(self.template.get("Parameters"), dict):

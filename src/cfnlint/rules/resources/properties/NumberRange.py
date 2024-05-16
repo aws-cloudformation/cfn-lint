@@ -33,8 +33,8 @@ class NumberRange(CloudFormationLintRule):
 
     def minimum(self, validator, m, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get(self.parameter_rule):
                 yield from self.child_rules[self.parameter_rule].validate(
@@ -45,8 +45,8 @@ class NumberRange(CloudFormationLintRule):
 
     def maximum(self, validator, m, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get(self.parameter_rule):
                 yield from self.child_rules[self.parameter_rule].validate(
@@ -57,8 +57,8 @@ class NumberRange(CloudFormationLintRule):
 
     def exclusiveMaximum(self, validator, m, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get(self.parameter_rule):
                 yield from self.child_rules[self.parameter_rule].validate(
@@ -69,8 +69,8 @@ class NumberRange(CloudFormationLintRule):
 
     def exclusiveMinimum(self, validator, m, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get(self.parameter_rule):
                 yield from self.child_rules[self.parameter_rule].validate(

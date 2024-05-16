@@ -22,10 +22,10 @@ class DynamicReferenceSecretsManagerPath(CloudFormationLintRule):
     tags = ["functions", "dynamic reference"]
 
     def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
-        if len(validator.context.path) >= 3:
+        if len(validator.context.path.path) >= 3:
             if (
-                validator.context.path[0] == "Resources"
-                and validator.context.path[2] == "Properties"
+                validator.context.path.path[0] == "Resources"
+                and validator.context.path.path[2] == "Properties"
             ):
                 return
 

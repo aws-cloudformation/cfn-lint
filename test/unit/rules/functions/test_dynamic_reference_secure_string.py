@@ -3,9 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
+
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.DynamicReferenceSecureString import (
     DynamicReferenceSecureString,
@@ -46,13 +48,21 @@ def context(cfn):
         (
             "Valid SSM Secure Parameter",
             "{{resolve:ssm-secure:Parameter}}",
-            ["Resources", "MyResource", "Properties", "LoginProfile", "Password"],
+            deque(
+                [
+                    "Resources",
+                    "AWS::IAM::User",
+                    "Properties",
+                    "LoginProfile",
+                    "Password",
+                ]
+            ),
             [],
         ),
         (
             "Invalid SSM secure location",
             "{{resolve:ssm-secure:Parameter}}",
-            ["Outputs", "MyOutput", "Value"],
+            deque(["Outputs", "*", "Value"]),
             [
                 ValidationError(
                     (
@@ -66,8 +76,9 @@ def context(cfn):
     ],
 )
 def test_validate(name, instance, path, expected, rule, context, cfn):
-    for p in path:
-        context = context.evolve(path=p)
+    context = context.evolve(
+        path=Path(cfn_path=path),
+    )
     validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.validate(validator, {"type": "string"}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

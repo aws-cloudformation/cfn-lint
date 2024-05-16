@@ -46,7 +46,10 @@ def additionalProperties(
     if validator.is_type(aP, "object"):
         for extra in extras:
             yield from validator.descend(
-                instance[extra], aP, path=extra, property_path="*"
+                instance[extra],
+                aP,
+                path=extra,
+                property_path="*",
             )
     elif not aP and extras:
         if "patternProperties" in schema:
@@ -543,7 +546,7 @@ def type(
         yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
-def prefixItems(validator, prefixItems, instance, schema):
+def prefixItems(validator: Validator, prefixItems: Any, instance: Any, schema: Any):
     if not validator.is_type(instance, "array"):
         return
 

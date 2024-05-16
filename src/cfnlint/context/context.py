@@ -39,6 +39,62 @@ class Transforms:
 
 
 @dataclass(frozen=True)
+class Path:
+    """
+    A `Path` keeps track of the different Path values
+    """
+
+    # path keeps track of the path as we move down the template
+    # Example: Resources, MyResource, Properties, Name, ...
+    path: Deque[str | int] = field(init=True, default_factory=deque)
+
+    # value_path is an override of the value if we got it from another place
+    # like a Parameter default value
+    # Example: Parameters, MyParameter, Default, ...
+    value_path: Deque[str | int] = field(init=True, default_factory=deque)
+
+    # cfn_path is a generic path used by cfn-lint to help make
+    # writing rules easier.  The resource name is replaced by the type
+    # lists are replaced with a *
+    # Example: Resources, AWS::S3::Bucket, Properties, Name, ...
+    # Example: Resources, *, Type
+    cfn_path: Deque[str] = field(init=True, default_factory=deque)
+
+    def descend(self, **kwargs):
+        """
+        Create a new Path by appending values
+        """
+        cls = self.__class__
+
+        for f in fields(Path):
+            if kwargs.get(f.name) is not None:
+                kwargs[f.name] = getattr(self, f.name) + deque([kwargs[f.name]])
+            else:
+                kwargs[f.name] = getattr(self, f.name)
+
+        return cls(**kwargs)
+
+    def evolve(self, **kwargs):
+        """
+        Create a new path without appending values
+        """
+        cls = self.__class__
+
+        for f in fields(Path):
+            kwargs.setdefault(f.name, getattr(self, f.name))
+
+        return cls(**kwargs)
+
+    @property
+    def path_string(self):
+        return "/".join(str(p) for p in self.path)
+
+    @property
+    def cfn_path_string(self):
+        return "/".join(self.cfn_path)
+
+
+@dataclass(frozen=True)
 class Context:
     """
     A `Context` keeps track of the current context that we are evaluating against
@@ -61,12 +117,7 @@ class Context:
     # supported functions at this point in the template
     functions: Sequence[str] = field(init=True, default_factory=list)
 
-    # path keeps track of the path as we move down the template
-    # Example: Resources, MyResource, Properties, Name, ...
-    path: Deque[str] = field(init=True, default_factory=deque)
-    # value_path is an override of the value if we got it from another place
-    # like a Parameter default value
-    value_path: Deque[str] = field(init=True, default_factory=deque)
+    path: Path = field(init=True, default_factory=Path)
 
     # cfn-lint Template class
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
@@ -95,21 +146,14 @@ class Context:
 
     def evolve(self, **kwargs) -> "Context":
         """
-        Create a new context merging together attributes
+        Create a new context without merging together attributes
         """
         cls = self.__class__
 
-        if "path" in kwargs and kwargs["path"] is not None:
-            path = self.path.copy()
-            path.append(kwargs["path"])
-            kwargs["path"] = path
-        else:
-            kwargs["path"] = self.path.copy()
-
-        if "ref_values" in kwargs and kwargs["ref_values"] is not None:
-            ref_values = self.ref_values.copy()
-            ref_values.update(kwargs["ref_values"])
-            kwargs["ref_values"] = ref_values
+        if "ref_values" in kwargs:
+            new_ref_values = self.ref_values.copy()
+            new_ref_values.update(kwargs["ref_values"])
+            kwargs["ref_values"] = new_ref_values
 
         for f in fields(Context):
             if f.init:
@@ -134,7 +178,9 @@ class Context:
         if instance in self.parameters:
             for v, path in self.parameters[instance].ref(self):
                 yield v, self.evolve(
-                    value_path=deque(["Parameters", instance]) + path,
+                    path=self.path.evolve(
+                        value_path=deque(["Parameters", instance]) + path
+                    ),
                     ref_values={instance: v},
                 )
             return
@@ -450,6 +496,6 @@ def create_context_for_template(cfn):
         transforms=transforms,
         mappings=mappings,
         regions=cfn.regions,
-        path=deque([]),
+        path=Path(),
         functions=["Fn::Transform"],
     )

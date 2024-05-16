@@ -41,19 +41,19 @@ class TestTemplate(BaseTestCase):
 
         # ruff: noqa: E501
         expected_content = """digraph "template" {
-MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type="Resource"];
-RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type="Resource"];
-RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type="Resource"];
-RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type="Resource"];
-MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
-mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type="Resource"];
-MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
-ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type="Resource"];
-ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type="Resource"];
-IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type="Resource"];
-CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type="Resource"];
-WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type="Resource"];
-LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type="Resource"];
+MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type=Resource];
+RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type=Resource];
+RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type=Resource];
+RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type=Resource];
+MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
+mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type=Resource];
+MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
+ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type=Resource];
+ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type=Resource];
+IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type=Resource];
+CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type=Resource];
+WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type=Resource];
+LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type=Resource];
 RolePolicies -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, source_paths="['Properties', 'IamInstanceProfile']"];
@@ -90,6 +90,29 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             len(actual_modules) == expected_modules_count
         ), "Expected {} modules, got {}".format(
             expected_modules_count, len(actual_modules)
+        )
+
+    def test_get_resource_children(self):
+        """Test Success on Get Resources"""
+        resources = list(self.template.get_resource_children("RootRole"))
+        self.assertListEqual(
+            resources, ["RolePolicies", "RootInstanceProfile"]
+        ), "Expected {} resources, got {}".format(
+            ["RolePolicies", "RootInstanceProfile"], resources
+        )
+
+        resources = list(
+            self.template.get_resource_children(
+                "RootRole", ["AWS::IAM::InstanceProfile"]
+            )
+        )
+        self.assertListEqual(
+            resources, ["RootInstanceProfile"]
+        ), "Expected {} resources, got {}".format(["RootInstanceProfile"], resources)
+
+        resources = list(self.template.get_resource_children("ElasticIP", []))
+        self.assertListEqual(resources, []), "Expected {} resources, got {}".format(
+            [], resources
         )
 
     def test_get_resources_bad(self):

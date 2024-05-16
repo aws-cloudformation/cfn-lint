@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context import Path
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.NumberRange import NumberRange as ParamaterNumberRange
 from cfnlint.rules.resources.properties.NumberRange import NumberRange
@@ -30,8 +31,10 @@ def test_minimum(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Ref"]),
-            value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            path=Path(
+                path=deque(["Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            )
         )
     )
     errs = list(rule.minimum(evolved, 1, 0, {}))
@@ -49,8 +52,10 @@ def test_maximum(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Ref"]),
-            value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            path=Path(
+                path=deque(["Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            ),
         )
     )
     errs = list(rule.maximum(evolved, 1, 2, {}))
@@ -68,8 +73,10 @@ def test_exclusive_minimum(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Ref"]),
-            value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            path=Path(
+                path=deque(["Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            ),
         )
     )
     errs = list(rule.exclusiveMinimum(evolved, 1, 1, {}))
@@ -87,8 +94,10 @@ def test_exlusive_maximum(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Ref"]),
-            value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            path=Path(
+                path=deque(["Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "MinValue"]),
+            ),
         )
     )
     errs = list(rule.exclusiveMaximum(evolved, 1, 1, {}))

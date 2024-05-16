@@ -35,8 +35,8 @@ class Tagging(CloudFormationLintRule):
             )
         )
         for err in validator.descend(
-            instance,
-            self._schema,
+            instance=instance,
+            schema=self._schema,
         ):
             err.validator = "tagging"
             yield err

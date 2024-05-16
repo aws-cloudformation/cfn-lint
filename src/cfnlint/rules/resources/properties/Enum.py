@@ -21,8 +21,8 @@ class Enum(CloudFormationLintRule):
 
     def enum(self, validator, enums, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get("W2030"):
                 yield from self.child_rules["W2030"].enum(

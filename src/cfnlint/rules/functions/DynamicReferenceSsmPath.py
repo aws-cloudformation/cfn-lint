@@ -20,18 +20,18 @@ class DynamicReferenceSsmPath(CloudFormationLintRule):
     tags = ["functions", "dynamic reference"]
 
     def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
-        if len(validator.context.path) > 0:
-            if validator.context.path[0] == "Parameters":
-                if len(validator.context.path) >= 3:
-                    if validator.context.path[2] in ["Default", "AllowedValues"]:
+        if len(validator.context.path.path) > 0:
+            if validator.context.path.path[0] == "Parameters":
+                if len(validator.context.path.path) >= 3:
+                    if validator.context.path.path[2] in ["Default", "AllowedValues"]:
                         return
-            elif validator.context.path[0] == "Resources":
-                if len(validator.context.path) >= 3:
-                    if validator.context.path[2] in ["Properties", "Metadata"]:
+            elif validator.context.path.path[0] == "Resources":
+                if len(validator.context.path.path) >= 3:
+                    if validator.context.path.path[2] in ["Properties", "Metadata"]:
                         return
-            elif validator.context.path[0] == "Outputs":
-                if len(validator.context.path) >= 3:
-                    if validator.context.path[2] in ["Value"]:
+            elif validator.context.path.path[0] == "Outputs":
+                if len(validator.context.path.path) >= 3:
+                    if validator.context.path.path[2] in ["Value"]:
                         return
 
         yield ValidationError(

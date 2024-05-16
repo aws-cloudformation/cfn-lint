@@ -3,35 +3,167 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
+from unittest import mock
 
-from cfnlint.config import ConfigMixIn
-from cfnlint.rules.resources.lmbd.SnapStartEnabled import SnapStartEnabled
+import pytest
+
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
+from cfnlint.template import Template
 
 
-class TestSnapStartSupported(BaseRuleTestCase):
-    """Test Lambda SnapStart supported"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = SnapStartSupported()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestSnapStartSupported, self).setUp()
-        self.collection.register(SnapStartSupported())
-        self.collection.register(SnapStartEnabled())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/lambda/snapstart-supported.yaml"
-        ]
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    yield CfnTemplateValidator(
+        schema={},
+        cfn=Template("", {}),
+    )
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/snapstart-supported.yaml",
-            2,
-            config=ConfigMixIn(
-                regions=["us-east-1", "me-central-1"],
-            ),
-        )
+
+@pytest.mark.parametrize(
+    "name,instance,regions,add_child_rule,child_rule_called,expected",
+    [
+        (
+            "SnapStart enabled on appropriate java version",
+            {
+                "Runtime": "java17",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart enabled with ref for runtime",
+            {
+                "Runtime": {"Ref": "Runtime"},
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart not enabled in region that doesn't support it",
+            {
+                "Runtime": "java17",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1", "foo-bar-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'SnapStart' enabled functions are not supported in ['foo-bar-1']",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
+            "SnapStart not enabled on non java runtime",
+            {
+                "Runtime": "python3.11",
+            },
+            ["us-east-1"],
+            True,
+            True,
+            [],
+        ),
+        (
+            "SnapStart not enabled on java runtime in a bad region",
+            {
+                "Runtime": "python3.11",
+            },
+            ["foo-bar-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart not enabled and no child rule",
+            {
+                "Runtime": "java17",
+            },
+            ["us-east-1"],
+            False,
+            False,
+            [],
+        ),
+        (
+            "SnapStart set off with Python runtime",
+            {
+                "Runtime": "python3.11",
+                "SnapStart": {
+                    "ApplyOn": "None",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "Snapstart should not be enabled for non java runtime",
+            {
+                "Runtime": "python3.11",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'python3.11' is not supported for 'SnapStart' enabled functions",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+    ],
+)
+def test_validate(
+    name,
+    instance,
+    regions,
+    add_child_rule,
+    child_rule_called,
+    expected,
+    rule,
+    validator,
+):
+    validator = validator.evolve(
+        context=validator.context.evolve(regions=regions),
+    )
+
+    child_rule = mock.MagicMock()
+    if add_child_rule:
+        rule.child_rules["I2530"] = child_rule
+    else:
+        rule.child_rules["I2530"] = None
+
+    errs = list(rule.validate(validator, "", instance, {}))
+
+    if child_rule_called:
+        child_rule.validate.assert_called_with(
+            instance.get("Runtime")
+        ), f"{name!r}: child rule not called"
+    else:
+        child_rule.validate.assert_not_called(), f"{name!r}: child rule called"
+
+    assert errs == expected, f"{name!r}: expected {expected!r} got {errs!r}"

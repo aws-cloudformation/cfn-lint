@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context import Path
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.Pattern import Pattern as ParameterPattern
 from cfnlint.rules.resources.properties.Pattern import Pattern
@@ -30,7 +31,7 @@ def test_validate(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Fn::Sub"]),
+            path=Path(path=deque(["Fn::Sub"])),
         )
     )
     errs = list(rule.pattern(evolved, "bar", "bar", {}))
@@ -38,8 +39,10 @@ def test_validate(rule, validator):
 
     evolved = validator.evolve(
         context=validator.context.evolve(
-            path=deque(["Ref"]),
-            value_path=deque(["Parameters", "MyParameter", "Default"]),
+            path=Path(
+                path=deque(["Ref"]),
+                value_path=deque(["Parameters", "MyParameter", "Default"]),
+            ),
         )
     )
     errs = list(rule.pattern(evolved, "foo", "bar", {}))

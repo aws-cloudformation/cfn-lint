@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.DynamicReferenceSecretsManagerPath import (
     DynamicReferenceSecretsManagerPath,
@@ -43,6 +43,20 @@ def context(cfn):
             [],
         ),
         (
+            "Short list",
+            "{{resolve:secretsmanager:Parameter}}",
+            ["Parameters", "MyParameter"],
+            [
+                ValidationError(
+                    (
+                        "Dynamic reference '{{resolve:secretsmanager:Parameter}}' "
+                        "to secrets manager can only be used in resource properties"
+                    ),
+                    rule=DynamicReferenceSecretsManagerPath(),
+                )
+            ],
+        ),
+        (
             "Invalid SSM secure location",
             "{{resolve:secretsmanager:Parameter}}",
             ["Outputs", "MyOutput", "Value"],
@@ -59,8 +73,9 @@ def context(cfn):
     ],
 )
 def test_validate(name, instance, path, expected, rule, context, cfn):
-    for p in path:
-        context = context.evolve(path=p)
+    context = context.evolve(
+        path=Path(path),
+    )
     validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.validate(validator, {"type": "string"}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

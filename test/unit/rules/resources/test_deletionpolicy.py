@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.context.context import Parameter, Resource
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
@@ -78,7 +78,7 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
 def test_deletion_policy(name, instance, path, expected):
     context = Context(
         regions=["us-east-1"],
-        path=path,
+        path=Path(path=path),
         resources={
             "MyVolume": Resource({"Type": "AWS::EC2::Volume"}),
             "MyInstance": Resource({"Type": "AWS::EC2::Instance"}),

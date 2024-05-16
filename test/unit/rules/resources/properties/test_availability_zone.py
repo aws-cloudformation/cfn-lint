@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.properties.AvailabilityZone import (
@@ -110,7 +110,7 @@ def validator():
 def test_validate(name, instance, path, expected, rule, validator):
     validator = validator.evolve(
         context=validator.context.evolve(
-            path=path,
+            path=Path(path=path),
         )
     )
     errors = list(rule.validate(validator, False, instance, {}))

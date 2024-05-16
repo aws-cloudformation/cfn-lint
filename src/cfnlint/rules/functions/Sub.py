@@ -85,8 +85,11 @@ class Sub(BaseFn):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=self._functions,
+                path=validator.context.path.descend(
+                    path=key,
+                    cfn_path=key,
+                ),
             ),
-            cfn_path=deque([key]),
         )
         for param in params:
             param = param.strip()
@@ -98,7 +101,11 @@ class Sub(BaseFn):
                 ):
                     yield self._clean_error(err, {"Fn::GetAtt": param}, param)
             else:
-                for err in validator.descend({"Ref": param}, {"type": ["string"]}, key):
+                for err in validator.descend(
+                    instance={"Ref": param},
+                    schema={"type": ["string"]},
+                    path=key,
+                ):
                     yield self._clean_error(err, {"Ref": param}, param)
 
     def fn_sub(

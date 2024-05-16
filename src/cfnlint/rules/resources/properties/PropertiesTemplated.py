@@ -27,7 +27,6 @@ class PropertiesTemplated(CfnLintKeyword):
     def __init__(self):
         """Init"""
         super().__init__(TEMPLATED_PROPERTY_CFN_PATHS)
-        # self.resource_property_types.extend(self.templated_exceptions.keys())
 
     def validate(self, validator, keywords, instance, schema):
         if not isinstance(instance, str):
@@ -36,7 +35,7 @@ class PropertiesTemplated(CfnLintKeyword):
         if validator.cfn.has_serverless_transform():
             return []
 
-        if validator.context.path[-1] in FUNCTIONS:
+        if validator.context.path.path[-1] in FUNCTIONS:
             return
 
         if not instance.startswith("s3://") and not instance.startswith("https://"):

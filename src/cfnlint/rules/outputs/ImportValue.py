@@ -25,10 +25,10 @@ class ImportValue(CloudFormationLintRule):
     def validate(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> Iterator[ValidationError]:
-        if len(validator.context.path) >= 2:
+        if len(validator.context.path.path) >= 2:
             if (
-                validator.context.path[0] == "Outputs"
-                and validator.context.path[2] == "Value"
+                validator.context.path.path[0] == "Outputs"
+                and validator.context.path.path[2] == "Value"
             ):
                 key = list(instance.keys())[0]
                 yield ValidationError(

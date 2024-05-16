@@ -45,8 +45,8 @@ class Pattern(CloudFormationLintRule):
     # pylint: disable=unused-argument, arguments-renamed
     def pattern(self, validator, patrn, instance, schema):
         if (
-            len(validator.context.value_path) > 0
-            and validator.context.value_path[0] == "Parameters"
+            len(validator.context.path.value_path) > 0
+            and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get("W2031"):
                 yield from self.child_rules["W2031"].pattern(

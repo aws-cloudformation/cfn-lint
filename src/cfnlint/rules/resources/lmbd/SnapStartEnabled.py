@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from collections import deque
+
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 
 
 class SnapStartEnabled(CloudFormationLintRule):
@@ -18,24 +21,15 @@ class SnapStartEnabled(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html"
     tags = ["resources", "lambda"]
 
-    def __init__(self):
-        super().__init__()
-        self.resource_property_types.append("AWS::Lambda::Function")
-
-    def validate(self, runtime, path, region, regions):
+    def validate(self, runtime):
         if not isinstance(runtime, str):
-            return []
-
-        if region not in regions:
-            return []
+            return
 
         if not (runtime.startswith("java")) or runtime in ["java8.al2", "java8"]:
-            return []
+            return
 
-        return [
-            RuleMatch(
-                path,
-                f"When using {runtime} configure SnapStart",
-                rule=self,
-            )
-        ]
+        yield ValidationError(
+            f"{runtime!r} runtime should consider using 'SnapStart'",
+            path=deque(["SnapStart", "ApplyOn"]),
+            rule=self,
+        )
