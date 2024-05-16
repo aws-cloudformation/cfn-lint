@@ -739,6 +739,17 @@
   "AWS::Batch::JobQueue.JobStateTimeLimitAction": "CACHED",
   "AWS::Batch::SchedulingPolicy.FairsharePolicy": "CACHED",
   "AWS::Batch::SchedulingPolicy.ShareAttributes": "CACHED",
+  "AWS::Bedrock::Agent.APISchema": "CACHED",
+  "AWS::Bedrock::Agent.ActionGroupExecutor": "CACHED",
+  "AWS::Bedrock::Agent.AgentActionGroup": "CACHED",
+  "AWS::Bedrock::Agent.AgentKnowledgeBase": "CACHED",
+  "AWS::Bedrock::Agent.Function": "CACHED",
+  "AWS::Bedrock::Agent.FunctionSchema": "CACHED",
+  "AWS::Bedrock::Agent.InferenceConfiguration": "CACHED",
+  "AWS::Bedrock::Agent.ParameterDetail": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration": "CACHED",
+  "AWS::Bedrock::Agent.PromptOverrideConfiguration": "CACHED",
+  "AWS::Bedrock::Agent.S3Identifier": "CACHED",
   "AWS::Bedrock::AgentAlias.AgentAliasHistoryEvent": "CACHED",
   "AWS::Bedrock::AgentAlias.AgentAliasRoutingConfigurationListItem": "CACHED",
   "AWS::Bedrock::Guardrail.ContentFilterConfig": "CACHED",
@@ -997,6 +1008,7 @@
   "AWS::CodePipeline::Pipeline.ArtifactStoreMap": "CACHED",
   "AWS::CodePipeline::Pipeline.BlockerDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.EncryptionKey": "CACHED",
+  "AWS::CodePipeline::Pipeline.FailureConditions": "CACHED",
   "AWS::CodePipeline::Pipeline.GitBranchFilterCriteria": "CACHED",
   "AWS::CodePipeline::Pipeline.GitConfiguration": "CACHED",
   "AWS::CodePipeline::Pipeline.GitFilePathFilterCriteria": "CACHED",
@@ -1890,6 +1902,7 @@
   "AWS::Events::Endpoint.ReplicationConfig": "CACHED",
   "AWS::Events::Endpoint.RoutingConfig": "CACHED",
   "AWS::Events::Endpoint.Secondary": "CACHED",
+  "AWS::Events::EventBus.DeadLetterConfig": "CACHED",
   "AWS::Events::EventBusPolicy.Condition": "CACHED",
   "AWS::Events::Rule.AppSyncParameters": "CACHED",
   "AWS::Events::Rule.AwsVpcConfiguration": "CACHED",
@@ -6837,6 +6850,8 @@
   "AWS::SecurityHub::Insight.MapFilter": "CACHED",
   "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterConfiguration": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterValue": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Expiration": "CACHED",
@@ -7118,7 +7133,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "173.0.0",
+ "ResourceSpecificationVersion": "174.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7247,6 +7262,7 @@
   "AWS::Batch::JobDefinition": "CACHED",
   "AWS::Batch::JobQueue": "CACHED",
   "AWS::Batch::SchedulingPolicy": "CACHED",
+  "AWS::Bedrock::Agent": "CACHED",
   "AWS::Bedrock::AgentAlias": "CACHED",
   "AWS::Bedrock::Guardrail": "CACHED",
   "AWS::Bedrock::GuardrailVersion": "CACHED",
@@ -7953,7 +7969,146 @@
   "AWS::Lightsail::Container": "CACHED",
   "AWS::Lightsail::Database": "CACHED",
   "AWS::Lightsail::Disk": "CACHED",
-  "AWS::Lightsail::Instance": "CACHED",
+  "AWS::Lightsail::Instance": {
+   "Attributes": {
+    "Hardware.CpuCount": {
+     "PrimitiveType": "Integer"
+    },
+    "Hardware.RamSizeInGb": {
+     "PrimitiveType": "Integer"
+    },
+    "InstanceArn": {
+     "PrimitiveType": "String"
+    },
+    "IsStaticIp": {
+     "PrimitiveType": "Boolean"
+    },
+    "Location.AvailabilityZone": {
+     "PrimitiveType": "String"
+    },
+    "Location.RegionName": {
+     "PrimitiveType": "String"
+    },
+    "Networking.MonthlyTransfer.GbPerMonthAllocated": {
+     "PrimitiveType": "String"
+    },
+    "PrivateIpAddress": {
+     "PrimitiveType": "String"
+    },
+    "PublicIpAddress": {
+     "PrimitiveType": "String"
+    },
+    "ResourceType": {
+     "PrimitiveType": "String"
+    },
+    "SshKeyName": {
+     "PrimitiveType": "String"
+    },
+    "State.Code": {
+     "PrimitiveType": "Integer"
+    },
+    "State.Name": {
+     "PrimitiveType": "String"
+    },
+    "SupportCode": {
+     "PrimitiveType": "String"
+    },
+    "UserName": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html",
+   "Properties": {
+    "AddOns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-addons",
+     "DuplicatesAllowed": true,
+     "ItemType": "AddOn",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "AvailabilityZone": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-availabilityzone",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lightsail::Instance.AvailabilityZone"
+     }
+    },
+    "BlueprintId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-blueprintid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lightsail::Instance.BlueprintId"
+     }
+    },
+    "BundleId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-bundleid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lightsail::Instance.BundleId"
+     }
+    },
+    "Hardware": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-hardware",
+     "Required": false,
+     "Type": "Hardware",
+     "UpdateType": "Mutable"
+    },
+    "InstanceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-instancename",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lightsail::Instance.InstanceName"
+     }
+    },
+    "KeyPairName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-keypairname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Location": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-location",
+     "Required": false,
+     "Type": "Location",
+     "UpdateType": "Mutable"
+    },
+    "Networking": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-networking",
+     "Required": false,
+     "Type": "Networking",
+     "UpdateType": "Mutable"
+    },
+    "State": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-state",
+     "Required": false,
+     "Type": "State",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "UserData": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lightsail-instance.html#cfn-lightsail-instance-userdata",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lightsail::LoadBalancer": "CACHED",
   "AWS::Lightsail::LoadBalancerTlsCertificate": "CACHED",
   "AWS::Lightsail::StaticIp": "CACHED",
@@ -8300,6 +8455,7 @@
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Insight": "CACHED",
   "AWS::SecurityHub::ProductSubscription": "CACHED",
+  "AWS::SecurityHub::SecurityControl": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::SecurityLake::AwsLogSource": "CACHED",
   "AWS::SecurityLake::DataLake": {
@@ -8926,6 +9082,28 @@
   "AWS::Batch::JobQueue.JobStateTimeLimitAction.State": "CACHED",
   "AWS::Batch::JobQueue.SchedulingPolicyArn": "CACHED",
   "AWS::Batch::JobQueue.State": "CACHED",
+  "AWS::Bedrock::Agent.AgentActionGroup.ActionGroupName": "CACHED",
+  "AWS::Bedrock::Agent.AgentActionGroup.ActionGroupState": "CACHED",
+  "AWS::Bedrock::Agent.AgentActionGroup.Description": "CACHED",
+  "AWS::Bedrock::Agent.AgentActionGroup.ParentActionGroupSignature": "CACHED",
+  "AWS::Bedrock::Agent.AgentKnowledgeBase.Description": "CACHED",
+  "AWS::Bedrock::Agent.AgentKnowledgeBase.KnowledgeBaseId": "CACHED",
+  "AWS::Bedrock::Agent.AgentKnowledgeBase.KnowledgeBaseState": "CACHED",
+  "AWS::Bedrock::Agent.AgentName": "CACHED",
+  "AWS::Bedrock::Agent.AgentResourceRoleArn": "CACHED",
+  "AWS::Bedrock::Agent.CustomerEncryptionKeyArn": "CACHED",
+  "AWS::Bedrock::Agent.Description": "CACHED",
+  "AWS::Bedrock::Agent.FoundationModel": "CACHED",
+  "AWS::Bedrock::Agent.Function.Description": "CACHED",
+  "AWS::Bedrock::Agent.Function.Name": "CACHED",
+  "AWS::Bedrock::Agent.IdleSessionTTLInSeconds": "CACHED",
+  "AWS::Bedrock::Agent.Instruction": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration.BasePromptTemplate": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration.ParserMode": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration.PromptCreationMode": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration.PromptState": "CACHED",
+  "AWS::Bedrock::Agent.PromptConfiguration.PromptType": "CACHED",
+  "AWS::Bedrock::Agent.PromptOverrideConfiguration.OverrideLambda": "CACHED",
   "AWS::Bedrock::AgentAlias.AgentAliasName": "CACHED",
   "AWS::Bedrock::AgentAlias.AgentAliasRoutingConfigurationListItem.AgentVersion": "CACHED",
   "AWS::Bedrock::AgentAlias.AgentId": "CACHED",
@@ -14861,6 +15039,9 @@
   "AWS::SecurityHub::Insight.Name": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.LastUpdateReason": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlId": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
   "AWS::SecurityLake::AwsLogSource.Accounts": "CACHED",
@@ -15033,9 +15214,6 @@
   "AWS::Transfer::Workflow.TagStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration.GroupEntityType": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.ClientIds": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.UserPoolArn": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",
