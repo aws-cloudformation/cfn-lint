@@ -114,6 +114,12 @@ def context(cfn):
             [],
         ),
         (
+            "Short list for path",
+            {"Ref": "MyParameter"},
+            deque([]),
+            [],
+        ),
+        (
             "Using NoEcho in Outputs",
             {"Ref": "Echo"},
             deque(["Outputs", "Name", "Value"]),

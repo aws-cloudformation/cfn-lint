@@ -110,6 +110,11 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             resources, ["RootInstanceProfile"]
         ), "Expected {} resources, got {}".format(["RootInstanceProfile"], resources)
 
+        resources = list(self.template.get_resource_children("ElasticIP", []))
+        self.assertListEqual(resources, []), "Expected {} resources, got {}".format(
+            [], resources
+        )
+
     def test_get_resources_bad(self):
         """Don't get resources that aren't properly configured"""
         template = {

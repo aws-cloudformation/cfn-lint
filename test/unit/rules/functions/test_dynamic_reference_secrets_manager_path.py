@@ -43,6 +43,20 @@ def context(cfn):
             [],
         ),
         (
+            "Short list",
+            "{{resolve:secretsmanager:Parameter}}",
+            ["Parameters", "MyParameter"],
+            [
+                ValidationError(
+                    (
+                        "Dynamic reference '{{resolve:secretsmanager:Parameter}}' "
+                        "to secrets manager can only be used in resource properties"
+                    ),
+                    rule=DynamicReferenceSecretsManagerPath(),
+                )
+            ],
+        ),
+        (
             "Invalid SSM secure location",
             "{{resolve:secretsmanager:Parameter}}",
             ["Outputs", "MyOutput", "Value"],

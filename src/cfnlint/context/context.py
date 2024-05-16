@@ -67,11 +67,10 @@ class Path:
         cls = self.__class__
 
         for f in fields(Path):
-            if f.init:
-                if kwargs.get(f.name) is not None:
-                    kwargs[f.name] = getattr(self, f.name) + deque([kwargs[f.name]])
-                else:
-                    kwargs[f.name] = getattr(self, f.name)
+            if kwargs.get(f.name) is not None:
+                kwargs[f.name] = getattr(self, f.name) + deque([kwargs[f.name]])
+            else:
+                kwargs[f.name] = getattr(self, f.name)
 
         return cls(**kwargs)
 
@@ -82,8 +81,7 @@ class Path:
         cls = self.__class__
 
         for f in fields(Path):
-            if f.init:
-                kwargs.setdefault(f.name, getattr(self, f.name))
+            kwargs.setdefault(f.name, getattr(self, f.name))
 
         return cls(**kwargs)
 

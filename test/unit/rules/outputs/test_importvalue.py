@@ -39,6 +39,13 @@ def validator():
             [],
         ),
         (
+            "Short path",
+            {"Fn::ImportValue": "Export"},
+            deque(["Outputs"]),
+            {"type": "object"},
+            [],
+        ),
+        (
             "Invalid Fn::ImportValue in Output",
             {"Fn::ImportValue": "Export"},
             deque(["Outputs", "MyOutput", "Value"]),
