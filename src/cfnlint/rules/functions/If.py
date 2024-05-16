@@ -66,9 +66,7 @@ class If(BaseFn):
             err.validator = self.fn.py
             yield err
 
-        for err in validator.descend(instance=value[1], schema=s, path=1):
-            err.path.appendleft(key)
-            yield err
-        for err in validator.descend(instance=value[2], schema=s, path=2):
-            err.path.appendleft(key)
-            yield err
+        for i in [1, 2]:
+            for err in validator.descend(instance=value[i], schema=s, path=i):
+                err.path.appendleft(key)
+                yield err

@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.outputs.ImportValue import ImportValue
 
@@ -22,7 +22,6 @@ def rule():
 def validator():
     context = Context(
         regions=["us-east-1"],
-        path=deque([]),
         resources={},
         parameters={},
     )
@@ -58,9 +57,7 @@ def validator():
     ],
 )
 def test_validate(name, instance, path, schema, expected, rule, validator):
-    context = validator.context
-    for p in path:
-        context = context.evolve(path=p)
+    context = validator.context.evolve(path=Path(path=path))
     validator = validator.evolve(context=context)
     errs = list(rule.validate(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

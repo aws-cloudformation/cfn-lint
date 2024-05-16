@@ -18,7 +18,7 @@ def _resolve(name, instance, expected_results, **kwargs):
 
     for i, (instance, v, errors) in enumerate(resolutions):
         assert instance == expected_results[i][0]
-        assert v.context.value_path == expected_results[i][1]
+        assert v.context.path.value_path == expected_results[i][1]
         assert errors == expected_results[i][2]
 
 

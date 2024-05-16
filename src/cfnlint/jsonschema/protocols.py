@@ -62,7 +62,7 @@ class Validator(Protocol):
     cfn: Template | None
     context: Context
     function_filter: FunctionFilter
-    cfn_path: deque[str | int]
+    cfn_path: deque[str]
 
     def __init__(
         self,

@@ -244,13 +244,15 @@ def create(
             schema: Any,
             path: str | int | None = None,
             schema_path: str | int | None = None,
-            property_path: str | int | None = None,
+            property_path: str | None = None,
         ) -> ValidationResult:
             for error in self.evolve(
                 schema=schema,
-                context=self.context.descend(
-                    path=[path] if path else [],
-                    cfn_path=[property_path] if property_path else [],
+                context=self.context.evolve(
+                    path=self.context.path.descend(
+                        path=path,
+                        cfn_path=property_path,
+                    ),
                 ),
             ).iter_errors(instance):
                 if path is not None:

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.DynamicReferenceSsmPath import DynamicReferenceSsmPath
 from cfnlint.template import Template
@@ -167,8 +167,7 @@ def context(cfn):
     ],
 )
 def test_validate(name, instance, path, expected, rule, context, cfn):
-    for p in path:
-        context = context.evolve(path=p)
+    context = context.evolve(path=Path(path=path))
     validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.validate(validator, {"type": "string"}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

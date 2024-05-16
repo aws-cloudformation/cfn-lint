@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from typing import Any
 
 import regex as re
@@ -31,5 +32,5 @@ class SubParametersUsed(CloudFormationLintRule):
         for v, _ in instance[1].items():
             if v not in variables:
                 yield ValidationError(
-                    f"Parameter {v!r} not used in 'Fn::Sub'", path=[1, v]
+                    f"Parameter {v!r} not used in 'Fn::Sub'", path=deque([1, v])
                 )

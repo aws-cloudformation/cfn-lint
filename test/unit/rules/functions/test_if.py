@@ -23,7 +23,6 @@ def rule():
 def validator():
     context = Context(
         regions=["us-east-1"],
-        path=deque([]),
         resources={},
         parameters={
             "MyParameter": Parameter(

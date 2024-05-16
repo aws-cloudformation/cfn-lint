@@ -85,7 +85,10 @@ class Sub(BaseFn):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=self._functions,
-                cfn_path=deque([key]),
+                path=validator.context.path.descend(
+                    path=key,
+                    cfn_path=key,
+                ),
             ),
         )
         for param in params:

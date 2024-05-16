@@ -3,11 +3,17 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field, fields
-from typing import Any, Sequence, Tuple
+from typing import TYPE_CHECKING, Any, Sequence, Tuple
 
 from cfnlint.helpers import REGEX_DYN_REF, ToPy
 from cfnlint.jsonschema._utils import ensure_list
+
+if TYPE_CHECKING:
+    from cfnlint.jsonschema.protocols import Validator
+
 
 _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
@@ -53,7 +59,7 @@ class FunctionFilter:
         default=True,
     )
 
-    def _filter_schemas(self, schema, validator: Any) -> Tuple[Any, Any]:
+    def _filter_schemas(self, schema, validator: Validator) -> Tuple[Any, Any]:
         """
         Filter the schemas to only include the ones that are required
         """
@@ -64,8 +70,8 @@ class FunctionFilter:
         # Example: Typically we want to remove (!Ref AWS::NoValue)
         # to count minItems, maxItems, required properties but if we
         # are in an If we need to be more strict
-        if len(validator.context.path) > 0:
-            if validator.context.path[-1] in ["Fn::If"]:
+        if len(validator.context.path.path) > 0:
+            if validator.context.path.path[-1] in ["Fn::If"]:
                 return schema, None
 
         standard_schema = {}
@@ -78,7 +84,7 @@ class FunctionFilter:
 
         if self.add_cfn_lint_keyword and "$ref" not in standard_schema:
             standard_schema["cfnLint"] = ensure_list(standard_schema.get("cfnLint", []))
-            standard_schema["cfnLint"].append("/".join(validator.context.cfn_path))
+            standard_schema["cfnLint"].append("/".join(validator.context.path.cfn_path))
 
         # some times CloudFormation dumps to standard nested "json".
         # it will do by using {"type": "object"} with no properties

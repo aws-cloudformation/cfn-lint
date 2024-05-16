@@ -17,7 +17,6 @@ SPDX-License-Identifier: MIT
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
 
-from collections import deque
 from copy import deepcopy
 from difflib import SequenceMatcher
 from typing import Any, Dict, Sequence
@@ -547,7 +546,7 @@ def type(
         yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
-def prefixItems(validator, prefixItems, instance, schema):
+def prefixItems(validator: Validator, prefixItems: Any, instance: Any, schema: Any):
     if not validator.is_type(instance, "array"):
         return
 
@@ -556,6 +555,6 @@ def prefixItems(validator, prefixItems, instance, schema):
             instance=item,
             schema=subschema,
             schema_path=index,
-            path=deque([index]),
-            property_path=deque(["*"]),
+            path=index,
+            property_path="*",
         )

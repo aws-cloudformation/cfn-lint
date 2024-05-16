@@ -32,7 +32,7 @@ class DeletionPolicy(CloudFormationLintRule):
         )
 
         enum = ["Delete", "Retain", "RetainExceptOnCreate"]
-        resource_name = validator.context.path[1]
+        resource_name = validator.context.path.path[1]
         if (
             isinstance(resource_name, str)
             and validator.context.resources[resource_name].type in valid_snapshot_types

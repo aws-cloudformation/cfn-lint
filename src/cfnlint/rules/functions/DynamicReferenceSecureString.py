@@ -39,8 +39,9 @@ class DynamicReferenceSecureString(BaseFn):
         ]
 
     def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
-        keyword = self.get_keyword(validator)
-        if keyword in self.exceptions:
+        print(1, validator.context.path.cfn_path)
+        print(validator.context.path.cfn_path_string)
+        if validator.context.path.cfn_path_string in self.exceptions:
             return
 
         yield ValidationError(

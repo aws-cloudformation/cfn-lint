@@ -60,7 +60,7 @@ class AvailabilityZone(CfnLintKeyword):
             if zone in self.exceptions:
                 continue
 
-            if any(fn in validator.context.path for fn in FUNCTIONS):
+            if any(fn in validator.context.path.path for fn in FUNCTIONS):
                 continue
 
             yield ValidationError(

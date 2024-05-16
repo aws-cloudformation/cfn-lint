@@ -107,7 +107,7 @@ class Ref(BaseFn):
             if rule:
                 yield from rule.validate(validator, {}, instance, schema)
 
-        keyword = self.get_keyword(validator)
+        keyword = validator.context.path.cfn_path_string
         rule_id = self.keywords.get(keyword)
         if rule_id:
             rule = self.child_rules.get(rule_id)

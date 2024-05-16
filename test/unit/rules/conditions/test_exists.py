@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.conditions.Exists import Exists
 from cfnlint.template import Template
@@ -34,14 +34,9 @@ def validator():
             },
         },
     )
-    context = (
-        create_context_for_template(cfn)
-        .evolve(
-            functions=[],
-            path="Resources",
-        )
-        .evolve(path="MyRdsDbInstance")
-        .evolve(path="Properties")
+    context = create_context_for_template(cfn).evolve(
+        functions=[],
+        path=Path(path=deque(["Resources", "MyRdsDbInstance", "Properties"])),
     )
     yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 

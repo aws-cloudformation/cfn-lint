@@ -49,42 +49,6 @@ class BaseFn(CloudFormationLintRule):
             context=validator.context.evolve(functions=self.functions),
         )
 
-    def get_keyword(self, validator: Validator) -> str:
-        if len(validator.context.path) < 1:
-            return ""
-
-        if (
-            validator.context.path[0] not in ["Resources", "Parameters"]
-            or len(validator.context.path) < 2
-        ):
-            return "/".join(str(i) for i in validator.context.path)
-
-        if validator.context.path[0] == "Resources":
-            resource_name = validator.context.path[1]
-            if (
-                isinstance(resource_name, str)
-                and resource_name in validator.context.resources
-            ):
-                resource_type = validator.context.resources[resource_name].type
-                return "/".join(
-                    ["Resources", resource_type]
-                    + list(x for x in validator.context.path if isinstance(x, str))[2:]
-                )
-
-        if validator.context.path[0] == "Parameters":
-            parameter_name = validator.context.path[1]
-            if (
-                isinstance(parameter_name, str)
-                and parameter_name in validator.context.parameters
-            ):
-                parameter_type = validator.context.parameters[parameter_name].type
-                return "/".join(
-                    ["Parameters", parameter_type]
-                    + list(x for x in validator.context.path if isinstance(x, str))[2:]
-                )
-
-        return "/".join(str(i) for i in validator.context.path)
-
     def resolve(
         self,
         validator: Validator,
@@ -98,7 +62,13 @@ class BaseFn(CloudFormationLintRule):
             if resolve_err:
                 yield resolve_err
                 continue
-            for err in self.fix_errors(v.descend(value, s, key)):
+            for err in self.fix_errors(
+                v.descend(
+                    instance=value,
+                    schema=s,
+                    path=key,
+                )
+            ):
                 err.message = err.message.replace(f"{value!r}", f"{instance!r}")
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 yield err

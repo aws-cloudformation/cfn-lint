@@ -31,7 +31,7 @@ class MaxProperties(CloudFormationLintRule):
         if percent > 1:
             yield ValidationError(
                 (
-                    f"{'/'.join(str(p) for p in validator.context.path)!r} "
+                    f"{validator.context.path.path_string!r} "
                     f"has more than {mP!r} properties"
                 )
             )
@@ -50,7 +50,7 @@ class MaxProperties(CloudFormationLintRule):
 
             yield ValidationError(
                 (
-                    f"{'/'.join(str(p) for p in validator.context.path)!r} "
+                    f"{validator.context.path.path_string!r} "
                     f"is approaching the limit of {mP!r} properties"
                 ),
                 rule=rule,

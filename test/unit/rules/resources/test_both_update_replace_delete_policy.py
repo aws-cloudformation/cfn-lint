@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.context.context import Resource
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.BothUpdateReplacePolicyDeletionPolicyNeeded import (
@@ -25,7 +25,7 @@ def rule():
 def validator():
     context = Context(
         regions=["us-east-1"],
-        path=deque([]),
+        path=Path(),
         resources={
             "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
         },
@@ -93,8 +93,7 @@ def validator():
 )
 def test_validate(name, instance, path, expected, rule, validator):
     context = validator.context
-    for p in path:
-        context = context.evolve(path=p)
+    context = context.evolve(path=Path(path=path))
     validator = validator.evolve(context=context)
     errs = list(rule.validate(validator, {}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
