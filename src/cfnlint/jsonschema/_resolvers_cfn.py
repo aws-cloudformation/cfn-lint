@@ -66,7 +66,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         not (equal(map_name, each)) for each in mappings
                     ):
                         yield None, map_v.evolve(
-                            context=map_v.context.evolve(value_path=[0])
+                            context=map_v.context.evolve(value_path=deque([0]))
                         ), ValidationError(
                             f"{map_name!r} is not one of {mappings!r}", path=[0]
                         )
@@ -79,7 +79,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         not (equal(top_level_key, each)) for each in top_level_keys
                     ):
                         yield None, top_v.evolve(
-                            context=top_v.context.evolve(value_path=[1])
+                            context=top_v.context.evolve(value_path=deque([1]))
                         ), ValidationError(
                             f"{top_level_key!r} is not one of {top_level_keys!r}",
                             path=[0],
@@ -96,7 +96,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                         for each in second_level_keys
                     ):
                         yield None, second_v.evolve(
-                            context=second_v.context.evolve(value_path=[2])
+                            context=second_v.context.evolve(value_path=deque([2]))
                         ), ValidationError(
                             f"{second_level_key!r} is not one of {second_level_keys!r}",
                             path=[0],

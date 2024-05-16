@@ -99,7 +99,7 @@ class GetAtt(BaseFn):
                 resource_name_validator.descend(
                     resource_name,
                     {"enum": list(validator.context.resources.keys())},
-                    key,
+                    path=key,
                 )
             ):
                 err.path.append(paths[0])

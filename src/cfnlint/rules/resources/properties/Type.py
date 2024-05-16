@@ -36,9 +36,9 @@ class Type(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
-        if validator.cfn_path:
+        if validator.context.cfn_path:
             if validator.is_type(instance, "string"):
-                if "/".join(validator.cfn_path) in TEMPLATED_PROPERTY_CFN_PATHS:
+                if "/".join(validator.context.cfn_path) in TEMPLATED_PROPERTY_CFN_PATHS:
                     return
 
         if self.config.get("strict") or validator.context.strict_types:

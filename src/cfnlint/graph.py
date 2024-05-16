@@ -77,7 +77,7 @@ class GraphSettings:
                     edge_2,
                     **edge_data,
                 )
-        print(view.edges)
+
         view.graph.update(graph.graph)
         return view
 

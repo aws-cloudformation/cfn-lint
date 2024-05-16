@@ -18,7 +18,6 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
-from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Callable, Dict
@@ -44,13 +43,11 @@ def create(
     function_filter: FunctionFilter | None = None,
     context: Context | None = None,
     fn_resolvers: Mapping[str, Any] | None = None,
-    cfn_path: deque[str | int] | None = deque([]),
 ):
     validators_arg = validators or {}
     function_filter_arg = function_filter or FunctionFilter()
     context_arg = context or Context()
     fn_resolvers_arg = fn_resolvers or {}
-    cfn_path_arg = cfn_path or deque([])
 
     @dataclass
     class Validator:
@@ -83,8 +80,6 @@ def create(
         )
         cfn: Template | None = field(default=None)
         context: Context = field(default_factory=lambda: context_arg)
-
-        cfn_path: deque[str | int] = field(default_factory=lambda: cfn_path_arg)
 
         fn_resolvers: Mapping[
             str,
@@ -248,15 +243,15 @@ def create(
             instance: Any,
             schema: Any,
             path: str | int | None = None,
-            schema_path: str | None = None,
+            schema_path: str | int | None = None,
             property_path: str | int | None = None,
         ) -> ValidationResult:
             for error in self.evolve(
                 schema=schema,
-                context=self.context.evolve(
-                    path=path,
+                context=self.context.descend(
+                    path=[path] if path else [],
+                    cfn_path=[property_path] if property_path else [],
                 ),
-                cfn_path=deque([property_path]) if property_path else deque([]),
             ).iter_errors(instance):
                 if path is not None:
                     error.path.appendleft(path)
@@ -279,12 +274,7 @@ def create(
             cls = self.__class__
             for f in fields(Validator):
                 if f.init:
-                    if f.name == "cfn_path":
-                        cfn_path = self.cfn_path.copy()
-                        cfn_path.extend(kwargs.get(f.name, []))
-                        kwargs["cfn_path"] = cfn_path
-                    else:
-                        kwargs.setdefault(f.name, getattr(self, f.name))
+                    kwargs.setdefault(f.name, getattr(self, f.name))
 
             return cls(**kwargs)
 
@@ -321,7 +311,6 @@ def create(
                 function_filter=function_filter,
                 context=context,
                 fn_resolvers=all_fn_resolvers,
-                cfn_path=self.cfn_path,
             )
 
     return Validator

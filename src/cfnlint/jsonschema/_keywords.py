@@ -17,6 +17,7 @@ SPDX-License-Identifier: MIT
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
 
+from collections import deque
 from copy import deepcopy
 from difflib import SequenceMatcher
 from typing import Any, Dict, Sequence
@@ -46,7 +47,10 @@ def additionalProperties(
     if validator.is_type(aP, "object"):
         for extra in extras:
             yield from validator.descend(
-                instance[extra], aP, path=extra, property_path="*"
+                instance[extra],
+                aP,
+                path=extra,
+                property_path="*",
             )
     elif not aP and extras:
         if "patternProperties" in schema:
@@ -552,6 +556,6 @@ def prefixItems(validator, prefixItems, instance, schema):
             instance=item,
             schema=subschema,
             schema_path=index,
-            path=index,
-            property_path="*",
+            path=deque([index]),
+            property_path=deque(["*"]),
         )

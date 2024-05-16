@@ -78,7 +78,7 @@ class FunctionFilter:
 
         if self.add_cfn_lint_keyword and "$ref" not in standard_schema:
             standard_schema["cfnLint"] = ensure_list(standard_schema.get("cfnLint", []))
-            standard_schema["cfnLint"].append("/".join(validator.cfn_path))
+            standard_schema["cfnLint"].append("/".join(validator.context.cfn_path))
 
         # some times CloudFormation dumps to standard nested "json".
         # it will do by using {"type": "object"} with no properties

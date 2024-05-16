@@ -63,10 +63,12 @@ class Context:
 
     # path keeps track of the path as we move down the template
     # Example: Resources, MyResource, Properties, Name, ...
-    path: Deque[str] = field(init=True, default_factory=deque)
+    path: Deque[str | int] = field(init=True, default_factory=deque)
     # value_path is an override of the value if we got it from another place
     # like a Parameter default value
-    value_path: Deque[str] = field(init=True, default_factory=deque)
+    value_path: Deque[str | int] = field(init=True, default_factory=deque)
+
+    cfn_path: Deque[str | int] = field(init=True, default_factory=deque)
 
     # cfn-lint Template class
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
@@ -93,23 +95,49 @@ class Context:
         if self.path is None:
             self.path = deque([])
 
-    def evolve(self, **kwargs) -> "Context":
+    def descend(
+        self,
+        path: Sequence[str | int] = (),
+        ref_values: Dict[str, Any] | None = None,
+        value_path: Sequence[str | int] = (),
+        cfn_path: Sequence[str | int] = (),
+        regions: Sequence[str] | None = None,
+    ):
         """
         Create a new context merging together attributes
         """
         cls = self.__class__
 
-        if "path" in kwargs and kwargs["path"] is not None:
-            path = self.path.copy()
-            path.append(kwargs["path"])
-            kwargs["path"] = path
-        else:
-            kwargs["path"] = self.path.copy()
+        kwargs: dict[str, Any] = {}
 
-        if "ref_values" in kwargs and kwargs["ref_values"] is not None:
-            ref_values = self.ref_values.copy()
-            ref_values.update(kwargs["ref_values"])
-            kwargs["ref_values"] = ref_values
+        if value_path:
+            kwargs["value_path"] = deque(value_path)
+
+        if path:
+            kwargs["path"] = self.path + deque(path)
+
+        if cfn_path:
+            kwargs["cfn_path"] = self.cfn_path + deque(cfn_path)
+
+        if ref_values is not None:
+            new_ref_values = self.ref_values.copy()
+            new_ref_values.update(ref_values)
+            kwargs["ref_values"] = new_ref_values
+
+        if regions is not None:
+            kwargs["regions"] = list(regions)
+
+        for f in fields(Context):
+            if f.init:
+                kwargs.setdefault(f.name, getattr(self, f.name))
+
+        return cls(**kwargs)
+
+    def evolve(self, **kwargs) -> "Context":
+        """
+        Create a new context without merging together attributes
+        """
+        cls = self.__class__
 
         for f in fields(Context):
             if f.init:
@@ -133,7 +161,7 @@ class Context:
             return
         if instance in self.parameters:
             for v, path in self.parameters[instance].ref(self):
-                yield v, self.evolve(
+                yield v, self.descend(
                     value_path=deque(["Parameters", instance]) + path,
                     ref_values={instance: v},
                 )

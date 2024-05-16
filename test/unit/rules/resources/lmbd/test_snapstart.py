@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context import Context
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.lmbd.SnapStart import SnapStart
 from cfnlint.template import Template
@@ -94,7 +95,9 @@ def validator():
 )
 def test_validate(name, instance, path, expected, rule, validator):
     validator = validator.evolve(
-        context=validator.context.evolve(path=path),
+        context=Context(
+            path=path,
+        )
     )
     errs = list(rule.validate(validator, "", instance, {}))
 

@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import json
+from collections import deque
 from typing import List
 
 from cfnlint.helpers import load_resource
@@ -17,7 +18,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 def _scalar_or_array(validator, subschema, instance, schema):
     if validator.is_type(instance, "array"):
         for index, i in enumerate(instance):
-            yield from validator.descend(i, subschema, path=index)
+            yield from validator.descend(i, subschema, path=deque([index]))
     else:
         yield from validator.descend(instance, subschema)
 

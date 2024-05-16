@@ -28,8 +28,8 @@ class ImageId(CloudFormationLintRule):
 
         parameter_type = validator.context.parameters[value].type
         for err in validator.descend(
-            parameter_type,
-            {
+            instance=parameter_type,
+            schema={
                 "enum": [
                     "AWS::EC2::Image::Id",
                     "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",

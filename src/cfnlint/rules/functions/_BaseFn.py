@@ -61,7 +61,10 @@ class BaseFn(CloudFormationLintRule):
 
         if validator.context.path[0] == "Resources":
             resource_name = validator.context.path[1]
-            if resource_name in validator.context.resources:
+            if (
+                isinstance(resource_name, str)
+                and resource_name in validator.context.resources
+            ):
                 resource_type = validator.context.resources[resource_name].type
                 return "/".join(
                     ["Resources", resource_type]
@@ -70,7 +73,10 @@ class BaseFn(CloudFormationLintRule):
 
         if validator.context.path[0] == "Parameters":
             parameter_name = validator.context.path[1]
-            if parameter_name in validator.context.parameters:
+            if (
+                isinstance(parameter_name, str)
+                and parameter_name in validator.context.parameters
+            ):
                 parameter_type = validator.context.parameters[parameter_name].type
                 return "/".join(
                     ["Parameters", parameter_type]
