@@ -1,3 +1,11 @@
+### v0.87.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `174.0.0` (pull #[3229](https://github.com/aws-cloudformation/cfn-lint/pull/3229))
+###### Fixes
+- In Graph make sure is_resource id is string (pull #[3252](https://github.com/aws-cloudformation/cfn-lint/pull/3252))
+- Update language extension transform to enumerate FindInMap when can't be resolved (pull #[3246](https://github.com/aws-cloudformation/cfn-lint/pull/3246))
+- Add `AWS::IAM::ManagedPolicy.PolicyArn` to `AWS::IAM::ManagedPolicy.Arn` (pull #[3230](https://github.com/aws-cloudformation/cfn-lint/pull/3230))
+
 ### v0.87.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `173.0.0` (pull #[3215](https://github.com/aws-cloudformation/cfn-lint/pull/3215))
