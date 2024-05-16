@@ -1008,6 +1008,7 @@
   "AWS::CodePipeline::Pipeline.ArtifactStoreMap": "CACHED",
   "AWS::CodePipeline::Pipeline.BlockerDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.EncryptionKey": "CACHED",
+  "AWS::CodePipeline::Pipeline.FailureConditions": "CACHED",
   "AWS::CodePipeline::Pipeline.GitBranchFilterCriteria": "CACHED",
   "AWS::CodePipeline::Pipeline.GitConfiguration": "CACHED",
   "AWS::CodePipeline::Pipeline.GitFilePathFilterCriteria": "CACHED",
@@ -1907,6 +1908,7 @@
   "AWS::Events::Endpoint.ReplicationConfig": "CACHED",
   "AWS::Events::Endpoint.RoutingConfig": "CACHED",
   "AWS::Events::Endpoint.Secondary": "CACHED",
+  "AWS::Events::EventBus.DeadLetterConfig": "CACHED",
   "AWS::Events::EventBusPolicy.Condition": "CACHED",
   "AWS::Events::Rule.AppSyncParameters": "CACHED",
   "AWS::Events::Rule.AwsVpcConfiguration": "CACHED",
@@ -3292,7 +3294,32 @@
   "AWS::MediaTailor::Channel.TimeShiftConfiguration": "CACHED",
   "AWS::MediaTailor::LiveSource.HttpPackageConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.AdMarkerPassthrough": "CACHED",
-  "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": "CACHED",
+  "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-playbackconfiguration-availsuppression.html",
+   "Properties": {
+    "FillPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-playbackconfiguration-availsuppression.html#cfn-mediatailor-playbackconfiguration-availsuppression-fillpolicy",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Mode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-playbackconfiguration-availsuppression.html#cfn-mediatailor-playbackconfiguration-availsuppression-mode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::MediaTailor::PlaybackConfiguration.AvailSuppression.Mode"
+     }
+    },
+    "Value": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediatailor-playbackconfiguration-availsuppression.html#cfn-mediatailor-playbackconfiguration-availsuppression-value",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::MediaTailor::PlaybackConfiguration.Bumper": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.CdnConfiguration": "CACHED",
   "AWS::MediaTailor::PlaybackConfiguration.DashConfiguration": "CACHED",
@@ -5462,7 +5489,43 @@
   "AWS::SageMaker::Domain.CustomImage": "CACHED",
   "AWS::SageMaker::Domain.CustomPosixUserConfig": "CACHED",
   "AWS::SageMaker::Domain.DefaultEbsStorageSettings": "CACHED",
-  "AWS::SageMaker::Domain.DefaultSpaceSettings": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html",
+   "Properties": {
+    "ExecutionRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-executionrole",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.ExecutionRole"
+     }
+    },
+    "JupyterServerAppSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-jupyterserverappsettings",
+     "Required": false,
+     "Type": "JupyterServerAppSettings",
+     "UpdateType": "Mutable"
+    },
+    "KernelGatewayAppSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-kernelgatewayappsettings",
+     "Required": false,
+     "Type": "KernelGatewayAppSettings",
+     "UpdateType": "Mutable"
+    },
+    "SecurityGroups": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-securitygroups",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.SecurityGroups"
+     }
+    }
+   }
+  },
   "AWS::SageMaker::Domain.DefaultSpaceStorageSettings": "CACHED",
   "AWS::SageMaker::Domain.DockerSettings": "CACHED",
   "AWS::SageMaker::Domain.DomainSettings": "CACHED",
@@ -5743,6 +5806,8 @@
   "AWS::SecurityHub::Insight.MapFilter": "CACHED",
   "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterConfiguration": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterValue": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Expiration": "CACHED",
@@ -6040,7 +6105,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "173.0.0",
+ "ResourceSpecificationVersion": "174.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7331,6 +7396,7 @@
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Insight": "CACHED",
   "AWS::SecurityHub::ProductSubscription": "CACHED",
+  "AWS::SecurityHub::SecurityControl": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::SecurityLake::AwsLogSource": "CACHED",
   "AWS::SecurityLake::DataLake": {
@@ -14054,6 +14120,9 @@
   "AWS::SecurityHub::Insight.Name": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.LastUpdateReason": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlId": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
   "AWS::SecurityLake::AwsLogSource.Accounts": "CACHED",
@@ -14242,9 +14311,6 @@
   "AWS::Transfer::Workflow.TagStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration.GroupEntityType": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.ClientIds": "CACHED",
-  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration.UserPoolArn": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",

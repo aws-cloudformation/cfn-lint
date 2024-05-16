@@ -1398,6 +1398,7 @@
   "AWS::CodePipeline::Pipeline.ArtifactStoreMap": "CACHED",
   "AWS::CodePipeline::Pipeline.BlockerDeclaration": "CACHED",
   "AWS::CodePipeline::Pipeline.EncryptionKey": "CACHED",
+  "AWS::CodePipeline::Pipeline.FailureConditions": "CACHED",
   "AWS::CodePipeline::Pipeline.GitBranchFilterCriteria": "CACHED",
   "AWS::CodePipeline::Pipeline.GitConfiguration": "CACHED",
   "AWS::CodePipeline::Pipeline.GitFilePathFilterCriteria": "CACHED",
@@ -2056,6 +2057,7 @@
   "AWS::Events::Endpoint.ReplicationConfig": "CACHED",
   "AWS::Events::Endpoint.RoutingConfig": "CACHED",
   "AWS::Events::Endpoint.Secondary": "CACHED",
+  "AWS::Events::EventBus.DeadLetterConfig": "CACHED",
   "AWS::Events::EventBusPolicy.Condition": "CACHED",
   "AWS::Events::Rule.AppSyncParameters": "CACHED",
   "AWS::Events::Rule.AwsVpcConfiguration": "CACHED",
@@ -3378,6 +3380,8 @@
   "AWS::SecurityHub::Insight.MapFilter": "CACHED",
   "AWS::SecurityHub::Insight.NumberFilter": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterConfiguration": "CACHED",
+  "AWS::SecurityHub::SecurityControl.ParameterValue": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl": "CACHED",
   "AWS::SecurityLake::DataLake.EncryptionConfiguration": "CACHED",
   "AWS::SecurityLake::DataLake.Expiration": "CACHED",
@@ -3617,7 +3621,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "173.0.0",
+ "ResourceSpecificationVersion": "174.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4891,7 +4895,39 @@
   "AWS::EMRServerless::Application": "CACHED",
   "AWS::ElastiCache::CacheCluster": "CACHED",
   "AWS::ElastiCache::GlobalReplicationGroup": "CACHED",
-  "AWS::ElastiCache::ParameterGroup": "CACHED",
+  "AWS::ElastiCache::ParameterGroup": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html",
+   "Properties": {
+    "CacheParameterGroupFamily": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html#cfn-elasticache-parametergroup-cacheparametergroupfamily",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html#cfn-elasticache-parametergroup-description",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Properties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html#cfn-elasticache-parametergroup-properties",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-parameter-group.html#cfn-elasticache-parametergroup-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ElastiCache::ReplicationGroup": "CACHED",
   "AWS::ElastiCache::SecurityGroup": "CACHED",
   "AWS::ElastiCache::SecurityGroupIngress": "CACHED",
@@ -5241,7 +5277,55 @@
   "AWS::Lambda::LayerVersionPermission": "CACHED",
   "AWS::Lambda::Permission": "CACHED",
   "AWS::Lambda::Url": "CACHED",
-  "AWS::Lambda::Version": "CACHED",
+  "AWS::Lambda::Version": {
+   "Attributes": {
+    "FunctionArn": {
+     "PrimitiveType": "String"
+    },
+    "Version": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html",
+   "Properties": {
+    "CodeSha256": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-codesha256",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::Version.Description"
+     }
+    },
+    "FunctionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-functionname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::Version.FunctionName"
+     }
+    },
+    "ProvisionedConcurrencyConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-provisionedconcurrencyconfig",
+     "Required": false,
+     "Type": "ProvisionedConcurrencyConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "RuntimePolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-version.html#cfn-lambda-version-runtimepolicy",
+     "Required": false,
+     "Type": "RuntimePolicy",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Logs::AccountPolicy": "CACHED",
   "AWS::Logs::Delivery": "CACHED",
   "AWS::Logs::DeliveryDestination": "CACHED",
@@ -5542,6 +5626,7 @@
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Insight": "CACHED",
   "AWS::SecurityHub::ProductSubscription": "CACHED",
+  "AWS::SecurityHub::SecurityControl": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::SecurityLake::AwsLogSource": "CACHED",
   "AWS::SecurityLake::DataLake": {
@@ -8200,6 +8285,9 @@
   "AWS::SecurityHub::Insight.Name": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.LastUpdateReason": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlArn": "CACHED",
+  "AWS::SecurityHub::SecurityControl.SecurityControlId": "CACHED",
   "AWS::SecurityHub::Standard.StandardsArn": "CACHED",
   "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": "CACHED",
   "AWS::SecurityLake::AwsLogSource.Accounts": "CACHED",
