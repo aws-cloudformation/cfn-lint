@@ -3,25 +3,141 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+from collections import deque
 
-from cfnlint.rules.resources.DependsOn import DependsOn  # pylint: disable=E0401
+import pytest
+
+from cfnlint.context import Path, create_context_for_template
+from cfnlint.helpers import FUNCTIONS
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules.resources.DependsOn import DependsOn  # noqa: E501
+from cfnlint.template import Template
 
 
-class TestResourceDependsOn(BaseRuleTestCase):
-    """Test base template"""
+@pytest.fixture(scope="module")
+def rule():
+    rule = DependsOn()
+    yield rule
 
-    def setUp(self):
-        """Setup"""
-        super(TestResourceDependsOn, self).setUp()
-        self.collection.register(DependsOn())
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+@pytest.fixture(scope="module")
+def validator():
+    cfn = Template(
+        "",
+        {
+            "Conditions": {
+                "IsUsEast1": {
+                    "Fn::Equals": [
+                        {"Ref": "AWS::Region"},
+                        "us-east-1",
+                    ]
+                }
+            },
+            "Resources": {
+                "ParentBucket": {
+                    "Type": "AWS::S3::Bucket",
+                },
+                "ChildBucket": {
+                    "Type": "AWS::S3::Bucket",
+                    "DependsOn": "ParentBucket",
+                },
+                "ParentBucketWithGoodCondition": {
+                    "Condition": "IsUsEast1",
+                    "Type": "AWS::S3::Bucket",
+                },
+                "ChildBucketWithGoodCondition": {
+                    "Condition": "IsUsEast1",
+                    "DependsOn": "ParentBucketWithGoodCondition",
+                },
+                "ParentBucketWithBadCondition": {
+                    "Condition": "IsUsEast1",
+                    "Type": "AWS::S3::Bucket",
+                },
+                "ChildBucketWithBadCondition": {
+                    "Type": "AWS::S3::Bucket",
+                    "DependsOn": "ParentBucketWithBadCondition",
+                },
+                "ToMySelf": {
+                    "Type": "AWS::S3::Bucket",
+                    "DependsOn": "ToMySelf",
+                },
+            },
+        },
+    )
+    context = create_context_for_template(cfn).evolve(
+        functions=FUNCTIONS,
+    )
+    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources_dependson.yaml", 4
-        )
+
+@pytest.mark.parametrize(
+    "name,instance,path,expected",
+    [
+        (
+            "Valid depends on",
+            "ParentBucket",
+            deque(["Resources", "ChildBucket", "DependsOn"]),
+            [],
+        ),
+        (
+            "Valid depends on with conditions",
+            "ParentBucketWithGoodCondition",
+            deque(["Resources", "ChildBucketWithGoodCondition", "DependsOn"]),
+            [],
+        ),
+        (
+            "Invalid type isn't validated by this rule",
+            {"Ref": "MyResource"},
+            deque(["Resources", "ChildBucket", "DependsOn"]),
+            [],
+        ),
+        (
+            "Invalid depends on",
+            "Foo",
+            deque(["Resources", "ChildBucket", "DependsOn"]),
+            [
+                ValidationError(
+                    (
+                        "'Foo' is not one of ['ParentBucket', "
+                        "'ParentBucketWithGoodCondition', "
+                        "'ParentBucketWithBadCondition', "
+                        "'ChildBucketWithBadCondition', 'ToMySelf']"
+                    ),
+                )
+            ],
+        ),
+        (
+            "Invalid depends on with conditions",
+            "ParentBucketWithBadCondition",
+            deque(["Resources", "ChildBucketWithBadCondition", "DependsOn"]),
+            [
+                ValidationError(
+                    (
+                        "'ParentBucketWithBadCondition' will not exist when condition "
+                        "'IsUsEast1' is False"
+                    ),
+                )
+            ],
+        ),
+        (
+            "Invalid depends on relying on itself",
+            "ToMySelf",
+            deque(["Resources", "ToMySelf", "DependsOn"]),
+            [
+                ValidationError(
+                    (
+                        "'ToMySelf' is not one of ['ParentBucket', 'ChildBucket', "
+                        "'ParentBucketWithGoodCondition', "
+                        "'ParentBucketWithBadCondition', 'ChildBucketWithBadCondition']"
+                    ),
+                )
+            ],
+        ),
+    ],
+)
+def test_validate(name, instance, path, expected, rule, validator):
+
+    validator = validator.evolve(context=validator.context.evolve(path=Path(path)))
+    errs = list(rule.validate(validator, False, instance, {}))
+
+    assert errs == expected, f"Test {name!r} got {errs!r}"
