@@ -85,3 +85,14 @@ def test_validate(name, instance, expected, rule, validator):
     # we use error counts in this one as the instance types are
     # always changing so we aren't going to hold ourselves up by that
     assert errors == expected, f"Test {name!r} got {errors!r}"
+
+
+def test_validate_with_no_path(rule, validator):
+    validator = validator.evolve(
+        context=validator.context.path.evolve(
+            path=Path(path=deque([]), cfn_path=deque([]))
+        )
+    )
+
+    errors = list(rule.validate(validator, False, {}, {}))
+    assert errors == []

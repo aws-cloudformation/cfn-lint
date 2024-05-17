@@ -80,6 +80,22 @@ def validator():
             [],
         ),
         (
+            "Invalid depends on but low path",
+            "Foo",
+            deque([]),
+            [
+                ValidationError(
+                    (
+                        "'Foo' is not one of ['ParentBucket', "
+                        "'ChildBucket', "
+                        "'ParentBucketWithGoodCondition', "
+                        "'ParentBucketWithBadCondition', "
+                        "'ChildBucketWithBadCondition', 'ToMySelf']"
+                    ),
+                )
+            ],
+        ),
+        (
             "Valid depends on with conditions",
             "ParentBucketWithGoodCondition",
             deque(["Resources", "ChildBucketWithGoodCondition", "DependsOn"]),
@@ -141,3 +157,15 @@ def test_validate(name, instance, path, expected, rule, validator):
     errs = list(rule.validate(validator, False, instance, {}))
 
     assert errs == expected, f"Test {name!r} got {errs!r}"
+
+
+def test_validate_with_no_cfn(rule, validator):
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            path=Path(path=deque(["Resources", "ChildBucket", "DependsOn"]))
+        )
+    )
+    validator.cfn = None
+    errs = list(rule.validate(validator, False, "ParentBucketWithBadCondition", {}))
+
+    assert errs == [], f"Test without cfn got {errs!r}"
