@@ -108,6 +108,28 @@ def validator():
                 ),
             ],
         ),
+        (
+            {
+                "Engine": "mysql",
+                "Domain": "Foo",
+                "AllocatedStorage": 100,
+                "DBClusterInstanceClass": "foo",
+                "Iops": 100,
+                "StorageType": "io1",
+            },
+            [
+                ValidationError(
+                    (
+                        "Additional properties are not allowed 'Domain' "
+                        "when creating Multi-AZ cluster"
+                    ),
+                    rule=DbClusterMultiAz(),
+                    path=deque(["Domain"]),
+                    validator=None,
+                    schema_path=deque(["then", "properties", "Domain"]),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):

@@ -8,14 +8,14 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.resources.dynamodb.TableBillingModeExclusive import (
-    TableBillingModeExclusive,
+from cfnlint.rules.resources.dynamodb.TableBillingModeProvisioned import (
+    TableBillingModeProvisioned,
 )
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = TableBillingModeExclusive()
+    rule = TableBillingModeProvisioned()
     yield rule
 
 
@@ -49,16 +49,15 @@ def validator():
         ),
         (
             {
-                "BillingMode": "PAY_PER_REQUEST",
-                "ProvisionedThroughput": "FOO",
+                "BillingMode": "PROVISIONED",
             },
             [
                 ValidationError(
-                    "Additional properties are not allowed ('ProvisionedThroughput')",
-                    rule=TableBillingModeExclusive(),
-                    path=deque(["ProvisionedThroughput"]),
-                    validator=None,
-                    schema_path=deque(["then", "properties", "ProvisionedThroughput"]),
+                    "'ProvisionedThroughput' is a required property",
+                    rule=TableBillingModeProvisioned(),
+                    path=deque([]),
+                    validator="required",
+                    schema_path=deque(["then", "required"]),
                 )
             ],
         ),

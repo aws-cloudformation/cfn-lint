@@ -37,7 +37,11 @@ def validator():
         },
     )
     context = create_context_for_template(cfn).evolve(
-        functions=FUNCTIONS, path=Path(path=deque(["Resources", "MySqs", "Properties"]))
+        functions=FUNCTIONS,
+        path=Path(
+            path=deque(["Resources", "MySqs", "Properties"]),
+            cfn_path=deque(["Resources", "AWS::SQS::Queue", "Properties"]),
+        ),
     )
     yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
@@ -51,7 +55,7 @@ def validator():
             [],
         ),
         (
-            "Invalid type ",
+            "Invalid type",
             [],
             [],
         ),
@@ -61,10 +65,10 @@ def validator():
             [
                 ValidationError(
                     (
-                        "The default retention period will delete the data after "
-                        "a pre-defined time. Set an explicit values to avoid data "
-                        "loss on resource. 'MessageRetentionPeriod' is a "
-                        "required property"
+                        "'MessageRetentionPeriod' is a required property (The "
+                        "default retention period will delete the data after "
+                        "a pre-defined time. Set an explicit values to avoid "
+                        "data loss on resource)"
                     ),
                     rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
                     schema_path=deque(["required"]),

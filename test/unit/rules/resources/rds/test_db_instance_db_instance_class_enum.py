@@ -32,8 +32,14 @@ def validator():
             0,
         ),
         (
-            "Valid version",
-            {"DBInstanceClass": "db.x2iedn.8xlarge", "Engine": "MySql"},
+            "Valid but wrong type",
+            [],
+            ["us-east-1"],
+            0,
+        ),
+        (
+            "Valid but wrong type for Engine",
+            {"Engine": []},
             ["us-east-1"],
             0,
         ),
