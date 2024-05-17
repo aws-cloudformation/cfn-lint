@@ -95,21 +95,16 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
 
     def message(self, instance: Any, err: ValidationError) -> str:
         return (
-            "The default retention period will delete the data after a "
-            "pre-defined time. Set an explicit values to avoid data "
-            "loss on resource. " + err.message
+            f"{err.message} (The default retention period will delete "
+            "the data after a pre-defined time. Set an explicit "
+            "values to avoid data loss on resource)"
         )
 
     def validate(self, validator, keywords, instance, schema):
-        if validator.cfn is None:
+        if len(validator.context.path.cfn_path) < 1:
             return
-        resource_type = (
-            validator.cfn.template.get(validator.context.path.path[0], {})
-            .get(validator.context.path.path[1], {})
-            .get("Type", None)
-        )
-        if not validator.is_type(resource_type, "string"):
-            return
+
+        resource_type = validator.context.path.cfn_path[1]
 
         if resource_type != "AWS::RDS::DBInstance":
             required = []

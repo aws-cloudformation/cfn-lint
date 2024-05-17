@@ -3,10 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class DependsOn(CloudFormationLintRule):
+class DependsOn(CfnLintKeyword):
     """Check Base Resource Configuration"""
 
     id = "E3005"
@@ -15,58 +18,40 @@ class DependsOn(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
     tags = ["resources", "dependson"]
 
-    def check_value(self, key, path, resources, cfn):
-        """Check resource names for DependsOn"""
-        matches = []
+    def __init__(self):
+        super().__init__(keywords=["Resources/*/DependsOn", "Resources/*/DependsOn/*"])
 
-        if not isinstance(key, (str)):
-            message = "DependsOn values should be of string at {0}"
-            matches.append(RuleMatch(path, message.format("/".join(map(str, path)))))
-            return matches
-        if key not in resources:
-            message = "DependsOn should reference other resources at {0}"
-            matches.append(RuleMatch(path, message.format("/".join(map(str, path)))))
-        else:
-            for scenario in cfn.is_resource_available(path, key):
-                if scenario:
-                    scenario_text = " and ".join(
-                        [
-                            f'when condition "{k}" is {scenario[k]}'
-                            for k in sorted(scenario)
-                        ]
-                    )
-                    message = "DependsOn {0} may not exist when condition {1} at {2}"
-                    matches.append(
-                        RuleMatch(
-                            path,
-                            message.format(
-                                key, scenario_text, "/".join(map(str, path))
-                            ),
-                        )
-                    )
+    def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
+        if not validator.is_type(instance, "string"):
+            return
 
-        return matches
+        resources = list(validator.context.resources.keys())
 
-    def match(self, cfn):
-        matches = []
+        if len(validator.context.path.path) > 1:
+            if (
+                isinstance(validator.context.path.path[1], str)
+                and validator.context.path.path[1] in resources
+            ):
+                resources.remove(validator.context.path.path[1])
 
-        resources = cfn.get_resources()
+        if instance not in resources:
+            yield ValidationError(
+                f"{instance!r} is not one of {resources!r}",
+            )
+            return
 
-        for resource_name, resource_values in resources.items():
-            depends_ons = resource_values.get("DependsOn")
-            if depends_ons:
-                path = ["Resources", resource_name, "DependsOn"]
-                self.logger.debug(
-                    "Validating DependsOn for %s base configuration", resource_name
+        if not validator.cfn:
+            return
+
+        for scenario in validator.cfn.is_resource_available(
+            list(validator.context.path.path), instance
+        ):
+            if scenario:
+                scenario_text = " and ".join(
+                    [
+                        f"when condition {k!r} is {scenario[k]!r}"
+                        for k in sorted(scenario)
+                    ]
                 )
-                if isinstance(depends_ons, list):
-                    for index, depends_on in enumerate(depends_ons):
-                        matches.extend(
-                            self.check_value(
-                                depends_on, path[:] + [index], resources, cfn
-                            )
-                        )
-                else:
-                    matches.extend(self.check_value(depends_ons, path, resources, cfn))
 
-        return matches
+                yield ValidationError(f"{instance!r} will not exist {scenario_text}")

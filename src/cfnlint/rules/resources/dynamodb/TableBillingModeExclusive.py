@@ -30,4 +30,4 @@ class TableBillingModeExclusive(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "Additional properties are not allowed ('ProvisionedThroughput'}"
+        return "Additional properties are not allowed ('ProvisionedThroughput')"

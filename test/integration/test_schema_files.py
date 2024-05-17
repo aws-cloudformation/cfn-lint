@@ -29,6 +29,8 @@ class TestSchemaFiles(TestCase):
     _found_keywords: List[str] = [
         "Resources/*",
         "Parameters/*",
+        "Resources/*/DependsOn",
+        "Resources/*/DependsOn/*",
     ]
 
     def setUp(self) -> None:
@@ -102,7 +104,6 @@ class TestSchemaFiles(TestCase):
             if "array" in ensure_list(obj["type"]):
                 if "items" in obj:
                     for item in self._build_keywords(obj["items"], spec, refs):
-                        print(obj["items"])
                         yield ["*"] + item
 
         if "$ref" in obj:

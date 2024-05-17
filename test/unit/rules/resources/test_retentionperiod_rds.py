@@ -38,6 +38,7 @@ def validator():
         functions=FUNCTIONS,
         path=Path(
             path=deque(["Resources", "MyRdsDbInstance", "Properties"]),
+            cfn_path=deque(["Resources", "AWS::RDS::DBInstance", "Properties"]),
         ),
     )
     yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
@@ -64,10 +65,10 @@ def validator():
             [
                 ValidationError(
                     (
-                        "The default retention period will delete the data after "
-                        "a pre-defined time. Set an explicit values to avoid data "
-                        "loss on resource. 'BackupRetentionPeriod' is a "
-                        "required property"
+                        "'BackupRetentionPeriod' is a required property (The "
+                        "default retention period will delete the data after "
+                        "a pre-defined time. Set an explicit values to avoid "
+                        "data loss on resource)"
                     ),
                     rule=RetentionPeriodOnResourceTypesWithAutoExpiringContent(),
                     schema_path=deque(["then", "required"]),
