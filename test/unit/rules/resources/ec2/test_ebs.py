@@ -95,12 +95,4 @@ def validator():
 def test_backup_lifecycle(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
-    for err in errs:
-        print(err.path)
-        print(err.instance)
-        print(err.schema_path)
-        print(err.schema)
-        print(err.validator)
-        print(err.validator_value)
-        print(err.message)
     assert errs == expected, f"Expected {expected} got {errs}"

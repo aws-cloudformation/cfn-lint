@@ -79,7 +79,7 @@ class TestRunner(BaseTestCase):
             rules=self.rules,
         )
         failures = list(runner.run())
-        self.assertEqual(len(failures), 3, "Got failures {}".format(failures))
+        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
 
     def test_runner_mandatory_rules(self):
         """Success test"""
@@ -95,7 +95,7 @@ class TestRunner(BaseTestCase):
             rules=self.rules,
         )
         failures = list(runner.run())
-        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
+        self.assertEqual(len(failures), 5, "Got failures {}".format(failures))
 
         runner = TemplateRunner(
             filename=None,

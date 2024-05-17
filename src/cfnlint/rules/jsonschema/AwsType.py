@@ -40,7 +40,6 @@ class AwsType(CloudFormationLintRule):
             "CfnResources": "E3001",
             "CfnResourceDeletionPolicy": "E3035",
             "CfnResourceMetadata": "E3028",
-            "CfnResourceType": "E3011",
             "CfnResourceProperties": "E3002",
             "CfnResourceUpdatePolicy": "E3016",
             "CfnResourceUpdateReplacePolicy": "E3036",

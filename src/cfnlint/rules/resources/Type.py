@@ -7,11 +7,11 @@ from collections import deque
 from typing import Any, Dict
 
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
-class Type(BaseJsonSchema):
+class Type(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3011"
@@ -20,14 +20,15 @@ class Type(BaseJsonSchema):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources"]
 
-    # pylint: disable=unused-argument
-    def cfnresourcetype(
-        self,
-        validator: Validator,
-        resource_type: str,
-        instance: Any,
-        schema: Dict[str, Any],
-    ):
+    def __init__(self) -> Any:
+        return super().__init__(
+            keywords=[
+                "Resources/*",
+            ],
+            all_matches=True,
+        )
+
+    def validate(self, validator, keywords, instance, schema):
         resource_type = instance.get("Type")
         if not validator.is_type(resource_type, "string"):
             return

@@ -124,7 +124,6 @@ class TestSchemaFiles(TestCase):
         )
         for k, v in spec.get("properties").items():
             for item in self._build_keywords(v, spec):
-                print(["Resources", spec["typeName"], "Properties", k] + item)
                 self._found_keywords.append(
                     "/".join(["Resources", spec["typeName"], "Properties", k] + item)
                 )

@@ -84,6 +84,11 @@ def additionalProperties(
 def allOf(
     validator: Validator, allOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    validator = validator.evolve(
+        function_filter=validator.function_filter.evolve(
+            add_cfn_lint_keyword=False,
+        )
+    )
     for index, subschema in enumerate(allOf):
         yield from validator.descend(instance, subschema, schema_path=index)
 
@@ -91,6 +96,11 @@ def allOf(
 def anyOf(
     validator: Validator, anyOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    validator = validator.evolve(
+        function_filter=validator.function_filter.evolve(
+            add_cfn_lint_keyword=False,
+        )
+    )
     all_errors = []
     for index, subschema in enumerate(anyOf):
         errs = list(validator.descend(instance, subschema, schema_path=index))
@@ -247,6 +257,11 @@ def format(
 def if_(
     validator: Validator, if_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    validator = validator.evolve(
+        function_filter=validator.function_filter.evolve(
+            add_cfn_lint_keyword=False,
+        )
+    )
     if validator.evolve(schema=if_schema).is_valid(instance):
         if "then" in schema:
             then = schema["then"]
@@ -388,6 +403,11 @@ def multipleOf(
 def not_(
     validator: Validator, not_schema: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    validator = validator.evolve(
+        function_filter=validator.function_filter.evolve(
+            add_cfn_lint_keyword=False,
+        )
+    )
     if validator.evolve(schema=not_schema).is_valid(instance):
         message = f"{instance!r} should not be valid under {not_schema!r}"
         yield ValidationError(message)
@@ -396,6 +416,11 @@ def not_(
 def oneOf(
     validator: Validator, oneOf: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
+    validator = validator.evolve(
+        function_filter=validator.function_filter.evolve(
+            add_cfn_lint_keyword=False,
+        )
+    )
     subschemas = enumerate(oneOf)
     all_errors = []
     for index, subschema in subschemas:

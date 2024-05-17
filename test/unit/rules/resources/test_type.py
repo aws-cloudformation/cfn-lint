@@ -22,7 +22,7 @@ class TestType(BaseRuleTestCase):
     def test_property_names(self):
         validator = CfnTemplateValidator({})
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator, "cfnResourceType", {"Type": "AWS::S3::Bucket"}, {}
             )
         )
@@ -39,7 +39,7 @@ class TestType(BaseRuleTestCase):
         cfn.conditions.build_scenerios_on_region.return_value = [True]
         validator = CfnTemplateValidator({}).evolve(cfn=cfn)
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator,
                 "cfnResources",
                 {"Type": "Foo::Bar::Type", "Condition": "IsUsEast1"},
@@ -67,7 +67,7 @@ class TestType(BaseRuleTestCase):
         cfn.conditions.build_scenerios_on_region.return_value = [False]
         validator = CfnTemplateValidator({}).evolve(cfn=cfn)
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator,
                 "cfnResources",
                 {"Type": "Foo::Bar::Type", "Condition": "IsUsEast1"},
