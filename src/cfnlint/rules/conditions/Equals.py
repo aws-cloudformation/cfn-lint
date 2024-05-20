@@ -32,8 +32,9 @@ class Equals(BaseFn):
             yield from iter(errs)
             return
 
-        if self.child_rules.get("W8003"):
-            yield from self.child_rules["W8003"].equals_is_useful(
+        child_rule = self.child_rules.get("W8003")
+        if child_rule and hasattr(child_rule, "equals_is_useful"):
+            yield from child_rule.equals_is_useful(
                 validator, s, instance.get("Fn::Equals", []), schema
             )
 

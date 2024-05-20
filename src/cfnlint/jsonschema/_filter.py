@@ -81,7 +81,6 @@ class FunctionFilter:
                 group_schema[key] = value
             else:
                 standard_schema[key] = value
-
         if self.add_cfn_lint_keyword and "$ref" not in standard_schema:
             standard_schema["cfnLint"] = ensure_list(standard_schema.get("cfnLint", []))
             standard_schema["cfnLint"].append("/".join(validator.context.path.cfn_path))
@@ -126,7 +125,7 @@ class FunctionFilter:
 
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
-                for k, _ in instance.items():
+                for k, v in instance.items():
                     if k in validator.context.functions:
                         k_py = ToPy(k)
                         k_schema = {

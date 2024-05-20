@@ -20,7 +20,7 @@ class MaxProperties(CloudFormationLintRule):
 
         self.child_rules = {}
         if approaching_limit_rule:
-            self.child_rules[approaching_limit_rule] = ""
+            self.child_rules[approaching_limit_rule] = None
 
     # pylint: disable=unused-argument
     def maxProperties(self, validator, mP, instance, schema):

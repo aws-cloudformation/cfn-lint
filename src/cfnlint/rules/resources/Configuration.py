@@ -27,7 +27,7 @@ class Configuration(BaseJsonSchema):
         }
         self.rule_set = {
             "maxProperties": "E3010",
-            "propertyNames": "E3006",
+            "propertyNames": "E3011",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
         self._schema = cfnlint.helpers.load_resource(resources, "configuration.json")

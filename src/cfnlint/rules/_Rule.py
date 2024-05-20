@@ -170,7 +170,7 @@ class CloudFormationLintRule:
         self.resource_sub_property_types: List[str] = []
         self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
         self.config_definition: Dict[str, Any] = {}
-        self._child_rules: Dict[str, "CloudFormationLintRule"] = {}
+        self._child_rules: Dict[str, "CloudFormationLintRule" | None] = {}
         # Parent IDs to do the opposite of child rules
         self._parent_rules: List[str] = []
         super().__init__()
@@ -179,11 +179,11 @@ class CloudFormationLintRule:
         return f"{self.id}: {self.shortdesc}"
 
     @property
-    def child_rules(self):
+    def child_rules(self) -> Dict[str, "CloudFormationLintRule" | None]:
         return self._child_rules
 
     @child_rules.setter
-    def child_rules(self, rules: Dict[str, "CloudFormationLintRule"]):
+    def child_rules(self, rules: Dict[str, "CloudFormationLintRule" | None]):
         self._child_rules = rules
 
     @property

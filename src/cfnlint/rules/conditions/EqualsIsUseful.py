@@ -37,7 +37,8 @@ class EqualsIsUseful(CloudFormationLintRule):
         # 1 == "1"
         if json.dumps(instance[0]) == json.dumps(instance[1]):
             yield ValidationError(
-                f"{instance!r} will always return {True!r} or {False!r}"
+                f"{instance!r} will always return {True!r} or {False!r}",
+                rule=self,
             )
             return
         try:
@@ -49,7 +50,8 @@ class EqualsIsUseful(CloudFormationLintRule):
                 first = "true" if first else "false"
             if str(first) == str(second):
                 yield ValidationError(
-                    f"{instance!r} will always return {True!r} or {False!r}"
+                    f"{instance!r} will always return {True!r} or {False!r}",
+                    rule=self,
                 )
         except:  # noqa: E722
             pass

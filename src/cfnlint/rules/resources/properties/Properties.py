@@ -62,7 +62,7 @@ class Properties(BaseJsonSchema):
     def cfnresourceproperties(self, validator: Validator, _, instance: Any, schema):
         validator = validator.evolve(
             context=validator.context.evolve(
-                functions=FUNCTIONS,
+                functions=list(FUNCTIONS),
                 strict_types=False,
             )
         )

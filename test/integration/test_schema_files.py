@@ -27,10 +27,23 @@ class TestSchemaFiles(TestCase):
     """Test schema files"""
 
     _found_keywords: List[str] = [
-        "Resources/*",
+        "Conditions",
+        "Mappings",
+        "Metadata",
+        "Metadata/AWS::CloudFormation::Interface",
+        "Metadata/cfn-lint",
+        "Outputs",
+        "Outputs/*/Export/Name",
+        "Outputs/*/Value",
+        "Parameters",
         "Parameters/*",
+        "Resources/*",
+        "Resources/*/DeletionPolicy",
         "Resources/*/DependsOn",
         "Resources/*/DependsOn/*",
+        "Resources/*/Metadata",
+        "Resources/*/UpdatePolicy",
+        "Resources/*/UpdateReplacePolicy",
     ]
 
     def setUp(self) -> None:

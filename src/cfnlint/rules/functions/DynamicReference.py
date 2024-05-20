@@ -114,7 +114,7 @@ class DynamicReference(BaseFn):
             elif parts[1] == "ssm-secure":
                 evolved = validator.evolve(schema=_ssm)
                 rule = self.child_rules["E1027"]
-                if rule:
+                if rule and hasattr(rule, "validate"):
                     yield from rule.validate(validator, {}, v, schema)
             else:
                 if parts[2] == "arn":
@@ -122,7 +122,7 @@ class DynamicReference(BaseFn):
                 else:  # this is secrets manager
                     evolved = validator.evolve(schema=_secrets_manager)
                 rule = self.child_rules["E1051"]
-                if rule:
+                if rule and hasattr(rule, "validate"):
                     yield from rule.validate(validator, {}, v, schema)
 
             for err in evolved.iter_errors(parts):

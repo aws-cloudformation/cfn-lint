@@ -8,7 +8,7 @@ from typing import Any
 import cfnlint.data.schemas.other.resources
 import cfnlint.helpers
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import RefResolver
+from cfnlint.jsonschema import RefResolver, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -31,9 +31,9 @@ class Configuration(CfnLintJsonSchema):
             all_matches=True,
         )
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
         validator = validator.evolve(
-            context=validator.context.evolve(functions=FUNCTIONS),
+            context=validator.context.evolve(functions=list(FUNCTIONS)),
             schema=self._schema,
             resolver=RefResolver.from_schema(
                 self._schema,

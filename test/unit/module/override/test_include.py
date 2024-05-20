@@ -37,7 +37,7 @@ class TestInclude(BaseTestCase):
             regions=[self.region],
             templates=[filename],
             ignore_checks=["I", "W", "E"],
-            mandatory_checks=["E3011"],
+            mandatory_checks=["E3006"],
         )
         runner = Runner(config)
         runner.rules = self.collection

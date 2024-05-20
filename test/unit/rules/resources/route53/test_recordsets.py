@@ -361,6 +361,7 @@ def validator():
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([0, "pattern"]),
+                                rule=RecordSet(),
                             ),
                             ValidationError(
                                 (
@@ -370,6 +371,7 @@ def validator():
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([1, "pattern"]),
+                                rule=RecordSet(),
                             ),
                         ]
                     ),
@@ -430,6 +432,7 @@ def validator():
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([0, "pattern"]),
+                                rule=RecordSet(),
                             ),
                             ValidationError(
                                 (
@@ -439,6 +442,7 @@ def validator():
                                 path=deque([]),
                                 validator="pattern",
                                 schema_path=deque([1, "pattern"]),
+                                rule=RecordSet(),
                             ),
                         ]
                     ),

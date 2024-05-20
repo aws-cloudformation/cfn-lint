@@ -11,17 +11,17 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
-class Type(CfnLintKeyword):
+class ResourceType(CfnLintKeyword):
     """Check Base Resource Configuration"""
 
-    id = "E3011"
+    id = "E3006"
     shortdesc = "Validate the CloudFormation resource type"
     description = "Resource types are validated against the spec accounting for regions"
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources"]
 
     def __init__(self) -> None:
-        return super().__init__(
+        super().__init__(
             keywords=[
                 "Resources/*",
             ],

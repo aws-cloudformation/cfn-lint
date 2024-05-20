@@ -54,7 +54,7 @@ class TestComplete(BaseTestCase):
             regions=[self.region],
             templates=[filename],
             ignore_checks=["I", "W", "E"],
-            mandatory_checks=["E3001", "E3003", "E3011"],
+            mandatory_checks=["E3001", "E3003", "E3006"],
         )
         runner = Runner(config)
         runner.rules = self.collection

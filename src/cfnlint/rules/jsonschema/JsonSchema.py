@@ -27,10 +27,12 @@ class JsonSchema(BaseJsonSchema):
         self.rule_set = {
             "awsType": "E1100",
             "cfnLint": "E1101",
+            "condition": "E8007",
             "dynamicReference": "E1050",
-            "ref": "E1020",
+            "fn_and": "E8004",
             "fn_base64": "E1021",
             "fn_cidr": "E1024",
+            "fn_equals": "E8003",
             "fn_findinmap": "E1011",
             "fn_foreach": "E1032",
             "fn_getatt": "E1010",
@@ -39,10 +41,13 @@ class JsonSchema(BaseJsonSchema):
             "fn_importvalue": "E1016",
             "fn_join": "E1022",
             "fn_length": "E1030",
+            "fn_not": "E8005",
+            "fn_or": "E8006",
             "fn_select": "E1017",
             "fn_split": "E1018",
             "fn_sub": "E1019",
             "fn_tojsonstring": "E1031",
+            "ref": "E1020",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
         self.config_definition = {"sections": {"default": "", "type": "string"}}

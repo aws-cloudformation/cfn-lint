@@ -5,13 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
+import cfnlint.data.schemas.other.resources
 import cfnlint.helpers
-from cfnlint.data.schemas.other import resources
 from cfnlint.jsonschema import Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class Metadata(BaseJsonSchema):
+class Metadata(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3028"
@@ -23,24 +23,19 @@ class Metadata(BaseJsonSchema):
     tags = ["resources"]
 
     def __init__(self):
-        super().__init__()
-        self._schema = cfnlint.helpers.load_resource(resources, "metadata.json")
+        super().__init__(
+            keywords=["Resources/*/Metadata"],
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.resources, "metadata.json"
+            ),
+            all_matches=True,
+        )
 
-    @property
-    def schema(self):
-        return self._schema
-
-    # pylint: disable=unused-argument
-    def cfnresourcemetadata(self, validator: Validator, _, instance: Any, schema):
-        validator = self.extend_validator(
-            validator,
-            self.schema,
+    def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
+        validator = validator.evolve(
+            schema=self._schema,
             context=validator.context.evolve(
                 functions=cfnlint.helpers.FUNCTIONS,
             ),
         )
-        for err in validator.iter_errors(instance):
-            if err.rule is None:
-                if not err.validator.startswith("fn") and err.validator != "ref":
-                    err.rule = self
-            yield err
+        yield from self._iter_errors(validator, instance)

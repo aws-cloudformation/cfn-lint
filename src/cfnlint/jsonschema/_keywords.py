@@ -472,7 +472,7 @@ def patternProperties(
                     subschema,
                     path=k,
                     schema_path=pattern,
-                    property_path=k,
+                    property_path="*",
                 )
 
 
@@ -506,7 +506,6 @@ def propertyNames(
             instance=property,
             schema=propertyNames,
             path=property,
-            property_path="*",
         )
 
 

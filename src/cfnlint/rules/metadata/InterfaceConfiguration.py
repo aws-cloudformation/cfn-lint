@@ -3,12 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.data.schemas.other import metadata as schema_metadata
-from cfnlint.helpers import load_resource
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+import cfnlint.data.schemas.other.metadata
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class InterfaceConfiguration(BaseJsonSchema):
+class InterfaceConfiguration(CfnLintJsonSchema):
     """Check if Metadata Interface Configuration are configured correctly"""
 
     id = "E4001"
@@ -18,12 +17,10 @@ class InterfaceConfiguration(BaseJsonSchema):
     tags = ["metadata"]
 
     def __init__(self) -> None:
-        super().__init__()
-        self.rule_set = {}
-        self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self._schema = load_resource(schema_metadata, "interface.json")
-        self.cfnmetadatainterface = self.validate
-
-    @property
-    def schema(self):
-        return self._schema
+        super().__init__(
+            keywords=["Metadata/AWS::CloudFormation::Interface"],
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.metadata, "interface.json"
+            ),
+            all_matches=True,
+        )

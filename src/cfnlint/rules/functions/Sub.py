@@ -140,7 +140,7 @@ class Sub(BaseFn):
         # we know the structure is valid at this point
         # so any child rule doesn't have to revalidate it
         for _, rule in self.child_rules.items():
-            if rule:
+            if rule and hasattr(rule, "validate"):
                 for err in rule.validate(validator, s, instance.get("Fn::Sub"), schema):
                     err.path.append("Fn::Sub")
                     err.rule = rule

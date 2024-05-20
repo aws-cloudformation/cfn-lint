@@ -29,7 +29,7 @@ class CfnInit(CloudFormationLintRule):
 
     def _validate(self, validator, mL, instance, schema):
         validator = validator.evolve(
-            context=validator.context.evolve(functions=FUNCTIONS),
+            context=validator.context.evolve(functions=list(FUNCTIONS)),
         ).extend()(schema)
 
         yield from validator.iter_errors(instance)

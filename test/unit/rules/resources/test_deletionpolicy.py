@@ -26,7 +26,6 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
                     "{'Foo': 'Bar'} is not of type 'string'",
                     schema_path=deque(["type"]),
                     validator="type",
-                    validator_value="string",
                     rule=DeletionPolicy(),
                 ),
                 ValidationError(
@@ -36,12 +35,6 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
                     ),
                     schema_path=deque(["enum"]),
                     validator="enum",
-                    validator_value=[
-                        "Delete",
-                        "Retain",
-                        "RetainExceptOnCreate",
-                        "Snapshot",
-                    ],
                     rule=DeletionPolicy(),
                 ),
             ],
@@ -58,11 +51,6 @@ from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy
                     ),
                     schema_path=deque(["enum"]),
                     validator="enum",
-                    validator_value=[
-                        "Delete",
-                        "Retain",
-                        "RetainExceptOnCreate",
-                    ],
                     rule=DeletionPolicy(),
                 ),
             ],
@@ -89,17 +77,12 @@ def test_deletion_policy(name, instance, path, expected):
 
     rule = DeletionPolicy()
     errors = list(
-        rule.deletionpolicy(
+        rule.validate(
             validator=validator,
             dP="deletionpolicy",
             instance=instance,
-            schema={
-                "awsType": "deletionpolicy",
-            },
+            schema={},
         )
     )
 
-    assert len(errors) == len(expected), name
-    for i, error in enumerate(expected):
-        error.instance = instance
-        assert errors[i] == error, name
+    assert errors == expected

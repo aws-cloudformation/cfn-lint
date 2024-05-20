@@ -19,7 +19,6 @@ class CfnLint(CloudFormationLintRule):
                 add_cfn_lint_keyword=False,
             )
         )
-
         for keyword in keywords:
             for rule in self.child_rules.values():
                 if rule is None:

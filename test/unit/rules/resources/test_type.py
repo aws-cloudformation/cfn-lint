@@ -8,7 +8,7 @@ from test.unit.rules import BaseRuleTestCase
 from unittest.mock import Mock, patch
 
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.resources.Type import Type
+from cfnlint.rules.resources.ResourceType import ResourceType
 
 
 class TestType(BaseRuleTestCase):
@@ -17,7 +17,7 @@ class TestType(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestType, self).setUp()
-        self.rule = Type()
+        self.rule = ResourceType()
 
     def test_property_names(self):
         validator = CfnTemplateValidator({})
@@ -54,7 +54,7 @@ class TestType(BaseRuleTestCase):
                     "Resource type 'Foo::Bar::Type' does not exist in 'us-east-1'",
                     path=deque(["Type"]),
                     schema_path=deque([]),
-                    rule=Type(),
+                    rule=ResourceType(),
                 ),
             ],
             errors,
