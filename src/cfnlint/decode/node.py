@@ -8,7 +8,6 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 
-from cfnlint.decode.exceptions import TemplateAttributeError
 from cfnlint.decode.mark import Mark
 
 LOGGER = logging.getLogger(__name__)
@@ -84,21 +83,6 @@ def create_dict_node_class(cls):
     return node_class
 
 
-def create_intrinsic_node_class(cls):
-    """
-    Create dynamic sub class
-    """
-
-    class intrinsic_class(cls):
-        """Node class created based on the input class"""
-
-        def is_valid(self):
-            raise TemplateAttributeError("intrisnic class shouldn't be directly used")
-
-    intrinsic_class.__name__ = f"{cls.__name__}_intrinsic"
-    return intrinsic_class
-
-
 def create_dict_list_class(cls):
     """
     Create dynamic list class
@@ -132,4 +116,3 @@ def create_dict_list_class(cls):
 str_node = create_str_node_class(str)
 dict_node = create_dict_node_class(dict)
 list_node = create_dict_list_class(list)
-intrinsic_node = create_intrinsic_node_class(dict_node)

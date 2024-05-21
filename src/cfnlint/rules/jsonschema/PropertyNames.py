@@ -41,7 +41,6 @@ class PropertyNames(CloudFormationLintRule):
 
             if hasattr(rule, "maxLength") and callable(getattr(rule, "maxLength")):
                 validate = getattr(rule, "maxLength")
-                print("Call it")
                 yield from validate(validator, mL, instance, schema)
                 return
 

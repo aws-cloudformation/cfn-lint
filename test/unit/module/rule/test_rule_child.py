@@ -54,7 +54,18 @@ class TestCloudFormationRuleChild(BaseTestCase):
             failures = list(runner.run())
 
             self.assertListEqual(
-                failures, [Match(1, 2, 1, 7, "", test_rule_child, "failure")]
+                failures,
+                [
+                    Match(
+                        linenumber=1,
+                        columnnumber=2,
+                        linenumberend=1,
+                        columnnumberend=7,
+                        filename=None,
+                        rule=test_rule_child,
+                        message="failure",
+                    )
+                ],
             )
 
     def test_child_rules_suppressed(self) -> None:

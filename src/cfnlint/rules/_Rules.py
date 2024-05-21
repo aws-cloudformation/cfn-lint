@@ -24,7 +24,6 @@ from typing import (
 
 import cfnlint.helpers
 import cfnlint.rules.custom
-from cfnlint.decode.exceptions import TemplateAttributeError
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules._Rule import CloudFormationLintRule, Match
 from cfnlint.rules.RuleError import RuleError
@@ -314,10 +313,8 @@ class RulesCollection:
     def run_check(self, check, filename, rule_id, *args):
         """Run a check"""
         try:
-            return check(*args)
-        except TemplateAttributeError as err:
-            LOGGER.debug(str(err))
-            return []
+            matches = list(check(*args))
+            return matches
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled(RuleError()):
                 # In debug mode, print the error include complete stack trace
@@ -333,6 +330,8 @@ class RulesCollection:
                         message=message.format(rule_id, error_message),
                     )
                 ]
+
+        return []
 
     def run(self, filename: Optional[str], cfn: Template, config=None):
         """Run rules"""

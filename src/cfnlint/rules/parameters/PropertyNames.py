@@ -7,16 +7,17 @@ from cfnlint.rules.jsonschema.PropertyNames import PropertyNames as ParentProper
 
 
 class PropertyNames(ParentPropertyNames):
-    """Check if maximum Parameter value size limit is exceeded"""
-
     id = "E2011"
-    shortdesc = "Parameter value limit not exceeded"
+    shortdesc = "Validate the name for a parameter"
     description = (
-        "Check if the size of Parameter values in the template is less than the upper"
-        " limit"
+        "Validate the name of a parameter with special handling "
+        "of the max length length"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["parameters", "limits"]
+
+    # by bundling under propertyNames we can include one rule for all property
+    # name validation
 
     def __init__(self) -> None:
         super().__init__("I2011")

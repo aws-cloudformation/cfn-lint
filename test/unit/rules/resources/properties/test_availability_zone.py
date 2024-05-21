@@ -46,6 +46,33 @@ def validator():
     yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
 
+@pytest.fixture(scope="module")
+def validator_cdk():
+    cfn = Template(
+        "",
+        {
+            "Resources": {
+                "MySqs": {
+                    "Type": "AWS::SQS::Queue",
+                },
+                "CDK": {
+                    "Type": "AWS::CDK::Metadata",
+                },
+            }
+        },
+    )
+    context = (
+        create_context_for_template(cfn)
+        .evolve(
+            functions=FUNCTIONS,
+            path="Resources",
+        )
+        .evolve(path="MySqs")
+        .evolve(path="Properties")
+    )
+    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
+
+
 @pytest.mark.parametrize(
     "name,instance,path,expected",
     [
@@ -80,6 +107,12 @@ def validator():
             [],
         ),
         (
+            "Valid hardcoded all string",
+            "all",
+            deque(["Resources", "MySqs", "Properties"]),
+            [],
+        ),
+        (
             "Invalid hardcoded string",
             "us-east-1a",
             deque(["Resources", "MySqs", "Properties"]),
@@ -110,6 +143,29 @@ def validator():
 def test_validate(name, instance, path, expected, rule, validator):
     validator = validator.evolve(
         context=validator.context.evolve(
+            path=Path(path=path),
+        )
+    )
+    errors = list(rule.validate(validator, False, instance, {}))
+    # we use error counts in this one as the instance types are
+    # always changing so we aren't going to hold ourselves up by that
+    assert errors == expected, f"Test {name!r} got {errors!r}"
+
+
+@pytest.mark.parametrize(
+    "name,instance,path,expected",
+    [
+        (
+            "Valid hardcoded string because CDK",
+            "us-east-1a",
+            deque(["Resources", "MySqs", "Properties"]),
+            [],
+        ),
+    ],
+)
+def test_validate_for_cdk(name, instance, path, expected, rule, validator_cdk):
+    validator = validator_cdk.evolve(
+        context=validator_cdk.context.evolve(
             path=Path(path=path),
         )
     )

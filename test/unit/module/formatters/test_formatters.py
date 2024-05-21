@@ -52,38 +52,38 @@ class TestFormatters(BaseTestCase):
 
         self.results = [
             Match(
-                6,
-                3,
-                6,
-                10,
-                self.filename,
-                UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(),
-                (
+                linenumber=6,
+                columnnumber=3,
+                linenumberend=6,
+                columnnumberend=10,
+                filename=self.filename,
+                rule=UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(),
+                message=(
                     "The default action when replacing/removing a resource is to delete"
                     " it. Set explicit values for UpdateReplacePolicy / DeletionPolicy"
                     " on potentially stateful resource: Resources/myTable"
                 ),
             ),
             Match(
-                9,
-                7,
-                9,
-                16,
-                self.filename,
-                SubUnneeded(),
-                (
+                linenumber=9,
+                columnnumber=7,
+                linenumberend=9,
+                columnnumberend=16,
+                filename=self.filename,
+                rule=SubUnneeded(),
+                message=(
                     "Fn::Sub isn't needed because there are no variables at"
                     " Resources/myTable/Properties/TableName/Fn::Sub"
                 ),
             ),
             Match(
-                18,
-                9,
-                18,
-                27,
-                self.filename,
-                Type(),
-                "'5' is not of type 'integer'",
+                linenumber=18,
+                columnnumber=9,
+                linenumberend=18,
+                columnnumberend=27,
+                filename=self.filename,
+                rule=Type(),
+                message="'5' is not of type 'integer'",
             ),
         ]
 

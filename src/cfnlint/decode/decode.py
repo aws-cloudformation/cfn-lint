@@ -88,8 +88,18 @@ def _decode(
                 template = json_f(payload)
             except cfn_json.JSONDecodeError as json_errs:
                 for json_err in json_errs.matches:
-                    json_err.filename = filename
-                matches = json_errs.matches
+                    matches.append(
+                        Match(
+                            message=json_err.message,
+                            filename=filename,
+                            linenumber=json_err.linenumber,
+                            columnnumber=json_err.columnnumber,
+                            linenumberend=json_err.linenumberend,
+                            columnnumberend=json_err.columnnumberend,
+                            rule=json_err.rule,
+                            parent_id=json_err.parent_id,
+                        )
+                    )
             except JSONDecodeError as json_err:
                 if hasattr(json_err, "msg"):
                     if json_err.msg in [
