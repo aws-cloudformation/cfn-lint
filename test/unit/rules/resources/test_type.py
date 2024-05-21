@@ -8,7 +8,7 @@ from test.unit.rules import BaseRuleTestCase
 from unittest.mock import Mock, patch
 
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.resources.Type import Type
+from cfnlint.rules.resources.ResourceType import ResourceType
 
 
 class TestType(BaseRuleTestCase):
@@ -17,12 +17,12 @@ class TestType(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestType, self).setUp()
-        self.rule = Type()
+        self.rule = ResourceType()
 
     def test_property_names(self):
         validator = CfnTemplateValidator({})
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator, "cfnResourceType", {"Type": "AWS::S3::Bucket"}, {}
             )
         )
@@ -39,7 +39,7 @@ class TestType(BaseRuleTestCase):
         cfn.conditions.build_scenerios_on_region.return_value = [True]
         validator = CfnTemplateValidator({}).evolve(cfn=cfn)
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator,
                 "cfnResources",
                 {"Type": "Foo::Bar::Type", "Condition": "IsUsEast1"},
@@ -54,7 +54,7 @@ class TestType(BaseRuleTestCase):
                     "Resource type 'Foo::Bar::Type' does not exist in 'us-east-1'",
                     path=deque(["Type"]),
                     schema_path=deque([]),
-                    rule=Type(),
+                    rule=ResourceType(),
                 ),
             ],
             errors,
@@ -67,7 +67,7 @@ class TestType(BaseRuleTestCase):
         cfn.conditions.build_scenerios_on_region.return_value = [False]
         validator = CfnTemplateValidator({}).evolve(cfn=cfn)
         errors = list(
-            self.rule.cfnresourcetype(
+            self.rule.validate(
                 validator,
                 "cfnResources",
                 {"Type": "Foo::Bar::Type", "Condition": "IsUsEast1"},

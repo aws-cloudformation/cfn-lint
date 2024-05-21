@@ -27,10 +27,23 @@ class TestSchemaFiles(TestCase):
     """Test schema files"""
 
     _found_keywords: List[str] = [
-        "Resources/*",
+        "Conditions",
+        "Mappings",
+        "Metadata",
+        "Metadata/AWS::CloudFormation::Interface",
+        "Metadata/cfn-lint",
+        "Outputs",
+        "Outputs/*/Export/Name",
+        "Outputs/*/Value",
+        "Parameters",
         "Parameters/*",
+        "Resources/*",
+        "Resources/*/DeletionPolicy",
         "Resources/*/DependsOn",
         "Resources/*/DependsOn/*",
+        "Resources/*/Metadata",
+        "Resources/*/UpdatePolicy",
+        "Resources/*/UpdateReplacePolicy",
     ]
 
     def setUp(self) -> None:
@@ -124,7 +137,6 @@ class TestSchemaFiles(TestCase):
         )
         for k, v in spec.get("properties").items():
             for item in self._build_keywords(v, spec):
-                print(["Resources", spec["typeName"], "Properties", k] + item)
                 self._found_keywords.append(
                     "/".join(["Resources", spec["typeName"], "Properties", k] + item)
                 )

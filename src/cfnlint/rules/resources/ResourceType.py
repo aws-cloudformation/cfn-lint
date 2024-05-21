@@ -4,30 +4,30 @@ SPDX-License-Identifier: MIT-0
 """
 
 from collections import deque
-from typing import Any, Dict
+from typing import Any
 
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
-class Type(BaseJsonSchema):
+class ResourceType(CfnLintKeyword):
     """Check Base Resource Configuration"""
 
-    id = "E3011"
+    id = "E3006"
     shortdesc = "Validate the CloudFormation resource type"
     description = "Resource types are validated against the spec accounting for regions"
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources"]
 
-    # pylint: disable=unused-argument
-    def cfnresourcetype(
-        self,
-        validator: Validator,
-        resource_type: str,
-        instance: Any,
-        schema: Dict[str, Any],
-    ):
+    def __init__(self) -> None:
+        super().__init__(
+            keywords=[
+                "Resources/*",
+            ],
+        )
+
+    def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
         resource_type = instance.get("Type")
         if not validator.is_type(resource_type, "string"):
             return

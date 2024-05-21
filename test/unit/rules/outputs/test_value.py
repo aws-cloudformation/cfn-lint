@@ -24,6 +24,6 @@ def test_output_value(input, expected):
     rule = Value()
     validator = CfnTemplateValidator()
 
-    results = list(rule.cfnoutputvalue(validator, {}, input, {}))
+    results = list(rule.validate(validator, {}, input, {}))
 
     assert len(results) == expected, f"Expected {expected} results, got {results}"

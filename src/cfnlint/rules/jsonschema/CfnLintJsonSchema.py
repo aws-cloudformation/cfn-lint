@@ -59,8 +59,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
                 return
 
         for err in errs:
-            err.rule = self
-            yield err
+            yield self._clean_error(err)
 
     def validate(self, validator, keywords, instance, schema):
         # if the schema has a description will only replace the message with that

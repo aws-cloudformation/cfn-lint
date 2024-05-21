@@ -6,11 +6,11 @@ SPDX-License-Identifier: MIT-0
 from cfnlint.rules import CloudFormationLintRule
 
 
-class Type(CloudFormationLintRule):
-    """Check if Outputs have the correct type"""
+class Pattern(CloudFormationLintRule):
+    """Check if Outputs strings are less than the max length"""
 
-    id = "E6003"
-    shortdesc = "Check the type of Outputs"
-    description = "Validate the type of properties in the Outputs section"
+    id = "E6004"
+    shortdesc = "Outputs have appropriate names"
+    description = "Check if Outputs are properly named (A-Za-z0-9)"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]

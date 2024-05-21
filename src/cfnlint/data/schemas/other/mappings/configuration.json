@@ -1,43 +1,39 @@
 {
- "additionalProperties": {
-  "additionalProperties": {
-   "additionalProperties": {
-    "type": [
-     "string",
-     "boolean",
-     "integer",
-     "number",
-     "array"
-    ]
-   },
+ "additionalProperties": false,
+ "patternProperties": {
+  "^[a-zA-Z0-9]+$": {
+   "additionalProperties": false,
    "maxProperties": 200,
    "minProperties": 1,
-   "propertyNames": {
-    "maxLength": 255,
-    "pattern": "^[a-zA-Z0-9]+$",
-    "type": [
-     "string"
-    ]
+   "patternProperties": {
+    "^[a-zA-Z0-9.-]+$": {
+     "additionalProperties": false,
+     "maxProperties": 200,
+     "minProperties": 1,
+     "patternProperties": {
+      "^[a-zA-Z0-9]+$": {
+       "type": [
+        "string",
+        "boolean",
+        "integer",
+        "number",
+        "array"
+       ]
+      }
+     },
+     "propertyNames": {
+      "maxLength": 255,
+      "minLength": 1
+     },
+     "type": "object"
+    }
    },
    "type": "object"
-  },
-  "minProperties": 1,
-  "propertyNames": {
-   "maxLength": 255,
-   "pattern": "^[a-zA-Z0-9.-]+$",
-   "type": [
-    "string"
-   ]
-  },
-  "type": "object"
+  }
  },
- "maxProperties": 200,
  "propertyNames": {
   "maxLength": 255,
-  "pattern": "^[a-zA-Z0-9]+$",
-  "type": [
-   "string"
-  ]
+  "minLength": 1
  },
  "type": "object"
 }

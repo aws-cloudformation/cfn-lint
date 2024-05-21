@@ -5,14 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
-from cfnlint.data.schemas.other import conditions as schema_conditions
-from cfnlint.helpers import FUNCTION_CONDITIONS, load_resource
-from cfnlint.jsonschema import Validator
-from cfnlint.jsonschema._keywords_cfn import cfn_type
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+import cfnlint.data.schemas.other.conditions
+from cfnlint.helpers import FUNCTION_CONDITIONS
+from cfnlint.jsonschema import RefResolver, Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class Configuration(BaseJsonSchema):
+class Configuration(CfnLintJsonSchema):
     """Check if Conditions are configured correctly"""
 
     id = "E8001"
@@ -22,33 +21,28 @@ class Configuration(BaseJsonSchema):
     tags = ["conditions"]
 
     def __init__(self):
-        """Init"""
-        super().__init__()
-        self.rule_set = {
-            "fn_equals": "E8003",
-            "fn_not": "E8005",
-            "fn_and": "E8004",
-            "fn_or": "E8006",
-            "condition": "E8007",
-        }
-        self.child_rules = dict.fromkeys(list(self.rule_set.values()))
-        self._schema = load_resource(schema_conditions, "conditions.json")
-        self.validators = {
-            "type": cfn_type,
-        }
+        super().__init__(
+            keywords=["Conditions"],
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.conditions,
+                "conditions.json",
+            ),
+            all_matches=True,
+        )
 
-    @property
-    def schema(self):
-        return self._schema
-
-    # pylint: disable=unused-argument
-    def cfnconditions(self, validator: Validator, conditions, instance: Any, schema):
+    def validate(
+        self, validator: Validator, conditions: Any, instance: Any, schema: Any
+    ):
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTION_CONDITIONS) + ["Condition"],
                 resources={},
                 strict_types=False,
             ),
+            schema=self._schema,
+            resolver=RefResolver.from_schema(
+                self._schema,
+            ),
         )
 
-        yield from super().validate(validator, conditions, instance, schema)
+        yield from self._iter_errors(validator, instance)

@@ -5,14 +5,14 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
+import cfnlint.data.schemas.other.resources
 import cfnlint.helpers
-from cfnlint.data.schemas.other import resources
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.jsonschema import RefResolver, Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class Configuration(BaseJsonSchema):
+class Configuration(CfnLintJsonSchema):
     """Check Update Policy Configuration"""
 
     id = "E3016"
@@ -22,16 +22,22 @@ class Configuration(BaseJsonSchema):
     tags = ["resources", "updatepolicy"]
 
     def __init__(self) -> None:
-        super().__init__()
-        self._schema = cfnlint.helpers.load_resource(resources, "update_policy.json")
-
-    @property
-    def schema(self):
-        return self._schema
-
-    # pylint: disable=unused-argument
-    def cfnresourceupdatepolicy(self, validator: Validator, uP, instance: Any, schema):
-        validator = validator.evolve(
-            context=validator.context.evolve(functions=FUNCTIONS)
+        super().__init__(
+            keywords=["Resources/*"],
+            schema_details=SchemaDetails(
+                module=cfnlint.data.schemas.other.resources,
+                filename="update_policy.json",
+            ),
+            all_matches=True,
         )
-        yield from self.validate(validator, uP, instance, schema)
+
+    def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
+        validator = validator.evolve(
+            context=validator.context.evolve(functions=list(FUNCTIONS)),
+            schema=self._schema,
+            resolver=RefResolver.from_schema(
+                self._schema,
+            ),
+        )
+
+        yield from super()._iter_errors(validator, instance)

@@ -3,11 +3,16 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.jsonschema import Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class Export(CloudFormationLintRule):
+class Export(CfnLintJsonSchema):
     """Check if Output Export values"""
 
     id = "E6102"
@@ -16,15 +21,19 @@ class Export(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]
 
-    def cfnoutputexport(self, validator, tS, instance, schema):
+    def __init__(self):
+        super().__init__(
+            keywords=["Outputs/*/Export/Name"],
+            all_matches=True,
+        )
+
+    def validate(self, validator: Validator, _: Any, instance: Any, schema: Any):
         validator = validator.evolve(
             context=validator.context.evolve(
                 resources={},
-                functions=FUNCTIONS,
-            )
+                functions=list(FUNCTIONS),
+            ),
+            schema={"type": "string"},
         )
 
-        for err in validator.descend(instance, {"type": "string"}):
-            if not err.validator.startswith("fn"):
-                err.rule = self
-            yield err
+        yield from self._iter_errors(validator, instance)

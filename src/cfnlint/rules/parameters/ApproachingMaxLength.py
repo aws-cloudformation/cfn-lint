@@ -9,7 +9,7 @@ from cfnlint.rules import CloudFormationLintRule
 class ApproachingMaxLength(CloudFormationLintRule):
     """Check maximum Parameter name size limit"""
 
-    id = "I2012"
+    id = "I2011"
     shortdesc = "Parameter name limit"
     description = (
         "Check the size of Parameter names in the template is approaching the upper"

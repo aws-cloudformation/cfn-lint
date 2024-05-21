@@ -17,13 +17,13 @@ class TestConfiguration(BaseRuleTestCase):
         rule = Configuration()
         validator = CfnTemplateValidator({})
 
-        errors = list(rule.cfnconditions(validator, {}, {"foo": True}, []))
+        errors = list(rule.validate(validator, {}, {"foo": True}, []))
         self.assertListEqual(
             errors,
             [],
         )
 
-        errors = list(rule.cfnconditions(validator, {}, {"bar": "bad"}, []))
+        errors = list(rule.validate(validator, {}, {"bar": "bad"}, []))
         self.assertListEqual(
             errors,
             [

@@ -9,7 +9,7 @@ import pytest
 
 from cfnlint.context import Path
 from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules.parameters.Pattern import Pattern as ParameterPattern
+from cfnlint.rules.parameters.ValuePattern import ValuePattern as ParameterPattern
 from cfnlint.rules.resources.properties.Pattern import Pattern
 
 

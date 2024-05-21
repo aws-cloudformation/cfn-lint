@@ -3,12 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import cfnlint.helpers
-from cfnlint.data import AdditionalSpecs
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from typing import Any
+
+from cfnlint.jsonschema import Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLintRule):
+class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CfnLintJsonSchema):
     """Check for UpdateReplacePolicy / DeletionPolicy"""
 
     id = "I3011"
@@ -22,35 +23,58 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(
+            keywords=["Resources/*"],
+            all_matches=True,
+        )
 
-        spec = cfnlint.helpers.load_resource(AdditionalSpecs, "StatefulResources.json")
-
-        self.likely_stateful_resource_types = [
-            resource_type
-            for resource_type, descr in spec["ResourceTypes"].items()
-            # Resources that won't be deleted if they're not empty (ex: S3)
-            # don't need to be checked for policies, as chance of mistakes are low.
-            if not descr.get("DeleteRequiresEmptyResource", False)
+        self.config["types"] = [
+            "AWS::Backup::BackupVault",
+            "AWS::CloudFormation::Stack",
+            "AWS::Cognito::UserPool",
+            "AWS::DocDB::DBCluster",
+            "AWS::DocDB::DBInstance",
+            "AWS::DynamoDB::GlobalTable",
+            "AWS::DynamoDB::Table",
+            "AWS::EC2::Volume",
+            "AWS::EFS::FileSystem",
+            "AWS::EMR::Cluster",
+            "AWS::ElastiCache::CacheCluster",
+            "AWS::ElastiCache::ReplicationGroup",
+            "AWS::Elasticsearch::Domain",
+            "AWS::FSx::FileSystem",
+            "AWS::KMS::Key",
+            "AWS::Kinesis::Stream",
+            "AWS::Logs::LogGroup",
+            "AWS::Neptune::DBCluster",
+            "AWS::Neptune::DBInstance",
+            "AWS::OpenSearchService::Domain",
+            "AWS::Organizations::Account",
+            "AWS::QLDB::Ledger",
+            "AWS::RDS::DBCluster",
+            "AWS::RDS::DBInstance",
+            "AWS::Redshift::Cluster",
+            # "AWS::S3::Bucket", # can't be deleted without being empty
+            "AWS::SDB::Domain",
+            "AWS::SQS::Queue",
+            "AWS::SecretsManager::Secret",
         ]
 
-    def match(self, cfn):
-        """Check for UpdateReplacePolicy / DeletionPolicy"""
-        matches = []
+        self._schema = {"required": ["DeletionPolicy", "UpdateReplacePolicy"]}
 
-        resources = cfn.get_resources()
-        for r_name, r_values in resources.items():
-            if r_values.get("Type") in self.likely_stateful_resource_types:
-                if not r_values.get("DeletionPolicy") or not r_values.get(
-                    "UpdateReplacePolicy"
-                ):
-                    path = ["Resources", r_name]
-                    message = (
-                        "The default action when replacing/removing a resource is to"
-                        " delete it. Set explicit values for UpdateReplacePolicy /"
-                        " DeletionPolicy on potentially stateful resource:"
-                        f" {'/'.join(path)}"
-                    )
-                    matches.append(RuleMatch(path, message))
+    def validate(self, validator: Validator, s: Any, instance: Any, schema: Any):
+        resource_type = instance.get("Type")
 
-        return matches
+        if not isinstance(resource_type, str):
+            return
+
+        if resource_type not in self.config.get("types"):  # type: ignore
+            return
+
+        for err in super().validate(validator, s, instance, self._schema):
+            err.message = (
+                f"{err.message} (The default action when replacing/removing "
+                "a resource is to delete it. Set explicit values for "
+                "stateful resource)"
+            )
+            yield err

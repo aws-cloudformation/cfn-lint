@@ -78,7 +78,7 @@ class Join(BaseFn):
             yield from iter(errs)
 
         for rule in self.child_rules.values():
-            if rule is None:
+            if rule is None or not hasattr(rule, "validate"):
                 continue
 
             yield from rule.validate(validator, s, instance, schema)

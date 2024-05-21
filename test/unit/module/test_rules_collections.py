@@ -7,7 +7,7 @@ from test.testlib.testcase import BaseTestCase
 
 import regex as re
 
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules import CloudFormationLintRule, RulesCollection

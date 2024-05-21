@@ -343,6 +343,9 @@ class RulesCollection:
         for rule in self.rules.values():
             for key in rule.child_rules.keys():
                 rule.child_rules[key] = self.rules.get(key)
+            for parent_rule in rule.parent_rules:
+                if parent_rule in self.rules:
+                    self.rules[parent_rule].child_rules[rule.id] = rule
 
         for rule in self.rules.values():
             matches.extend(

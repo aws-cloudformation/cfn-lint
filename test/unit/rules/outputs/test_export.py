@@ -45,7 +45,7 @@ def validator():
     ],
 )
 def test_functions(name, instance, errors, rule, validator):
-    errs = list(rule.cfnoutputexport(validator, {}, instance, {}))
+    errs = list(rule.validate(validator, {}, instance, {}))
     assert len(errs) == len(errors), name
     for i, err in enumerate(errors):
         assert err == errs[i].message

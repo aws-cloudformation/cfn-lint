@@ -5,10 +5,10 @@ SPDX-License-Identifier: MIT-0
 
 from cfnlint.helpers import valid_snapshot_types
 from cfnlint.jsonschema import Validator
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class UpdateReplacePolicy(CloudFormationLintRule):
+class UpdateReplacePolicy(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3036"
@@ -17,10 +17,21 @@ class UpdateReplacePolicy(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html"
     tags = ["resources", "updatereplacepolicy"]
 
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfnresourceupdatereplacepolicy(
-        self, validator: Validator, uRp: str, instance, schema
-    ):
+    def __init__(self) -> None:
+        super().__init__(
+            keywords=["Resources/*/UpdateReplacePolicy"],
+            all_matches=True,
+        )
+
+    def validate(self, validator: Validator, dP: str, instance, schema):
+        enum = ["Delete", "Retain"]
+        resource_name = validator.context.path.path[1]
+        if (
+            isinstance(resource_name, str)
+            and validator.context.resources[resource_name].type in valid_snapshot_types
+        ):
+            enum.append("Snapshot")
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=[
@@ -30,16 +41,8 @@ class UpdateReplacePolicy(CloudFormationLintRule):
                     "Fn::If",
                     "Ref",
                 ]
-            )
+            ),
+            schema={"type": "string", "enum": enum},
         )
-        enum = ["Delete", "Retain"]
-        resource_name = validator.context.path.path[1]
-        if (
-            isinstance(resource_name, str)
-            and validator.context.resources[resource_name].type in valid_snapshot_types
-        ):
-            enum.append("Snapshot")
 
-        for err in validator.descend(instance, {"type": "string", "enum": enum}):
-            err.rule = self
-            yield err
+        yield from self._iter_errors(validator, instance)
