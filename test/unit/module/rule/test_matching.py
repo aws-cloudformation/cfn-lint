@@ -29,7 +29,19 @@ class TestMatching(BaseTestCase):
         r = f(self.example)
         t = r(self, "", None)
         self.assertEqual(
-            list(t), [Match(1, 1, 1, 1, "", rule(), "Message", rule_match)]
+            list(t),
+            [
+                Match(
+                    linenumber=1,
+                    columnnumber=1,
+                    linenumberend=1,
+                    columnnumberend=1,
+                    filename="",
+                    rule=rule(),
+                    message="Message",
+                    rulematch_obj=rule_match,
+                )
+            ],
         )
 
     def test_compare(self):

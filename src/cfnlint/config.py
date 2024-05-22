@@ -320,11 +320,9 @@ class RuleConfigurationAction(argparse.Action):
 class CliArgs:
     """Base Args class"""
 
-    cli_args: Dict = {}
-
-    def __init__(self, cli_args):
+    def __init__(self, cli_args: Sequence[str] | None):
         self.parser = self.create_parser()
-        self.cli_args = self.parser.parse_args(cli_args)
+        self.cli_args = self.parser.parse_args(cli_args or [])
 
     def create_parser(self):
         """Do first round of parsing parameters to set options"""

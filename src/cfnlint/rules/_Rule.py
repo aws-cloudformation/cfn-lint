@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-from typing import Any, Callable, Dict, Iterator, List, Sequence, Tuple, Union
+from typing import Any, Dict, Iterator, List, Sequence, Tuple, Union
 
 import cfnlint.helpers
 import cfnlint.rules.custom
@@ -55,10 +55,37 @@ def _rule_is_enabled(
 
 
 class RuleMatch:
-    """Rules Error"""
+    """
+    Represents a rule match found by a CloudFormationLintRule.
+
+    Attributes:
+        path (Sequence[str | int]): The path to the element that
+        triggered the rule match.
+        path_string (str): The string representation of the path.
+        message (str): The message associated with the rule match.
+        context (List[RuleMatch]): Additional context information
+        related to the rule match.
+
+    Methods:
+        __eq__(self, item) -> bool:
+            Override the equality comparison operator to compare
+            rule matches based on their path and message.
+        __hash__(self) -> int:
+            Override the hash function to allow rule matches to
+            be used as keys in a dictionary.
+    """
 
     def __init__(self, path: Sequence[str | int], message: str, **kwargs):
-        """Init"""
+        """
+        Initialize a new RuleMatch instance.
+
+        Args:
+            path (Sequence[str | int]): The path to the element
+            that triggered the rule match.
+            message (str): The message associated with the rule match.
+            **kwargs: Additional keyword arguments to be stored
+            as attributes on the RuleMatch instance.
+        """
         self.path: Sequence[str | int] = path
         self.path_string: str = "/".join(map(str, path))
         self.message: str = message
@@ -67,11 +94,27 @@ class RuleMatch:
             setattr(self, k, v)
 
     def __eq__(self, item):
-        """Override unique"""
+        """
+        Override the equality comparison operator to compare rule
+        matches based on their path and message.
+
+        Args:
+            item (RuleMatch): The other RuleMatch instance to compare with.
+
+        Returns:
+            bool: True if the path and message of the two rule matches
+            are equal, False otherwise.
+        """
         return (self.path, self.message) == (item.path, item.message)
 
     def __hash__(self):
-        """Hash for comparisons"""
+        """
+        Override the hash function to allow rule matches to be
+        used as keys in a dictionary.
+
+        Returns:
+            int: The hash value of the RuleMatch instance.
+        """
         return hash((self.path, self.message))
 
 
@@ -128,9 +171,6 @@ def matching(match_type: Any):
 
         def wrapper(self, filename: str, cfn: Template, *args, **kwargs):
             """Wrapper"""
-            if not getattr(self, match_type):
-                return
-
             if match_type == "match_resource_properties":
                 if args[1] not in self.resource_property_types:
                     return
@@ -167,7 +207,6 @@ class CloudFormationLintRule:
 
     def __init__(self) -> None:
         self.resource_property_types: List[str] = []
-        self.resource_sub_property_types: List[str] = []
         self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
         self.config_definition: Dict[str, Any] = {}
         self._child_rules: Dict[str, "CloudFormationLintRule" | None] = {}
@@ -177,6 +216,9 @@ class CloudFormationLintRule:
 
     def __repr__(self):
         return f"{self.id}: {self.shortdesc}"
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     @property
     def child_rules(self) -> Dict[str, "CloudFormationLintRule" | None]:
@@ -258,9 +300,17 @@ class CloudFormationLintRule:
                             elif self.config_definition[key]["itemtype"] == "integer":
                                 self.config[key].append(int(l_value))
 
-    match: Callable[[Template], List[RuleMatch]] = None  # type: ignore
-    # ruff: noqa: E501
-    match_resource_properties: Callable[[Dict, str, List[str], Template], List[RuleMatch]] = None  # type: ignore
+    def match(self, cfn: Template) -> List[RuleMatch]:
+        return []
+
+    def match_resource_properties(
+        self,
+        properties: dict[str, Any],
+        resourcetype: str,
+        path: Sequence[str | int],
+        cfn: Template,
+    ) -> list[RuleMatch]:
+        return []
 
     @matching("match")
     # pylint: disable=W0613

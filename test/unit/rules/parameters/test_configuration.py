@@ -175,6 +175,5 @@ def context(cfn):
 def test_validate(name, instance, expected, rule, context, cfn):
     validator = CfnTemplateValidator(context=context, cfn=cfn)
     errs = list(rule.validate(validator, {}, instance, {}))
-    for err in errs:
-        print(err.rule)
+
     assert errs == expected, f"Test {name!r} got {errs!r}"

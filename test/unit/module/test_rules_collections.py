@@ -10,8 +10,23 @@ import regex as re
 import cfnlint.decode.cfn_yaml
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.exceptions import DuplicateRuleError
+from cfnlint.match import Match
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
+from cfnlint.rules.RuleError import RuleError
 from cfnlint.template.template import Template
+
+
+class RuleFail(CloudFormationLintRule):
+    """Def Rule"""
+
+    id = "EYYYY"
+    shortdesc = "Test Rule"
+    description = "Test Rule"
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    tags = ["resources"]
+
+    def match(self, cfn):
+        raise KeyError("Bad template")
 
 
 class TestRulesCollection(BaseTestCase):
@@ -289,6 +304,31 @@ class TestRulesCollection(BaseTestCase):
         )
 
         self.assertEqual(len(rules), 15)
+
+    def test_rule_failure(self):
+        rules = RulesCollection(ignore_rules=["E"], mandatory_rules=["E000", "EYYYY"])
+        rules.extend([RuleFail()])
+
+        cfn = Template("-", {}, regions=["us-east-1"])
+
+        matches = list(rules.run("-", cfn))
+        self.assertListEqual(
+            [
+                Match(
+                    linenumber=1,
+                    linenumberend=1,
+                    columnnumber=1,
+                    columnnumberend=2,
+                    filename="-",
+                    rule=RuleError(),
+                    message=(
+                        "Unknown exception while processing rule "
+                        "EYYYY: 'Bad template'"
+                    ),
+                )
+            ],
+            matches,
+        )
 
 
 class TestCreateFromModule(BaseTestCase):

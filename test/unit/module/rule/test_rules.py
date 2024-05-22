@@ -91,13 +91,13 @@ class TestRules(BaseTestCase):
         self.assertListEqual(
             [
                 Match(
-                    1,
-                    1,
-                    1,
-                    1,
-                    "",
-                    RuleError(),
-                    (
+                    linenumber=1,
+                    linenumberend=1,
+                    columnnumber=1,
+                    columnnumberend=2,
+                    filename="-",
+                    rule=RuleError(),
+                    message=(
                         "Unknown exception while processing rule "
                         "EYYYY: \"'Bad template'\""
                     ),
@@ -118,22 +118,22 @@ class TestRules(BaseTestCase):
         self.assertListEqual(
             [
                 Match(
-                    1,
-                    1,
-                    1,
-                    1,
-                    "-",
-                    RuleParent(),
-                    ("Parent Rule"),
+                    linenumber=1,
+                    columnnumber=1,
+                    linenumberend=1,
+                    columnnumberend=1,
+                    filename="-",
+                    rule=RuleParent(),
+                    message="Parent Rule",
                 ),
                 Match(
-                    1,
-                    1,
-                    1,
-                    1,
-                    "-",
-                    RuleChild(),
-                    ("Child Rule"),
+                    linenumber=1,
+                    columnnumber=1,
+                    linenumberend=1,
+                    columnnumberend=1,
+                    filename="-",
+                    rule=RuleChild(),
+                    message="Child Rule",
                 ),
             ],
             matches,
@@ -156,13 +156,13 @@ class TestRules(BaseTestCase):
         self.assertListEqual(
             [
                 Match(
-                    1,
-                    1,
-                    1,
-                    1,
-                    "-",
-                    RuleChild(),
-                    ("Child Rule"),
+                    linenumber=1,
+                    columnnumber=1,
+                    linenumberend=1,
+                    columnnumberend=1,
+                    filename="-",
+                    rule=RuleChild(),
+                    message="Child Rule",
                 )
             ],
             matches,

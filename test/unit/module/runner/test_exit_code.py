@@ -25,9 +25,9 @@ class InformationRule(CloudFormationLintRule):
     description = "Informational"
 
 
-error_match = Match(0, 0, 0, 0, "", ErrorRule(), message="")
-warning_match = Match(0, 0, 0, 0, "", WarningRule(), message="")
-informational_match = Match(0, 0, 0, 0, "", InformationRule(), message="")
+error_match = Match("", ErrorRule(), "", 0, 0, 0, 0)
+warning_match = Match("", WarningRule(), "", 0, 0, 0, 0)
+informational_match = Match("", InformationRule(), "", 0, 0, 0, 0)
 
 
 class TestExitCodes(BaseTestCase):

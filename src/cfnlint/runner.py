@@ -25,6 +25,17 @@ LOGGER = logging.getLogger(__name__)
 
 
 def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
+    """
+    Get a formatter instance based on the specified configuration.
+
+    Args:
+        config (ConfigMixIn): The configuration object containing the format setting.
+
+    Returns:
+        cfnlint.formatters.BaseFormatter: A formatter instance based
+        on the specified format.
+
+    """
     fmt = config.format
     if fmt:
         if fmt == "quiet":
@@ -45,6 +56,26 @@ def get_formatter(config: ConfigMixIn) -> cfnlint.formatters.BaseFormatter:
 
 
 class TemplateRunner:
+    """
+    Runs a set of rules against a CloudFormation template.
+
+    Attributes:
+        config (ConfigMixIn): The configuration object containing
+        settings for the template scan.
+        cfn (Template): The CloudFormation template object.
+        rules (Rules): The set of rules to be applied to the template.
+
+    Methods:
+        _dedup(matches: Iterator[Match]) -> Iterator[Match]:
+            Deduplicate a sequence of matches.
+        run() -> Iterator[Match]:
+            Run the rules against the CloudFormation template and
+            yield the resulting matches.
+        check_metadata_directives(matches: Iterator[Match]) -> Iterator[Match]:
+            Filter matches based on metadata directives in the template.
+
+    """
+
     def __init__(
         self,
         filename: str | None,
@@ -52,13 +83,31 @@ class TemplateRunner:
         config: ConfigMixIn,
         rules: Rules,
     ) -> None:
+        """
+        Initialize a new TemplateRunner instance.
+
+        Args:
+            filename (str | None): The filename of the CloudFormation template.
+            template (Dict[str, Any]): The CloudFormation template as a dictionary.
+            config (ConfigMixIn): The configuration object containing
+            settings for the template scan.
+            rules (Rules): The set of rules to be applied to the template.
+        """
         self.config = deepcopy(config)
         self.config.set_template_args(template)
         self.cfn = Template(filename, template, self.config.regions)
         self.rules = rules
 
     def _dedup(self, matches: Iterator[Match]) -> Iterator[Match]:
-        """Deduplicate matches"""
+        """
+        Deduplicate a sequence of matches.
+
+        Args:
+            matches (Iterator[Match]): The sequence of matches to be deduplicated.
+
+        Yields:
+            Match: The unique matches from the input sequence.
+        """
         seen: List[Match] = []
         for match in matches:
             if match not in seen:
@@ -66,15 +115,17 @@ class TemplateRunner:
                 yield match
 
     def run(self) -> Iterator[Match]:
-        """Run rules"""
+        """
+        Run the rules against the CloudFormation template and
+        yield the resulting matches.
+
+        Yields:
+            Match: The matches found by running the rules against the template.
+        """
         LOGGER.info("Run scan of template %s", self.cfn.filename)
         matches = self.cfn.transform()
         if matches:
-            # Transform logic helps with handling serverless templates
-            if self.rules.is_rule_enabled(
-                TransformError(),
-                self.config,
-            ):
+            if self.rules.is_rule_enabled(TransformError(), self.config):
                 yield from iter(matches)
             return
 
@@ -90,7 +141,15 @@ class TemplateRunner:
             )
 
     def check_metadata_directives(self, matches: Iterator[Match]) -> Iterator[Match]:
-        # uniq the list of incidents and filter out exceptions from the template
+        """
+        Filter matches based on metadata directives in the template.
+
+        Args:
+            matches (Iterator[Match]): The sequence of matches to be filtered.
+
+        Yields:
+            Match: The matches that are not suppressed by metadata directives.
+        """
         directives = self.cfn.get_directives()
 
         for match in matches:
@@ -115,7 +174,42 @@ class TemplateRunner:
 
 
 class Runner:
+    """
+    Runs a set of rules against one or more CloudFormation templates.
+
+    Attributes:
+        config (ConfigMixIn): The configuration object containing
+        settings for the template scan.
+        formatter (BaseFormatter): The formatter used to output the
+        results of the template scan.
+        rules (Rules): The set of rules to be applied to the templates.
+
+    Methods:
+        _get_rules() -> None:
+            Load the rules to be applied to the templates.
+        _validate_filenames(filenames: Sequence[str | None]) -> Iterator[Match]:
+            Validate the specified filenames and yield any matches found.
+        validate_template(filename: str | None,
+         template: Dict[str, Any]) -> Iterator[Match]:
+            Validate a single CloudFormation template and yield any matches found.
+        _cli_output(matches: List[Match]) -> None:
+            Output the results of the template scan to the console or a file.
+        _exit(matches: List[Match]) -> int:
+            Determine the appropriate exit code based on the severity of the matches.
+        run() -> Iterator[Match]:
+            Run the template validation process and yield any matches found.
+        cli() -> None:
+            Run the template validation process and output the results.
+    """
+
     def __init__(self, config: ConfigMixIn) -> None:
+        """
+        Initialize a new Runner instance.
+
+        Args:
+            config (ConfigMixIn): The configuration object containing
+                settings for the template scan.
+        """
         self.config = config
         self.formatter = get_formatter(self.config)
         self.rules: Rules = Rules()
@@ -128,7 +222,10 @@ class Runner:
             for path in self.config.registry_schemas:
                 PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
 
-    def _get_rules(self):
+    def _get_rules(self) -> None:
+        """
+        Load the rules to be applied to the templates.
+        """
         self.rules = Rules()
         try:
             for rules_path in self.config.append_rules:
@@ -146,6 +243,22 @@ class Runner:
             ) from e
 
     def _validate_filenames(self, filenames: Sequence[str | None]) -> Iterator[Match]:
+        """
+        Validate the specified filenames and yield any matches found.
+
+        This function processes each filename in the provided sequence, decoding the
+        template and validating it against the configured rules. Any matches found
+        are yielded as an iterator.
+
+        Args:
+            filenames (Sequence[str | None]): The sequence of filenames to be validated.
+
+        Yields:
+            Match: The matches found during the validation process.
+
+        Raises:
+            None: This function does not raise any exceptions.
+        """
         ignore_bad_template: bool = False
         if self.config.ignore_bad_template:
             ignore_bad_template = True
@@ -177,6 +290,23 @@ class Runner:
     def validate_template(
         self, filename: str | None, template: Dict[str, Any]
     ) -> Iterator[Match]:
+        """
+        Validate a single CloudFormation template and yield any matches found.
+
+        This function takes a CloudFormation template as a dictionary and runs the
+        configured rules against it. Any matches found are yielded as an iterator.
+
+        Args:
+            filename (str | None): The filename of the CloudFormation template, or
+                `None` if the template is not associated with a file.
+            template (Dict[str, Any]): The CloudFormation template as a dictionary.
+
+        Yields:
+            Match: The matches found during the validation process.
+
+        Raises:
+            None: This function does not raise any exceptions.
+        """
         runner = TemplateRunner(filename, template, self.config, self.rules)
         yield from runner.run()
 
@@ -226,6 +356,27 @@ class Runner:
         sys.exit(exit_code)
 
     def run(self) -> Iterator[Match]:
+        """
+        Run the rules against the CloudFormation template and yield
+        the resulting matches.
+
+        This function is responsible for executing the validation
+        process against the CloudFormation template. It performs
+        the following steps:
+
+        1. Transform the template, if necessary, and yield any matches found.
+        2. Build the template graph, if configured.
+        3. Run the configured rules against the template and
+        yield the resulting matches.
+        4. Filter the matches based on any metadata directives in the template.
+        5. Deduplicate the matches before yielding them.
+
+        Yields:
+            Match: The matches found by running the rules against the template.
+
+        Raises:
+            None: This function does not raise any exceptions.
+        """
         if not sys.stdin.isatty() and not self.config.templates:
             yield from self._validate_filenames([None])
             return
@@ -233,6 +384,21 @@ class Runner:
         yield from self._validate_filenames(self.config.templates)
 
     def cli(self) -> None:
+        """
+        Run the template validation process and output the results.
+
+        This function is the entry point for the command-line interface (CLI) of the
+        CloudFormation linter.
+
+        If no templates are specified and the input is a terminal, the function will
+        print the usage information and exit with a non-zero status code.
+
+        Returns:
+            None: This function does not return a value.
+
+        Raises:
+            None: This function does not raise any exceptions.
+        """
         if self.config.update_specs:
             cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(0)
@@ -265,9 +431,28 @@ def main() -> None:
 
 
 class CfnLintExitException(Exception):
-    """Generic exception used when the cli should exit"""
+    """
+    An exception that is raised to indicate that the CloudFormation linter should exit.
+
+    This exception is used to signal that the linter should exit
+    with a specific exit code, typically indicating the severity
+    of the issues found in the CloudFormation template.
+
+    Attributes:
+        exit_code (int): The exit code to be used when the linter exits.
+
+    Methods:
+        __init__(self, exit_code: int) -> None:
+            Initialize a new CfnLintExitException instance with the specified exit code.
+    """
 
     def __init__(self, msg=None, exit_code=1):
+        """
+        Initialize a new CfnLintExitException instance with the specified exit code.
+
+        Args:
+            exit_code (int): The exit code to be used when the linter exits.
+        """
         if msg is None:
             msg = f"process failed with exit code {exit_code}"
         super().__init__(msg)
@@ -275,8 +460,20 @@ class CfnLintExitException(Exception):
 
 
 class InvalidRegionException(CfnLintExitException):
-    """When an unsupported/invalid region is supplied"""
+    """
+    An exception that is raised when an invalid AWS region is encountered.
+
+    This exception is raised when the CloudFormation linter encounters a resource
+    or parameter that references an AWS region that is not valid or supported.
+    """
 
 
 class UnexpectedRuleException(CfnLintExitException):
-    """When processing a rule fails in an unexpected way"""
+    """
+    An exception that is raised when an unexpected error occurs while loading rules.
+
+    This exception is raised when the CloudFormation linter encounters an error
+    while attempting to load custom rules or rules from a specified directory or
+    module. This could be due to a variety of reasons, such as a missing file,
+    a syntax error in the rule code, or an issue with the rule implementation.
+    """

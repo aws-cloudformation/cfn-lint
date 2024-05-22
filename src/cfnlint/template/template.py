@@ -8,7 +8,7 @@ from __future__ import annotations
 import functools
 import logging
 from copy import deepcopy
-from typing import Any, Dict, List
+from typing import TYPE_CHECKING, Any, Iterator
 
 import regex as re
 
@@ -21,38 +21,50 @@ from cfnlint.match import Match
 from cfnlint.template.getatts import GetAtts
 from cfnlint.template.transforms import Transform
 
+if TYPE_CHECKING:
+    from cfnlint.rules import RuleMatch
+
 LOGGER = logging.getLogger(__name__)
 
 
 class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attributes
-    """Class for a CloudFormation template"""
+    """
+    Class representing a CloudFormation template.
+
+    This class provides methods to access and manipulate various parts of the template,
+    such as resources, parameters, conditions, and transformations. It also includes
+    utility methods for checking conditions, resolving references, and more.
+
+    Attributes:
+        regions (list[str]): A list of AWS regions associated with the template.
+        filename (str | None): The filename of the template file, if available.
+        template (dict[str, Any]): The dictionary representing the CloudFormation template.
+        sections (list[str]): A list of CloudFormation template sections.
+        transform_pre (dict[str, Any]): A dictionary containing pre-processed transformation data.
+        conditions (Conditions): An instance of the Conditions class used for managing conditions.
+        graph (Graph): An instance of the Graph class used for representing the template structure.
+    """
 
     def __init__(
         self,
         filename: str | None,
-        template: Dict[str, Any],
-        regions: List[str] | None = None,
+        template: dict[str, Any],
+        regions: list[str] | None = None,
     ):
+        """Initialize a Template instance.
+
+        Args:
+            filename (str | None): The filename of the template file, if available.
+            template (dict[str, Any]): The dictionary representing the CloudFormation template.
+            regions (list[str] | None): A list of AWS regions associated with the template.
+        """
         if regions is None:
             self.regions = [cfnlint.helpers.REGION_PRIMARY]
         else:
             self.regions = regions
         self.filename = filename
         self.template = template
-        self.sections = [
-            "AWSTemplateFormatVersion",
-            "Description",
-            "Metadata",
-            "Parameters",
-            "Mappings",
-            "Conditions",
-            "Transform",
-            "Hooks",
-            "Resources",
-            "Outputs",
-            "Rules",
-        ]
-        self.transform_pre: Dict[str, Any] = {}
+        self.transform_pre: dict[str, Any] = {}
         self.transform_pre["Globals"] = {}
         self.transform_pre["Ref"] = self.search_deep_keys("Ref")
         self.transform_pre["Fn::Sub"] = self.search_deep_keys("Fn::Sub")
@@ -90,18 +102,24 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def _cache_clear(self):
         self.search_deep_keys.cache_clear()
 
-    def transform(self) -> List[Match]:
+    def transform(self) -> list[Match]:
         """
-        Transform the template
+        Transform the template.
+
+        Returns:
+            list[Match]: A list of Match objects representing the transformed template.
         """
         transform = Transform()
         results = transform.transform(self)
         self._cache_clear()
         return results
 
-    def build_graph(self):
+    def build_graph(self) -> None:
         """Generates a DOT representation of the template"""
-        path = self.filename + ".dot"
+        filename = self.filename or "cfn-lint"
+        path = filename + ".dot"
+        if not self.graph:
+            return
         try:
             self.graph.to_dot(path)
             LOGGER.info("DOT representation of the graph written to %s", path)
@@ -113,8 +131,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 )
             )
 
-    def has_language_extensions_transform(self):
-        """Check if the template has language extensions transform declared"""
+    def has_language_extensions_transform(self) -> bool:
+        """Check if the template has the AWS::LanguageExtensions transform declared.
+
+        Returns:
+            bool: True if the AWS::LanguageExtensions transform is declared, False otherwise.
+        """
         lang_extensions_transform = "AWS::LanguageExtensions"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
@@ -124,8 +146,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
         return bool(lang_extensions_transform in transform_type)
 
-    def has_serverless_transform(self):
-        """Check if the template has SAM transform declared"""
+    def has_serverless_transform(self) -> bool:
+        """Check if the template has the AWS::Serverless-2016-10-31 transform declared.
+
+        Returns:
+            bool: True if the AWS::Serverless-2016-10-31 transform is declared, False otherwise.
+        """
         lang_extensions_transform = "AWS::Serverless-2016-10-31"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
@@ -136,7 +162,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return bool(lang_extensions_transform in transform_type)
 
     def is_cdk_template(self) -> bool:
-        """Check if the template was created by CDK"""
+        """Check if the template was created by the AWS Cloud Development Kit (CDK).
+
+        Returns:
+            bool: True if the template was created by CDK, False otherwise.
+        """
         resources = self.template.get("Resources")
         if not isinstance(resources, dict):
             return False
@@ -152,10 +182,17 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return False
 
-    def get_resources(self, resource_type=[]):
-        """
-        Get Resources
-        Filter on type when specified
+    def get_resources(
+        self, resource_type: list[str] | str = []
+    ) -> dict[str, dict[str, Any]]:
+        """Get the resources in the template.
+
+        Args:
+            resource_type (list[str] | str): An optional list or string of resource types to filter by.
+
+        Returns:
+            dict[str, dict[str, Any]]: A dictionary containing the resources, where the keys are resource names
+                and the values are the resource dictionaries.
         """
         resources = self.template.get("Resources", {})
         if not isinstance(resources, dict):
@@ -173,7 +210,18 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_resource_children(self, resource_name: str, types: list[str] | None = None):
+    def get_resource_children(
+        self, resource_name: str, types: list[str] | None = None
+    ) -> Iterator[str]:
+        """Get the resource children for a given resource name.
+
+        Args:
+            resource_name (str): The name of the resource.
+            types (list[str] | None): An optional list of resource types to filter by.
+
+        Yields:
+            str: The name of each resource child.
+        """
         types = types or []
 
         if self.graph:
@@ -188,10 +236,16 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 else:
                     yield node_name
 
-    def get_parameters_valid(self):
+    def get_parameters_valid(self) -> dict[str, dict[str, Any]]:
+        """Get the valid parameters in the template.
+
+        Returns:
+            dict[str, dict[str, Any]]: A dictionary containing the valid parameters, where the keys are parameter names
+                and the values are the parameter dictionaries.
+        """
         result = {}
         if isinstance(self.template.get("Parameters"), dict):
-            parameters = self.template.get("Parameters")
+            parameters = self.template.get("Parameters", {})
             for parameter_name, parameter_value in parameters.items():
                 if isinstance(parameter_value, dict):
                     if isinstance(parameter_value.get("Type"), str):
@@ -199,8 +253,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return result
 
-    def get_modules(self):
-        """Get Modules"""
+    def get_modules(self) -> dict[str, dict[str, Any]]:
+        """Get the modules in the template.
+
+        Returns:
+            dict[str, dict[str, Any]]: A dictionary containing the modules, where the keys are module names
+                and the values are the module dictionaries.
+        """
         resources = self.template.get("Resources", {})
         if not resources:
             return {}
@@ -216,6 +275,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_valid_refs(self) -> cfnlint.helpers.RegexDict:
+        """Get a dictionary of valid references in the template.
+
+        Returns:
+            cfnlint.helpers.RegexDict: A dictionary containing valid references, where the keys are reference names
+                and the values are dictionaries with information about the reference type and source.
+        """
         results = cfnlint.helpers.RegexDict()
         parameters = self.template.get("Parameters", {})
         if parameters:
@@ -250,7 +315,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             results[pseudoparam] = element
         return results
 
-    def get_valid_getatts(self):
+    def get_valid_getatts(self) -> GetAtts:
+        """Get an instance of GetAtts containing valid GetAtt references in the template.
+
+        Returns:
+            GetAtts: An instance of GetAtts containing valid GetAtt references.
+        """
         results = GetAtts(self.regions)
 
         resources = self.template.get("Resources", {})
@@ -262,8 +332,14 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_directives(self):
-        results = {}
+    def get_directives(self) -> dict[str, list[str]]:
+        """Get the directives (ignore_checks) in the template.
+
+        Returns:
+            dict[str, list[str]]: A dictionary containing directives, where the keys are directive names
+                and the values are lists of resource names associated with the directive.
+        """
+        results: dict[str, list[str]] = {}
         resources = self.get_resources()
         if resources:
             for resource_name, resource_values in resources.items():
@@ -282,7 +358,16 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     # pylint: disable=dangerous-default-value
     def _search_deep_keys(self, searchText: str | re.Pattern, cfndict, path):
-        """Search deep for keys and get their values"""
+        """Search deep for keys and get their values.
+
+        Args:
+            searchText (str | re.Pattern): The text or regular expression pattern to search for.
+            cfndict (Any): The dictionary or list to search in.
+            path (list[Any]): The current path in the dictionary or list.
+
+        Returns:
+            list[list[Any]]: A list of paths where the searchText was found.
+        """
         keys = []
         if isinstance(cfndict, dict):
             for key in cfndict:
@@ -325,10 +410,18 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def search_deep_keys(
         self, searchText: str | re.Pattern, includeGlobals: bool = True
     ):
-        """
-        Search for a key in all parts of the template.
-        :return if searchText is "Ref", an array like
-        ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
+        """Search for a key in all parts of the template.
+
+        Args:
+            searchText (str | re.Pattern): The text or regular expression pattern to search for.
+            includeGlobals (bool): Whether to include globals in the search.
+
+        Returns:
+            liist[[Any]]: A list of paths where the searchText was found.
+
+        Example:
+            If searchText is "Ref", the return value could be something like
+            ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
         """
         results = []
         results.extend(self._search_deep_keys(searchText, self.template, []))
@@ -341,9 +434,20 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 results.append(["Globals"] + pre_result)
         return results
 
-    def get_condition_values(self, template, path=[]):
-        """Evaluates conditions and brings back the values"""
-        matches = []
+    def get_condition_values(self, template, path=[]) -> list[dict[str, Any]]:
+        """
+        Evaluates conditions in the provided CloudFormation template and returns the values.
+
+        Args:
+            template (list): The CloudFormation template to evaluate.
+            path (list, optional): The current path in the template. Defaults to an empty list.
+
+        Returns:
+            list: A list of dictionaries, where each dictionary contains the following keys:
+                - "Path": The path to the condition value in the template.
+                - "Value": The value of the condition.
+        """
+        matches: list[dict[str, Any]] = []
         if not isinstance(template, list):
             return matches
         if not len(template) == 3:
@@ -388,12 +492,23 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_values(self, obj, key, path=[]):
         """
-        Logic for getting the value of a key
-        Returns None if the item isn't found
-        Returns empty list if the item is found but Ref or GetAtt
-        Returns all the values as a list if condition
-        Returns the value if its just a string, int, boolean, etc.
+        Logic for getting the value of a key in the provided object.
 
+        Args:
+            obj (dict): The object to search for the key.
+            key (str): The key to search for in the object.
+            path (list, optional): The current path in the object. Defaults to an empty list.
+
+        Returns:
+            list: A list of dictionaries, where each dictionary contains the following keys:
+            - "Path": The path to the value in the object.
+            - "Value": The value found for the key.
+
+            Types of return values
+            - Returns None if the item isn't found
+            - Returns empty list if the item is found but Ref or GetAtt
+            - Returns all the values as a list if condition
+            - Returns the value if its just a string, int, boolean, etc.
         """
         matches = []
 
@@ -480,7 +595,15 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
 
     def get_sub_parameters(self, sub_string):
-        """Gets the parameters out of a Sub String"""
+        """
+        Gets the parameters out of a Sub String.
+
+        Args:
+            sub_string (str): The Sub string to extract parameters from.
+
+        Returns:
+            list: A list of the parameter names found in the Sub string.
+        """
         results = []
         if not isinstance(sub_string, str):
             return results
@@ -494,7 +617,17 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_location_yaml(self, text, path):
         """
-        Get the location information
+        Get the location information for the given YAML text and path.
+
+        Args:
+            text (str): The YAML text to search.
+            path (list): The path to the location within the YAML text.
+
+        Returns:
+            dict or None: A dictionary containing the location information, or None if the location could not be found.
+            The dictionary has the following keys:
+                - "start_mark": A dictionary with "line" and "column" keys indicating the start of the location.
+                - "end_mark": A dictionary with "line" and "column" keys indicating the end of the location.
         """
         result = None
         if not path:
@@ -549,7 +682,28 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         check_sub=None,
         pass_if_null=False,
         **kwargs,
-    ):
+    ) -> list[RuleMatch]:
+        """
+        Check the value of a key in the provided object.
+
+        Args:
+            obj (dict): The object to check the value of.
+            key (str): The key to check the value of.
+            path (list): The path to the current location in the object.
+            check_value (callable, optional): A function to check the value of the key.
+            check_ref (callable, optional): A function to check the "Ref" function.
+            check_get_att (callable, optional): A function to check the "Fn::GetAtt" function.
+            check_find_in_map (callable, optional): A function to check the "Fn::FindInMap" function.
+            check_split (callable, optional): A function to check the "Fn::Split" function.
+            check_join (callable, optional): A function to check the "Fn::Join" function.
+            check_import_value (callable, optional): A function to check the "Fn::ImportValue" function.
+            check_sub (callable, optional): A function to check the "Fn::Sub" function.
+            pass_if_null (bool, optional): Whether to pass if the value is null. Defaults to False.
+            **kwargs (dict): Additional keyword arguments to pass to the check functions.
+
+        Returns:
+            list[RuleMatch]: A list of matches found during the check.
+        """
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
@@ -628,17 +782,20 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def is_resource_available(self, path, resource):
         """
-        Compares a path to resource to see if its available
-        Returns scenarios that may result in the resource doesn't exist
-        Input:
-            Path: An array that is a Path to the object being checked
-            Resource: The resource being compared to
-        Output:
-            If the resource is available the result is an empty array []
-            If the resource is not available you will get a an array of Condition Names
-                and when that condition is True or False will result in the resource
-                not being available when trying to be associated.
-                [{'ConditionName'}: False]
+        Compares a path to a resource to see if it is available.
+
+        This function returns scenarios that may result in the resource not existing.
+
+        Args:
+            path (list): An array that is a path to the object being checked.
+            resource (str): The resource being compared.
+
+        Returns:
+            list: If the resource is available, the result is an empty list [].
+                If the resource is not available, the function returns a list of dictionaries,
+                where each dictionary represents a scenario where the resource is not available.
+                The dictionary keys are the condition names, and the values indicate whether
+                the condition is True or False.
         """
         results = []
         path_conditions = self.get_conditions_from_path(self.template, path)
@@ -677,7 +834,18 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def get_object_without_nested_conditions(self, obj, path, region=None):
         """
         Get a list of object values without conditions included.
-        Evaluates deep into the object removing any nested conditions as well
+
+        Evaluates deep into the object removing any nested conditions as well.
+
+        Args:
+            obj (dict): The object to process.
+            path (list): The current path in the object.
+            region (str, optional): The AWS region to use for evaluating conditions. Defaults to None.
+
+        Returns:
+            list: A list of dictionaries, where each dictionary contains the following keys:
+                - "Scenario": The scenario for the object, or None if there are no conditions.
+                - "Object": The object with conditions removed.
         """
         results = []
         scenarios = self.get_condition_scenarios_below_path(path, False, region)
@@ -730,7 +898,19 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_value_from_scenario(self, obj, scenario):
         """
-        Get object values from a provided scenario
+        Get object values from a provided scenario.
+
+        This function recursively processes the provided object, resolving any
+        conditional logic (such as Fn::If) based on the given scenario.
+
+        Args:
+            obj (dict): The object to process.
+            scenario (dict): The scenario to use when resolving conditional logic.
+
+        Returns:
+            dict or list or any: The processed object, with conditional logic resolved.
+            The return type can be a dictionary, list, or any other data type,
+            depending on the structure of the input object.
         """
 
         def get_value(value, scenario):  # pylint: disable=R0911
@@ -877,7 +1057,20 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self, path, include_if_in_function=False, region=None
     ):
         """
-        get Condition Scenarios from below path
+        Get all possible scenarios for the conditions in the provided object.
+
+        This function recursively processes the object, identifying any conditional
+        logic (such as Fn::If) and generating all possible scenarios based on the
+        conditions.
+
+        Args:
+            obj (dict): The object to process.
+            region (str, optional): The AWS region to use for evaluating conditions. Defaults to None.
+
+        Returns:
+            list: A list of dictionaries, where each dictionary represents a possible
+            scenario. The keys in the dictionary are the condition names, and the
+            values are boolean values indicating whether the condition is True or False.
         """
         fn_ifs = self.search_deep_keys("Fn::If")
         results = {}
@@ -898,7 +1091,19 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_conditions_scenarios_from_object(self, objs, region=None):
         """
-        Get condition from objects
+        Get the conditions that are applicable for the given path in the template.
+
+        This function recursively traverses the template, following the provided path,
+        and collects all the conditions that are relevant for the given path.
+
+        Args:
+            template (dict): The CloudFormation template to analyze.
+            path (list): The path within the template to analyze.
+
+        Returns:
+            dict: A dictionary where the keys are the condition names, and the values
+            are sets of boolean values (True or False) indicating the possible
+            outcomes for that condition.
         """
 
         def get_conditions_from_property(value):
@@ -956,13 +1161,24 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     ):
         """
         Parent function to handle resources with conditions.
-        Input:
-            text: The object to start processing through the Path
-            path: The path to recursively look for
-        Output:
-            An Object with keys being the Condition Names and the values are what
-                if its in the True or False part of the path.
-                {'condition': {True}}
+
+        This function recursively processes the provided text and path to identify
+        the conditions that are relevant for the given path.
+
+        Args:
+            text (dict): The object to start processing through the path.
+            path (list): The path to recursively look for conditions.
+            include_resource_conditions (bool, optional): Whether to include conditions
+                from the resource itself. Defaults to True.
+            include_if_in_function (bool, optional): Whether to include conditions
+                from Fn::If functions. Defaults to True.
+            only_last (bool, optional): Whether to only return the conditions for the
+                last element in the path. Defaults to False.
+
+        Returns:
+            dict: A dictionary where the keys are the condition names, and the values
+            are sets of boolean values (True or False) indicating the possible
+            outcomes for that condition.
         """
 
         results = self._get_conditions_from_path(
