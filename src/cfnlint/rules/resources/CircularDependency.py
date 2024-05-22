@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class CircularDependency(CloudFormationLintRule):
@@ -18,7 +20,7 @@ class CircularDependency(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources", "circularly", "dependson", "ref", "sub", "getatt"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
         if cfn.graph is None:

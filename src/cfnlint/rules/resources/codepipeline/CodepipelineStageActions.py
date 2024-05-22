@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
+from cfnlint._typing import Path, RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class CodepipelineStageActions(CloudFormationLintRule):
@@ -292,21 +294,21 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check that stage actions are set up properly."""
-        matches = []
+        matches: RuleMatches = []
 
         for resource_name, resource_value in cfn.get_resources(
             "AWS::CodePipeline::Pipeline"
         ).items():
-            path = ["Resources", resource_name, "Properties"]
-            properties = resource_value.get("Properties")
+            path: Path = ["Resources", resource_name, "Properties"]
+            properties = resource_value.get("Properties", {})
             scenarios = cfn.get_object_without_nested_conditions(properties, path)
             for scenario in scenarios:
                 conditions = scenario.get("Scenario")
                 path = path + ["Stages"]
                 properties = scenario.get("Object")
-                artifact_names = set()
+                artifact_names: set[str] = set()
 
                 s_stages = properties.get("Stages")
                 if not isinstance(s_stages, list):
@@ -315,7 +317,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     )
                     return matches
                 for s_stage_i, s_stage_v in enumerate(s_stages):
-                    action_names = set()
+                    action_names: set[str] = set()
                     s_actions = s_stage_v.get("Actions")
                     if not isinstance(s_actions, list):
                         self.logger.debug(

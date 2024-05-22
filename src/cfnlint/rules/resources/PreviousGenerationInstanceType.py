@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class PreviousGenerationInstanceType(CloudFormationLintRule):
@@ -15,7 +17,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
     source_url = "https://aws.amazon.com/ec2/previous-generation/"
     tags = ["resources", "ec2", "rds", "elasticcache", "elasticsearch"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
         for resource_type, property_type in [
             ("AWS::AutoScaling::LaunchConfiguration", "InstanceType"),
@@ -43,7 +45,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
                                     property_type,
                                 ],
                                 "Upgrade previous generation instance type: "
-                                + resource.get("Properties").get(property_type),
+                                + resource.get("Properties", {}).get(property_type),
                             )
                         )
 
@@ -84,8 +86,8 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
                                     property_type,
                                 ],
                                 "Upgrade previous generation instance type: "
-                                + resource.get("Properties")
-                                .get(top_level_property_type)
+                                + resource.get("Properties", {})
+                                .get(top_level_property_type, {})
                                 .get(property_type),
                             )
                         )

@@ -8,7 +8,9 @@ from functools import reduce  # pylint: disable=redefined-builtin
 
 import regex as re
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class SubNeeded(CloudFormationLintRule):
@@ -76,7 +78,7 @@ class SubNeeded(CloudFormationLintRule):
             return re.match(custom_search, value)
         return False
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
         refs = cfn.get_valid_refs()

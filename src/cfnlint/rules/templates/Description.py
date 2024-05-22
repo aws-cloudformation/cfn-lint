@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Description(CloudFormationLintRule):
@@ -15,8 +17,8 @@ class Description(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html"
     tags = ["description"]
 
-    def match(self, cfn):
-        matches = []
+    def match(self, cfn: Template) -> RuleMatches:
+        matches: RuleMatches = []
 
         description = cfn.template.get("Description")
         if "Description" not in cfn.template:

@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.data.schemas.other import template as schema_template
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.template import Template
 
 
 class JsonSchema(BaseJsonSchema):
@@ -64,7 +66,7 @@ class JsonSchema(BaseJsonSchema):
 
         return schema
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check CloudFormation Parameters"""
         matches = []
 

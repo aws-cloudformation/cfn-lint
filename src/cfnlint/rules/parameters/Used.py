@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import unicode_literals
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Used(CloudFormationLintRule):
@@ -17,15 +19,15 @@ class Used(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["parameters"]
 
-    def match(self, cfn):
-        matches = []
+    def match(self, cfn: Template) -> RuleMatches:
+        matches: RuleMatches = []
 
         le_refs = None
         if cfn.has_language_extensions_transform():
             le_refs = cfn.search_deep_keys("Ref")
 
-        reftrees = cfn.transform_pre.get("Ref")
-        subtrees = cfn.transform_pre.get("Fn::Sub")
+        reftrees = cfn.transform_pre.get("Ref", [])
+        subtrees = cfn.transform_pre.get("Fn::Sub", [])
         refs = []
         for reftree in reftrees:
             refs.append(reftree[-1])

@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Used(CloudFormationLintRule):
@@ -15,8 +17,8 @@ class Used(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["mappings"]
 
-    def match(self, cfn):
-        matches = []
+    def match(self, cfn: Template) -> RuleMatches:
+        matches: RuleMatches = []
         findinmap_mappings = []
 
         mappings = cfn.template.get("Mappings", {})

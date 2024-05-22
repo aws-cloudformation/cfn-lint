@@ -7,9 +7,11 @@ from copy import copy
 from dataclasses import dataclass, field
 from typing import Any, Dict, Set
 
+from cfnlint._typing import RuleMatches
 from cfnlint.jsonschema._utils import equal
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
+from cfnlint.template import Template
 
 
 @dataclass
@@ -124,7 +126,7 @@ class PrimaryIdentifiers(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         tS = set()
         for _, resource_properties in cfn.get_resources().items():
             t = resource_properties.get("Type")

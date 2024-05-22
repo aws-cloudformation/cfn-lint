@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import Path, RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class CodepipelineStages(CloudFormationLintRule):
@@ -134,15 +136,15 @@ class CodepipelineStages(CloudFormationLintRule):
                 self.logger.debug("Found non string for stage name: %s", stage_name)
         return matches
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check CodePipeline stages"""
         matches = []
 
         for resource_name, resource_value in cfn.get_resources(
             "AWS::CodePipeline::Pipeline"
         ).items():
-            path = ["Resources", resource_name, "Properties", "Stages"]
-            properties = resource_value.get("Properties")
+            path: Path = ["Resources", resource_name, "Properties", "Stages"]
+            properties = resource_value.get("Properties", {})
 
             s_stages = cfn.get_object_without_nested_conditions(
                 properties.get("Stages"), path

@@ -5,8 +5,10 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
+from cfnlint._typing import RuleMatches
 from cfnlint.helpers import REGEX_DYN_REF, REGEX_DYN_REF_SSM
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Password(CloudFormationLintRule):
@@ -20,7 +22,7 @@ class Password(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds"
     tags = ["parameters", "passwords", "security", "dynamic reference"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check CloudFormation Password Parameters"""
 
         matches = []

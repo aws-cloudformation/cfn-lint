@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import Path, RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class ZipPackageRequiredProperties(CloudFormationLintRule):
@@ -18,7 +20,7 @@ class ZipPackageRequiredProperties(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html"
     tags = ["resources", "lambda"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
         required_properties = [
             "Handler",
@@ -36,7 +38,7 @@ class ZipPackageRequiredProperties(CloudFormationLintRule):
                 properties, ["PackageType", "Code", "Handler", "Runtime"]
             ):
                 props = scenario.get("Object")
-                path = ["Resources", resource_name, "Properties"]
+                path: Path = ["Resources", resource_name, "Properties"]
 
                 # check is zip deployment
                 is_zip_deployment = True

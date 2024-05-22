@@ -17,7 +17,7 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import Any
+from typing import Any, Dict
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -205,7 +205,7 @@ PSEUDOPARAMS = frozenset(
     ["AWS::NoValue"] + list(PSEUDOPARAMS_SINGLE) + list(PSEUDOPARAMS_MULTIPLE)
 )
 
-LIMITS = {
+LIMITS: Dict[str, Any] = {
     "Mappings": {"number": 200, "attributes": 200, "name": 255},  # in characters
     "Outputs": {
         "number": 200,

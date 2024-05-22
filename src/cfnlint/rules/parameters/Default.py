@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Default(CloudFormationLintRule):
@@ -128,7 +130,7 @@ class Default(CloudFormationLintRule):
     def is_cdl(self, paramvalue):
         return paramvalue.get("Type") == "CommaDelimitedList"
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
         for paramname, paramvalue in cfn.get_parameters_valid().items():
