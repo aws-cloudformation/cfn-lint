@@ -14,6 +14,7 @@ import regex as re
 
 import cfnlint.conditions
 import cfnlint.helpers
+from cfnlint._typing import CheckValueFn, Path
 from cfnlint.context import create_context_for_template
 from cfnlint.decode.node import dict_node, list_node
 from cfnlint.graph import Graph
@@ -357,7 +358,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     # pylint: disable=dangerous-default-value
-    def _search_deep_keys(self, searchText: str | re.Pattern, cfndict, path):
+    def _search_deep_keys(self, searchText: str | re.Pattern, cfndict, path: Path):
         """Search deep for keys and get their values.
 
         Args:
@@ -371,7 +372,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         keys = []
         if isinstance(cfndict, dict):
             for key in cfndict:
-                pathprop = path[:]
+                pathprop: Path = path[:]
                 pathprop.append(key)
                 if isinstance(searchText, str):
                     if key == searchText:
@@ -434,7 +435,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 results.append(["Globals"] + pre_result)
         return results
 
-    def get_condition_values(self, template, path=[]) -> list[dict[str, Any]]:
+    def get_condition_values(self, template, path: Path | None) -> list[dict[str, Any]]:
         """
         Evaluates conditions in the provided CloudFormation template and returns the values.
 
@@ -447,6 +448,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 - "Path": The path to the condition value in the template.
                 - "Value": The value of the condition.
         """
+        path = path or []
         matches: list[dict[str, Any]] = []
         if not isinstance(template, list):
             return matches
@@ -454,7 +456,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             return matches
 
         for index, item in enumerate(template[1:]):
-            result = {}
+            result: dict[str, Any] = {}
             result["Path"] = path[:] + [index + 1]
             if not isinstance(item, (dict, list)):
                 # Just straight values and pass them through
@@ -490,7 +492,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return matches
 
-    def get_values(self, obj, key, path=[]):
+    def get_values(self, obj, key, path: Path | None = None):
         """
         Logic for getting the value of a key in the provided object.
 
@@ -510,6 +512,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             - Returns all the values as a list if condition
             - Returns the value if its just a string, int, boolean, etc.
         """
+        path = path or []
         matches = []
 
         if not isinstance(obj, dict):
@@ -585,7 +588,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return matches
 
-    def _loc(self, obj):
+    def _loc(self, obj: Any) -> tuple[int, int, int, int]:
         """Return location of object"""
         return (
             obj.start_mark.line,
@@ -615,7 +618,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_location_yaml(self, text, path):
+    def get_location_yaml(self, text: Any, path: Path):
         """
         Get the location information for the given YAML text and path.
 
@@ -669,19 +672,19 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     # pylint: disable=W0613,too-many-locals
     def check_value(
         self,
-        obj,
-        key,
-        path,
-        check_value=None,
-        check_ref=None,
-        check_get_att=None,
-        check_find_in_map=None,
-        check_split=None,
-        check_join=None,
-        check_import_value=None,
-        check_sub=None,
-        pass_if_null=False,
-        **kwargs,
+        obj: dict[str, Any],
+        key: str,
+        path: Path,
+        check_value: CheckValueFn | None = None,
+        check_ref: CheckValueFn | None = None,
+        check_get_att: CheckValueFn | None = None,
+        check_find_in_map: CheckValueFn | None = None,
+        check_split: CheckValueFn | None = None,
+        check_join: CheckValueFn | None = None,
+        check_import_value: CheckValueFn | None = None,
+        check_sub: CheckValueFn | None = None,
+        pass_if_null: bool = False,
+        **kwargs: dict[str, Any],
     ) -> list[RuleMatch]:
         """
         Check the value of a key in the provided object.
@@ -780,7 +783,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return matches
 
-    def is_resource_available(self, path, resource):
+    def is_resource_available(self, path: Path, resource: str) -> list[dict[str, bool]]:
         """
         Compares a path to a resource to see if it is available.
 
@@ -797,7 +800,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 The dictionary keys are the condition names, and the values indicate whether
                 the condition is True or False.
         """
-        results = []
+        results: list[dict[str, bool]] = []
         path_conditions = self.get_conditions_from_path(self.template, path)
         resource_condition = (
             self.template.get("Resources", {}).get(resource, {}).get("Condition")
@@ -815,7 +818,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             # resource conditions are always true.  If the same resource condition
             # exists in the path with the False then nothing else matters
             if False in path_conditions.get(resource_condition, {True}):
-                return [path_conditions]
+                return [{resource_condition: False}]
 
             # if any condition paths loop back on themselves with the opposite
             # then its unreachable code
@@ -831,7 +834,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         # if resource condition isn't available then the resource is available
         return results
 
-    def get_object_without_nested_conditions(self, obj, path, region=None):
+    def get_object_without_nested_conditions(
+        self, obj: dict | list, path: Path, region: str | None = None
+    ):
         """
         Get a list of object values without conditions included.
 
@@ -1054,8 +1059,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_condition_scenarios_below_path(
-        self, path, include_if_in_function=False, region=None
-    ):
+        self,
+        path: Path,
+        include_if_in_function: bool = False,
+        region: str | None = None,
+    ) -> list[dict[str, bool]]:
         """
         Get all possible scenarios for the conditions in the provided object.
 
@@ -1073,7 +1081,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             values are boolean values indicating whether the condition is True or False.
         """
         fn_ifs = self.search_deep_keys("Fn::If")
-        results = {}
+        results: dict[str, set] = {}
         for fn_if in fn_ifs:
             if len(fn_if) >= len(path):
                 if path == fn_if[0 : len(path)]:
@@ -1153,12 +1161,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_conditions_from_path(
         self,
-        text,
-        path,
-        include_resource_conditions=True,
-        include_if_in_function=True,
-        only_last=False,
-    ):
+        text: Any,
+        path: Path,
+        include_resource_conditions: bool = True,
+        include_if_in_function: bool = True,
+        only_last: bool = False,
+    ) -> dict[str, set[bool]]:
         """
         Parent function to handle resources with conditions.
 
@@ -1196,8 +1204,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def _get_conditions_from_path(
-        self, text, path, include_if_in_function=True, only_last=False
-    ):
+        self,
+        text: Any,
+        path: Path,
+        include_if_in_function: bool = True,
+        only_last: bool = False,
+    ) -> dict[str, set[bool]]:
         """
         Get the conditions and their True/False value for the path provided
         Input:
@@ -1208,7 +1220,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if its in the True or False part of the path.
                 {'condition': {True}}
         """
-        results = {}
+        results: dict[str, set[bool]] = {}
 
         def get_condition_name(value, num=None):
             """Test conditions for validity before providing the name"""

@@ -3,6 +3,8 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import itertools
 import logging
 import traceback
@@ -154,7 +156,7 @@ class Conditions:
         return (cnf, equal_vars)
 
     def build_scenarios(
-        self, conditions: Dict[str, Set[bool]], region: None = None
+        self, conditions: Dict[str, Set[bool]], region: str | None = None
     ) -> Iterator[Dict[str, bool]]:
         """Given a list of condition names this function will
         yield scenarios that represent those conditions and
@@ -203,7 +205,7 @@ class Conditions:
                     itertools.product(condition_names, [region]),
                 )
             else:
-                products = itertools.product([True, False], repeat=len(condition_names))
+                products = itertools.product([True, False], repeat=len(condition_names))  # type: ignore
 
             for p in products:
                 cnf = c_cnf.copy()
