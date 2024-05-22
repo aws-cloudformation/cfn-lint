@@ -7,10 +7,11 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, Iterator, List, Sequence, Tuple, Union
+from typing import Any, Dict, Iterator, List, Tuple, Union
 
 import cfnlint.helpers
 import cfnlint.rules.custom
+from cfnlint._typing import Path
 from cfnlint.match import Match
 from cfnlint.template import Template
 
@@ -75,18 +76,18 @@ class RuleMatch:
             be used as keys in a dictionary.
     """
 
-    def __init__(self, path: Sequence[str | int], message: str, **kwargs):
+    def __init__(self, path: Path, message: str, **kwargs):
         """
         Initialize a new RuleMatch instance.
 
         Args:
-            path (Sequence[str | int]): The path to the element
+            path (Path): The path to the element
             that triggered the rule match.
             message (str): The message associated with the rule match.
             **kwargs: Additional keyword arguments to be stored
             as attributes on the RuleMatch instance.
         """
-        self.path: Sequence[str | int] = path
+        self.path: Path = path
         self.path_string: str = "/".join(map(str, path))
         self.message: str = message
         self.context: List[RuleMatch] = []
@@ -307,7 +308,7 @@ class CloudFormationLintRule:
         self,
         properties: dict[str, Any],
         resourcetype: str,
-        path: Sequence[str | int],
+        path: Path,
         cfn: Template,
     ) -> list[RuleMatch]:
         return []

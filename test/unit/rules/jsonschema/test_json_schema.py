@@ -6,8 +6,8 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from test.unit.rules import BaseRuleTestCase
-from typing import List
 
+from cfnlint._typing import Path
 from cfnlint.decode.cfn_json import Mark
 from cfnlint.decode.node import dict_node, str_node
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
@@ -66,7 +66,7 @@ class TestJsonSchema(BaseRuleTestCase):
         self.template = build_dict({})
         self.cfn = Template("", self.template, ["us-east-1"])
 
-    def build_result(self, message: str, path: List[str]) -> RuleMatch:
+    def build_result(self, message: str, path: Path) -> RuleMatch:
         if len(path) > 0:
             return RuleMatch(
                 path[:],

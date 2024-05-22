@@ -302,7 +302,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                 ],
                 "LambdaExecutionRole",
             ),
-            [{"isPrimary": {False}}],
+            [{"isPrimary": False}],
         )
         # No error when the condition has both true/false use cases
         self.assertEqual(
