@@ -42,6 +42,7 @@ class TestSchemaFiles(TestCase):
         "Resources/*/DependsOn",
         "Resources/*/DependsOn/*",
         "Resources/*/Metadata",
+        "Resources/*/Metadata/AWS::CloudFormation::Init",
         "Resources/*/UpdatePolicy",
         "Resources/*/UpdateReplacePolicy",
     ]
