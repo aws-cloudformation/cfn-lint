@@ -20,9 +20,6 @@ class AwsType(CloudFormationLintRule):
         super().__init__()
         self.types = {
             "CfnCondition": "E8002",
-            "CfnDynamicReferenceSecret": "E1051",
-            "CfnResources": "E3001",
-            "CfnResourceProperties": "E3002",
         }
         self.child_rules = dict.fromkeys(list(self.types.values()))
 

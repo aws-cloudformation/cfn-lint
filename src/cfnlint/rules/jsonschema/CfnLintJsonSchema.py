@@ -10,7 +10,6 @@ from typing import Any, Sequence
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._keywords import type
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
@@ -37,8 +36,6 @@ class CfnLintJsonSchema(BaseJsonSchema):
                 filename=schema_details.filename,
             )
             self._use_schema_arg = False
-
-        self.validators["type"] = type
 
     @property
     def schema(self):
@@ -70,7 +67,10 @@ class CfnLintJsonSchema(BaseJsonSchema):
         cfn_validator = self.extend_validator(
             validator=validator,
             schema=schema,
-            context=validator.context.evolve(functions=[]),
+            context=validator.context.evolve(
+                functions=[],
+                strict_types=True,
+            ),
         )
 
         yield from self._iter_errors(cfn_validator, instance)

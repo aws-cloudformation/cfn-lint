@@ -21,9 +21,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
     def test_configurations(self):
         validator = CfnTemplateValidator({})
         errors = list(
-            self.rule.cfnresources(
-                validator, "cfnResources", {"foo": {"Type": "bar"}}, {}
-            )
+            self.rule.validate(validator, "cfnResources", {"foo": {"Type": "bar"}}, {})
         )
         self.assertListEqual(
             errors,
@@ -31,30 +29,16 @@ class TestResourceConfiguration(BaseRuleTestCase):
             errors,
         )
 
-        errors = list(
-            self.rule.cfnresources(validator, "cfnResources", {"foo": []}, {})
-        )
+        errors = list(self.rule.validate(validator, "cfnResources", {"foo": []}, {}))
 
         self.assertListEqual(
             errors,
             [
                 ValidationError(
-                    (
-                        "[] should not be valid under {'required': "
-                        "['CreationPolicy', 'UpdatePolicy']}"
-                    ),
-                    rule=Configuration(),
-                    path=deque(["foo"]),
-                    schema_path=deque(["additionalProperties", "then", "not"]),
-                    validator="not",
-                    validator_value={"required": ["CreationPolicy", "UpdatePolicy"]},
-                    instance=[],
-                ),
-                ValidationError(
                     "[] is not of type 'object'",
                     rule=Configuration(),
                     path=deque(["foo"]),
-                    schema_path=deque(["additionalProperties", "type"]),
+                    schema_path=deque(["patternProperties", "^[a-zA-Z0-9]+$", "type"]),
                     validator="type",
                     validator_value="object",
                     instance=[],
@@ -64,7 +48,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
         )
 
         errors = list(
-            self.rule.cfnresources(validator, "cfnResources", {"foo": {"Type": []}}, {})
+            self.rule.validate(validator, "cfnResources", {"foo": {"Type": []}}, {})
         )
 
         self.assertListEqual(
@@ -75,7 +59,13 @@ class TestResourceConfiguration(BaseRuleTestCase):
                     rule=Configuration(),
                     path=deque(["foo", "Type"]),
                     schema_path=deque(
-                        ["additionalProperties", "properties", "Type", "type"]
+                        [
+                            "patternProperties",
+                            "^[a-zA-Z0-9]+$",
+                            "properties",
+                            "Type",
+                            "type",
+                        ]
                     ),
                     validator="type",
                     validator_value="string",
