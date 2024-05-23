@@ -37,6 +37,7 @@ class TestSchemaFiles(TestCase):
         "Outputs/*/Value",
         "Parameters",
         "Parameters/*",
+        "Resources",
         "Resources/*",
         "Resources/*/DeletionPolicy",
         "Resources/*/DependsOn",

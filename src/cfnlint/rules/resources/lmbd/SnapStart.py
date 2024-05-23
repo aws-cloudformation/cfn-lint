@@ -31,7 +31,7 @@ class SnapStart(CfnLintKeyword):
         if instance != "PublishedVersions":
             return
 
-        resource_name = validator.context.path[1]
+        resource_name = validator.context.path.path[1]
         lambda_version_type = "AWS::Lambda::Version"
         if list(
             validator.cfn.get_resource_children(resource_name, [lambda_version_type])

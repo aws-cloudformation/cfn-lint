@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.lmbd.SnapStart import SnapStart
 from cfnlint.template import Template
@@ -96,7 +96,18 @@ def validator():
 def test_validate(name, instance, path, expected, rule, validator):
     validator = validator.evolve(
         context=Context(
-            path=path,
+            path=Path(
+                path=path,
+                cfn_path=deque(
+                    [
+                        "Resources",
+                        "AWS::Lambda::Function",
+                        "Properties",
+                        "SnapStart",
+                        "ApplyOn",
+                    ]
+                ),
+            )
         )
     )
     errs = list(rule.validate(validator, "", instance, {}))
