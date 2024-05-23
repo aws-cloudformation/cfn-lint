@@ -28,7 +28,6 @@ class JsonSchema(BaseJsonSchema):
         """Init"""
         super().__init__()
         self.rule_set = {
-            "awsType": "E1100",
             "cfnLint": "E1101",
             "condition": "E8007",
             "dynamicReference": "E1050",
@@ -56,7 +55,6 @@ class JsonSchema(BaseJsonSchema):
         self.config_definition = {"sections": {"default": "", "type": "string"}}
         self.configure()
         self.validators = {
-            "awsType": None,
             "type": cfn_type,
         }
 
