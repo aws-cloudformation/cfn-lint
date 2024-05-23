@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 
 import os
-from typing import List
 
+from cfnlint._typing import RuleMatches
 from cfnlint.decode import decode
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template.template import Template
@@ -81,7 +81,7 @@ class NestedStackParameters(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn: Template) -> List[RuleMatch]:
+    def match(self, cfn: Template) -> RuleMatches:
         """Check CloudFormation Properties"""
         matches = []
         resources = cfn.get_resources("AWS::CloudFormation::Stack")

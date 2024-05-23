@@ -3,8 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.helpers import LIMITS
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class LimitDescription(CloudFormationLintRule):
@@ -18,7 +20,7 @@ class LimitDescription(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["description", "limits"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
         description = cfn.template.get("Description", "")
         if isinstance(description, str):

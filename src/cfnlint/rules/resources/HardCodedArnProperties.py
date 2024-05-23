@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class HardCodedArnProperties(CloudFormationLintRule):
@@ -77,8 +79,8 @@ class HardCodedArnProperties(CloudFormationLintRule):
         results.extend(self._match_values(cfn.template.get("Globals", {}), []))
         return results
 
-    def match(self, cfn):
-        matches = []
+    def match(self, cfn: Template) -> RuleMatches:
+        matches: RuleMatches = []
 
         transforms = cfn.transform_pre["Transform"]
         transforms = transforms if isinstance(transforms, list) else [transforms]

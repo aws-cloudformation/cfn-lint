@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import logging
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -32,7 +34,7 @@ class ForEach(CloudFormationLintRule):
         return matches
 
     # pylint: disable=unused-argument
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
         intrinsic_function = "Fn::ForEach"
         for_eaches = cfn.transform_pre["Fn::ForEach"]

@@ -7,6 +7,7 @@ import regex as re
 
 # pylint: disable=cyclic-import
 import cfnlint.rules
+from cfnlint._typing import RuleMatches
 
 OPERATOR = [
     "EQUALS",
@@ -551,7 +552,7 @@ def CreateInvalidRule(rule_id, operator):
             )
             self.shortdesc = "Invalid custom rule configuration"
 
-        def match(self, _):
+        def match(self, _) -> RuleMatches:
             message = '"{0}" not in supported operators: [{1}]'
             return [
                 cfnlint.rules.RuleMatch(

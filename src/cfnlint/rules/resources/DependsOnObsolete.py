@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class DependsOnObsolete(CloudFormationLintRule):
@@ -64,7 +66,7 @@ class DependsOnObsolete(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
         resources = cfn.get_resources()

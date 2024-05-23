@@ -11,7 +11,7 @@ from typing import Any, Dict, Iterator, List, Tuple, Union
 
 import cfnlint.helpers
 import cfnlint.rules.custom
-from cfnlint._typing import Path
+from cfnlint._typing import Path, RuleMatches
 from cfnlint.match import Match
 from cfnlint.template import Template
 
@@ -64,7 +64,7 @@ class RuleMatch:
         triggered the rule match.
         path_string (str): The string representation of the path.
         message (str): The message associated with the rule match.
-        context (List[RuleMatch]): Additional context information
+        context (RuleMatches): Additional context information
         related to the rule match.
 
     Methods:
@@ -90,7 +90,7 @@ class RuleMatch:
         self.path: Path = path
         self.path_string: str = "/".join(map(str, path))
         self.message: str = message
-        self.context: List[RuleMatch] = []
+        self.context: RuleMatches = []
         for k, v in kwargs.items():
             setattr(self, k, v)
 
@@ -301,7 +301,7 @@ class CloudFormationLintRule:
                             elif self.config_definition[key]["itemtype"] == "integer":
                                 self.config[key].append(int(l_value))
 
-    def match(self, cfn: Template) -> List[RuleMatch]:
+    def match(self, cfn: Template) -> RuleMatches:
         return []
 
     def match_resource_properties(
@@ -310,7 +310,7 @@ class CloudFormationLintRule:
         resourcetype: str,
         path: Path,
         cfn: Template,
-    ) -> list[RuleMatch]:
+    ) -> RuleMatches:
         return []
 
     @matching("match")

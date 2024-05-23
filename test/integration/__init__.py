@@ -112,6 +112,6 @@ class BaseCliTestCase(unittest.TestCase):
                 len(expected_results),
                 len(matches),
                 "Expected {} failures, got {} on {}".format(
-                    len(expected_results), len(matches), filename
+                    len(expected_results), matches, filename
                 ),
             )

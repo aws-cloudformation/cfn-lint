@@ -4,9 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 
 from collections import defaultdict
+from typing import Any
 
 import cfnlint.helpers
+from cfnlint._typing import Path, RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class RouteTableAssociation(CloudFormationLintRule):
@@ -18,12 +21,12 @@ class RouteTableAssociation(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html"
     tags = ["resources", "ec2", "subnet", "route table"]
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.resource_values = {}
-        self.associated_resources = defaultdict(list)
+        self.resource_values: dict[str, list[str]] = {}
+        self.associated_resources: defaultdict[Any, list[str]] = defaultdict(list)
 
-    def initialize(self, cfn):
+    def initialize(self, cfn: Template) -> None:
         self.resource_values = {}
         self.associated_resources = defaultdict(list)
 
@@ -71,7 +74,7 @@ class RouteTableAssociation(CloudFormationLintRule):
         for value in values:
             self.associated_resources[value].append(resource_name)
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check SubnetRouteTableAssociation Resource Properties"""
         matches = []
         resources = cfn.get_resources(["AWS::EC2::SubnetRouteTableAssociation"])
@@ -84,18 +87,18 @@ class RouteTableAssociation(CloudFormationLintRule):
         for resource_name, resource_values in self.resource_values.items():
             for value in resource_values:
                 bare_value = (None, None, value[2])
-                other_resources = []
+                other_resources: list[str] = []
 
                 if len(self.associated_resources[value]) > 1:
-                    for resource in self.associated_resources[value]:
-                        if resource != resource_name:
-                            other_resources.append(resource)
+                    for associated_name in self.associated_resources[value]:
+                        if associated_name != resource_name:
+                            other_resources.append(associated_name)
 
                 if value != bare_value and self.associated_resources[bare_value]:
                     other_resources.extend(self.associated_resources[bare_value])
 
                 if other_resources:
-                    path = ["Resources", resource_name, "Properties", "SubnetId"]
+                    path: Path = ["Resources", resource_name, "Properties", "SubnetId"]
                     message = "SubnetId in {0} is also associated with {1}"
                     matches.append(
                         RuleMatch(

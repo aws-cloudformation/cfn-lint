@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class RelationshipConditions(CloudFormationLintRule):
@@ -19,11 +21,12 @@ class RelationshipConditions(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html"
     tags = ["conditions", "resources", "relationships", "ref", "getatt", "sub"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check CloudFormation Ref/GetAtt for Conditions"""
 
-        matches = []
-
+        matches: RuleMatches = []
+        if cfn.graph is None:
+            return matches
         for edge in cfn.graph.graph.edges.data():
             source, destination, data = edge
 

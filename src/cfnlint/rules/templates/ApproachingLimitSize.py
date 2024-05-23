@@ -6,8 +6,10 @@ SPDX-License-Identifier: MIT-0
 import os
 from pathlib import Path
 
+from cfnlint._typing import RuleMatches
 from cfnlint.helpers import LIMITS
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class LimitSize(CloudFormationLintRule):
@@ -19,7 +21,7 @@ class LimitSize(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["limits"]
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         matches = []
         # Only check if the file exists. The template could be passed in using stdIn
         if cfn.filename:

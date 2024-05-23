@@ -3,12 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.data.schemas.other import cfn_init
-from cfnlint.helpers import FUNCTIONS, load_resource
-from cfnlint.rules import CloudFormationLintRule
+import cfnlint.data.schemas.other.resources
+from cfnlint.helpers import FUNCTIONS
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
-class CfnInit(CloudFormationLintRule):
+class CfnInit(CfnLintJsonSchema):
     """Check CloudFormation Init items"""
 
     id = "E3009"
@@ -18,46 +18,19 @@ class CfnInit(CloudFormationLintRule):
     tags = ["resources", "cloudformation init"]
 
     def __init__(self) -> None:
-        super().__init__()
-        self.cfn_init_commands = load_resource(cfn_init, "commands.json")
-        self.cfn_init_files = load_resource(cfn_init, "files.json")
-        self.cfn_init_groups = load_resource(cfn_init, "groups.json")
-        self.cfn_init_packages = load_resource(cfn_init, "packages.json")
-        self.cfn_init_services = load_resource(cfn_init, "services.json")
-        self.cfn_init_sources = load_resource(cfn_init, "sources.json")
-        self.cfn_init_users = load_resource(cfn_init, "users.json")
+        super().__init__(
+            keywords=["Resources/*/Metadata/AWS::CloudFormation::Init"],
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.resources, "cfn_init.json"
+            ),
+            all_matches=True,
+        )
 
-    def _validate(self, validator, mL, instance, schema):
-        validator = validator.evolve(
+    def validate(self, validator, keywords, instance, schema):
+        cfn_validator = self.extend_validator(
+            validator=validator,
+            schema=self._schema,
             context=validator.context.evolve(functions=list(FUNCTIONS)),
-        ).extend()(schema)
+        )
 
-        yield from validator.iter_errors(instance)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitcommands(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_commands)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitfiles(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_files)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitgroups(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_groups)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitpackages(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_packages)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitservices(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_services)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitsources(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_sources)
-
-    # pylint: disable=unused-argument, arguments-renamed
-    def cfninitusers(self, validator, s, instance, schema):
-        yield from self._validate(validator, s, instance, self.cfn_init_users)
+        yield from super()._iter_errors(cfn_validator, instance)

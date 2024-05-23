@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import json
 
+from cfnlint._typing import RuleMatches
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class EventsLogGroupName(CloudFormationLintRule):
@@ -53,7 +55,7 @@ class EventsLogGroupName(CloudFormationLintRule):
             log_group_paths[log_group_name].append(value[0])
         return log_group_paths
 
-    def match(self, cfn):
+    def match(self, cfn: Template) -> RuleMatches:
         """Check if Lambda Events Subscription is duplicated"""
         matches = []
         matches.extend(self.check_events_subscription_duplicated(cfn))
