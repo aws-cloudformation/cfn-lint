@@ -18,11 +18,11 @@ class Condition(BaseFn):
     tags = ["functions", "and"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::And", ("boolean",))
+        super().__init__("Condition", ("boolean",))
         self.condition = self.validate
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
             "type": "string",
-            "awsType": "CfnCondition",
+            "enum": list(validator.context.conditions.keys()),
         }

@@ -1,42 +1,8 @@
 {
- "additionalProperties": {
-  "$ref": "#/definitions/ResourceConfiguration"
- },
+ "additionalProperties": false,
  "definitions": {
-  "CloudFormationInitConfig": {
-   "properties": {
-    "config": {
-     "properties": {
-      "commands": {
-       "awsType": "CfnInitCommands"
-      },
-      "files": {
-       "awsType": "CfnInitFiles"
-      },
-      "groups": {
-       "awsType": "CfnInitGroups"
-      },
-      "packages": {
-       "awsType": "CfnInitPackages"
-      },
-      "services": {
-       "awsType": "CfnInitServices"
-      },
-      "sources": {
-       "awsType": "CfnInitSources"
-      },
-      "users": {
-       "awsType": "CfnInitUsers"
-      }
-     },
-     "type": "object"
-    }
-   },
-   "type": "object"
-  },
   "ResourceConfiguration": {
    "additionalProperties": false,
-   "awsType": "CfnResourceProperties",
    "else": {
     "not": {
      "required": [
@@ -61,15 +27,12 @@
    },
    "properties": {
     "Condition": {
-     "awsType": "CfnCondition",
      "type": "string"
     },
     "CreationPolicy": {
      "type": "object"
     },
-    "DeletionPolicy": {
-     "awsType": "CfnDeletionPolicy"
-    },
+    "DeletionPolicy": {},
     "DependsOn": {
      "items": {
       "type": "string"
@@ -79,19 +42,13 @@
       "array"
      ]
     },
-    "Metadata": {
-     "awsType": "CfnResourceMetadata"
-    },
+    "Metadata": {},
     "Properties": {},
     "Type": {
      "type": "string"
     },
-    "UpdatePolicy": {
-     "type": "object"
-    },
-    "UpdateReplacePolicy": {
-     "awsType": "CfnResourceUpdateReplacePolicy"
-    },
+    "UpdatePolicy": {},
+    "UpdateReplacePolicy": {},
     "Version": {
      "type": "string"
     }
@@ -100,13 +57,9 @@
     "Type"
    ],
    "then": {
-    "not": {
-     "required": [
-      "CreationPolicy",
-      "UpdatePolicy"
-     ]
-    },
     "properties": {
+     "CreationPolicy": false,
+     "UpdatePolicy": false,
      "Version": {
       "type": "string"
      }
@@ -116,9 +69,13 @@
   }
  },
  "maxProperties": 500,
+ "patternProperties": {
+  "^[a-zA-Z0-9]+$": {
+   "$ref": "#/definitions/ResourceConfiguration"
+  }
+ },
  "propertyNames": {
-  "maxLength": 255,
-  "pattern": "^[a-zA-Z0-9]+$"
+  "maxLength": 255
  },
  "type": "object"
 }

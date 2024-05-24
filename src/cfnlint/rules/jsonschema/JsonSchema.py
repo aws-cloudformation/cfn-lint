@@ -7,6 +7,7 @@ from cfnlint._typing import RuleMatches
 from cfnlint.data.schemas.other import template as schema_template
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema._keywords_cfn import cfn_type
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 from cfnlint.template import Template
 
@@ -27,7 +28,6 @@ class JsonSchema(BaseJsonSchema):
         """Init"""
         super().__init__()
         self.rule_set = {
-            "awsType": "E1100",
             "cfnLint": "E1101",
             "condition": "E8007",
             "dynamicReference": "E1050",
@@ -55,7 +55,7 @@ class JsonSchema(BaseJsonSchema):
         self.config_definition = {"sections": {"default": "", "type": "string"}}
         self.configure()
         self.validators = {
-            "awsType": None,
+            "type": cfn_type,
         }
 
     @property

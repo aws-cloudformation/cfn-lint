@@ -8,14 +8,14 @@ from collections import deque
 from typing import Any
 
 from cfnlint.helpers import FUNCTIONS, REGION_PRIMARY
-from cfnlint.jsonschema import Validator
-from cfnlint.rules.jsonschema.Base import BaseJsonSchema
+from cfnlint.jsonschema import ValidationResult, Validator
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Properties(BaseJsonSchema):
+class Properties(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3002"
@@ -26,7 +26,10 @@ class Properties(BaseJsonSchema):
 
     def __init__(self):
         """Init"""
-        super().__init__()
+        super().__init__(
+            keywords=["Resources/*"],
+            all_matches=True,
+        )
         self.rule_set = {
             "additionalProperties": "E3002",
             "anyOf": "E3017",
@@ -54,17 +57,21 @@ class Properties(BaseJsonSchema):
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
-    def validate(self, validator: Validator, _, instance: Any, schema):
+    def _validate_resource(self, validator: Validator, _, instance: Any, schema):
         validator = self.extend_validator(validator, schema, validator.context.evolve())
         yield from self._validate(validator, instance)
 
-    # pylint: disable=unused-argument
-    def cfnresourceproperties(self, validator: Validator, _, instance: Any, schema):
+    def validate(
+        self, validator: Validator, _, instance: Any, schema: Any
+    ) -> ValidationResult:
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
                 strict_types=False,
-            )
+            ),
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=True,
+            ),
         )
 
         t = instance.get("Type")
@@ -95,7 +102,7 @@ class Properties(BaseJsonSchema):
                                 ).descend(path="Properties"),
                             )
                         )
-                        for err in self.validate(
+                        for err in self._validate_resource(
                             region_validator, t, properties, schema.json_schema
                         ):
                             err.path.appendleft("Properties")
@@ -116,7 +123,7 @@ class Properties(BaseJsonSchema):
                 )
             )
 
-            for err in self.validate(
+            for err in self._validate_resource(
                 region_validator, t, properties, cached_schema.json_schema
             ):
                 err.path.appendleft("Properties")

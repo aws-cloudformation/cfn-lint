@@ -219,6 +219,8 @@ class CloudFormationLintRule:
         return f"{self.id}: {self.shortdesc}"
 
     def __eq__(self, other):
+        if other is None:
+            return False
         return self.id == other.id
 
     @property

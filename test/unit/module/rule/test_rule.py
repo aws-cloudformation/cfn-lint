@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
+from cfnlint.rules import CloudFormationLintRule
 
 
 class TestCloudFormationRule(BaseTestCase):
@@ -147,3 +147,17 @@ class TestCloudFormationRule(BaseTestCase):
 
         rule.configure({}, True)
         self.assertFalse(rule.config.get("experimental"))
+
+    def test_none_equal(self):
+        class TestRule(CloudFormationLintRule):
+            """Def Rule"""
+
+            id = "E1000"
+            shortdesc = "Test Rule"
+            description = "Test Rule"
+            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            tags = ["resources"]
+
+        rule = TestRule()
+
+        self.assertNotEqual(rule, None)

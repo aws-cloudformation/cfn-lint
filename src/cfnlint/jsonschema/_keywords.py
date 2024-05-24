@@ -491,7 +491,7 @@ def properties(
                 subschema,
                 path=k[0] if len(k) > 0 else p,
                 schema_path=p,
-                property_path=k[0] if len(k) > 0 else p,
+                property_path=p,
             )
 
 

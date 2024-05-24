@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint.jsonschema._utils import Unset
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -19,6 +20,7 @@ class CfnLint(CloudFormationLintRule):
                 add_cfn_lint_keyword=False,
             )
         )
+
         for keyword in keywords:
             for rule in self.child_rules.values():
                 if rule is None:
@@ -30,5 +32,6 @@ class CfnLint(CloudFormationLintRule):
                     if rule_keyword == keyword:
                         for err in rule.validate(validator, keyword, instance, schema):
                             if err.rule is None:
-                                err.rule = rule
+                                if isinstance(err.validator, Unset):
+                                    err.rule = rule
                             yield err
