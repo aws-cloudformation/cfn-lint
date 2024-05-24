@@ -34,9 +34,4 @@ class CfnLint(CloudFormationLintRule):
                             if err.rule is None:
                                 if isinstance(err.validator, Unset):
                                     err.rule = rule
-                                elif (
-                                    not err.validator.startswith("fn")
-                                    and err.validator != "ref"
-                                ):
-                                    err.rule = rule
                             yield err

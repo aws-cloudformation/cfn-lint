@@ -9,8 +9,7 @@ from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class PolicyVersion(CfnLintJsonSchema):
-    """Check if IAM Policy Version is correct"""
+class Condition(CfnLintJsonSchema):
 
     id = "E6005"
     shortdesc = "Validate the Output condition is valid"
