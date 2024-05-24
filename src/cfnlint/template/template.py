@@ -1103,8 +1103,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 for item in value:
                     new_value = get_value(item, scenario)
                     if new_value is not None:
-                        new_list.append(get_value(item, scenario))
+                        new_list.append(new_value)
 
+                if not new_list:
+                    return None
                 return new_list
 
             return value
