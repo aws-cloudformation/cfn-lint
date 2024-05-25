@@ -1499,8 +1499,11 @@
     "ListMicrosoftTeamsChannelConfigurations",
     "ListMicrosoftTeamsConfiguredTeams",
     "ListMicrosoftTeamsUserIdentities",
+    "ListTagsForResource",
     "RedeemMicrosoftTeamsOauthCode",
     "RedeemSlackOauthCode",
+    "TagResource",
+    "UntagResource",
     "UpdateAccountPreferences",
     "UpdateChimeWebhookConfiguration",
     "UpdateMicrosoftTeamsChannelConfiguration",
@@ -2780,6 +2783,7 @@
     "GetLandingZoneOperation",
     "GetLandingZoneStatus",
     "ListBaselines",
+    "ListControlOperations",
     "ListDirectoryGroups",
     "ListDriftDetails",
     "ListEnabledBaselines",
@@ -5184,6 +5188,7 @@
     "DeleteDatastore",
     "DeleteImageSet",
     "GetDICOMImportJob",
+    "GetDICOMInstance",
     "GetDatastore",
     "GetImageFrame",
     "GetImageSet",
@@ -8366,17 +8371,29 @@
    ]
   },
   "AWS Payments": {
+   "ARNFormat": "arn:aws:payments::${Account}:${ResourceType}:${ResourceId}",
+   "ARNRegex": "^arn:aws:payments::[0-9]{12}:.+:.+",
    "Actions": [
     "CreatePaymentInstrument",
     "DeletePaymentInstrument",
     "GetPaymentInstrument",
     "GetPaymentStatus",
+    "ListPaymentInstruments",
     "ListPaymentPreferences",
+    "ListTagsForResource",
     "MakePayment",
+    "TagResource",
+    "UntagResource",
+    "UpdatePaymentInstrument",
     "UpdatePaymentPreferences"
    ],
-   "HasResource": false,
-   "StringPrefix": "payments"
+   "HasResource": true,
+   "StringPrefix": "payments",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS Performance Insights": {
    "ARNFormat": "arn:aws:pi:${Region}:${Account}:${ResourceType}/${RelativeId}",
@@ -8401,7 +8418,8 @@
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
+    "aws:TagKeys",
+    "pi:Dimensions"
    ]
   },
   "AWS Price List": {
@@ -9906,6 +9924,14 @@
    "HasResource": false,
    "StringPrefix": "supportplans"
   },
+  "AWS Support Recommendations": {
+   "Actions": [
+    "GetSupportTroubleshootingResponse",
+    "StartSupportTroubleshooting"
+   ],
+   "HasResource": false,
+   "StringPrefix": "supportrecommendations"
+  },
   "AWS Sustainability": {
    "ARNFormat": "arn:${Partition}:sustainability:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:${Partition}:sustainability:.+:.+:.+",
@@ -10498,6 +10524,18 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
    ]
+  },
+  "AWS User Subscriptions": {
+   "Actions": [
+    "CreateClaim",
+    "DeleteClaim",
+    "ListApplicationClaims",
+    "ListClaims",
+    "ListUserSubscriptions",
+    "UpdateClaim"
+   ],
+   "HasResource": false,
+   "StringPrefix": "user-subscriptions"
   },
   "AWS Verified Access": {
    "Actions": [
@@ -14295,6 +14333,7 @@
     "DisableImage",
     "DisableImageBlockPublicAccess",
     "DisableImageDeprecation",
+    "DisableImageDeregistrationProtection",
     "DisableIpamOrganizationAdminAccount",
     "DisableSerialConsoleAccess",
     "DisableSnapshotBlockPublicAccess",
@@ -14326,6 +14365,7 @@
     "EnableImage",
     "EnableImageBlockPublicAccess",
     "EnableImageDeprecation",
+    "EnableImageDeregistrationProtection",
     "EnableIpamOrganizationAdminAccount",
     "EnableReachabilityAnalyzerOrganizationSharing",
     "EnableSerialConsoleAccess",
@@ -14354,6 +14394,7 @@
     "GetHostReservationPurchasePreview",
     "GetImageBlockPublicAccessState",
     "GetInstanceMetadataDefaults",
+    "GetInstanceTpmEkPub",
     "GetInstanceTypesFromInstanceRequirements",
     "GetInstanceUefiData",
     "GetIpamAddressHistory",
@@ -14884,6 +14925,7 @@
    "ARNRegex": "^arn:aws:emr-serverless:.+",
    "Actions": [
     "AccessInteractiveEndpoints",
+    "AccessLivyEndpoints",
     "CancelJobRun",
     "CreateApplication",
     "DeleteApplication",
@@ -19196,6 +19238,7 @@
     "DescribeIAMPolicyAssignment",
     "DescribeIngestion",
     "DescribeIpRestriction",
+    "DescribeKeyRegistration",
     "DescribeNamespace",
     "DescribeRefreshSchedule",
     "DescribeRoleCustomPermission",
@@ -19295,6 +19338,7 @@
     "UpdateIAMPolicyAssignment",
     "UpdateIdentityPropagationConfig",
     "UpdateIpRestriction",
+    "UpdateKeyRegistration",
     "UpdatePublicSharingSettings",
     "UpdateRefreshSchedule",
     "UpdateResourcePermissions",
@@ -19322,6 +19366,7 @@
     "quicksight:DirectoryType",
     "quicksight:Edition",
     "quicksight:IamArn",
+    "quicksight:KmsKeyArns",
     "quicksight:SessionName",
     "quicksight:UserName"
    ]
@@ -21377,6 +21422,70 @@
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
+   ]
+  },
+  "Amazon Simple Email Service - Mail Manager": {
+   "ARNFormat": "arn:aws:ses:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:ses:.+:[0-9]+:.+",
+   "Actions": [
+    "CreateAddonInstance",
+    "CreateAddonSubscription",
+    "CreateArchive",
+    "CreateIngressPoint",
+    "CreateRelay",
+    "CreateRuleSet",
+    "CreateTrafficPolicy",
+    "DeleteAddonInstance",
+    "DeleteAddonSubscription",
+    "DeleteArchive",
+    "DeleteIngressPoint",
+    "DeleteRelay",
+    "DeleteRuleSet",
+    "DeleteTrafficPolicy",
+    "GetAddonInstance",
+    "GetAddonSubscription",
+    "GetArchive",
+    "GetArchiveExport",
+    "GetArchiveMessage",
+    "GetArchiveMessageContent",
+    "GetArchiveSearch",
+    "GetArchiveSearchResults",
+    "GetIngressPoint",
+    "GetRelay",
+    "GetRuleSet",
+    "GetTrafficPolicy",
+    "ListAddonInstances",
+    "ListAddonSubscriptions",
+    "ListArchiveExports",
+    "ListArchiveSearches",
+    "ListArchives",
+    "ListIngressPoints",
+    "ListRelays",
+    "ListRuleSets",
+    "ListTagsForResource",
+    "ListTrafficPolicies",
+    "StartArchiveExport",
+    "StartArchiveSearch",
+    "StopArchiveExport",
+    "StopArchiveSearch",
+    "TagResource",
+    "UntagResource",
+    "UpdateArchive",
+    "UpdateIngressPoint",
+    "UpdateRelay",
+    "UpdateRuleSet",
+    "UpdateTrafficPolicy"
+   ],
+   "HasResource": true,
+   "StringPrefix": "ses",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
+    "ses:AddonSubscriptionArn",
+    "ses:MailManagerIngressPointType",
+    "ses:MailManagerRuleSetArn",
+    "ses:MailManagerTrafficPolicyArn"
    ]
   },
   "Amazon Simple Email Service v2": {
