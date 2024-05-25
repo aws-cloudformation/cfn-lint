@@ -71,7 +71,5 @@ def validator():
     ],
 )
 def test_backup_lifecycle(instance, expected, rule, validator):
-    errs = list(
-        rule.backupbackupplanlifecycle(validator, "LambdaRuntime", instance, {})
-    )
+    errs = list(rule.validate(validator, "LambdaRuntime", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"

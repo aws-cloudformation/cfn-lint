@@ -27,11 +27,12 @@ class BackupPlanLifecycleRule(CfnLintKeyword):
     def __init__(self) -> None:
         super().__init__(
             [
-                "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle"
+                "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/Lifecycle",
+                "Resources/AWS::Backup::BackupPlan/Properties/BackupPlan/BackupPlanRule/*/CopyActions/*/Lifecycle",
             ]
         )
 
-    def backupbackupplanlifecycle(self, validator, uI, instance, schema):
+    def validate(self, validator, uI, instance, schema):
         delete_after_days = instance.get("DeleteAfterDays")
         move_to_cold_storage_after_days = instance.get("MoveToColdStorageAfterDays")
 
