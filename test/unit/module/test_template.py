@@ -742,6 +742,15 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                                     {"Ref": "LaunchConfiguration"},
                                 ]
                             },
+                            "PropertyA": [
+                                {
+                                    "Fn::If": [
+                                        "useAmiId",
+                                        {"Ref": "AWS::NoValue"},
+                                        {"Ref": "LaunchConfiguration"},
+                                    ]
+                                }
+                            ],
                         },
                     }
                 },
@@ -761,7 +770,10 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             elif result["Scenario"] == {"useAmiId": False}:
                 self.assertDictEqual(
                     result["Object"],
-                    {"LaunchConfiguration": {"Ref": "LaunchConfiguration"}},
+                    {
+                        "LaunchConfiguration": {"Ref": "LaunchConfiguration"},
+                        "PropertyA": [{"Ref": "LaunchConfiguration"}],
+                    },
                 )
 
     def test_get_object_without_conditions_no_value(self):
@@ -796,6 +808,15 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                                     {"Ref": "AWS::NoValue"},
                                 ]
                             },
+                        ],
+                        "PropertyA": [
+                            {
+                                "Fn::If": [
+                                    "useAmiId",
+                                    {"Ref": "AWS::NoValue"},
+                                    {"Ref": "LaunchConfiguration"},
+                                ]
+                            }
                         ],
                     },
                 }
