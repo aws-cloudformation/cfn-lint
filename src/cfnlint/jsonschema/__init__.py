@@ -5,12 +5,12 @@ from cfnlint.jsonschema.protocols import Validator
 from cfnlint.jsonschema.validators import CfnTemplateValidator, StandardValidator
 
 __all__ = [
-    ValidationResult,
-    ValidationError,
-    Validator,
-    CfnTemplateValidator,
-    StandardValidator,
-    RefResolver,
-    ResolutionResult,
-    V,
+    "ValidationResult",
+    "ValidationError",
+    "Validator",
+    "CfnTemplateValidator",
+    "StandardValidator",
+    "RefResolver",
+    "ResolutionResult",
+    "V",
 ]
