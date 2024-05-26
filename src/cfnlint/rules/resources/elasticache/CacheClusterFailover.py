@@ -4,11 +4,10 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.helpers import bool_compare
-from cfnlint.rules import RuleMatch
-from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
-class CacheClusterFailover(CfnLintKeyword):
+class CacheClusterFailover(CloudFormationLintRule):
     """Check automatic failover on a cache cluster"""
 
     id = "E3026"
@@ -22,11 +21,7 @@ class CacheClusterFailover(CfnLintKeyword):
 
     def __init__(self):
         """Init"""
-        super().__init__(
-            keywords=[
-                "Resources/AWS::ElastiCache::ReplicationGroup/Properties/CacheParameterGroupName"
-            ]
-        )
+        super().__init__()
         self.resource_property_types.append("AWS::ElastiCache::ReplicationGroup")
 
     def is_cluster_enabled(self, properties):
