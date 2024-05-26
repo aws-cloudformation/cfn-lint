@@ -218,7 +218,7 @@ LIMITS: Dict[str, Any] = {
         "value": 4096,  # in bytes
     },
     "Resources": {"number": 500, "name": 255},  # in characters
-    "template": {"body": 1000000, "description": 1024},  # in bytes  # in bytes
+    "template": {"body": 1000000},  # in bytes  # in bytes
     "threshold": 0.9,  # for rules about approaching the other limit values
 }
 

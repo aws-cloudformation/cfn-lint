@@ -3,19 +3,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
-
 import pytest
 
 from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.rules.templates.Description import Description
+from cfnlint.rules.templates.ApproachingLimitDescription import (
+    ApproachingLimitDescription,
+)
 from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = Description()
+    rule = ApproachingLimitDescription()
     yield rule
 
 
@@ -31,25 +31,22 @@ def validator():
     [
         (
             "Valid description",
-            "My Description",
+            "a" * 18,
             [],
         ),
         (
-            "Invalid type",
-            {},
+            "Too long",
+            "a" * 19,
             [
                 ValidationError(
-                    ("{} is not of type 'string'"),
-                    rule=Description(),
-                    schema_path=deque(["type"]),
-                    validator="type",
+                    f"'{'a'*19}' is approaching the max length of 20",
+                    rule=ApproachingLimitDescription(),
                 )
             ],
         ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
-    errors = list(rule.validate(validator, False, instance, {}))
-    # we use error counts in this one as the instance types are
-    # always changing so we aren't going to hold ourselves up by that
+    errors = list(rule.maxLength(validator, 20, instance, {}))
+
     assert errors == expected, f"Test {name!r} got {errors!r}"
