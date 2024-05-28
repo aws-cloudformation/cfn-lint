@@ -1,3 +1,10 @@
+### v0.87.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `175.0.0` (pull #[3255](https://github.com/aws-cloudformation/cfn-lint/pull/3255))
+- Add some allowed patterns for ELB and SGs (pull #[3269](https://github.com/aws-cloudformation/cfn-lint/pull/3269))
+###### Fixes
+- Return None when a list is emptied out during condition processing (pull #[3265](https://github.com/aws-cloudformation/cfn-lint/pull/3265))
+
 ### v0.87.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `174.0.0` (pull #[3229](https://github.com/aws-cloudformation/cfn-lint/pull/3229))
