@@ -147,7 +147,7 @@ def main():
             if resource_type in _manual_patches:
                 resource_patches.extend(_manual_patches[resource_type])
 
-            for path in _descend(obj, ["VpcId"]):
+            for path in _descend(obj, ["VpcId", "VPCId"]):
                 if path[-2] == "properties":
                     resource_patches.append(
                         _create_patch(

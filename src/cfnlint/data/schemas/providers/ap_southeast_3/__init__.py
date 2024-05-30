@@ -234,6 +234,7 @@ types = [
     "AWS::IAM::Policy",
     "AWS::SES::ContactList",
     "AWS::RDS::DBSecurityGroupIngress",
+    "AWS::SecurityHub::OrganizationConfiguration",
     "AWS::EC2::TransitGatewayMulticastGroupMember",
     "AWS::EC2::VolumeAttachment",
     "AWS::NetworkFirewall::TLSInspectionConfiguration",
@@ -624,6 +625,7 @@ types = [
 # pylint: disable=too-many-lines
 cached: List[str] = [
     "aws-ce-anomalysubscription.json",
+    "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
     "aws-ec2-transitgatewayroutetablepropagation.json",
     "aws-shield-proactiveengagement.json",
@@ -825,6 +827,7 @@ cached: List[str] = [
     "aws-iam-policy.json",
     "aws-ses-contactlist.json",
     "aws-rds-dbsecuritygroupingress.json",
+    "aws-securityhub-organizationconfiguration.json",
     "aws-ec2-transitgatewaymulticastgroupmember.json",
     "aws-ec2-volumeattachment.json",
     "aws-networkfirewall-tlsinspectionconfiguration.json",
@@ -1171,4 +1174,5 @@ cached: List[str] = [
     "aws-redshift-eventsubscription.json",
     "aws-cloudformation-waitconditionhandle.json",
     "aws-globalaccelerator-accelerator.json",
+    "aws-eks-addon.json",
 ]

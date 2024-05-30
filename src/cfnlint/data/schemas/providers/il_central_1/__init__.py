@@ -635,6 +635,7 @@ types = [
 # pylint: disable=too-many-lines
 cached: List[str] = [
     "aws-ce-anomalysubscription.json",
+    "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
     "aws-glue-partition.json",
     "aws-ec2-transitgatewayroutetablepropagation.json",
@@ -743,6 +744,7 @@ cached: List[str] = [
     "aws-rds-globalcluster.json",
     "aws-route53profiles-profileresourceassociation.json",
     "aws-sso-permissionset.json",
+    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-eks-podidentityassociation.json",
     "aws-resourceexplorer2-index.json",
