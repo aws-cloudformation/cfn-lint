@@ -13,7 +13,7 @@ from cfnlint.jsonschema import Validator
 from cfnlint.rules.formats.FormatKeyword import FormatKeyword
 
 
-class SecuriyGroupId(FormatKeyword):
+class SecurityGroupId(FormatKeyword):
     id = "E1150"
     shortdesc = "Validate security group format"
     description = (
