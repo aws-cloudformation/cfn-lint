@@ -16,9 +16,10 @@ class Metadata(CfnLintJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3028"
-    shortdesc = "Basic CloudFormation Resource Check"
+    shortdesc = "Validate the metadata section of a resource"
     description = (
-        "Making sure the basic CloudFormation resources are properly configured"
+        "The metadata section can be unstructured but we do "
+        "validate the items we can"
     )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources"]

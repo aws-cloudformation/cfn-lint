@@ -16,7 +16,7 @@ class LimitSize(CloudFormationLintRule):
     """Check Template Size"""
 
     id = "E1002"
-    shortdesc = "Template size limit"
+    shortdesc = "Validate if a template size is too large"
     description = "Check the size of the template is less than the upper limit"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["limits"]

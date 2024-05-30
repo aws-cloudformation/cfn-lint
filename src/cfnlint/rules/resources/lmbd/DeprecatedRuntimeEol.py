@@ -10,16 +10,13 @@ from cfnlint.rules import CloudFormationLintRule
 
 
 class DeprecatedRuntimeEol(CloudFormationLintRule):
-    """Check if EOL Lambda Function Runtimes are used"""
 
     id = "W2531"
     shortdesc = "Check if EOL Lambda Function Runtimes are used"
     description = (
-        "Check if an EOL Lambda Runtime is specified and give a warning if used. "
+        "Check if an EOL Lambda Runtime is specified and give a warning if used"
     )
-    source_url = (
-        "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
-    )
+    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
     tags = ["resources", "lambda", "runtime"]
 
     def __init__(self):

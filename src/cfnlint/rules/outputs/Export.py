@@ -16,8 +16,8 @@ class Export(CfnLintJsonSchema):
     """Check if Output Export values"""
 
     id = "E6102"
-    shortdesc = "Outputs have values of strings"
-    description = "Making sure the outputs have strings as values"
+    shortdesc = "Validate that output exports have values of strings"
+    description = "Make sure output exports have a value of type string"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]
 

@@ -23,30 +23,10 @@ class Ref(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Ref", all_types)
-        self.keywords = {
-            "Resources/AWS::AutoScaling::LaunchConfiguration/Properties/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::Batch::ComputeEnvironment/Properties/ComputeResources/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::Cloud9::EnvironmentEC2/Properties/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::EC2::Instance/Properties/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::EC2::LaunchTemplate/Properties/LaunchTemplateData/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::ImageBuilder::Image/Properties/ImageId": "W2506",  # noqa: E501
-            "Resources/AWS::DirectoryService::MicrosoftAD/Properties/Password": "W1011",  # noqa: E501
-            "Resources/AWS::DirectoryService::SimpleAD/Properties/Password": "W1011",  # noqa: E501
-            "Resources/AWS::ElastiCache::ReplicationGroup/Properties/AuthToken": "W1011",  # noqa: E501
-            "Resources/AWS::IAM::User/Properties/LoginProfile/Password": "W1011",  # noqa: E501
-            "Resources/AWS::KinesisFirehose::DeliveryStream/Properties/RedshiftDestinationConfiguration/Password": "W1011",  # noqa: E501
-            "Resources/AWS::OpsWorks::App/Properties/AppSource/Password": "W1011",  # noqa: E501
-            "Resources/AWS::OpsWorks::Stack/Properties/RdsDbInstances/DbPassword": "W1011",  # noqa: E501
-            "Resources/AWS::OpsWorks::Stack/Properties/CustomCookbooksSource/Password": "W1011",  # noqa: E501
-            "Resources/AWS::RDS::DBCluster/Properties/MasterUserPassword": "W1011",  # noqa: E501
-            "Resources/AWS::RDS::DBInstance/Properties/MasterUserPassword": "W1011",  # noqa: E501
-            "Resources/AWS::Redshift::Cluster/Properties/MasterUserPassword": "W1011",  # noqa: E501
-        }
         self._all_refs = [
             "W2010",
         ]
-        self.child_rules = dict.fromkeys(list(self.keywords.values()) + self._all_refs)
+        self.child_rules = dict.fromkeys(self._all_refs)
 
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
@@ -108,8 +88,8 @@ class Ref(BaseFn):
                 yield from rule.validate(validator, {}, instance, schema)
 
         keyword = validator.context.path.cfn_path_string
-        rule_id = self.keywords.get(keyword)
-        if rule_id:
-            rule = self.child_rules.get(rule_id)
-            if rule:
+        for rule in self.child_rules.values():
+            if not rule or rule.id in self._all_refs:
+                continue
+            if keyword in rule.keywords:
                 yield from rule.validate(validator, keyword, instance, schema)

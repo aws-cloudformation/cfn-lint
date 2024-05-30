@@ -26,7 +26,7 @@
     "RuntimeVersionArn": {
      "maxLength": 2048,
      "minLength": 26,
-     "pattern": "^arn:(aws[a-zA-Z-]*):lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}::runtime:.+$",
+     "pattern": "^arn:(aws[a-zA-Z-]*):lambda:[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}::runtime:.+$",
      "type": "string"
     },
     "UpdateRuntimeOn": {
@@ -63,7 +63,7 @@
      "FunctionName": {
       "maxLength": 140,
       "minLength": 1,
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
       "type": "string"
      }
     },
@@ -81,9 +81,6 @@
     "lambda:GetProvisionedConcurrencyConfig",
     "lambda:GetRuntimeManagementConfig"
    ]
-  },
-  "update": {
-   "permissions": []
   }
  },
  "primaryIdentifier": [
@@ -99,13 +96,31 @@
    "type": "string"
   },
   "FunctionArn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
    "type": "string"
   },
   "FunctionName": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/FunctionName",
+      "typeName": "AWS::Lambda::Function"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Lambda::Function"
+     }
+    }
+   ],
    "maxLength": 140,
    "minLength": 1,
-   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
    "type": "string"
+  },
+  "Policy": {
+   "type": "object"
   },
   "ProvisionedConcurrencyConfig": {
    "$ref": "#/definitions/ProvisionedConcurrencyConfiguration"

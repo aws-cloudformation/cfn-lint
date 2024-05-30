@@ -12,7 +12,7 @@ class FleetInstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3621"
     shortdesc = "Validate the instance types for AppStream Fleet"
     description = (
-        "Validates the instance types based on region "
+        "Validates the AppStream Fleet instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

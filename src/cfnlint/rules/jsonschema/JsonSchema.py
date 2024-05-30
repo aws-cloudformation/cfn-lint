@@ -49,6 +49,7 @@ class JsonSchema(BaseJsonSchema):
             "fn_split": "E1018",
             "fn_sub": "E1019",
             "fn_tojsonstring": "E1031",
+            "format": "E1103",
             "ref": "E1020",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))

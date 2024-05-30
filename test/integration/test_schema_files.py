@@ -17,9 +17,10 @@ import regex as re
 
 import cfnlint
 from cfnlint.helpers import REGIONS, load_plugins, load_resource
-from cfnlint.jsonschema import RefResolver, StandardValidator, ValidationError
+from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.schema._pointer import resolve_pointer
+from cfnlint.schema_resolver import RefResolver
 
 
 @pytest.mark.data

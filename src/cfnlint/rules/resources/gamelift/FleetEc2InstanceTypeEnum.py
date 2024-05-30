@@ -12,8 +12,8 @@ class FleetEc2InstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3641"
     shortdesc = "Validate GameLift Fleet EC2 instance type"
     description = (
-        "Validates the instance types based on region "
-        "and data gathered from the pricing APIs"
+        "Validates the GameLift Fleet EC2 instance types based on "
+        "region and data gathered from the pricing APIs"
     )
     tags = ["resources"]
 

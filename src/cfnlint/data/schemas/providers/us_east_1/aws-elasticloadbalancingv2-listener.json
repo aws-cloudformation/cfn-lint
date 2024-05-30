@@ -26,6 +26,10 @@
      "$ref": "#/definitions/RedirectConfig"
     },
     "TargetGroupArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/TargetGroupArn",
+      "typeName": "AWS::ElasticLoadBalancingV2::TargetGroup"
+     },
      "type": "string"
     },
     "Type": {
@@ -61,12 +65,34 @@
      "type": "string"
     },
     "UserPoolArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Cognito::UserPool"
+     },
      "type": "string"
     },
     "UserPoolClientId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/UserPoolId",
+        "typeName": "AWS::Cognito::UserPoolClient"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/ClientId",
+        "typeName": "AWS::Cognito::UserPoolClient"
+       }
+      }
+     ],
      "type": "string"
     },
     "UserPoolDomain": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::Cognito::UserPoolDomain"
+     },
      "type": "string"
     }
    },
@@ -135,6 +161,20 @@
    "additionalProperties": false,
    "properties": {
     "CertificateArn": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Id",
+        "typeName": "AWS::CertificateManager::Certificate"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::IAM::ServerCertificate"
+       }
+      }
+     ],
      "type": "string"
     }
    },
@@ -233,6 +273,10 @@
    "additionalProperties": false,
    "properties": {
     "TargetGroupArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/TargetGroupArn",
+      "typeName": "AWS::ElasticLoadBalancingV2::TargetGroup"
+     },
      "type": "string"
     },
     "Weight": {

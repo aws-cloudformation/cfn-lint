@@ -12,16 +12,11 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
 class DeprecatedRuntimeEnd(CfnLintKeyword):
-    """Check if EOL Lambda Function Runtimes are used"""
 
     id = "E2531"
-    shortdesc = "Check if EOL Lambda Function Runtimes are used"
-    description = (
-        "Check if an EOL Lambda Runtime is specified and give an error if used. "
-    )
-    source_url = (
-        "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
-    )
+    shortdesc = "Validate if lambda runtime is deprecated"
+    description = "Check the lambda runtime has reached the end of life"
+    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
     tags = ["resources", "lambda", "runtime"]
 
     def __init__(self):

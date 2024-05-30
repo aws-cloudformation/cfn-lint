@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetId",
+  "/properties/TargetType"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:StartConfigurationPolicyAssociation",
+    "securityhub:GetConfigurationPolicyAssociation"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:StartConfigurationPolicyDisassociation",
+    "securityhub:GetConfigurationPolicyAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListConfigurationPolicyAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetConfigurationPolicyAssociation",
+    "securityhub:GetConfigurationPolicyAssociation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:StartConfigurationPolicyAssociation",
+    "securityhub:GetConfigurationPolicyAssociation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssociationIdentifier"
+ ],
+ "properties": {
+  "AssociationIdentifier": {
+   "type": "string"
+  },
+  "AssociationStatus": {
+   "enum": [
+    "SUCCESS",
+    "PENDING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "AssociationStatusMessage": {
+   "type": "string"
+  },
+  "AssociationType": {
+   "enum": [
+    "APPLIED",
+    "INHERITED"
+   ],
+   "type": "string"
+  },
+  "ConfigurationPolicyId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$|^SELF_MANAGED_SECURITY_HUB$",
+   "type": "string"
+  },
+  "TargetId": {
+   "type": "string"
+  },
+  "TargetType": {
+   "enum": [
+    "ACCOUNT",
+    "ORGANIZATIONAL_UNIT",
+    "ROOT"
+   ],
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociationStatus",
+  "/properties/AssociationType",
+  "/properties/AssociationStatusMessage",
+  "/properties/UpdatedAt",
+  "/properties/AssociationIdentifier"
+ ],
+ "required": [
+  "TargetId",
+  "TargetType",
+  "ConfigurationPolicyId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::PolicyAssociation"
+}

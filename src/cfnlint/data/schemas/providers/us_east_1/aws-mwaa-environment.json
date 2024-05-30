@@ -171,8 +171,16 @@
    ],
    "type": "string"
   },
+  "MaxWebservers": {
+   "minimum": 2,
+   "type": "integer"
+  },
   "MaxWorkers": {
    "minimum": 1,
+   "type": "integer"
+  },
+  "MinWebservers": {
+   "minimum": 2,
    "type": "integer"
   },
   "MinWorkers": {
@@ -210,6 +218,7 @@
    "additionalProperties": false,
    "properties": {
     "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
      "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/SecurityGroupId"
@@ -250,6 +259,7 @@
    "type": "integer"
   },
   "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.GroupId",
    "maxLength": 1024,
    "minLength": 1,
    "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
@@ -379,8 +389,14 @@
   "LoggingConfiguration": {
    "$ref": "#/definitions/LoggingConfiguration"
   },
+  "MaxWebservers": {
+   "$ref": "#/definitions/MaxWebservers"
+  },
   "MaxWorkers": {
    "$ref": "#/definitions/MaxWorkers"
+  },
+  "MinWebservers": {
+   "$ref": "#/definitions/MinWebservers"
   },
   "MinWorkers": {
    "$ref": "#/definitions/MinWorkers"

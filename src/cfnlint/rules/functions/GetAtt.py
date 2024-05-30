@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import deque
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Sequence
 
 import regex as re
 
@@ -55,42 +55,40 @@ class GetAtt(BaseFn):
             ],
         }
 
-    def fn_getatt(
-        self, validator: Validator, s: Any, instance: Any, schema: Any
+    def _iter_errors(
+        self, evolved: Validator, key: str, instance: Any, type: str
     ) -> ValidationResult:
-        errs = list(super().validate(validator, s, instance, schema))
-        if errs:
-            yield from iter(errs)
+        value: Any = None
+        if type == "string":
+            value = ""
+        elif type == "number":
+            value = 1.0
+        elif type == "integer":
+            value = 1
+        elif type == "boolean":
+            value = True
+        elif type == "array":
+            value = []
+        elif type == "object":
+            value = {}
+        else:
             return
 
-        key, value = self.key_value(instance)
-        paths: List[int | None] = [0, 1]
-        if validator.is_type(value, "string"):
-            paths = [None, None]
-            value = value.split(".", 1)
+        for err in evolved.iter_errors(value):
+            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+            err.validator = self.fn.py
+            err.path = deque([key])
+            yield err
 
-        def iter_errors(type: str) -> ValidationResult:
-            value: Any = None
-            if type == "string":
-                value = ""
-            elif type == "number":
-                value = 1.0
-            elif type == "integer":
-                value = 1
-            elif type == "boolean":
-                value = True
-            elif type == "array":
-                value = []
-            elif type == "object":
-                value = {}
-            else:
-                return
-
-            for err in evolved.iter_errors(value):
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.validator = self.fn.py
-                err.path = deque([key])
-                yield err
+    def _resolve_getatt(
+        self,
+        validator: Validator,
+        key: str,
+        value: Any,
+        instance: Any,
+        s: Any,
+        paths: Sequence[Any],
+    ) -> ValidationResult:
 
         for resource_name, resource_name_validator, _ in validator.resolve_value(
             value[0]
@@ -148,10 +146,36 @@ class GetAtt(BaseFn):
                     type_err_ct = 0
                     all_errs = []
                     for type in types:
-                        errs = list(iter_errors(type))
+                        errs = list(self._iter_errors(evolved, key, instance, type))
                         if errs:
                             type_err_ct += 1
                             all_errs.extend(errs)
 
                     if type_err_ct == len(types):
-                        yield from errs
+                        yield from iter(errs)
+
+    def fn_getatt(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+            return
+
+        key, value = self.key_value(instance)
+        paths: List[int | None] = [0, 1]
+        if validator.is_type(value, "string"):
+            paths = [None, None]
+            value = value.split(".", 1)
+
+        errs = list(self._resolve_getatt(validator, key, value, instance, s, paths))
+        if errs:
+            yield from iter(errs)
+            return
+
+        keyword = validator.context.path.cfn_path_string
+        for rule in self.child_rules.values():
+            if rule is None:
+                continue
+            if keyword in rule.keywords or "*" in rule.keywords:  # type: ignore
+                yield from rule.validate(validator, s, value, s)  # type: ignore

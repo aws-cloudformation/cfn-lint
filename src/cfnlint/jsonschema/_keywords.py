@@ -247,9 +247,9 @@ def exclusiveMinimum(
 def format(
     validator: Validator, format: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    if validator._format_checker is not None:  # type: ignore
+    if validator.format_checker is not None:  # type: ignore
         try:
-            validator._format_checker.check(instance, format)  # type: ignore
+            validator.format_checker.check(instance, format)  # type: ignore
         except FormatError as error:
             yield ValidationError(error.message, cause=error.cause)
 

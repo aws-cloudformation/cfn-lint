@@ -12,7 +12,7 @@ class DbInstanceDbInstanceClassEnum(CfnLintJsonSchemaRegional):
     id = "E3025"
     shortdesc = "Validates RDS DB Instance Class"
     description = (
-        "Validates the instance types based on region "
+        "Validates the RDS DB instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

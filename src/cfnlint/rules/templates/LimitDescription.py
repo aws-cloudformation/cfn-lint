@@ -14,7 +14,7 @@ class LimitDescription(CloudFormationLintRule):
     """Check Template Description Size"""
 
     id = "E1003"
-    shortdesc = "Template description limit"
+    shortdesc = "Validate the max size of a description"
     description = (
         "Check if the size of the template description is less than the upper limit"
     )

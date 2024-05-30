@@ -26,15 +26,15 @@ from cfnlint.context import Context
 from cfnlint.jsonschema import _keywords, _keywords_cfn, _resolvers_cfn
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
-from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._types import TypeChecker, cfn_type_checker
 from cfnlint.jsonschema._typing import ResolutionResult, V, ValidationResult
-from cfnlint.jsonschema._utils import custom_msg, id_of
+from cfnlint.jsonschema._utils import custom_msg
 from cfnlint.jsonschema.exceptions import (
     UndefinedTypeCheck,
     UnknownType,
     ValidationError,
 )
+from cfnlint.schema_resolver import RefResolver, id_of
 from cfnlint.template import Template
 
 
@@ -65,7 +65,7 @@ def create(
         _type_checker: TypeChecker = field(
             init=False, default_factory=lambda: cfn_type_checker
         )
-        _format_checker: FormatChecker = field(
+        format_checker: FormatChecker = field(
             init=False, default_factory=lambda: cfn_format_checker
         )
 
@@ -89,7 +89,7 @@ def create(
         def __post_init__(self):
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
-                    self.schema,
+                    schema=self.schema,
                 )
 
         def is_type(self, instance: Any, type: str) -> bool:

@@ -234,6 +234,7 @@ class GetAtt:
     def __init__(self, schema: Dict[str, Any], getatt_type: GetAttType) -> None:
         self._getatt_type: GetAttType = getatt_type
         self._type: Optional[str] = schema.get("type")
+        self._format: Optional[str] = schema.get("format")
         self._item_type: Optional[str]
         if self._type == "array":
             self._item_type = schema.get("items", {}).get("type")
@@ -241,6 +242,10 @@ class GetAtt:
     @property
     def type(self) -> Optional[str]:
         return self._type
+
+    @property
+    def format(self) -> Optional[str]:
+        return self._format
 
     @property
     def item_type(self) -> Optional[str]:

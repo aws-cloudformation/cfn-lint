@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AwsAccountId",
+  "/properties/DataSetId",
+  "/properties/Schedule/ScheduleId"
+ ],
+ "definitions": {
+  "RefreshScheduleMap": {
+   "additionalProperties": false,
+   "properties": {
+    "RefreshType": {
+     "enum": [
+      "FULL_REFRESH",
+      "INCREMENTAL_REFRESH"
+     ],
+     "type": "string"
+    },
+    "ScheduleFrequency": {
+     "additionalProperties": false,
+     "properties": {
+      "Interval": {
+       "enum": [
+        "MINUTE15",
+        "MINUTE30",
+        "HOURLY",
+        "DAILY",
+        "WEEKLY",
+        "MONTHLY"
+       ],
+       "type": "string"
+      },
+      "RefreshOnDay": {
+       "additionalProperties": false,
+       "properties": {
+        "DayOfMonth": {
+         "maxLength": 128,
+         "minLength": 1,
+         "type": "string"
+        },
+        "DayOfWeek": {
+         "enum": [
+          "SUNDAY",
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY",
+          "SATURDAY"
+         ],
+         "type": "string"
+        }
+       },
+       "required": [],
+       "type": "object"
+      },
+      "TimeOfTheDay": {
+       "maxLength": 128,
+       "minLength": 1,
+       "type": "string"
+      },
+      "TimeZone": {
+       "maxLength": 128,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [],
+     "type": "object"
+    },
+    "ScheduleId": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "StartAfterDateTime": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "quicksight:CreateRefreshSchedule",
+    "quicksight:DescribeRefreshSchedule"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "quicksight:DeleteRefreshSchedule",
+    "quicksight:DescribeRefreshSchedule"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "AwsAccountId": {
+      "$ref": "resource-schema.json#/properties/AwsAccountId"
+     },
+     "DataSetId": {
+      "$ref": "resource-schema.json#/properties/DataSetId"
+     }
+    },
+    "required": [
+     "AwsAccountId",
+     "DataSetId"
+    ]
+   },
+   "permissions": [
+    "quicksight:ListRefreshSchedules"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "quicksight:DescribeRefreshSchedule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "quicksight:UpdateRefreshSchedule",
+    "quicksight:DescribeRefreshSchedule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AwsAccountId",
+  "/properties/DataSetId",
+  "/properties/Schedule/ScheduleId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AwsAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "DataSetId": {
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/RefreshScheduleMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::QuickSight::RefreshSchedule"
+}

@@ -12,7 +12,7 @@ class DBInstanceDBInstanceClassEnum(CfnLintJsonSchemaRegional):
     id = "E3635"
     shortdesc = "Validate Neptune DB instance class"
     description = (
-        "Validates the instance types based on region "
+        "Validates the instance types for Neptune DB based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

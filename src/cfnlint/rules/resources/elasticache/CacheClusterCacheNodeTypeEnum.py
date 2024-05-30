@@ -12,7 +12,7 @@ class CacheClusterCacheNodeTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3647"
     shortdesc = "Validate ElastiCache cluster cache node type"
     description = (
-        "Validates the instance types based on region "
+        "Validates the ElastiCache instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

@@ -1,0 +1,77 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PathPart",
+  "/properties/ParentId",
+  "/properties/RestApiId"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/ResourceId"
+ ],
+ "properties": {
+  "ParentId": {
+   "type": "string"
+  },
+  "PathPart": {
+   "type": "string"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "RestApiId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResourceId"
+ ],
+ "required": [
+  "ParentId",
+  "PathPart",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Resource"
+}

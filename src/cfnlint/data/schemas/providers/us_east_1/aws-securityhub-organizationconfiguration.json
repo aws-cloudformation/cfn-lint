@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:UpdateOrganizationConfiguration",
+    "securityhub:DescribeOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:UpdateOrganizationConfiguration",
+    "securityhub:DescribeOrganizationConfiguration",
+    "securityhub:ListFindingAggregators",
+    "organizations:DescribeOrganization"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:DescribeOrganizationConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:DescribeOrganizationConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateOrganizationConfiguration",
+    "securityhub:DescribeOrganizationConfiguration",
+    "organizations:DescribeOrganization"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OrganizationConfigurationIdentifier"
+ ],
+ "properties": {
+  "AutoEnable": {
+   "type": "boolean"
+  },
+  "AutoEnableStandards": {
+   "enum": [
+    "DEFAULT",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "ConfigurationType": {
+   "enum": [
+    "CENTRAL",
+    "LOCAL"
+   ],
+   "type": "string"
+  },
+  "MemberAccountLimitReached": {
+   "type": "boolean"
+  },
+  "OrganizationConfigurationIdentifier": {
+   "pattern": "^[0-9]{12}/[a-zA-Z0-9-]{1,32}/securityhub-organization-configuration$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "ENABLED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OrganizationConfigurationIdentifier",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/MemberAccountLimitReached"
+ ],
+ "required": [
+  "AutoEnable"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::OrganizationConfiguration"
+}

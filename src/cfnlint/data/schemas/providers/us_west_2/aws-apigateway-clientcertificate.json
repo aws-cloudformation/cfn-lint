@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH",
+    "apigateway:PUT",
+    "apigateway:DELETE"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClientCertificateId"
+ ],
+ "properties": {
+  "ClientCertificateId": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClientCertificateId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "apigateway:PUT",
+   "apigateway:DELETE",
+   "apigateway:GET"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::ClientCertificate"
+}

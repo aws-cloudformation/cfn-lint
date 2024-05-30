@@ -10,12 +10,10 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class Certificate(CfnLintJsonSchema):
     id = "E3679"
     shortdesc = (
-        "Validate protocols that require certificates have a certificate specified"
+        "Validate ELB protocols that require certificates have a certificate specified"
     )
-    description = (
-        "Validates the instance types based on region "
-        "and data gathered from the pricing APIs"
-    )
+    description = "When using HTTPS or SSL you must provide a certificate"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancing-loadbalancer-listeners.html#cfn-elasticloadbalancing-loadbalancer-listeners-sslcertificateid"
     tags = ["resources"]
 
     def __init__(self) -> None:

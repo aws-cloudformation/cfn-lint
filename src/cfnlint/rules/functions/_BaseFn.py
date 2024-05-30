@@ -73,22 +73,38 @@ class BaseFn(CloudFormationLintRule):
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 yield err
 
+    def _resolve_ref(self, validator, schema) -> Any:
+
+        resolve = getattr(validator.resolver, "resolve", None)
+        ref = schema["$ref"]
+        if resolve is None:
+            resolved = validator.resolver.resolving(ref)
+        else:
+            _, resolved = validator.resolver.resolve(ref)
+
+        return resolved
+
     def resolve_type(self, validator, schema) -> List[str]:
         if "type" in schema:
             return ensure_list(schema["type"])  # type: ignore
 
         if "$ref" in schema:
-            resolve = getattr(validator.resolver, "resolve", None)
-            ref = schema["$ref"]
-            if resolve is None:
-                resolved = validator.resolver.resolving(ref)
-            else:
-                _, resolved = validator.resolver.resolve(ref)
+            resolved = self._resolve_ref(validator, schema)
 
-            if "type" in resolved:
-                return ensure_list(resolved["type"])  # type: ignore
+            return self.resolve_type(validator, resolved)
 
         return []
+
+    def resolve_format(self, validator, schema) -> str | None:
+        if "format" in schema:
+            return schema["format"]  # type: ignore
+
+        if "$ref" in schema:
+            resolved = self._resolve_ref(validator, schema)
+
+            return self.resolve_format(validator, resolved)
+
+        return None
 
     def validate_fn_output_types(
         self, validator: Validator, s: Any, instance: Any

@@ -19,18 +19,8 @@ SPDX-License-Identifier: MIT
 
 import itertools
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 import regex as re
-
-
-def id_of(schema: Any) -> str:
-    """
-    Return the ID of a schema for recent JSON Schema drafts.
-    """
-    if schema is True or schema is False:
-        return ""
-    return schema.get("$id", "")  # type: ignore
 
 
 class Unset:

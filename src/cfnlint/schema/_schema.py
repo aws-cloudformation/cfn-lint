@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional
 import jsonpatch
 
 from cfnlint.schema._getatts import AttributeDict, GetAtts
+from cfnlint.schema_resolver import RefResolver
 
 # Can't use a dataclass because its hard to parse in json
 # with optional fields without addtional help
@@ -23,6 +24,7 @@ class Schema:
         self._json_schema = self._cleanse_schema(schema=deepcopy(schema))
         self.type_name = schema["typeName"]
         self._getatts = GetAtts(self.schema)
+        self.resolver = RefResolver.from_schema(schema)
 
     def _cleanse_schema(self, schema: Dict[str, Any]) -> Dict:
         for ro_prop in schema.get("readOnlyProperties", []):

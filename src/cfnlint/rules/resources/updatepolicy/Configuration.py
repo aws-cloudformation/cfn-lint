@@ -8,8 +8,9 @@ from typing import Any
 import cfnlint.data.schemas.other.resources
 import cfnlint.helpers
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import RefResolver, Validator
+from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
+from cfnlint.schema_resolver import RefResolver
 
 
 class Configuration(CfnLintJsonSchema):
