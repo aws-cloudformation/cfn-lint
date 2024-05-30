@@ -29,7 +29,7 @@ class ImageId(CfnLintKeyword):
                 "Resources/AWS::Cloud9::EnvironmentEC2/Properties/ImageId",
                 "Resources/AWS::EC2::Instance/Properties/ImageId",
                 "Resources/AWS::EC2::LaunchTemplate/Properties/LaunchTemplateData/ImageId",
-                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/ImageId",
+                "Resources/AWS::EC2::SpotFleet/Properties/SpotFleetRequestConfigData/LaunchSpecifications/*/ImageId",
                 "Resources/AWS::ImageBuilder::Image/Properties/ImageId",
             ]
         )

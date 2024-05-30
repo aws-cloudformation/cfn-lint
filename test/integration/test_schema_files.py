@@ -28,6 +28,7 @@ class TestSchemaFiles(TestCase):
     """Test schema files"""
 
     _found_keywords: List[str] = [
+        "*",
         "Conditions",
         "Description",
         "Mappings",

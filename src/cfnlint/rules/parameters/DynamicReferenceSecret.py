@@ -34,7 +34,7 @@ class DynamicReferenceSecret(CfnLintKeyword):
                 "Resources/AWS::IAM::User/Properties/LoginProfile/Password",
                 "Resources/AWS::KinesisFirehose::DeliveryStream/Properties/RedshiftDestinationConfiguration/Password",
                 "Resources/AWS::OpsWorks::App/Properties/AppSource/Password",
-                "Resources/AWS::OpsWorks::Stack/Properties/RdsDbInstances/DbPassword",
+                "Resources/AWS::OpsWorks::Stack/Properties/RdsDbInstances/*/DbPassword",
                 "Resources/AWS::OpsWorks::Stack/Properties/CustomCookbooksSource/Password",
                 "Resources/AWS::RDS::DBCluster/Properties/MasterUserPassword",
                 "Resources/AWS::RDS::DBInstance/Properties/MasterUserPassword",
