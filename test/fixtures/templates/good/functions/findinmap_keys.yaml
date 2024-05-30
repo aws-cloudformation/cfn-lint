@@ -4,8 +4,10 @@ Mappings:
   CertificateMap:
     us-east-1:
       Arn: arn:aws:acm:us-east-1:<account>:certificate/<id>
-    2:
+    "2":
       Arn: "" # Empty string is a valid value
+    key:
+      3: "" # Empty string is a valid value
 Resources:
   AppAlbListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -32,3 +34,9 @@ Resources:
       Certificates:
         - CertificateArn:  # Doesn't fail with integer
             Fn::FindInMap: [!Ref 'AWS::Region', 2, id]
+  AppAlbListener4:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn:  # Doesn't fail with integer
+            Fn::FindInMap: [!Ref 'AWS::Region', key, 3]
