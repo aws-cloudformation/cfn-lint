@@ -157,6 +157,16 @@ def main():
                         )
                     )
 
+            for path in _descend(obj, ["ImageId", "AmiId"]):
+                if path[-2] == "properties":
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::EC2::Image.Id"},
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                        )
+                    )
+
             # for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
             #    if path[-2] == "properties":
             #        resource_patches.extend(
