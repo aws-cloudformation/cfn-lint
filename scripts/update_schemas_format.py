@@ -62,6 +62,7 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
         _create_patch(
             {"format": "AWS::EC2::SecurityGroup.GroupId"},
             items_path,
+            resolver=resolver,
         ),
     ]
 
@@ -82,14 +83,19 @@ def _create_security_group_id(type_name: str, ref: str, resolver: RefResolver):
         _create_patch(
             {"format": "AWS::EC2::SecurityGroup.GroupId"},
             ref,
+            resolver=resolver,
         )
     ]
 
 
-def _create_patch(value: dict[str, str], path: Sequence[str]):
+def _create_patch(value: dict[str, str], ref: Sequence[str], resolver: RefResolver):
+    _, resolved = resolver.resolve(ref)
+    if "$ref" in resolved:
+        return _create_patch(value, resolved["$ref"], resolver)
+
     return Patch(
         values=value,
-        path=path[1:],
+        path=ref[1:],
     )
 
 
@@ -110,6 +116,12 @@ _manual_patches = {
         Patch(
             values={"format": "AWS::EC2::SecurityGroup.GroupId"},
             path="properties/GroupId",
+        ),
+    ],
+    "AWS::EC2::VPC": [
+        Patch(
+            values={"format": "AWS::EC2::VPC.Id"},
+            path="properties/Id",
         ),
     ],
 }
@@ -135,30 +147,40 @@ def main():
             if resource_type in _manual_patches:
                 resource_patches.extend(_manual_patches[resource_type])
 
-            for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
+            for path in _descend(obj, ["VpcId"]):
                 if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_ids_patch(
-                            resource_type, "#/" + "/".join(path), resolver
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::EC2::VPC.Id"},
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
                         )
                     )
 
-            for path in _descend(
-                obj,
-                [
-                    "DefaultSecurityGroup",
-                    "SourceSecurityGroupId",
-                    "DestinationSecurityGroupId",
-                    "SecurityGroup",
-                    "SecurityGroupId",
-                ],
-            ):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_id(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
+            # for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
+            #    if path[-2] == "properties":
+            #        resource_patches.extend(
+            #            _create_security_group_ids_patch(
+            #                resource_type, "#/" + "/".join(path), resolver
+            #            )
+            #        )
+
+            # for path in _descend(
+            #    obj,
+            #    [
+            #        "DefaultSecurityGroup",
+            #        "SourceSecurityGroupId",
+            #        "DestinationSecurityGroupId",
+            #        "SecurityGroup",
+            #        "SecurityGroupId",
+            #    ],
+            # ):
+            #    if path[-2] == "properties":
+            #        resource_patches.extend(
+            #            _create_security_group_id(
+            #                resource_type, "#/" + "/".join(path), resolver
+            #            )
+            #        )
 
             if resource_patches:
                 patches.append(
