@@ -143,14 +143,25 @@ def create(
                         if key in self.fn_resolvers:
                             for (
                                 resolved_value,
-                                validator,
-                                resolve_errs,
+                                resolved_validator,
+                                resolved_errs,
                             ) in self.resolve_value(value):
-                                if resolve_errs:
+                                if resolved_errs:
                                     continue
-                                yield from self.fn_resolvers[key](
-                                    validator, resolved_value  # type: ignore
-                                )
+                                for (
+                                    fn_resolved_value,
+                                    fn_resolved_validator,
+                                    fn_resolved_err,
+                                ) in self.fn_resolvers[key](
+                                    resolved_validator, resolved_value  # type: ignore
+                                ):
+                                    if fn_resolved_err:
+                                        fn_resolved_err.path.appendleft(key)
+                                    yield (
+                                        fn_resolved_value,
+                                        fn_resolved_validator,
+                                        fn_resolved_err,
+                                    )
 
                             return
 
