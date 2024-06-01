@@ -65,18 +65,6 @@ def custom_msg(validator, schema):
     return None
 
 
-def ensure_list(thing):
-    """
-    Wrap ``thing`` in a list if it's a single str.
-
-    Otherwise, return it unchanged.
-    """
-
-    if isinstance(thing, str):
-        return [thing]
-    return thing
-
-
 def _mapping_equal(one, two):
     """
     Check if two mappings are equal using the semantics of `equal`.

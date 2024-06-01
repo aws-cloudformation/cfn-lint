@@ -11,7 +11,7 @@ from typing import Any, List
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
-from cfnlint.schema_resolver import RefResolver
+from cfnlint.schema.resolver import RefResolver
 
 
 # pylint: disable=unused-argument

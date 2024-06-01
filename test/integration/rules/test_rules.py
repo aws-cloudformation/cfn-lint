@@ -16,8 +16,6 @@ def test_rule_descriptions():
         str(root_dir),
     )
 
-    print(rules)
-
     descriptions = set()
     shortdesc = set()
 

@@ -8,9 +8,8 @@ from __future__ import annotations
 from collections import namedtuple
 from typing import Any, Dict, List, Tuple
 
-from cfnlint.helpers import ToPy
+from cfnlint.helpers import ToPy, ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules import CloudFormationLintRule
 
 SchemaDetails = namedtuple("SchemaDetails", ["module", "filename"])

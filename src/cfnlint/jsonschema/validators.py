@@ -34,7 +34,7 @@ from cfnlint.jsonschema.exceptions import (
     UnknownType,
     ValidationError,
 )
-from cfnlint.schema_resolver import RefResolver, id_of
+from cfnlint.schema.resolver import RefResolver, id_of
 from cfnlint.template import Template
 
 

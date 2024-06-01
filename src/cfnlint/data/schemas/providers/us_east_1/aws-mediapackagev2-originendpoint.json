@@ -13,6 +13,13 @@
   "/properties/OriginEndpointName"
  ],
  "definitions": {
+  "AdMarkerDash": {
+   "enum": [
+    "BINARY",
+    "XML"
+   ],
+   "type": "string"
+  },
   "AdMarkerHls": {
    "enum": [
     "DATERANGE"
@@ -30,6 +37,102 @@
    "enum": [
     "TS",
     "CMAF"
+   ],
+   "type": "string"
+  },
+  "DashDrmSignaling": {
+   "enum": [
+    "INDIVIDUAL",
+    "REFERENCED"
+   ],
+   "type": "string"
+  },
+  "DashManifestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DrmSignaling": {
+     "$ref": "#/definitions/DashDrmSignaling"
+    },
+    "FilterConfiguration": {
+     "$ref": "#/definitions/FilterConfiguration"
+    },
+    "ManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "MinBufferTimeSeconds": {
+     "type": "integer"
+    },
+    "MinUpdatePeriodSeconds": {
+     "type": "integer"
+    },
+    "PeriodTriggers": {
+     "items": {
+      "$ref": "#/definitions/DashPeriodTrigger"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "ScteDash": {
+     "$ref": "#/definitions/ScteDash"
+    },
+    "SegmentTemplateFormat": {
+     "$ref": "#/definitions/DashSegmentTemplateFormat"
+    },
+    "SuggestedPresentationDelaySeconds": {
+     "type": "integer"
+    },
+    "UtcTiming": {
+     "$ref": "#/definitions/DashUtcTiming"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "DashPeriodTrigger": {
+   "enum": [
+    "AVAILS",
+    "DRM_KEY_ROTATION",
+    "SOURCE_CHANGES",
+    "SOURCE_DISRUPTIONS",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "DashSegmentTemplateFormat": {
+   "enum": [
+    "NUMBER_WITH_TIMELINE"
+   ],
+   "type": "string"
+  },
+  "DashUtcTiming": {
+   "additionalProperties": false,
+   "properties": {
+    "TimingMode": {
+     "$ref": "#/definitions/DashUtcTimingMode"
+    },
+    "TimingSource": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DashUtcTimingMode": {
+   "enum": [
+    "HTTP_HEAD",
+    "HTTP_ISO",
+    "HTTP_XSDATE",
+    "UTC_DIRECT"
    ],
    "type": "string"
   },
@@ -232,6 +335,15 @@
    },
    "type": "object"
   },
+  "ScteDash": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkerDash": {
+     "$ref": "#/definitions/AdMarkerDash"
+    }
+   },
+   "type": "object"
+  },
   "ScteFilter": {
    "enum": [
     "SPLICE_INSERT",
@@ -420,6 +532,12 @@
   "CreatedAt": {
    "format": "date-time",
    "type": "string"
+  },
+  "DashManifests": {
+   "items": {
+    "$ref": "#/definitions/DashManifestConfiguration"
+   },
+   "type": "array"
   },
   "Description": {
    "maxLength": 1024,

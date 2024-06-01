@@ -10,8 +10,8 @@ from typing import Any, Dict, List, Sequence
 
 import regex as re
 
+from cfnlint.helpers import ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 

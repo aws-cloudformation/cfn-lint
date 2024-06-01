@@ -5,11 +5,15 @@ SPDX-License-Identifier: MIT-0
 
 import enum
 from collections import UserDict
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 import regex as re
 
-from cfnlint.schema._pointer import resolve_pointer
+from cfnlint.schema.resolver import RefResolver
+
+if TYPE_CHECKING:
+    from cfnlint.schema import Schema
+
 
 _all_property_types = [
     "AWS::Amplify::Branch",
@@ -260,27 +264,28 @@ class GetAtts:
     """Class for helping with GetAtt logic"""
 
     _attrs: AttributeDict = AttributeDict()
-    _schema: Dict[str, Any] = {}
 
-    def __init__(self, schema: Dict[str, Any]) -> None:
+    def __init__(self, schema: "Schema") -> None:
         self._attrs = AttributeDict()
-        self._schema = schema
-        type_name = schema.get("typeName", "")
-        if type_name in _all_property_types:
-            for name, value in schema.get("properties", {}).items():
-                self._process_schema(name, value, GetAttType.All)
+        if schema.type_name in _all_property_types:
+            for name, value in schema.schema.get("properties", {}).items():
+                self._process_schema(name, value, schema.resolver, GetAttType.All)
             return
-        if type_name in _exceptions:
-            for name in _exceptions[type_name]:
-                attr_schema = self._flatten_schema_by_pointer(f"/properties/{name}")
-                self._process_schema(name, attr_schema, GetAttType.ReadOnly)
+        if schema.type_name in _exceptions:
+            for name in _exceptions[schema.type_name]:
+                _, attr_schema = schema.resolver.resolve_cfn_pointer(
+                    f"/properties/{name}"
+                )
+                self._process_schema(
+                    name, attr_schema, schema.resolver, GetAttType.ReadOnly
+                )
         for unnamed_type in _unnamed_string_types:
-            if type_name.startswith(unnamed_type):
+            if schema.type_name.startswith(unnamed_type):
                 self._attrs["Outputs\\..*"] = GetAtt(
                     schema={"type": "string"}, getatt_type=GetAttType.Unnamed
                 )
         for unnamed_type in _unnamed_unknown_types:
-            if type_name.startswith(unnamed_type):
+            if schema.type_name.startswith(unnamed_type):
                 self._attrs[".*"] = GetAtt(
                     schema={
                         "type": [
@@ -294,41 +299,34 @@ class GetAtts:
                     },
                     getatt_type=GetAttType.Unnamed,
                 )
-        for ro_attr in schema.get("readOnlyProperties", []):
+        for ro_attr in schema.schema.get("readOnlyProperties", []):
             try:
                 name = ".".join(ro_attr.split("/")[2:])
-                ro_schema = self._flatten_schema_by_pointer(ro_attr)
-                self._process_schema(name, ro_schema, GetAttType.ReadOnly)
+                _, ro_schema = schema.resolver.resolve_cfn_pointer(ro_attr)
+                ro_schema = schema.resolver.flatten_schema(ro_schema)
+                self._process_schema(
+                    name, ro_schema, schema.resolver, GetAttType.ReadOnly
+                )
             except KeyError:
                 pass
 
-    def _flatten_schema(self, schema: Dict[str, Any]) -> Dict[str, Any]:
-        r_schema = schema.copy()
-        for k, v in schema.items():
-            if k == "$ref":
-                r_schema.pop(k)
-                r_schema = {**r_schema, **self._flatten_schema_by_pointer(v)}
-            elif k == "items":
-                r_schema[k] = self._flatten_schema(v)
-        return r_schema
-
-    def _flatten_schema_by_pointer(self, ptr: str) -> Dict[str, Any]:
-        schema = resolve_pointer(self._schema, ptr)
-        return self._flatten_schema(schema)
-
     def _process_schema(
-        self, name: str, schema: Dict[str, Any], getatt_type: GetAttType
+        self,
+        name: str,
+        schema: Dict[str, Any],
+        resolver: "RefResolver",
+        getatt_type: GetAttType,
     ):
         if schema.get("type") == "object":
             for prop, value in schema.get("properties", {}).items():
-                self._process_schema(f"{name}.{prop}", value, getatt_type)
+                self._process_schema(f"{name}.{prop}", value, resolver, getatt_type)
         elif schema.get("type") == "array":
             # GetAtt doesn't support going into an array of objects or another array
             # so we only look at an array of strings, etc.
             self._attrs[name] = GetAtt(schema, getatt_type)
         elif schema.get("$ref"):
-            schema = resolve_pointer(self._schema, schema.get("$ref"))
-            self._process_schema(name, schema, getatt_type)
+            _, schema = resolver.resolve(schema.get("$ref"))
+            self._process_schema(name, schema, resolver, getatt_type)
         else:
             self._attrs[name] = GetAtt(schema, getatt_type)
 

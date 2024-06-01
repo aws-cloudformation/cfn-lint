@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from cfnlint.context import Context
     from cfnlint.jsonschema._format import FormatChecker
     from cfnlint.jsonschema._typing import ResolutionResult, V, ValidationResult
-    from cfnlint.schema_resolver import RefResolver
+    from cfnlint.schema.resolver import RefResolver
     from cfnlint.template import Template
 
 

@@ -17,7 +17,7 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import Any, Dict
+from typing import Any, Dict, List
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -615,3 +615,9 @@ def get_hash(instance: Any) -> str:
     return hashlib.sha1(
         json.dumps(instance, sort_keys=True, cls=_ObjectEncoder).encode("utf-8")
     ).hexdigest()
+
+
+def ensure_list(instance: Any) -> List[Any]:
+    if isinstance(instance, (list, tuple)):
+        return list(instance)
+    return [instance]

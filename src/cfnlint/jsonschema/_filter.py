@@ -8,8 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, fields
 from typing import TYPE_CHECKING, Any, Sequence, Tuple
 
-from cfnlint.helpers import REGEX_DYN_REF, ToPy
-from cfnlint.jsonschema._utils import ensure_list
+from cfnlint.helpers import REGEX_DYN_REF, ToPy, ensure_list
 
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator

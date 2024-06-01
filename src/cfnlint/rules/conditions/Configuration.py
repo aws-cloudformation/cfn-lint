@@ -9,7 +9,7 @@ import cfnlint.data.schemas.other.conditions
 from cfnlint.helpers import FUNCTION_CONDITIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
-from cfnlint.schema_resolver import RefResolver
+from cfnlint.schema.resolver import RefResolver
 
 
 class Configuration(CfnLintJsonSchema):

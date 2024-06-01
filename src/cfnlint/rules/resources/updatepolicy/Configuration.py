@@ -10,7 +10,7 @@ import cfnlint.helpers
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
-from cfnlint.schema_resolver import RefResolver
+from cfnlint.schema.resolver import RefResolver
 
 
 class Configuration(CfnLintJsonSchema):

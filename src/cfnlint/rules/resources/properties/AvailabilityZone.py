@@ -3,9 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.helpers import FUNCTIONS
+from cfnlint.helpers import FUNCTIONS, ensure_list
 from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 

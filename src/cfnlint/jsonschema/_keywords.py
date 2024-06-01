@@ -23,10 +23,10 @@ from typing import Any, Dict, Sequence
 
 import regex as re
 
+from cfnlint.helpers import ensure_list
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import ValidationResult
 from cfnlint.jsonschema._utils import (
-    ensure_list,
     equal,
     find_additional_properties,
     unbool,
