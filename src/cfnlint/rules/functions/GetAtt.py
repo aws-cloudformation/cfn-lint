@@ -13,6 +13,7 @@ import regex as re
 from cfnlint.helpers import ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 
 class GetAtt(BaseFn):
@@ -135,24 +136,37 @@ class GetAtt(BaseFn):
                         "type": validator.validators.get("type"),  # type: ignore
                     }
 
-                    types = ensure_list(
-                        validator.context.resources[resource_name]
-                        .get_atts[attribute_name]
-                        .type
+                    getatts = validator.cfn.get_valid_getatts()
+                    t = validator.context.resources[resource_name].type
+                    pointer = getatts.match(
+                        validator.context.regions[0], [resource_name, attribute_name]
                     )
 
-                    # validate all possible types.
-                    # We will only alert when all types fail
-                    type_err_ct = 0
-                    all_errs = []
-                    for type in types:
-                        errs = list(self._iter_errors(evolved, key, instance, type))
-                        if errs:
-                            type_err_ct += 1
-                            all_errs.extend(errs)
+                    for (
+                        regions,
+                        schema,
+                    ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
+                        t, validator.context.regions
+                    ):
+                        _, getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
 
-                    if type_err_ct == len(types):
-                        yield from iter(errs)
+                        if not getatt_schema.get("type") or not s.get("type"):
+                            continue
+
+                        schema_types = ensure_list(getatt_schema.get("type"))
+
+                        types = ensure_list(s.get("type"))
+
+                        if any(schema_type in types for schema_type in schema_types):
+                            continue
+
+                        reprs = ", ".join(repr(type) for type in types)
+                        yield ValidationError(
+                            (f"{instance!r} is not of type {reprs}"),
+                            validator=self.fn.py,
+                            path=deque([self.fn.name]),
+                            schema_path=deque(["type"]),
+                        )
 
     def fn_getatt(
         self, validator: Validator, s: Any, instance: Any, schema: Any

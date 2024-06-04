@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::CE::AnomalySubscription",
     "AWS::Shield::DRTAccess",
     "AWS::Glue::Partition",
@@ -494,6 +495,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-ce-anomalysubscription.json",
     "aws-shield-drtaccess.json",
     "aws-glue-partition.json",
@@ -606,7 +608,6 @@ cached: List[str] = [
     "aws-cloudformation-stackset.json",
     "aws-ec2-route.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-wafv2-loggingconfiguration.json",
     "aws-dynamodb-globaltable.json",
@@ -687,6 +688,7 @@ cached: List[str] = [
     "aws-servicecatalogappregistry-application.json",
     "aws-glue-database.json",
     "aws-backup-backupvault.json",
+    "aws-ec2-customergateway.json",
     "aws-iam-grouppolicy.json",
     "aws-waf-bytematchset.json",
     "aws-ec2-routetable.json",
@@ -784,6 +786,7 @@ cached: List[str] = [
     "aws-lakeformation-resource.json",
     "aws-ec2-ipamscope.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-config-aggregationauthorization.json",
     "aws-datasync-agent.json",
     "aws-logs-loggroup.json",
@@ -832,6 +835,7 @@ cached: List[str] = [
     "aws-datasync-locationobjectstorage.json",
     "aws-ecs-capacityprovider.json",
     "aws-elasticache-cachecluster.json",
+    "aws-sagemaker-modelcard.json",
     "aws-logs-destination.json",
     "aws-eks-nodegroup.json",
     "aws-organizations-organizationalunit.json",

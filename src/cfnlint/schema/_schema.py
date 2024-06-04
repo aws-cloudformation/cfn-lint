@@ -3,8 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from copy import deepcopy
-from typing import Any, Dict, List, Optional
+from __future__ import annotations
+
+from typing import Any, Dict, List
 
 import jsonpatch
 
@@ -16,40 +17,27 @@ from cfnlint.schema.resolver import RefResolver
 
 
 class Schema:
-    _json_schema: Dict
-
     def __init__(self, schema: Dict[str, Any], is_cached: bool = False) -> None:
-        self.is_cached = is_cached
-        self.schema = deepcopy(schema)
-        self._json_schema = self._cleanse_schema(schema=deepcopy(schema))
-        self.type_name = schema["typeName"]
-        self.resolver = RefResolver.from_schema(schema)
-        self._getatts = GetAtts(self)
-
-    def _cleanse_schema(self, schema: Dict[str, Any]) -> Dict:
-        for ro_prop in schema.get("readOnlyProperties", []):
-            sub_schema: Optional[Dict[str, Any]] = schema
-            for p in ro_prop.split("/")[1:-1]:
-                if not isinstance(sub_schema, dict):
-                    raise ValueError(f"Should be an object for: {sub_schema!r}")
-                sub_schema = sub_schema.get(p)
-                if sub_schema is None:
-                    break
-            if sub_schema is not None:
-                if sub_schema.get(ro_prop.split("/")[-1]) is not None:
-                    del sub_schema[ro_prop.split("/")[-1]]
-
-        return schema
+        self.is_cached: bool = is_cached
+        self._schema: Dict[str, Any] = schema
+        self._type_name: str = schema["typeName"]
+        self.resolver: RefResolver = RefResolver.from_schema(schema)
+        self._getatts: GetAtts = GetAtts(self)
 
     @property
-    def json_schema(self) -> Dict:
+    def type_name(self) -> str:
+        """Return the type name of the schema"""
+        return self._type_name
+
+    @property
+    def schema(self) -> Dict:
         """Return the JSON Schema version of the CFN Schema
 
         Args:
         Returns:
             Dict: the JSON schema representation of the CFN schema
         """
-        return self._json_schema
+        return self._schema
 
     def patch(self, patches: List[Dict]) -> None:
         """Patches the schema file
@@ -59,7 +47,7 @@ class Schema:
         Returns:
             None: Returns when the patches have been applied
         """
-        jsonpatch.JsonPatch(patches).apply(self._json_schema, in_place=True)
+        jsonpatch.JsonPatch(patches).apply(self.schema, in_place=True)
 
     @property
     def get_atts(self) -> AttributeDict:

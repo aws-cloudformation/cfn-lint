@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::ApiGatewayV2::Integration",
     "AWS::ApiGatewayV2::ApiMapping",
     "AWS::CE::AnomalySubscription",
@@ -764,6 +765,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-apigatewayv2-integration.json",
     "aws-apigatewayv2-apimapping.json",
     "aws-ce-anomalysubscription.json",
@@ -972,7 +974,6 @@ cached: List[str] = [
     "aws-ec2-route.json",
     "aws-codecommit-repository.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-refactorspaces-environment.json",
     "aws-xray-resourcepolicy.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
@@ -1271,6 +1272,7 @@ cached: List[str] = [
     "aws-eks-identityproviderconfig.json",
     "aws-ec2-ipamresourcediscoveryassociation.json",
     "aws-ec2-clientvpntargetnetworkassociation.json",
+    "aws-mediapackagev2-originendpoint.json",
     "aws-appsync-graphqlapi.json",
     "aws-ec2-egressonlyinternetgateway.json",
     "aws-securityhub-insight.json",
@@ -1287,6 +1289,7 @@ cached: List[str] = [
     "aws-sagemaker-dataqualityjobdefinition.json",
     "aws-ec2-vpcendpoint.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-config-aggregationauthorization.json",
     "aws-datasync-agent.json",
     "aws-cognito-userpoolidentityprovider.json",

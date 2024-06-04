@@ -71,8 +71,10 @@ class JsonSchema(BaseJsonSchema):
         """Check CloudFormation Parameters"""
         matches = []
 
+        validator = CfnTemplateValidator({}).evolve(cfn=cfn)
+
         cfn_validator = self.extend_validator(
-            validator=CfnTemplateValidator({}).evolve(cfn=cfn),
+            validator=validator,
             schema=self.schema,
             context=cfn.context,
         )

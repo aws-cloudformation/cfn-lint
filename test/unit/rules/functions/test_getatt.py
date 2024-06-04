@@ -183,6 +183,6 @@ def context(cfn):
 )
 def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
     context = context.evolve(**context_evolve)
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    validator = CfnTemplateValidator({}, context=context, cfn=cfn)
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::CleanRooms::ConfiguredTableAssociation",
     "AWS::ApiGatewayV2::Integration",
     "AWS::Pinpoint::App",

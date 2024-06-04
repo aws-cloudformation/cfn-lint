@@ -3,45 +3,16 @@ from __future__ import annotations
 from collections import UserDict
 from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
 
-import regex as re
-
-from cfnlint.schema import (
-    PROVIDER_SCHEMA_MANAGER,
-    GetAtt,
-    GetAttType,
-    ResourceNotFoundError,
-)
-
-
-class _AttributeDict(UserDict):
-    def __init__(self, __dict: None = None) -> None:
-        super().__init__(__dict)
-        self.data: Dict[str, GetAtt] = {}
-
-    def get(self, key: str, default: Any = None) -> Any:
-        try:
-            return self.__getitem__(key)
-        except KeyError:
-            return default
-
-    def __getitem__(self, key: str) -> GetAtt:
-        possible_items = {}
-        for k, v in self.data.items():
-            if re.fullmatch(k, key):
-                possible_items[k] = v
-        if not possible_items:
-            raise KeyError(key)
-        longest_match = sorted(possible_items.keys(), key=len)[-1]
-        return possible_items[longest_match]
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict, ResourceNotFoundError
 
 
 class _ResourceDict(UserDict):
     def __init__(self, __dict: None = None) -> None:
         self._has_modules: bool = False
         super().__init__(__dict)
-        self.data: Dict[str, _AttributeDict] = {}
+        self.data: Dict[str, AttributeDict] = {}
 
-    def __setitem__(self, key: str, item: _AttributeDict) -> None:
+    def __setitem__(self, key: str, item: AttributeDict) -> None:
         if key.endswith(".*"):
             self._has_modules = True
         return super().__setitem__(key, item)
@@ -52,7 +23,7 @@ class _ResourceDict(UserDict):
         except KeyError:
             return default
 
-    def __getitem__(self, key: str) -> _AttributeDict:
+    def __getitem__(self, key: str) -> AttributeDict:
         attr = self.data.get(key)
         if attr is not None:
             return attr
@@ -77,12 +48,6 @@ class GetAtts:
         self._regions = regions
         self._getatts: Dict[str, _ResourceDict] = {}
 
-        self._astrik_string_types = ("AWS::CloudFormation::Stack",)
-        self._astrik_unknown_types = (
-            "Custom::",
-            "AWS::Serverless::",
-            "AWS::CloudFormation::CustomResource",
-        )
         for region in self._regions:
             self._getatts[region] = _ResourceDict()
 
@@ -90,32 +55,21 @@ class GetAtts:
         for region in self._regions:
             if resource_name not in self._getatts[region]:
                 if resource_type.endswith("::MODULE"):
-                    self._getatts[region][f"{resource_name}.*"] = _AttributeDict()
-                    self._getatts[region][resource_name][".*"] = GetAtt(
-                        schema={}, getatt_type=GetAttType.ReadOnly
-                    )
-                    continue
-
-                self._getatts[region][resource_name] = _AttributeDict()
-                if resource_type.startswith(self._astrik_string_types):
-                    self._getatts[region][resource_name]["Outputs\\..*"] = GetAtt(
-                        schema={"type": "string"}, getatt_type=GetAttType.ReadOnly
-                    )
-                elif resource_type.startswith(self._astrik_unknown_types):
-                    self._getatts[region][resource_name][".*"] = GetAtt(
-                        schema={}, getatt_type=GetAttType.ReadOnly
-                    )
-                else:
-                    try:
-                        for (
-                            attr_name,
-                            attr_value,
-                        ) in PROVIDER_SCHEMA_MANAGER.get_type_getatts(
+                    self._getatts[region][f"{resource_name}.*"] = (
+                        PROVIDER_SCHEMA_MANAGER.get_type_getatts(
                             resource_type=resource_type, region=region
-                        ).items():
-                            self._getatts[region][resource_name][attr_name] = attr_value
-                    except ResourceNotFoundError:
-                        continue
+                        )
+                    )
+
+                try:
+                    self._getatts[region][resource_name] = (
+                        PROVIDER_SCHEMA_MANAGER.get_type_getatts(
+                            resource_type=resource_type, region=region
+                        )
+                    )
+                except ResourceNotFoundError:
+                    self._getatts[region][resource_name] = AttributeDict()
+                    continue
 
     def json_schema(self, region: str) -> Dict:
         schema: Dict[str, List] = {"oneOf": []}
@@ -179,7 +133,7 @@ class GetAtts:
         schema["oneOf"].append(schema_strings)
         return schema
 
-    def match(self, region: str, getatt: Union[str, List[str]]) -> GetAtt:
+    def match(self, region: str, getatt: Union[str, List[str]]) -> str:
         if isinstance(getatt, str):
             getatt = getatt.split(".", 1)
 
@@ -190,7 +144,7 @@ class GetAtts:
             try:
                 result = (
                     self._getatts.get(region, _ResourceDict())
-                    .get(getatt[0], _AttributeDict())
+                    .get(getatt[0], AttributeDict())
                     .get(getatt[1])
                 )
                 if result is None:
@@ -204,7 +158,7 @@ class GetAtts:
 
     def items(
         self, region: Optional[str] = None
-    ) -> Iterator[Tuple[str, _AttributeDict]]:
+    ) -> Iterator[Tuple[str, AttributeDict]]:
         if region is None:
             region = self._regions[0]
             for k, v in self._getatts.get(region, _ResourceDict()).items():

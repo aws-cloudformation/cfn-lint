@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::ApiGatewayV2::Integration",
     "AWS::ApiGatewayV2::ApiMapping",
     "AWS::SSO::Assignment",
@@ -658,6 +659,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-apigatewayv2-integration.json",
     "aws-sso-assignment.json",
     "aws-glue-partition.json",
@@ -683,7 +685,6 @@ cached: List[str] = [
     "aws-servicecatalog-launchnotificationconstraint.json",
     "aws-iot-cacertificate.json",
     "aws-transfer-certificate.json",
-    "aws-apigateway-documentationpart.json",
     "aws-cloudwatch-compositealarm.json",
     "aws-route53resolver-firewalldomainlist.json",
     "aws-appconfig-application.json",
@@ -714,7 +715,6 @@ cached: List[str] = [
     "aws-organizations-resourcepolicy.json",
     "aws-ec2-transitgatewaymulticastgroupsource.json",
     "aws-transfer-profile.json",
-    "aws-apigateway-usageplankey.json",
     "aws-docdb-dbinstance.json",
     "aws-datasync-locationhdfs.json",
     "aws-msk-cluster.json",
@@ -768,7 +768,6 @@ cached: List[str] = [
     "aws-iam-role.json",
     "aws-dms-endpoint.json",
     "aws-appmesh-gatewayroute.json",
-    "aws-apigateway-apikey.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-lambda-alias.json",
     "aws-waf-ipset.json",
@@ -793,7 +792,6 @@ cached: List[str] = [
     "aws-fis-experimenttemplate.json",
     "aws-codecommit-repository.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-iot-resourcespecificlogging.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
@@ -820,7 +818,6 @@ cached: List[str] = [
     "aws-guardduty-ipset.json",
     "aws-servicediscovery-httpnamespace.json",
     "aws-cloudwatch-insightrule.json",
-    "aws-apigateway-usageplan.json",
     "aws-batch-schedulingpolicy.json",
     "aws-iot-authorizer.json",
     "aws-iot-jobtemplate.json",
@@ -946,7 +943,6 @@ cached: List[str] = [
     "aws-iam-usertogroupaddition.json",
     "aws-ec2-vpngatewayroutepropagation.json",
     "aws-glue-crawler.json",
-    "aws-apigateway-method.json",
     "aws-ssm-patchbaseline.json",
     "aws-servicediscovery-service.json",
     "aws-waf-webacl.json",
@@ -1041,6 +1037,7 @@ cached: List[str] = [
     "aws-detective-memberinvitation.json",
     "aws-ec2-ipamscope.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-datasync-agent.json",
     "aws-resiliencehub-resiliencypolicy.json",
     "aws-iot-dimension.json",

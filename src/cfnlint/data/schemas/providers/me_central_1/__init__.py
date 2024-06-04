@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::CE::AnomalySubscription",
     "AWS::Shield::DRTAccess",
     "AWS::SSO::Assignment",
@@ -654,6 +655,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-ce-anomalysubscription.json",
     "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
@@ -813,7 +815,6 @@ cached: List[str] = [
     "aws-cloudformation-stackset.json",
     "aws-ec2-route.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-iot-resourcespecificlogging.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
@@ -931,6 +932,7 @@ cached: List[str] = [
     "aws-glue-database.json",
     "aws-neptune-dbcluster.json",
     "aws-backup-backupvault.json",
+    "aws-ec2-customergateway.json",
     "aws-iam-grouppolicy.json",
     "aws-scheduler-schedule.json",
     "aws-waf-bytematchset.json",
@@ -1081,6 +1083,7 @@ cached: List[str] = [
     "aws-ec2-ipamscope.json",
     "aws-ec2-vpcendpoint.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-config-aggregationauthorization.json",
     "aws-datasync-agent.json",
     "aws-iot-dimension.json",

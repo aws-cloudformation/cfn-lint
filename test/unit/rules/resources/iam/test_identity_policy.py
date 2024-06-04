@@ -29,13 +29,13 @@ class TestIdentityPolicies(TestCase):
                 validator=validator, policy=policy, schema={}, policy_type=None
             )
         )
+        self.assertEqual(errs[0].message, "'Statement' is a required property")
+        self.assertListEqual(list(errs[0].path), [])
         self.assertEqual(len(errs), 2, errs)
         self.assertEqual(
-            errs[0].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
+            errs[1].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
         )
-        self.assertListEqual(list(errs[0].path), ["Version"])
-        self.assertEqual(errs[1].message, "'Statement' is a required property")
-        self.assertListEqual(list(errs[1].path), [])
+        self.assertListEqual(list(errs[1].path), ["Version"])
 
     def test_object_multiple_effect(self):
         validator = CfnTemplateValidator()
@@ -76,7 +76,9 @@ class TestIdentityPolicies(TestCase):
         )
 
     def test_object_statements(self):
-        validator = CfnTemplateValidator(context=Context(functions=FUNCTIONS))
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(functions=FUNCTIONS)
+        )
 
         policy = {
             "Version": "2012-10-17",

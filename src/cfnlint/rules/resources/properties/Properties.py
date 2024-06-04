@@ -7,10 +7,10 @@ import logging
 from collections import deque
 from typing import Any
 
-from cfnlint.helpers import FUNCTIONS, REGION_PRIMARY
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
+from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,41 +82,12 @@ class Properties(CfnLintJsonSchema):
             t = "AWS::CloudFormation::CustomResource"
 
         properties = instance.get("Properties", {})
-        cached_regions = []
-        cached_schema = None
-        for region in validator.context.regions:
-            schema = {}
-            try:
-                schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(region, t)
-            except ResourceNotFoundError as e:
-                LOGGER.info(e)
-                continue
-            if schema:
-                if schema.json_schema:
-                    if not schema.is_cached and region != REGION_PRIMARY:
-                        region_validator = validator.evolve(
-                            context=validator.context.evolve(
-                                regions=[region],
-                                path=validator.context.path.evolve(
-                                    cfn_path=deque(["Resources", t, "Properties"]),
-                                ).descend(path="Properties"),
-                            )
-                        )
-                        for err in self._validate_resource(
-                            region_validator, t, properties, schema.json_schema
-                        ):
-                            err.path.appendleft("Properties")
-                            yield err
-
-                    else:
-                        if not cached_schema:
-                            cached_schema = schema
-                        cached_regions.append(region)
-
-        if cached_regions and cached_schema:
+        for regions, schema in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
+            t, validator.context.regions
+        ):
             region_validator = validator.evolve(
                 context=validator.context.evolve(
-                    regions=cached_regions,
+                    regions=regions,
                     path=validator.context.path.evolve(
                         cfn_path=deque(["Resources", t, "Properties"]),
                     ).descend(path="Properties"),
@@ -124,7 +95,7 @@ class Properties(CfnLintJsonSchema):
             )
 
             for err in self._validate_resource(
-                region_validator, t, properties, cached_schema.json_schema
+                region_validator, t, properties, schema.schema
             ):
                 err.path.appendleft("Properties")
                 yield err

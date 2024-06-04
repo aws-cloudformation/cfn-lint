@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::CE::AnomalySubscription",
     "AWS::Shield::DRTAccess",
     "AWS::SSO::Assignment",
@@ -635,6 +636,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-ce-anomalysubscription.json",
     "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
@@ -789,7 +791,6 @@ cached: List[str] = [
     "aws-cloudformation-stackset.json",
     "aws-ec2-route.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
     "aws-wafv2-loggingconfiguration.json",
@@ -902,6 +903,7 @@ cached: List[str] = [
     "aws-networkmanager-site.json",
     "aws-glue-database.json",
     "aws-backup-backupvault.json",
+    "aws-ec2-customergateway.json",
     "aws-waf-bytematchset.json",
     "aws-ec2-routetable.json",
     "aws-rds-dbproxyendpoint.json",
@@ -1034,6 +1036,7 @@ cached: List[str] = [
     "aws-detective-memberinvitation.json",
     "aws-ec2-ipamscope.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-config-aggregationauthorization.json",
     "aws-datasync-agent.json",
     "aws-cognito-userpoolidentityprovider.json",

@@ -22,7 +22,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Callable, Dict
 
-from cfnlint.context import Context
+from cfnlint.context import Context, create_context_for_template
 from cfnlint.jsonschema import _keywords, _keywords_cfn, _resolvers_cfn
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
@@ -41,12 +41,10 @@ from cfnlint.template import Template
 def create(
     validators: Mapping[str, V] | None = None,
     function_filter: FunctionFilter | None = None,
-    context: Context | None = None,
     fn_resolvers: Mapping[str, Any] | None = None,
 ):
     validators_arg = validators or {}
     function_filter_arg = function_filter or FunctionFilter()
-    context_arg = context or Context()
     fn_resolvers_arg = fn_resolvers or {}
 
     @dataclass
@@ -78,8 +76,8 @@ def create(
         function_filter: FunctionFilter = field(
             init=True, default_factory=lambda: function_filter_arg
         )
-        cfn: Template | None = field(default=None)
-        context: Context = field(default_factory=lambda: context_arg)
+        cfn: Template = field(default_factory=lambda: Template(None, {}))
+        context: Context = field(default=None)  # type: ignore
 
         fn_resolvers: Mapping[
             str,
@@ -87,6 +85,8 @@ def create(
         ] = field(init=False, default_factory=lambda: fn_resolvers_arg)
 
         def __post_init__(self):
+            if self.context is None:
+                self.context = create_context_for_template(self.cfn)
             if self.resolver is None:
                 self.resolver = RefResolver.from_schema(
                     schema=self.schema,
@@ -295,7 +295,6 @@ def create(
             self,
             validators: Dict[str, V] | None = None,
             function_filter: FunctionFilter | None = None,
-            context: Context | None = None,
             fn_resolvers: Mapping[str, Callable[["Validator", Any], Any]] | None = None,
         ) -> "Validator":
             """
@@ -312,9 +311,6 @@ def create(
             if function_filter is None:
                 function_filter = self.function_filter
 
-            if context is None:
-                context = self.context
-
             all_fn_resolvers = dict(self.fn_resolvers)
             if fn_resolvers is not None:
                 all_fn_resolvers.update(fn_resolvers)
@@ -322,7 +318,6 @@ def create(
             return create(  # type: ignore
                 validators=all_validators,
                 function_filter=function_filter,
-                context=context,
                 fn_resolvers=all_fn_resolvers,
             )
 

@@ -65,7 +65,6 @@ class Configuration(CfnLintJsonSchema):
             context=validator.context,
         ).evolve(
             context=validator.context.evolve(strict_types=False),
-            cfn=validator.cfn,
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=False,
             ),

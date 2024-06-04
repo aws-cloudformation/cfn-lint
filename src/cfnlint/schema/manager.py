@@ -3,6 +3,8 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import filecmp
 import fnmatch
 import json
@@ -15,7 +17,7 @@ import sys
 import zipfile
 from copy import copy
 from functools import lru_cache
-from typing import Any, Dict, List, Sequence
+from typing import Any, Dict, Iterator, List, Sequence
 
 import jsonpatch
 
@@ -94,6 +96,35 @@ class ProviderSchemaManager:
                 with open(os.path.join(dirpath, filename), "r", encoding="utf-8") as fh:
                     schema = Schema(json.load(fh))
                     self._registry_schemas[schema.type_name] = schema
+
+    def get_resource_schemas_by_regions(
+        self, resource_type: str, regions: Sequence[str]
+    ) -> Iterator[tuple[List[str], Schema]]:
+        """
+        Get unique schemas with their associated regions
+
+        Args:
+            resource_type (str): the :: version of the resource type
+            regions (Sequence[str]): the regions in which we want schems for
+        Returns:
+            Iterator[tuple[list[str], Schema]]: the unique schemas with
+              their associated regions
+        """
+        cached_regions: list[str] = []
+        cached_schema: Schema | None = None
+        for region in regions:
+            try:
+                schema = self.get_resource_schema(region, resource_type)
+            except ResourceNotFoundError:
+                continue
+            if not schema.is_cached and region != REGION_PRIMARY:
+                yield [region], schema
+            else:
+                cached_regions.append(region)
+                cached_schema = schema
+
+        if cached_schema is not None:
+            yield cached_regions, cached_schema
 
     @lru_cache(maxsize=None)
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
@@ -250,7 +281,19 @@ class ProviderSchemaManager:
                 if os.path.isfile(os.path.join(directory, f)) and f != "__init__.py"
             ]
             # There is no schema for CDK but its an allowable type
-            all_types = ["AWS::CDK::Metadata"]
+            all_types = ["AWS::CDK::Metadata", "Module"]
+            with open(f"{directory}module.json", "w", encoding="utf-8") as fh:
+                json.dump(
+                    {
+                        "additionalProperties": True,
+                        "type": "object",
+                        "typeName": "Module",
+                    },
+                    fh,
+                    indent=1,
+                    separators=(",", ": "),
+                    sort_keys=True,
+                )
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
@@ -284,7 +327,7 @@ class ProviderSchemaManager:
             # if the region is not us-east-1 compare the files to those in us-east-1
             # symlink if the files are the same
             if reg.name != self._region_primary.name:
-                cached = []
+                cached = ["Module"]
                 for filename in os.listdir(directory):
                     if filename != "__init__.py":
                         try:
@@ -466,6 +509,8 @@ class ProviderSchemaManager:
         """
         if resource_type.startswith("Custom::"):
             resource_type = "AWS::CloudFormation::CustomResource"
+        if resource_type.endswith("::MODULE"):
+            resource_type = "Module"
         self.get_resource_schema(region=region, resource_type=resource_type)
         return self._schemas[region][resource_type].get_atts
 

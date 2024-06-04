@@ -159,7 +159,7 @@ class RefResolver:
 
         return url, self._cache(url)
 
-    def resolve_cfn_pointer(self, pointer):
+    def resolve_cfn_pointer(self, pointer: str) -> tuple[str, dict]:
         """
         Resolve the given cfn pointer.
 
@@ -171,6 +171,25 @@ class RefResolver:
         # to worry about
 
         schema = self.referrer
+
+        # to handle custom resources
+        if pointer == "/properties/CfnLintAllTypes":
+            return pointer, {
+                "type": [
+                    "string",
+                    "integer",
+                    "number",
+                    "boolean",
+                    "object",
+                    "array",
+                ]
+            }
+        elif pointer == "/properties/CfnLintStringType":
+            return pointer, {
+                "type": [
+                    "string",
+                ]
+            }
 
         ref = pointer.lstrip("/").split("/") if pointer else []
 
@@ -232,7 +251,14 @@ class RefResolver:
 
         try:
             if point == "*":
-                return self._walk_cfn_pointer(document["items"], pointer[1:])
+                if "items" in document:
+                    return self._walk_cfn_pointer(document["items"], pointer[1:])
+                if "additionalProperties" in document and isinstance(
+                    document["additionalProperties"], dict
+                ):
+                    return self._walk_cfn_pointer(
+                        document["additionalProperties"], pointer[1:]
+                    )
             return self._walk_cfn_pointer(document["properties"][point], pointer[1:])
         except (TypeError, LookupError, KeyError, RefResolutionError) as e:
             for c in ["anyOf", "allOf", "oneOf"]:
@@ -245,7 +271,8 @@ class RefResolver:
 
             if e.__class__.__name__ == "RefResolutionError":
                 raise e
-            raise RefResolutionError(f"Unresolvable JSON pointer: {point!r}") from e
+
+            raise RefResolutionError(f"Unresolvable CFN pointer: {point!r}") from e
 
     def resolve_fragment(self, document, fragment):
         """

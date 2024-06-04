@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Location",
+  "/properties/RestApiId"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Method": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "StatusCode": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "API",
+      "AUTHORIZER",
+      "MODEL",
+      "RESOURCE",
+      "METHOD",
+      "PATH_PARAMETER",
+      "QUERY_PARAMETER",
+      "REQUEST_HEADER",
+      "REQUEST_BODY",
+      "RESPONSE",
+      "RESPONSE_HEADER",
+      "RESPONSE_BODY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "RestApiId": {
+      "$ref": "resource-schema.json#/properties/RestApiId"
+     }
+    },
+    "required": [
+     "RestApiId"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DocumentationPartId",
+  "/properties/RestApiId"
+ ],
+ "properties": {
+  "DocumentationPartId": {
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "Properties": {
+   "type": "string"
+  },
+  "RestApiId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DocumentationPartId"
+ ],
+ "required": [
+  "Location",
+  "Properties",
+  "RestApiId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "typeName": "AWS::ApiGateway::DocumentationPart"
+}

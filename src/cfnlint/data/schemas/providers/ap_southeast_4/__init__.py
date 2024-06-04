@@ -3,6 +3,7 @@ from typing import List
 # pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
+    "Module",
     "AWS::CE::AnomalySubscription",
     "AWS::Shield::DRTAccess",
     "AWS::SSO::Assignment",
@@ -572,6 +573,7 @@ types = [
 
 # pylint: disable=too-many-lines
 cached: List[str] = [
+    "Module",
     "aws-ce-anomalysubscription.json",
     "aws-shield-drtaccess.json",
     "aws-sso-assignment.json",
@@ -708,7 +710,6 @@ cached: List[str] = [
     "aws-cloudformation-stackset.json",
     "aws-ec2-route.json",
     "aws-cloudformation-hookversion.json",
-    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
     "aws-wafv2-loggingconfiguration.json",
@@ -808,6 +809,7 @@ cached: List[str] = [
     "aws-servicecatalogappregistry-application.json",
     "aws-glue-database.json",
     "aws-backup-backupvault.json",
+    "aws-ec2-customergateway.json",
     "aws-iam-grouppolicy.json",
     "aws-scheduler-schedule.json",
     "aws-waf-bytematchset.json",
@@ -921,6 +923,7 @@ cached: List[str] = [
     "aws-eks-identityproviderconfig.json",
     "aws-ec2-ipamresourcediscoveryassociation.json",
     "aws-servicecatalogappregistry-attributegroup.json",
+    "aws-mediapackagev2-originendpoint.json",
     "aws-ec2-egressonlyinternetgateway.json",
     "aws-securityhub-insight.json",
     "aws-config-conformancepack.json",
@@ -932,6 +935,7 @@ cached: List[str] = [
     "aws-lakeformation-resource.json",
     "aws-ec2-ipamscope.json",
     "aws-rds-eventsubscription.json",
+    "module.json",
     "aws-config-aggregationauthorization.json",
     "aws-datasync-agent.json",
     "aws-logs-loggroup.json",

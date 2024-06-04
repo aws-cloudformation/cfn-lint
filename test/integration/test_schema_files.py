@@ -50,7 +50,6 @@ class TestSchemaFiles(TestCase):
         "Resources/*/UpdatePolicy",
         "Resources/*/UpdateReplacePolicy",
     ]
-    _keywords_built = False
 
     def setUp(self) -> None:
         schema_path = os.path.join(os.path.dirname(cfnlint.__file__), "data", "schemas")
@@ -201,6 +200,8 @@ class TestSchemaFiles(TestCase):
                     # not allowed but true with this resource
                     if filename == "aws-cloudformation-customresource.json":
                         d["additionalProperties"] = False
+                    if filename == "module.json":
+                        continue
                     errs = list(validator.iter_errors(d))
                     self.assertListEqual(
                         errs, [], f"Error with {dirpath}/{filename}: {errs}"
@@ -210,8 +211,6 @@ class TestSchemaFiles(TestCase):
                         schema_resolver, f"{dirpath}/{filename}"
                     )
                     self.build_keywords(schema_resolver)
-
-        self._keywords_built = True
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)
@@ -260,8 +259,6 @@ class TestSchemaFiles(TestCase):
                     )
 
     def test_x_keywords(self):
-        if not self._keywords_built:
-            self.skipTest("Keywords not built")
         root_dir = pathlib.Path(__file__).parent.parent.parent / "src/cfnlint/rules"
         rules = load_plugins(
             str(root_dir),

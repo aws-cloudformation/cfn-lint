@@ -56,7 +56,7 @@ class Validator(Protocol):
     schema: Mapping | bool
     resolver: RefResolver
 
-    cfn: Template | None
+    cfn: Template
     context: Context
     function_filter: FunctionFilter
     cfn_path: deque[str]
