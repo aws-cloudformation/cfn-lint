@@ -59,9 +59,13 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         if not validator.is_type(map_name, "string"):
             continue
         for top_level_key, top_v, _ in validator.resolve_value(instance[1]):
+            if validator.is_type(top_level_key, "integer"):
+                top_level_key = str(top_level_key)
             if not validator.is_type(top_level_key, "string"):
                 continue
-            for second_level_key, second_v, _ in validator.resolve_value(instance[2]):
+            for second_level_key, second_v, err in validator.resolve_value(instance[2]):
+                if validator.is_type(second_level_key, "integer"):
+                    second_level_key = str(second_level_key)
                 if not validator.is_type(second_level_key, "string"):
                     continue
                 try:
@@ -90,7 +94,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                             ),
                         ), ValidationError(
                             f"{top_level_key!r} is not one of {top_level_keys!r}",
-                            path=[0],
+                            path=[1],
                         )
                         continue
 
@@ -111,7 +115,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                             ),
                         ), ValidationError(
                             f"{second_level_key!r} is not one of {second_level_keys!r}",
-                            path=[0],
+                            path=[2],
                         )
                         continue
 
