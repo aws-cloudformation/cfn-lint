@@ -1,0 +1,492 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TriggerEventSource",
+  "/properties/InstanceArn"
+ ],
+ "definitions": {
+  "Actions": {
+   "additionalProperties": false,
+   "properties": {
+    "AssignContactCategoryActions": {
+     "$ref": "#/definitions/AssignContactCategoryActions"
+    },
+    "CreateCaseActions": {
+     "$ref": "#/definitions/CreateCaseActions"
+    },
+    "EndAssociatedTasksActions": {
+     "$ref": "#/definitions/EndAssociatedTasksActions"
+    },
+    "EventBridgeActions": {
+     "$ref": "#/definitions/EventBridgeActions"
+    },
+    "SendNotificationActions": {
+     "$ref": "#/definitions/SendNotificationActions"
+    },
+    "SubmitAutoEvaluationActions": {
+     "$ref": "#/definitions/SubmitAutoEvaluationActions"
+    },
+    "TaskActions": {
+     "$ref": "#/definitions/TaskActions"
+    },
+    "UpdateCaseActions": {
+     "$ref": "#/definitions/UpdateCaseActions"
+    }
+   },
+   "type": "object"
+  },
+  "AssignContactCategoryAction": {
+   "type": "object"
+  },
+  "AssignContactCategoryActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AssignContactCategoryAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreateCaseAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Fields": {
+     "$ref": "#/definitions/Fields"
+    },
+    "TemplateId": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Fields",
+    "TemplateId"
+   ],
+   "type": "object"
+  },
+  "CreateCaseActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CreateCaseAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EndAssociatedTasksAction": {
+   "type": "object"
+  },
+  "EndAssociatedTasksActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EndAssociatedTasksAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EventBridgeAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^[a-zA-Z0-9._-]{1,100}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "EventBridgeActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventBridgeAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/FieldValue"
+    }
+   },
+   "required": [
+    "Id",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FieldValue": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "type": "number"
+    },
+    "EmptyValue": {
+     "type": "object"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Fields": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Field"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NotificationRecipientType": {
+   "additionalProperties": false,
+   "properties": {
+    "UserArns": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/UserArn"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "UserTags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^(?=.{1,128}$).+$": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "type": "object"
+  },
+  "Reference": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "URL",
+      "ATTACHMENT",
+      "NUMBER",
+      "STRING",
+      "DATE",
+      "EMAIL"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^(/|https:)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RuleTriggerEventSource": {
+   "additionalProperties": false,
+   "properties": {
+    "EventSourceName": {
+     "enum": [
+      "OnContactEvaluationSubmit",
+      "OnPostCallAnalysisAvailable",
+      "OnRealTimeCallAnalysisAvailable",
+      "OnRealTimeChatAnalysisAvailable",
+      "OnPostChatAnalysisAvailable",
+      "OnZendeskTicketCreate",
+      "OnZendeskTicketStatusUpdate",
+      "OnSalesforceCaseCreate",
+      "OnMetricDataUpdate",
+      "OnCaseCreate",
+      "OnCaseUpdate"
+     ],
+     "type": "string"
+    },
+    "IntegrationAssociationArn": {
+     "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/integration-association/[-a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventSourceName"
+   ],
+   "type": "object"
+  },
+  "SendNotificationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ContentType": {
+     "enum": [
+      "PLAIN_TEXT"
+     ],
+     "type": "string"
+    },
+    "DeliveryMethod": {
+     "enum": [
+      "EMAIL"
+     ],
+     "type": "string"
+    },
+    "Recipient": {
+     "$ref": "#/definitions/NotificationRecipientType"
+    },
+    "Subject": {
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryMethod",
+    "Content",
+    "Recipient",
+    "ContentType"
+   ],
+   "type": "object"
+  },
+  "SendNotificationActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SendNotificationAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubmitAutoEvaluationAction": {
+   "additionalProperties": false,
+   "properties": {
+    "EvaluationFormArn": {
+     "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/evaluation-form/[-a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EvaluationFormArn"
+   ],
+   "type": "object"
+  },
+  "SubmitAutoEvaluationActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubmitAutoEvaluationAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TaskAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ContactFlowArn": {
+     "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 4096,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "References": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^(?=.{1,4096}$).+$": {
+       "$ref": "#/definitions/Reference"
+      }
+     }
+    }
+   },
+   "required": [
+    "Name",
+    "ContactFlowArn"
+   ],
+   "type": "object"
+  },
+  "TaskActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TaskAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpdateCaseAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Fields": {
+     "$ref": "#/definitions/Fields"
+    }
+   },
+   "required": [
+    "Fields"
+   ],
+   "type": "object"
+  },
+  "UpdateCaseActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/UpdateCaseAction"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserArn": {
+   "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateRule",
+    "cases:GetTemplate",
+    "cases:ListFields",
+    "cases:ListFieldOptions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteRule",
+    "connect:UntagResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeRule"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateRule",
+    "cases:GetTemplate",
+    "cases:ListFields",
+    "cases:ListFieldOptions",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleArn"
+ ],
+ "properties": {
+  "Actions": {
+   "$ref": "#/definitions/Actions"
+  },
+  "Function": {
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9._-]{1,200}$",
+   "type": "string"
+  },
+  "PublishStatus": {
+   "enum": [
+    "DRAFT",
+    "PUBLISHED"
+   ],
+   "type": "string"
+  },
+  "RuleArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/rule/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TriggerEventSource": {
+   "$ref": "#/definitions/RuleTriggerEventSource"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Name",
+  "InstanceArn",
+  "TriggerEventSource",
+  "Function",
+  "Actions",
+  "PublishStatus"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::Rule"
+}

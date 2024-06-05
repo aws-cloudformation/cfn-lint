@@ -1325,7 +1325,6 @@ cached: List[str] = [
     "aws-kinesisanalyticsv2-applicationoutput.json",
     "aws-securityhub-configurationpolicy.json",
     "aws-medialive-inputsecuritygroup.json",
-    "aws-sagemaker-domain.json",
     "aws-codebuild-fleet.json",
     "aws-certificatemanager-certificate.json",
     "aws-glue-schemaversionmetadata.json",
