@@ -7,7 +7,7 @@ from typing import Any
 
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
-from cfnlint.schema import ResourceNotFoundError
+from cfnlint.schema.resolver import RefResolutionError
 
 
 class ReadOnly(CfnLintKeyword):
@@ -43,5 +43,5 @@ class ReadOnly(CfnLintKeyword):
                     f"({validator.context.path.cfn_path[-1]!r})"
                 )
 
-        except ResourceNotFoundError:
+        except RefResolutionError:
             pass
