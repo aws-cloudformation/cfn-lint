@@ -14,7 +14,7 @@ from typing import Any, Iterator, Sequence
 
 from update_schemas_manually import Patch, ResourcePatch, build_patches
 
-from cfnlint.schema_resolver._resolver import RefResolver
+from cfnlint.schema.resolver import RefResolver
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -167,30 +167,30 @@ def main():
                         )
                     )
 
-            # for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
-            #    if path[-2] == "properties":
-            #        resource_patches.extend(
-            #            _create_security_group_ids_patch(
-            #                resource_type, "#/" + "/".join(path), resolver
-            #            )
-            #        )
+            for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_security_group_ids_patch(
+                            resource_type, "#/" + "/".join(path), resolver
+                        )
+                    )
 
-            # for path in _descend(
-            #    obj,
-            #    [
-            #        "DefaultSecurityGroup",
-            #        "SourceSecurityGroupId",
-            #        "DestinationSecurityGroupId",
-            #        "SecurityGroup",
-            #        "SecurityGroupId",
-            #    ],
-            # ):
-            #    if path[-2] == "properties":
-            #        resource_patches.extend(
-            #            _create_security_group_id(
-            #                resource_type, "#/" + "/".join(path), resolver
-            #            )
-            #        )
+            for path in _descend(
+                obj,
+                [
+                    "DefaultSecurityGroup",
+                    "SourceSecurityGroupId",
+                    "DestinationSecurityGroupId",
+                    "SecurityGroup",
+                    "SecurityGroupId",
+                ],
+            ):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_security_group_id(
+                            resource_type, "#/" + "/".join(path), resolver
+                        )
+                    )
 
             if resource_patches:
                 patches.append(

@@ -792,6 +792,7 @@ cached: List[str] = [
     "aws-fis-experimenttemplate.json",
     "aws-codecommit-repository.json",
     "aws-cloudformation-hookversion.json",
+    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-iot-resourcespecificlogging.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
