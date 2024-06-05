@@ -28,12 +28,19 @@
     "events:DescribeEventBus",
     "events:PutPermission",
     "events:ListTagsForResource",
-    "events:TagResource"
+    "events:TagResource",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "delete": {
    "permissions": [
     "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "events:ListTagsForResource",
+    "events:UntagResource",
+    "events:RemovePermission",
     "events:DeleteEventBus"
    ]
   },
@@ -54,7 +61,11 @@
     "events:TagResource",
     "events:UntagResource",
     "events:PutPermission",
-    "events:DescribeEventBus"
+    "events:DescribeEventBus",
+    "events:UpdateEventBus",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   }
  },
@@ -65,7 +76,22 @@
   "Arn": {
    "type": "string"
   },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
   "EventSourceName": {
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
    "type": "string"
   },
   "Name": {

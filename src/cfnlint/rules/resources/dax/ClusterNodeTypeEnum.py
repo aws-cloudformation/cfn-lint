@@ -12,7 +12,7 @@ class ClusterNodeTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3672"
     shortdesc = "Validate the cluster node type for a DAX Cluster"
     description = (
-        "Validates the instance types based on region "
+        "Validates the DAX cluster instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

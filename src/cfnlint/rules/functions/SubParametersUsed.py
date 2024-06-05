@@ -17,7 +17,7 @@ class SubParametersUsed(CloudFormationLintRule):
     """Check if Sub Parameters are used"""
 
     id = "W1019"
-    shortdesc = "Sub validation of parameters"
+    shortdesc = "Validate that parameters to a Fn::Sub are used"
     description = "Validate that Fn::Sub Parameters are used"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
     tags = ["functions", "sub"]

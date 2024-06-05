@@ -12,7 +12,7 @@ class NodeNodeConfigurationInstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3617"
     shortdesc = "Validate ManagedBlockchain instance type"
     description = (
-        "Validates the instance types based on region "
+        "Validates the ManagedBlockchain instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

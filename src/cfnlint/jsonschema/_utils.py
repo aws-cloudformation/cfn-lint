@@ -19,18 +19,8 @@ SPDX-License-Identifier: MIT
 
 import itertools
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 import regex as re
-
-
-def id_of(schema: Any) -> str:
-    """
-    Return the ID of a schema for recent JSON Schema drafts.
-    """
-    if schema is True or schema is False:
-        return ""
-    return schema.get("$id", "")  # type: ignore
 
 
 class Unset:
@@ -73,18 +63,6 @@ def custom_msg(validator, schema):
         return messages.get(validator)
 
     return None
-
-
-def ensure_list(thing):
-    """
-    Wrap ``thing`` in a list if it's a single str.
-
-    Otherwise, return it unchanged.
-    """
-
-    if isinstance(thing, str):
-        return [thing]
-    return thing
 
 
 def _mapping_equal(one, two):

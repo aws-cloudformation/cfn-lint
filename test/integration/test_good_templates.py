@@ -217,7 +217,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "test/fixtures/templates/good/transform_serverless_globals.yaml"
                         )
                     ),
-                    "Id": "fc9f2534-f4f8-092b-52d6-dafd2d429b67",
+                    "Id": "878e389d-52d8-e7f2-fecd-614651007ecd",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 10},
@@ -228,14 +228,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     "ParentId": None,
                     "Rule": {
                         "Description": (
-                            "Check if an EOL Lambda Runtime is specified and give an"
-                            " error if used. "
+                            "Check the lambda runtime has reached the end of life"
                         ),
                         "Id": "E2531",
                         "ShortDescription": (
-                            "Check if EOL Lambda Function Runtimes are used"
+                            "Validate if lambda runtime is deprecated"
                         ),
-                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html",
+                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
                     },
                 }
             ],

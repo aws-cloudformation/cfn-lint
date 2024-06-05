@@ -10,6 +10,7 @@ import pytest
 from cfnlint.context import create_context_for_template
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.rules import CfnLintKeyword
 from cfnlint.rules.functions.GetAtt import GetAtt
 from cfnlint.template import Template
 
@@ -40,13 +41,35 @@ def context(cfn):
     return create_context_for_template(cfn)
 
 
+class _Pass(CfnLintKeyword):
+    id = "AAAAA"
+
+    def __init__(self) -> None:
+        super().__init__(keywords=["*"])
+
+    def validate(self, validator, s, instance, schema):
+        return
+        yield
+
+
+class _Fail(CfnLintKeyword):
+    id = "BBBBB"
+
+    def __init__(self) -> None:
+        super().__init__(keywords=["*"])
+
+    def validate(self, validator, s, instance, schema):
+        yield ValidationError("Fail")
+
+
 @pytest.mark.parametrize(
-    "name,instance,schema,context_evolve,expected",
+    "name,instance,schema,context_evolve,child_rules,expected",
     [
         (
             "Valid GetAtt with a good attribute",
             {"Fn::GetAtt": ["MyBucket", "Arn"]},
             {"type": "string"},
+            {},
             {},
             [],
         ),
@@ -54,6 +77,7 @@ def context(cfn):
             "Invalid GetAtt with bad attribute",
             {"Fn::GetAtt": ["MyBucket", "foo"]},
             {"type": "string"},
+            {},
             {},
             [
                 ValidationError(
@@ -72,6 +96,7 @@ def context(cfn):
             {"Fn::GetAtt": ["Foo", "bar"]},
             {"type": "string"},
             {},
+            {},
             [
                 ValidationError(
                     "'Foo' is not one of ['MyBucket']",
@@ -85,6 +110,7 @@ def context(cfn):
             "Invalid GetAtt with a bad type",
             {"Fn::GetAtt": {"foo": "bar"}},
             {"type": "string"},
+            {},
             {},
             [
                 ValidationError(
@@ -100,6 +126,7 @@ def context(cfn):
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": "array"},
             {},
+            {},
             [
                 ValidationError(
                     "{'Fn::GetAtt': 'MyBucket.Arn'} is not of type 'array'",
@@ -113,6 +140,7 @@ def context(cfn):
             "Invalid GetAtt with a bad response type and multiple types",
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "object"]},
+            {},
             {},
             [
                 ValidationError(
@@ -128,6 +156,7 @@ def context(cfn):
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "string"]},
             {},
+            {},
             [],
         ),
         (
@@ -135,6 +164,7 @@ def context(cfn):
             {"Fn::GetAtt": [{"Ref": "MyResourceParameter"}, "Arn"]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            {},
             [],
         ),
         (
@@ -142,6 +172,7 @@ def context(cfn):
             {"Fn::GetAtt": ["MyBucket", {"Ref": "MyAttributeParameter"}]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            {},
             [],
         ),
         (
@@ -149,6 +180,7 @@ def context(cfn):
             {"Fn::GetAtt": ["MyBucket", {"Ref": "MyResourceParameter"}]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            {},
             [
                 ValidationError(
                     (
@@ -167,6 +199,7 @@ def context(cfn):
             {"Fn::GetAtt": [{"Ref": "MyAttributeParameter"}, "Arn"]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            {},
             [
                 ValidationError(
                     (
@@ -179,10 +212,25 @@ def context(cfn):
                 )
             ],
         ),
+        (
+            "Valid GetAtt with child rules",
+            {"Fn::GetAtt": ["MyBucket", "Arn"]},
+            {"type": "string"},
+            {},
+            {
+                "AAAAA": _Pass(),
+                "BBBBB": _Fail(),
+                "CCCCC": None,
+            },
+            [ValidationError("Fail")],
+        ),
     ],
 )
-def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
+def test_validate(
+    name, instance, schema, context_evolve, child_rules, expected, rule, context, cfn
+):
     context = context.evolve(**context_evolve)
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+    rule.child_rules = child_rules
+    validator = CfnTemplateValidator({}, context=context, cfn=cfn)
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

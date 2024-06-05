@@ -65,12 +65,7 @@ _secrets_manager_arn = {
 class DynamicReference(BaseFn):
     id = "E1050"
     shortdesc = "Validate the structure of a dynamic reference"
-    description = (
-        "Dynamic References Secure Strings are only supported for a small set of"
-        " resource properties.  Validate that they are being used in the correct"
-        " location when checking values and Fn::Sub in resource properties. Currently"
-        " doesn't check outputs, maps, conditions, parameters, and descriptions."
-    )
+    description = "Make sure dynamic reference strings have the correct syntax"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html"
     tags = ["functions", "dynamic reference"]
 

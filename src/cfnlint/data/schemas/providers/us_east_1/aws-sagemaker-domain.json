@@ -122,11 +122,26 @@
   "DefaultSpaceSettings": {
    "additionalProperties": false,
    "properties": {
+    "CustomFileSystemConfigs": {
+     "items": {
+      "$ref": "#/definitions/CustomFileSystemConfig"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CustomPosixUserConfig": {
+     "$ref": "#/definitions/CustomPosixUserConfig"
+    },
     "ExecutionRole": {
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/JupyterLabAppSettings"
     },
     "JupyterServerAppSettings": {
      "$ref": "#/definitions/JupyterServerAppSettings"
@@ -145,6 +160,9 @@
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/DefaultSpaceStorageSettings"
     }
    },
    "required": [
@@ -720,6 +738,7 @@
    "type": "string"
   },
   "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
    "maxLength": 32,
    "pattern": "[-0-9a-zA-Z]+",
    "type": "string"

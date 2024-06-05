@@ -348,6 +348,8 @@ class Resource(_Ref):
         if not isinstance(t, str):
             raise ValueError("Type must be a string")
         self.type = t
+        if self.type.startswith("Custom::"):
+            self.type = "AWS::CloudFormation::CustomResource"
 
     @property
     def get_atts(self, region: str = "us-east-1") -> AttributeDict:

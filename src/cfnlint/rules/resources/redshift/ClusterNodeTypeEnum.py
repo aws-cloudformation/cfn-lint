@@ -12,7 +12,7 @@ class ClusterNodeTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3667"
     shortdesc = "Validate RedShift cluster node type"
     description = (
-        "Validates the instance types based on region "
+        "Validates the RedShift instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

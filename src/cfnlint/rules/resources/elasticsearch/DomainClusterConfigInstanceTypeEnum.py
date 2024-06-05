@@ -12,7 +12,7 @@ class DomainClusterConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3652"
     shortdesc = "Validate Elasticsearch domain cluster instance"
     description = (
-        "Validates the instance types based on region "
+        "Validates the Elasticsearch instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

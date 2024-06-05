@@ -32,7 +32,15 @@ def test_cfn_lint_rules_have_validate_function():
         )
     )
 
+    parent_rules = [
+        "E1010",
+        "E1101",
+        "E1020",
+    ]
+
     for rule in rules:
         assert hasattr(rule, "validate")
         assert callable(rule.validate)
-        assert "E1101" in rule._parent_rules
+        assert all(
+            r in parent_rules for r in rule._parent_rules
+        ), f"{rule._parent_rules!r} not in {parent_rules!r}"

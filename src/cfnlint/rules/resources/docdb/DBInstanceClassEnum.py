@@ -12,7 +12,7 @@ class DBInstanceClassEnum(CfnLintJsonSchemaRegional):
     id = "E3620"
     shortdesc = "Validate a DocDB DB Instance class"
     description = (
-        "Validates the instance types based on region "
+        "Validates the DocDB instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

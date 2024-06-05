@@ -5,6 +5,23 @@
   "/properties/AddonName"
  ],
  "definitions": {
+  "PodIdentityAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "pattern": "^arn:aws(-cn|-us-gov|-iso(-[a-z])?)?:iam::\\d{12}:(role)\\/*",
+     "type": "string"
+    },
+    "ServiceAccount": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ServiceAccount",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -32,13 +49,16 @@
     "eks:CreateAddon",
     "eks:DescribeAddon",
     "eks:TagResource",
-    "iam:PassRole"
+    "iam:PassRole",
+    "iam:GetRole",
+    "eks:CreatePodIdentityAssociation"
    ]
   },
   "delete": {
    "permissions": [
     "eks:DeleteAddon",
-    "eks:DescribeAddon"
+    "eks:DescribeAddon",
+    "eks:DeletePodIdentityAssociation"
    ]
   },
   "list": {
@@ -64,12 +84,15 @@
   "update": {
    "permissions": [
     "iam:PassRole",
+    "iam:GetRole",
     "eks:UpdateAddon",
     "eks:DescribeAddon",
     "eks:DescribeUpdate",
     "eks:ListTagsForResource",
     "eks:TagResource",
-    "eks:UntagResource"
+    "eks:UntagResource",
+    "eks:CreatePodIdentityAssociation",
+    "eks:DeletePodIdentityAssociation"
    ]
   }
  },
@@ -96,6 +119,14 @@
   "ConfigurationValues": {
    "minLength": 1,
    "type": "string"
+  },
+  "PodIdentityAssociations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PodIdentityAssociation"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "PreserveOnDelete": {
    "type": "boolean"
@@ -140,6 +171,7 @@
  "typeName": "AWS::EKS::Addon",
  "writeOnlyProperties": [
   "/properties/ResolveConflicts",
-  "/properties/PreserveOnDelete"
+  "/properties/PreserveOnDelete",
+  "/properties/PodIdentityAssociations"
  ]
 }

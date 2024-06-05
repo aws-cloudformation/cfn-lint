@@ -23,10 +23,10 @@ from typing import Any, Dict, Sequence
 
 import regex as re
 
+from cfnlint.helpers import ensure_list
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import ValidationResult
 from cfnlint.jsonschema._utils import (
-    ensure_list,
     equal,
     find_additional_properties,
     unbool,
@@ -247,9 +247,9 @@ def exclusiveMinimum(
 def format(
     validator: Validator, format: Any, instance: Any, schema: Dict[str, Any]
 ) -> ValidationResult:
-    if validator._format_checker is not None:  # type: ignore
+    if validator.format_checker is not None:  # type: ignore
         try:
-            validator._format_checker.check(instance, format)  # type: ignore
+            validator.format_checker.check(instance, format)  # type: ignore
         except FormatError as error:
             yield ValidationError(error.message, cause=error.cause)
 

@@ -27,15 +27,16 @@ class TestFormatters(BaseCliTestCase):
 
         self.assertIn(
             (
-                '<testcase name="I1002 Template size limit"'
+                '<testcase name="I1002 Validate approaching the template size limit"'
                 ' url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>'
             ),
             result,
         )
         self.assertIn(
             (
-                '<testcase name="I1003 Template description limit"'
-                ' url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>'
+                '<testcase name="I1003 Validate if we are approaching the '
+                'max size of a description" '
+                'url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>'
             ),
             result,
         )

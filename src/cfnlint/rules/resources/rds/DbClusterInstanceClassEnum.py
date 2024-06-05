@@ -10,9 +10,9 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchema
 
 class DbClusterInstanceClassEnum(CfnLintJsonSchemaRegional):
     id = "E3694"
-    shortdesc = "Validates RDS DB Instance Class"
+    shortdesc = "Validates RDS DB Cluster instance class"
     description = (
-        "Validates the instance types based on region "
+        "Validates the RDS DB Cluster instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

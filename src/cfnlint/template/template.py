@@ -324,12 +324,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         """
         results = GetAtts(self.regions)
 
-        resources = self.template.get("Resources", {})
-
-        for name, value in resources.items():
-            resource_type = value.get("Type")
-            if isinstance(resource_type, str):
-                results.add(name, resource_type)
+        for name, value in self.context.resources.items():
+            results.add(name, value.type)
 
         return results
 

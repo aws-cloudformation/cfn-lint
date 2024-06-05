@@ -9,8 +9,9 @@ import json
 from typing import Any, List
 
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import RefResolver, Validator
+from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
+from cfnlint.schema.resolver import RefResolver
 
 
 # pylint: disable=unused-argument
@@ -58,10 +59,10 @@ class Policy(CfnLintJsonSchema):
                     validators={
                         "scalarOrArray": _scalar_or_array,
                     },
+                )(schema=self.identity_schema).evolve(
                     context=validator.context.evolve(
                         functions=[],
                     ),
-                )(schema=self.identity_schema).evolve(
                     resolver=self.resolver,
                 )
                 policy = json.loads(policy)
@@ -73,6 +74,8 @@ class Policy(CfnLintJsonSchema):
                     "scalarOrArray": _scalar_or_array,
                 },
             )(schema=self.identity_schema).evolve(
+                cfn=validator.cfn,
+                context=validator.context,
                 resolver=self.resolver,
             )
 

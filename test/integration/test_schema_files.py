@@ -16,10 +16,9 @@ import pytest
 import regex as re
 
 import cfnlint
-from cfnlint.helpers import REGIONS, load_plugins, load_resource
-from cfnlint.jsonschema import RefResolver, StandardValidator, ValidationError
-from cfnlint.jsonschema._utils import ensure_list
-from cfnlint.schema._pointer import resolve_pointer
+from cfnlint.helpers import REGIONS, ensure_list, load_plugins, load_resource
+from cfnlint.jsonschema import StandardValidator, ValidationError
+from cfnlint.schema.resolver import RefResolutionError, RefResolver
 
 
 @pytest.mark.data
@@ -27,6 +26,7 @@ class TestSchemaFiles(TestCase):
     """Test schema files"""
 
     _found_keywords: List[str] = [
+        "*",
         "Conditions",
         "Description",
         "Mappings",
@@ -85,7 +85,9 @@ class TestSchemaFiles(TestCase):
         except Exception:
             yield ValidationError(f"Pattern doesn't compile: {patrn}")
 
-    def validate_basic_schema_details(self, d, filepath):
+    def validate_basic_schema_details(
+        self, schema_resolver: RefResolver, filepath: str
+    ):
         """
         Validate that readOnly, writeOnly, etc are valid
         """
@@ -100,13 +102,15 @@ class TestSchemaFiles(TestCase):
             "primaryIdentifier",
         ]
         for section in sections:
-            for prop in d.get(section, []):
+            for prop in schema_resolver.referrer.get(section, []):
                 try:
-                    self.assertIsNotNone(resolve_pointer(d, prop))
-                except KeyError:
+                    self.assertIsNotNone(schema_resolver.resolve_cfn_pointer(prop))
+                except RefResolutionError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
-    def _build_keywords(self, obj: Any, spec: Any, refs: list[str] | None = None):
+    def _build_keywords(
+        self, obj: Any, schema_resolver: RefResolver, refs: list[str] | None = None
+    ):
         if refs is None:
             refs = []
         if not isinstance(obj, dict):
@@ -117,11 +121,13 @@ class TestSchemaFiles(TestCase):
             if "object" in ensure_list(obj["type"]):
                 if "properties" in obj:
                     for k, v in obj["properties"].items():
-                        for item in self._build_keywords(v, spec, refs):
+                        for item in self._build_keywords(v, schema_resolver, refs):
                             yield [k] + item
             if "array" in ensure_list(obj["type"]):
                 if "items" in obj:
-                    for item in self._build_keywords(obj["items"], spec, refs):
+                    for item in self._build_keywords(
+                        obj["items"], schema_resolver, refs
+                    ):
                         yield ["*"] + item
 
         if "$ref" in obj:
@@ -129,21 +135,30 @@ class TestSchemaFiles(TestCase):
             if ref in refs:
                 yield []
                 return
+            _, resolved_schema = schema_resolver.resolve(ref)
             for item in self._build_keywords(
-                resolve_pointer(spec, ref), spec, refs + [ref]
+                resolved_schema, schema_resolver, refs + [ref]
             ):
                 yield item
 
         yield []
 
-    def build_keywords(self, spec):
+    def build_keywords(self, schema_resolver):
         self._found_keywords.append(
-            "/".join(["Resources", spec["typeName"], "Properties"])
+            "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
         )
-        for k, v in spec.get("properties").items():
-            for item in self._build_keywords(v, spec):
+        for k, v in schema_resolver.referrer.get("properties").items():
+            for item in self._build_keywords(v, schema_resolver):
                 self._found_keywords.append(
-                    "/".join(["Resources", spec["typeName"], "Properties", k] + item)
+                    "/".join(
+                        [
+                            "Resources",
+                            schema_resolver.referrer["typeName"],
+                            "Properties",
+                            k,
+                        ]
+                        + item
+                    )
                 )
 
     def test_data_module_specs(self):
@@ -185,12 +200,17 @@ class TestSchemaFiles(TestCase):
                     # not allowed but true with this resource
                     if filename == "aws-cloudformation-customresource.json":
                         d["additionalProperties"] = False
+                    if filename == "module.json":
+                        continue
                     errs = list(validator.iter_errors(d))
                     self.assertListEqual(
                         errs, [], f"Error with {dirpath}/{filename}: {errs}"
                     )
-                    self.validate_basic_schema_details(d, f"{dirpath}/{filename}")
-                    self.build_keywords(d)
+                    schema_resolver = RefResolver(d)
+                    self.validate_basic_schema_details(
+                        schema_resolver, f"{dirpath}/{filename}"
+                    )
+                    self.build_keywords(schema_resolver)
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)
@@ -233,7 +253,10 @@ class TestSchemaFiles(TestCase):
                     self.assertListEqual(
                         errs, [], f"Error with {dirpath}/{filename}: {errs}"
                     )
-                    self.validate_basic_schema_details(d, f"{dirpath}/{filename}")
+                    schema_resolver = RefResolver(d)
+                    self.validate_basic_schema_details(
+                        schema_resolver, f"{dirpath}/{filename}"
+                    )
 
     def test_x_keywords(self):
         root_dir = pathlib.Path(__file__).parent.parent.parent / "src/cfnlint/rules"

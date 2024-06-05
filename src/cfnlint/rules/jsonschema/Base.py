@@ -10,8 +10,8 @@ from typing import Any, Dict, Sequence
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import V, ValidationError, Validator
-from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.schema.resolver import RefResolver
 
 LOGGER = logging.getLogger("cfnlint.rules.jsonschema")
 

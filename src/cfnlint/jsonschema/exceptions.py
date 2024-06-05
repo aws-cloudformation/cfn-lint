@@ -25,8 +25,6 @@ from pprint import pformat
 from textwrap import dedent, indent
 from typing import TYPE_CHECKING, ClassVar, Deque, Tuple, Union
 
-import attr
-
 from cfnlint.jsonschema import _utils
 
 if TYPE_CHECKING:
@@ -198,18 +196,6 @@ class SchemaError(_Error):
 
     _word_for_schema_in_error_message = "metaschema"
     _word_for_instance_in_error_message = "schema"
-
-
-@attr.s(hash=True)
-class RefResolutionError(Exception):
-    """
-    A ref could not be resolved.
-    """
-
-    _cause = attr.ib()
-
-    def __str__(self):
-        return str(self._cause)
 
 
 class UnknownType(Exception):

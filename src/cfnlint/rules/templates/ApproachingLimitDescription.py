@@ -13,7 +13,7 @@ class ApproachingLimitDescription(CloudFormationLintRule):
     """Check Template Description Size"""
 
     id = "I1003"
-    shortdesc = "Template description limit"
+    shortdesc = "Validate if we are approaching the max size of a description"
     description = (
         "Check if the size of the template description is approaching the upper limit"
     )

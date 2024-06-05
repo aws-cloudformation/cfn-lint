@@ -8,9 +8,8 @@ from __future__ import annotations
 from collections import namedtuple
 from typing import Any, Dict, List, Tuple
 
-from cfnlint.helpers import ToPy
+from cfnlint.helpers import ToPy, ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.jsonschema._utils import ensure_list
 from cfnlint.rules import CloudFormationLintRule
 
 SchemaDetails = namedtuple("SchemaDetails", ["module", "filename"])
@@ -73,20 +72,25 @@ class BaseFn(CloudFormationLintRule):
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 yield err
 
+    def _resolve_ref(self, validator, schema) -> Any:
+
+        resolve = getattr(validator.resolver, "resolve", None)
+        ref = schema["$ref"]
+        if resolve is None:
+            resolved = validator.resolver.resolving(ref)
+        else:
+            _, resolved = validator.resolver.resolve(ref)
+
+        return resolved
+
     def resolve_type(self, validator, schema) -> List[str]:
         if "type" in schema:
             return ensure_list(schema["type"])  # type: ignore
 
         if "$ref" in schema:
-            resolve = getattr(validator.resolver, "resolve", None)
-            ref = schema["$ref"]
-            if resolve is None:
-                resolved = validator.resolver.resolving(ref)
-            else:
-                _, resolved = validator.resolver.resolve(ref)
+            resolved = self._resolve_ref(validator, schema)
 
-            if "type" in resolved:
-                return ensure_list(resolved["type"])  # type: ignore
+            return self.resolve_type(validator, resolved)
 
         return []
 

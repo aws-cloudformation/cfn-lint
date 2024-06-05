@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AdMarkerPassthrough": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AvailSuppression": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "enum": [
+      "OFF",
+      "BEHIND_LIVE_EDGE"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Bumper": {
+   "additionalProperties": false,
+   "properties": {
+    "EndUrl": {
+     "type": "string"
+    },
+    "StartUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CdnConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdSegmentUrlPrefix": {
+     "type": "string"
+    },
+    "ContentSegmentUrlPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigurationAliases": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "player_params\\.\\w+\\Z": {
+     "type": "object"
+    }
+   }
+  },
+  "DashConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestEndpointPrefix": {
+     "type": "string"
+    },
+    "MpdLocation": {
+     "type": "string"
+    },
+    "OriginManifestType": {
+     "enum": [
+      "SINGLE_PERIOD",
+      "MULTI_PERIOD"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestEndpointPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LivePreRollConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdDecisionServerUrl": {
+     "type": "string"
+    },
+    "MaxDurationSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestProcessingRules": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkerPassthrough": {
+     "$ref": "#/definitions/AdMarkerPassthrough"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediatailor:PutPlaybackConfiguration",
+    "mediatailor:ConfigureLogsForPlaybackConfiguration",
+    "iam:CreateServiceLinkedRole",
+    "mediatailor:UntagResource",
+    "mediatailor:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediatailor:DeletePlaybackConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediatailor:ListPlaybackConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediatailor:GetPlaybackConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediatailor:PutPlaybackConfiguration",
+    "mediatailor:ConfigureLogsForPlaybackConfiguration",
+    "iam:CreateServiceLinkedRole",
+    "mediatailor:UntagResource",
+    "mediatailor:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AdDecisionServerUrl": {
+   "type": "string"
+  },
+  "AvailSuppression": {
+   "$ref": "#/definitions/AvailSuppression"
+  },
+  "Bumper": {
+   "$ref": "#/definitions/Bumper"
+  },
+  "CdnConfiguration": {
+   "$ref": "#/definitions/CdnConfiguration"
+  },
+  "ConfigurationAliases": {
+   "$ref": "#/definitions/ConfigurationAliases"
+  },
+  "DashConfiguration": {
+   "$ref": "#/definitions/DashConfiguration"
+  },
+  "HlsConfiguration": {
+   "$ref": "#/definitions/HlsConfiguration"
+  },
+  "LivePreRollConfiguration": {
+   "$ref": "#/definitions/LivePreRollConfiguration"
+  },
+  "ManifestProcessingRules": {
+   "$ref": "#/definitions/ManifestProcessingRules"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "PersonalizationThresholdSeconds": {
+   "type": "integer"
+  },
+  "PlaybackConfigurationArn": {
+   "type": "string"
+  },
+  "PlaybackEndpointPrefix": {
+   "type": "string"
+  },
+  "SessionInitializationEndpointPrefix": {
+   "type": "string"
+  },
+  "SlateAdUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TranscodeProfileName": {
+   "type": "string"
+  },
+  "VideoContentSourceUrl": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SessionInitializationEndpointPrefix",
+  "/properties/HlsConfiguration/ManifestEndpointPrefix",
+  "/properties/DashConfiguration/ManifestEndpointPrefix",
+  "/properties/PlaybackConfigurationArn",
+  "/properties/PlaybackEndpointPrefix"
+ ],
+ "required": [
+  "Name",
+  "VideoContentSourceUrl",
+  "AdDecisionServerUrl"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaTailor::PlaybackConfiguration"
+}

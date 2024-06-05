@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/Member"
+ ],
+ "definitions": {
+  "Member": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "UserIdentifier": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "UserIdentifier"
+     ],
+     "title": "UserIdentifier",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GroupIdentifier": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "GroupIdentifier"
+     ],
+     "title": "GroupIdentifier",
+     "type": "object"
+    }
+   ]
+  },
+  "MemberIdentifierType": {
+   "enum": [
+    "USER_IDENTIFIER",
+    "GROUP_IDENTIFIER"
+   ],
+   "type": "string"
+  },
+  "UserDesignation": {
+   "enum": [
+    "PROJECT_OWNER",
+    "PROJECT_CONTRIBUTOR"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datazone:CreateProjectMembership",
+    "datazone:ListProjectMemberships",
+    "iam:GetRole",
+    "datazone:GetGroupProfile",
+    "datazone:GetUserProfile"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datazone:DeleteProjectMembership"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainIdentifier": {
+      "$ref": "resource-schema.json#/properties/DomainIdentifier"
+     },
+     "ProjectIdentifier": {
+      "$ref": "resource-schema.json#/properties/ProjectIdentifier"
+     }
+    },
+    "required": [
+     "DomainIdentifier",
+     "ProjectIdentifier"
+    ]
+   },
+   "permissions": [
+    "datazone:ListProjectMemberships"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datazone:ListProjectMemberships"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datazone:CreateProjectMembership",
+    "datazone:DeleteProjectMembership"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/ProjectIdentifier"
+ ],
+ "properties": {
+  "Designation": {
+   "$ref": "#/definitions/UserDesignation"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Member": {
+   "$ref": "#/definitions/Member"
+  },
+  "ProjectIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Designation",
+  "DomainIdentifier",
+  "ProjectIdentifier",
+  "Member"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::ProjectMembership",
+ "writeOnlyProperties": [
+  "/properties/Designation",
+  "/properties/Member"
+ ]
+}

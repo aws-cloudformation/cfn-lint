@@ -1626,16 +1626,19 @@ def configure_logging():
     LOGGER.addHandler(ch)
 
 
-def build_resource_type_patches(resource_patches: ResourcePatch):
+def build_resource_type_patches(resource_patches: ResourcePatch, filename: str):
     LOGGER.info(f"Applying patches for {resource_patches.resource_type}")
 
     resource_name = resource_patches.resource_type.lower().replace("::", "_")
-    output_dir = os.path.join("src/cfnlint/data/schemas/patches/extensions/all/")
-    output_file = os.path.join(
-        output_dir,
-        resource_name,
-        "manual.json",
+    output_dir = os.path.join(
+        "src/cfnlint/data/schemas/patches/extensions/all/", resource_name
     )
+    output_file = os.path.join(output_dir, filename)
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        with open(os.path.join(output_dir, "__init__.py"), "w"):
+            pass
 
     d = []
     with open(output_file, "w+") as fh:
@@ -1658,15 +1661,15 @@ def build_resource_type_patches(resource_patches: ResourcePatch):
         fh.write("\n")
 
 
-def build_patches():
+def build_patches(patches, filename):
     for patch in patches:
-        build_resource_type_patches(resource_patches=patch)
+        build_resource_type_patches(resource_patches=patch, filename=filename)
 
 
 def main():
     """main function"""
     configure_logging()
-    build_patches()
+    build_patches(patches, "manual.json")
 
 
 if __name__ == "__main__":

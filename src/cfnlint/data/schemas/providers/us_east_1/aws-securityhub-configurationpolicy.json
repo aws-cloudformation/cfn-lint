@@ -1,0 +1,268 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ParameterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "$ref": "#/definitions/ParameterValue"
+    },
+    "ValueType": {
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "minProperties": 1,
+   "properties": {
+    "Boolean": {
+     "type": "boolean"
+    },
+    "Double": {
+     "type": "number"
+    },
+    "Enum": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "EnumList": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Integer": {
+     "type": "integer"
+    },
+    "IntegerList": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "String": {
+     "maxLength": 2048,
+     "type": "string"
+    },
+    "StringList": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Policy": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityHub": {
+     "$ref": "#/definitions/SecurityHubPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityControlCustomParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Parameters": {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "patternProperties": {
+      "^[-_+=.:/@\\w\\s]{1,128}$": {
+       "$ref": "#/definitions/ParameterConfiguration"
+      }
+     },
+     "type": "object"
+    },
+    "SecurityControlId": {
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityControlsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DisabledSecurityControlIdentifiers": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnabledSecurityControlIdentifiers": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecurityControlCustomParameters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SecurityControlCustomParameter"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SecurityHubPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "EnabledStandardIdentifiers": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 2048,
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SecurityControlsConfiguration": {
+     "$ref": "#/definitions/SecurityControlsConfiguration"
+    },
+    "ServiceEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9]{1,128}$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:CreateConfigurationPolicy",
+    "securityhub:TagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:GetConfigurationPolicy",
+    "securityhub:DeleteConfigurationPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "securityhub:ListConfigurationPolicies",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:GetConfigurationPolicy",
+    "securityhub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:UpdateConfigurationPolicy",
+    "securityhub:TagResource",
+    "securityhub:UntagResource",
+    "securityhub:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws\\S*:securityhub:[a-z0-9-]+:[0-9]{12}:configuration-policy/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConfigurationPolicy": {
+   "$ref": "#/definitions/Policy"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ServiceEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/ServiceEnabled"
+ ],
+ "required": [
+  "ConfigurationPolicy",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::ConfigurationPolicy"
+}

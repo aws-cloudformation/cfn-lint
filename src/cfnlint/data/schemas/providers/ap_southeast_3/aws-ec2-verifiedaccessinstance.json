@@ -1,0 +1,259 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VerifiedAccessLogs": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "additionalProperties": false,
+     "properties": {
+      "Enabled": {
+       "type": "boolean"
+      },
+      "LogGroup": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "IncludeTrustContext": {
+     "type": "boolean"
+    },
+    "KinesisDataFirehose": {
+     "additionalProperties": false,
+     "properties": {
+      "DeliveryStream": {
+       "type": "string"
+      },
+      "Enabled": {
+       "type": "boolean"
+      }
+     },
+     "type": "object"
+    },
+    "LogVersion": {
+     "type": "string"
+    },
+    "S3": {
+     "additionalProperties": false,
+     "properties": {
+      "BucketName": {
+       "type": "string"
+      },
+      "BucketOwner": {
+       "type": "string"
+      },
+      "Enabled": {
+       "type": "boolean"
+      },
+      "Prefix": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "VerifiedAccessTrustProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "DeviceTrustProviderType": {
+     "type": "string"
+    },
+    "TrustProviderType": {
+     "type": "string"
+    },
+    "UserTrustProviderType": {
+     "type": "string"
+    },
+    "VerifiedAccessTrustProviderId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VerifiedAccessTrustProviderId": {
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVerifiedAccessInstance",
+    "ec2:AttachVerifiedAccessTrustProvider",
+    "ec2:ModifyVerifiedAccessInstanceLoggingConfiguration",
+    "ec2:DescribeVerifiedAccessInstances",
+    "ec2:DescribeVerifiedAccessInstanceLoggingConfigurations",
+    "ec2:DetachVerifiedAccessTrustProvider",
+    "ec2:DeleteVerifiedAccessInstance",
+    "ec2:CreateTags",
+    "ec2:DescribeTags",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:PutDestination",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:PutLogEvents",
+    "logs:DescribeLogStreams",
+    "s3:listBuckets",
+    "s3:PutObject",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "logs:DescribeLogGroups",
+    "logs:PutResourcePolicy",
+    "firehose:TagDeliveryStream",
+    "logs:DescribeResourcePolicies",
+    "iam:CreateServiceLinkedRole",
+    "verified-access:AllowVerifiedAccess"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteVerifiedAccessInstance",
+    "ec2:DeleteTags",
+    "ec2:DescribeVerifiedAccessInstances",
+    "ec2:DescribeVerifiedAccessInstanceLoggingConfigurations",
+    "ec2:DetachVerifiedAccessTrustProvider",
+    "ec2:GetVerifiedAccessGroupPolicy",
+    "ec2:DescribeTags",
+    "logs:ListLogDeliveries",
+    "logs:GetLogDelivery",
+    "logs:DeleteLogDelivery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessInstances",
+    "ec2:DescribeTags",
+    "logs:ListLogDeliveries",
+    "logs:GetLogDelivery"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessInstances",
+    "ec2:DescribeVerifiedAccessInstanceLoggingConfigurations",
+    "ec2:DescribeTags",
+    "logs:GetLogDelivery",
+    "logs:ListLogDeliveries"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVerifiedAccessInstance",
+    "ec2:ModifyVerifiedAccessInstanceLoggingConfiguration",
+    "ec2:DescribeVerifiedAccessInstances",
+    "ec2:DescribeVerifiedAccessInstanceLoggingConfigurations",
+    "ec2:DescribeTags",
+    "ec2:AttachVerifiedAccessTrustProvider",
+    "ec2:DetachVerifiedAccessTrustProvider",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "ec2:DescribeTags",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:PutDestination",
+    "logs:PutLogEvents",
+    "logs:DescribeLogStreams",
+    "s3:listBuckets",
+    "s3:PutObject",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "logs:DescribeLogGroups",
+    "logs:PutResourcePolicy",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole",
+    "logs:DescribeResourcePolicies"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessInstanceId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "FipsEnabled": {
+   "type": "boolean"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "LoggingConfigurations": {
+   "$ref": "#/definitions/VerifiedAccessLogs"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessInstanceId": {
+   "type": "string"
+  },
+  "VerifiedAccessTrustProviderIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VerifiedAccessTrustProviderId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessTrustProviders": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VerifiedAccessTrustProvider"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessInstanceId",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessinstance",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessInstance"
+}

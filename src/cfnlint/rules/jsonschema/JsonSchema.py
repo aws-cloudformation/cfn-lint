@@ -49,6 +49,7 @@ class JsonSchema(BaseJsonSchema):
             "fn_split": "E1018",
             "fn_sub": "E1019",
             "fn_tojsonstring": "E1031",
+            "format": "E1103",
             "ref": "E1020",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
@@ -70,8 +71,10 @@ class JsonSchema(BaseJsonSchema):
         """Check CloudFormation Parameters"""
         matches = []
 
+        validator = CfnTemplateValidator({}).evolve(cfn=cfn)
+
         cfn_validator = self.extend_validator(
-            validator=CfnTemplateValidator({}).evolve(cfn=cfn),
+            validator=validator,
             schema=self.schema,
             context=cfn.context,
         )

@@ -22,18 +22,14 @@ from collections import deque
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, ClassVar, Dict, Protocol, Type, runtime_checkable
 
-from cfnlint.context import Context
 from cfnlint.jsonschema._filter import FunctionFilter
-from cfnlint.jsonschema._resolver import RefResolver
 
 if TYPE_CHECKING:
-    from cfnlint.jsonschema._typing import (
-        ResolutionResult,
-        V,
-        ValidationResult,
-    )
-
-from cfnlint.template import Template
+    from cfnlint.context import Context
+    from cfnlint.jsonschema._format import FormatChecker
+    from cfnlint.jsonschema._typing import ResolutionResult, V, ValidationResult
+    from cfnlint.schema.resolver import RefResolver
+    from cfnlint.template import Template
 
 
 @runtime_checkable
@@ -54,12 +50,13 @@ class Validator(Protocol):
     #: validate the keyword with that name. For more information see
     #: `creating-validators`.
     validators: ClassVar[Mapping]
+    format_checker: ClassVar[FormatChecker]
 
     #: The schema that will be used to validate instances
     schema: Mapping | bool
     resolver: RefResolver
 
-    cfn: Template | None
+    cfn: Template
     context: Context
     function_filter: FunctionFilter
     cfn_path: deque[str]

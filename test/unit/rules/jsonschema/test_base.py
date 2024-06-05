@@ -159,15 +159,6 @@ class TestBaseJsonSchema(BaseRuleTestCase):
             errors,
             [
                 ValidationError(
-                    "'bad' is not one of ['foobar']",
-                    path=deque(["bar"]),
-                    rule=ChildRule(),
-                    schema_path=deque(["properties", "bar", "enum"]),
-                    validator="enum",
-                    validator_value=["foobar"],
-                    instance="bad",
-                ),
-                ValidationError(
                     "'foo' is a required property",
                     path=deque([]),
                     rule=Test(),
@@ -175,6 +166,15 @@ class TestBaseJsonSchema(BaseRuleTestCase):
                     validator="required",
                     validator_value=["foo"],
                     instance={"bar": "bad"},
+                ),
+                ValidationError(
+                    "'bad' is not one of ['foobar']",
+                    path=deque(["bar"]),
+                    rule=ChildRule(),
+                    schema_path=deque(["properties", "bar", "enum"]),
+                    validator="enum",
+                    validator_value=["foobar"],
+                    instance="bad",
                 ),
             ],
         )

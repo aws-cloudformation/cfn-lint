@@ -1,0 +1,327 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type"
+ ],
+ "definitions": {
+  "CapabilityConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Edi": {
+       "$ref": "#/definitions/EdiConfiguration"
+      }
+     },
+     "required": [
+      "Edi"
+     ],
+     "title": "Edi",
+     "type": "object"
+    }
+   ]
+  },
+  "CapabilityType": {
+   "enum": [
+    "edi"
+   ],
+   "type": "string"
+  },
+  "EdiConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputLocation": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "OutputLocation": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "TransformerId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/EdiType"
+    }
+   },
+   "required": [
+    "InputLocation",
+    "OutputLocation",
+    "TransformerId",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "EdiType": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "X12Details": {
+       "$ref": "#/definitions/X12Details"
+      }
+     },
+     "required": [
+      "X12Details"
+     ],
+     "title": "X12Details",
+     "type": "object"
+    }
+   ]
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "X12Details": {
+   "additionalProperties": false,
+   "properties": {
+    "TransactionSet": {
+     "$ref": "#/definitions/X12TransactionSet"
+    },
+    "Version": {
+     "$ref": "#/definitions/X12Version"
+    }
+   },
+   "type": "object"
+  },
+  "X12TransactionSet": {
+   "enum": [
+    "X12_110",
+    "X12_180",
+    "X12_204",
+    "X12_210",
+    "X12_211",
+    "X12_214",
+    "X12_215",
+    "X12_259",
+    "X12_260",
+    "X12_266",
+    "X12_269",
+    "X12_270",
+    "X12_271",
+    "X12_274",
+    "X12_275",
+    "X12_276",
+    "X12_277",
+    "X12_278",
+    "X12_310",
+    "X12_315",
+    "X12_322",
+    "X12_404",
+    "X12_410",
+    "X12_417",
+    "X12_421",
+    "X12_426",
+    "X12_810",
+    "X12_820",
+    "X12_824",
+    "X12_830",
+    "X12_832",
+    "X12_834",
+    "X12_835",
+    "X12_837",
+    "X12_844",
+    "X12_846",
+    "X12_849",
+    "X12_850",
+    "X12_852",
+    "X12_855",
+    "X12_856",
+    "X12_860",
+    "X12_861",
+    "X12_864",
+    "X12_865",
+    "X12_869",
+    "X12_870",
+    "X12_940",
+    "X12_945",
+    "X12_990",
+    "X12_997",
+    "X12_999",
+    "X12_270_X279",
+    "X12_271_X279",
+    "X12_275_X210",
+    "X12_275_X211",
+    "X12_276_X212",
+    "X12_277_X212",
+    "X12_277_X214",
+    "X12_277_X364",
+    "X12_278_X217",
+    "X12_820_X218",
+    "X12_820_X306",
+    "X12_824_X186",
+    "X12_834_X220",
+    "X12_834_X307",
+    "X12_834_X318",
+    "X12_835_X221",
+    "X12_837_X222",
+    "X12_837_X223",
+    "X12_837_X224",
+    "X12_837_X291",
+    "X12_837_X292",
+    "X12_837_X298",
+    "X12_999_X231"
+   ],
+   "type": "string"
+  },
+  "X12Version": {
+   "enum": [
+    "VERSION_4010",
+    "VERSION_4030",
+    "VERSION_5010",
+    "VERSION_5010_HIPAA"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "b2bi:CreateCapability",
+    "b2bi:TagResource",
+    "events:ListRules",
+    "events:PutRule",
+    "events:PutTargets",
+    "logs:CreateLogDelivery",
+    "logs:CreateLogGroup",
+    "logs:CreateLogStream",
+    "logs:DescribeLogGroups",
+    "logs:DescribeLogStreams",
+    "logs:DescribeResourcePolicies",
+    "logs:ListLogDeliveries",
+    "logs:PutLogEvents",
+    "logs:PutResourcePolicy",
+    "s3:GetObject",
+    "s3:ListBucket"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "b2bi:DeleteCapability"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "b2bi:ListCapabilities"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "b2bi:GetCapability",
+    "b2bi:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "b2bi:TagResource",
+    "b2bi:UntagResource",
+    "b2bi:UpdateCapability"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CapabilityId"
+ ],
+ "properties": {
+  "CapabilityArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CapabilityId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/CapabilityConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "InstructionsDocuments": {
+   "items": {
+    "$ref": "#/definitions/S3Location"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 254,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/CapabilityType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CapabilityArn",
+  "/properties/CapabilityId",
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "Configuration",
+  "Name",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::B2BI::Capability"
+}

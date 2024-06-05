@@ -12,7 +12,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 class DbClusterEngineVersion(CfnLintJsonSchema):
     id = "E3690"
     shortdesc = "Validate DB Cluster Engine and Engine Version"
-    description = "Validate the engine along with the engine version"
+    description = "Validate the DB Cluster engine along with the engine version"
     tags = ["resources"]
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-engineversion"
 

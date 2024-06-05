@@ -3,13 +3,18 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import enum
+from __future__ import annotations
+
 from collections import UserDict
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict
 
 import regex as re
 
-from cfnlint.schema._pointer import resolve_pointer
+from cfnlint.helpers import ensure_list
+
+if TYPE_CHECKING:
+    from cfnlint.schema import Schema
+
 
 _all_property_types = [
     "AWS::Amplify::Branch",
@@ -193,29 +198,34 @@ _exceptions = {
     ],
 }
 
-_unnamed_string_types = ("AWS::CloudFormation::Stack",)
-
 _unnamed_unknown_types = (
     "Custom::",
     "AWS::Serverless::",
     "AWS::CloudFormation::CustomResource",
+    "Module",
 )
 
 
 class AttributeDict(UserDict):
     def __init__(self, __dict: None = None) -> None:
         super().__init__(__dict)
-        self.data: Dict[str, GetAtt] = {}
+        self.data: Dict[str, str] = {}
 
-    def __getitem__(self, key: str) -> "GetAtt":
+    def __getitem__(self, key: str) -> str:
         possible_items = {}
         for k, v in self.data.items():
-            if re.fullmatch(k, key):
+            if re.fullmatch(k, key) or k == key:
                 possible_items[k] = v
         if not possible_items:
             raise KeyError(key)
         longest_match = sorted(possible_items.keys(), key=len)[-1]
         return possible_items[longest_match]
+
+    def get(self, key: str, default: Any = None) -> Any:
+        try:
+            return self.__getitem__(key)
+        except KeyError:
+            return default
 
     def __repr__(self) -> str:
         keys = []
@@ -224,108 +234,52 @@ class AttributeDict(UserDict):
         return f"{keys!r}"
 
 
-class GetAttType(enum.Enum):
-    ReadOnly = 1
-    All = 2
-    Unnamed = 3
-
-
-class GetAtt:
-    def __init__(self, schema: Dict[str, Any], getatt_type: GetAttType) -> None:
-        self._getatt_type: GetAttType = getatt_type
-        self._type: Optional[str] = schema.get("type")
-        self._item_type: Optional[str]
-        if self._type == "array":
-            self._item_type = schema.get("items", {}).get("type")
-
-    @property
-    def type(self) -> Optional[str]:
-        return self._type
-
-    @property
-    def item_type(self) -> Optional[str]:
-        return self._item_type
-
-    @property
-    def getatt_type(self) -> GetAttType:
-        return self._getatt_type
-
-
 class GetAtts:
     """Class for helping with GetAtt logic"""
 
-    _attrs: AttributeDict = AttributeDict()
-    _schema: Dict[str, Any] = {}
-
-    def __init__(self, schema: Dict[str, Any]) -> None:
+    def __init__(self, schema: "Schema") -> None:
         self._attrs = AttributeDict()
-        self._schema = schema
-        type_name = schema.get("typeName", "")
-        if type_name in _all_property_types:
-            for name, value in schema.get("properties", {}).items():
-                self._process_schema(name, value, GetAttType.All)
+        if schema.type_name in _all_property_types:
+            for name, value in schema.schema.get("properties", {}).items():
+                self._process_schema(value, schema, f"/properties/{name}")
             return
-        if type_name in _exceptions:
-            for name in _exceptions[type_name]:
-                attr_schema = self._flatten_schema_by_pointer(f"/properties/{name}")
-                self._process_schema(name, attr_schema, GetAttType.ReadOnly)
-        for unnamed_type in _unnamed_string_types:
-            if type_name.startswith(unnamed_type):
-                self._attrs["Outputs\\..*"] = GetAtt(
-                    schema={"type": "string"}, getatt_type=GetAttType.Unnamed
+        if schema.type_name in _exceptions:
+            for name in _exceptions[schema.type_name]:
+                self._attrs[self._pointer_to_attr(f"/properties/{name}")] = (
+                    f"/properties/{name}"
                 )
+
+        if schema.type_name == "AWS::CloudFormation::Stack":
+            self._attrs["Outputs\\..*"] = "/properties/CfnLintStringType"
+            return
+
         for unnamed_type in _unnamed_unknown_types:
-            if type_name.startswith(unnamed_type):
-                self._attrs[".*"] = GetAtt(
-                    schema={
-                        "type": [
-                            "string",
-                            "number",
-                            "boolean",
-                            "object",
-                            "array",
-                            "integer",
-                        ]
-                    },
-                    getatt_type=GetAttType.Unnamed,
-                )
-        for ro_attr in schema.get("readOnlyProperties", []):
-            try:
-                name = ".".join(ro_attr.split("/")[2:])
-                ro_schema = self._flatten_schema_by_pointer(ro_attr)
-                self._process_schema(name, ro_schema, GetAttType.ReadOnly)
-            except KeyError:
-                pass
+            if schema.type_name.startswith(unnamed_type):
+                self._attrs[".*"] = "/properties/CfnLintAllTypes"
 
-    def _flatten_schema(self, schema: Dict[str, Any]) -> Dict[str, Any]:
-        r_schema = schema.copy()
-        for k, v in schema.items():
-            if k == "$ref":
-                r_schema.pop(k)
-                r_schema = {**r_schema, **self._flatten_schema_by_pointer(v)}
-            elif k == "items":
-                r_schema[k] = self._flatten_schema(v)
-        return r_schema
+        for ro_attr in schema.schema.get("readOnlyProperties", []):
+            self._attrs[self._pointer_to_attr(ro_attr)] = ro_attr
 
-    def _flatten_schema_by_pointer(self, ptr: str) -> Dict[str, Any]:
-        schema = resolve_pointer(self._schema, ptr)
-        return self._flatten_schema(schema)
+    def _pointer_to_attr(self, pointer: str) -> str:
+        return ".".join(pointer.split("/")[2:])
 
-    def _process_schema(
-        self, name: str, schema: Dict[str, Any], getatt_type: GetAttType
-    ):
-        if schema.get("type") == "object":
-            for prop, value in schema.get("properties", {}).items():
-                self._process_schema(f"{name}.{prop}", value, getatt_type)
-        elif schema.get("type") == "array":
+    def _process_schema(self, obj: dict[str, Any], schema: "Schema", path: str):
+        types = ensure_list(obj.get("type"))
+        if "object" in types:
+            for prop, value in obj.get("properties", {}).items():
+                self._process_schema(value, schema, f"{path}/{prop}")
+        elif "array" in types:
             # GetAtt doesn't support going into an array of objects or another array
             # so we only look at an array of strings, etc.
-            self._attrs[name] = GetAtt(schema, getatt_type)
-        elif schema.get("$ref"):
-            schema = resolve_pointer(self._schema, schema.get("$ref"))
-            self._process_schema(name, schema, getatt_type)
+            if obj.get("items", {}).get("type") in ["object", "array"]:
+                return
+            path = f"{path}/*"
+            self._attrs[self._pointer_to_attr(path)] = path
+        elif obj.get("$ref"):
+            _, obj = schema.resolver.resolve(obj.get("$ref"))
+            self._process_schema(obj, schema, path)
         else:
-            self._attrs[name] = GetAtt(schema, getatt_type)
+            self._attrs[self._pointer_to_attr(path)] = path
 
     @property
     def attrs(self) -> AttributeDict:

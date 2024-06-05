@@ -23,8 +23,11 @@ class _Seen:
 
 class PrimaryIdentifiers(CloudFormationLintRule):
     id = "E3019"
-    shortdesc = "Unique resource and parameter names"
-    description = "All resources and parameters must have unique names"
+    shortdesc = "Validate that all resources have unique primary identifiers"
+    description = (
+        "Use the primary identifiers in a resource schema to validate that "
+        "resources inside the template are unique"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html"
     tags = ["parameters", "resources"]
 

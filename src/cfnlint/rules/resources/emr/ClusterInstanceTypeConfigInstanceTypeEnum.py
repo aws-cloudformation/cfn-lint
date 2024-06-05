@@ -12,7 +12,7 @@ class ClusterInstanceTypeConfigInstanceTypeEnum(CfnLintJsonSchemaRegional):
     id = "E3675"
     shortdesc = "Validate EMR cluster instance type"
     description = (
-        "Validates the instance types based on region "
+        "Validates the EMR cluster instance types based on region "
         "and data gathered from the pricing APIs"
     )
     tags = ["resources"]

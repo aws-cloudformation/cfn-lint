@@ -8,8 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, fields
 from typing import TYPE_CHECKING, Any, Sequence, Tuple
 
-from cfnlint.helpers import REGEX_DYN_REF, ToPy
-from cfnlint.jsonschema._utils import ensure_list
+from cfnlint.helpers import REGEX_DYN_REF, ToPy, ensure_list
 
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator
@@ -63,14 +62,12 @@ class FunctionFilter:
         """
         Filter the schemas to only include the ones that are required
         """
-        if validator.cfn is None:
-            return schema, None
 
         # If we are in an if we want to keep any !Ref AWS::NoValue
         # Example: Typically we want to remove (!Ref AWS::NoValue)
         # to count minItems, maxItems, required properties but if we
         # are in an If we need to be more strict
-        if len(validator.context.path.path) > 0:
+        if validator.context.path.path:
             if validator.context.path.path[-1] in ["Fn::If"]:
                 return schema, None
 

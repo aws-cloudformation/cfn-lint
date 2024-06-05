@@ -11,6 +11,9 @@ class RequiredXor(CloudFormationLintRule):
 
     id = "E3014"
     shortdesc = "Validate only one of a set of required properties are specified"
-    description = "Making sure that Resources properties that are required exist"
+    description = (
+        "Make sure that Resources properties that are required exist. "
+        "Along with other properties not being specified"
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/cfn-schema-specification.md#requiredxor"
     tags = ["resources"]
