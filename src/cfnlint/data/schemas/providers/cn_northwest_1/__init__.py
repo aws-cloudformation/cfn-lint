@@ -883,7 +883,6 @@ cached: List[str] = [
     "aws-datasync-locationnfs.json",
     "aws-kinesisanalyticsv2-applicationoutput.json",
     "aws-securityhub-configurationpolicy.json",
-    "aws-sagemaker-domain.json",
     "aws-certificatemanager-certificate.json",
     "aws-glue-schemaversionmetadata.json",
     "aws-sdb-domain.json",

@@ -40,9 +40,6 @@ class GetAttFormat(CfnLintKeyword):
 
         if getatt_fmt != fmt:
             yield ValidationError(
-                (
-                    f"{instance!r} creates {getatt_fmt!r} that does not "
-                    f"match {fmt!r}"
-                ),
+                f"{{'Fn::GetAtt': {instance!r}}} that does not match {fmt!r}",
                 rule=self,
             )

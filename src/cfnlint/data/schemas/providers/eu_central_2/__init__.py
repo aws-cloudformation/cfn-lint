@@ -715,6 +715,7 @@ cached: List[str] = [
     "aws-cloudformation-stackset.json",
     "aws-ec2-route.json",
     "aws-cloudformation-hookversion.json",
+    "aws-rolesanywhere-profile.json",
     "aws-xray-resourcepolicy.json",
     "aws-servicecatalog-launchtemplateconstraint.json",
     "aws-wafv2-loggingconfiguration.json",
