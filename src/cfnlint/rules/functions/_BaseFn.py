@@ -94,17 +94,6 @@ class BaseFn(CloudFormationLintRule):
 
         return []
 
-    def resolve_format(self, validator, schema) -> str | None:
-        if "format" in schema:
-            return schema["format"]  # type: ignore
-
-        if "$ref" in schema:
-            resolved = self._resolve_ref(validator, schema)
-
-            return self.resolve_format(validator, resolved)
-
-        return None
-
     def validate_fn_output_types(
         self, validator: Validator, s: Any, instance: Any
     ) -> ValidationResult:

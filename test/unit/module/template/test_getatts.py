@@ -37,6 +37,15 @@ class TestGetAtts(BaseTestCase):
         with self.assertRaises(ValueError):
             getatts.match("us-east-1", "NoMatch.Attribute")
 
+    def test_getatt_type_errors(self):
+        getatts = GetAtts(["us-east-1"])
+
+        with self.assertRaises(TypeError):
+            getatts.match("us-east-1", {})
+
+        with self.assertRaises(TypeError):
+            getatts.match("us-east-1", ["Foo", "Bar", "FooBar"])
+
     def test_getatt_resource_with_list(self):
         getatts = GetAtts(["us-east-1"])
         getatts.add("Resource", "AWS::NetworkFirewall::Firewall")

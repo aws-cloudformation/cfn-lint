@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import UserDict
-from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Union
 
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict, ResourceNotFoundError
 
@@ -155,11 +155,3 @@ class GetAtts:
 
         else:
             raise TypeError("Invalid GetAtt structure")
-
-    def items(
-        self, region: Optional[str] = None
-    ) -> Iterator[Tuple[str, AttributeDict]]:
-        if region is None:
-            region = self._regions[0]
-            for k, v in self._getatts.get(region, _ResourceDict()).items():
-                yield k, v

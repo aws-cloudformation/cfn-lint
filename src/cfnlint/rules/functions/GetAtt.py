@@ -56,31 +56,6 @@ class GetAtt(BaseFn):
             ],
         }
 
-    def _iter_errors(
-        self, evolved: Validator, key: str, instance: Any, type: str
-    ) -> ValidationResult:
-        value: Any = None
-        if type == "string":
-            value = ""
-        elif type == "number":
-            value = 1.0
-        elif type == "integer":
-            value = 1
-        elif type == "boolean":
-            value = True
-        elif type == "array":
-            value = []
-        elif type == "object":
-            value = {}
-        else:
-            return
-
-        for err in evolved.iter_errors(value):
-            err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-            err.validator = self.fn.py
-            err.path = deque([key])
-            yield err
-
     def _resolve_getatt(
         self,
         validator: Validator,
@@ -143,7 +118,7 @@ class GetAtt(BaseFn):
                     )
 
                     for (
-                        regions,
+                        _,
                         schema,
                     ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
                         t, validator.context.regions
