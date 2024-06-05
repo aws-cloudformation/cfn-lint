@@ -7,6 +7,7 @@ from typing import Any
 
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema import CfnLintKeyword
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 
 class GetAttFormat(CfnLintKeyword):
@@ -36,10 +37,19 @@ class GetAttFormat(CfnLintKeyword):
 
         resource, attr = instance[0:2]
 
-        getatt_fmt = validator.context.resources[resource].get_atts[attr]
+        getatt_ptr = validator.context.resources[resource].get_atts[attr]
+        t = validator.context.resources[resource].type
 
-        if getatt_fmt != fmt:
-            yield ValidationError(
-                f"{{'Fn::GetAtt': {instance!r}}} that does not match {fmt!r}",
-                rule=self,
-            )
+        for (
+            _,
+            resource_schema,
+        ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
+            t, validator.context.regions
+        ):
+            _, getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
+            getatt_fmt = getatt_schema.get("format")
+            if getatt_fmt != fmt:
+                yield ValidationError(
+                    f"{{'Fn::GetAtt': {instance!r}}} that does not match {fmt!r}",
+                    rule=self,
+                )

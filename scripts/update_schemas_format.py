@@ -141,12 +141,6 @@ _manual_patches = {
             path="/properties/GroupId",
         ),
     ],
-    "AWS::EC2::VPC": [
-        Patch(
-            values={"format": "AWS::EC2::VPC.Id"},
-            path="/properties/Id",
-        ),
-    ],
 }
 
 
