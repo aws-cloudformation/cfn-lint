@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 from cfnlint.jsonschema import ValidationError, Validator
+from cfnlint.jsonschema._keywords import format as parent_format
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -22,7 +23,7 @@ class Format(CloudFormationLintRule):
     ):
         if validator.format_checker is not None:  # type: ignore
             if format in validator.format_checker.checkers:
-                yield from format(validator, format, instance, schema)
+                yield from parent_format(validator, format, instance, schema)
                 return
 
         for rule in self.child_rules.values():
