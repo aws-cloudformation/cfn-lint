@@ -24,12 +24,33 @@ class TestPointer(BaseTestCase):
                 "fooBar": {
                     "type": "object",
                     "properties": {"a": {"type": "string"}, "b": {"type": "string"}},
-                }
+                },
+                "anyOf": {
+                    "anyOf": [
+                        {"$ref": "#/definitions/fooBar"},
+                        {
+                            "type": "object",
+                            "properties": {
+                                "a": {"type": "boolean"},
+                                "c": {"type": "boolean"},
+                                "d": {"type": "boolean"},
+                            },
+                        },
+                    ]
+                },
             },
             "properties": {
                 "foo": {"type": "string"},
                 "bar": {"$ref": "#/definitions/bar"},
                 "fooBars": {"type": "array", "items": {"$ref": "#/definitions/fooBar"}},
+                "refFirst": {
+                    "$ref": "#/definitions/fooBar",
+                    "type": "object",
+                    "properties": {
+                        "a": {"type": "boolean"},
+                    },
+                },
+                "anyOf": {"$ref": "#/definitions/anyOf"},
             },
         }
 
@@ -42,6 +63,24 @@ class TestPointer(BaseTestCase):
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/fooBars/*/a"),
             ("/properties/fooBars/*/a", {"type": "string"}),
+        )
+
+        # first one found is string (not boolean)
+        self.assertEqual(
+            resolver.resolve_cfn_pointer("/properties/anyOf/a"),
+            ("/properties/anyOf/a", {"type": "string"}),
+        )
+
+        # second option in anyOf has the property we are looking for
+        self.assertEqual(
+            resolver.resolve_cfn_pointer("/properties/anyOf/c"),
+            ("/properties/anyOf/c", {"type": "boolean"}),
+        )
+
+        # refs are handled first
+        self.assertEqual(
+            resolver.resolve_cfn_pointer("/properties/refFirst/a"),
+            ("/properties/refFirst/a", {"type": "string"}),
         )
 
         with self.assertRaises(RefResolutionError):
