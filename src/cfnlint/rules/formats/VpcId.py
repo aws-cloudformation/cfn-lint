@@ -18,6 +18,7 @@ class VpcId(FormatKeyword):
     shortdesc = "Validate VPC id format"
     description = "Check that a VPC id matches a pattern"
     tags = []
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/format_keyword.md#AWS::EC2::VPC.Id"
 
     def __init__(self):
         super().__init__(format="AWS::EC2::VPC.Id")

@@ -21,15 +21,16 @@ class SecurityGroupId(FormatKeyword):
         "group or has the valid pattern"
     )
     tags = []
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/format_keyword.md#AWS::EC2::SecurityGroup.GroupId"
 
     def __init__(self):
-        super().__init__(format="SecurityGroupId")
+        super().__init__(format="AWS::EC2::SecurityGroup.GroupId")
 
     def format(self, validator: Validator, instance: Any) -> bool:
         if not isinstance(instance, str):
             return True
 
-        if re.match(r"^sg-[a-z0-9]{8,17}$", instance):
+        if re.match(r"^sg-([a-z0-9]{8}|[a-z0-9]{17})$", instance):
             return True
 
         return False
