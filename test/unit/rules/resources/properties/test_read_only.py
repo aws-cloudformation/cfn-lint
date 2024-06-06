@@ -4,12 +4,14 @@ SPDX-License-Identifier: MIT-0
 """
 
 from collections import deque
+from unittest import mock
 
 import pytest
 
 from cfnlint.context import Path
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.properties.ReadOnly import ReadOnly
+from cfnlint.schema.resolver import RefResolutionError
 
 
 @pytest.fixture(scope="module")
@@ -30,36 +32,47 @@ def validator():
 
 
 @pytest.mark.parametrize(
-    "name,path,expected",
+    "name,path,side_effect,expected",
     [
         (
             "Not using read only property",
             deque(["Resources", "Test", "Properties", "Name"]),
+            None,
             [],
         ),
         (
             "Not in outputs",
             deque(["Outputs"]),
+            None,
             [],
         ),
         (
             "Not in resource properties",
             deque(["Resources"]),
+            None,
             [],
         ),
         (
             "Not in resource properties",
             deque(["Resources", "*", "Metadata"]),
+            None,
             [],
         ),
         (
             "Setting a read only property",
             deque(["Resources", "Test", "Properties", "Id"]),
+            None,
             [ValidationError("Read only properties are not allowed ('Id')")],
+        ),
+        (
+            "No readonlyProperties in schema",
+            deque(["Resources", "Test", "Properties", "Id"]),
+            RefResolutionError("not found"),
+            [],
         ),
     ],
 )
-def test_validate(name, path, expected, rule, validator):
+def test_validate(name, path, side_effect, expected, rule, validator):
     validator = validator.evolve(
         context=validator.context.evolve(
             path=Path(
@@ -67,6 +80,10 @@ def test_validate(name, path, expected, rule, validator):
             )
         ),
     )
+
+    if side_effect:
+        validator.resolver = mock.MagicMock()
+        validator.resolver.resolve_from_url.side_effect = side_effect
 
     errs = list(rule.validate(validator, "", "", {}))
 
