@@ -123,7 +123,7 @@ class GetAtt(BaseFn):
                     ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
                         t, validator.context.regions
                     ):
-                        _, getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
+                        getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
 
                         if not getatt_schema.get("type") or not s.get("type"):
                             continue

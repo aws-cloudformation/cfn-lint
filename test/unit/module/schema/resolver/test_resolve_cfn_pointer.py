@@ -58,29 +58,29 @@ class TestPointer(BaseTestCase):
         resolver = RefResolver(self.schema)
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/foo"),
-            ("/properties/foo", {"type": "string"}),
+            {"type": "string"},
         )
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/fooBars/*/a"),
-            ("/properties/fooBars/*/a", {"type": "string"}),
+            {"type": "string"},
         )
 
         # first one found is string (not boolean)
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/anyOf/a"),
-            ("/properties/anyOf/a", {"type": "string"}),
+            {"type": "string"},
         )
 
         # second option in anyOf has the property we are looking for
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/anyOf/c"),
-            ("/properties/anyOf/c", {"type": "boolean"}),
+            {"type": "boolean"},
         )
 
         # refs are handled first
         self.assertEqual(
             resolver.resolve_cfn_pointer("/properties/refFirst/a"),
-            ("/properties/refFirst/a", {"type": "string"}),
+            {"type": "string"},
         )
 
         with self.assertRaises(RefResolutionError):
