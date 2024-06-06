@@ -30,7 +30,7 @@ class SecurityGroupId(FormatKeyword):
         if not isinstance(instance, str):
             return True
 
-        if re.match(r"^sg-([a-z0-9]{8}|[a-z0-9]{17})$", instance):
+        if re.match(r"^sg-([a-zA-Z0-9]{8}|[a-zA-Z0-9]{17})$", instance):
             return True
 
         return False
