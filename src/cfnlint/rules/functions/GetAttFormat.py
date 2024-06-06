@@ -46,7 +46,7 @@ class GetAttFormat(CfnLintKeyword):
         ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
             t, validator.context.regions
         ):
-            _, getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
+            getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
             getatt_fmt = getatt_schema.get("format")
             if getatt_fmt != fmt:
                 yield ValidationError(

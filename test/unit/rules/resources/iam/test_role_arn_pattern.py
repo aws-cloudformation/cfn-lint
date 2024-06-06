@@ -38,6 +38,11 @@ def _message_errors(name, arn, errors, **kwargs):
             ],
         ),
         (
+            "Valid but wrong type",
+            {},
+            [],
+        ),
+        (
             "Valid Arn",
             "arn:aws:iam::123456789012:role/test",
             [],

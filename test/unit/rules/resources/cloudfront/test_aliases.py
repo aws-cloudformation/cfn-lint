@@ -72,6 +72,10 @@ def validator():
             [],
         ),
         (
+            {},
+            [],
+        ),
+        (
             "email.*.example.com",
             [
                 ValidationError(

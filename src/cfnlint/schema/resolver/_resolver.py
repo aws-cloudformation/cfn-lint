@@ -159,7 +159,7 @@ class RefResolver:
 
         return url, self._cache(url)
 
-    def resolve_cfn_pointer(self, pointer: str) -> tuple[str, dict]:
+    def resolve_cfn_pointer(self, pointer: str) -> dict[str, Any]:
         """
         Resolve the given cfn pointer.
 
@@ -174,7 +174,7 @@ class RefResolver:
 
         # to handle custom resources
         if pointer == "/properties/CfnLintAllTypes":
-            return pointer, {
+            return {
                 "type": [
                     "string",
                     "integer",
@@ -185,7 +185,7 @@ class RefResolver:
                 ]
             }
         elif pointer == "/properties/CfnLintStringType":
-            return pointer, {
+            return {
                 "type": [
                     "string",
                 ]
@@ -193,29 +193,7 @@ class RefResolver:
 
         ref = pointer.lstrip("/").split("/") if pointer else []
 
-        return pointer, self._walk_cfn_pointer(schema, ref[1:])
-
-    def flatten_schema(self, schema: dict[str, Any]) -> dict[str, Any]:
-        """
-        Flatten the schema used by the cloudformation-cli.
-
-        Ref takes precedence and will override
-        anything in the parent schema
-
-        """
-        schema = schema.copy()
-        return self._flatten_schema(schema)
-
-    def _flatten_schema(self, schema: dict[str, Any]) -> dict[str, Any]:
-        r_schema = schema.copy()
-        for k, v in schema.items():
-            if k == "$ref":
-                r_schema.pop(k)
-                _, ref_schema = self.resolve(v)
-                r_schema = {**r_schema, **ref_schema}
-            elif k == "items":
-                r_schema[k] = self._flatten_schema(v)
-        return r_schema
+        return self._walk_cfn_pointer(schema, ref[1:])
 
     @property
     def resolution_scope(self):
@@ -224,7 +202,9 @@ class RefResolver:
         """
         return self._scopes_stack[-1]
 
-    def _walk_cfn_pointer(self, document, pointer):
+    def _walk_cfn_pointer(
+        self, document: dict[str, Any], pointer: Sequence[str]
+    ) -> dict[str, Any]:
         """
         Resolve a cfn ``pointer`` within the referenced ``document``.
 
@@ -253,12 +233,6 @@ class RefResolver:
             if point == "*":
                 if "items" in document:
                     return self._walk_cfn_pointer(document["items"], pointer[1:])
-                if "additionalProperties" in document and isinstance(
-                    document["additionalProperties"], dict
-                ):
-                    return self._walk_cfn_pointer(
-                        document["additionalProperties"], pointer[1:]
-                    )
             return self._walk_cfn_pointer(document["properties"][point], pointer[1:])
         except (TypeError, LookupError, KeyError, RefResolutionError) as e:
             for c in ["anyOf", "allOf", "oneOf"]:
@@ -296,10 +270,6 @@ class RefResolver:
         def find(key):
             yield from _search_schema(document, _match_keyword(key))
 
-        for keyword in ["$anchor", "$dynamicAnchor"]:
-            for subschema in find(keyword):
-                if fragment == subschema[keyword]:
-                    return subschema
         for keyword in ["id", "$id"]:
             for subschema in find(keyword):
                 if "#" + fragment == subschema[keyword]:
