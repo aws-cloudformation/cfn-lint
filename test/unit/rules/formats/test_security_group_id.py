@@ -36,7 +36,7 @@ def validator():
         ),
         (
             "Valid security group id long",
-            "sg-abcdefg1234567890",
+            "sg-abcdefa1234567890",
             True,
         ),
         (

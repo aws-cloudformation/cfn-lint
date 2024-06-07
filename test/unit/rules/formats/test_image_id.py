@@ -36,7 +36,7 @@ def validator():
         ),
         (
             "Valid image id long",
-            "ami-abcdefg1234567890",
+            "ami-abcdefa1234567890",
             True,
         ),
         (
