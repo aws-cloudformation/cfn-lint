@@ -294,6 +294,7 @@ class ProviderSchemaManager:
                     separators=(",", ": "),
                     sort_keys=True,
                 )
+                fh.write("\n")
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
