@@ -2593,6 +2593,7 @@
   "AWS::EFS::FileSystem.ReplicationDestination": "CACHED",
   "AWS::EKS::AccessEntry.AccessPolicy": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope": "CACHED",
+  "AWS::EKS::Addon.PodIdentityAssociation": "CACHED",
   "AWS::EKS::Cluster.AccessConfig": "CACHED",
   "AWS::EKS::Cluster.ClusterLogging": "CACHED",
   "AWS::EKS::Cluster.ControlPlanePlacement": "CACHED",
@@ -4180,7 +4181,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "175.0.0",
+ "ResourceSpecificationVersion": "176.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4574,10 +4575,7 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html#cfn-apigateway-method-authorizationtype",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::ApiGateway::Method.AuthorizationType"
-     }
+     "UpdateType": "Mutable"
     },
     "AuthorizerId": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html#cfn-apigateway-method-authorizerid",
@@ -5744,7 +5742,60 @@
   "AWS::EC2::ClientVpnEndpoint": "CACHED",
   "AWS::EC2::ClientVpnRoute": "CACHED",
   "AWS::EC2::ClientVpnTargetNetworkAssociation": "CACHED",
-  "AWS::EC2::CustomerGateway": "CACHED",
+  "AWS::EC2::CustomerGateway": {
+   "Attributes": {
+    "CustomerGatewayId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html",
+   "Properties": {
+    "BgpAsn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-bgpasn",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "CertificateArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-certificatearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::CustomerGateway.CertificateArn"
+     }
+    },
+    "DeviceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-devicename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "IpAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-ipaddress",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customergateway.html#cfn-ec2-customergateway-type",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CustomerGatewayType"
+     }
+    }
+   }
+  },
   "AWS::EC2::DHCPOptions": "CACHED",
   "AWS::EC2::EC2Fleet": "CACHED",
   "AWS::EC2::EIP": "CACHED",
@@ -6601,140 +6652,7 @@
   "AWS::Glue::DataQualityRuleset": "CACHED",
   "AWS::Glue::Database": "CACHED",
   "AWS::Glue::DevEndpoint": "CACHED",
-  "AWS::Glue::Job": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html",
-   "Properties": {
-    "AllocatedCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-allocatedcapacity",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Command": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-command",
-     "Required": true,
-     "Type": "JobCommand",
-     "UpdateType": "Mutable"
-    },
-    "Connections": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-connections",
-     "Required": false,
-     "Type": "ConnectionsList",
-     "UpdateType": "Mutable"
-    },
-    "DefaultArguments": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-defaultarguments",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExecutionClass": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-executionclass",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExecutionProperty": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-executionproperty",
-     "Required": false,
-     "Type": "ExecutionProperty",
-     "UpdateType": "Mutable"
-    },
-    "GlueVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-glueversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LogUri": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-loguri",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MaxCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-maxcapacity",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MaxRetries": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-maxretries",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Glue::Job.Name"
-     }
-    },
-    "NonOverridableArguments": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-nonoverridablearguments",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NotificationProperty": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-notificationproperty",
-     "Required": false,
-     "Type": "NotificationProperty",
-     "UpdateType": "Mutable"
-    },
-    "NumberOfWorkers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-numberofworkers",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Glue::Job.NumberOfWorkers"
-     }
-    },
-    "Role": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-role",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IAM::Role.NameOrArn"
-     }
-    },
-    "SecurityConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-securityconfiguration",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-tags",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Timeout": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-timeout",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "WorkerType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-workertype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Glue::Job": "CACHED",
   "AWS::Glue::MLTransform": "CACHED",
   "AWS::Glue::Partition": "CACHED",
   "AWS::Glue::SecurityConfiguration": "CACHED",
@@ -7339,6 +7257,7 @@
   "AWS::SecurityHub::DelegatedAdmin": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Insight": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration": "CACHED",
   "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::SecurityControl": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
@@ -7466,7 +7385,6 @@
   "AWS::ApiGateway::Authorizer.Type": "CACHED",
   "AWS::ApiGateway::DocumentationPart.Location.Type": "CACHED",
   "AWS::ApiGateway::GatewayResponse.ResponseType": "CACHED",
-  "AWS::ApiGateway::Method.AuthorizationType": "CACHED",
   "AWS::ApiGateway::Method.Integration.ConnectionType": "CACHED",
   "AWS::ApiGateway::Method.Integration.ContentHandling": "CACHED",
   "AWS::ApiGateway::Method.Integration.PassthroughBehavior": "CACHED",
@@ -7985,6 +7903,7 @@
   "AWS::EFS::FileSystem.BackupPolicy.Status": "CACHED",
   "AWS::EFS::FileSystem.FileSystemProtection.ReplicationOverwriteProtection": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope.Type": "CACHED",
+  "AWS::EKS::Addon.PodIdentityAssociation.RoleArn": "CACHED",
   "AWS::EKS::Addon.ResolveConflicts": "CACHED",
   "AWS::EKS::Cluster.AccessConfig.AuthenticationMode": "CACHED",
   "AWS::EKS::Cluster.KubernetesNetworkConfig.IpFamily": "CACHED",
@@ -9176,6 +9095,8 @@
   "AWS::SecurityHub::Insight.MapFilter.Comparison": "CACHED",
   "AWS::SecurityHub::Insight.Name": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration.AutoEnableStandards": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration.ConfigurationType": "CACHED",
   "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
   "AWS::SecurityHub::SecurityControl.LastUpdateReason": "CACHED",
   "AWS::SecurityHub::SecurityControl.SecurityControlArn": "CACHED",
