@@ -18,6 +18,14 @@
     "MetricName": {
      "type": "string"
     },
+    "Metrics": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TargetTrackingMetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
     "Namespace": {
      "type": "string"
     },
@@ -35,11 +43,7 @@
      "type": "string"
     }
    },
-   "required": [
-    "MetricName",
-    "Statistic",
-    "Namespace"
-   ],
+   "required": [],
    "type": "object"
   },
   "Metric": {
@@ -338,6 +342,49 @@
    },
    "required": [
     "TargetValue"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingMetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/TargetTrackingMetricStat"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingMetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Metric"
    ],
    "type": "object"
   }
