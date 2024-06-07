@@ -229,6 +229,36 @@
    },
    "type": "object"
   },
+  "DimensionMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DimensionValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DimensionValueType": {
+     "$ref": "#/definitions/DimensionValueType"
+    }
+   },
+   "required": [
+    "DimensionName",
+    "DimensionValue",
+    "DimensionValueType"
+   ],
+   "type": "object"
+  },
+  "DimensionValueType": {
+   "enum": [
+    "VARCHAR"
+   ],
+   "type": "string"
+  },
   "DynamoDBStreamStartPosition": {
    "enum": [
     "TRIM_HORIZON",
@@ -401,6 +431,15 @@
    },
    "type": "object"
   },
+  "EpochTimeUnit": {
+   "enum": [
+    "MILLISECONDS",
+    "SECONDS",
+    "MICROSECONDS",
+    "NANOSECONDS"
+   ],
+   "type": "string"
+  },
   "Filter": {
    "additionalProperties": false,
    "properties": {
@@ -543,6 +582,63 @@
     "LATEST"
    ],
    "type": "string"
+  },
+  "MeasureValueType": {
+   "enum": [
+    "DOUBLE",
+    "BIGINT",
+    "VARCHAR",
+    "BOOLEAN",
+    "TIMESTAMP"
+   ],
+   "type": "string"
+  },
+  "MultiMeasureAttributeMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValueType": {
+     "$ref": "#/definitions/MeasureValueType"
+    },
+    "MultiMeasureAttributeName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MeasureValue",
+    "MeasureValueType",
+    "MultiMeasureAttributeName"
+   ],
+   "type": "object"
+  },
+  "MultiMeasureMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MultiMeasureAttributeMappings": {
+     "items": {
+      "$ref": "#/definitions/MultiMeasureAttributeMapping"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array"
+    },
+    "MultiMeasureName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "MultiMeasureAttributeMappings",
+    "MultiMeasureName"
+   ],
+   "type": "object"
   },
   "NetworkConfiguration": {
    "additionalProperties": false,
@@ -1193,6 +1289,9 @@
     },
     "StepFunctionStateMachineParameters": {
      "$ref": "#/definitions/PipeTargetStateMachineParameters"
+    },
+    "TimestreamParameters": {
+     "$ref": "#/definitions/PipeTargetTimestreamParameters"
     }
    },
    "type": "object"
@@ -1279,6 +1378,62 @@
      "$ref": "#/definitions/PipeTargetInvocationType"
     }
    },
+   "type": "object"
+  },
+  "PipeTargetTimestreamParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionMappings": {
+     "items": {
+      "$ref": "#/definitions/DimensionMapping"
+     },
+     "maxItems": 128,
+     "minItems": 1,
+     "type": "array"
+    },
+    "EpochTimeUnit": {
+     "$ref": "#/definitions/EpochTimeUnit"
+    },
+    "MultiMeasureMappings": {
+     "items": {
+      "$ref": "#/definitions/MultiMeasureMapping"
+     },
+     "maxItems": 1024,
+     "minItems": 0,
+     "type": "array"
+    },
+    "SingleMeasureMappings": {
+     "items": {
+      "$ref": "#/definitions/SingleMeasureMapping"
+     },
+     "maxItems": 8192,
+     "minItems": 0,
+     "type": "array"
+    },
+    "TimeFieldType": {
+     "$ref": "#/definitions/TimeFieldType"
+    },
+    "TimeValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TimestampFormat": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VersionValue": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DimensionMappings",
+    "TimeValue",
+    "VersionValue"
+   ],
    "type": "object"
   },
   "PlacementConstraint": {
@@ -1499,6 +1654,30 @@
    ],
    "type": "string"
   },
+  "SingleMeasureMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MeasureName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValue": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MeasureValueType": {
+     "$ref": "#/definitions/MeasureValueType"
+    }
+   },
+   "required": [
+    "MeasureName",
+    "MeasureValue",
+    "MeasureValueType"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -1531,6 +1710,13 @@
     }
    },
    "type": "object"
+  },
+  "TimeFieldType": {
+   "enum": [
+    "EPOCH",
+    "TIMESTAMP_FORMAT"
+   ],
+   "type": "string"
   }
  },
  "handlers": {
