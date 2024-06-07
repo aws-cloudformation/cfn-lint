@@ -36,7 +36,7 @@ def validator():
         ),
         (
             "Valid vpc id long",
-            "vpc-abcdefg1234567890",
+            "vpc-abcdefa1234567890",
             True,
         ),
         (

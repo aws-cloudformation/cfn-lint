@@ -27,7 +27,7 @@ class VpcId(FormatKeyword):
         if not isinstance(instance, str):
             return True
 
-        if re.match(r"^vpc-(([0-9A-Za-z]{8})|([0-9A-Za-z]{17}))$", instance):
+        if re.match(r"^vpc-(([0-9A-Fa-f]{8})|([0-9A-Fa-f]{17}))$", instance):
             return True
 
         return False
