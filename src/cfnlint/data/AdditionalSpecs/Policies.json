@@ -48,7 +48,6 @@
   "aws:TokenIssueTime",
   "aws:UserAgent",
   "aws:ViaAWSService",
-  "aws:VpcSourceIp",
   "aws:userid",
   "aws:username"
  ],
@@ -147,6 +146,7 @@
    "ARNFormat": "arn:aws:account::${Account}:account",
    "ARNRegex": "^arn:aws:account::.+:account",
    "Actions": [
+    "AcceptPrimaryEmailUpdate",
     "CloseAccount",
     "DeleteAlternateContact",
     "DisableRegion",
@@ -155,11 +155,13 @@
     "GetAlternateContact",
     "GetChallengeQuestions",
     "GetContactInformation",
+    "GetPrimaryEmail",
     "GetRegionOptStatus",
     "ListRegions",
     "PutAlternateContact",
     "PutChallengeQuestions",
-    "PutContactInformation"
+    "PutContactInformation",
+    "StartPrimaryEmailUpdate"
    ],
    "HasResource": true,
    "StringPrefix": "account",
@@ -167,6 +169,7 @@
     "account:AccountResourceOrgPaths",
     "account:AccountResourceOrgTags/${TagKey}",
     "account:AlternateContactTypes",
+    "account:EmailTargetDomain",
     "account:TargetRegion"
    ]
   },
@@ -1246,6 +1249,7 @@
     "DescribeJobQueues",
     "DescribeJobs",
     "DescribeSchedulingPolicies",
+    "GetJobQueueSnapshot",
     "ListJobs",
     "ListSchedulingPolicies",
     "ListTagsForResource",
@@ -4800,6 +4804,7 @@
     "BatchGetTableOptimizer",
     "BatchGetTriggers",
     "BatchGetWorkflows",
+    "BatchPutDataQualityStatisticAnnotation",
     "BatchStopJobRun",
     "BatchUpdatePartition",
     "CancelDataQualityRuleRecommendationRun",
@@ -4856,6 +4861,8 @@
     "DeleteUserDefinedFunction",
     "DeleteWorkflow",
     "DeregisterDataPreview",
+    "DescribeConnectionType",
+    "DescribeEntity",
     "GetBlueprint",
     "GetBlueprintRun",
     "GetBlueprintRuns",
@@ -4875,6 +4882,8 @@
     "GetCustomEntityType",
     "GetDataCatalogEncryptionSettings",
     "GetDataPreviewStatement",
+    "GetDataQualityModel",
+    "GetDataQualityModelResult",
     "GetDataQualityResult",
     "GetDataQualityRuleRecommendationRun",
     "GetDataQualityRuleset",
@@ -4943,6 +4952,7 @@
     "ImportCatalogToGlue",
     "ListBlueprints",
     "ListColumnStatisticsTaskRuns",
+    "ListConnectionTypes",
     "ListCrawlers",
     "ListCrawls",
     "ListCustomEntityTypes",
@@ -4950,7 +4960,10 @@
     "ListDataQualityRuleRecommendationRuns",
     "ListDataQualityRulesetEvaluationRuns",
     "ListDataQualityRulesets",
+    "ListDataQualityStatisticAnnotations",
+    "ListDataQualityStatistics",
     "ListDevEndpoints",
+    "ListEntities",
     "ListJobs",
     "ListMLTransforms",
     "ListRegistries",
@@ -4965,10 +4978,12 @@
     "PassConnection",
     "PublishDataQuality",
     "PutDataCatalogEncryptionSettings",
+    "PutDataQualityProfileAnnotation",
     "PutResourcePolicy",
     "PutSchemaVersionMetadata",
     "PutWorkflowRunProperties",
     "QuerySchemaVersionMetadata",
+    "RefreshOAuth2Tokens",
     "RegisterSchemaVersion",
     "RemoveSchemaVersionMetadata",
     "RequestLogParsing",
@@ -7180,6 +7195,7 @@
     "ExtendTransaction",
     "GetDataAccess",
     "GetDataCellsFilter",
+    "GetDataLakePrincipal",
     "GetDataLakeSettings",
     "GetEffectivePermissionsForPath",
     "GetLFTag",
@@ -7307,6 +7323,7 @@
    ]
   },
   "AWS Launch Wizard": {
+   "ARNFormat": "arn:aws:launchwizard:${Region}:${Account}:${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:launchwizard:.+:.+:.+",
    "Actions": [
     "CreateAdditionalNode",
@@ -7329,6 +7346,7 @@
     "GetWorkload",
     "GetWorkloadAsset",
     "GetWorkloadAssets",
+    "GetWorkloadDeploymentPattern",
     "ListAdditionalNodes",
     "ListAllowedResources",
     "ListDeploymentEvents",
@@ -7336,15 +7354,23 @@
     "ListProvisionedApps",
     "ListResourceCostEstimates",
     "ListSettingsSets",
+    "ListTagsForResource",
     "ListWorkloadDeploymentOptions",
     "ListWorkloadDeploymentPatterns",
     "ListWorkloads",
     "PutSettingsSet",
     "StartProvisioning",
+    "TagResource",
+    "UntagResource",
     "UpdateSettingsSet"
    ],
-   "HasResource": false,
-   "StringPrefix": "launchwizard"
+   "HasResource": true,
+   "StringPrefix": "launchwizard",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS License Manager": {
    "ARNFormat": "arn:aws:license-manager:${Region}:${Account}:${ResourceType}:${ResourceId}",
@@ -8372,7 +8398,7 @@
   },
   "AWS Payments": {
    "ARNFormat": "arn:aws:payments::${Account}:${ResourceType}:${ResourceId}",
-   "ARNRegex": "^arn:aws:payments::[0-9]{12}:.+:.+",
+   "ARNRegex": "^arn:aws:payments:::.+:.+",
    "Actions": [
     "CreatePaymentInstrument",
     "DeletePaymentInstrument",
@@ -12324,6 +12350,34 @@
     "aws:TagKeys"
    ]
   },
+  "Amazon CloudWatch Application Signals": {
+   "ARNFormat": "arn:aws:application-signals:${Region}:${Account}:slo/{ServiceLevelObjectivesName}",
+   "ARNRegex": "^arn:aws:application-signals:.+:.+:.+",
+   "Actions": [
+    "BatchGetServiceLevelObjectiveBudgetReport",
+    "CreateServiceLevelObjective",
+    "DeleteServiceLevelObjective",
+    "GetService",
+    "GetServiceLevelObjective",
+    "ListServiceDependencies",
+    "ListServiceDependents",
+    "ListServiceLevelObjectives",
+    "ListServiceOperations",
+    "ListServices",
+    "ListTagsForResource",
+    "StartDiscovery",
+    "TagResource",
+    "UntagResource",
+    "UpdateServiceLevelObjective"
+   ],
+   "HasResource": true,
+   "StringPrefix": "application-signals",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "Amazon CloudWatch Evidently": {
    "ARNFormat": "arn:aws:evidently:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:evidently:.+:.+:.+",
@@ -14933,6 +14987,7 @@
     "GetDashboardForJobRun",
     "GetJobRun",
     "ListApplications",
+    "ListJobRunAttempts",
     "ListJobRuns",
     "ListTagsForResource",
     "StartApplication",
@@ -17315,6 +17370,7 @@
     "DescribeRouteCalculator",
     "DescribeTracker",
     "DisassociateTrackerConsumer",
+    "ForecastGeofenceEvents",
     "GetDevicePosition",
     "GetDevicePositionHistory",
     "GetGeofence",
@@ -17344,7 +17400,8 @@
     "UpdateMap",
     "UpdatePlaceIndex",
     "UpdateRouteCalculator",
-    "UpdateTracker"
+    "UpdateTracker",
+    "VerifyDevicePosition"
    ],
    "HasResource": true,
    "StringPrefix": "geo",
@@ -21611,6 +21668,8 @@
     "CountOpenWorkflowExecutions",
     "CountPendingActivityTasks",
     "CountPendingDecisionTasks",
+    "DeleteActivityType",
+    "DeleteWorkflowType",
     "DeprecateActivityType",
     "DeprecateDomain",
     "DeprecateWorkflowType",
@@ -22385,37 +22444,7 @@
    "HasResource": false,
    "StringPrefix": "wam"
   },
-  "Amazon WorkSpaces Thin Client": {
-   "ARNFormat": "arn:aws:thinclient:${Region}:${Account}:${ResourceType}/${ResourceIdentifier}",
-   "ARNRegex": "^arn:aws:thinclient:.+:.+:.+",
-   "Actions": [
-    "CreateEnvironment",
-    "DeleteDevice",
-    "DeleteEnvironment",
-    "DeregisterDevice",
-    "GetDevice",
-    "GetEnvironment",
-    "GetSoftwareSet",
-    "ListDeviceSessions",
-    "ListDevices",
-    "ListEnvironments",
-    "ListSoftwareSets",
-    "ListTagsForResource",
-    "TagResource",
-    "UntagResource",
-    "UpdateDevice",
-    "UpdateEnvironment",
-    "UpdateSoftwareSet"
-   ],
-   "HasResource": true,
-   "StringPrefix": "thinclient",
-   "conditionKeys": [
-    "aws:RequestTag/${TagKey}",
-    "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
-   ]
-  },
-  "Amazon WorkSpaces Web": {
+  "Amazon WorkSpaces Secure Browser": {
    "ARNFormat": "arn:aws:workspaces-web:${Region}:${Account}:${ResourceType}/${ResourceIdentifier}",
    "ARNRegex": "^arn:aws:workspaces-web:.+",
    "Actions": [
@@ -22480,6 +22509,36 @@
    ],
    "HasResource": true,
    "StringPrefix": "workspaces-web",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
+  "Amazon WorkSpaces Thin Client": {
+   "ARNFormat": "arn:aws:thinclient:${Region}:${Account}:${ResourceType}/${ResourceIdentifier}",
+   "ARNRegex": "^arn:aws:thinclient:.+:.+:.+",
+   "Actions": [
+    "CreateEnvironment",
+    "DeleteDevice",
+    "DeleteEnvironment",
+    "DeregisterDevice",
+    "GetDevice",
+    "GetEnvironment",
+    "GetSoftwareSet",
+    "ListDeviceSessions",
+    "ListDevices",
+    "ListEnvironments",
+    "ListSoftwareSets",
+    "ListTagsForResource",
+    "TagResource",
+    "UntagResource",
+    "UpdateDevice",
+    "UpdateEnvironment",
+    "UpdateSoftwareSet"
+   ],
+   "HasResource": true,
+   "StringPrefix": "thinclient",
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",

@@ -1483,6 +1483,7 @@
   "AWS::EFS::FileSystem.ReplicationDestination": "CACHED",
   "AWS::EKS::AccessEntry.AccessPolicy": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope": "CACHED",
+  "AWS::EKS::Addon.PodIdentityAssociation": "CACHED",
   "AWS::EKS::Cluster.AccessConfig": "CACHED",
   "AWS::EKS::Cluster.ClusterLogging": "CACHED",
   "AWS::EKS::Cluster.ControlPlanePlacement": "CACHED",
@@ -2634,6 +2635,8 @@
   "AWS::MediaPackage::PackagingGroup.Authorization": "CACHED",
   "AWS::MediaPackage::PackagingGroup.LogConfiguration": "CACHED",
   "AWS::MediaPackageV2::Channel.IngestEndpoint": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashManifestConfiguration": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashUtcTiming": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Encryption": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.EncryptionContractConfiguration": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.EncryptionMethod": "CACHED",
@@ -2641,6 +2644,7 @@
   "AWS::MediaPackageV2::OriginEndpoint.HlsManifestConfiguration": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.LowLatencyHlsManifestConfiguration": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Scte": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ScteDash": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.ScteHls": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Segment": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.SpekeKeyProvider": "CACHED",
@@ -5038,6 +5042,12 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.ParameterConfiguration": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.ParameterValue": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.Policy": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityControlCustomParameter": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityControlsConfiguration": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityHubPolicy": "CACHED",
   "AWS::SecurityHub::Insight.AwsSecurityFindingFilters": "CACHED",
   "AWS::SecurityHub::Insight.BooleanFilter": "CACHED",
   "AWS::SecurityHub::Insight.DateFilter": "CACHED",
@@ -5058,6 +5068,8 @@
   "AWS::SecurityLake::Subscriber.CustomLogSource": "CACHED",
   "AWS::SecurityLake::Subscriber.Source": "CACHED",
   "AWS::SecurityLake::Subscriber.SubscriberIdentity": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.HttpsNotificationConfiguration": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.NotificationConfiguration": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -5131,6 +5143,26 @@
   "AWS::VerifiedPermissions::Policy.TemplateLinkedPolicyDefinition": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.SchemaDefinition": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.ValidationSettings": "CACHED",
+  "AWS::VpcLattice::Listener.DefaultAction": "CACHED",
+  "AWS::VpcLattice::Listener.FixedResponse": "CACHED",
+  "AWS::VpcLattice::Listener.Forward": "CACHED",
+  "AWS::VpcLattice::Listener.WeightedTargetGroup": "CACHED",
+  "AWS::VpcLattice::Rule.Action": "CACHED",
+  "AWS::VpcLattice::Rule.FixedResponse": "CACHED",
+  "AWS::VpcLattice::Rule.Forward": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatch": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatchType": "CACHED",
+  "AWS::VpcLattice::Rule.HttpMatch": "CACHED",
+  "AWS::VpcLattice::Rule.Match": "CACHED",
+  "AWS::VpcLattice::Rule.PathMatch": "CACHED",
+  "AWS::VpcLattice::Rule.PathMatchType": "CACHED",
+  "AWS::VpcLattice::Rule.WeightedTargetGroup": "CACHED",
+  "AWS::VpcLattice::Service.DnsEntry": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkServiceAssociation.DnsEntry": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Matcher": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Target": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig": "CACHED",
   "AWS::WAF::ByteMatchSet.ByteMatchTuple": "CACHED",
   "AWS::WAF::ByteMatchSet.FieldToMatch": "CACHED",
   "AWS::WAF::IPSet.IPSetDescriptor": "CACHED",
@@ -5294,7 +5326,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "175.0.0",
+ "ResourceSpecificationVersion": "176.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -6100,140 +6132,7 @@
   "AWS::Glue::DataQualityRuleset": "CACHED",
   "AWS::Glue::Database": "CACHED",
   "AWS::Glue::DevEndpoint": "CACHED",
-  "AWS::Glue::Job": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html",
-   "Properties": {
-    "AllocatedCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-allocatedcapacity",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Command": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-command",
-     "Required": true,
-     "Type": "JobCommand",
-     "UpdateType": "Mutable"
-    },
-    "Connections": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-connections",
-     "Required": false,
-     "Type": "ConnectionsList",
-     "UpdateType": "Mutable"
-    },
-    "DefaultArguments": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-defaultarguments",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExecutionClass": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-executionclass",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExecutionProperty": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-executionproperty",
-     "Required": false,
-     "Type": "ExecutionProperty",
-     "UpdateType": "Mutable"
-    },
-    "GlueVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-glueversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "LogUri": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-loguri",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MaxCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-maxcapacity",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MaxRetries": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-maxretries",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Glue::Job.Name"
-     }
-    },
-    "NonOverridableArguments": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-nonoverridablearguments",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NotificationProperty": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-notificationproperty",
-     "Required": false,
-     "Type": "NotificationProperty",
-     "UpdateType": "Mutable"
-    },
-    "NumberOfWorkers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-numberofworkers",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Glue::Job.NumberOfWorkers"
-     }
-    },
-    "Role": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-role",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::IAM::Role.NameOrArn"
-     }
-    },
-    "SecurityConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-securityconfiguration",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-tags",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Timeout": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-timeout",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "WorkerType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-workertype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Glue::Job": "CACHED",
   "AWS::Glue::MLTransform": "CACHED",
   "AWS::Glue::Partition": "CACHED",
   "AWS::Glue::Registry": "CACHED",
@@ -6786,62 +6685,20 @@
   "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::AutomationRule": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy": "CACHED",
   "AWS::SecurityHub::DelegatedAdmin": "CACHED",
+  "AWS::SecurityHub::FindingAggregator": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::SecurityHub::Insight": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration": "CACHED",
+  "AWS::SecurityHub::PolicyAssociation": "CACHED",
   "AWS::SecurityHub::ProductSubscription": "CACHED",
   "AWS::SecurityHub::SecurityControl": "CACHED",
   "AWS::SecurityHub::Standard": "CACHED",
   "AWS::SecurityLake::AwsLogSource": "CACHED",
-  "AWS::SecurityLake::DataLake": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "S3BucketArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html",
-   "Properties": {
-    "EncryptionConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-encryptionconfiguration",
-     "Required": false,
-     "Type": "EncryptionConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "LifecycleConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-lifecycleconfiguration",
-     "Required": false,
-     "Type": "LifecycleConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "MetaStoreManagerRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-metastoremanagerrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SecurityLake::DataLake.MetaStoreManagerRoleArn"
-     }
-    },
-    "ReplicationConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-replicationconfiguration",
-     "Required": false,
-     "Type": "ReplicationConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securitylake-datalake.html#cfn-securitylake-datalake-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::SecurityLake::DataLake": "CACHED",
   "AWS::SecurityLake::Subscriber": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -6891,6 +6748,16 @@
   "AWS::VerifiedPermissions::Policy": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate": "CACHED",
+  "AWS::VpcLattice::AccessLogSubscription": "CACHED",
+  "AWS::VpcLattice::AuthPolicy": "CACHED",
+  "AWS::VpcLattice::Listener": "CACHED",
+  "AWS::VpcLattice::ResourcePolicy": "CACHED",
+  "AWS::VpcLattice::Rule": "CACHED",
+  "AWS::VpcLattice::Service": "CACHED",
+  "AWS::VpcLattice::ServiceNetwork": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkServiceAssociation": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkVpcAssociation": "CACHED",
+  "AWS::VpcLattice::TargetGroup": "CACHED",
   "AWS::WAF::ByteMatchSet": "CACHED",
   "AWS::WAF::IPSet": "CACHED",
   "AWS::WAF::Rule": "CACHED",
@@ -7014,7 +6881,6 @@
   "AWS::ApiGateway::Authorizer.Type": "CACHED",
   "AWS::ApiGateway::DocumentationPart.Location.Type": "CACHED",
   "AWS::ApiGateway::GatewayResponse.ResponseType": "CACHED",
-  "AWS::ApiGateway::Method.AuthorizationType": "CACHED",
   "AWS::ApiGateway::Method.Integration.ConnectionType": "CACHED",
   "AWS::ApiGateway::Method.Integration.ContentHandling": "CACHED",
   "AWS::ApiGateway::Method.Integration.PassthroughBehavior": "CACHED",
@@ -7888,6 +7754,7 @@
   "AWS::EC2::CapacityReservationFleet.InstanceMatchCriteria": "CACHED",
   "AWS::EC2::CapacityReservationFleet.Tenancy": "CACHED",
   "AWS::EC2::CapacityReservationFleet.TotalTargetCapacity": "CACHED",
+  "AWS::EC2::CustomerGateway.BgpAsnExtended": "CACHED",
   "AWS::EC2::CustomerGateway.CertificateArn": "CACHED",
   "AWS::EC2::EC2Fleet.CapacityRebalance.ReplacementStrategy": "CACHED",
   "AWS::EC2::EC2Fleet.CapacityReservationOptionsRequest.UsageStrategy": "CACHED",
@@ -7998,6 +7865,7 @@
   "AWS::EFS::FileSystem.BackupPolicy.Status": "CACHED",
   "AWS::EFS::FileSystem.FileSystemProtection.ReplicationOverwriteProtection": "CACHED",
   "AWS::EKS::AccessEntry.AccessScope.Type": "CACHED",
+  "AWS::EKS::Addon.PodIdentityAssociation.RoleArn": "CACHED",
   "AWS::EKS::Addon.ResolveConflicts": "CACHED",
   "AWS::EKS::Cluster.AccessConfig.AuthenticationMode": "CACHED",
   "AWS::EKS::Cluster.KubernetesNetworkConfig.IpFamily": "CACHED",
@@ -8900,6 +8768,12 @@
   "AWS::MediaPackageV2::OriginEndpoint.ChannelGroupName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.ChannelName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.ContainerType": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashManifestConfiguration.DrmSignaling": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashManifestConfiguration.ManifestName": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashManifestConfiguration.PeriodTriggers": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashManifestConfiguration.SegmentTemplateFormat": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashUtcTiming.TimingMode": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.DashUtcTiming.TimingSource": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Description": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Encryption.ConstantInitializationVector": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Encryption.KeyRotationIntervalSeconds": "CACHED",
@@ -8914,6 +8788,7 @@
   "AWS::MediaPackageV2::OriginEndpoint.LowLatencyHlsManifestConfiguration.ManifestName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.OriginEndpointName": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Scte.ScteFilter": "CACHED",
+  "AWS::MediaPackageV2::OriginEndpoint.ScteDash.AdMarkerDash": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.ScteHls.AdMarkerHls": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Segment.SegmentDurationSeconds": "CACHED",
   "AWS::MediaPackageV2::OriginEndpoint.Segment.SegmentName": "CACHED",
@@ -11871,7 +11746,15 @@
   "AWS::SecurityHub::AutomationRule.SeverityUpdate.Label": "CACHED",
   "AWS::SecurityHub::AutomationRule.StringFilter.Comparison": "CACHED",
   "AWS::SecurityHub::AutomationRule.WorkflowUpdate.Status": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.Description": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.Name": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityControlCustomParameter.SecurityControlId": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityControlsConfiguration.DisabledSecurityControlIdentifiers": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityControlsConfiguration.EnabledSecurityControlIdentifiers": "CACHED",
+  "AWS::SecurityHub::ConfigurationPolicy.SecurityHubPolicy.EnabledStandardIdentifiers": "CACHED",
   "AWS::SecurityHub::DelegatedAdmin.AdminAccountId": "CACHED",
+  "AWS::SecurityHub::FindingAggregator.RegionLinkingMode": "CACHED",
+  "AWS::SecurityHub::FindingAggregator.Regions": "CACHED",
   "AWS::SecurityHub::Hub.ControlFindingGenerator": "CACHED",
   "AWS::SecurityHub::Insight.DateFilter.End": "CACHED",
   "AWS::SecurityHub::Insight.DateFilter.Start": "CACHED",
@@ -11879,6 +11762,10 @@
   "AWS::SecurityHub::Insight.MapFilter.Comparison": "CACHED",
   "AWS::SecurityHub::Insight.Name": "CACHED",
   "AWS::SecurityHub::Insight.StringFilter.Comparison": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration.AutoEnableStandards": "CACHED",
+  "AWS::SecurityHub::OrganizationConfiguration.ConfigurationType": "CACHED",
+  "AWS::SecurityHub::PolicyAssociation.ConfigurationPolicyId": "CACHED",
+  "AWS::SecurityHub::PolicyAssociation.TargetType": "CACHED",
   "AWS::SecurityHub::ProductSubscription.ProductArn": "CACHED",
   "AWS::SecurityHub::SecurityControl.LastUpdateReason": "CACHED",
   "AWS::SecurityHub::SecurityControl.SecurityControlArn": "CACHED",
@@ -11896,6 +11783,10 @@
   "AWS::SecurityLake::Subscriber.SubscriberIdentity.ExternalId": "CACHED",
   "AWS::SecurityLake::Subscriber.SubscriberIdentity.Principal": "CACHED",
   "AWS::SecurityLake::Subscriber.SubscriberName": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.HttpsNotificationConfiguration.Endpoint": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.HttpsNotificationConfiguration.HttpMethod": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.HttpsNotificationConfiguration.TargetRoleArn": "CACHED",
+  "AWS::SecurityLake::SubscriberNotification.SubscriberArn": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",
@@ -12040,6 +11931,60 @@
   "AWS::VerifiedPermissions::PolicyTemplate.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate.Statement": "CACHED",
+  "AWS::VpcLattice::AccessLogSubscription.DestinationArn": "CACHED",
+  "AWS::VpcLattice::AccessLogSubscription.ResourceIdentifier": "CACHED",
+  "AWS::VpcLattice::AuthPolicy.ResourceIdentifier": "CACHED",
+  "AWS::VpcLattice::Listener.FixedResponse.StatusCode": "CACHED",
+  "AWS::VpcLattice::Listener.Name": "CACHED",
+  "AWS::VpcLattice::Listener.Port": "CACHED",
+  "AWS::VpcLattice::Listener.Protocol": "CACHED",
+  "AWS::VpcLattice::Listener.ServiceIdentifier": "CACHED",
+  "AWS::VpcLattice::Listener.WeightedTargetGroup.TargetGroupIdentifier": "CACHED",
+  "AWS::VpcLattice::Listener.WeightedTargetGroup.Weight": "CACHED",
+  "AWS::VpcLattice::ResourcePolicy.ResourceArn": "CACHED",
+  "AWS::VpcLattice::Rule.FixedResponse.StatusCode": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatch.Name": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatchType.Contains": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatchType.Exact": "CACHED",
+  "AWS::VpcLattice::Rule.HeaderMatchType.Prefix": "CACHED",
+  "AWS::VpcLattice::Rule.HttpMatch.Method": "CACHED",
+  "AWS::VpcLattice::Rule.ListenerIdentifier": "CACHED",
+  "AWS::VpcLattice::Rule.Name": "CACHED",
+  "AWS::VpcLattice::Rule.PathMatchType.Exact": "CACHED",
+  "AWS::VpcLattice::Rule.PathMatchType.Prefix": "CACHED",
+  "AWS::VpcLattice::Rule.Priority": "CACHED",
+  "AWS::VpcLattice::Rule.ServiceIdentifier": "CACHED",
+  "AWS::VpcLattice::Rule.WeightedTargetGroup.TargetGroupIdentifier": "CACHED",
+  "AWS::VpcLattice::Rule.WeightedTargetGroup.Weight": "CACHED",
+  "AWS::VpcLattice::Service.AuthType": "CACHED",
+  "AWS::VpcLattice::Service.CertificateArn": "CACHED",
+  "AWS::VpcLattice::Service.CustomDomainName": "CACHED",
+  "AWS::VpcLattice::Service.Name": "CACHED",
+  "AWS::VpcLattice::ServiceNetwork.AuthType": "CACHED",
+  "AWS::VpcLattice::ServiceNetwork.Name": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkServiceAssociation.ServiceIdentifier": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkServiceAssociation.ServiceNetworkIdentifier": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkVpcAssociation.SecurityGroupIds": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkVpcAssociation.ServiceNetworkIdentifier": "CACHED",
+  "AWS::VpcLattice::ServiceNetworkVpcAssociation.VpcIdentifier": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthCheckIntervalSeconds": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthCheckTimeoutSeconds": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthyThresholdCount": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Path": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Port": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Protocol": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.ProtocolVersion": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.UnhealthyThresholdCount": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Matcher.HttpCode": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Name": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Target.Port": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.IpAddressType": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.LambdaEventStructureVersion": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.Port": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.Protocol": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.ProtocolVersion": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.VpcIdentifier": "CACHED",
+  "AWS::VpcLattice::TargetGroup.Type": "CACHED",
   "AWS::WAFRegional::RegexPatternSet.RegexPatternStrings": "CACHED",
   "AWS::WAFv2::IPSet.Addresses": "CACHED",
   "AWS::WAFv2::IPSet.Description": "CACHED",
