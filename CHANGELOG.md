@@ -1,3 +1,9 @@
+### v0.87.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to `176.0.0` (pull #[3268](https://github.com/aws-cloudformation/cfn-lint/pull/3268))
+###### Fixes
+- Update [W1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1011) to allow integers in the `Fn::FindInMap` (pull #[3272](https://github.com/aws-cloudformation/cfn-lint/pull/3272))
+
 ### v0.87.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `175.0.0` (pull #[3255](https://github.com/aws-cloudformation/cfn-lint/pull/3255))
