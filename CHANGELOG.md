@@ -1,3 +1,15 @@
+### v1.2.5a10
+## What's Changed
+* Update CloudFormation schemas to `2024-06-07` by @kddejong in (pull #[3249](https://github.com/aws-cloudformation/cfn-lint/pull/3249))
+* Add rule [E3040](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3040) to validate a developer isn't using a read only property by @kddejong in (pull #[3275](https://github.com/aws-cloudformation/cfn-lint/pull/3275))
+* Add AWS custom `format` types `AWS::EC2::SecurityGroup.GroupId`, `AWS::EC2::SecurityGroup.GroupName` by @kddejong in (pull #[3274](https://github.com/aws-cloudformation/cfn-lint/pull/3274))
+* Add AWS custom `format` types `AWS::EC2::VPC.Id`, `AWS::EC2::Image.Id` by @kddejong in (pull #[3271](https://github.com/aws-cloudformation/cfn-lint/pull/3271))
+* Break resolver functionality into its own package by @kddejong in (pull #[3271](https://github.com/aws-cloudformation/cfn-lint/pull/3271))
+* Remove `awsType` and convert them to `cfnLint` keyword by @kddejong in (pull #[3262](https://github.com/aws-cloudformation/cfn-lint/pull/3262))
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a9...v1.2.5.a10
+
+
 ### v1.2.5a9
 ## What's Changed
 * Update CloudFormation schemas to 2024-05-14 by @kddejong in (pull #[3234](https://github.com/aws-cloudformation/cfn-lint/pull/3234))
