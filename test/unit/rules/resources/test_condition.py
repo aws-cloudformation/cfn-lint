@@ -46,6 +46,11 @@ def context(cfn):
             [],
         ),
         (
+            "Valid because of wrong type",
+            {},
+            [],
+        ),
+        (
             "Invalid condition",
             "IsProduction",
             [
