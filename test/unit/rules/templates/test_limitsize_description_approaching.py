@@ -5,25 +5,16 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import create_context_for_template
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.templates.ApproachingLimitDescription import (
     ApproachingLimitDescription,
 )
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = ApproachingLimitDescription()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    cfn = Template("", {})
-    context = create_context_for_template(cfn)
-    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
 
 @pytest.mark.parametrize(

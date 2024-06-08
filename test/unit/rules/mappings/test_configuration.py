@@ -7,30 +7,14 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.mappings.Configuration import Configuration
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = Configuration()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def cfn():
-    return Template(
-        "",
-        {},
-        regions=["us-east-1"],
-    )
-
-
-@pytest.fixture(scope="module")
-def context(cfn):
-    return create_context_for_template(cfn)
 
 
 @pytest.mark.parametrize(
@@ -151,8 +135,7 @@ def context(cfn):
         ),
     ],
 )
-def test_validate(name, instance, expected, rule, context, cfn):
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, {}, instance, {}))
 
     assert errs == expected, f"Test {name!r} got {errs!r}"

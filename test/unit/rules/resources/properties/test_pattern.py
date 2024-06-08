@@ -8,7 +8,6 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Path
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.ValuePattern import ValuePattern as ParameterPattern
 from cfnlint.rules.resources.properties.Pattern import Pattern
 
@@ -18,11 +17,6 @@ def rule():
     rule = Pattern()
     rule.child_rules["W2031"] = ParameterPattern()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 def test_validate(rule, validator):

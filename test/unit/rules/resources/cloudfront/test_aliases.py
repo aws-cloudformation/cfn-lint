@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.cloudfront.Aliases import Aliases
 
 
@@ -15,11 +15,6 @@ from cfnlint.rules.resources.cloudfront.Aliases import Aliases
 def rule():
     rule = Aliases()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

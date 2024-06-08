@@ -7,8 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.metadata.Configuration import Configuration
 
 
@@ -16,16 +15,6 @@ from cfnlint.rules.metadata.Configuration import Configuration
 def rule():
     rule = Configuration()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
 
 
 @pytest.mark.parametrize(

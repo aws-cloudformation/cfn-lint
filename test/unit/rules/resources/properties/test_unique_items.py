@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.properties.UniqueItems import UniqueItems
 from cfnlint.rules.resources.properties.UniqueItemsAllowed import UniqueItemsAllowed
 
@@ -15,11 +14,6 @@ def rule():
     rule = UniqueItems()
     rule.child_rules["I3037"] = UniqueItemsAllowed()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

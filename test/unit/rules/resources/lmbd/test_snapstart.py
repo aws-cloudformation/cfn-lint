@@ -8,9 +8,8 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Context, Path
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.SnapStart import SnapStart
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -19,42 +18,36 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(
-        schema={},
-        cfn=Template(
-            "",
-            {
-                "Resources": {
-                    "GoodSnapStart": {
-                        "Type": "AWS::Lambda::Function",
-                        "Properties": {
-                            "Code": {"S3Bucket": "XXXXXX", "S3Key": "key"},
-                            "Handler": "handler",
-                            "Role": "role",
-                            "Runtime": "runtime",
-                            "SnapStart": {"ApplyOn": "PublishedVersions"},
-                        },
-                    },
-                    "GoodSnapStartVersion": {
-                        "Type": "AWS::Lambda::Version",
-                        "Properties": {"FunctionName": {"Ref": "GoodSnapStart"}},
-                    },
-                    "BadSnapStart": {
-                        "Type": "AWS::Lambda::Function",
-                        "Properties": {
-                            "Code": {"S3Bucket": "XXXXXX", "S3Key": "key"},
-                            "Handler": "handler",
-                            "Role": "role",
-                            "Runtime": "runtime",
-                            "SnapStart": {"ApplyOn": "PublishedVersions"},
-                        },
-                    },
-                }
+@pytest.fixture
+def template():
+    return {
+        "Resources": {
+            "GoodSnapStart": {
+                "Type": "AWS::Lambda::Function",
+                "Properties": {
+                    "Code": {"S3Bucket": "XXXXXX", "S3Key": "key"},
+                    "Handler": "handler",
+                    "Role": "role",
+                    "Runtime": "runtime",
+                    "SnapStart": {"ApplyOn": "PublishedVersions"},
+                },
             },
-        ),
-    )
+            "GoodSnapStartVersion": {
+                "Type": "AWS::Lambda::Version",
+                "Properties": {"FunctionName": {"Ref": "GoodSnapStart"}},
+            },
+            "BadSnapStart": {
+                "Type": "AWS::Lambda::Function",
+                "Properties": {
+                    "Code": {"S3Bucket": "XXXXXX", "S3Key": "key"},
+                    "Handler": "handler",
+                    "Role": "role",
+                    "Runtime": "runtime",
+                    "SnapStart": {"ApplyOn": "PublishedVersions"},
+                },
+            },
+        }
+    }
 
 
 @pytest.mark.parametrize(

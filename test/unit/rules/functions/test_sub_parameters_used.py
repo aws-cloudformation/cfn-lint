@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.functions.SubParametersUsed import SubParametersUsed
 
 
@@ -13,11 +13,6 @@ from cfnlint.rules.functions.SubParametersUsed import SubParametersUsed
 def rule():
     rule = SubParametersUsed()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.rds.DbClusterAurora import DbClusterAurora
 
 
@@ -15,11 +15,6 @@ from cfnlint.rules.resources.rds.DbClusterAurora import DbClusterAurora
 def rule():
     rule = DbClusterAurora()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.ectwo.Ebs import Ebs
 
 
@@ -15,11 +15,6 @@ from cfnlint.rules.resources.ectwo.Ebs import Ebs
 def rule():
     rule = Ebs()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

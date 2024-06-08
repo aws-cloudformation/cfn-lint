@@ -7,13 +7,11 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Path, create_context_for_template
-from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.context import Path
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (  # noqa: E501
     RetentionPeriodOnResourceTypesWithAutoExpiringContent,
 )
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -22,26 +20,23 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    cfn = Template(
-        "",
-        {
-            "Resources": {
-                "MyRdsDbInstance": {
-                    "Type": "AWS::RDS::DBInstance",
-                }
+@pytest.fixture
+def template():
+    return {
+        "Resources": {
+            "MyRdsDbInstance": {
+                "Type": "AWS::RDS::DBInstance",
             }
-        },
+        }
+    }
+
+
+@pytest.fixture
+def path():
+    return Path(
+        path=deque(["Resources", "MyRdsDbInstance", "Properties"]),
+        cfn_path=deque(["Resources", "AWS::RDS::DBInstance", "Properties"]),
     )
-    context = create_context_for_template(cfn).evolve(
-        functions=FUNCTIONS,
-        path=Path(
-            path=deque(["Resources", "MyRdsDbInstance", "Properties"]),
-            cfn_path=deque(["Resources", "AWS::RDS::DBInstance", "Properties"]),
-        ),
-    )
-    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
 
 @pytest.mark.parametrize(

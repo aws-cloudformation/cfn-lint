@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.formats import FormatKeyword
 from cfnlint.rules.formats.Format import Format
 
@@ -15,16 +14,6 @@ from cfnlint.rules.formats.Format import Format
 def rule():
     rule = Format()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
 
 
 class _Pass(FormatKeyword):

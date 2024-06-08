@@ -8,7 +8,6 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Path
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.NumberRange import NumberRange as ParamaterNumberRange
 from cfnlint.rules.resources.properties.NumberRange import NumberRange
 
@@ -18,11 +17,6 @@ def rule():
     rule = NumberRange()
     rule.child_rules["W3034"] = ParamaterNumberRange()
     yield NumberRange()
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 def test_minimum(rule, validator):

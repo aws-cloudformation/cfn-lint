@@ -7,7 +7,7 @@ from datetime import datetime
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEnd import DeprecatedRuntimeEnd
 
 
@@ -16,11 +16,6 @@ def rule():
     rule = DeprecatedRuntimeEnd()
     rule.current_date = datetime(2019, 6, 29)
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

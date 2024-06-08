@@ -7,9 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Resource
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.functions.SubNotJoin import SubNotJoin
 
 
@@ -19,17 +17,15 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        path=deque([]),
-        resources={
-            "MyResource": Resource({"Type": "AWS::S3::Bucket"}),
+@pytest.fixture
+def template():
+    return {
+        "Resources": {
+            "MyResource": {
+                "Type": "AWS::S3::Bucket",
+            },
         },
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
+    }
 
 
 @pytest.mark.parametrize(

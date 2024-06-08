@@ -5,10 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import create_context_for_template
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.functions.GetAttFormat import GetAttFormat
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -17,29 +15,15 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def cfn():
-    return Template(
-        "",
-        {
-            "Resources": {
-                "MyBucket": {"Type": "AWS::S3::Bucket"},
-                "MyVpc": {"Type": "AWS::EC2::VPC"},
-                "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
-            },
+@pytest.fixture
+def template():
+    return {
+        "Resources": {
+            "MyBucket": {"Type": "AWS::S3::Bucket"},
+            "MyVpc": {"Type": "AWS::EC2::VPC"},
+            "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
         },
-        regions=["us-east-1"],
-    )
-
-
-@pytest.fixture(scope="module")
-def context(cfn):
-    return create_context_for_template(cfn)
-
-
-@pytest.fixture(scope="module")
-def validator(cfn, context):
-    return CfnTemplateValidator({}, context=context, cfn=cfn)
+    }
 
 
 @pytest.mark.parametrize(

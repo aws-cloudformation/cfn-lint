@@ -7,11 +7,9 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Path, create_context_for_template
-from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.context import Path
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.DependsOn import DependsOn  # noqa: E501
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -20,54 +18,47 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    cfn = Template(
-        "",
-        {
-            "Conditions": {
-                "IsUsEast1": {
-                    "Fn::Equals": [
-                        {"Ref": "AWS::Region"},
-                        "us-east-1",
-                    ]
-                }
+@pytest.fixture
+def template():
+    return {
+        "Conditions": {
+            "IsUsEast1": {
+                "Fn::Equals": [
+                    {"Ref": "AWS::Region"},
+                    "us-east-1",
+                ]
+            }
+        },
+        "Resources": {
+            "ParentBucket": {
+                "Type": "AWS::S3::Bucket",
             },
-            "Resources": {
-                "ParentBucket": {
-                    "Type": "AWS::S3::Bucket",
-                },
-                "ChildBucket": {
-                    "Type": "AWS::S3::Bucket",
-                    "DependsOn": "ParentBucket",
-                },
-                "ParentBucketWithGoodCondition": {
-                    "Condition": "IsUsEast1",
-                    "Type": "AWS::S3::Bucket",
-                },
-                "ChildBucketWithGoodCondition": {
-                    "Condition": "IsUsEast1",
-                    "DependsOn": "ParentBucketWithGoodCondition",
-                },
-                "ParentBucketWithBadCondition": {
-                    "Condition": "IsUsEast1",
-                    "Type": "AWS::S3::Bucket",
-                },
-                "ChildBucketWithBadCondition": {
-                    "Type": "AWS::S3::Bucket",
-                    "DependsOn": "ParentBucketWithBadCondition",
-                },
-                "ToMySelf": {
-                    "Type": "AWS::S3::Bucket",
-                    "DependsOn": "ToMySelf",
-                },
+            "ChildBucket": {
+                "Type": "AWS::S3::Bucket",
+                "DependsOn": "ParentBucket",
+            },
+            "ParentBucketWithGoodCondition": {
+                "Condition": "IsUsEast1",
+                "Type": "AWS::S3::Bucket",
+            },
+            "ChildBucketWithGoodCondition": {
+                "Condition": "IsUsEast1",
+                "DependsOn": "ParentBucketWithGoodCondition",
+            },
+            "ParentBucketWithBadCondition": {
+                "Condition": "IsUsEast1",
+                "Type": "AWS::S3::Bucket",
+            },
+            "ChildBucketWithBadCondition": {
+                "Type": "AWS::S3::Bucket",
+                "DependsOn": "ParentBucketWithBadCondition",
+            },
+            "ToMySelf": {
+                "Type": "AWS::S3::Bucket",
+                "DependsOn": "ToMySelf",
             },
         },
-    )
-    context = create_context_for_template(cfn).evolve(
-        functions=FUNCTIONS,
-    )
-    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
+    }
 
 
 @pytest.mark.parametrize(

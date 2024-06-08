@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.rds.DbInstanceDbInstanceClassEnum import (
     DbInstanceDbInstanceClassEnum,
 )
@@ -15,11 +14,6 @@ from cfnlint.rules.resources.rds.DbInstanceDbInstanceClassEnum import (
 def rule():
     rule = DbInstanceDbInstanceClassEnum()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

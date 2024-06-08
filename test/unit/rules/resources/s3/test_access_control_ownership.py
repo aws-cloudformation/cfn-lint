@@ -7,20 +7,14 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.s3.AccessControlOwnership import AccessControlOwnership
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = AccessControlOwnership()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={}).evolve(cfn=Template("", {}))
 
 
 @pytest.mark.parametrize(

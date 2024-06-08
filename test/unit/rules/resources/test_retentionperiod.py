@@ -7,15 +7,13 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Path, create_context_for_template
-from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.context import Path
+from cfnlint.jsonschema import ValidationError
 
 # ruff: noqa: E501
 from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (
     RetentionPeriodOnResourceTypesWithAutoExpiringContent,
 )
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -24,26 +22,23 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    cfn = Template(
-        "",
-        {
-            "Resources": {
-                "MySqs": {
-                    "Type": "AWS::SQS::Queue",
-                }
+@pytest.fixture
+def template():
+    return {
+        "Resources": {
+            "MySqs": {
+                "Type": "AWS::SQS::Queue",
             }
-        },
+        }
+    }
+
+
+@pytest.fixture
+def path():
+    return Path(
+        path=deque(["Resources", "MySqs", "Properties"]),
+        cfn_path=deque(["Resources", "AWS::SQS::Queue", "Properties"]),
     )
-    context = create_context_for_template(cfn).evolve(
-        functions=FUNCTIONS,
-        path=Path(
-            path=deque(["Resources", "MySqs", "Properties"]),
-            cfn_path=deque(["Resources", "AWS::SQS::Queue", "Properties"]),
-        ),
-    )
-    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
 
 
 @pytest.mark.parametrize(

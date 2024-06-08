@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 
 # ruff: noqa: E501
 from cfnlint.rules.resources.UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes import (
@@ -19,11 +19,6 @@ from cfnlint.rules.resources.UpdateReplacePolicyDeletionPolicyOnStatefulResource
 def rule():
     rule = UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

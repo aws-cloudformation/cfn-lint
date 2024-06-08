@@ -7,8 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context, Path
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.outputs.ImportValue import ImportValue
 
 
@@ -18,37 +17,33 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
-
-
 @pytest.mark.parametrize(
     "name,instance,path,schema,expected",
     [
         (
             "Valid Fn::ImportValue",
             {"Fn::ImportValue": "Export"},
-            deque(["Resources", "MyResource", "Properties", "BucketName"]),
+            {
+                "path": ["Resources", "MyResource", "Properties", "BucketName"],
+            },
             {"type": "string"},
             [],
         ),
         (
             "Short path",
             {"Fn::ImportValue": "Export"},
-            deque(["Outputs"]),
+            {
+                "path": ["Outputs"],
+            },
             {"type": "object"},
             [],
         ),
         (
             "Invalid Fn::ImportValue in Output",
             {"Fn::ImportValue": "Export"},
-            deque(["Outputs", "MyOutput", "Value"]),
+            {
+                "path": ["Outputs", "MyOutput", "Value"],
+            },
             {"type": "string"},
             [
                 ValidationError(
@@ -62,9 +57,8 @@ def validator():
             ],
         ),
     ],
+    indirect=["path"],
 )
 def test_validate(name, instance, path, schema, expected, rule, validator):
-    context = validator.context.evolve(path=Path(path=path))
-    validator = validator.evolve(context=context)
     errs = list(rule.validate(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

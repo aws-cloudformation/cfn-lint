@@ -7,10 +7,9 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Path, create_context_for_template
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.context import Path
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.conditions.Exists import Exists
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
@@ -19,26 +18,23 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    cfn = Template(
-        "",
-        {
-            "Conditions": {
-                "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
-            },
-            "Resources": {
-                "MyRdsDbInstance": {
-                    "Type": "AWS::RDS::DBInstance",
-                }
-            },
+@pytest.fixture
+def template():
+    return {
+        "Conditions": {
+            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
         },
-    )
-    context = create_context_for_template(cfn).evolve(
-        functions=[],
-        path=Path(path=deque(["Resources", "MyRdsDbInstance", "Properties"])),
-    )
-    yield CfnTemplateValidator(schema={}, context=context, cfn=cfn)
+        "Resources": {
+            "MyRdsDbInstance": {
+                "Type": "AWS::RDS::DBInstance",
+            }
+        },
+    }
+
+
+@pytest.fixture
+def path():
+    return Path(path=deque(["Resources", "MyRdsDbInstance", "Properties"]))
 
 
 @pytest.mark.parametrize(
@@ -62,4 +58,4 @@ def validator():
 )
 def test_condition(name, instance, errors, rule, validator):
     errs = list(rule.cfncondition(validator, {}, instance, {}))
-    assert errs == errors
+    assert errs == errors, f"Test {name!r} failed with {errs!r}"

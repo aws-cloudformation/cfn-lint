@@ -7,9 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Parameter
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.properties.ImageId import ImageId
 
 
@@ -19,25 +17,19 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={
-            "MyImageId": Parameter(
-                {
-                    "Type": "AWS::EC2::Image::Id",
-                }
-            ),
-            "MyString": Parameter(
-                {
-                    "Type": "String",
-                }
-            ),
+@pytest.fixture
+def template():
+    return {
+        "Parameters": {
+            "MyImageId": {
+                "Type": "AWS::EC2::Image::Id",
+            },
+            "MyString": {
+                "Type": "String",
+            },
         },
-    )
-    yield CfnTemplateValidator(context=context)
+        "Resources": {},
+    }
 
 
 @pytest.mark.parametrize(

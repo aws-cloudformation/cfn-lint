@@ -3,12 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
-
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.events.RuleScheduleExpression import RuleScheduleExpression
 
 
@@ -16,17 +13,6 @@ from cfnlint.rules.resources.events.RuleScheduleExpression import RuleScheduleEx
 def rule():
     rule = RuleScheduleExpression()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        path=deque([]),
-        resources={},
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
 
 
 @pytest.mark.parametrize(

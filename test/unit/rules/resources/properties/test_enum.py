@@ -8,7 +8,6 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Path
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.Enum import Enum as ParameterEnum
 from cfnlint.rules.resources.properties.Enum import Enum
 
@@ -18,11 +17,6 @@ def rule():
     rule = Enum()
     rule.child_rules["W2030"] = ParameterEnum()
     yield Enum()
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 def test_validate(rule, validator):
