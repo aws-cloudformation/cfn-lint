@@ -10,7 +10,12 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Set, Tuple
 
-from cfnlint.helpers import BOOLEAN_STRINGS_TRUE, PSEUDOPARAMS, REGION_PRIMARY
+from cfnlint.helpers import (
+    BOOLEAN_STRINGS_TRUE,
+    PSEUDOPARAMS,
+    REGION_PRIMARY,
+    TRANSFORM_SAM,
+)
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
 
 _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
@@ -36,6 +41,9 @@ class Transforms:
     def has_language_extensions_transform(self):
         lang_extensions_transform = "AWS::LanguageExtensions"
         return bool(lang_extensions_transform in self._transforms)
+
+    def has_sam_transform(self):
+        return bool(TRANSFORM_SAM in self._transforms)
 
 
 @dataclass(frozen=True)

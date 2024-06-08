@@ -3,31 +3,59 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.unit.rules import BaseRuleTestCase
+import pytest
 
-from cfnlint.rules.resources.ServerlessTransform import (
-    ServerlessTransform,  # pylint: disable=E0401
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules.resources.ServerlessTransform import ServerlessTransform
+
+
+@pytest.fixture(scope="module")
+def rule():
+    rule = ServerlessTransform()
+    yield rule
+
+
+@pytest.mark.parametrize(
+    "name,instance,template,expected",
+    [
+        (
+            "Valid with transform",
+            "AWS::Serverless::Function",
+            {
+                "Transform": ["AWS::Serverless-2016-10-31"],
+            },
+            [],
+        ),
+        (
+            "Invalid type",
+            [],
+            {},
+            [],
+        ),
+        (
+            "Valid type without transform",
+            "AWS::Lambda::Function",
+            {},
+            [],
+        ),
+        (
+            "Invalid when not specified",
+            "AWS::Serverless::Function",
+            {},
+            [
+                ValidationError(
+                    (
+                        "'AWS::Serverless::Function' type used "
+                        "without the serverless transform "
+                        "'AWS::Serverless-2016-10-31'"
+                    ),
+                    rule=ServerlessTransform(),
+                )
+            ],
+        ),
+    ],
+    indirect=["template"],
 )
-
-
-class TestServerlessTransform(BaseRuleTestCase):
-    """Test base template"""
-
-    def setUp(self):
-        """Setup"""
-        super(TestServerlessTransform, self).setUp()
-        self.collection.register(ServerlessTransform())
-        self.success_templates = [
-            "test/fixtures/templates/good/generic.yaml",
-            "test/fixtures/templates/good/transform_serverless_function.yaml",
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/transform_serverless_missing.yaml", 1
-        )
+def test_validate(name, instance, template, expected, rule, validator):
+    errors = list(rule.validate(validator, False, instance, {}))
+    assert errors == expected, f"Test {name!r} got {errors!r}"

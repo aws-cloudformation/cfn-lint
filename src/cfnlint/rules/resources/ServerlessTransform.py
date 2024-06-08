@@ -3,12 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint._typing import RuleMatches
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
-from cfnlint.template import Template
+from typing import Any
+
+from cfnlint.helpers import TRANSFORM_SAM
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.rules.jsonschema import CfnLintKeyword
 
 
-class ServerlessTransform(CloudFormationLintRule):
+class ServerlessTransform(CfnLintKeyword):
     """Check if Serverless Resources exist without the Serverless Transform"""
 
     id = "E3038"
@@ -17,32 +19,26 @@ class ServerlessTransform(CloudFormationLintRule):
         "Check that a template with Serverless Resources also includes the Serverless"
         " Transform"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html"
     tags = ["resources", "transform"]
 
-    def match(self, cfn: Template) -> RuleMatches:
-        matches: RuleMatches = []
+    def __init__(self) -> None:
+        super().__init__(keywords=["Resources/*/Type"])
 
-        transforms = cfn.template.get("Transform", [])
-        if not isinstance(transforms, list):
-            transforms = [transforms]
-        has_serverless_transform = any(
-            transform == "AWS::Serverless-2016-10-31" for transform in transforms
-        )
-        if has_serverless_transform:
-            return matches
+    def validate(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        if not validator.is_type(instance, "string"):
+            return
 
-        for resource_name, resource_values in cfn.get_resources().items():
-            resource_type = resource_values["Type"]
-            if isinstance(resource_type, str):
-                if resource_type.startswith("AWS::Serverless::"):
-                    message = (
-                        "Serverless Transform required for Type {0} for resource {1}"
-                    )
-                    matches.append(
-                        RuleMatch(
-                            ["Transform"], message.format(resource_type, resource_name)
-                        )
-                    )
-                    break
-        return matches
+        if validator.context.transforms.has_sam_transform():
+            return
+
+        if instance.startswith("AWS::Serverless::"):
+            yield ValidationError(
+                (
+                    f"{instance!r} type used without the "
+                    f"serverless transform {TRANSFORM_SAM!r}"
+                ),
+                rule=self,
+            )
