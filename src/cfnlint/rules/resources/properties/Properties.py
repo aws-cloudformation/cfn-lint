@@ -57,10 +57,6 @@ class Properties(CfnLintJsonSchema):
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
-    def _validate_resource(self, validator: Validator, _, instance: Any, schema):
-        validator = self.extend_validator(validator, schema, validator.context.evolve())
-        yield from self._validate(validator, instance)
-
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -78,9 +74,6 @@ class Properties(CfnLintJsonSchema):
         if not validator.is_type(t, "string"):
             return
 
-        if t.startswith("Custom::"):
-            t = "AWS::CloudFormation::CustomResource"
-
         properties = instance.get("Properties", {})
         for regions, schema in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
             t, validator.context.regions
@@ -91,11 +84,12 @@ class Properties(CfnLintJsonSchema):
                     path=validator.context.path.evolve(
                         cfn_path=deque(["Resources", t, "Properties"]),
                     ).descend(path="Properties"),
-                )
+                ),
             )
 
-            for err in self._validate_resource(
-                region_validator, t, properties, schema.schema
-            ):
+            region_validator = self.extend_validator(
+                region_validator, schema.schema, region_validator.context.evolve()
+            )
+            for err in self._validate(region_validator, properties):
                 err.path.appendleft("Properties")
                 yield err

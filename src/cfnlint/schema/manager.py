@@ -126,6 +126,22 @@ class ProviderSchemaManager:
         if cached_schema is not None:
             yield cached_regions, cached_schema
 
+    def _normalize_resource_type(self, resource_type: str) -> str:
+        """
+        Normalize the resource type to the correct format
+
+        Args:
+            resource_type (str): the :: version of the resource type
+        Returns:
+            str: the normalized resource type
+        """
+        if resource_type.startswith("Custom::"):
+            resource_type = "AWS::CloudFormation::CustomResource"
+        if resource_type.endswith("::MODULE"):
+            resource_type = "Module"
+
+        return resource_type
+
     @lru_cache(maxsize=None)
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
         """Get the provider resource shcema and cache it to speed up future lookups
@@ -136,6 +152,8 @@ class ProviderSchemaManager:
         Returns:
             dict: returns the schema
         """
+        resource_type = self._normalize_resource_type(resource_type)
+
         if resource_type in self._removed_types:
             raise ResourceNotFoundError(resource_type, region)
 
@@ -508,10 +526,7 @@ class ProviderSchemaManager:
             Dict(str, Dict): Returns a Dict where the keys are the attributes and the
                 value is the CloudFormation schema description of the attribute
         """
-        if resource_type.startswith("Custom::"):
-            resource_type = "AWS::CloudFormation::CustomResource"
-        if resource_type.endswith("::MODULE"):
-            resource_type = "Module"
+        resource_type = self._normalize_resource_type(resource_type)
         self.get_resource_schema(region=region, resource_type=resource_type)
         return self._schemas[region][resource_type].get_atts
 
