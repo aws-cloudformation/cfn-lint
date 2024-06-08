@@ -8,23 +8,14 @@ from unittest import mock
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.lmbd.SnapStartSupported import SnapStartSupported
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = SnapStartSupported()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(
-        schema={},
-        cfn=Template("", {}),
-    )
 
 
 @pytest.mark.parametrize(

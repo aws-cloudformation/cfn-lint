@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.route53.HealthCheckHealthCheckConfigTypeInclusive import (
     HealthCheckHealthCheckConfigTypeInclusive,
 )
@@ -17,11 +17,6 @@ from cfnlint.rules.resources.route53.HealthCheckHealthCheckConfigTypeInclusive i
 def rule():
     rule = HealthCheckHealthCheckConfigTypeInclusive()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

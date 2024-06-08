@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.elasticloadbalancingv2.ListenerCertificate import (
     ListenerCertificate,
 )
@@ -17,11 +17,6 @@ from cfnlint.rules.resources.elasticloadbalancingv2.ListenerCertificate import (
 def rule():
     rule = ListenerCertificate()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

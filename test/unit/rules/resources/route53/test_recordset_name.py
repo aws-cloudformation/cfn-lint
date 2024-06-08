@@ -7,20 +7,14 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.route53.RecordSetName import RecordSetName
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = RecordSetName()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={}).evolve(cfn=Template("", {}))
 
 
 @pytest.mark.parametrize(

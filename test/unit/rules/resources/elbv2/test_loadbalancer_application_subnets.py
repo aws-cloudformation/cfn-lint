@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 
 # ruff: noqa: E501
 from cfnlint.rules.resources.elasticloadbalancingv2.LoadBalancerApplicationSubnets import (
@@ -19,11 +19,6 @@ from cfnlint.rules.resources.elasticloadbalancingv2.LoadBalancerApplicationSubne
 def rule():
     rule = LoadBalancerApplicationSubnets()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(

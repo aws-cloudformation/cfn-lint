@@ -7,22 +7,16 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.certificatemanager.DomainValidationOptions import (
     DomainValidationOptions,
 )
-from cfnlint.template import Template
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = DomainValidationOptions()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={}).evolve(cfn=Template("", {}))
 
 
 @pytest.mark.parametrize(

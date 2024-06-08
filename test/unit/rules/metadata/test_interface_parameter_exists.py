@@ -7,9 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Parameter
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.metadata.InterfaceParameterExists import InterfaceParameterExists
 
 
@@ -19,16 +17,13 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={
-            "Foo": Parameter({"Type": "String"}),
+@pytest.fixture
+def template():
+    return {
+        "Parameters": {
+            "Foo": {"Type": "String"},
         },
-    )
-    yield CfnTemplateValidator(context=context)
+    }
 
 
 @pytest.mark.parametrize(

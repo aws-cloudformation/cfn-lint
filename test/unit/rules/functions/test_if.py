@@ -7,9 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.context.context import Condition, Parameter
-from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.functions.If import If
 
 
@@ -19,26 +17,21 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={
-            "MyParameter": Parameter(
-                {
-                    "Type": "String",
-                    "Default": "foobar",
-                }
-            )
+@pytest.fixture
+def template():
+    return {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Conditions": {
+            "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
         },
-        conditions={
-            "IsUsEast1": Condition(
-                {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}
-            )
+        "Parameters": {
+            "MyParameter": {
+                "Type": "String",
+                "Default": "foobar",
+            },
         },
-    )
-    yield CfnTemplateValidator(context=context)
+        "Resources": {},
+    }
 
 
 @pytest.mark.parametrize(

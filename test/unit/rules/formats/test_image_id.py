@@ -5,8 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import Context
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.formats.ImageId import ImageId
 
 
@@ -14,16 +12,6 @@ from cfnlint.rules.formats.ImageId import ImageId
 def rule():
     rule = ImageId()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    context = Context(
-        regions=["us-east-1"],
-        resources={},
-        parameters={},
-    )
-    yield CfnTemplateValidator(context=context)
 
 
 @pytest.mark.parametrize(

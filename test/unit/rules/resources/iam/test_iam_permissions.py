@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.iam.Permissions import Permissions
 
 
@@ -13,11 +12,6 @@ from cfnlint.rules.resources.iam.Permissions import Permissions
 def rule():
     rule = Permissions()
     yield rule
-
-
-@pytest.fixture(scope="module")
-def validator():
-    yield CfnTemplateValidator(schema={})
 
 
 @pytest.mark.parametrize(
