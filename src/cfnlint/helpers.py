@@ -319,6 +319,8 @@ BOOLEAN_STRINGS_TRUE = frozenset(["true", "True"])
 BOOLEAN_STRINGS_FALSE = frozenset(["false", "False"])
 BOOLEAN_STRINGS = frozenset(list(BOOLEAN_STRINGS_TRUE) + list(BOOLEAN_STRINGS_FALSE))
 
+TRANSFORM_SAM = "AWS::Serverless-2016-10-31"
+
 
 # pylint: disable=missing-class-docstring
 class RegexDict(dict):

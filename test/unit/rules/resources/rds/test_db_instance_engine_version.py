@@ -27,6 +27,10 @@ def rule():
             [],
         ),
         (
+            [],
+            [],
+        ),
+        (
             {
                 "Engine": "MySqL",  # API converts it appropriately
             },

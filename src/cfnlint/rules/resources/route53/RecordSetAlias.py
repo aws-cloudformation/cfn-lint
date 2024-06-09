@@ -34,6 +34,4 @@ class RecordSetAlias(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        if err.validator is None:
-            return "Additional properties are not allowed ('TTL' was unexpected)"
-        return super().message(instance, err)
+        return "Additional properties are not allowed ('TTL' was unexpected)"

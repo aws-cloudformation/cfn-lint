@@ -15,7 +15,9 @@ from cfnlint.template import Template
 
 
 @pytest.fixture
-def template():
+def template(request):
+    if hasattr(request, "param"):
+        return request.param
     return {}
 
 
