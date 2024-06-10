@@ -170,13 +170,13 @@ def _join_expansion(validator: Validator, instances: Any) -> Iterator[Any]:
     if len(instances) == 1:
         for value, _, _ in validator.resolve_value(instances[0]):
             if not isinstance(value, (str, int, float, bool)):
-                raise ValueError("Incorrect value type for {value!r}")
+                raise ValueError(f"Incorrect value type for {value!r}")
             yield [value]
         return
 
     for value, _, _ in validator.resolve_value(instances[0]):
         if not isinstance(value, (str, int, float, bool)):
-            raise ValueError("Incorrect value type for {value!r}")
+            raise ValueError(f"Incorrect value type for {value!r}")
         for values in _join_expansion(validator, instances[1:]):
             yield [value] + values
 

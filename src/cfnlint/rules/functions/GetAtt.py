@@ -157,7 +157,11 @@ class GetAtt(BaseFn):
             paths = [None, None]
             value = value.split(".", 1)
 
-        errs = list(self._resolve_getatt(validator, key, value, instance, s, paths))
+        errs = list(
+            self._resolve_getatt(
+                self.validator(validator), key, value, instance, s, paths
+            )
+        )
         if errs:
             yield from iter(errs)
             return

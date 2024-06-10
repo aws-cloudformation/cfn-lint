@@ -87,8 +87,10 @@ class Sub(BaseFn):
                 functions=self._functions,
                 path=validator.context.path.descend(
                     path=key,
-                    cfn_path=key,
                 ),
+            ),
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
             ),
         )
         for param in params:
