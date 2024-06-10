@@ -194,8 +194,11 @@ def join(validator: Validator, instance: Any) -> ResolutionResult:
         for values, values_v, _ in validator.resolve_value(instance[1]):
             if not values_v.is_type(values, "array"):
                 continue
-            for value in _join_expansion(values_v, values):
-                yield delimiter.join(value), values_v, None
+            try:
+                for value in _join_expansion(values_v, values):
+                    yield delimiter.join(value), values_v, None
+            except ValueError:
+                return
 
 
 def select(validator: Validator, instance: Any) -> ResolutionResult:

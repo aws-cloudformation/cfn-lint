@@ -60,13 +60,18 @@ def test_resolvers_ref(name, instance, response):
             [],
         ),
         (
-            "Invalid Join with an invalid type for second element",
+            "Invalid Join with an invalid type for first element",
             {"Fn::Join": [["a"], "b"]},
             [],
         ),
         (
             "Invalid Join with an invalid type for second element",
             {"Fn::Join": ["a", "b"]},
+            [],
+        ),
+        (
+            "Invalid Join with an invalid type for second element item",
+            {"Fn::Join": ["/", [["a"], "b"]]},
             [],
         ),
         (
