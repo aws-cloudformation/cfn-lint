@@ -12,6 +12,7 @@ from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Set, Tup
 
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
+    FUNCTIONS,
     PSEUDOPARAMS,
     REGION_PRIMARY,
     TRANSFORM_SAM,
@@ -68,11 +69,16 @@ class Path:
     # Example: Resources, *, Type
     cfn_path: Deque[str] = field(init=True, default_factory=deque)
 
-    def descend(self, **kwargs):
+    def descend(self, **kwargs) -> "Path":
         """
         Create a new Path by appending values
         """
         cls = self.__class__
+
+        if kwargs.get("cfn_path") in FUNCTIONS:
+            raise ValueError(f"{kwargs['cfn_path']!r} cannot be in 'cfn_path'")
+        elif isinstance(kwargs.get("cfn_path"), int):
+            raise ValueError(f"{kwargs['cfn_path']!r} cannot be an integer")
 
         for f in fields(Path):
             if kwargs.get(f.name) is not None:

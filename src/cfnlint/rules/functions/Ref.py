@@ -11,8 +11,6 @@ from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
 class Ref(BaseFn):
-    """Check if Ref value is a string"""
-
     id = "E1020"
     shortdesc = "Ref validation of value"
     description = (
@@ -50,6 +48,9 @@ class Ref(BaseFn):
         return validator.evolve(
             context=validator.context.evolve(
                 functions=supported_functions,
+            ),
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
             ),
         )
 

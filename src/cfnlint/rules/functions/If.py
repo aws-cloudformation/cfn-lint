@@ -28,9 +28,11 @@ class If(BaseFn):
             "maxItems": 3,
             "fn_items": [
                 {
+                    "functions": [],
                     "schema": {
                         "type": ["string"],
-                    }
+                        "enum": list(validator.context.conditions.keys()),
+                    },
                 },
             ],
         }
@@ -42,11 +44,14 @@ class If(BaseFn):
         errs = list(self.validate_fn_output_types(validator, s, instance))
 
         key, value = self.key_value(instance)
+
         errs.extend(
             list(
                 self.fix_errors(
                     self.validator(validator).descend(
-                        value, self.schema(validator, instance), path=key
+                        value,
+                        self.schema(validator, instance),
+                        path=key,
                     )
                 )
             )
@@ -56,17 +61,16 @@ class If(BaseFn):
             yield from iter(errs)
             return
 
-        for err in validator.descend(
-            instance=value[0],
-            schema={"enum": list(validator.context.conditions.keys())},
-            path=0,
-        ):
-            err.path.appendleft(key)
-            err.rule = self
-            err.validator = self.fn.py
-            yield err
-
+        # we pass through the functions for the paths down
+        # the second and third element of the if
+        element_validator = validator.evolve(
+            context=validator.context.evolve(
+                path=validator.context.path.descend(
+                    path=key,
+                ),
+            )
+        )
         for i in [1, 2]:
-            for err in validator.descend(instance=value[i], schema=s, path=i):
+            for err in element_validator.descend(instance=value[i], schema=s, path=i):
                 err.path.appendleft(key)
                 yield err

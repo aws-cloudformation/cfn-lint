@@ -70,6 +70,25 @@ def template():
             ],
         ),
         (
+            "Invalid Fn::If with bad condition",
+            {"Fn::If": [{"Ref": "MyParameter"}, "foo", "bar"]},
+            {"type": "string"},
+            [
+                ValidationError(
+                    "{'Ref': 'MyParameter'} is not of type 'string'",
+                    path=deque(["Fn::If", 0]),
+                    schema_path=deque(["fn_items", "type"]),
+                    validator="fn_if",
+                ),
+                ValidationError(
+                    "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
+                    path=deque(["Fn::If", 0]),
+                    schema_path=deque(["fn_items", "enum"]),
+                    validator="fn_if",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::If with bad second element",
             {"Fn::If": ["IsUsEast1", "foo", {"foo": "bar"}]},
             {"type": "string"},
@@ -90,9 +109,8 @@ def template():
                 ValidationError(
                     "'foo' is not one of ['IsUsEast1']",
                     path=deque(["Fn::If", 0]),
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(["fn_items", "enum"]),
                     validator="fn_if",
-                    rule=If(),
                 ),
             ],
         ),
@@ -112,5 +130,7 @@ def template():
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):
+
     errs = list(rule.fn_if(validator, schema, instance, {}))
+
     assert errs == expected, f"Test {name!r} got {errs!r}"

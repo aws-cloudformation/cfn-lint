@@ -76,6 +76,7 @@ class RouteTableAssociation(CloudFormationLintRule):
 
     def match(self, cfn: Template) -> RuleMatches:
         """Check SubnetRouteTableAssociation Resource Properties"""
+
         matches = []
         resources = cfn.get_resources(["AWS::EC2::SubnetRouteTableAssociation"])
         for resource_name, resource in resources.items():
