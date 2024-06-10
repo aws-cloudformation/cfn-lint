@@ -18,6 +18,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Callable, Dict
@@ -211,21 +212,31 @@ def create(
                         if validator is None:
                             continue
 
-                        for err in validator(self, v, _instance, _schema) or ():
-                            msg = custom_msg(k, _schema) or err.message
-                            if msg is not None:
-                                err.message = msg
-                            # set details if not already set by the called fn
-                            err._set(
+                        try:
+                            for err in validator(self, v, _instance, _schema) or ():
+                                msg = custom_msg(k, _schema) or err.message
+                                if msg is not None:
+                                    err.message = msg
+                                # set details if not already set by the called fn
+                                err._set(
+                                    validator=k,
+                                    validator_value=v,
+                                    instance=_instance,
+                                    schema=_schema,
+                                    type_checker=self._type_checker,
+                                )
+                                if k not in {"if", "$ref"}:
+                                    err.schema_path.appendleft(k)
+                                yield err
+                        except Exception as err:
+                            yield ValidationError(
+                                f"Exception {str(err)!r} raised while validating {k!r}",
                                 validator=k,
                                 validator_value=v,
                                 instance=_instance,
                                 schema=_schema,
-                                type_checker=self._type_checker,
+                                schema_path=deque([k]),
                             )
-                            if k not in {"if", "$ref"}:
-                                err.schema_path.appendleft(k)
-                            yield err
             finally:
                 if scope:
                     self.resolver.pop_scope()
