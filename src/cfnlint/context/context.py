@@ -154,10 +154,6 @@ class Context:
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
-    def __post_init__(self) -> None:
-        if self.path is None:
-            self.path = deque([])
-
     def evolve(self, **kwargs) -> "Context":
         """
         Create a new context without merging together attributes
