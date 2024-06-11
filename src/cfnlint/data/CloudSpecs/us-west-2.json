@@ -660,6 +660,8 @@
   "AWS::AutoScaling::ScalingPolicy.PredictiveScalingPredefinedScalingMetric": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.StepAdjustment": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.TargetTrackingConfiguration": "CACHED",
+  "AWS::AutoScaling::ScalingPolicy.TargetTrackingMetricDataQuery": "CACHED",
+  "AWS::AutoScaling::ScalingPolicy.TargetTrackingMetricStat": "CACHED",
   "AWS::AutoScaling::WarmPool.InstanceReusePolicy": "CACHED",
   "AWS::AutoScalingPlans::ScalingPlan.ApplicationSource": "CACHED",
   "AWS::AutoScalingPlans::ScalingPlan.CustomizedLoadMetricSpecification": "CACHED",
@@ -728,7 +730,36 @@
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
-  "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.NodeRangeProperty": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html",
+   "Properties": {
+    "Container": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-container",
+     "Required": false,
+     "Type": "ContainerProperties",
+     "UpdateType": "Mutable"
+    },
+    "EcsProperties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-ecsproperties",
+     "Required": false,
+     "Type": "EcsProperties",
+     "UpdateType": "Mutable"
+    },
+    "InstanceTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-instancetypes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetNodes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-targetnodes",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.RepositoryCredentials": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
@@ -1169,6 +1200,7 @@
   "AWS::Connect::Rule.Reference": "CACHED",
   "AWS::Connect::Rule.RuleTriggerEventSource": "CACHED",
   "AWS::Connect::Rule.SendNotificationAction": "CACHED",
+  "AWS::Connect::Rule.SubmitAutoEvaluationAction": "CACHED",
   "AWS::Connect::Rule.TaskAction": "CACHED",
   "AWS::Connect::Rule.UpdateCaseAction": "CACHED",
   "AWS::Connect::SecurityProfile.Application": "CACHED",
@@ -1746,6 +1778,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ManagedStorageConfiguration": "CACHED",
   "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
@@ -2091,6 +2124,7 @@
   "AWS::FSx::FileSystem.ClientConfigurations": "CACHED",
   "AWS::FSx::FileSystem.DiskIopsConfiguration": "CACHED",
   "AWS::FSx::FileSystem.LustreConfiguration": "CACHED",
+  "AWS::FSx::FileSystem.MetadataConfiguration": "CACHED",
   "AWS::FSx::FileSystem.NfsExports": "CACHED",
   "AWS::FSx::FileSystem.OntapConfiguration": "CACHED",
   "AWS::FSx::FileSystem.OpenZFSConfiguration": "CACHED",
@@ -3779,6 +3813,7 @@
   "AWS::Pipes::Pipe.CapacityProviderStrategyItem": "CACHED",
   "AWS::Pipes::Pipe.CloudwatchLogsLogDestination": "CACHED",
   "AWS::Pipes::Pipe.DeadLetterConfig": "CACHED",
+  "AWS::Pipes::Pipe.DimensionMapping": "CACHED",
   "AWS::Pipes::Pipe.EcsContainerOverride": "CACHED",
   "AWS::Pipes::Pipe.EcsEnvironmentFile": "CACHED",
   "AWS::Pipes::Pipe.EcsEnvironmentVariable": "CACHED",
@@ -3791,6 +3826,8 @@
   "AWS::Pipes::Pipe.FirehoseLogDestination": "CACHED",
   "AWS::Pipes::Pipe.MQBrokerAccessCredentials": "CACHED",
   "AWS::Pipes::Pipe.MSKAccessCredentials": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureAttributeMapping": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureMapping": "CACHED",
   "AWS::Pipes::Pipe.NetworkConfiguration": "CACHED",
   "AWS::Pipes::Pipe.PipeEnrichmentHttpParameters": "CACHED",
   "AWS::Pipes::Pipe.PipeEnrichmentParameters": "CACHED",
@@ -3815,12 +3852,14 @@
   "AWS::Pipes::Pipe.PipeTargetSageMakerPipelineParameters": "CACHED",
   "AWS::Pipes::Pipe.PipeTargetSqsQueueParameters": "CACHED",
   "AWS::Pipes::Pipe.PipeTargetStateMachineParameters": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters": "CACHED",
   "AWS::Pipes::Pipe.PlacementConstraint": "CACHED",
   "AWS::Pipes::Pipe.PlacementStrategy": "CACHED",
   "AWS::Pipes::Pipe.S3LogDestination": "CACHED",
   "AWS::Pipes::Pipe.SageMakerPipelineParameter": "CACHED",
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationCredentials": "CACHED",
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationVpc": "CACHED",
+  "AWS::Pipes::Pipe.SingleMeasureMapping": "CACHED",
   "AWS::QBusiness::Application.AttachmentsConfiguration": "CACHED",
   "AWS::QBusiness::Application.EncryptionConfiguration": "CACHED",
   "AWS::QBusiness::DataSource.DataSourceVpcConfiguration": "CACHED",
@@ -5501,39 +5540,8 @@
   "AWS::RoboMaker::SimulationApplication.RobotSoftwareSuite": "CACHED",
   "AWS::RoboMaker::SimulationApplication.SimulationSoftwareSuite": "CACHED",
   "AWS::RoboMaker::SimulationApplication.SourceConfig": "CACHED",
-  "AWS::RolesAnywhere::Profile.AttributeMapping": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-profile-attributemapping.html",
-   "Properties": {
-    "CertificateField": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-profile-attributemapping.html#cfn-rolesanywhere-profile-attributemapping-certificatefield",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField"
-     }
-    },
-    "MappingRules": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-profile-attributemapping.html#cfn-rolesanywhere-profile-attributemapping-mappingrules",
-     "DuplicatesAllowed": true,
-     "ItemType": "MappingRule",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::RolesAnywhere::Profile.MappingRule": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-profile-mappingrule.html",
-   "Properties": {
-    "Specifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-profile-mappingrule.html#cfn-rolesanywhere-profile-mappingrule-specifier",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RolesAnywhere::Profile.AttributeMapping": "CACHED",
+  "AWS::RolesAnywhere::Profile.MappingRule": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.SourceData": "CACHED",
@@ -6388,7 +6396,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "176.0.0",
+ "ResourceSpecificationVersion": "177.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -6712,11 +6720,348 @@
   "AWS::DataZone::ProjectMembership": "CACHED",
   "AWS::DataZone::SubscriptionTarget": "CACHED",
   "AWS::DataZone::UserProfile": "CACHED",
-  "AWS::Deadline::Farm": "CACHED",
-  "AWS::Deadline::Fleet": "CACHED",
-  "AWS::Deadline::LicenseEndpoint": "CACHED",
+  "AWS::Deadline::Farm": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "FarmId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-farm.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-farm.html#cfn-deadline-farm-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Farm.Description"
+     }
+    },
+    "DisplayName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-farm.html#cfn-deadline-farm-displayname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Farm.DisplayName"
+     }
+    },
+    "KmsKeyArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-farm.html#cfn-deadline-farm-kmskeyarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Farm.KmsKeyArn"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-farm.html#cfn-deadline-farm-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Deadline::Fleet": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Capabilities": {
+     "Type": "FleetCapabilities"
+    },
+    "Capabilities.Amounts": {
+     "ItemType": "FleetAmountCapability",
+     "Type": "List"
+    },
+    "Capabilities.Attributes": {
+     "ItemType": "FleetAttributeCapability",
+     "Type": "List"
+    },
+    "FleetId": {
+     "PrimitiveType": "String"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    },
+    "WorkerCount": {
+     "PrimitiveType": "Integer"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html",
+   "Properties": {
+    "Configuration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-configuration",
+     "Required": true,
+     "Type": "FleetConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Fleet.Description"
+     }
+    },
+    "DisplayName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-displayname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Fleet.DisplayName"
+     }
+    },
+    "FarmId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-farmid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Fleet.FarmId"
+     }
+    },
+    "MaxWorkerCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-maxworkercount",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "MinWorkerCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-minworkercount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Fleet.RoleArn"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-fleet.html#cfn-deadline-fleet-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Deadline::LicenseEndpoint": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "DnsName": {
+     "PrimitiveType": "String"
+    },
+    "LicenseEndpointId": {
+     "PrimitiveType": "String"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    },
+    "StatusMessage": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-licenseendpoint.html",
+   "Properties": {
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-licenseendpoint.html#cfn-deadline-licenseendpoint-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-licenseendpoint.html#cfn-deadline-licenseendpoint-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::LicenseEndpoint.SubnetIds"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-licenseendpoint.html#cfn-deadline-licenseendpoint-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-licenseendpoint.html#cfn-deadline-licenseendpoint-vpcid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::LicenseEndpoint.VpcId"
+     }
+    }
+   }
+  },
   "AWS::Deadline::MeteredProduct": "CACHED",
-  "AWS::Deadline::Queue": "CACHED",
+  "AWS::Deadline::Monitor": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "IdentityCenterApplicationArn": {
+     "PrimitiveType": "String"
+    },
+    "MonitorId": {
+     "PrimitiveType": "String"
+    },
+    "Url": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-monitor.html",
+   "Properties": {
+    "DisplayName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-monitor.html#cfn-deadline-monitor-displayname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "IdentityCenterInstanceArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-monitor.html#cfn-deadline-monitor-identitycenterinstancearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-monitor.html#cfn-deadline-monitor-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Subdomain": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-monitor.html#cfn-deadline-monitor-subdomain",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Deadline::Queue": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "QueueId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html",
+   "Properties": {
+    "AllowedStorageProfileIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-allowedstorageprofileids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.AllowedStorageProfileIds"
+     }
+    },
+    "DefaultBudgetAction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-defaultbudgetaction",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.DefaultBudgetAction"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.Description"
+     }
+    },
+    "DisplayName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-displayname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.DisplayName"
+     }
+    },
+    "FarmId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-farmid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.FarmId"
+     }
+    },
+    "JobAttachmentSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-jobattachmentsettings",
+     "Required": false,
+     "Type": "JobAttachmentSettings",
+     "UpdateType": "Mutable"
+    },
+    "JobRunAsUser": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-jobrunasuser",
+     "Required": false,
+     "Type": "JobRunAsUser",
+     "UpdateType": "Mutable"
+    },
+    "RequiredFileSystemLocationNames": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-requiredfilesystemlocationnames",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.RequiredFileSystemLocationNames"
+     }
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-rolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Deadline::Queue.RoleArn"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-deadline-queue.html#cfn-deadline-queue-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Deadline::QueueEnvironment": "CACHED",
   "AWS::Deadline::QueueFleetAssociation": "CACHED",
   "AWS::Deadline::StorageProfile": "CACHED",
@@ -7103,38 +7448,7 @@
   "AWS::EC2::TransitGatewayMulticastGroupMember": "CACHED",
   "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
-  "AWS::EC2::TransitGatewayRoute": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html",
-   "Properties": {
-    "Blackhole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-blackhole",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DestinationCidrBlock": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-destinationcidrblock",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "CidrIp"
-     }
-    },
-    "TransitGatewayAttachmentId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayattachmentid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TransitGatewayRouteTableId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayroutetableid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::TransitGatewayRoute": "CACHED",
   "AWS::EC2::TransitGatewayRouteTable": "CACHED",
   "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
   "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
@@ -7843,87 +8157,7 @@
   "AWS::RoboMaker::SimulationApplication": "CACHED",
   "AWS::RoboMaker::SimulationApplicationVersion": "CACHED",
   "AWS::RolesAnywhere::CRL": "CACHED",
-  "AWS::RolesAnywhere::Profile": {
-   "Attributes": {
-    "ProfileArn": {
-     "PrimitiveType": "String"
-    },
-    "ProfileId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html",
-   "Properties": {
-    "AttributeMappings": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-attributemappings",
-     "DuplicatesAllowed": true,
-     "ItemType": "AttributeMapping",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "DurationSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-durationseconds",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RolesAnywhere::Profile.DurationSeconds"
-     }
-    },
-    "Enabled": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-enabled",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ManagedPolicyArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-managedpolicyarns",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RequireInstanceProperties": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-requireinstanceproperties",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RoleArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-rolearns",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RolesAnywhere::Profile.RoleArns"
-     }
-    },
-    "SessionPolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-sessionpolicy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RolesAnywhere::Profile": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor": "CACHED",
   "AWS::Route53::CidrCollection": "CACHED",
   "AWS::Route53::DNSSEC": "CACHED",
@@ -9236,6 +9470,7 @@
   "AWS::Connect::Rule.SendNotificationAction.ContentType": "CACHED",
   "AWS::Connect::Rule.SendNotificationAction.DeliveryMethod": "CACHED",
   "AWS::Connect::Rule.SendNotificationAction.Subject": "CACHED",
+  "AWS::Connect::Rule.SubmitAutoEvaluationAction.EvaluationFormArn": "CACHED",
   "AWS::Connect::Rule.TaskAction.ContactFlowArn": "CACHED",
   "AWS::Connect::Rule.TaskAction.Description": "CACHED",
   "AWS::Connect::Rule.TaskAction.Name": "CACHED",
@@ -11925,6 +12160,9 @@
   "AWS::Pipes::Pipe.DeadLetterConfig.Arn": "CACHED",
   "AWS::Pipes::Pipe.Description": "CACHED",
   "AWS::Pipes::Pipe.DesiredState": "CACHED",
+  "AWS::Pipes::Pipe.DimensionMapping.DimensionName": "CACHED",
+  "AWS::Pipes::Pipe.DimensionMapping.DimensionValue": "CACHED",
+  "AWS::Pipes::Pipe.DimensionMapping.DimensionValueType": "CACHED",
   "AWS::Pipes::Pipe.EcsEnvironmentFile.Type": "CACHED",
   "AWS::Pipes::Pipe.EcsEphemeralStorage.SizeInGiB": "CACHED",
   "AWS::Pipes::Pipe.EcsResourceRequirement.Type": "CACHED",
@@ -11933,6 +12171,10 @@
   "AWS::Pipes::Pipe.Enrichment": "CACHED",
   "AWS::Pipes::Pipe.Filter.Pattern": "CACHED",
   "AWS::Pipes::Pipe.FirehoseLogDestination.DeliveryStreamArn": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureAttributeMapping.MeasureValue": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureAttributeMapping.MeasureValueType": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureAttributeMapping.MultiMeasureAttributeName": "CACHED",
+  "AWS::Pipes::Pipe.MultiMeasureMapping.MultiMeasureName": "CACHED",
   "AWS::Pipes::Pipe.Name": "CACHED",
   "AWS::Pipes::Pipe.PipeEnrichmentHttpParameters.PathParameterValues": "CACHED",
   "AWS::Pipes::Pipe.PipeEnrichmentParameters.InputTemplate": "CACHED",
@@ -11989,6 +12231,11 @@
   "AWS::Pipes::Pipe.PipeTargetSqsQueueParameters.MessageDeduplicationId": "CACHED",
   "AWS::Pipes::Pipe.PipeTargetSqsQueueParameters.MessageGroupId": "CACHED",
   "AWS::Pipes::Pipe.PipeTargetStateMachineParameters.InvocationType": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters.EpochTimeUnit": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters.TimeFieldType": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters.TimeValue": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters.TimestampFormat": "CACHED",
+  "AWS::Pipes::Pipe.PipeTargetTimestreamParameters.VersionValue": "CACHED",
   "AWS::Pipes::Pipe.PlacementConstraint.Expression": "CACHED",
   "AWS::Pipes::Pipe.PlacementConstraint.Type": "CACHED",
   "AWS::Pipes::Pipe.PlacementStrategy.Field": "CACHED",
@@ -11999,6 +12246,9 @@
   "AWS::Pipes::Pipe.SageMakerPipelineParameter.Value": "CACHED",
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationVpc.SecurityGroup": "CACHED",
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationVpc.Subnets": "CACHED",
+  "AWS::Pipes::Pipe.SingleMeasureMapping.MeasureName": "CACHED",
+  "AWS::Pipes::Pipe.SingleMeasureMapping.MeasureValue": "CACHED",
+  "AWS::Pipes::Pipe.SingleMeasureMapping.MeasureValueType": "CACHED",
   "AWS::Pipes::Pipe.Source": "CACHED",
   "AWS::Pipes::Pipe.Target": "CACHED",
   "AWS::Proton::EnvironmentAccountConnection.CodebuildRoleArn": "CACHED",
@@ -13998,13 +14248,7 @@
   "AWS::RoboMaker::SimulationApplicationVersion.Application": "CACHED",
   "AWS::RoboMaker::SimulationApplicationVersion.CurrentRevisionId": "CACHED",
   "AWS::RolesAnywhere::CRL.TrustAnchorArn": "CACHED",
-  "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField": {
-   "AllowedValues": [
-    "x509Subject",
-    "x509Issuer",
-    "x509SAN"
-   ]
-  },
+  "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField": "CACHED",
   "AWS::RolesAnywhere::Profile.DurationSeconds": "CACHED",
   "AWS::RolesAnywhere::Profile.RoleArns": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Channel": "CACHED",
