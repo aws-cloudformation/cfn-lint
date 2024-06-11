@@ -1,3 +1,9 @@
+### v0.87.6
+###### CloudFormation Specifications
+- Update CloudFormation specs to `177.0.0` (pull #[3282](https://github.com/aws-cloudformation/cfn-lint/pull/3282))
+###### Fixes
+- Update language transformation to handle SSM based Parameters (pull #[3293](https://github.com/aws-cloudformation/cfn-lint/pull/3293))
+
 ### v0.87.5
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `176.0.0` (pull #[3268](https://github.com/aws-cloudformation/cfn-lint/pull/3268))
