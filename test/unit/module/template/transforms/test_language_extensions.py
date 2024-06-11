@@ -105,6 +105,11 @@ class TestRef(TestCase):
                     "AccountIds": {
                         "Type": "CommaDelimitedList",
                     },
+                    "SSMParameter": {
+                        "Type": "AWS::SSM::Parameter::Value<String>",
+                        "Default": "/global/account/accounttype",
+                        "AllowedValues": ["/global/account/accounttype"],
+                    },
                 },
             }
         )
@@ -154,6 +159,10 @@ class TestRef(TestCase):
             ],
         )
 
+        fe = _ForEachValue.create({"Ref": "SSMParameter"})
+        with self.assertRaises(_ResolveError):
+            fe.value(self.cfn)
+
 
 class TestFindInMap(TestCase):
     def setUp(self) -> None:
@@ -174,6 +183,13 @@ class TestFindInMap(TestCase):
                 "Mappings": {
                     "Bucket": {"Production": {"Names": ["foo", "bar"]}},
                     "AnotherBucket": {"Production": {"Names": ["a", "b"]}},
+                    "Config": {
+                        "DBInstances": {
+                            "Development": "1",
+                            "Stage": ["1", "2"],
+                            "Production": ["1", "2", "3"],
+                        }
+                    },
                 },
             }
         )
@@ -272,6 +288,19 @@ class TestFindInMap(TestCase):
             self.assertEqual(map.value(self.cfn, None, False, True), "bar")
         with self.assertRaises(_ResolveError):
             map.value(self.cfn, None, False, False)
+
+    def test_find_in_map_values_without_default_resolve_error(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Bucket", "Production", {"Ref": "SSMParameter"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), ["foo", "bar"])
+
+        map = _ForEachValueFnFindInMap(
+            "a", ["Config", "DBInstances", {"Ref": "SSMParameter"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), ["1", "2"])
 
     def test_mapping_not_found(self):
         map = _ForEachValueFnFindInMap(
