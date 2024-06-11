@@ -3,9 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
+from __future__ import annotations
 
-from cfnlint.jsonschema import ValidationError
+from collections import deque
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -34,7 +37,9 @@ class DomainValidationOptions(CfnLintKeyword):
             ]
         )
 
-    def validate(self, validator, _, instance, schema):
+    def validate(
+        self, validator: Validator, _, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not isinstance(instance, dict):
             return
 

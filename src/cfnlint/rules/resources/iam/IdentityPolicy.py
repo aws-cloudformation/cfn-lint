@@ -31,6 +31,3 @@ class IdentityPolicy(Policy):
             "identity",
             "policy_identity.json",
         )
-
-    def validate(self, validator, policy_type, policy, schema):
-        yield from super().validate(validator, policy_type, policy, schema)

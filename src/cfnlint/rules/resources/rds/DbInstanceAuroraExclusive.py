@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 import cfnlint.data.schemas.extensions.aws_rds_dbinstance
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -49,7 +49,9 @@ class DbInstanceAuroraExclusive(CfnLintJsonSchema):
 
         return f"Additional properties are not allowed ({extra!r})"
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not validator.is_type(instance, "object"):
             return
 

@@ -3,8 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from cfnlint.helpers import FUNCTIONS, TEMPLATED_PROPERTY_CFN_PATHS
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -28,12 +32,14 @@ class PropertiesTemplated(CfnLintKeyword):
         """Init"""
         super().__init__(TEMPLATED_PROPERTY_CFN_PATHS)
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not isinstance(instance, str):
             return
 
         if validator.cfn.has_serverless_transform():
-            return []
+            return
 
         if validator.context.path.path[-1] in FUNCTIONS:
             return
