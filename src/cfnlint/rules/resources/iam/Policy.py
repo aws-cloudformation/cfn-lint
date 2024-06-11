@@ -9,7 +9,7 @@ import json
 from typing import Any, List
 
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import Validator
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.resolver import RefResolver
 
@@ -50,7 +50,13 @@ class Policy(CfnLintJsonSchema):
             self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
 
     # pylint: disable=unused-argument
-    def validate(self, validator, policy_type, policy, schema):
+    def validate(
+        self,
+        validator: Validator,
+        policy_type: Any,
+        policy: Any,
+        schema: dict[str, Any],
+    ) -> ValidationResult:
         # First time child rules are configured against the rule
         # so we can run this now
         if validator.is_type(policy, "string"):

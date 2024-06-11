@@ -10,6 +10,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context import Path, create_context_for_template
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.template import Template
 
@@ -56,8 +57,16 @@ def path(request):
 
 
 @pytest.fixture
-def context(cfn, path):
-    return create_context_for_template(cfn).evolve(path=path)
+def functions():
+    return FUNCTIONS
+
+
+@pytest.fixture
+def context(cfn, path, functions):
+    return create_context_for_template(cfn).evolve(
+        path=path,
+        functions=functions,
+    )
 
 
 @pytest.fixture

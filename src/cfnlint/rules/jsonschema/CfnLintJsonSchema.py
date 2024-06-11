@@ -9,7 +9,7 @@ from collections import namedtuple
 from typing import Any, Sequence
 
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 
@@ -58,7 +58,9 @@ class CfnLintJsonSchema(BaseJsonSchema):
         for err in errs:
             yield self._clean_error(err)
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
         if not self._use_schema_arg:

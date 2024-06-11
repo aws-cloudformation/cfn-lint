@@ -3,7 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.jsonschema import ValidationError
+from __future__ import annotations
+
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -24,14 +28,16 @@ class SnapStart(CfnLintKeyword):
             ["Resources/AWS::Lambda::Function/Properties/SnapStart/ApplyOn"]
         )
 
-    def validate(self, validator, _, instance, schema):
+    def validate(
+        self, validator: Validator, _, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not validator.is_type(instance, "string"):
             return
 
         if instance != "PublishedVersions":
             return
 
-        resource_name = validator.context.path.path[1]
+        resource_name: str = str(validator.context.path.path[1])
         lambda_version_type = "AWS::Lambda::Version"
         if list(
             validator.cfn.get_resource_children(resource_name, [lambda_version_type])

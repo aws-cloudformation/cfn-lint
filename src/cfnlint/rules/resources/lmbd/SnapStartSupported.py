@@ -3,9 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
+from __future__ import annotations
 
-from cfnlint.jsonschema import ValidationError
+from collections import deque
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -48,7 +51,9 @@ class SnapStartSupported(CfnLintKeyword):
             "sa-east-1",
         ]
 
-    def validate(self, validator, _, instance, schema):
+    def validate(
+        self, validator: Validator, _, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
 
         for scenario in validator.cfn.get_object_without_conditions(
             instance,
@@ -63,7 +68,7 @@ class SnapStartSupported(CfnLintKeyword):
                     if all(
                         region in self.regions for region in validator.context.regions
                     ):
-                        yield from self.child_rules["I2530"].validate(
+                        yield from self.child_rules["I2530"].validate(  # type: ignore
                             runtime,
                         )
                 continue

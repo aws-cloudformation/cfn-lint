@@ -3,8 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import cfnlint.data.schemas.other.resources
 from cfnlint.helpers import FUNCTIONS
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -26,7 +31,9 @@ class CfnInit(CfnLintJsonSchema):
             all_matches=True,
         )
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         cfn_validator = self.extend_validator(
             validator=validator,
             schema=self._schema,

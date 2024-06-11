@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 from typing import Any, Dict, List
 
 import cfnlint.data.schemas.extensions.aws_rds_dbinstance
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -100,7 +102,9 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
             "values to avoid data loss on resource)"
         )
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if len(validator.context.path.cfn_path) < 1:
             return
 

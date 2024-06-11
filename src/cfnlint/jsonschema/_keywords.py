@@ -489,7 +489,7 @@ def properties(
             yield from validator.descend(
                 instance[p],
                 subschema,
-                path=k[0] if len(k) > 0 else p,
+                path=k[0] if k else p,
                 schema_path=p,
                 property_path=p,
             )

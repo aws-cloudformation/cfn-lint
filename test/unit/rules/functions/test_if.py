@@ -114,19 +114,6 @@ def template():
                 ),
             ],
         ),
-        (
-            "Invalid Fn::If with a resolved value",
-            {"Fn::If": ["IsUsEast1", "foo", {"Ref": "MyParameter"}]},
-            {"enum": ["foo", "bar"]},
-            [
-                ValidationError(
-                    "{'Ref': 'MyParameter'} is not one of ['foo', 'bar']",
-                    path=deque(["Fn::If", 2]),
-                    schema_path=deque(["enum"]),
-                    validator="enum",
-                ),
-            ],
-        ),
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):

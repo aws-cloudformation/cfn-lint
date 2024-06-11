@@ -3,8 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from cfnlint.helpers import FUNCTIONS, ensure_list
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -42,7 +46,9 @@ class AvailabilityZone(CfnLintKeyword):
         )
         self.exceptions = ["all"]
 
-    def validate(self, validator, keywords, zones, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, zones: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not isinstance(zones, (str, list)):
             return
 

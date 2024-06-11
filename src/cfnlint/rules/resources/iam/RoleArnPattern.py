@@ -3,9 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import regex as re
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -33,7 +37,9 @@ class RoleArnPattern(CfnLintKeyword):
         )
 
     # pylint: disable=unused-argument
-    def validate(self, validator, aZ, arn, schema):
+    def validate(
+        self, validator: Validator, aZ: Any, arn: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         if not validator.is_type(arn, "string"):
             return
 

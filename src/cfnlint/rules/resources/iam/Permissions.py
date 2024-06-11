@@ -3,9 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from cfnlint.data import AdditionalSpecs
 from cfnlint.helpers import ensure_list, load_resource
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -26,7 +30,9 @@ class Permissions(CfnLintKeyword):
         )
         self.service_map = self.load_service_map()
 
-    def validate(self, validator, _, instance, schema):
+    def validate(
+        self, validator: Validator, _, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         actions = ensure_list(instance)
 
         for action in actions:

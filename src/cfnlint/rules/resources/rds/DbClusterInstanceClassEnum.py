@@ -3,7 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 import cfnlint.data.schemas.extensions.aws_rds_dbcluster
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 
@@ -26,7 +31,9 @@ class DbClusterInstanceClassEnum(CfnLintJsonSchemaRegional):
             ),
         )
 
-    def validate(self, validator, keywords, instance, schema):
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         # RDS pricing schemas are based on values
         validator = validator.evolve(
             context=validator.context.evolve(

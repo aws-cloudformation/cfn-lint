@@ -3,11 +3,14 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 from datetime import datetime
+from typing import Any
 
 from cfnlint.data import AdditionalSpecs
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -31,7 +34,9 @@ class DeprecatedRuntimeEnd(CfnLintKeyword):
         )
 
     # pylint: disable=unused-argument
-    def validate(self, validator, v, runtime, schema):
+    def validate(
+        self, validator: Validator, v: Any, runtime: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         runtime_data = self.deprecated_runtimes.get(runtime)
         if not runtime_data:
             return
@@ -49,4 +54,4 @@ class DeprecatedRuntimeEnd(CfnLintKeyword):
             )
 
         if self.child_rules["W2531"]:
-            yield from self.child_rules["W2531"].lambdaruntime(runtime, runtime_data)
+            yield from self.child_rules["W2531"].lambdaruntime(runtime, runtime_data)  # type: ignore

@@ -3,9 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from collections import deque
+from __future__ import annotations
 
-from cfnlint.jsonschema import ValidationError
+from collections import deque
+from typing import Any
+
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
@@ -32,7 +35,9 @@ class BackupPlanLifecycleRule(CfnLintKeyword):
             ]
         )
 
-    def validate(self, validator, uI, instance, schema):
+    def validate(
+        self, validator: Validator, uI: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
         delete_after_days = instance.get("DeleteAfterDays")
         move_to_cold_storage_after_days = instance.get("MoveToColdStorageAfterDays")
 
