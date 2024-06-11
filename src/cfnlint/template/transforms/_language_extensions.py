@@ -51,6 +51,7 @@ def language_extension(cfn: Any) -> TransformResult:
     try:
         return transform.transform(cfn)
     except (_ValueError, _TypeError, _ResolveError) as e:
+        LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
         from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
@@ -81,6 +82,7 @@ def language_extension(cfn: Any) -> TransformResult:
             )
         ], None
     except Exception as e:  # pylint: disable=broad-exception-caught
+        LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
         from cfnlint.rules import TransformError  # pylint: disable=cyclic-import
@@ -369,6 +371,15 @@ class _ForEachValueFnFindInMap(_ForEachValue):
             except _ResolveError as e:
                 if len(self._map) == 4 and default_on_resolver_failure:
                     return self._map[3].value(cfn, params, only_params)
+                # no default value and map 1 exists
+                try:
+                    for _, v in mapping.get(
+                        t_map[1].value(cfn, params, only_params), {}
+                    ).items():
+                        if isinstance(v, list):
+                            return v
+                except _ResolveError:
+                    pass
                 raise _ResolveError("Can't resolve Fn::FindInMap", self._obj) from e
 
         if len(self._map) == 4 and default_on_resolver_failure:
@@ -447,6 +458,9 @@ class _ForEachValueRef(_ForEachValue):
         if not p:
             raise _ResolveError("Can't resolve Fn::Ref", self._obj)
         t = p.get("Type", "String")
+
+        if t.startswith("AWS::SSM::Parameter"):
+            raise _ResolveError("Can't resolve Fn::Ref", self._obj)
         default = p.get("Default")
         if default:
             if "List" in t:
