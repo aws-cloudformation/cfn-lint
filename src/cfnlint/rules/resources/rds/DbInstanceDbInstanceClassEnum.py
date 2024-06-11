@@ -30,6 +30,12 @@ class DbInstanceDbInstanceClassEnum(CfnLintJsonSchemaRegional):
         if not validator.is_type(instance, "object"):
             return
 
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                functions=[],
+            )
+        )
+
         if validator.is_type(instance.get("Engine"), "string"):
             instance["Engine"] = instance["Engine"].lower()
 

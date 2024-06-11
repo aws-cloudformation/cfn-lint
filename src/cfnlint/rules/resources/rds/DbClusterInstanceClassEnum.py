@@ -25,3 +25,13 @@ class DbClusterInstanceClassEnum(CfnLintJsonSchemaRegional):
                 "dbclusterinstanceclass_enum.json",
             ),
         )
+
+    def validate(self, validator, keywords, instance, schema):
+        # RDS pricing schemas are based on values
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                functions=[],
+            )
+        )
+
+        yield from super().validate(validator, keywords, instance, schema)
