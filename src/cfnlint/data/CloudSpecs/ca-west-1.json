@@ -732,6 +732,8 @@
   },
   "AWS::ApiGateway::UsagePlan.QuotaSettings": "CACHED",
   "AWS::ApiGateway::UsagePlan.ThrottleSettings": "CACHED",
+  "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
+  "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
   "AWS::AppConfig::Application.Tags": "CACHED",
   "AWS::AppConfig::ConfigurationProfile.Tags": "CACHED",
   "AWS::AppConfig::ConfigurationProfile.Validators": "CACHED",
@@ -1050,7 +1052,46 @@
     }
    }
   },
-  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": "CACHED",
+  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html",
+   "Properties": {
+    "Dimensions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-dimensions",
+     "DuplicatesAllowed": false,
+     "ItemType": "MetricDimension",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "MetricName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-metricname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Namespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-namespace",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Statistic": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-statistic",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
+     }
+    },
+    "Unit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-unit",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::AutoScaling::ScalingPolicy.Metric": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDataQuery": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDimension": "CACHED",
@@ -1329,6 +1370,14 @@
   "AWS::DMS::ReplicationConfig.ComputeConfig": "CACHED",
   "AWS::DataSync::LocationAzureBlob.AzureBlobSasConfiguration": "CACHED",
   "AWS::DataSync::LocationEFS.Ec2Config": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.NFS": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.NfsMountOptions": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.Protocol": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SMB": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SmbMountOptions": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.MountOptions": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.NFS": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.Protocol": "CACHED",
   "AWS::DataSync::LocationHDFS.NameNode": "CACHED",
   "AWS::DataSync::LocationHDFS.QopConfiguration": "CACHED",
   "AWS::DataSync::LocationNFS.MountOptions": "CACHED",
@@ -2024,6 +2073,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ManagedStorageConfiguration": "CACHED",
   "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
@@ -2332,6 +2382,7 @@
   "AWS::FSx::FileSystem.ClientConfigurations": "CACHED",
   "AWS::FSx::FileSystem.DiskIopsConfiguration": "CACHED",
   "AWS::FSx::FileSystem.LustreConfiguration": "CACHED",
+  "AWS::FSx::FileSystem.MetadataConfiguration": "CACHED",
   "AWS::FSx::FileSystem.NfsExports": "CACHED",
   "AWS::FSx::FileSystem.OntapConfiguration": "CACHED",
   "AWS::FSx::FileSystem.OpenZFSConfiguration": "CACHED",
@@ -2367,7 +2418,30 @@
   "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.IcebergTarget": "CACHED",
-  "AWS::Glue::Crawler.JdbcTarget": "CACHED",
+  "AWS::Glue::Crawler.JdbcTarget": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html",
+   "Properties": {
+    "ConnectionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-connectionname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Exclusions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-exclusions",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Path": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-path",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Crawler.LakeFormationConfiguration": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
   "AWS::Glue::Crawler.RecrawlPolicy": "CACHED",
@@ -2780,6 +2854,8 @@
   "AWS::ResourceGroups::Group.Query": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery": "CACHED",
   "AWS::ResourceGroups::Group.TagFilter": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping": "CACHED",
+  "AWS::RolesAnywhere::Profile.MappingRule": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.SourceData": "CACHED",
@@ -4099,7 +4175,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "176.0.0",
+ "ResourceSpecificationVersion": "177.0.0",
  "ResourceTypes": {
   "AMZN::SDC::Deployment": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sdc-deployment.html",
@@ -4947,6 +5023,7 @@
     }
    }
   },
+  "AWS::ApiGatewayV2::Stage": "CACHED",
   "AWS::AppConfig::Application": "CACHED",
   "AWS::AppConfig::ConfigurationProfile": "CACHED",
   "AWS::AppConfig::Deployment": "CACHED",
@@ -5548,6 +5625,10 @@
   "AWS::DataSync::Agent": "CACHED",
   "AWS::DataSync::LocationAzureBlob": "CACHED",
   "AWS::DataSync::LocationEFS": "CACHED",
+  "AWS::DataSync::LocationFSxLustre": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS": "CACHED",
+  "AWS::DataSync::LocationFSxWindows": "CACHED",
   "AWS::DataSync::LocationHDFS": "CACHED",
   "AWS::DataSync::LocationNFS": "CACHED",
   "AWS::DataSync::LocationObjectStorage": "CACHED",
@@ -6196,38 +6277,7 @@
   },
   "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
-  "AWS::EC2::TransitGatewayRoute": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html",
-   "Properties": {
-    "Blackhole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-blackhole",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DestinationCidrBlock": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-destinationcidrblock",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "CidrIp"
-     }
-    },
-    "TransitGatewayAttachmentId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayattachmentid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TransitGatewayRouteTableId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayroutetableid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::TransitGatewayRoute": "CACHED",
   "AWS::EC2::TransitGatewayRouteTable": "CACHED",
   "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
   "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
@@ -7478,6 +7528,16 @@
   "AWS::AmazonMQ::Broker.DeploymentMode": "CACHED",
   "AWS::AmazonMQ::Broker.EngineType": "CACHED",
   "AWS::AmazonMQ::Broker.HostInstanceType": {
+   "AllowedValues": [
+    "mq.m5.16xl",
+    "mq.m5.24xl",
+    "mq.m5.2xlarge",
+    "mq.m5.4xlarge",
+    "mq.m5.8xl",
+    "mq.m5.large",
+    "mq.m5.xlarge",
+    "mq.t3.micro"
+   ],
    "Ref": {
     "Parameters": [
      "String"
@@ -7774,6 +7834,27 @@
   "AWS::DataSync::LocationEFS.FileSystemAccessRoleArn": "CACHED",
   "AWS::DataSync::LocationEFS.InTransitEncryption": "CACHED",
   "AWS::DataSync::LocationEFS.Subdirectory": "CACHED",
+  "AWS::DataSync::LocationFSxLustre.FsxFilesystemArn": "CACHED",
+  "AWS::DataSync::LocationFSxLustre.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::LocationFSxLustre.Subdirectory": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.NfsMountOptions.Version": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SMB.Domain": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SMB.Password": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SMB.User": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.SmbMountOptions.Version": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.StorageVirtualMachineArn": "CACHED",
+  "AWS::DataSync::LocationFSxONTAP.Subdirectory": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.FsxFilesystemArn": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.MountOptions.Version": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::LocationFSxOpenZFS.Subdirectory": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.Domain": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.FsxFilesystemArn": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.Password": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.Subdirectory": "CACHED",
+  "AWS::DataSync::LocationFSxWindows.User": "CACHED",
   "AWS::DataSync::LocationHDFS.AgentArns": "CACHED",
   "AWS::DataSync::LocationHDFS.AuthenticationType": "CACHED",
   "AWS::DataSync::LocationHDFS.BlockSize": "CACHED",
@@ -8549,6 +8630,7 @@
   "AWS::ResourceGroups::Group.Name": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery.Type": "CACHED",
   "AWS::RolesAnywhere::CRL.TrustAnchorArn": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField": "CACHED",
   "AWS::RolesAnywhere::Profile.DurationSeconds": "CACHED",
   "AWS::RolesAnywhere::Profile.RoleArns": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Channel": "CACHED",

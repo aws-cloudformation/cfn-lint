@@ -166,6 +166,8 @@
   "AWS::ACMPCA::CertificateAuthority.OtherName": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.RevocationConfiguration": "CACHED",
   "AWS::ACMPCA::CertificateAuthority.Subject": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.PracticeRunConfiguration": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.AnalyzerConfiguration": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.ArchiveRule": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.Filter": "CACHED",
@@ -959,7 +961,46 @@
     }
    }
   },
-  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": "CACHED",
+  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html",
+   "Properties": {
+    "Dimensions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-dimensions",
+     "DuplicatesAllowed": false,
+     "ItemType": "MetricDimension",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "MetricName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-metricname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Namespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-namespace",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Statistic": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-statistic",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
+     }
+    },
+    "Unit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-unit",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::AutoScaling::ScalingPolicy.Metric": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDataQuery": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDimension": "CACHED",
@@ -1046,7 +1087,36 @@
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
-  "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.NodeRangeProperty": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html",
+   "Properties": {
+    "Container": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-container",
+     "Required": false,
+     "Type": "ContainerProperties",
+     "UpdateType": "Mutable"
+    },
+    "EcsProperties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-ecsproperties",
+     "Required": false,
+     "Type": "EcsProperties",
+     "UpdateType": "Mutable"
+    },
+    "InstanceTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-instancetypes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetNodes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-targetnodes",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.RepositoryCredentials": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
@@ -2190,6 +2260,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ManagedStorageConfiguration": "CACHED",
   "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
@@ -2859,7 +2930,83 @@
   "AWS::FSx::FileSystem.AuditLogConfiguration": "CACHED",
   "AWS::FSx::FileSystem.ClientConfigurations": "CACHED",
   "AWS::FSx::FileSystem.DiskIopsConfiguration": "CACHED",
-  "AWS::FSx::FileSystem.LustreConfiguration": "CACHED",
+  "AWS::FSx::FileSystem.LustreConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html",
+   "Properties": {
+    "AutoImportPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-autoimportpolicy",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AutomaticBackupRetentionDays": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-automaticbackupretentiondays",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "CopyTagsToBackups": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-copytagstobackups",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DailyAutomaticBackupStartTime": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-dailyautomaticbackupstarttime",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DataCompressionType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-datacompressiontype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DeploymentType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-deploymenttype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DriveCacheType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-drivecachetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ExportPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-exportpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ImportPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-importpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ImportedFileChunkSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-importedfilechunksize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PerUnitStorageThroughput": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-perunitstoragethroughput",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "WeeklyMaintenanceStartTime": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-filesystem-lustreconfiguration.html#cfn-fsx-filesystem-lustreconfiguration-weeklymaintenancestarttime",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::FSx::FileSystem.NfsExports": "CACHED",
   "AWS::FSx::FileSystem.OntapConfiguration": "CACHED",
   "AWS::FSx::FileSystem.OpenZFSConfiguration": "CACHED",
@@ -3662,12 +3809,6 @@
      "Type": "EcsProperties",
      "UpdateType": "Mutable"
     },
-    "EksProperties": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-gammadilithium-jobdefinition-noderangeproperty.html#cfn-gammadilithium-jobdefinition-noderangeproperty-eksproperties",
-     "Required": false,
-     "Type": "EksProperties",
-     "UpdateType": "Mutable"
-    },
     "InstanceTypes": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-gammadilithium-jobdefinition-noderangeproperty.html#cfn-gammadilithium-jobdefinition-noderangeproperty-instancetypes",
      "PrimitiveItemType": "String",
@@ -4181,7 +4322,30 @@
   "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.IcebergTarget": "CACHED",
-  "AWS::Glue::Crawler.JdbcTarget": "CACHED",
+  "AWS::Glue::Crawler.JdbcTarget": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html",
+   "Properties": {
+    "ConnectionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-connectionname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Exclusions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-exclusions",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Path": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-path",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Crawler.LakeFormationConfiguration": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
   "AWS::Glue::Crawler.RecrawlPolicy": "CACHED",
@@ -7018,6 +7182,8 @@
   "AWS::RoboMaker::SimulationApplication.RobotSoftwareSuite": "CACHED",
   "AWS::RoboMaker::SimulationApplication.SimulationSoftwareSuite": "CACHED",
   "AWS::RoboMaker::SimulationApplication.SourceConfig": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping": "CACHED",
+  "AWS::RolesAnywhere::Profile.MappingRule": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.SourceData": "CACHED",
@@ -7945,12 +8111,13 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "176.0.0",
+ "ResourceSpecificationVersion": "177.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
   "AWS::ACMPCA::CertificateAuthorityActivation": "CACHED",
   "AWS::ACMPCA::Permission": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration": "CACHED",
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
   "AWS::AmazonMQ::Configuration": "CACHED",
@@ -10610,7 +10777,38 @@
   "AWS::EC2::TransitGatewayMulticastGroupMember": "CACHED",
   "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
-  "AWS::EC2::TransitGatewayRoute": "CACHED",
+  "AWS::EC2::TransitGatewayRoute": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html",
+   "Properties": {
+    "Blackhole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-blackhole",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DestinationCidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-destinationcidrblock",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "TransitGatewayAttachmentId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayattachmentid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "TransitGatewayRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayroutetableid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::TransitGatewayRouteTable": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroutetable.html",
    "Properties": {
@@ -11332,6 +11530,7 @@
   "AWS::EventSchemas::Registry": "CACHED",
   "AWS::EventSchemas::RegistryPolicy": "CACHED",
   "AWS::EventSchemas::Schema": "CACHED",
+  "AWS::Events::Archive": "CACHED",
   "AWS::Events::EventBus": {
    "Attributes": {
     "Arn": {
@@ -13001,6 +13200,9 @@
   "AWS::RolesAnywhere::CRL": "CACHED",
   "AWS::RolesAnywhere::Profile": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor": "CACHED",
+  "AWS::Route53Profiles::Profile": "CACHED",
+  "AWS::Route53Profiles::ProfileAssociation": "CACHED",
+  "AWS::Route53Profiles::ProfileResourceAssociation": "CACHED",
   "AWS::Route53Resolver::FirewallDomainList": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroup": "CACHED",
   "AWS::Route53Resolver::FirewallRuleGroupAssociation": "CACHED",
@@ -13271,6 +13473,12 @@
   "AWS::XRay::SamplingRule": "CACHED"
  },
  "ValueTypes": {
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition.AlarmIdentifier": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ControlCondition.Type": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.PracticeRunConfiguration.BlockedDates": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.PracticeRunConfiguration.BlockedWindows": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ResourceIdentifier": "CACHED",
+  "AWS::ARCZonalShift::ZonalAutoshiftConfiguration.ZonalAutoshiftStatus": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.AnalyzerName": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.Type": "CACHED",
   "AWS::AccessAnalyzer::Analyzer.UnusedAccessConfiguration.UnusedAccessAge": "CACHED",
@@ -14035,6 +14243,7 @@
   "AWS::ElasticLoadBalancingV2::LoadBalancer.Name": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup.HealthCheckIntervalSeconds": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup.UnhealthyThresholdCount": "CACHED",
+  "AWS::Events::Archive.ArchiveName": "CACHED",
   "AWS::Events::EventBusPolicy.Action": "CACHED",
   "AWS::Events::EventBusPolicy.Condition.Key": "CACHED",
   "AWS::Events::EventBusPolicy.Condition.Type": "CACHED",
@@ -16643,12 +16852,14 @@
   "AWS::RoboMaker::SimulationApplicationVersion.Application": "CACHED",
   "AWS::RoboMaker::SimulationApplicationVersion.CurrentRevisionId": "CACHED",
   "AWS::RolesAnywhere::CRL.TrustAnchorArn": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField": "CACHED",
   "AWS::RolesAnywhere::Profile.DurationSeconds": "CACHED",
   "AWS::RolesAnywhere::Profile.RoleArns": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Channel": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Event": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Threshold": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source.SourceType": "CACHED",
+  "AWS::Route53Profiles::Profile.Name": "CACHED",
   "AWS::Route53Resolver::FirewallDomainList.DomainFileUrl": "CACHED",
   "AWS::Route53Resolver::FirewallDomainList.Domains": "CACHED",
   "AWS::Route53Resolver::FirewallDomainList.Name": "CACHED",

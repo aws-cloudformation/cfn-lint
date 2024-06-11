@@ -741,6 +741,8 @@
   },
   "AWS::ApiGateway::UsagePlan.QuotaSettings": "CACHED",
   "AWS::ApiGateway::UsagePlan.ThrottleSettings": "CACHED",
+  "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
+  "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
   "AWS::AppConfig::Application.Tags": "CACHED",
   "AWS::AppConfig::ConfigurationProfile.Tags": "CACHED",
   "AWS::AppConfig::ConfigurationProfile.Validators": "CACHED",
@@ -921,7 +923,46 @@
     }
    }
   },
-  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": "CACHED",
+  "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html",
+   "Properties": {
+    "Dimensions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-dimensions",
+     "DuplicatesAllowed": false,
+     "ItemType": "MetricDimension",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "MetricName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-metricname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Namespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-namespace",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Statistic": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-statistic",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
+     }
+    },
+    "Unit": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-scalingpolicy-customizedmetricspecification.html#cfn-autoscaling-scalingpolicy-customizedmetricspecification-unit",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::AutoScaling::ScalingPolicy.Metric": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDataQuery": "CACHED",
   "AWS::AutoScaling::ScalingPolicy.MetricDimension": "CACHED",
@@ -1006,7 +1047,36 @@
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
-  "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.NodeRangeProperty": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html",
+   "Properties": {
+    "Container": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-container",
+     "Required": false,
+     "Type": "ContainerProperties",
+     "UpdateType": "Mutable"
+    },
+    "EcsProperties": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-ecsproperties",
+     "Required": false,
+     "Type": "EcsProperties",
+     "UpdateType": "Mutable"
+    },
+    "InstanceTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-instancetypes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetNodes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-targetnodes",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.RepositoryCredentials": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
@@ -2334,6 +2404,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ManagedStorageConfiguration": "CACHED",
   "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
@@ -2587,6 +2658,7 @@
   "AWS::FSx::FileSystem.ClientConfigurations": "CACHED",
   "AWS::FSx::FileSystem.DiskIopsConfiguration": "CACHED",
   "AWS::FSx::FileSystem.LustreConfiguration": "CACHED",
+  "AWS::FSx::FileSystem.MetadataConfiguration": "CACHED",
   "AWS::FSx::FileSystem.NfsExports": "CACHED",
   "AWS::FSx::FileSystem.OntapConfiguration": "CACHED",
   "AWS::FSx::FileSystem.OpenZFSConfiguration": "CACHED",
@@ -2622,7 +2694,30 @@
   "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.IcebergTarget": "CACHED",
-  "AWS::Glue::Crawler.JdbcTarget": "CACHED",
+  "AWS::Glue::Crawler.JdbcTarget": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html",
+   "Properties": {
+    "ConnectionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-connectionname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Exclusions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-exclusions",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Path": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-path",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Crawler.LakeFormationConfiguration": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
   "AWS::Glue::Crawler.RecrawlPolicy": "CACHED",
@@ -3140,6 +3235,8 @@
   "AWS::ResourceGroups::Group.Query": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery": "CACHED",
   "AWS::ResourceGroups::Group.TagFilter": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping": "CACHED",
+  "AWS::RolesAnywhere::Profile.MappingRule": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.Source": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.SourceData": "CACHED",
@@ -3650,6 +3747,9 @@
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.IdentitySourceConfiguration": "CACHED",
   "AWS::VerifiedPermissions::Policy.EntityIdentifier": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyDefinition": "CACHED",
   "AWS::VerifiedPermissions::Policy.StaticPolicyDefinition": "CACHED",
@@ -3838,7 +3938,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "176.0.0",
+ "ResourceSpecificationVersion": "177.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4673,6 +4773,7 @@
     }
    }
   },
+  "AWS::ApiGatewayV2::Stage": "CACHED",
   "AWS::AppConfig::Application": "CACHED",
   "AWS::AppConfig::ConfigurationProfile": "CACHED",
   "AWS::AppConfig::Deployment": "CACHED",
@@ -5370,7 +5471,38 @@
   "AWS::EC2::TransitGatewayMulticastGroupMember": "CACHED",
   "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
-  "AWS::EC2::TransitGatewayRoute": "CACHED",
+  "AWS::EC2::TransitGatewayRoute": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html",
+   "Properties": {
+    "Blackhole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-blackhole",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DestinationCidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-destinationcidrblock",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "TransitGatewayAttachmentId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayattachmentid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "TransitGatewayRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayroutetableid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::TransitGatewayRouteTable": "CACHED",
   "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
   "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
@@ -6109,6 +6241,7 @@
   "AWS::Transfer::Server": "CACHED",
   "AWS::Transfer::User": "CACHED",
   "AWS::Transfer::Workflow": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource": "CACHED",
   "AWS::VerifiedPermissions::Policy": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore": "CACHED",
   "AWS::VerifiedPermissions::PolicyTemplate": "CACHED",
@@ -7517,6 +7650,7 @@
   "AWS::ResourceGroups::Group.Name": "CACHED",
   "AWS::ResourceGroups::Group.ResourceQuery.Type": "CACHED",
   "AWS::RolesAnywhere::CRL.TrustAnchorArn": "CACHED",
+  "AWS::RolesAnywhere::Profile.AttributeMapping.CertificateField": "CACHED",
   "AWS::RolesAnywhere::Profile.DurationSeconds": "CACHED",
   "AWS::RolesAnywhere::Profile.RoleArns": "CACHED",
   "AWS::RolesAnywhere::TrustAnchor.NotificationSetting.Channel": "CACHED",
@@ -7937,6 +8071,8 @@
   "AWS::Transfer::Workflow.TagStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.WorkflowStep.Type": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.PolicyStoreId": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.PrincipalEntityType": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyStoreId": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.Description": "CACHED",
   "AWS::VerifiedPermissions::PolicyStore.ValidationSettings.Mode": "CACHED",
