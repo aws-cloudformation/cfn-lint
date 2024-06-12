@@ -61,4 +61,5 @@ class BaseRuleTestCase(BaseTestCase):
         bad_runner = Runner(self.collection, filename, template, regions, [])
         bad_runner.transform()
         errs = bad_runner.run()
+        print(errs)
         self.assertEqual(err_count, len(errs))

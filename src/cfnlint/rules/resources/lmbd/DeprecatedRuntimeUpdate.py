@@ -9,13 +9,13 @@ from cfnlint.rules import RuleMatch
 from cfnlint.rules.resources.lmbd.DeprecatedRuntime import DeprecatedRuntime
 
 
-class DeprecatedRuntimeEol(DeprecatedRuntime):
+class DeprecatedRuntimeUpdate(DeprecatedRuntime):
     """Check if EOL Lambda Function Runtimes are used"""
 
-    id = "W2531"
-    shortdesc = "Check if EOL Lambda Function Runtimes are used"
+    id = "E2533"
+    shortdesc = "Check if Lambda Function Runtimes are updatable"
     description = (
-        "Check if an EOL Lambda Runtime is specified and give a warning if used. "
+        "Check if an EOL Lambda Runtime is specified and you cannot update the function"
     )
     source_url = (
         "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
@@ -29,20 +29,16 @@ class DeprecatedRuntimeEol(DeprecatedRuntime):
         runtime = self.deprecated_runtimes.get(runtime_value)
         if runtime:
             if (
-                datetime.strptime(runtime["deprecated"], "%Y-%m-%d") < self.current_date
-                and datetime.strptime(runtime["create-block"], "%Y-%m-%d")
-                > self.current_date
-                and datetime.strptime(runtime["update-block"], "%Y-%m-%d")
-                > self.current_date
+                datetime.strptime(runtime["update-block"], "%Y-%m-%d")
+                < self.current_date
             ):
-                message = "Runtime ({0}) was deprecated on {1}. Creation will be disabled on {2} and update on {3}. Please consider updating to {4}"
+                message = "Runtime ({0}) was deprecated on {1}. Update disabled on {2}. Please consider updating to {3}"
                 matches.append(
                     RuleMatch(
                         path,
                         message.format(
                             runtime_value,
                             runtime["deprecated"],
-                            runtime["create-block"],
                             runtime["update-block"],
                             runtime["successor"],
                         ),

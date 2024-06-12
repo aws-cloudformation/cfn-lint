@@ -6,20 +6,18 @@ SPDX-License-Identifier: MIT-0
 from datetime import datetime
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEol import (
-    DeprecatedRuntimeEol,  # pylint: disable=E0401
-)
+from cfnlint.rules.resources.lmbd.DeprecatedRuntimeCreate import DeprecatedRuntimeCreate
 
 
-class TestDeprecatedRuntimeEol(BaseRuleTestCase):
+class TestDeprecatedRuntimeCreate(BaseRuleTestCase):
     """Test Lambda Deprecated Runtime usage"""
 
     def setUp(self):
         """Setup"""
-        super(TestDeprecatedRuntimeEol, self).setUp()
-        rule = DeprecatedRuntimeEol()
+        super(TestDeprecatedRuntimeCreate, self).setUp()
+        rule = DeprecatedRuntimeCreate()
         self.collection.register(rule)
-        self.collection.rules[rule.id].current_date = datetime(2024, 1, 1)
+        self.collection.rules[rule.id].current_date = datetime(2021, 8, 30)
 
     def test_file_positive(self):
         """Test Positive"""
@@ -28,17 +26,17 @@ class TestDeprecatedRuntimeEol(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/runtimes.yaml", 2
+            "test/fixtures/templates/bad/resources/lambda/runtimes.yaml", 1
         )
 
 
-class TestDeprecatedRuntimeEolMatchDate(BaseRuleTestCase):
+class TestDeprecatedRuntimeCreateMatchDate(BaseRuleTestCase):
     """Test Lambda Deprecated Runtime usage"""
 
     def setUp(self):
         """Setup"""
-        super(TestDeprecatedRuntimeEolMatchDate, self).setUp()
-        rule = DeprecatedRuntimeEol()
+        super(TestDeprecatedRuntimeCreateMatchDate, self).setUp()
+        rule = DeprecatedRuntimeCreate()
         self.collection.register(rule)
         self.collection.rules[rule.id].current_date = datetime(2016, 10, 31)
 
