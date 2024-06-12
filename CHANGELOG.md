@@ -1,3 +1,9 @@
+### v0.87.7
+###### Fixes
+- Update rule [W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2531) to validate when the specified runtime is deprecated (pull #[3297](https://github.com/aws-cloudformation/cfn-lint/pull/3297))
+- Update rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2531) to validate when you can no longer create a lambda function with the specified runtime (pull #[3297](https://github.com/aws-cloudformation/cfn-lint/pull/3297))
+- Create rule [E2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2533) to validate when you can no longer update a lambda function with the specified runtime (pull #[3297](https://github.com/aws-cloudformation/cfn-lint/pull/3297))
+
 ### v0.87.6
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `177.0.0` (pull #[3282](https://github.com/aws-cloudformation/cfn-lint/pull/3282))
