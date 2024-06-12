@@ -141,6 +141,12 @@ _manual_patches = {
             path="/properties/GroupId",
         ),
     ],
+    "AWS::ElasticLoadBalancing::LoadBalancer": [
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.GroupName"},
+            path="/properties/SourceSecurityGroup/properties/GroupName",
+        ),
+    ],
 }
 
 
