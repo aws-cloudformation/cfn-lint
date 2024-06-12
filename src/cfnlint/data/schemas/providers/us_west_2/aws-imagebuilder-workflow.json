@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/ChangeDescription",
+  "/properties/Description",
+  "/properties/Data",
+  "/properties/Uri",
+  "/properties/Type",
+  "/properties/KmsKeyId",
+  "/properties/Tags"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyPair",
+    "kms:GenerateDataKeyPairWithoutPlaintext",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "s3:GetObject",
+    "s3:HeadBucket",
+    "s3:GetBucketLocation",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetWorkflow",
+    "imagebuilder:CreateWorkflow"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:GetWorkflow",
+    "imagebuilder:UnTagResource",
+    "imagebuilder:DeleteWorkflow"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Arn"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "imagebuilder:ListWorkflows"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetWorkflow"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Data"
+   ]
+  },
+  {
+   "required": [
+    "Uri"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChangeDescription": {
+   "type": "string"
+  },
+  "Data": {
+   "maxLength": 16000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "BUILD",
+    "TEST",
+    "DISTRIBUTION"
+   ],
+   "type": "string"
+  },
+  "Uri": {
+   "type": "string"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Type",
+  "Version"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::Workflow",
+ "writeOnlyProperties": [
+  "/properties/Data",
+  "/properties/Uri"
+ ]
+}

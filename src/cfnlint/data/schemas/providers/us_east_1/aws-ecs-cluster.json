@@ -28,6 +28,9 @@
    "properties": {
     "ExecuteCommandConfiguration": {
      "$ref": "#/definitions/ExecuteCommandConfiguration"
+    },
+    "ManagedStorageConfiguration": {
+     "$ref": "#/definitions/ManagedStorageConfiguration"
     }
    },
    "type": "object"
@@ -88,6 +91,18 @@
    },
    "type": "object"
   },
+  "ManagedStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FargateEphemeralStorageKmsKeyId": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ServiceConnectDefaults": {
    "additionalProperties": false,
    "properties": {
@@ -116,13 +131,15 @@
     "ecs:CreateCluster",
     "ecs:DescribeClusters",
     "iam:CreateServiceLinkedRole",
-    "ecs:TagResource"
+    "ecs:TagResource",
+    "kms:DescribeKey"
    ]
   },
   "delete": {
    "permissions": [
     "ecs:DeleteCluster",
-    "ecs:DescribeClusters"
+    "ecs:DescribeClusters",
+    "kms:DescribeKey"
    ]
   },
   "list": {
@@ -133,7 +150,8 @@
   },
   "read": {
    "permissions": [
-    "ecs:DescribeClusters"
+    "ecs:DescribeClusters",
+    "kms:DescribeKey"
    ]
   },
   "update": {
@@ -146,7 +164,8 @@
     "ecs:ListTagsForResource",
     "ecs:UpdateCluster",
     "ecs:UpdateClusterSettings",
-    "ecs:PutClusterCapacityProviders"
+    "ecs:PutClusterCapacityProviders",
+    "kms:DescribeKey"
    ]
   }
  },
