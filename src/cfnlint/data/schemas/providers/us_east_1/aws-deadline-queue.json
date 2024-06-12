@@ -81,6 +81,26 @@
    ],
    "type": "string"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "WindowsUser": {
    "additionalProperties": false,
    "properties": {
@@ -112,7 +132,9 @@
     "iam:PassRole",
     "identitystore:ListGroupMembershipsForMember",
     "logs:CreateLogGroup",
-    "s3:ListBucket"
+    "s3:ListBucket",
+    "deadline:TagResource",
+    "deadline:ListTagsForResource"
    ]
   },
   "delete": {
@@ -143,7 +165,8 @@
   "read": {
    "permissions": [
     "deadline:GetQueue",
-    "identitystore:ListGroupMembershipsForMember"
+    "identitystore:ListGroupMembershipsForMember",
+    "deadline:ListTagsForResource"
    ]
   },
   "update": {
@@ -153,7 +176,10 @@
     "iam:PassRole",
     "identitystore:ListGroupMembershipsForMember",
     "logs:CreateLogGroup",
-    "s3:ListBucket"
+    "s3:ListBucket",
+    "deadline:TagResource",
+    "deadline:UntagResource",
+    "deadline:ListTagsForResource"
    ]
   }
  },
@@ -218,6 +244,15 @@
   "RoleArn": {
    "pattern": "^arn:(aws[a-zA-Z-]*):iam::\\d{12}:role(/[!-.0-~]+)*/[\\w+=,.@-]+$",
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -229,10 +264,16 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "deadline:TagResource",
+   "deadline:UntagResource",
+   "deadline:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Deadline::Queue"
 }

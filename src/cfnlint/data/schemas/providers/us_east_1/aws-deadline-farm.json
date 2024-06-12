@@ -3,11 +3,36 @@
  "createOnlyProperties": [
   "/properties/KmsKeyArn"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "handlers": {
   "create": {
    "permissions": [
     "deadline:CreateFarm",
     "deadline:GetFarm",
+    "deadline:TagResource",
+    "deadline:ListTagsForResource",
+    "identitystore:ListGroupMembershipsForMember",
     "kms:Encrypt",
     "kms:Decrypt",
     "kms:CreateGrant",
@@ -34,6 +59,7 @@
   "read": {
    "permissions": [
     "deadline:GetFarm",
+    "deadline:ListTagsForResource",
     "identitystore:ListGroupMembershipsForMember",
     "kms:Encrypt",
     "kms:Decrypt",
@@ -45,6 +71,9 @@
    "permissions": [
     "deadline:UpdateFarm",
     "deadline:GetFarm",
+    "deadline:TagResource",
+    "deadline:UntagResource",
+    "deadline:ListTagsForResource",
     "identitystore:ListGroupMembershipsForMember",
     "kms:Encrypt",
     "kms:Decrypt",
@@ -58,7 +87,7 @@
  ],
  "properties": {
   "Arn": {
-   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/.+?",
+   "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/farm-[0-9a-z]{32}$",
    "type": "string"
   },
   "Description": {
@@ -79,6 +108,15 @@
   "KmsKeyArn": {
    "pattern": "^arn:aws[-a-z]*:kms:.*:key/.*",
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -89,10 +127,16 @@
   "DisplayName"
  ],
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "deadline:TagResource",
+   "deadline:UntagResource",
+   "deadline:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Deadline::Farm"
 }

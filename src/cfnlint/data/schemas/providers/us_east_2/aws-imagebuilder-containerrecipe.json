@@ -1,0 +1,300 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/ContainerType",
+  "/properties/TargetRepository",
+  "/properties/InstanceConfiguration",
+  "/properties/ParentImage",
+  "/properties/Description",
+  "/properties/DockerfileTemplateUri",
+  "/properties/DockerfileTemplateData",
+  "/properties/ImageOsVersionOverride",
+  "/properties/KmsKeyId",
+  "/properties/PlatformOverride",
+  "/properties/WorkingDirectory",
+  "/properties/Components",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ComponentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentArn": {
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ComponentParameter"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "EbsInstanceBlockDeviceSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "Throughput": {
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "gp3",
+      "sc1",
+      "st1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceBlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsInstanceBlockDeviceSpecification"
+    },
+    "NoDevice": {
+     "type": "string"
+    },
+    "VirtualName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockDeviceMappings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/InstanceBlockDeviceMapping"
+     },
+     "type": "array"
+    },
+    "Image": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetContainerRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryName": {
+     "type": "string"
+    },
+    "Service": {
+     "enum": [
+      "ECR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "imagebuilder:GetComponent",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetContainerRecipe",
+    "imagebuilder:CreateContainerRecipe",
+    "imagebuilder:GetImage",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "kms:ReEncryptFrom",
+    "kms:ReEncryptTo",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyPair",
+    "kms:GenerateDataKeyPairWithoutPlaintext",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "ecr:DescribeRepositories",
+    "ec2:DescribeImages"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:UnTagResource",
+    "imagebuilder:GetContainerRecipe",
+    "imagebuilder:DeleteContainerRecipe"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "imagebuilder:ListContainerRecipes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetContainerRecipe"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "DockerfileTemplateData",
+    "Name",
+    "Version",
+    "Components",
+    "ParentImage",
+    "TargetRepository",
+    "ContainerType"
+   ]
+  },
+  {
+   "required": [
+    "DockerfileTemplateUri",
+    "Name",
+    "Version",
+    "Components",
+    "ParentImage",
+    "TargetRepository",
+    "ContainerType"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Components": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ComponentConfiguration"
+   },
+   "type": "array"
+  },
+  "ContainerType": {
+   "enum": [
+    "DOCKER"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DockerfileTemplateData": {
+   "type": "string"
+  },
+  "DockerfileTemplateUri": {
+   "type": "string"
+  },
+  "ImageOsVersionOverride": {
+   "type": "string"
+  },
+  "InstanceConfiguration": {
+   "$ref": "#/definitions/InstanceConfiguration",
+   "additionalProperties": false
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ParentImage": {
+   "type": "string"
+  },
+  "PlatformOverride": {
+   "enum": [
+    "Windows",
+    "Linux"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetRepository": {
+   "$ref": "#/definitions/TargetContainerRepository"
+  },
+  "Version": {
+   "type": "string"
+  },
+  "WorkingDirectory": {
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/InstanceConfiguration/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::ContainerRecipe",
+ "writeOnlyProperties": [
+  "/properties/DockerfileTemplateData",
+  "/properties/DockerfileTemplateUri",
+  "/properties/ImageOsVersionOverride",
+  "/properties/PlatformOverride"
+ ]
+}

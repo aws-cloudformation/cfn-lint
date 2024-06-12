@@ -14,6 +14,26 @@
     "NOT_READY"
    ],
    "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "handlers": {
@@ -23,7 +43,9 @@
     "deadline:GetLicenseEndpoint",
     "ec2:CreateTags",
     "ec2:CreateVpcEndpoint",
-    "ec2:DescribeVpcEndpoints"
+    "ec2:DescribeVpcEndpoints",
+    "deadline:TagResource",
+    "deadline:ListTagsForResource"
    ]
   },
   "delete": {
@@ -41,6 +63,15 @@
   },
   "read": {
    "permissions": [
+    "deadline:GetLicenseEndpoint",
+    "deadline:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "deadline:TagResource",
+    "deadline:UntagResource",
+    "deadline:ListTagsForResource",
     "deadline:GetLicenseEndpoint"
    ]
   }
@@ -88,6 +119,15 @@
    "minItems": 1,
    "type": "array"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
   "VpcId": {
    "format": "AWS::EC2::VPC.Id",
    "maxLength": 32,
@@ -108,10 +148,16 @@
   "VpcId"
  ],
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "deadline:TagResource",
+   "deadline:UntagResource",
+   "deadline:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Deadline::LicenseEndpoint"
 }

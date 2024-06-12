@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/ChangeDescription",
+  "/properties/Description",
+  "/properties/Platform",
+  "/properties/Data",
+  "/properties/Uri",
+  "/properties/KmsKeyId",
+  "/properties/SupportedOsVersions",
+  "/properties/Tags"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "iam:GetRole",
+    "kms:GenerateDataKey",
+    "kms:GenerateDataKeyPair",
+    "kms:GenerateDataKeyPairWithoutPlaintext",
+    "kms:GenerateDataKeyWithoutPlaintext",
+    "kms:Encrypt",
+    "kms:Decrypt",
+    "s3:GetObject",
+    "s3:HeadBucket",
+    "s3:GetBucketLocation",
+    "imagebuilder:TagResource",
+    "imagebuilder:GetComponent",
+    "imagebuilder:CreateComponent"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "imagebuilder:GetComponent",
+    "imagebuilder:UnTagResource",
+    "imagebuilder:DeleteComponent"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "Arn": {
+      "$ref": "resource-schema.json#/properties/Arn"
+     }
+    },
+    "required": [
+     "Arn"
+    ]
+   },
+   "permissions": [
+    "imagebuilder:ListComponents"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "imagebuilder:GetComponent"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "Data"
+   ]
+  },
+  {
+   "required": [
+    "Uri"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChangeDescription": {
+   "type": "string"
+  },
+  "Data": {
+   "maxLength": 16000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Platform": {
+   "enum": [
+    "Windows",
+    "Linux"
+   ],
+   "type": "string"
+  },
+  "SupportedOsVersions": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "BUILD",
+    "TEST"
+   ],
+   "type": "string"
+  },
+  "Uri": {
+   "type": "string"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Type",
+  "/properties/Encrypted"
+ ],
+ "required": [
+  "Name",
+  "Platform",
+  "Version"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::Component",
+ "writeOnlyProperties": [
+  "/properties/Data",
+  "/properties/Uri",
+  "/properties/Platform"
+ ]
+}

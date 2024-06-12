@@ -396,6 +396,26 @@
    ],
    "type": "string"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "VCpuCountRange": {
    "additionalProperties": false,
    "properties": {
@@ -423,7 +443,9 @@
     "deadline:GetFleet",
     "iam:PassRole",
     "identitystore:ListGroupMembershipsForMember",
-    "logs:CreateLogGroup"
+    "logs:CreateLogGroup",
+    "deadline:TagResource",
+    "deadline:ListTagsForResource"
    ]
   },
   "delete": {
@@ -454,7 +476,8 @@
   "read": {
    "permissions": [
     "deadline:GetFleet",
-    "identitystore:ListGroupMembershipsForMember"
+    "identitystore:ListGroupMembershipsForMember",
+    "deadline:ListTagsForResource"
    ]
   },
   "update": {
@@ -462,7 +485,10 @@
     "deadline:UpdateFleet",
     "deadline:GetFleet",
     "iam:PassRole",
-    "identitystore:ListGroupMembershipsForMember"
+    "identitystore:ListGroupMembershipsForMember",
+    "deadline:TagResource",
+    "deadline:UntagResource",
+    "deadline:ListTagsForResource"
    ]
   }
  },
@@ -517,6 +543,15 @@
   "Status": {
    "$ref": "#/definitions/FleetStatus"
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
   "WorkerCount": {
    "type": "integer"
   }
@@ -536,10 +571,16 @@
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
  "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "deadline:TagResource",
+   "deadline:UntagResource",
+   "deadline:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Deadline::Fleet"
 }
