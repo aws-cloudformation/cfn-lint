@@ -42,6 +42,9 @@ class ImportValue(BaseFn):
                 functions=self.functions,
                 resources={},
             ),
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
+            ),
         )
 
     def fn_importvalue(

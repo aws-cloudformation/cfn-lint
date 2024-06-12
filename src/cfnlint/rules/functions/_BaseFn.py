@@ -73,6 +73,7 @@ class BaseFn(CloudFormationLintRule):
                     path=key,
                 )
             ):
+                print(value, instance, v.context.ref_values)
                 err.message = err.message.replace(f"{value!r}", f"{instance!r}")
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 yield err

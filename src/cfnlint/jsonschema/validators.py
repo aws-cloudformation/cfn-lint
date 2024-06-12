@@ -18,6 +18,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
+import logging
 from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
@@ -38,6 +39,8 @@ from cfnlint.jsonschema.exceptions import (
 from cfnlint.schema.resolver import RefResolver, id_of
 from cfnlint.template import Template
 
+
+LOGGER = logging.getLogger(__name__)
 
 def create(
     validators: Mapping[str, V] | None = None,
@@ -229,6 +232,7 @@ def create(
                                     err.schema_path.appendleft(k)
                                 yield err
                         except Exception as err:
+                            LOGGER.debug(err, exc_info=True)
                             yield ValidationError(
                                 f"Exception {str(err)!r} raised while validating {k!r}",
                                 validator=k,

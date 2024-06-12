@@ -12,7 +12,7 @@ from cfnlint.helpers import REGEX_DYN_REF, ToPy, ensure_list
 
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator
-
+import traceback
 
 _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
@@ -81,6 +81,8 @@ class FunctionFilter:
         if self.add_cfn_lint_keyword and "$ref" not in standard_schema:
             standard_schema["cfnLint"] = ensure_list(standard_schema.get("cfnLint", []))
             standard_schema["cfnLint"].append("/".join(validator.context.path.cfn_path))
+        else:
+            standard_schema["cfnLint"] = []
 
         # some times CloudFormation dumps to standard nested "json".
         # it will do by using {"type": "object"} with no properties
