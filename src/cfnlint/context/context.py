@@ -10,6 +10,7 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator, List, Sequence, Set, Tuple
 
+from cfnlint.context._conditions import Conditions
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
@@ -136,7 +137,7 @@ class Context:
     # cfn-lint Template class
     parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
     resources: Dict[str, "Resource"] = field(init=True, default_factory=dict)
-    conditions: Dict[str, "Condition"] = field(init=True, default_factory=dict)
+    conditions: Conditions = field(init=True, default_factory=Conditions)
     mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
 
     strict_types: bool = field(init=True, default=True)
@@ -148,9 +149,6 @@ class Context:
     # Combiniation of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
     ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
-
-    # Resolved conditions for reference
-    resolved_conditions: dict[str, bool] = field(init=True, default_factory=dict)
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
@@ -164,11 +162,6 @@ class Context:
             new_ref_values = self.ref_values.copy()
             new_ref_values.update(kwargs["ref_values"])
             kwargs["ref_values"] = new_ref_values
-
-        if "resolved_conditions" in kwargs:
-            new_resolved_conditions = self.resolved_conditions.copy()
-            new_resolved_conditions.update(kwargs["resolved_conditions"])
-            kwargs["resolved_conditions"] = new_resolved_conditions
 
         for f in fields(Context):
             if f.init:
@@ -273,11 +266,6 @@ class _Ref(ABC):
     @abstractmethod
     def ref(self, context: Context) -> Iterator[Any]:
         pass
-
-
-@dataclass
-class Condition:
-    instance: Any = field(init=True)
 
 
 @dataclass
@@ -457,19 +445,6 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
-def _init_conditions(conditions: Any) -> dict[str, Condition]:
-    obj = {}
-    if not isinstance(conditions, dict):
-        raise ValueError("Conditions must be a object")
-    for k, v in conditions.items():
-        try:
-            obj[k] = Condition(v)
-        except ValueError:
-            pass
-
-    return obj
-
-
 def _init_mappings(mappings: Any) -> dict[str, Map]:
     obj = {}
     if not isinstance(mappings, dict):
@@ -498,9 +473,9 @@ def create_context_for_template(cfn):
 
     transforms = _init_transforms(cfn.template.get("Transform", []))
 
-    conditions = {}
+    conditions = Conditions({})
     try:
-        conditions = _init_conditions(cfn.template.get("Conditions", {}))
+        conditions = Conditions.create_from_instance(cfn.template.get("Conditions", {}))
     except (ValueError, AttributeError):
         pass
 

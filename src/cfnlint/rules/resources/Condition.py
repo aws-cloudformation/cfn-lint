@@ -31,7 +31,7 @@ class Condition(CfnLintJsonSchema):
 
         validator = self.extend_validator(
             validator=validator,
-            schema={"enum": list(validator.context.conditions.keys())},
+            schema={"enum": list(validator.context.conditions.conditions.keys())},
             context=validator.context.evolve(),
         )
 

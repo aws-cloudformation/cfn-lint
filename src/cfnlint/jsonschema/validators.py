@@ -171,7 +171,7 @@ def create(
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
                         if self.cfn.conditions.satisfiable(
-                            r_validator.context.resolved_conditions,
+                            r_validator.context.conditions.status,
                             r_validator.context.ref_values,
                         ):
                             yield r_value, r_validator, r_errs
