@@ -98,7 +98,13 @@ def test_create_context(name, instance, counts):
     context = create_context_for_template(cfn)
 
     for i in counts._fields:
-        assert len(getattr(context, i)) == getattr(counts, i), (
-            f"Test {name} has {i} {len(getattr(context, i))} "
-            "and expected {getattr(counts, i)}"
-        )
+        if i == "conditions":
+            assert len(context.conditions.conditions) == getattr(counts, i), (
+                f"Test {name} has {i} {len(getattr(context, i))} "
+                "and expected {getattr(counts, i)}"
+            )
+        else:
+            assert len(getattr(context, i)) == getattr(counts, i), (
+                f"Test {name} has {i} {len(getattr(context, i))} "
+                "and expected {getattr(counts, i)}"
+            )

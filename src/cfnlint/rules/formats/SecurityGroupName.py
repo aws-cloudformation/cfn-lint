@@ -27,7 +27,7 @@ class SecurityGroupName(FormatKeyword):
         if not isinstance(instance, str):
             return True
 
-        if re.match(r"^[a-zA-Z0-9\._\-:\/()#\,@\[\]+=&;\{\}!\$\*]+$", instance):
+        if re.match(r"^[a-zA-Z0-9 \._\-:\/()#\,@\[\]+=&;\{\}!\$\*]+$", instance):
             return True
 
         return False

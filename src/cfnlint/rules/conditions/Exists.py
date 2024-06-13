@@ -24,7 +24,7 @@ class Exists(CloudFormationLintRule):
         if not validator.is_type(instance, "string"):
             return
         for err in validator.descend(
-            instance, {"enum": list(validator.context.conditions.keys())}
+            instance, {"enum": list(validator.context.conditions.conditions.keys())}
         ):
             err.rule = self
             yield err

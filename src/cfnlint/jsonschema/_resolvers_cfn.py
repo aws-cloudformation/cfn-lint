@@ -266,14 +266,21 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
     sub_regex = re.compile(r"(\${([^!].*?)})")
 
     def _replace(matchobj):
-        for value, _ in validator.context.ref_value(matchobj.group(2).strip()):
+        nonlocal validator
+        for value, c in validator.context.ref_value(matchobj.group(2).strip()):
             if not isinstance(value, (str, int, float, bool)):
                 raise ValueError(f"Parameter {matchobj.group(2)!r} has wrong type")
+
+            validator = validator.evolve(
+                context=validator.context.evolve(
+                    ref_values=c.ref_values,
+                )
+            )
             return value
         raise ValueError(f"No matches for {matchobj.group(2)!r}")
 
     try:
-        yield re.sub(sub_regex, _replace, string), validator.evolve(), None
+        yield re.sub(sub_regex, _replace, string), validator, None
     except ValueError:
         return
 

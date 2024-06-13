@@ -18,6 +18,7 @@ from sympy.logic.inference import satisfiable
 from cfnlint.conditions._condition import ConditionNamed
 from cfnlint.conditions._equals import Equal
 from cfnlint.conditions._utils import get_hash
+from cfnlint.helpers import PSEUDOPARAMS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -348,3 +349,61 @@ class Conditions:
         )
         if satisfiable(cnf_test):
             yield False
+
+    def satisfiable(
+        self, conditions: dict[str, bool], parameter_values: dict[str, str]
+    ) -> bool:
+        """Given a list of condition names this function will
+        determine if the conditions are satisfied
+
+        Args:
+            condition_names (List[str]): A list of condition names
+
+        Returns:
+            bool: True if the conditions are satisfied
+        """
+        if not conditions:
+            return True
+
+        cnf = self._cnf.copy()
+        at_least_one_param_found = False
+        for condition_name, opt in conditions.items():
+            for c_equals in self._conditions[condition_name].equals:
+                found_params = {}
+                for param, value in parameter_values.items():
+                    if param in PSEUDOPARAMS:
+                        continue
+
+                    ref_hash = get_hash({"Ref": param})
+                    if ref_hash in c_equals.parameters:
+                        found_params = {ref_hash: value}
+
+                if not found_params:
+                    continue
+
+                at_least_one_param_found = True
+                if c_equals.test(found_params):
+                    cnf.add_prop(Symbol(c_equals.hash))
+                else:
+                    cnf.add_prop(Not(Symbol(c_equals.hash)))
+
+                if opt:
+                    cnf.add_prop(
+                        self._conditions[condition_name].build_true_cnf(
+                            self._solver_params
+                        )
+                    )
+                else:
+                    cnf.add_prop(
+                        self._conditions[condition_name].build_false_cnf(
+                            self._solver_params
+                        )
+                    )
+
+        if at_least_one_param_found is False:
+            return True
+
+        satisfied = satisfiable(cnf, all_models=False)
+        if satisfied is False:
+            return satisfied
+        return True

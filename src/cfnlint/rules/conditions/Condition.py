@@ -24,5 +24,5 @@ class Condition(BaseFn):
     def schema(self, validator, instance) -> Dict[str, Any]:
         return {
             "type": "string",
-            "enum": list(validator.context.conditions.keys()),
+            "enum": list(validator.context.conditions.conditions.keys()),
         }

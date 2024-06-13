@@ -5,9 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context.context import _init_conditions
+from cfnlint.context._conditions import Conditions
 
 
 def test_conditions():
     with pytest.raises(ValueError):
-        _init_conditions([])
+        Conditions.create_from_instance([])

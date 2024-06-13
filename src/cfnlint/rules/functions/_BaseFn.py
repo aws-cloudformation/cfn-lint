@@ -47,9 +47,6 @@ class BaseFn(CloudFormationLintRule):
         return validator.evolve(
             context=validator.context.evolve(
                 functions=self.functions,
-                path=validator.context.path.descend(
-                    path=self.fn.name,
-                ),
             ),
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=False,

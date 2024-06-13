@@ -31,7 +31,7 @@ class If(BaseFn):
                     "functions": [],
                     "schema": {
                         "type": ["string"],
-                        "enum": list(validator.context.conditions.keys()),
+                        "enum": list(validator.context.conditions.conditions.keys()),
                     },
                 },
             ],
@@ -61,16 +61,25 @@ class If(BaseFn):
             yield from iter(errs)
             return
 
-        # we pass through the functions for the paths down
-        # the second and third element of the if
-        element_validator = validator.evolve(
-            context=validator.context.evolve(
-                path=validator.context.path.descend(
-                    path=key,
-                ),
-            )
-        )
         for i in [1, 2]:
-            for err in element_validator.descend(instance=value[i], schema=s, path=i):
-                err.path.appendleft(key)
-                yield err
+            # we pass through the functions for the paths down
+            # the second and third element of the if
+            try:
+                element_validator = validator.evolve(
+                    context=validator.context.evolve(
+                        path=validator.context.path.descend(
+                            path=key,
+                        ),
+                        conditions=validator.context.conditions.evolve(
+                            {value[0]: True if i == 1 else False}
+                        ),
+                    )
+                )
+                for err in element_validator.descend(
+                    instance=value[i], schema=s, path=i
+                ):
+                    err.path.appendleft(key)
+                    yield err
+            except ValueError:
+                # impossible code path
+                pass

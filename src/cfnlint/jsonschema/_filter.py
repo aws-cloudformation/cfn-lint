@@ -13,7 +13,6 @@ from cfnlint.helpers import REGEX_DYN_REF, ToPy, ensure_list
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator
 
-
 _all_types = ["array", "boolean", "integer", "number", "object", "string"]
 
 

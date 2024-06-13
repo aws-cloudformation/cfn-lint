@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from collections import deque
 from typing import Any
 
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema import CfnLintKeyword
 
@@ -36,6 +37,9 @@ class ImageId(CfnLintKeyword):
         self.parent_rules = ["E1020"]
 
     def validate(self, validator: Validator, _, instance: Any, schema: Any):
+        if any(fn in validator.context.path.path for fn in FUNCTIONS):
+            return
+
         value = instance.get("Ref")
         if value not in validator.context.parameters:
             return
