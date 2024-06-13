@@ -121,9 +121,13 @@ class Graph:
 
     def _add_outputs(self, cfn: Any) -> None:
         # add all outputs in the template as nodes
-        for output_id in cfn.template.get("Outputs", {}).keys():
-            graph_label = str.format(f'"{output_id}"')
-            self._add_node(output_id, label=graph_label, settings=self.settings.output)
+        outputs = cfn.template.get("Outputs", {})
+        if isinstance(outputs, dict):
+            for output_id in outputs.keys():
+                graph_label = str.format(f'"{output_id}"')
+                self._add_node(
+                    output_id, label=graph_label, settings=self.settings.output
+                )
 
     def _add_resources(self, cfn: Any):
         # add all resources in the template as nodes

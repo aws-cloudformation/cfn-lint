@@ -49,7 +49,10 @@ def approaching_number_limit(cfn, section):
 
 def name_limit(cfn, section):
     matches = []
-    for name in cfn.template.get(section, {}):
+    items = cfn.template.get(section)
+    if not isinstance(items, dict):
+        return matches
+    for name in items:
         if len(name) > LIMITS[section]["name"]:
             message = (
                 "The length of " + section[:-1] + " name ({0}) exceeds the limit ({1})"
@@ -65,8 +68,10 @@ def name_limit(cfn, section):
 def number_limit(cfn, section):
     matches = []
     number = (
-        cfn.get_resources() if section == "Resources" else cfn.template.get(section, {})
+        cfn.get_resources() if section == "Resources" else cfn.template.get(section)
     )
+    if not isinstance(number, dict):
+        return matches
     if len(number) > LIMITS[section]["number"]:
         message = "The number of " + section + " ({0}) exceeds the limit ({1})"
         matches.append(
@@ -77,7 +82,10 @@ def number_limit(cfn, section):
 
 def alphanumeric_name(cfn, section):
     matches = []
-    for name, _ in cfn.template.get(section, {}).items():
+    items = cfn.template.get(section)
+    if not isinstance(items, dict):
+        return matches
+    for name, _ in items.items():
         if not re.match(REGEX_ALPHANUMERIC, name):
             message = (
                 section[:-1] + " {0} has invalid name.  Name has to be alphanumeric."
