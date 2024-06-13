@@ -17,7 +17,7 @@ from samtranslator.translator.translator import Translator
 
 from cfnlint.data import Serverless
 from cfnlint.decode.utils import convert_dict
-from cfnlint.helpers import format_json_string, load_resource
+from cfnlint.helpers import load_resource
 from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
@@ -158,9 +158,6 @@ class Transform:
                 )
             )
 
-            LOGGER.info(
-                "Transformed template: \n%s", format_json_string(self._template)
-            )
         except InvalidDocumentException as e:
             # pylint: disable=import-outside-toplevel
             from cfnlint.match import Match  # pylint: disable=cyclic-import

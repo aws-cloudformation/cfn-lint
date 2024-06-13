@@ -61,16 +61,17 @@ class If(BaseFn):
             yield from iter(errs)
             return
 
-        # we pass through the functions for the paths down
-        # the second and third element of the if
-        element_validator = validator.evolve(
-            context=validator.context.evolve(
-                path=validator.context.path.descend(
-                    path=key,
-                ),
-            )
-        )
         for i in [1, 2]:
+            # we pass through the functions for the paths down
+            # the second and third element of the if
+            element_validator = validator.evolve(
+                context=validator.context.evolve(
+                    path=validator.context.path.descend(
+                        path=key,
+                    ),
+                    resolved_conditions={value[0]: True if i == 1 else False},
+                )
+            )
             for err in element_validator.descend(instance=value[i], schema=s, path=i):
                 err.path.appendleft(key)
                 yield err

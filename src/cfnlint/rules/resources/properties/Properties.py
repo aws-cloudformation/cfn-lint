@@ -60,10 +60,17 @@ class Properties(CfnLintJsonSchema):
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
     ) -> ValidationResult:
+        if not validator.is_type(instance, "object"):
+            return
+        resolved_conditions = {}
+        if validator.is_type(instance.get("Condition"), "string"):
+            resolved_conditions = {instance.get("Condition"): True}
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
                 strict_types=False,
+                resolved_conditions=resolved_conditions,
             ),
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=True,

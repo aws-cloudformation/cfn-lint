@@ -25,6 +25,7 @@ from dataclasses import dataclass, field, fields
 from typing import Any, Callable, Dict
 
 from cfnlint.context import Context, create_context_for_template
+from cfnlint.helpers import is_function
 from cfnlint.jsonschema import _keywords, _keywords_cfn, _resolvers_cfn
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
@@ -39,8 +40,8 @@ from cfnlint.jsonschema.exceptions import (
 from cfnlint.schema.resolver import RefResolver, id_of
 from cfnlint.template import Template
 
-
 LOGGER = logging.getLogger(__name__)
+
 
 def create(
     validators: Mapping[str, V] | None = None,
@@ -140,34 +141,41 @@ def create(
             error = next(self.iter_errors(instance), None)
             return error is None
 
-        def resolve_value(self, instance: Any) -> ResolutionResult:
-            if self.is_type(instance, "object"):
-                if len(instance) == 1:
-                    for key, value in instance.items():
-                        if key in self.fn_resolvers:
-                            for (
-                                resolved_value,
-                                resolved_validator,
-                                resolved_errs,
-                            ) in self.resolve_value(value):
-                                if resolved_errs:
-                                    continue
-                                for (
-                                    fn_resolved_value,
-                                    fn_resolved_validator,
-                                    fn_resolved_err,
-                                ) in self.fn_resolvers[key](
-                                    resolved_validator, resolved_value  # type: ignore
-                                ):
-                                    if fn_resolved_err:
-                                        fn_resolved_err.path.appendleft(key)
-                                    yield (
-                                        fn_resolved_value,
-                                        fn_resolved_validator,
-                                        fn_resolved_err,
-                                    )
+        def _resolve_fn(self, key: str, value: Any) -> ResolutionResult:
+            for (
+                value_resolved_value,
+                value_resolved_validator,
+                value_resolved_errs,
+            ) in self.resolve_value(value):
+                if value_resolved_errs:
+                    continue
+                for (
+                    fn_resolved_value,
+                    fn_resolved_validator,
+                    fn_resolved_err,
+                ) in self.fn_resolvers[key](
+                    value_resolved_validator, value_resolved_value  # type: ignore
+                ):
+                    if fn_resolved_err:
+                        fn_resolved_err.path.appendleft(key)
+                    yield (
+                        fn_resolved_value,
+                        fn_resolved_validator,
+                        fn_resolved_err,
+                    )
 
-                            return
+        def resolve_value(self, instance: Any) -> ResolutionResult:
+            key, value = is_function(instance)
+            if key in self.fn_resolvers:
+                # There is no None in self.fn_resolvers
+                for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
+                    if not r_errs:
+                        if self.cfn.conditions.satisfiable(
+                            r_validator.context.resolved_conditions,
+                            r_validator.context.ref_values,
+                        ):
+                            yield r_value, r_validator, r_errs
+                return
 
             # The return type is a Protocol and we are returning an instance
             # we will ignore this error
@@ -237,8 +245,8 @@ def create(
                                 f"Exception {str(err)!r} raised while validating {k!r}",
                                 validator=k,
                                 validator_value=v,
-                                instance=_instance,
-                                schema=_schema,
+                                instance=instance,
+                                schema=self.schema,
                                 schema_path=deque([k]),
                             )
             finally:

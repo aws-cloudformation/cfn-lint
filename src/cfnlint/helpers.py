@@ -5,6 +5,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import datetime
 import fnmatch
 import gzip
@@ -182,6 +184,10 @@ FUNCTION_FOR_EACH = re.compile(r"^Fn::ForEach::[a-zA-Z0-9]+$")
 
 FUNCTION_CONDITIONS = frozenset(
     [FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, FUNCTION_EQUALS]
+)
+
+FUNCTIONS_ALL = frozenset.union(
+    *[FUNCTIONS, FUNCTION_CONDITIONS, frozenset(["Condition"])]
 )
 
 PSEUDOPARAMS_SINGLE = frozenset(
@@ -507,6 +513,28 @@ def bool_compare(first, second):
         second = bool(second.lower() in ["true", "True"])
 
     return first is second
+
+
+def is_function(instance: Any) -> tuple[str | None, Any]:
+    """
+    Checks if the given instance is a dictionary representing a function.
+
+    Args:
+        instance (Any): The object to check if it represents a function.
+
+    Returns:
+        tuple[str, Any] | None: If the instance is a dictionary with a single
+        key-value pair, and the key is a valid function name, returns a tuple
+        containing the function name (str) and the function arguments (Any).
+        Otherwise, returns a tuple with None and None.
+    """
+    if isinstance(instance, dict):
+        if len(instance) == 1:
+            for key, value in instance.items():
+                if key in FUNCTIONS_ALL:
+                    return key, value
+
+    return None, None
 
 
 def format_json_string(json_string):

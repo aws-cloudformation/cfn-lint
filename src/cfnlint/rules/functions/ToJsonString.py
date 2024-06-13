@@ -49,6 +49,9 @@ class ToJsonString(BaseFn):
                     [sp for sp in PSEUDOPARAMS if sp != "AWS::NotificationARNs"]
                 ),
             ),
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
+            ),
         )
 
     def fn_tojsonstring(

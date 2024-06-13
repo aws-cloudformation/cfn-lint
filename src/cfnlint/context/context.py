@@ -8,7 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterator, List, Mapping, Sequence, Set, Tuple
+from typing import Any, Deque, Dict, Iterator, List, Sequence, Set, Tuple
 
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
@@ -150,7 +150,7 @@ class Context:
     ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
 
     # Resolved conditions for reference
-    resolved_conditions: Mapping[str, bool] = field(init=True, default_factory=dict)
+    resolved_conditions: dict[str, bool] = field(init=True, default_factory=dict)
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
@@ -164,6 +164,11 @@ class Context:
             new_ref_values = self.ref_values.copy()
             new_ref_values.update(kwargs["ref_values"])
             kwargs["ref_values"] = new_ref_values
+
+        if "resolved_conditions" in kwargs:
+            new_resolved_conditions = self.resolved_conditions.copy()
+            new_resolved_conditions.update(kwargs["resolved_conditions"])
+            kwargs["resolved_conditions"] = new_resolved_conditions
 
         for f in fields(Context):
             if f.init:
@@ -187,6 +192,10 @@ class Context:
             return
         if instance in self.parameters:
             for v, path in self.parameters[instance].ref(self):
+
+                # validate that ref is possible with path
+                # need to evaluate if Fn::If would be not true if value is
+                # what it is
                 yield v, self.evolve(
                     path=self.path.evolve(
                         value_path=deque(["Parameters", instance]) + path

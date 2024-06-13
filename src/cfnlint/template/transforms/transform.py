@@ -11,6 +11,7 @@ from typing import Any, Callable, List, Mapping
 from cfnlint.conditions import Conditions
 from cfnlint.context import create_context_for_template
 from cfnlint.graph import Graph
+from cfnlint.helpers import format_json_string
 from cfnlint.match import Match
 from cfnlint.template.transforms._language_extensions import language_extension
 from cfnlint.template.transforms._sam import sam
@@ -52,7 +53,7 @@ class Transform:
                 return matches
             cfn.template = template
 
-        LOGGER.info("Transformed template: %s", cfn.template)
+        LOGGER.info("Transformed template: \n%s", format_json_string(cfn.template))
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
         cfn.context = create_context_for_template(cfn)

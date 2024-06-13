@@ -270,7 +270,7 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
         for value, c in validator.context.ref_value(matchobj.group(2).strip()):
             if not isinstance(value, (str, int, float, bool)):
                 raise ValueError(f"Parameter {matchobj.group(2)!r} has wrong type")
-            
+
             validator = validator.evolve(
                 context=validator.context.evolve(
                     ref_values=c.ref_values,
