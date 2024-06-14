@@ -602,6 +602,16 @@
   "AWS::ApplicationInsights::Application.SubComponentConfigurationDetails": "CACHED",
   "AWS::ApplicationInsights::Application.SubComponentTypeConfiguration": "CACHED",
   "AWS::ApplicationInsights::Application.WindowsEvent": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.CalendarInterval": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Dimension": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Goal": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Interval": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Metric": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.MetricDataQuery": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.MetricStat": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.RollingInterval": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Sli": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.SliMetric": "CACHED",
   "AWS::Athena::CapacityReservation.CapacityAssignment": "CACHED",
   "AWS::Athena::CapacityReservation.CapacityAssignmentConfiguration": "CACHED",
   "AWS::Athena::WorkGroup.AclConfiguration": "CACHED",
@@ -939,6 +949,7 @@
   "AWS::CodeBuild::Project.ProjectTriggers": "CACHED",
   "AWS::CodeBuild::Project.RegistryCredential": "CACHED",
   "AWS::CodeBuild::Project.S3LogsConfig": "CACHED",
+  "AWS::CodeBuild::Project.ScopeConfiguration": "CACHED",
   "AWS::CodeBuild::Project.Source": "CACHED",
   "AWS::CodeBuild::Project.SourceAuth": "CACHED",
   "AWS::CodeBuild::Project.VpcConfig": "CACHED",
@@ -1968,30 +1979,7 @@
   "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.IcebergTarget": "CACHED",
-  "AWS::Glue::Crawler.JdbcTarget": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html",
-   "Properties": {
-    "ConnectionName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-connectionname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Exclusions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-exclusions",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Path": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-jdbctarget.html#cfn-glue-crawler-jdbctarget-path",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Glue::Crawler.JdbcTarget": "CACHED",
   "AWS::Glue::Crawler.LakeFormationConfiguration": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
   "AWS::Glue::Crawler.RecrawlPolicy": "CACHED",
@@ -2170,6 +2158,12 @@
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
   "AWS::GuardDuty::Filter.TagItem": "CACHED",
   "AWS::GuardDuty::IPSet.TagItem": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.CFNActions": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.CFNProtectedResource": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.CFNStatusReasons": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.CFNTagging": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.S3Bucket": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan.TagItem": "CACHED",
   "AWS::GuardDuty::ThreatIntelSet.TagItem": "CACHED",
   "AWS::HealthLake::FHIRDatastore.CreatedAt": "CACHED",
   "AWS::HealthLake::FHIRDatastore.IdentityProviderConfiguration": "CACHED",
@@ -3195,7 +3189,33 @@
   "AWS::OSIS::Pipeline.EncryptionAtRestOptions": "CACHED",
   "AWS::OSIS::Pipeline.LogPublishingOptions": "CACHED",
   "AWS::OSIS::Pipeline.VpcEndpoint": "CACHED",
-  "AWS::OSIS::Pipeline.VpcOptions": "CACHED",
+  "AWS::OSIS::Pipeline.VpcOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html",
+   "Properties": {
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.SecurityGroupIds"
+     }
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.SubnetIds"
+     }
+    }
+   }
+  },
   "AWS::Oam::Link.LinkConfiguration": "CACHED",
   "AWS::Oam::Link.LinkFilter": "CACHED",
   "AWS::OpenSearchServerless::SecurityConfig.SamlConfigOptions": "CACHED",
@@ -5838,7 +5858,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "177.0.0",
+ "ResourceSpecificationVersion": "178.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5939,6 +5959,7 @@
   "AWS::ApplicationAutoScaling::ScalableTarget": "CACHED",
   "AWS::ApplicationAutoScaling::ScalingPolicy": "CACHED",
   "AWS::ApplicationInsights::Application": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective": "CACHED",
   "AWS::Athena::CapacityReservation": "CACHED",
   "AWS::Athena::DataCatalog": "CACHED",
   "AWS::Athena::NamedQuery": "CACHED",
@@ -6127,6 +6148,7 @@
   "AWS::Deadline::Fleet": "CACHED",
   "AWS::Deadline::LicenseEndpoint": "CACHED",
   "AWS::Deadline::MeteredProduct": "CACHED",
+  "AWS::Deadline::Monitor": "CACHED",
   "AWS::Deadline::Queue": "CACHED",
   "AWS::Deadline::QueueEnvironment": "CACHED",
   "AWS::Deadline::QueueFleetAssociation": "CACHED",
@@ -6280,38 +6302,7 @@
   "AWS::EC2::TransitGatewayMulticastGroupMember": "CACHED",
   "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
-  "AWS::EC2::TransitGatewayRoute": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html",
-   "Properties": {
-    "Blackhole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-blackhole",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DestinationCidrBlock": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-destinationcidrblock",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "CidrIp"
-     }
-    },
-    "TransitGatewayAttachmentId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayattachmentid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TransitGatewayRouteTableId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayroute.html#cfn-ec2-transitgatewayroute-transitgatewayroutetableid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::TransitGatewayRoute": "CACHED",
   "AWS::EC2::TransitGatewayRouteTable": "CACHED",
   "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
   "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
@@ -6565,6 +6556,7 @@
   "AWS::GuardDuty::Detector": "CACHED",
   "AWS::GuardDuty::Filter": "CACHED",
   "AWS::GuardDuty::IPSet": "CACHED",
+  "AWS::GuardDuty::MalwareProtectionPlan": "CACHED",
   "AWS::GuardDuty::Master": "CACHED",
   "AWS::GuardDuty::Member": "CACHED",
   "AWS::GuardDuty::ThreatIntelSet": "CACHED",
@@ -6801,7 +6793,92 @@
   "AWS::NetworkManager::TransitGatewayRouteTableAttachment": "CACHED",
   "AWS::NetworkManager::VpcAttachment": "CACHED",
   "AWS::NimbleStudio::Studio": "CACHED",
-  "AWS::OSIS::Pipeline": "CACHED",
+  "AWS::OSIS::Pipeline": {
+   "Attributes": {
+    "IngestEndpointUrls": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "PipelineArn": {
+     "PrimitiveType": "String"
+    },
+    "VpcEndpoints": {
+     "ItemType": "VpcEndpoint",
+     "Type": "List"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html",
+   "Properties": {
+    "BufferOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-bufferoptions",
+     "Required": false,
+     "Type": "BufferOptions",
+     "UpdateType": "Mutable"
+    },
+    "EncryptionAtRestOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-encryptionatrestoptions",
+     "Required": false,
+     "Type": "EncryptionAtRestOptions",
+     "UpdateType": "Mutable"
+    },
+    "LogPublishingOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-logpublishingoptions",
+     "Required": false,
+     "Type": "LogPublishingOptions",
+     "UpdateType": "Mutable"
+    },
+    "MaxUnits": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-maxunits",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.MaxUnits"
+     }
+    },
+    "MinUnits": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-minunits",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.MinUnits"
+     }
+    },
+    "PipelineConfigurationBody": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-pipelineconfigurationbody",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.PipelineConfigurationBody"
+     }
+    },
+    "PipelineName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-pipelinename",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.PipelineName"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-vpcoptions",
+     "Required": false,
+     "Type": "VpcOptions",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Oam::Link": "CACHED",
   "AWS::Oam::Sink": "CACHED",
   "AWS::OpenSearchServerless::AccessPolicy": "CACHED",
@@ -7496,6 +7573,15 @@
   "AWS::ApplicationInsights::Application.WindowsEvent.EventName": "CACHED",
   "AWS::ApplicationInsights::Application.WindowsEvent.LogGroupName": "CACHED",
   "AWS::ApplicationInsights::Application.WindowsEvent.PatternSet": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.CalendarInterval.DurationUnit": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Description": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Name": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.RollingInterval.DurationUnit": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.Sli.ComparisonOperator": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.SliMetric.MetricType": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.SliMetric.OperationName": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.SliMetric.PeriodSeconds": "CACHED",
+  "AWS::ApplicationSignals::ServiceLevelObjective.SliMetric.Statistic": "CACHED",
   "AWS::Athena::CapacityReservation.CapacityAssignment.WorkgroupNames": "CACHED",
   "AWS::Athena::CapacityReservation.Name": "CACHED",
   "AWS::Athena::DataCatalog.Description": "CACHED",
@@ -8264,6 +8350,10 @@
   "AWS::Deadline::MeteredProduct.Port": "CACHED",
   "AWS::Deadline::MeteredProduct.ProductId": "CACHED",
   "AWS::Deadline::MeteredProduct.Vendor": "CACHED",
+  "AWS::Deadline::Monitor.DisplayName": "CACHED",
+  "AWS::Deadline::Monitor.IdentityCenterInstanceArn": "CACHED",
+  "AWS::Deadline::Monitor.RoleArn": "CACHED",
+  "AWS::Deadline::Monitor.Subdomain": "CACHED",
   "AWS::Deadline::Queue.AllowedStorageProfileIds": "CACHED",
   "AWS::Deadline::Queue.DefaultBudgetAction": "CACHED",
   "AWS::Deadline::Queue.Description": "CACHED",
@@ -12243,11 +12333,23 @@
     "db.r6i.16xlarge",
     "db.r6i.24xlarge",
     "db.r6i.2xlarge",
+    "db.r6i.2xlarge.tpc1.mem2x",
+    "db.r6i.2xlarge.tpc2.mem4x",
+    "db.r6i.2xlarge.tpc2.mem8x",
     "db.r6i.32xlarge",
     "db.r6i.4xlarge",
+    "db.r6i.4xlarge.tpc2.mem2x",
+    "db.r6i.4xlarge.tpc2.mem3x",
+    "db.r6i.4xlarge.tpc2.mem4x",
+    "db.r6i.6xlarge.tpc2.mem4x",
     "db.r6i.8xlarge",
+    "db.r6i.8xlarge.tpc2.mem3x",
+    "db.r6i.8xlarge.tpc2.mem4x",
     "db.r6i.large",
+    "db.r6i.large.tpc1.mem2x",
     "db.r6i.xlarge",
+    "db.r6i.xlarge.tpc2.mem2x",
+    "db.r6i.xlarge.tpc2.mem4x",
     "db.r6id.12xlarge",
     "db.r6id.16xlarge",
     "db.r6id.24xlarge",
