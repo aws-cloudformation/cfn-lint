@@ -8,12 +8,12 @@ from datetime import datetime
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEol import DeprecatedRuntimeEol
+from cfnlint.rules.resources.lmbd.DeprecatedRuntimeUpdate import DeprecatedRuntimeUpdate
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = DeprecatedRuntimeEol()
+    rule = DeprecatedRuntimeUpdate()
     yield rule
 
 
@@ -37,7 +37,7 @@ def rule():
         ),
         (
             "python3.7",
-            datetime(2023, 12, 4),
+            datetime(2025, 2, 28),
             [
                 ValidationError(
                     (
@@ -50,16 +50,19 @@ def rule():
             ],
         ),
         (
-            # will be caught by the create rule
-            "python3.7",
-            datetime(2023, 1, 9),
-            [],
-        ),
-        (
             # will be caught by the update rule
             "nodejs",
             datetime(2016, 10, 31),
-            [],
+            [
+                ValidationError(
+                    (
+                        "Runtime 'nodejs' was deprecated on "
+                        "'2016-10-31'. Creation was disabled on "
+                        "'2016-10-31' and update on '2016-10-31'. "
+                        "Please consider updating to 'nodejs20.x'"
+                    ),
+                )
+            ],
         ),
     ],
 )

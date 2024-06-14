@@ -8,12 +8,12 @@ from datetime import datetime
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEol import DeprecatedRuntimeEol
+from cfnlint.rules.resources.lmbd.DeprecatedRuntimeCreate import DeprecatedRuntimeCreate
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = DeprecatedRuntimeEol()
+    rule = DeprecatedRuntimeCreate()
     yield rule
 
 
@@ -37,7 +37,7 @@ def rule():
         ),
         (
             "python3.7",
-            datetime(2023, 12, 4),
+            datetime(2024, 1, 9),
             [
                 ValidationError(
                     (
@@ -50,9 +50,9 @@ def rule():
             ],
         ),
         (
-            # will be caught by the create rule
+            # will be caught by the update rule
             "python3.7",
-            datetime(2023, 1, 9),
+            datetime(2025, 2, 28),
             [],
         ),
         (

@@ -14,44 +14,44 @@ from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class DeprecatedRuntimeEnd(CfnLintKeyword):
+class DeprecatedRuntimeUpdate(CfnLintKeyword):
 
-    id = "E2531"
-    shortdesc = "Validate if lambda runtime is deprecated"
-    description = "Check the lambda runtime has reached the end of life"
-    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
+    id = "E2533"
+    shortdesc = "Check if Lambda Function Runtimes are updatable"
+    description = (
+        "Check if an EOL Lambda Runtime is specified and you cannot update the function"
+    )
+    source_url = (
+        "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
+    )
     tags = ["resources", "lambda", "runtime"]
 
     def __init__(self):
         """Init"""
         super().__init__(["Resources/AWS::Lambda::Function/Properties/Runtime"])
-        self.child_rules = {
-            "W2531": None,
-        }
         self.current_date = datetime.today()
         self.deprecated_runtimes = load_resource(
             AdditionalSpecs, "LmbdRuntimeLifecycle.json"
         )
 
-    # pylint: disable=unused-argument
     def validate(
         self, validator: Validator, v: Any, runtime: Any, schema: dict[str, Any]
     ) -> ValidationResult:
+        if not validator.is_type(runtime, "string"):
+            return
         runtime_data = self.deprecated_runtimes.get(runtime)
         if not runtime_data:
             return
         if (
-            datetime.strptime(runtime_data["deprecated"], "%Y-%m-%d")
-            < self.current_date
+            datetime.strptime(runtime_data["update-block"], "%Y-%m-%d")
+            <= self.current_date
         ):
             yield ValidationError(
                 (
-                    f"Deprecated runtime {runtime!r} specified. Updating "
-                    f"disabled since {runtime_data['deprecated']!r}. "
-                    f"Please consider updating to {runtime_data['successor']!r}"
+                    f"Runtime {runtime!r} was deprecated on "
+                    f"{runtime_data['deprecated']!r}. Creation was disabled on "
+                    f"{runtime_data['create-block']!r} and update on "
+                    f"{runtime_data['update-block']!r}. Please consider "
+                    f"updating to {runtime_data['successor']!r}"
                 ),
-                rule=self,
             )
-
-        if self.child_rules["W2531"]:
-            yield from self.child_rules["W2531"].lambdaruntime(runtime, runtime_data)  # type: ignore

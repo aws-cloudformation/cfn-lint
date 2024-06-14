@@ -144,7 +144,10 @@ class Graph:
 
     def _add_outputs(self, cfn: Any) -> None:
         # add all outputs in the template as nodes
-        for output_id in cfn.template.get("Outputs", {}).keys():
+        outputs = cfn.template.get("Outputs", {})
+        if not isinstance(outputs, dict):
+            return
+        for output_id in outputs.keys():
             graph_label = str.format(f'"{output_id}"')
             self._add_node(output_id, settings=self.settings.output, label=graph_label)
 

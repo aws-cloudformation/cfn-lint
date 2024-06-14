@@ -14,16 +14,12 @@ from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 
-class DeprecatedRuntimeEol(CfnLintKeyword):
+class DeprecatedRuntimeCreate(CfnLintKeyword):
 
-    id = "W2531"
-    shortdesc = "Check if EOL Lambda Function Runtimes are used"
-    description = (
-        "Check if an EOL Lambda Runtime is specified and give a warning if used. "
-    )
-    source_url = (
-        "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
-    )
+    id = "E2531"
+    shortdesc = "Validate if lambda runtime is deprecated"
+    description = "Check the lambda runtime has reached the end of life"
+    source_url = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
     tags = ["resources", "lambda", "runtime"]
 
     def __init__(self):
@@ -34,6 +30,7 @@ class DeprecatedRuntimeEol(CfnLintKeyword):
             AdditionalSpecs, "LmbdRuntimeLifecycle.json"
         )
 
+    # pylint: disable=unused-argument
     def validate(
         self, validator: Validator, v: Any, runtime: Any, schema: dict[str, Any]
     ) -> ValidationResult:
@@ -41,13 +38,12 @@ class DeprecatedRuntimeEol(CfnLintKeyword):
             return
 
         runtime_data = self.deprecated_runtimes.get(runtime)
+
         if not runtime_data:
             return
         if (
-            datetime.strptime(runtime_data["deprecated"], "%Y-%m-%d")
+            datetime.strptime(runtime_data["create-block"], "%Y-%m-%d")
             <= self.current_date
-            and datetime.strptime(runtime_data["create-block"], "%Y-%m-%d")
-            > self.current_date
             and datetime.strptime(runtime_data["update-block"], "%Y-%m-%d")
             > self.current_date
         ):
