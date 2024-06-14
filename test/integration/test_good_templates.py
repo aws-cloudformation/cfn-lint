@@ -217,24 +217,24 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "test/fixtures/templates/good/transform_serverless_globals.yaml"
                         )
                     ),
-                    "Id": "878e389d-52d8-e7f2-fecd-614651007ecd",
+                    "Id": "f0f6c586-81bc-9182-de02-659a3a1a5b2c",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 10},
                         "Path": ["Resources", "myFunction", "Properties", "Runtime"],
                         "Start": {"ColumnNumber": 3, "LineNumber": 10},
                     },
-                    "Message": "Deprecated runtime 'nodejs6.10' specified. Updating disabled since '2019-08-12'. Please consider updating to 'nodejs20.x'",
+                    "Message": "Runtime 'nodejs6.10' was deprecated on '2019-08-12'. Creation was disabled on '2019-08-12' and update on '2019-08-12'. Please consider updating to 'nodejs20.x'",
                     "ParentId": None,
                     "Rule": {
                         "Description": (
-                            "Check the lambda runtime has reached the end of life"
+                            "Check if an EOL Lambda Runtime is specified and you cannot update the function"
                         ),
-                        "Id": "E2531",
+                        "Id": "E2533",
                         "ShortDescription": (
-                            "Validate if lambda runtime is deprecated"
+                            "Check if Lambda Function Runtimes are updatable"
                         ),
-                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
+                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html",
                     },
                 }
             ],
