@@ -2146,6 +2146,7 @@ cached: List[str] = [
     "aws-networkmanager-connectpeer.json",
     "aws-certificatemanager-account.json",
     "aws-ec2-vpngatewayroutepropagation.json",
+    "aws-kinesisfirehose-deliverystream.json",
     "aws-applicationautoscaling-scalingpolicy.json",
     "aws-location-geofencecollection.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",

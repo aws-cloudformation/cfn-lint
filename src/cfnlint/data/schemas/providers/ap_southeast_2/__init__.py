@@ -1320,6 +1320,7 @@ cached: List[str] = [
     "aws-iotwireless-deviceprofile.json",
     "aws-wafregional-webaclassociation.json",
     "aws-servicecatalog-serviceaction.json",
+    "aws-ec2-transitgatewayroute.json",
     "aws-appstream-directoryconfig.json",
     "aws-ce-anomalymonitor.json",
     "aws-iot-resourcespecificlogging.json",

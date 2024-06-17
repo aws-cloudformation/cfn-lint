@@ -1366,6 +1366,7 @@ cached: List[str] = [
     "aws-arczonalshift-zonalautoshiftconfiguration.json",
     "aws-logs-logstream.json",
     "aws-ec2-vpcendpointconnectionnotification.json",
+    "aws-synthetics-canary.json",
     "aws-s3-bucket.json",
     "aws-certificatemanager-account.json",
     "aws-applicationautoscaling-scalingpolicy.json",

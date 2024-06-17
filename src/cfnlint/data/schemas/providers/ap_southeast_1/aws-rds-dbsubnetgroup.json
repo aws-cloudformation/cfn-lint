@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "rds:CreateDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:AddTagsToResource",
+    "rds:RemoveTagsFromResource",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:ModifyDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:AddTagsToResource",
+    "rds:RemoveTagsFromResource",
+    "rds:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "properties": {
+  "DBSubnetGroupDescription": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
+ },
+ "required": [
+  "DBSubnetGroupDescription",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "typeName": "AWS::RDS::DBSubnetGroup",
+ "writeOnlyProperties": [
+  "/properties/SubnetIds"
+ ]
+}
