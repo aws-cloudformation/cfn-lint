@@ -1,3 +1,18 @@
+### v1.2.5a11
+## What's Changed
+* Update CloudFormation schemas to 2024-06-17 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3299
+* Cleanup rule pytest logic to make life easier by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3285
+* Cleanup `cfn_path` generation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3287
+* Add error catching to better handle rule issues by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3289
+* Fix an issue with SSM params for ForEach by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3294
+* V1 - more typing and cleanup by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3296
+* Update resolver logic to see if parameter will result in applied conditions still being valid by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3303
+* Update rule [W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2531) to validate when the specified runtime is deprecated by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3304
+* Update rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2531) to validate when you can no longer create a lambda function with the specified runtime by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3304
+* Create rule [E2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2533) to validate when you can no longer update a lambda function with the specified runtime by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3304
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a10...v1.2.5.a11
+
 ### v1.2.5a10
 ## What's Changed
 * Update CloudFormation schemas to `2024-06-07` by @kddejong in (pull #[3249](https://github.com/aws-cloudformation/cfn-lint/pull/3249))
