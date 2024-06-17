@@ -50,6 +50,10 @@
      "type": "string"
     },
     "S3Bucket": {
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
      "type": "string"
     },
     "S3Key": {
@@ -147,6 +151,20 @@
     "SecurityGroupIds": {
      "format": "AWS::EC2::SecurityGroup.Ids",
      "items": {
+      "anyOf": [
+       {
+        "relationshipRef": {
+         "propertyPath": "/properties/GroupId",
+         "typeName": "AWS::EC2::SecurityGroup"
+        }
+       },
+       {
+        "relationshipRef": {
+         "propertyPath": "/properties/DefaultSecurityGroup",
+         "typeName": "AWS::EC2::VPC"
+        }
+       }
+      ],
       "format": "AWS::EC2::SecurityGroup.GroupId",
       "type": "string"
      },
@@ -154,12 +172,20 @@
     },
     "SubnetIds": {
      "items": {
+      "relationshipRef": {
+       "propertyPath": "/properties/SubnetId",
+       "typeName": "AWS::EC2::Subnet"
+      },
       "type": "string"
      },
      "type": "array"
     },
     "VpcId": {
      "format": "AWS::EC2::VPC.Id",
+     "relationshipRef": {
+      "propertyPath": "/properties/VpcId",
+      "typeName": "AWS::EC2::VPC"
+     },
      "type": "string"
     }
    },

@@ -1,0 +1,153 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ChannelGroupName",
+   "/properties/ChannelName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelGroupName",
+  "/properties/ChannelName"
+ ],
+ "definitions": {
+  "IngestEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:CreateChannel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediapackagev2:GetChannel",
+    "mediapackagev2:DeleteChannel"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ChannelGroupName": {
+      "$ref": "resource-schema.json#/properties/ChannelGroupName"
+     }
+    },
+    "required": [
+     "ChannelGroupName"
+    ]
+   },
+   "permissions": [
+    "mediapackagev2:ListChannels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediapackagev2:GetChannel"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediapackagev2:TagResource",
+    "mediapackagev2:UntagResource",
+    "mediapackagev2:ListTagsForResource",
+    "mediapackagev2:UpdateChannel"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChannelGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "IngestEndpointUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "IngestEndpoints": {
+   "items": {
+    "$ref": "#/definitions/IngestEndpoint"
+   },
+   "type": "array"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/IngestEndpoints",
+  "/properties/IngestEndpointUrls",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "ChannelGroupName",
+  "ChannelName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackageV2::Channel"
+}
