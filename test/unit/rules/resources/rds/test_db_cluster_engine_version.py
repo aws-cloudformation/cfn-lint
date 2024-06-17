@@ -70,7 +70,8 @@ def rule():
                 ValidationError(
                     (
                         "'foo' is not one of ['5.7.44', '5.7.44-rds.20240408', "
-                        "'8.0.32', '8.0.33', '8.0.34', '8.0.35', '8.0.36']"
+                        "'5.7.44-rds.20240529', '8.0.32', '8.0.33', '8.0.34', "
+                        "'8.0.35', '8.0.36']"
                     ),
                     rule=DbClusterEngineVersion(),
                     path=deque(["EngineVersion"]),
