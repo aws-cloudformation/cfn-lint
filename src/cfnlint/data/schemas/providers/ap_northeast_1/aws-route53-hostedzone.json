@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "HostedZoneConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HostedZoneTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "QueryLoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsLogGroupArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Logs::LogGroup"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "CloudWatchLogsLogGroupArn"
+   ],
+   "type": "object"
+  },
+  "VPC": {
+   "additionalProperties": false,
+   "properties": {
+    "VPCId": {
+     "format": "AWS::EC2::VPC.Id",
+     "relationshipRef": {
+      "propertyPath": "/properties/VpcId",
+      "typeName": "AWS::EC2::VPC"
+     },
+     "type": "string"
+    },
+    "VPCRegion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VPCId",
+    "VPCRegion"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:CreateHostedZone",
+    "route53:CreateQueryLoggingConfig",
+    "route53:ChangeTagsForResource",
+    "route53:GetChange",
+    "route53:AssociateVPCWithHostedZone",
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:DeleteHostedZone",
+    "route53:DeleteQueryLoggingConfig",
+    "route53:ListQueryLoggingConfigs",
+    "route53:GetChange"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:GetHostedZone",
+    "route53:ListHostedZones",
+    "route53:ListHostedZonesByName",
+    "route53:ListQueryLoggingConfigs",
+    "route53:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:GetHostedZone",
+    "route53:ListTagsForResource",
+    "route53:ListQueryLoggingConfigs"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53:GetChange",
+    "route53:ListTagsForResource",
+    "route53:UpdateHostedZoneComment",
+    "route53:ChangeTagsForResource",
+    "route53:AssociateVPCWithHostedZone",
+    "route53:DisassociateVPCFromHostedZone",
+    "route53:CreateQueryLoggingConfig",
+    "route53:DeleteQueryLoggingConfig",
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "HostedZoneConfig": {
+   "$ref": "#/definitions/HostedZoneConfig"
+  },
+  "HostedZoneTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HostedZoneTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "NameServers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "QueryLoggingConfig": {
+   "$ref": "#/definitions/QueryLoggingConfig"
+  },
+  "VPCs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VPC"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/Name": "Name $OR $join([Name, \".\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/NameServers"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53.git",
+ "typeName": "AWS::Route53::HostedZone"
+}

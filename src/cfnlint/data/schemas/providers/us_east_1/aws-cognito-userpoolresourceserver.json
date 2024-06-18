@@ -1,8 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Identifier",
-  "/properties/UserPoolId"
+  "/properties/UserPoolId",
+  "/properties/Identifier"
  ],
  "definitions": {
   "ResourceServerScopeType": {
@@ -16,19 +16,59 @@
     }
    },
    "required": [
-    "ScopeName",
-    "ScopeDescription"
+    "ScopeDescription",
+    "ScopeName"
    ],
    "type": "object"
   }
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:CreateResourceServer",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:DeleteResourceServer"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "UserPoolId": {
+      "$ref": "resource-schema.json#/properties/UserPoolId"
+     }
+    },
+    "required": [
+     "UserPoolId"
+    ]
+   },
+   "permissions": [
+    "cognito-idp:ListResourceServers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:DescribeResourceServer"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-idp:UpdateResourceServer",
+    "iam:PassRole"
+   ],
+   "timeoutInMinutes": 2
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/UserPoolId",
+  "/properties/Identifier"
  ],
  "properties": {
-  "Id": {
-   "type": "string"
-  },
   "Identifier": {
    "type": "string"
   },
@@ -39,20 +79,23 @@
    "items": {
     "$ref": "#/definitions/ResourceServerScopeType"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "UserPoolId": {
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
   "UserPoolId",
   "Identifier",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::Cognito::UserPoolResourceServer"
 }
