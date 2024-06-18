@@ -7,7 +7,7 @@ import itertools
 import operator
 
 from cfnlint.formatters._utils import color, colored
-from cfnlint.formatters.BaseFormatter import BaseFormatter
+from cfnlint.formatters.base import BaseFormatter
 
 
 class PrettyFormatter(BaseFormatter):

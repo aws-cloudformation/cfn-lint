@@ -19,7 +19,7 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import Any, Dict, List
+from typing import Any
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -211,7 +211,7 @@ PSEUDOPARAMS = frozenset(
     ["AWS::NoValue"] + list(PSEUDOPARAMS_SINGLE) + list(PSEUDOPARAMS_MULTIPLE)
 )
 
-LIMITS: Dict[str, Any] = {
+LIMITS: dict[str, Any] = {
     "Mappings": {"number": 200, "attributes": 200, "name": 255},  # in characters
     "Outputs": {
         "number": 200,
@@ -553,7 +553,7 @@ def format_json_string(json_string):
 def create_rules(
     mod,
     name="CloudFormationLintRule",
-    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._Rule"),
+    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._rule"),
 ):
     """Create and return an instance of each CloudFormationLintRule subclass
     from the given module."""
@@ -601,7 +601,7 @@ def import_filename(pluginname, root):
 def load_plugins(
     directory,
     name="CloudFormationLintRule",
-    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._Rule"),
+    modules=("cfnlint", "cfnlint.rules", "cfnlint.rules._rule"),
 ):
     """Load plugins"""
     result = []
@@ -647,7 +647,7 @@ def get_hash(instance: Any) -> str:
     ).hexdigest()
 
 
-def ensure_list(instance: Any) -> List[Any]:
+def ensure_list(instance: Any) -> list[Any]:
     if isinstance(instance, (list, tuple)):
         return list(instance)
     return [instance]

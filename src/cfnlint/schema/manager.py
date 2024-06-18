@@ -17,7 +17,7 @@ import sys
 import zipfile
 from copy import copy
 from functools import lru_cache
-from typing import Any, Dict, Iterator, List, Sequence
+from typing import Any, Dict, Iterator, Sequence
 
 import jsonpatch
 
@@ -38,7 +38,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class _FileLocation:
-    def __init__(self, path: List[str]):
+    def __init__(self, path: list[str]):
         self.path_relative = os.path.join(
             os.path.dirname(__file__),
             "..",
@@ -65,8 +65,8 @@ class ProviderSchemaManager:
             ]
         )
         self._region_primary = ToPy(REGION_PRIMARY)
-        self._registry_schemas: Dict[str, Schema] = {}
-        self._provider_schema_modules: Dict[str, Any] = {}
+        self._registry_schemas: dict[str, Schema] = {}
+        self._provider_schema_modules: dict[str, Any] = {}
         self.reset()
 
     def reset(self) -> None:
@@ -75,10 +75,10 @@ class ProviderSchemaManager:
         Important function when processing many templates
         and using spec patching
         """
-        self._schemas: Dict[str, Dict[str, Schema]] = {}
+        self._schemas: dict[str, dict[str, Schema]] = {}
         for region in REGIONS:
             self._schemas[region] = {}
-        self._removed_types: List[str] = []
+        self._removed_types: list[str] = []
         self.get_resource_schema.cache_clear()
         self.get_resource_types.cache_clear()
         self.get_type_getatts.cache_clear()
@@ -99,7 +99,7 @@ class ProviderSchemaManager:
 
     def get_resource_schemas_by_regions(
         self, resource_type: str, regions: Sequence[str]
-    ) -> Iterator[tuple[List[str], Schema]]:
+    ) -> Iterator[tuple[list[str], Schema]]:
         """
         Get unique schemas with their associated regions
 
@@ -195,13 +195,13 @@ class ProviderSchemaManager:
         return schema
 
     @lru_cache(maxsize=None)
-    def get_resource_types(self, region: str) -> List[str]:
+    def get_resource_types(self, region: str) -> list[str]:
         """Get the resource types for a region
 
         Args:
             region (str): the region in which to get the resource types for
         Returns:
-            List[str]: returns a list of resource types
+            list[str]: returns a list of resource types
         """
         reg = ToPy(region)
 
@@ -209,7 +209,7 @@ class ProviderSchemaManager:
             self._provider_schema_modules[self._region_primary.name] = __import__(
                 f"{self._root.module}.{self._region_primary.py}", fromlist=[""]
             )
-        resource_types: List[str] = []
+        resource_types: list[str] = []
         if reg.name not in self._provider_schema_modules:
             self._provider_schema_modules[region] = __import__(
                 f"{self._root.module}.{reg.py}", fromlist=[""]
@@ -242,14 +242,14 @@ class ProviderSchemaManager:
 
     def _remove_descriptions(self, spec: Any) -> Any:
         if isinstance(spec, dict):
-            r: Dict[Any, Any] = {}
+            r: dict[Any, Any] = {}
             for k, v in spec.items():
                 if k != "description":
                     r[k] = self._remove_descriptions(v)
 
             return r
         elif isinstance(spec, list):
-            m: List[Any] = []
+            m: list[Any] = []
             for v in spec:
                 m.append(self._remove_descriptions(v))
 

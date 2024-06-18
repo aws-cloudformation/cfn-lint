@@ -9,15 +9,14 @@ import logging
 import os
 import sys
 from copy import deepcopy
-from typing import Any, Dict, Iterator, List, Sequence
+from typing import Any, Iterator, Sequence
 
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn
 from cfnlint.decode.decode import decode
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.ParseError import ParseError
-from cfnlint.rules.TransformError import TransformError
+from cfnlint.rules.errors import ParseError, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
@@ -79,7 +78,7 @@ class TemplateRunner:
     def __init__(
         self,
         filename: str | None,
-        template: Dict[str, Any],
+        template: dict[str, Any],
         config: ConfigMixIn,
         rules: Rules,
     ) -> None:
@@ -88,7 +87,7 @@ class TemplateRunner:
 
         Args:
             filename (str | None): The filename of the CloudFormation template.
-            template (Dict[str, Any]): The CloudFormation template as a dictionary.
+            template (dict[str, Any]): The CloudFormation template as a dictionary.
             config (ConfigMixIn): The configuration object containing
             settings for the template scan.
             rules (Rules): The set of rules to be applied to the template.
@@ -108,7 +107,7 @@ class TemplateRunner:
         Yields:
             Match: The unique matches from the input sequence.
         """
-        seen: List[Match] = []
+        seen: list[Match] = []
         for match in matches:
             if match not in seen:
                 seen.append(match)
@@ -190,11 +189,11 @@ class Runner:
         _validate_filenames(filenames: Sequence[str | None]) -> Iterator[Match]:
             Validate the specified filenames and yield any matches found.
         validate_template(filename: str | None,
-         template: Dict[str, Any]) -> Iterator[Match]:
+         template: dict[str, Any]) -> Iterator[Match]:
             Validate a single CloudFormation template and yield any matches found.
-        _cli_output(matches: List[Match]) -> None:
+        _cli_output(matches: list[Match]) -> None:
             Output the results of the template scan to the console or a file.
-        _exit(matches: List[Match]) -> int:
+        _exit(matches: list[Match]) -> int:
             Determine the appropriate exit code based on the severity of the matches.
         run() -> Iterator[Match]:
             Run the template validation process and yield any matches found.
@@ -288,7 +287,7 @@ class Runner:
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
     def validate_template(
-        self, filename: str | None, template: Dict[str, Any]
+        self, filename: str | None, template: dict[str, Any]
     ) -> Iterator[Match]:
         """
         Validate a single CloudFormation template and yield any matches found.
@@ -299,7 +298,7 @@ class Runner:
         Args:
             filename (str | None): The filename of the CloudFormation template, or
                 `None` if the template is not associated with a file.
-            template (Dict[str, Any]): The CloudFormation template as a dictionary.
+            template (dict[str, Any]): The CloudFormation template as a dictionary.
 
         Yields:
             Match: The matches found during the validation process.
@@ -310,7 +309,7 @@ class Runner:
         runner = TemplateRunner(filename, template, self.config, self.rules)
         yield from runner.run()
 
-    def _cli_output(self, matches: List[Match]) -> None:
+    def _cli_output(self, matches: list[Match]) -> None:
         formatter = get_formatter(self.config)
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
         output = formatter.print_matches(matches, self.rules, config=self.config)
@@ -323,12 +322,12 @@ class Runner:
 
         self._exit(matches)
 
-    def _exit(self, matches: List[Match]) -> int:
+    def _exit(self, matches: list[Match]) -> int:
         """Determine exit code"""
 
         exit_level: str = self.config.non_zero_exit_code or "informational"
 
-        exit_levels: Dict[str, List[str]] = {
+        exit_levels: dict[str, list[str]] = {
             "informational": ["informational", "warning", "error"],
             "warning": ["warning", "error"],
             "error": ["error"],

@@ -8,7 +8,7 @@ from __future__ import annotations
 import itertools
 import logging
 import traceback
-from typing import Any, Dict, Iterator, List, Set, Tuple
+from typing import Any, Iterator, Set, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
@@ -29,8 +29,8 @@ class Conditions:
     _max_scenarios: int = 128  # equivalent to 2^7
 
     def __init__(self, cfn) -> None:
-        self._conditions: Dict[str, ConditionNamed] = {}
-        self._parameters: Dict[str, List[str]] = {}
+        self._conditions: dict[str, ConditionNamed] = {}
+        self._parameters: dict[str, list[str]] = {}
         self._init_conditions(cfn=cfn)
         self._init_parameters(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
@@ -78,14 +78,14 @@ class Conditions:
         return self._conditions.get(name, default)
 
     def _build_cnf(
-        self, condition_names: List[str]
-    ) -> Tuple[EncodedCNF, Dict[str, Any]]:
+        self, condition_names: list[str]
+    ) -> Tuple[EncodedCNF, dict[str, Any]]:
         cnf = EncodedCNF()
 
         # build parameters and equals into solver
-        equal_vars: Dict[str, Symbol] = {}
+        equal_vars: dict[str, Symbol] = {}
 
-        equals: Dict[str, Equal] = {}
+        equals: dict[str, Equal] = {}
         for condition_name in condition_names:
             c_equals = self._conditions[condition_name].equals
             for c_equal in c_equals:
@@ -157,17 +157,17 @@ class Conditions:
         return (cnf, equal_vars)
 
     def build_scenarios(
-        self, conditions: Dict[str, Set[bool]], region: str | None = None
-    ) -> Iterator[Dict[str, bool]]:
+        self, conditions: dict[str, Set[bool]], region: str | None = None
+    ) -> Iterator[dict[str, bool]]:
         """Given a list of condition names this function will
         yield scenarios that represent those conditions and
         there result (True/False)
 
         Args:
-            condition_names (List[str]): A list of condition names
+            condition_names (list[str]): A list of condition names
 
         Returns:
-            Iterator[Dict[str, bool]]: yield dict objects of {ConditionName: True/False}
+            Iterator[dict[str, bool]]: yield dict objects of {ConditionName: True/False}
         """
         # nothing to yield if there are no conditions
         if len(conditions) == 0:
@@ -239,13 +239,13 @@ class Conditions:
             #  formatting or just the wrong condition name
             return
 
-    def check_implies(self, scenarios: Dict[str, bool], implies: str) -> bool:
+    def check_implies(self, scenarios: dict[str, bool], implies: str) -> bool:
         """Based on a bunch of scenario conditions and their Truth/False value
         determine if implies condition is True any time the scenarios are satisfied
         solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
 
         Args:
-            scenarios (Dict[str, bool]): A list of condition names
+            scenarios (dict[str, bool]): A list of condition names
             and if they are True or False implies: the condition name that
             we are implying will also be True
 
@@ -357,7 +357,7 @@ class Conditions:
         determine if the conditions are satisfied
 
         Args:
-            condition_names (List[str]): A list of condition names
+            condition_names (list[str]): A list of condition names
 
         Returns:
             bool: True if the conditions are satisfied

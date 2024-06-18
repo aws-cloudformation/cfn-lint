@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from cfnlint.jsonschema import ValidationResult
 from cfnlint.jsonschema.protocols import Validator
@@ -25,7 +27,7 @@ class Join(BaseFn):
             "I1022": None,
         }
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator, instance) -> dict[str, Any]:
         return {
             "type": "array",
             "maxItems": 2,

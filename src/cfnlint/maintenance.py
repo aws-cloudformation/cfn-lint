@@ -76,11 +76,7 @@ def update_documentation(rules):
             '| [{0}<a name="{0}"></a>]({6}) | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
         )
 
-        for rule in [
-            cfnlint.rules.ParseError.ParseError(),
-            cfnlint.rules.TransformError.TransformError(),
-            cfnlint.rules.RuleError.RuleError(),
-        ] + sorted_rules:
+        for rule in sorted_rules:
             rule_source_code_file = (
                 "../"
                 + subprocess.check_output(

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import json
 
-from cfnlint.formatters.BaseFormatter import BaseFormatter
+from cfnlint.formatters.base import BaseFormatter
 from cfnlint.rules import Match
 
 

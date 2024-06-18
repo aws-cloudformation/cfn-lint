@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from cfnlint.helpers import VALID_PARAMETER_TYPES, VALID_PARAMETER_TYPES_LIST
 from cfnlint.jsonschema import ValidationError, Validator
@@ -26,7 +28,7 @@ class Ref(BaseFn):
         ]
         self.child_rules = dict.fromkeys(self._all_refs)
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator, instance) -> dict[str, Any]:
         return {
             "type": ["string"],
             "enum": validator.context.refs,

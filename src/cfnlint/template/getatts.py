@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import UserDict
-from typing import Any, Dict, List, Union
+from typing import Any
 
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict, ResourceNotFoundError
 
@@ -10,7 +10,7 @@ class _ResourceDict(UserDict):
     def __init__(self, __dict: None = None) -> None:
         self._has_modules: bool = False
         super().__init__(__dict)
-        self.data: Dict[str, AttributeDict] = {}
+        self.data: dict[str, AttributeDict] = {}
 
     def __setitem__(self, key: str, item: AttributeDict) -> None:
         if key.endswith(".*"):
@@ -44,9 +44,9 @@ class _ResourceDict(UserDict):
 
 
 class GetAtts:
-    def __init__(self, regions: List[str]) -> None:
+    def __init__(self, regions: list[str]) -> None:
         self._regions = regions
-        self._getatts: Dict[str, _ResourceDict] = {}
+        self._getatts: dict[str, _ResourceDict] = {}
 
         for region in self._regions:
             self._getatts[region] = _ResourceDict()
@@ -71,13 +71,13 @@ class GetAtts:
                     self._getatts[region][resource_name] = AttributeDict()
                     continue
 
-    def json_schema(self, region: str) -> Dict:
-        schema: Dict[str, List] = {"oneOf": []}
-        schema_strings: Dict[str, Any] = {
+    def json_schema(self, region: str) -> dict:
+        schema: dict[str, list[Any]] = {"oneOf": []}
+        schema_strings: dict[str, Any] = {
             "type": "string",
             "enum": [],
         }
-        schema_array: Dict[str, Union[str, List]] = {
+        schema_array: dict[str, str | list[Any]] = {
             "type": "array",
             "items": [{"type": "string", "enum": []}, {"type": ["string", "object"]}],
             "allOf": [],
@@ -133,7 +133,7 @@ class GetAtts:
         schema["oneOf"].append(schema_strings)
         return schema
 
-    def match(self, region: str, getatt: Union[str, List[str]]) -> str:
+    def match(self, region: str, getatt: str | list[str]) -> str:
         if isinstance(getatt, str):
             getatt = getatt.split(".", 1)
 

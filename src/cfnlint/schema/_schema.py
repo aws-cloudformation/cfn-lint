@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import jsonpatch
 
@@ -17,9 +17,9 @@ from cfnlint.schema.resolver import RefResolver
 
 
 class Schema:
-    def __init__(self, schema: Dict[str, Any], is_cached: bool = False) -> None:
+    def __init__(self, schema: dict[str, Any], is_cached: bool = False) -> None:
         self.is_cached: bool = is_cached
-        self._schema: Dict[str, Any] = schema
+        self._schema: dict[str, Any] = schema
         self._type_name: str = schema["typeName"]
         self.resolver: RefResolver = RefResolver.from_schema(schema)
         self._getatts: GetAtts = GetAtts(self)
@@ -39,7 +39,7 @@ class Schema:
         """
         return self._schema
 
-    def patch(self, patches: List[Dict]) -> None:
+    def patch(self, patches: list[Dict]) -> None:
         """Patches the schema file
 
         Args:
@@ -56,7 +56,7 @@ class Schema:
 
         Args:
         Returns:
-            Dict[str, GetAtt]: Dict of keys with valid strings and the json schema
+            dict[str, GetAtt]: Dict of keys with valid strings and the json schema
             object for the property
         """
         return self._getatts.attrs

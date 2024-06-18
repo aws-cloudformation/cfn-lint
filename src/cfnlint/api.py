@@ -19,9 +19,9 @@ Matches = List[Match]
 def lint(
     s: str,
     rules: RulesCollection | None = None,
-    regions: List[str] | None = None,
+    regions: list[str] | None = None,
     config: ManualArgs | None = None,
-) -> List[Match]:
+) -> list[Match]:
     """Validate a string template using the specified rules and regions.
 
     Parameters
@@ -30,7 +30,7 @@ def lint(
         the template string
     rules : RulesCollection
         The rules to run against s
-    regions : List[str]
+    regions : list[str]
         The regions to test against s
 
     Returns
@@ -64,7 +64,7 @@ def lint(
     return list(runner.validate_template(None, template))
 
 
-def lint_all(s: str) -> List[Match]:
+def lint_all(s: str) -> list[Match]:
     """Validate a string template against all regions and rules.
 
     Parameters

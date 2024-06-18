@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import json
-from typing import Any, List
+from typing import Any
 
 from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import ValidationResult, Validator
@@ -28,7 +28,7 @@ class Policy(CfnLintJsonSchema):
 
     def __init__(
         self,
-        keywords: List[str] | None = None,
+        keywords: list[str] | None = None,
         schema_name: str | None = None,
         schema_file: str | None = None,
     ):

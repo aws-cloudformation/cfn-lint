@@ -23,7 +23,7 @@ import itertools
 from collections import deque
 from pprint import pformat
 from textwrap import dedent, indent
-from typing import TYPE_CHECKING, ClassVar, Deque, Tuple, Union
+from typing import TYPE_CHECKING, ClassVar, Deque, Tuple
 
 from cfnlint.jsonschema import _utils
 
@@ -54,7 +54,7 @@ class _Error(Exception):
         parent=None,
         type_checker=_unset,
         extra_args=None,
-        rule: Union[CloudFormationLintRule, None] = None,
+        rule: CloudFormationLintRule | None = None,
         path_override: Deque | Tuple = (),
     ):
         super().__init__(

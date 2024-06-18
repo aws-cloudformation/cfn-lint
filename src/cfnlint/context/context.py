@@ -8,7 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
-from typing import Any, Deque, Dict, Iterator, List, Sequence, Set, Tuple
+from typing import Any, Deque, Iterator, Sequence, Set, Tuple
 
 from cfnlint.context._conditions import Conditions
 from cfnlint.helpers import (
@@ -26,8 +26,8 @@ _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
 @dataclass
 class Transforms:
     # Template level parameters
-    transforms: InitVar[str | List[str] | None]
-    _transforms: List[str] = field(init=False, default_factory=list)
+    transforms: InitVar[str | list[str] | None]
+    _transforms: list[str] = field(init=False, default_factory=list)
 
     def __post_init__(self, transforms) -> None:
         if transforms is None:
@@ -135,10 +135,10 @@ class Context:
     path: Path = field(init=True, default_factory=Path)
 
     # cfn-lint Template class
-    parameters: Dict[str, "Parameter"] = field(init=True, default_factory=dict)
-    resources: Dict[str, "Resource"] = field(init=True, default_factory=dict)
+    parameters: dict[str, "Parameter"] = field(init=True, default_factory=dict)
+    resources: dict[str, "Resource"] = field(init=True, default_factory=dict)
     conditions: Conditions = field(init=True, default_factory=Conditions)
-    mappings: Dict[str, "Map"] = field(init=True, default_factory=dict)
+    mappings: dict[str, "Map"] = field(init=True, default_factory=dict)
 
     strict_types: bool = field(init=True, default=True)
 
@@ -148,7 +148,7 @@ class Context:
 
     # Combiniation of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
-    ref_values: Dict[str, Any] = field(init=True, default_factory=dict)
+    ref_values: dict[str, Any] = field(init=True, default_factory=dict)
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
@@ -169,7 +169,7 @@ class Context:
 
         return cls(**kwargs)
 
-    def ref_value(self, instance: str) -> Iterator[Tuple[str | List[str], "Context"]]:
+    def ref_value(self, instance: str) -> Iterator[Tuple[str | list[str], "Context"]]:
         if instance in PSEUDOPARAMS and instance not in self.pseudo_parameters:
             return
 
@@ -223,7 +223,7 @@ class Context:
         )
 
 
-def _get_pseudo_value(parameter: str) -> str | List[str] | None:
+def _get_pseudo_value(parameter: str) -> str | list[str] | None:
     if parameter == "AWS::AccountId":
         return "123456789012"
     if parameter == "AWS::StackName":
@@ -231,7 +231,7 @@ def _get_pseudo_value(parameter: str) -> str | List[str] | None:
     return None
 
 
-def _get_pseudo_value_by_region(parameter: str, region: str) -> str | List[str]:
+def _get_pseudo_value_by_region(parameter: str, region: str) -> str | list[str]:
     if parameter == "AWS::NotificationARNs":
         return [f"arn:{_get_partition(region)}:sns:{region}:123456789012:notification"]
     if parameter == "AWS::Partition":
@@ -373,7 +373,7 @@ class _MappingSecondaryKey:
     This class holds a mapping value
     """
 
-    keys: Dict[str, List[Any] | str | int | float] = field(
+    keys: dict[str, list[Any] | str | int | float] = field(
         init=False, default_factory=dict
     )
     instance: InitVar[Any]
@@ -399,7 +399,7 @@ class Map:
     This class holds a mapping
     """
 
-    keys: Dict[str, _MappingSecondaryKey] = field(init=False, default_factory=dict)
+    keys: dict[str, _MappingSecondaryKey] = field(init=False, default_factory=dict)
     resource: InitVar[Any]
 
     def __post_init__(self, mapping) -> None:

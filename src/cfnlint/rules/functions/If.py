@@ -3,7 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Dict
+from __future__ import annotations
+
+from typing import Any
 
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
@@ -21,7 +23,7 @@ class If(BaseFn):
     def __init__(self) -> None:
         super().__init__("Fn::If", all_types)
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator, instance) -> dict[str, Any]:
         return {
             "type": ["array"],
             "minItems": 3,

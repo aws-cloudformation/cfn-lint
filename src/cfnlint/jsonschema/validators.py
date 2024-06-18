@@ -22,7 +22,7 @@ import logging
 from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from cfnlint.context import Context, create_context_for_template
 from cfnlint.helpers import is_function
@@ -316,7 +316,7 @@ def create(
 
         def extend(
             self,
-            validators: Dict[str, V] | None = None,
+            validators: dict[str, V] | None = None,
             function_filter: FunctionFilter | None = None,
             fn_resolvers: Mapping[str, Callable[["Validator", Any], Any]] | None = None,
         ) -> "Validator":
@@ -347,7 +347,7 @@ def create(
     return Validator
 
 
-_standard_validators: Dict[str, V] = {
+_standard_validators: dict[str, V] = {
     "$ref": _keywords.ref,
     "additionalProperties": _keywords.additionalProperties,
     "allOf": _keywords.allOf,

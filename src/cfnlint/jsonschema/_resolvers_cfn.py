@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import json
 from collections import deque
-from typing import Any, Dict, Iterator
+from typing import Any, Iterator
 
 import regex as re
 
@@ -242,8 +242,8 @@ def split(validator: Validator, instance: Any) -> ResolutionResult:
 
 
 def _sub_parameter_expansion(
-    validator: Validator, parameters: Dict[str, Any]
-) -> Iterator[Dict[str, Any]]:
+    validator: Validator, parameters: dict[str, Any]
+) -> Iterator[dict[str, Any]]:
     parameters = parameters.copy()
     if len(parameters) == 0:
         yield {}
@@ -344,7 +344,7 @@ def to_json_string(validator: Validator, instance: Any) -> ResolutionResult:
 # not all functions need to be resolved.  These functions
 # allow us to pull up values from nested functions
 # allowing us to test the possible values against the schema
-fn_resolvers: Dict[str, Any] = {
+fn_resolvers: dict[str, Any] = {
     "Fn::Base64": unresolvable,
     "Fn::Cidr": unresolvable,
     "Fn::FindInMap": find_in_map,

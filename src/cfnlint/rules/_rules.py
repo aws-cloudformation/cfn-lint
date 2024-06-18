@@ -10,23 +10,13 @@ import logging
 import os
 import traceback
 from collections import UserDict
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    MutableSet,
-    Optional,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Iterator, MutableSet
 
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.exceptions import DuplicateRuleError
-from cfnlint.rules._Rule import CloudFormationLintRule, Match
-from cfnlint.rules.RuleError import RuleError
+from cfnlint.rules._rule import CloudFormationLintRule, Match
+from cfnlint.rules.errors import RuleError
 from cfnlint.template import Template
 
 if TYPE_CHECKING:
@@ -45,8 +35,8 @@ class Rules(TypedRules):
         self, rules: dict[str, CloudFormationLintRule] | None = None, /, **kwargs
     ):
         super().__init__()
-        self.data: Dict[str, CloudFormationLintRule] = {}
-        self._used_rules: Dict[str, CloudFormationLintRule] = {}
+        self.data: dict[str, CloudFormationLintRule] = {}
+        self._used_rules: dict[str, CloudFormationLintRule] = {}
         if rules is not None:
             self.update(rules)
         if kwargs:
@@ -70,7 +60,7 @@ class Rules(TypedRules):
 
     def filter(
         self,
-        func: Callable[[Dict[str, CloudFormationLintRule], ConfigMixIn], Rules],
+        func: Callable[[dict[str, CloudFormationLintRule], ConfigMixIn], Rules],
         config: ConfigMixIn,
     ):
         return func(self.data, config)
@@ -91,12 +81,12 @@ class Rules(TypedRules):
             return True
         return False
 
-    def extend(self, rules: List[CloudFormationLintRule]):
+    def extend(self, rules: list[CloudFormationLintRule]):
         for rule in rules:
             self.register(rule)
 
     @property
-    def used_rules(self) -> Dict[str, CloudFormationLintRule]:
+    def used_rules(self) -> dict[str, CloudFormationLintRule]:
         return self._used_rules
 
     # pylint: disable=inconsistent-return-statements
@@ -131,7 +121,7 @@ class Rules(TypedRules):
                 yield match
 
     def run(
-        self, filename: Optional[str], cfn: Template, config: ConfigMixIn
+        self, filename: str | None, cfn: Template, config: ConfigMixIn
     ) -> Iterator[Match]:
         """Run rules"""
         for rule_id, rule in self.data.items():
@@ -177,7 +167,7 @@ class Rules(TypedRules):
                     )
 
     @classmethod
-    def _from_list(cls, items: List[CloudFormationLintRule]) -> Rules:
+    def _from_list(cls, items: list[CloudFormationLintRule]) -> Rules:
         rules = Rules()
         for item in items:
             rules[item.id] = item
@@ -222,14 +212,14 @@ class RulesCollection:
 
     def __init__(
         self,
-        ignore_rules: Union[List[str], None] = None,
-        include_rules: Union[List[str], None] = None,
+        ignore_rules: list[str] | None = None,
+        include_rules: list[str] | None = None,
         configure_rules: Any = None,
         include_experimental: bool = False,
-        mandatory_rules: Union[List[str], None] = None,
+        mandatory_rules: list[str] | None = None,
     ):
-        self.rules: Dict[str, CloudFormationLintRule] = {}
-        self.all_rules: Dict[str, CloudFormationLintRule] = {}
+        self.rules: dict[str, CloudFormationLintRule] = {}
+        self.all_rules: dict[str, CloudFormationLintRule] = {}
         self.used_rules: MutableSet[str] = set()
 
         self.configure(
@@ -242,11 +232,11 @@ class RulesCollection:
 
     def configure(
         self,
-        ignore_rules: Union[List[str], None] = None,
-        include_rules: Union[List[str], None] = None,
+        ignore_rules: list[str] | None = None,
+        include_rules: list[str] | None = None,
         configure_rules: Any = None,
         include_experimental: bool = False,
-        mandatory_rules: Union[List[str], None] = None,
+        mandatory_rules: list[str] | None = None,
     ):
         self.rules = {}
         # Whether "experimental" rules should be added
@@ -333,7 +323,7 @@ class RulesCollection:
 
         return []
 
-    def run(self, filename: Optional[str], cfn: Template, config=None):
+    def run(self, filename: str | None, cfn: Template, config=None):
         """Run rules"""
         matches = []
         for rule in self.rules.values():

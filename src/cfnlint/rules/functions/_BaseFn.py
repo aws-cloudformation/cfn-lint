@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import namedtuple
-from typing import Any, Dict, List, Tuple
+from typing import Any, Tuple
 
 from cfnlint.helpers import ToPy, ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
@@ -29,7 +29,7 @@ class BaseFn(CloudFormationLintRule):
         self.types = types or tuple([])
         self.functions = functions or tuple([])
 
-    def key_value(self, instance: Dict[str, Any]) -> Tuple[str, Any]:
+    def key_value(self, instance: dict[str, Any]) -> Tuple[str, Any]:
         return list(instance.keys())[0], instance.get(self.fn.name)
 
     def fix_errors(self, errs: ValidationResult) -> ValidationResult:
@@ -38,7 +38,7 @@ class BaseFn(CloudFormationLintRule):
                 err.validator = self.fn.py
             yield err
 
-    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
+    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
         return {
             "type": ["string"],
         }
@@ -88,7 +88,7 @@ class BaseFn(CloudFormationLintRule):
 
         return resolved
 
-    def resolve_type(self, validator, schema) -> List[str]:
+    def resolve_type(self, validator, schema) -> list[str]:
         if "type" in schema:
             return ensure_list(schema["type"])  # type: ignore
 

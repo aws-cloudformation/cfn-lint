@@ -11,7 +11,7 @@ import logging
 import random
 import string
 from copy import deepcopy
-from typing import Any, Iterator, List, Mapping, MutableMapping, Optional, Tuple
+from typing import Any, Iterator, Mapping, MutableMapping, Tuple
 
 import regex as re
 
@@ -54,9 +54,7 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
-            TransformError,
-        )
+        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
@@ -87,9 +85,7 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
-            TransformError,
-        )
+        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
 
         message = "Error transforming template: {0}"
         return [
@@ -244,7 +240,7 @@ class _ForEachValue:
 
     # pylint: disable=unused-argument
     def value(
-        self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool = False
+        self, cfn, params: Mapping[str, Any] | None = None, only_params: bool = False
     ):
         return self._value
 
@@ -277,7 +273,7 @@ class _FnFindInMapDefaultValue(_ForEachValue):
             self._value = _ForEachValue.create(v)
 
     def value(
-        self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool = False
+        self, cfn, params: Mapping[str, Any] | None = None, only_params: bool = False
     ):
         if params is None:
             params = {}
@@ -309,7 +305,7 @@ class _ForEachValueFnFindInMap(_ForEachValue):
     def value(
         self,
         cfn: Any,
-        params: Optional[Mapping[str, Any]] = None,
+        params: Mapping[str, Any] | None = None,
         only_params: bool = False,
         default_on_resolver_failure: bool = True,
     ) -> Any:
@@ -406,7 +402,7 @@ class _ForEachValueRef(_ForEachValue):
     def value(
         self,
         cfn: Any,
-        params: Optional[Mapping[str, Any]] = None,
+        params: Mapping[str, Any] | None = None,
         only_params: bool = False,
     ) -> Any:
         if params is None:
@@ -485,9 +481,9 @@ class _ForEachValueRef(_ForEachValue):
 
 class _ForEachCollection:
     def __init__(self, obj: Any) -> None:
-        self._collection: Optional[List[_ForEachValue]] = None
+        self._collection: list[_ForEachValue] | None = None
         self._obj = obj
-        self._fn: Optional[_ForEachValue] = None
+        self._fn: _ForEachValue | None = None
         if isinstance(obj, list):
             self._collection = []
             self._string = obj
