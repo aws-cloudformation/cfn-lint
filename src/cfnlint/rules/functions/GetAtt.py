@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import deque
-from typing import Any, Dict, List, Sequence
+from typing import Any, Sequence
 
 import regex as re
 
@@ -31,7 +31,7 @@ class GetAtt(BaseFn):
     def __init__(self) -> None:
         super().__init__("Fn::GetAtt", all_types)
 
-    def schema(self, validator, instance) -> Dict[str, Any]:
+    def schema(self, validator, instance) -> dict[str, Any]:
         resource_functions = []
         if validator.context.transforms.has_language_extensions_transform():
             resource_functions = ["Ref"]
@@ -152,7 +152,7 @@ class GetAtt(BaseFn):
             return
 
         key, value = self.key_value(instance)
-        paths: List[int | None] = [0, 1]
+        paths: list[int | None] = [0, 1]
         if validator.is_type(value, "string"):
             paths = [None, None]
             value = value.split(".", 1)

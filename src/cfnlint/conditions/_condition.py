@@ -3,7 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
+from __future__ import annotations
+
+from typing import Any, Dict, Mapping, Sequence, Union
 
 from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
@@ -19,13 +21,13 @@ class Condition:
     """The generic class to represent any type of Condition"""
 
     def __init__(self) -> None:
-        self._fn_equals: Optional[Equal] = None
-        self._condition: Optional[Union[ConditionList, ConditionNamed]] = None
+        self._fn_equals: Equal | None = None
+        self._condition: ConditionList | ConditionNamed | None = None
 
     def _init_condition(
         self,
         condition: _CONDITION,
-        all_conditions: Dict[str, dict],
+        all_conditions: dict[str, dict],
     ) -> None:
         if len(condition) == 1:
             for k, v in condition.items():
@@ -50,13 +52,13 @@ class Condition:
             raise ValueError("Condition value must be an object of length 1")
 
     @property
-    def equals(self) -> List[Equal]:
+    def equals(self) -> list[Equal]:
         """Returns a Sequence of the Equals that make up the Condition
 
         Args: None
 
         Returns:
-            Union[Sequence[EqualParameter], Sequence[Equal]]:
+            Sequence[EqualParameter] | Sequence[Equal] | None:
                 The Equal that are part of the condition
         """
         if self._fn_equals:
@@ -65,13 +67,11 @@ class Condition:
             return self._condition.equals
         return []
 
-    def build_cnf(
-        self, params: Dict[str, Symbol]
-    ) -> Optional[Union[BooleanFunction, Symbol]]:
+    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction | Symbol | None:
         """Build a SymPy CNF based on the provided params
 
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy Symbols
 
         Returns:
@@ -98,24 +98,24 @@ class ConditionList(Condition):
     """
 
     def __init__(
-        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+        self, conditions: Sequence[_CONDITION], all_conditions: dict[str, dict]
     ) -> None:
         super().__init__()
-        self._conditions: List[ConditionUnnammed] = []
+        self._conditions: list[ConditionUnnammed] = []
         self._prefix_path: str = ""
         for condition in conditions:
             self._conditions.append(ConditionUnnammed(condition, all_conditions))
 
     @property
-    def equals(self) -> List[Equal]:
+    def equals(self) -> list[Equal]:
         """Returns a List of the Equals that make up the Condition
 
         Args: None
 
         Returns:
-            List[Equal]: The Equal that are part of the condition
+            list[Equal]: The Equal that are part of the condition
         """
-        equals: List[Equal] = []
+        equals: list[Equal] = []
         for condition in self._conditions:
             equals.extend(condition.equals)
         return equals
@@ -125,20 +125,20 @@ class ConditionAnd(ConditionList):
     """Represents the logic specific to an And Condition"""
 
     def __init__(
-        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+        self, conditions: Sequence[_CONDITION], all_conditions: dict[str, dict]
     ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::And"
 
-    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction:
         """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy Symbols
         Returns:
             BooleanFunction: An And SymPy BooleanFunction
         """
-        conditions: List[Any] = []
+        conditions: list[Any] = []
         for child in self._conditions:
             conditions.append(child.build_cnf(params))
 
@@ -153,17 +153,17 @@ class ConditionNot(ConditionList):
     """Represents the logic specific to an Not Condition"""
 
     def __init__(
-        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+        self, conditions: Sequence[_CONDITION], all_conditions: dict[str, dict]
     ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Not"
         if len(conditions) != 1:
             raise ValueError("Condition length must be 1")
 
-    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction:
         """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy Symbol
         Returns:
             BooleanFunction: A Not SymPy BooleanFunction
@@ -179,20 +179,20 @@ class ConditionOr(ConditionList):
     """Represents the logic specific to an Or Condition"""
 
     def __init__(
-        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+        self, conditions: Sequence[_CONDITION], all_conditions: dict[str, dict]
     ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Or"
 
-    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction:
         """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy Symbols
         Returns:
             BooleanFunction: An Or SymPy BooleanFunction
         """
-        conditions: List[Any] = []
+        conditions: list[Any] = []
         for child in self._conditions:
             conditions.append(child.build_cnf(params))
         return Or(*conditions)
@@ -205,7 +205,7 @@ class ConditionOr(ConditionList):
 class ConditionUnnammed(Condition):
     """Represents an unnamed condition which is basically a nested Equals"""
 
-    def __init__(self, condition: Any, all_conditions: Dict[str, dict]) -> None:
+    def __init__(self, condition: Any, all_conditions: dict[str, dict]) -> None:
         super().__init__()
         if isinstance(condition, dict):
             self._init_condition(condition, all_conditions)
@@ -216,7 +216,7 @@ class ConditionUnnammed(Condition):
 class ConditionNamed(Condition):
     """The parent condition that directly represents a named condition in a template"""
 
-    def __init__(self, name: str, all_conditions: Dict[str, dict]) -> None:
+    def __init__(self, name: str, all_conditions: dict[str, dict]) -> None:
         super().__init__()
         condition = all_conditions.get(name)
         if isinstance(condition, dict):
@@ -225,20 +225,20 @@ class ConditionNamed(Condition):
         else:
             raise ValueError(f"Condition {name} must have a value that is an object")
 
-    def build_true_cnf(self, params: Dict[str, Symbol]) -> Any:
+    def build_true_cnf(self, params: dict[str, Symbol]) -> Any:
         """Build a SymPy CNF for a True based scenario
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy Symbols
         Returns:
             Any: A SymPy CNF clause
         """
         return self.build_cnf(params)
 
-    def build_false_cnf(self, params: Dict[str, Symbol]) -> Any:
+    def build_false_cnf(self, params: dict[str, Symbol]) -> Any:
         """Build a SymPy CNF for a False based scenario
         Args:
-            params Dict[str, Symbol]: params is a dict that represents
+            params dict[str, Symbol]: params is a dict that represents
                     the hash of an Equal and the SymPy CNF Symbols
         Returns:
             Any: A Not SymPy CNF clause

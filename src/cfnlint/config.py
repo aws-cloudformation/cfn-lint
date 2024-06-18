@@ -13,7 +13,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Sequence, TypedDict
+from typing import Any, Dict, Sequence, TypedDict
 
 from typing_extensions import Unpack
 
@@ -600,10 +600,10 @@ class TemplateArgs:
 
 
 class ManualArgs(TypedDict, total=False):
-    configure_rules: Dict[str, Dict[str, Any]]
-    include_checks: List[str]
-    ignore_checks: List[str]
-    mandatory_checks: List[str]
+    configure_rules: dict[str, dict[str, Any]]
+    include_checks: list[str]
+    ignore_checks: list[str]
+    mandatory_checks: list[str]
     include_experimental: bool
     ignore_bad_template: bool
     ignore_templates: list
@@ -617,7 +617,7 @@ class ManualArgs(TypedDict, total=False):
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     """Mixin for the Configs"""
 
-    def __init__(self, cli_args: List[str] | None = None, **kwargs: Unpack[ManualArgs]):
+    def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
@@ -754,7 +754,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
         return self._glob_filenames(filenames)
 
-    def _glob_filenames(self, filenames: Sequence[str]) -> List[str]:
+    def _glob_filenames(self, filenames: Sequence[str]) -> list[str]:
         # handle different shells and Config files
         # some shells don't expand * and configparser won't expand wildcards
         all_filenames = []

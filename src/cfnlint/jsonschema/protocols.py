@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from collections import deque
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, Protocol, Type, runtime_checkable
+from typing import TYPE_CHECKING, Any, ClassVar, Protocol, Type, runtime_checkable
 
 from cfnlint.jsonschema._filter import FunctionFilter
 
@@ -208,7 +208,7 @@ class Validator(Protocol):
 
     def extend(
         self,
-        validators: Dict[str, V] | None,
+        validators: dict[str, V] | None,
         function_filter: FunctionFilter | None = None,
         context: Context | None = None,
     ) -> Type[Validator]:

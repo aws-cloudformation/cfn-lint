@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 import warnings
-from typing import Any, List
+from typing import Any
 
 import networkx
 import regex as re
@@ -55,7 +55,7 @@ class GraphSettings:
 
     def subgraph_view(self, graph) -> networkx.MultiDiGraph:
         view = networkx.MultiDiGraph(name="template")
-        resources: List[str] = [
+        resources: list[str] = [
             n for n, v in graph.nodes.items() if v["type"] in ["Resource"]
         ]
 
@@ -95,7 +95,7 @@ class Graph:
     """Models a template as a directed graph of resources"""
 
     settings: GraphSettings
-    __supported_types: List[str] = ["Resources", "Parameters", "Outputs"]
+    __supported_types: list[str] = ["Resources", "Parameters", "Outputs"]
 
     def __init__(self, cfn):
         """Builds a graph where resources are nodes and edges are

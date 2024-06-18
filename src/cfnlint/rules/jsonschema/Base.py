@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Sequence
+from typing import Any, Sequence
 
 from cfnlint.context import Context
 from cfnlint.jsonschema import V, ValidationError, Validator
@@ -22,9 +22,9 @@ class BaseJsonSchema(CloudFormationLintRule):
     def __init__(self) -> None:
         """Init"""
         super().__init__()
-        self.rules: Dict[str, Any] = {}
-        self.rule_set: Dict[str, str] = {}
-        self.validators: Dict[str, V] = {}
+        self.rules: dict[str, Any] = {}
+        self.rule_set: dict[str, str] = {}
+        self.validators: dict[str, V] = {}
 
     def _convert_validation_errors_to_matches(
         self,
@@ -32,7 +32,7 @@ class BaseJsonSchema(CloudFormationLintRule):
         e: ValidationError,
     ):
         matches = []
-        kwargs: Dict[Any, Any] = {}
+        kwargs: dict[Any, Any] = {}
         if e.extra_args:
             kwargs = e.extra_args
         e_path = list(path) + list(e.path)
@@ -116,7 +116,7 @@ class BaseJsonSchema(CloudFormationLintRule):
         )
         yield from self._validate(validator, instance)
 
-    def _get_validators(self) -> Dict[str, V]:
+    def _get_validators(self) -> dict[str, V]:
         validators = self.validators.copy()
         for name, rule_id in self.rule_set.items():
             rule = self.child_rules.get(rule_id)

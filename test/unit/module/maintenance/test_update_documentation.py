@@ -8,6 +8,7 @@ from test.testlib.testcase import BaseTestCase
 from unittest.mock import call, mock_open, patch
 
 import cfnlint.maintenance
+from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
 
 LOGGER = logging.getLogger("cfnlint.maintenance")
@@ -23,8 +24,7 @@ Regular Text
 """
 
     def test_update_docs(self):
-        collection = Rules()
-
+        collection = Rules.create_from_directory(_DEFAULT_RULESDIR + "/errors")
         builtin_module_name = "builtins"
 
         mo = mock_open(read_data=self.TEST_TEXT)

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any
 
 import cfnlint.data.schemas.extensions.aws_rds_dbinstance
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
@@ -46,7 +46,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
             ),
         )
         self._rds_schema = self._schema
-        self._properties: Dict[str, List[Dict[str, str]]] = {
+        self._properties: dict[str, list[dict[str, str]]] = {
             "AWS::Kinesis::Stream": [
                 {
                     "Attribute": "RetentionPeriodHours",

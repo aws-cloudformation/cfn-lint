@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules import CloudFormationLintRule
@@ -24,7 +24,7 @@ class PropertyNames(CloudFormationLintRule):
             self.child_rules[self.approaching_limit_rule] = None
 
     def _max_length(
-        self, validator: Validator, mL: int, instance: Any, schema: Dict[str, Any]
+        self, validator: Validator, mL: int, instance: Any, schema: dict[str, Any]
     ):
         if not validator.is_type(instance, "string"):
             return
@@ -54,7 +54,7 @@ class PropertyNames(CloudFormationLintRule):
         validator: Validator,
         propertyNames: Any,
         instance: Any,
-        schema: Dict[str, Any],
+        schema: dict[str, Any],
     ) -> ValidationResult:
         if not validator.is_type(instance, "object"):
             return

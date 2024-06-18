@@ -3,9 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import json
 from collections import deque
-from typing import Any, Dict
+from typing import Any
 
 import regex as re
 
@@ -26,7 +28,7 @@ class Split(BaseFn):
     def __init__(self) -> None:
         super().__init__("Fn::Split", ("array",))
 
-    def schema(self, validator: Validator, instance: Any) -> Dict[str, Any]:
+    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
         return {
             "type": "array",
             "maxItems": 2,

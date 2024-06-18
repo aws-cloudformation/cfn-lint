@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections import UserDict
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 import regex as re
 
@@ -209,7 +209,7 @@ _unnamed_unknown_types = (
 class AttributeDict(UserDict):
     def __init__(self, __dict: None = None) -> None:
         super().__init__(__dict)
-        self.data: Dict[str, str] = {}
+        self.data: dict[str, str] = {}
 
     def __getitem__(self, key: str) -> str:
         possible_items = {}

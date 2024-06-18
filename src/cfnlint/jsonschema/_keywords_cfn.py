@@ -18,7 +18,7 @@ SPDX-License-Identifier: MIT
 # https://github.com/python-jsonschema/jsonschema
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 import regex as re
 
@@ -137,7 +137,7 @@ def cfn_type(validator: Validator, tS: Any, instance: Any, schema: Any):
         yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
-cfn_validators: Dict[str, V] = {
+cfn_validators: dict[str, V] = {
     "additionalProperties": additionalProperties,
     "fn_items": FnItems().validate,
     "type": cfn_type,

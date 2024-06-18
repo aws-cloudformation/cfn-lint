@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from typing import Any, Callable, List, Mapping
+from typing import Any, Callable, Mapping
 
 from cfnlint.conditions import Conditions
 from cfnlint.context import create_context_for_template
@@ -27,9 +27,9 @@ class Transform:
             "AWS::LanguageExtensions": language_extension,
         }
 
-    def transform(self, cfn: Any) -> List[Match]:
+    def transform(self, cfn: Any) -> list[Match]:
         """Transform logic"""
-        matches: List[Match] = []
+        matches: list[Match] = []
         transform_declaration = cfn.template.get("Transform", [])
         transform_type = (
             transform_declaration

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, Iterator, List, Tuple, Union
+from typing import Any, Iterator, Tuple
 
 import cfnlint.helpers
 import cfnlint.rules.custom
@@ -21,9 +21,9 @@ LOGGER = logging.getLogger(__name__)
 def _rule_is_enabled(
     rule: "CloudFormationLintRule",
     include_experimental: bool = False,
-    ignore_rules: List[str] | None = None,
-    include_rules: List[str] | None = None,
-    mandatory_rules: List[str] | None = None,
+    ignore_rules: list[str] | None = None,
+    include_rules: list[str] | None = None,
+    mandatory_rules: list[str] | None = None,
 ):
     """Is the rule enabled based on the configuration"""
     ignore_rules = ignore_rules or []
@@ -129,7 +129,7 @@ def _rule_match_to_match(
     error_rule = rule
     if hasattr(match, "rule"):
         error_rule = match.rule
-    linenumbers: Union[Tuple[int, int, int, int], None] = None
+    linenumbers: Tuple[int, int, int, int] | None = None
     if hasattr(match, "location"):
         linenumbers = match.location
     else:
@@ -201,18 +201,18 @@ class CloudFormationLintRule:
     shortdesc: str = ""
     description: str = ""
     source_url: str = ""
-    tags: List[str] = []
+    tags: list[str] = []
     experimental: bool = False
 
     logger = logging.getLogger(__name__)
 
     def __init__(self) -> None:
-        self.resource_property_types: List[str] = []
-        self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
-        self.config_definition: Dict[str, Any] = {}
-        self._child_rules: Dict[str, "CloudFormationLintRule" | None] = {}
+        self.resource_property_types: list[str] = []
+        self.config: dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
+        self.config_definition: dict[str, Any] = {}
+        self._child_rules: dict[str, "CloudFormationLintRule" | None] = {}
         # Parent IDs to do the opposite of child rules
-        self._parent_rules: List[str] = []
+        self._parent_rules: list[str] = []
         super().__init__()
 
     def __repr__(self):
@@ -224,11 +224,11 @@ class CloudFormationLintRule:
         return self.id == other.id
 
     @property
-    def child_rules(self) -> Dict[str, "CloudFormationLintRule" | None]:
+    def child_rules(self) -> dict[str, "CloudFormationLintRule" | None]:
         return self._child_rules
 
     @child_rules.setter
-    def child_rules(self, rules: Dict[str, "CloudFormationLintRule" | None]):
+    def child_rules(self, rules: dict[str, "CloudFormationLintRule" | None]):
         self._child_rules = rules
 
     @property
@@ -236,7 +236,7 @@ class CloudFormationLintRule:
         return self._parent_rules
 
     @parent_rules.setter
-    def parent_rules(self, rules: List[str]):
+    def parent_rules(self, rules: list[str]):
         self._parent_rules = rules
 
     @property

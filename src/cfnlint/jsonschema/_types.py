@@ -21,7 +21,7 @@ from __future__ import annotations
 import datetime
 import numbers
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from cfnlint.jsonschema.exceptions import UndefinedTypeCheck
 
@@ -85,7 +85,7 @@ class TypeChecker:
             The initial mapping of types to their checking functions.
     """
 
-    type_checkers: Dict[str, Callable[[TypeChecker, Any], bool]] = field(
+    type_checkers: dict[str, Callable[[TypeChecker, Any], bool]] = field(
         init=True, default_factory=dict
     )
 

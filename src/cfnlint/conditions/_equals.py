@@ -3,9 +3,11 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 import json
 import logging
-from typing import Any, Dict, List, Mapping, Tuple, Union
+from typing import Any, Mapping, Tuple
 
 from cfnlint.conditions._utils import get_hash
 
@@ -28,12 +30,12 @@ class EqualParameter:
 
 class Equal:
     hash: str
-    _left: Union[EqualParameter, str]
-    _right: Union[EqualParameter, str]
-    _is_static: Union[bool, None]
+    _left: EqualParameter | str
+    _right: EqualParameter | str
+    _is_static: bool | None
     _is_region: Tuple[bool, str]
 
-    def __init__(self, equal: List[Union[str, dict]]) -> None:
+    def __init__(self, equal: list[str | dict]) -> None:
         self._is_static = None
         if isinstance(equal, list) and len(equal) == 2:
             # sort to keep consistancy from random ordering
@@ -63,34 +65,32 @@ class Equal:
             return
         raise ValueError("Equals has to be a list of two values")
 
-    def _init_parameter(
-        self, parameter: Union[Dict, str]
-    ) -> Union[EqualParameter, str]:
+    def _init_parameter(self, parameter: dict[str, Any] | str) -> EqualParameter | str:
         if isinstance(parameter, dict):
             return EqualParameter(parameter)
         return str(parameter)
 
     @property
-    def is_static(self) -> Union[bool, None]:
+    def is_static(self) -> bool | None:
         """Returns a boolean value if the result is always True or False or None if
             it isn't a static boolean
 
         Args: None
 
         Returns:
-            Union[bool, None]: None if the equals can be True or False or True/False if
+            bool | None: None if the equals can be True or False or True/False if
             the equals will always return the same result
         """
         return self._is_static
 
     @property
-    def parameters(self) -> List[EqualParameter]:
+    def parameters(self) -> list[EqualParameter]:
         """Returns a List of the EqualParameter that make up the Condition
 
         Args: None
 
         Returns:
-            List[Equal]: A list of the left and right equal parameters if they are
+            list[Equal]: A list of the left and right equal parameters if they are
                          of type EqualParameter
         """
         params = []
