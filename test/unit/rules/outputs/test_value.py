@@ -16,7 +16,7 @@ from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
         (1.0, 1),
         (1, 1),
         (True, 1),
-        (["foo"], 1),
+        ([{}], 1),
         ({"foo": "bar"}, 1),
     ],
 )
