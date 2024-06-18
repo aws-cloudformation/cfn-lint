@@ -172,6 +172,25 @@ def context(cfn):
             },
             [],
         ),
+        (
+            "Invalid SSM Parameter with string version",
+            "{{resolve:secretsmanager:arn:aws:secretsmanager:us-east-1:012345678901:secret:my-secret:SecretString::::}}",
+            {"type": "test"},
+            {
+                "E1051": _TestRule(),
+                "E1027": _TestRule(),
+            },
+            [
+                ValidationError(
+                    "['resolve', 'secretsmanager', 'arn', 'aws', "
+                    "'secretsmanager', 'us-east-1', '012345678901', "
+                    "'secret', 'my-secret', 'SecretString', "
+                    "'', '', '', ''] is too long (13)",
+                    validator="maxItems",
+                    rule=DynamicReference(),
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, schema, child_rules, expected, rule, context, cfn):

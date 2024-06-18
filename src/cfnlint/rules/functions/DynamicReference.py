@@ -37,8 +37,10 @@ _secrets_manager = {
         {"type": "string", "enum": ["SecretString", ""]},  # secret-string
         {"type": "string"},  # json-key
         {"type": "string"},  # version-stage or version-id
+        {"type": "string"},  # version-stage or version-id
     ],
-    "maxItems": 6,
+    "minItems": 3,
+    "maxItems": 7,
     "type": "array",
 }
 
@@ -56,8 +58,10 @@ _secrets_manager_arn = {
         {"type": "string", "enum": ["SecretString", ""]},  # secret-string
         {"type": "string"},  # json-key
         {"type": "string"},  # version-stage or version-id
+        {"type": "string"},  # version-stage or version-id
     ],
-    "maxItems": 12,
+    "minItems": 9,
+    "maxItems": 13,
     "type": "array",
 }
 
