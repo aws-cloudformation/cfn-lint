@@ -32,7 +32,12 @@ class Value(CfnLintJsonSchema):
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
             ),
-            schema={"type": "string"},
+            schema={
+                "type": ["array", "string"],
+                "items": {
+                    "type": "string",
+                },
+            },
         )
 
         yield from self._iter_errors(validator, instance)
