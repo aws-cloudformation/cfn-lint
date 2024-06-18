@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.formatters.BaseFormatter import BaseFormatter
+from cfnlint.formatters.base import BaseFormatter
 
 
 class JUnitFormatter(BaseFormatter):

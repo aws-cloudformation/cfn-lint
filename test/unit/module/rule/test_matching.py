@@ -7,7 +7,7 @@ from test.testlib.testcase import BaseTestCase
 from typing import Any
 
 from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch
-from cfnlint.rules._Rule import matching
+from cfnlint.rules._rule import matching
 
 
 class rule(CloudFormationLintRule):

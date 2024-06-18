@@ -12,7 +12,7 @@ from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.match import Match
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
-from cfnlint.rules.RuleError import RuleError
+from cfnlint.rules.errors import RuleError
 from cfnlint.template.template import Template
 
 

@@ -10,7 +10,7 @@ from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, Rules
-from cfnlint.rules._Rules import RuleError
+from cfnlint.rules.errors import RuleError
 
 
 class Rule(CloudFormationLintRule):

@@ -16,8 +16,7 @@ import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn
 from cfnlint.decode.decode import decode
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.ParseError import ParseError
-from cfnlint.rules.TransformError import TransformError
+from cfnlint.rules.errors import ParseError, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 

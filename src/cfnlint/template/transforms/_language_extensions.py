@@ -54,9 +54,7 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
-            TransformError,
-        )
+        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
@@ -87,9 +85,7 @@ def language_extension(cfn: Any) -> TransformResult:
         LOGGER.debug(e, exc_info=True)
         # pylint: disable=import-outside-toplevel
         from cfnlint.match import Match  # pylint: disable=cyclic-import
-        from cfnlint.rules.TransformError import (  # pylint: disable=cyclic-import
-            TransformError,
-        )
+        from cfnlint.rules.errors import TransformError  # pylint: disable=cyclic-import
 
         message = "Error transforming template: {0}"
         return [

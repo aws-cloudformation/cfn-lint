@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 import regex as re
 
-from cfnlint.formatters.BaseFormatter import BaseFormatter
+from cfnlint.formatters.base import BaseFormatter
 
 
 class ParseableFormatter(BaseFormatter):

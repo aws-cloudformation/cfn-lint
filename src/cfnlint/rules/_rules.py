@@ -25,8 +25,8 @@ from typing import (
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.exceptions import DuplicateRuleError
-from cfnlint.rules._Rule import CloudFormationLintRule, Match
-from cfnlint.rules.RuleError import RuleError
+from cfnlint.rules._rule import CloudFormationLintRule, Match
+from cfnlint.rules.errors import RuleError
 from cfnlint.template import Template
 
 if TYPE_CHECKING:
