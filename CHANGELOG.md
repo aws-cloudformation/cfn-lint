@@ -1,3 +1,12 @@
+### v1.3.0
+## What's Changed
+* Allow IAM principal to be str or a list by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3306
+* Update CloudFormation schemas to 2024-06-18 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3309
+* Array of strings are allowed as output value types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3312
+
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.2.5.a11...v1.3.0
+
 ### v1.2.5a11
 ## What's Changed
 * Update CloudFormation schemas to 2024-06-17 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3299
