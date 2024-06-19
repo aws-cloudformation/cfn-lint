@@ -22,7 +22,7 @@ class RuleFail(CloudFormationLintRule):
     id = "EYYYY"
     shortdesc = "Test Rule"
     description = "Test Rule"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
     tags = ["resources"]
 
     def match(self, cfn):

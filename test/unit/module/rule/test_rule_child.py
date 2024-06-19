@@ -22,7 +22,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
             child_rules: Dict[str, Any] = {"E1001": None}
 
@@ -35,7 +35,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1001"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
             def failure(self):
@@ -75,7 +75,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
             child_rules: Dict[str, Any] = {"E1001": None}
 
@@ -90,7 +90,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1001"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
             def failure(self):
@@ -122,7 +122,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
             child_rules: Dict[str, Any] = {"E1001": None}
 
@@ -135,7 +135,7 @@ class TestCloudFormationRuleChild(BaseTestCase):
             id = "E1001"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
             def __init__(self):

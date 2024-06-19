@@ -12,5 +12,5 @@ class ParseError(CloudFormationLintRule):
     id = "E0000"
     shortdesc = "Parsing error found when parsing the template"
     description = "Checks for JSON/YAML formatting errors in your template"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["base"]

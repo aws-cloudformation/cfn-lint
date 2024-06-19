@@ -12,5 +12,5 @@ class TransformError(CloudFormationLintRule):
     id = "E0001"
     shortdesc = "Error found when transforming the template"
     description = "Errors found when performing transformation on the template"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["base", "transform"]

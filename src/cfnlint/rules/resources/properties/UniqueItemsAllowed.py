@@ -15,7 +15,9 @@ class UniqueItemsAllowed(CloudFormationLintRule):
         "Certain lists support duplicate items."
         "Provide an alert when list of strings or numbers have repeats."
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#rules-1"
+    source_url = (
+        "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md#rules-1"
+    )
     tags = ["resources", "property", "list"]
 
     def __init__(self):

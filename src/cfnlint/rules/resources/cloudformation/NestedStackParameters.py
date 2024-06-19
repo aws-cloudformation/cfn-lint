@@ -20,7 +20,7 @@ class NestedStackParameters(CloudFormationLintRule):
         "Evalute if parameters for a nested stack are specified and "
         "if parameters are specified for a nested stack that aren't required."
     )
-    source_url = "https://github.com/awslabs/cfn-python-lint"
+    source_url = "https://github.com/awslabs/cfn-lint"
     tags = ["resources", "cloudformation"]
 
     def __init__(self):

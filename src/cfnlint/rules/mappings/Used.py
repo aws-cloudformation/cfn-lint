@@ -14,7 +14,7 @@ class Used(CloudFormationLintRule):
     id = "W7001"
     shortdesc = "Check if Mappings are Used"
     description = "Making sure the mappings defined are used"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["mappings"]
 
     def match(self, cfn: Template) -> RuleMatches:

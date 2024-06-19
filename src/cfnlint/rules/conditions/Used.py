@@ -14,7 +14,7 @@ class Used(CloudFormationLintRule):
     id = "W8001"
     shortdesc = "Check if Conditions are Used"
     description = "Making sure the conditions defined are used"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["conditions"]
 
     def match(self, cfn: Template) -> RuleMatches:

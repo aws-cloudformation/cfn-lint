@@ -16,5 +16,5 @@ class OneOf(CloudFormationLintRule):
         + "that require only one property from a list. "
         + "One has to be specified."
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources"]

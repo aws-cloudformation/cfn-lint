@@ -58,9 +58,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "Errors found when performing transformation on the"
                             " template"
                         ),
-                        "Source": (
-                            "https://github.com/aws-cloudformation/cfn-python-lint"
-                        ),
+                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
                         "ShortDescription": (
                             "Error found when transforming the template"
                         ),
@@ -91,9 +89,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "Errors found when performing transformation on the"
                             " template"
                         ),
-                        "Source": (
-                            "https://github.com/aws-cloudformation/cfn-python-lint"
-                        ),
+                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
                         "ShortDescription": (
                             "Error found when transforming the template"
                         ),
@@ -123,9 +119,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "Errors found when performing transformation on the"
                             " template"
                         ),
-                        "Source": (
-                            "https://github.com/aws-cloudformation/cfn-python-lint"
-                        ),
+                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
                         "ShortDescription": (
                             "Error found when transforming the template"
                         ),

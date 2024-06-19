@@ -19,7 +19,7 @@ class Rule(CloudFormationLintRule):
     id = "EXXXX"
     shortdesc = "Test Rule"
     description = "Test Rule"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
     tags = ["resources"]
 
     def __init__(self):
@@ -43,7 +43,7 @@ class RuleFail(CloudFormationLintRule):
     id = "EYYYY"
     shortdesc = "Test Rule"
     description = "Test Rule"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
     tags = ["resources"]
 
     def match(self, cfn):
@@ -54,7 +54,7 @@ class RuleChild(CloudFormationLintRule):
     id = "ECCCC"
     shortdesc = "Child Rule"
     description = "Child Rule"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
     tags = ["resources"]
 
     def validate(self, cfn):
@@ -65,7 +65,7 @@ class RuleParent(CloudFormationLintRule):
     id = "EPPPP"
     shortdesc = "Parent Rule"
     description = "Parent Rule"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/"
     tags = ["resources"]
 
     def __init__(self) -> None:

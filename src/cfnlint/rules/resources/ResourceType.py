@@ -17,7 +17,7 @@ class ResourceType(CfnLintKeyword):
     id = "E3006"
     shortdesc = "Validate the CloudFormation resource type"
     description = "Resource types are validated against the spec accounting for regions"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources"]
 
     def __init__(self) -> None:
