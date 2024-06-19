@@ -21,7 +21,7 @@ class Metadata(CfnLintJsonSchema):
         "The metadata section can be unstructured but we do "
         "validate the items we can"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources"]
 
     def __init__(self):

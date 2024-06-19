@@ -17,7 +17,7 @@ class CircularDependency(CloudFormationLintRule):
         "Check that Resources are not circularly dependent by DependsOn, Ref, Sub, or"
         " GetAtt"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources", "circularly", "dependson", "ref", "sub", "getatt"]
 
     def match(self, cfn: Template) -> RuleMatches:

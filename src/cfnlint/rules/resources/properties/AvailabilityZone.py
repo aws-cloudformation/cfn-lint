@@ -18,7 +18,7 @@ class AvailabilityZone(CfnLintKeyword):
     id = "W3010"
     shortdesc = "Availability zone properties should not be hardcoded"
     description = "Check if an Availability Zone property is hardcoded."
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["parameters", "availabilityzone"]
 
     def __init__(self):

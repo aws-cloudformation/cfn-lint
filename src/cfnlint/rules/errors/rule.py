@@ -12,5 +12,5 @@ class RuleError(CloudFormationLintRule):
     id = "E0002"
     shortdesc = "Error processing rule on the template"
     description = "Errors found when processing a rule on the template"
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["base", "rule"]

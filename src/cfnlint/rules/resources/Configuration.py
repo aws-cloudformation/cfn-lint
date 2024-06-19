@@ -20,7 +20,7 @@ class Configuration(CfnLintJsonSchema):
     description = (
         "Making sure the basic CloudFormation resources are properly configured"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources"]
 
     def __init__(self):

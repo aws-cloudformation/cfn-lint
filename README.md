@@ -47,22 +47,30 @@ Python 3.8+ is supported.
 `pip install cfn-lint`. If pip is not available, run
 `python setup.py clean --all` then `python setup.py install`.
 
+#### Optional dependencies
+
+`cfn-lint` has optional dependencies based on certain features you may need.
+
+* `pip install cfn-lint[graph]` for installing `pydot` to draw and output template graphs
+* `pip install cfn-lint[junit]` for installing the packages to output the `junit` format
+* `pip install cfn-lint[sarif]` for installing the packages to output the `sarif` format
+
 ### Homebrew (macOS)
 
 `brew install cfn-lint`
 
 ### Docker
 
-In `cfn-python-lint` source tree:
+In `cfn-lint` source tree:
 
 ```shell
-docker build --tag cfn-python-lint:latest .
+docker build --tag cfn-lint:latest .
 ```
 
 In repository to be linted:
 
 ```shell
-docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
+docker run --rm -v `pwd`:/data cfn-lint:latest /data/template.yaml
 ```
 
 ### Editor Plugins

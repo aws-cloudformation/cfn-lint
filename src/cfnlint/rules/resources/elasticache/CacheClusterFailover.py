@@ -16,7 +16,7 @@ class CacheClusterFailover(CloudFormationLintRule):
         "Evaluate Redis Cluster groups to make sure automatic failover is "
         "enabled when cluster mode is enabled"
     )
-    source_url = "https://github.com/awslabs/cfn-python-lint"
+    source_url = "https://github.com/awslabs/cfn-lint"
     tags = ["resources", "elasticcache"]
 
     def __init__(self):

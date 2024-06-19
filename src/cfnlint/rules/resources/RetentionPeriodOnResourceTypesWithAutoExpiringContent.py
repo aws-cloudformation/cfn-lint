@@ -25,7 +25,7 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CfnLintJsonSchema):
         " data after a period of time.This check requires you to explicitly set the"
         " retention period for those resources to avoid unexpected data losses"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint"
     tags = ["resources", "retentionperiod"]
 
     def __init__(self) -> None:
