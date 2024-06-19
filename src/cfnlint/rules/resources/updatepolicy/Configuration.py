@@ -34,7 +34,10 @@ class Configuration(CfnLintJsonSchema):
 
     def validate(self, validator: Validator, keywords: Any, instance: Any, schema: Any):
         validator = validator.evolve(
-            context=validator.context.evolve(functions=list(FUNCTIONS)),
+            context=validator.context.evolve(
+                functions=list(FUNCTIONS),
+                strict_types=False,
+            ),
             schema=self._schema,
             resolver=RefResolver.from_schema(
                 self._schema,

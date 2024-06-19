@@ -76,7 +76,7 @@ def rule():
                     },
                     "AutoScalingRollingUpdate": {
                         "MaxBatchSize": 1,
-                        "MinInstancesInService": 1,
+                        "MinInstancesInService": "1",  # also allows strings
                         "MinSuccessfulInstancesPercent": 100,
                         "PauseTime": "PT1M",
                         "WaitOnResourceSignals": True,
