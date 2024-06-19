@@ -20,7 +20,7 @@ class TestCloudFormationRule(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule Description"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
         self.assertEqual(TestRule.id, "E1000")
@@ -28,7 +28,7 @@ class TestCloudFormationRule(BaseTestCase):
         self.assertEqual(TestRule.description, "Test Rule Description")
         self.assertEqual(
             TestRule.source_url,
-            "https://github.com/aws-cloudformation/cfn-python-lint/",
+            "https://github.com/aws-cloudformation/cfn-lint/",
         )
         self.assertEqual(TestRule.tags, ["resources"])
 
@@ -41,7 +41,7 @@ class TestCloudFormationRule(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
             def __init__(self):
@@ -109,7 +109,7 @@ class TestCloudFormationRule(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
             def __init__(self):
@@ -140,7 +140,7 @@ class TestCloudFormationRule(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
         rule = TestRule()
@@ -155,7 +155,7 @@ class TestCloudFormationRule(BaseTestCase):
             id = "E1000"
             shortdesc = "Test Rule"
             description = "Test Rule"
-            source_url = "https://github.com/aws-cloudformation/cfn-python-lint/"
+            source_url = "https://github.com/aws-cloudformation/cfn-lint/"
             tags = ["resources"]
 
         rule = TestRule()

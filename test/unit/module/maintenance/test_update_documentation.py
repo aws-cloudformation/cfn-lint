@@ -58,7 +58,7 @@ Regular Text
                     "(../src/cfnlint/rules/errors/parse.py) |"
                     " Parsing error found when parsing the template | Checks for"
                     " JSON/YAML formatting errors in your template |  |"
-                    " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"
+                    " [Source](https://github.com/aws-cloudformation/cfn-lint) |"
                     " `base` |\n"
                 ),
                 call(
@@ -66,7 +66,7 @@ Regular Text
                     "(../src/cfnlint/rules/errors/transform.py) |"
                     " Error found when transforming the template | Errors found when"
                     " performing transformation on the template |  |"
-                    " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"
+                    " [Source](https://github.com/aws-cloudformation/cfn-lint) |"
                     " `base`,`transform` |\n"
                 ),
                 call(
@@ -74,7 +74,7 @@ Regular Text
                     "(../src/cfnlint/rules/errors/rule.py) |"
                     " Error processing rule on the template | Errors found when"
                     " processing a rule on the template |  |"
-                    " [Source](https://github.com/aws-cloudformation/cfn-python-lint) |"
+                    " [Source](https://github.com/aws-cloudformation/cfn-lint) |"
                     " `base`,`rule` |\n"
                 ),
                 call("\n\\* experimental rules\n"),

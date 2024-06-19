@@ -99,9 +99,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3001",
                         "ShortDescription": "Basic CloudFormation Resource Check",
-                        "Source": (
-                            "https://github.com/aws-cloudformation/cfn-python-lint"
-                        ),
+                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
                     },
                 },
                 {
@@ -213,9 +211,7 @@ class TestDirectives(BaseCliTestCase):
                         ),
                         "Id": "E3001",
                         "ShortDescription": "Basic CloudFormation Resource Check",
-                        "Source": (
-                            "https://github.com/aws-cloudformation/cfn-python-lint"
-                        ),
+                        "Source": ("https://github.com/aws-cloudformation/cfn-lint"),
                     },
                 },
                 {
