@@ -41,6 +41,7 @@ class Join(BaseFn):
                 {
                     "functions": [
                         "Fn::FindInMap",
+                        "Fn::GetAtt",
                         "Fn::If",
                         "Fn::Split",
                         "Ref",
