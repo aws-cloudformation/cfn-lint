@@ -50,19 +50,16 @@ def rule():
             ],
         ),
         (
-            "Bad special characters in array",
+            "Value is too long",
             {
                 "Tags": [
-                    {"Key": "Foo", "Value": "Foo & Bar"},
+                    {"Key": "Foo", "Value": "a" * 257},
                 ]
             },
             {"taggable": True},
             [
                 ValidationError(
-                    (
-                        "'Foo & Bar' does not match "
-                        "'^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
-                    ),
+                    f"{'a'*257!r} is longer than 256",
                     path=deque(["Tags", 0, "Value"]),
                     schema_path=deque(
                         [
@@ -71,7 +68,7 @@ def rule():
                             "items",
                             "properties",
                             "Value",
-                            "pattern",
+                            "maxLength",
                         ]
                     ),
                     validator="tagging",
@@ -79,25 +76,22 @@ def rule():
             ],
         ),
         (
-            "Bad special characters in object",
+            "Value is too long in object",
             {
-                "Tags": {"Foo": "Foo ! Bar"},
+                "Tags": {"Foo": "a" * 257},
             },
             {"taggable": True},
             [
                 ValidationError(
-                    (
-                        "'Foo ! Bar' does not match "
-                        "'^([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
-                    ),
+                    f"{'a'*257!r} is longer than 256",
                     path=deque(["Tags", "Foo"]),
                     schema_path=deque(
                         [
                             "properties",
                             "Tags",
                             "patternProperties",
-                            "^(?!aws:)([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-                            "pattern",
+                            "^(?!aws:).+$",
+                            "maxLength",
                         ]
                     ),
                     validator="tagging",
@@ -114,10 +108,7 @@ def rule():
             {"taggable": True},
             [
                 ValidationError(
-                    (
-                        "'aws:Foo' does not match "
-                        "'^(?!aws:)([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
-                    ),
+                    ("'aws:Foo' does not match " "'^(?!aws:).+$'"),
                     path=deque(["Tags", 0, "Key"]),
                     schema_path=deque(
                         ["properties", "Tags", "items", "properties", "Key", "pattern"]
@@ -137,7 +128,7 @@ def rule():
                     (
                         "'aws:Foo' does not match any of "
                         "the regexes: "
-                        "'^(?!aws:)([\\\\p{L}\\\\p{Z}\\\\p{N}_.:/=+\\\\-@]*)$'"
+                        "'^(?!aws:).+$'"
                     ),
                     path=deque(["Tags", "aws:Foo"]),
                     schema_path=deque(["properties", "Tags", "additionalProperties"]),
