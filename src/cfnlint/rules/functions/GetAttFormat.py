@@ -40,6 +40,9 @@ class GetAttFormat(CfnLintKeyword):
         getatt_ptr = validator.context.resources[resource].get_atts[attr]
         t = validator.context.resources[resource].type
 
+        if t in ["AWS::CloudFormation::CustomResource"]:
+            return
+
         for (
             _,
             resource_schema,

@@ -22,6 +22,7 @@ def template():
             "MyBucket": {"Type": "AWS::S3::Bucket"},
             "MyVpc": {"Type": "AWS::EC2::VPC"},
             "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
+            "MyCustomResource": {"Type": "Custom::CustomResource"},
         },
     }
 
@@ -32,6 +33,12 @@ def template():
         (
             "Valid GetAtt with a good format",
             ["MyVpc", "VpcId"],
+            {"format": "AWS::EC2::VPC.Id"},
+            [],
+        ),
+        (
+            "Valid GetAtt to a custom resource",
+            ["MyCustomResource", "ImageId"],
             {"format": "AWS::EC2::VPC.Id"},
             [],
         ),
