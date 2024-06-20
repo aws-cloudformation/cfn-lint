@@ -381,7 +381,7 @@ class Conditions:
                     ref_hash = get_hash({"Ref": param})
                     for c_equal_param in c_equals.parameters:
                         if isinstance(c_equal_param, EqualParameter):
-                            if c_equal_param._satisfiable is False:
+                            if c_equal_param.satisfiable is False:
                                 raise UnknownSatisfisfaction(
                                     f"Can't resolve satisfaction for {condition_name!r}"
                                 )

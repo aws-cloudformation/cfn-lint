@@ -10,7 +10,7 @@ import logging
 from typing import Any, Mapping, Tuple
 
 from cfnlint.conditions._utils import get_hash
-from cfnlint.helpers import FUNCTIONS, is_function
+from cfnlint.helpers import is_function
 
 LOGGER = logging.getLogger(__name__)
 REF_REGION = get_hash({"Ref": "AWS::Region"})
@@ -22,8 +22,13 @@ class EqualParameter:
     def __init__(self, value: dict):
         self._value = value
         k, _ = is_function(value)
-        if k in FUNCTIONS:
+
+        # we can only do satisfaction validation
+        # on Refs currently
+        if k not in ["Ref"]:
             self._satisfiable = False
+        else:
+            self._satisfiable = True
 
         self.hash: str = get_hash(value)
 
@@ -31,6 +36,17 @@ class EqualParameter:
         if isinstance(__o, str):
             return self.hash == __o
         return self.hash == __o.hash
+
+    @property
+    def satisfiable(self) -> bool:
+        """Returns a boolean value if the parameter can be True or False
+
+        Args: None
+
+        Returns:
+            bool: True if the parameter can be True or False, False otherwise
+        """
+        return self._satisfiable
 
 
 class Equal:

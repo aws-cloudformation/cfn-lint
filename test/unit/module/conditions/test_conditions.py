@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 import string
 from unittest import TestCase
 
+from cfnlint.conditions import UnknownSatisfisfaction
 from cfnlint.conditions._utils import get_hash
 from cfnlint.decode import decode_str
 from cfnlint.template import Template
@@ -304,3 +305,24 @@ class TestConditions(TestCase):
             list(cfn.conditions.build_scenerios_on_region("IsProd", "us-east-1")),
             [True, False],
         )
+
+    def test_satifaction(self):
+        """Get condition and test"""
+        template = decode_str(
+            """
+        Parameters:
+          SecurityGroups:
+            Default: ""
+            Type: CommaDelimitedList
+        Conditions:
+          IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+          HasSecurityGroups: !Not [ !Equals [ !Join [ '', !Ref SecurityGroups ], ''] ]
+        """
+        )[0]
+
+        cfn = Template("", template)
+
+        with self.assertRaises(UnknownSatisfisfaction):
+            cfn.conditions.satisfiable(
+                {"HasSecurityGroups": True}, {"SecurityGroups": [""]}
+            )
