@@ -744,16 +744,6 @@ patches.extend(
                     values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
                     path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
-                Patch(
-                    values={
-                        "requiredXor": [
-                            "SecurityGroups",
-                            "SecurityGroupIds",
-                            "NetworkInterfaces",
-                        ]
-                    },
-                    path="/definitions/LaunchTemplateData",
-                ),
             ],
         ),
         ResourcePatch(
