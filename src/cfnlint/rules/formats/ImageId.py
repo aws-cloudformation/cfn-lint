@@ -27,6 +27,13 @@ class ImageId(FormatKeyword):
         if not isinstance(instance, str):
             return True
 
+        if validator.context.path.cfn_path_string == (
+            "Resources/AWS::EC2::LaunchTemplate/"
+            "Properties/LaunchTemplateData/ImageId"
+        ):
+            if instance.startswith("resolve:ssm"):
+                return True
+
         if re.match(r"^ami-([0-9a-z]{8}|[0-9a-z]{17})$", instance):
             return True
 
