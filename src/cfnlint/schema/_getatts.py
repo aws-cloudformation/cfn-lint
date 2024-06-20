@@ -273,7 +273,6 @@ class GetAtts:
             # so we only look at an array of strings, etc.
             if obj.get("items", {}).get("type") in ["object", "array"]:
                 return
-            path = f"{path}/*"
             self._attrs[self._pointer_to_attr(path)] = path
         elif obj.get("$ref"):
             _, obj = schema.resolver.resolve(obj.get("$ref"))
