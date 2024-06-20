@@ -6,10 +6,12 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import os
+from typing import Sequence
 
-from cfnlint.config import _DEFAULT_RULESDIR
+from cfnlint.config import _DEFAULT_RULESDIR, ConfigMixIn, ManualArgs
+from cfnlint.match import Match
 from cfnlint.rules import RulesCollection
-from cfnlint.runner import UnexpectedRuleException
+from cfnlint.runner import TemplateRunner, UnexpectedRuleException
 
 
 def get_rules(
@@ -42,3 +44,35 @@ def get_rules(
             f"Tried to append rules but got an error: {str(e)}", 1
         ) from e
     return rules
+
+
+def run_checks(
+    filename: str,
+    template: dict,
+    rules: RulesCollection | None,
+    regions: Sequence[str],
+    mandatory_rules: Sequence[str] | None = None,
+) -> list[Match]:
+    """Run Checks and Custom Rules against the template"""
+
+    config: ManualArgs = ManualArgs(
+        regions=list(regions),
+        mandatory_checks=list(mandatory_rules or []),
+    )
+
+    if not rules:
+        return []
+
+    config_mixin = ConfigMixIn(
+        [],
+        **config,
+    )
+
+    runner = TemplateRunner(
+        filename=filename,
+        template=template,
+        rules=rules,  # type: ignore
+        config=config_mixin,
+    )
+
+    return list(runner.run())
