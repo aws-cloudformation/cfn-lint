@@ -10,6 +10,7 @@ import logging
 from typing import Any, Mapping, Tuple
 
 from cfnlint.conditions._utils import get_hash
+from cfnlint.helpers import FUNCTIONS, is_function
 
 LOGGER = logging.getLogger(__name__)
 REF_REGION = get_hash({"Ref": "AWS::Region"})
@@ -20,6 +21,10 @@ class EqualParameter:
 
     def __init__(self, value: dict):
         self._value = value
+        k, _ = is_function(value)
+        if k in FUNCTIONS:
+            self._satisfiable = False
+
         self.hash: str = get_hash(value)
 
     def __eq__(self, __o: Any):
