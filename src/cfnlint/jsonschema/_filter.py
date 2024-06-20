@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field, fields
 from typing import TYPE_CHECKING, Any, Sequence, Tuple
 
-from cfnlint.helpers import REGEX_DYN_REF, ToPy, ensure_list
+from cfnlint.helpers import FUNCTIONS, REGEX_DYN_REF, ToPy, ensure_list
 
 if TYPE_CHECKING:
     from cfnlint.jsonschema.protocols import Validator
@@ -106,7 +106,14 @@ class FunctionFilter:
         # Lets validate dynamic references when appropriate
         if validator.is_type(instance, "string"):
             if REGEX_DYN_REF.findall(instance):
-                yield (instance, {"dynamicReference": schema})
+                # if we are in a function we can't validate
+                # dynamic references the same way
+                if not any(
+                    p in set(FUNCTIONS) - set(["Fn::If"])
+                    for p in validator.context.path.path
+                ):
+                    yield (instance, {"dynamicReference": schema})
+                    return
                 return
 
         # dependencies, required, minProperties, maxProperties
