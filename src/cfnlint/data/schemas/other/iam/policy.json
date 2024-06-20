@@ -20,7 +20,14 @@
    "type": "string"
   },
   "AwsPrincipalArn": {
-   "pattern": "^((arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)|\\d{12})",
+   "anyOf": [
+    {
+     "pattern": "^((arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)|\\d{12})"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::cloudfront:user/.+$"
+    }
+   ],
    "type": "string"
   },
   "Condition": {
