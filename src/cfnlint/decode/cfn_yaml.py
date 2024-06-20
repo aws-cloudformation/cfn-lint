@@ -1,6 +1,9 @@
 """
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
+
+# Code is taken from jsonschema package and adapted CloudFormation use
+# https://github.com/yaml/pyyaml/blob/a2d19c0234866dc9d4d55abf3009699c258bb72f/lib/yaml/scanner.py#L46
 """
 
 import fileinput
@@ -198,8 +201,33 @@ NodeConstructor.add_constructor(  # type: ignore
 )
 
 
+class _Scanner(Scanner):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.ESCAPE_REPLACEMENTS = {
+            "0": "\0",
+            "a": "\x07",
+            "b": "\x08",
+            "t": "\x09",
+            "\t": "\x09",
+            "n": "\x0A",
+            "v": "\x0B",
+            "f": "\x0C",
+            "r": "\x0D",
+            "e": "\x1B",
+            " ": "\x20",
+            '"': '"',
+            "\\": "\\",
+            "N": "\x85",
+            "_": "\xA0",
+            "L": "\u2028",
+            "P": "\u2029",
+        }
+
+
 # pylint: disable=too-many-ancestors
-class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):
+class MarkedLoader(Reader, _Scanner, Parser, Composer, NodeConstructor, Resolver):
     """
     Class for marked loading YAML
     """
@@ -208,7 +236,7 @@ class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver)
 
     def __init__(self, stream, filename):
         Reader.__init__(self, stream)
-        Scanner.__init__(self)
+        _Scanner.__init__(self)
         if cyaml:
             Parser.__init__(self, stream)
         else:
