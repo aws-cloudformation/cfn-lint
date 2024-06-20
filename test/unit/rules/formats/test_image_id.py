@@ -53,6 +53,20 @@ def rule():
             False,
         ),
         (
+            "Valid image id in exception",
+            "ami-abcd1234",
+            deque(
+                [
+                    "Resources",
+                    "AWS::EC2::LaunchTemplate",
+                    "Properties",
+                    "LaunchTemplateData",
+                    "ImageId",
+                ]
+            ),
+            True,
+        ),
+        (
             "Valid type",
             [],
             deque([]),
