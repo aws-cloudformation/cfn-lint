@@ -27,6 +27,10 @@ class GetAttFormat(CfnLintKeyword):
             "AWS::EC2::SecurityGroup.GroupId",
             "AWS::EC2::SecurityGroup.GroupIds",
         ]
+        self._resource_type_exceptions = [
+            "AWS::CloudFormation::CustomResource",
+            "AWS::CloudFormation::Stack",
+        ]
 
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
@@ -40,7 +44,7 @@ class GetAttFormat(CfnLintKeyword):
         getatt_ptr = validator.context.resources[resource].get_atts[attr]
         t = validator.context.resources[resource].type
 
-        if t in ["AWS::CloudFormation::CustomResource"]:
+        if t in self._resource_type_exceptions:
             return
 
         for (

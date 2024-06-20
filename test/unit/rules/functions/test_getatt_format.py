@@ -23,6 +23,7 @@ def template():
             "MyVpc": {"Type": "AWS::EC2::VPC"},
             "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
             "MyCustomResource": {"Type": "Custom::CustomResource"},
+            "MySubTemplate": {"Type": "AWS::CloudFormation::Stack"},
         },
     }
 
@@ -39,6 +40,12 @@ def template():
         (
             "Valid GetAtt to a custom resource",
             ["MyCustomResource", "ImageId"],
+            {"format": "AWS::EC2::VPC.Id"},
+            [],
+        ),
+        (
+            "Valid GetAtt to a sub template ",
+            ["MySubTemplate", "Outputs.ImageId"],
             {"format": "AWS::EC2::VPC.Id"},
             [],
         ),
