@@ -95,6 +95,9 @@ class TestIdentityPolicies(TestCase):
                             "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
                         },
                         {
+                            "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:aws:transform/Serverless-2016-10-31"
+                        },
+                        {
                             "NotValid": [
                                 "arn:${AWS::Partition}:iam::123456789012:role/object-role"
                             ]
@@ -116,7 +119,7 @@ class TestIdentityPolicies(TestCase):
             errs[1].message,
             "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012:role/object-role']} is not of type 'string'",
         )
-        self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
+        self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 2])
 
     def test_string_statements(self):
         """Test Positive"""
