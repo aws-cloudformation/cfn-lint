@@ -38,6 +38,15 @@ class Permissions(CfnLintKeyword):
         for action in actions:
             if action == "*":
                 continue
+            if ":" not in action:
+                yield ValidationError(
+                    (
+                        f"{action!r} is not a valid action."
+                        "Must be of the form service:action or '*'"
+                    ),
+                    rule=self,
+                )
+                return
             service, permission = action.split(":", 1)
             service = service.lower()
             permission = permission.lower()
