@@ -340,7 +340,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
   - repo: https://github.com/aws-cloudformation/cfn-lint
-    rev: v1.3.1 # The version of cfn-lint to use
+    rev: v1.3.2 # The version of cfn-lint to use
     hooks:
       - id: cfn-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -351,7 +351,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
   - repo: https://github.com/aws-cloudformation/cfn-lint
-    rev: v1.3.1 # The version of cfn-lint to use
+    rev: v1.3.2 # The version of cfn-lint to use
     hooks:
       - id: cfn-lint-rc
 ```

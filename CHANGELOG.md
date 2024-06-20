@@ -1,3 +1,12 @@
+### v1.3.2
+## What's Changed
+* Switch max condition logic to attemptes over returned by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3359
+* Update maintenance job to get data from boto by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3361
+* Update md5 creation to work better on FIPS compliant OSes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3362
+* Add in awslogs-create-group to ECS task logging by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3363
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.1...v1.3.2
+
 ### v1.3.1
 ## What's Changed
 * Update some docs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3314
