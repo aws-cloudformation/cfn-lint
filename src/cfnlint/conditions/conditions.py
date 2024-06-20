@@ -200,7 +200,7 @@ class Conditions:
         try:
             # build a large matric of True/False options
             # based on the provided conditions
-            scenarios_returned = 0
+            scenarios_attempted = 0
             if region:
                 products = itertools.starmap(
                     self.build_scenerios_on_region,
@@ -229,11 +229,11 @@ class Conditions:
                 # if the scenario can be satisfied then return it
                 if satisfiable(cnf):
                     yield {**params, **conditions_set}
-                    scenarios_returned += 1
 
+                scenarios_attempted += 1
                 # On occassions people will use a lot of non-related conditions
                 # this is fail safe to limit the maximum number of responses
-                if scenarios_returned >= self._max_scenarios:
+                if scenarios_attempted >= self._max_scenarios:
                     return
         except KeyError:
             # KeyError is because the listed condition doesn't exist because of bad
