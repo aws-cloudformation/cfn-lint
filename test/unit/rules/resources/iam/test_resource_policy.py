@@ -57,6 +57,12 @@ class TestResourcePolicy(TestCase):
                         ],
                         "CanonicalUser": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be",
                     },
+                    "Condition": {
+                        "Null": {
+                            "s3:x-amz-server-side-encryption": [False],
+                            "aws:TagKeys": False,
+                        }
+                    },
                 }
             ],
         }
