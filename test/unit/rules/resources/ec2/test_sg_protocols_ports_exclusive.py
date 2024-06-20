@@ -35,6 +35,12 @@ def rule():
             [],
         ),
         (
+            {
+                "IpProtocol": "TCP",
+            },
+            [],
+        ),
+        (
             [],  # wrong type
             [],
         ),
