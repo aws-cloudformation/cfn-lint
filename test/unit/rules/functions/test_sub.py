@@ -138,6 +138,12 @@ def context(cfn):
             [],
         ),
         (
+            "Valid Fn::Sub with an ref to resource",
+            {"Fn::Sub": ["${MyResource}", {"MyResource": {"Ref": "MyResource"}}]},
+            {"type": "string"},
+            [],
+        ),
+        (
             "Invalid Fn::Sub with a too to many elements",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
             {"type": "string"},

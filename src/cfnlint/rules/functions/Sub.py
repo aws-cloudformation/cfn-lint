@@ -10,7 +10,7 @@ from typing import Any
 
 import regex as re
 
-from cfnlint.helpers import REGEX_SUB_PARAMETERS
+from cfnlint.helpers import REGEX_SUB_PARAMETERS, is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn
 
@@ -127,8 +127,13 @@ class Sub(BaseFn):
             if not validator.is_type(value[1], "object"):
                 return
 
+            sub_values = value[1].copy()
+            for sub_k, sub_v in value[1].items():
+                fn_k, fn_v = is_function(sub_v)
+                if fn_k == "Ref" and fn_v == sub_k:
+                    del sub_values[sub_k]
             validator_string = validator.evolve(
-                context=validator.context.evolve(ref_values=value[1])
+                context=validator.context.evolve(ref_values=sub_values)
             )
             value = value[0]
         elif validator.is_type(value, "string"):
