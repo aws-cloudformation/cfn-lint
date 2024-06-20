@@ -1539,7 +1539,7 @@ patches.extend(
             resource_type="AWS::SQS::Queue",
             patches=[
                 Patch(
-                    values={"maximum": 1209600, "minimum": 1024},
+                    values={"maximum": 1209600, "minimum": 60},
                     path="/properties/MessageRetentionPeriod",
                 ),
                 Patch(
