@@ -44,6 +44,21 @@
    ],
    "type": "object"
   },
+  "EventBridgeDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBusArn": {
+     "maxLength": 1024,
+     "minLength": 36,
+     "pattern": "^arn:aws[a-z0-9-]*:events:[a-z0-9-]+:\\d{12}:event-bus/[^:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventBusArn"
+   ],
+   "type": "object"
+  },
   "EventDestination": {
    "additionalProperties": false,
    "properties": {
@@ -52,6 +67,9 @@
     },
     "Enabled": {
      "type": "boolean"
+    },
+    "EventBridgeDestination": {
+     "$ref": "#/definitions/EventBridgeDestination"
     },
     "KinesisFirehoseDestination": {
      "$ref": "#/definitions/KinesisFirehoseDestination"

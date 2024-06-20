@@ -1,0 +1,197 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorId",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Eq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Equals": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "GreaterThan": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "GreaterThanOrEqual": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "Gt": {
+     "type": "integer"
+    },
+    "Gte": {
+     "type": "integer"
+    },
+    "LessThan": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "LessThanOrEqual": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "Lt": {
+     "type": "integer"
+    },
+    "Lte": {
+     "type": "integer"
+    },
+    "Neq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NotEquals": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "FindingCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Criterion": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/Condition"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "guardduty:CreateFilter",
+    "guardduty:GetFilter",
+    "guardduty:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "guardduty:ListDetectors",
+    "guardduty:ListFilters",
+    "guardduty:GetFilter",
+    "guardduty:DeleteFilter"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DetectorId": {
+      "type": "string"
+     }
+    }
+   },
+   "permissions": [
+    "guardduty:ListFilters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "guardduty:GetFilter"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "guardduty:UpdateFilter",
+    "guardduty:GetFilter",
+    "guardduty:ListFilters"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorId",
+  "/properties/Name"
+ ],
+ "properties": {
+  "Action": {
+   "enum": [
+    "NOOP",
+    "ARCHIVE"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DetectorId": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FindingCriteria": {
+   "$ref": "#/definitions/FindingCriteria"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Rank": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "FindingCriteria"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::Filter"
+}

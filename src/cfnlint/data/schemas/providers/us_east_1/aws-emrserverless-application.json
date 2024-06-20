@@ -131,6 +131,10 @@
    "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)$",
    "type": "string"
   },
+  "DiskType": {
+   "pattern": "^(SHUFFLE_OPTIMIZED|[Ss]huffle_[Oo]ptimized|STANDARD|[Ss]tandard)$",
+   "type": "string"
+  },
   "EncryptionKeyArn": {
    "maxLength": 2048,
    "minLength": 20,
@@ -392,6 +396,9 @@
     "Disk": {
      "$ref": "#/definitions/DiskSize"
     },
+    "DiskType": {
+     "$ref": "#/definitions/DiskType"
+    },
     "Memory": {
      "$ref": "#/definitions/MemorySize"
     }
@@ -430,16 +437,24 @@
  "handlers": {
   "create": {
    "permissions": [
-    "kms:Create*",
-    "kms:Describe*",
-    "kms:Enable*",
-    "kms:List*",
-    "kms:Put*",
-    "kms:Update*",
-    "kms:Revoke*",
-    "kms:Disable*",
-    "kms:Get*",
-    "kms:Delete*",
+    "kms:CreateKey",
+    "kms:CreateAlias",
+    "kms:DescribeKey",
+    "kms:EnableKey",
+    "kms:ListGrants",
+    "kms:ListAliases",
+    "kms:ListKeyPolicies",
+    "kms:ListKeys",
+    "kms:PutKeyPolicy",
+    "kms:UpdateKeyDescription",
+    "kms:UpdateAlias",
+    "kms:UpdatePrimaryRegion",
+    "kms:RevokeGrant",
+    "kms:DisableKey",
+    "kms:DisableKeyRotation",
+    "kms:GetKeyPolicy",
+    "kms:GetKeyRotationStatus",
+    "kms:DeleteAlias",
     "kms:ScheduleKeyDeletion",
     "kms:CancelKeyDeletion",
     "kms:GenerateDataKey",
@@ -482,16 +497,24 @@
     "ecr:BatchGetImage",
     "ecr:DescribeImages",
     "ecr:GetDownloadUrlForLayer",
-    "kms:Create*",
-    "kms:Describe*",
-    "kms:Enable*",
-    "kms:List*",
-    "kms:Put*",
-    "kms:Update*",
-    "kms:Revoke*",
-    "kms:Disable*",
-    "kms:Get*",
-    "kms:Delete*",
+    "kms:CreateKey",
+    "kms:CreateAlias",
+    "kms:DescribeKey",
+    "kms:EnableKey",
+    "kms:ListGrants",
+    "kms:ListAliases",
+    "kms:ListKeyPolicies",
+    "kms:ListKeys",
+    "kms:PutKeyPolicy",
+    "kms:UpdateKeyDescription",
+    "kms:UpdateAlias",
+    "kms:UpdatePrimaryRegion",
+    "kms:RevokeGrant",
+    "kms:DisableKey",
+    "kms:DisableKeyRotation",
+    "kms:GetKeyPolicy",
+    "kms:GetKeyRotationStatus",
+    "kms:DeleteAlias",
     "kms:ScheduleKeyDeletion",
     "kms:CancelKeyDeletion",
     "kms:GenerateDataKey",
@@ -514,6 +537,7 @@
    "$ref": "#/definitions/Architecture"
   },
   "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):emr-serverless:.+:(\\d{12}):\\/applications\\/[0-9a-zA-Z]+$",
    "type": "string"
   },
   "AutoStartConfiguration": {
@@ -578,7 +602,9 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
   "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
   "taggable": true
  },
  "typeName": "AWS::EMRServerless::Application"

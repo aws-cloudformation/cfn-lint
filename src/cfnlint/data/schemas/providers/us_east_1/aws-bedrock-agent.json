@@ -199,6 +199,21 @@
    "title": "Functions",
    "type": "object"
   },
+  "GuardrailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GuardrailIdentifier": {
+     "maxLength": 2048,
+     "pattern": "^(([a-z0-9]+)|(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+))$",
+     "type": "string"
+    },
+    "GuardrailVersion": {
+     "pattern": "^(([0-9]{1,8})|(DRAFT))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "InferenceConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -389,18 +404,24 @@
     "bedrock:ListAgentActionGroups",
     "bedrock:TagResource",
     "bedrock:ListTagsForResource",
+    "bedrock:CreateGuardrail",
+    "bedrock:CreateGuardrailVersion",
+    "bedrock:GetGuardrail",
     "iam:PassRole"
    ]
   },
   "delete": {
    "permissions": [
     "bedrock:GetAgent",
-    "bedrock:DeleteAgent"
+    "bedrock:DeleteAgent",
+    "bedrock:DeleteGuardrail",
+    "bedrock:GetGuardrail"
    ]
   },
   "list": {
    "permissions": [
-    "bedrock:ListAgents"
+    "bedrock:ListAgents",
+    "bedrock:ListGuardrails"
    ]
   },
   "read": {
@@ -410,7 +431,9 @@
     "bedrock:ListAgentActionGroups",
     "bedrock:GetAgentKnowledgeBase",
     "bedrock:ListAgentKnowledgeBases",
-    "bedrock:ListTagsForResource"
+    "bedrock:ListTagsForResource",
+    "bedrock:GetGuardrail",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -431,6 +454,9 @@
     "bedrock:TagResource",
     "bedrock:UntagResource",
     "bedrock:ListTagsForResource",
+    "bedrock:UpdateGuardrail",
+    "bedrock:GetGuardrail",
+    "kms:Decrypt",
     "iam:PassRole"
    ]
   }
@@ -505,6 +531,9 @@
    "minLength": 1,
    "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}(([:][a-z0-9-]{1,63}){0,2})?/[a-z0-9]{12})|(:foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2})))|(([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|(([0-9a-zA-Z][_-]?)+)$",
    "type": "string"
+  },
+  "GuardrailConfiguration": {
+   "$ref": "#/definitions/GuardrailConfiguration"
   },
   "IdleSessionTTLInSeconds": {
    "maximum": 3600,
