@@ -24,6 +24,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Callable
 
+from cfnlint.conditions import UnknownSatisfisfaction
 from cfnlint.context import Context, create_context_for_template
 from cfnlint.helpers import is_function
 from cfnlint.jsonschema import _keywords, _keywords_cfn, _resolvers_cfn
@@ -170,11 +171,15 @@ def create(
                 # There is no None in self.fn_resolvers
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
-                        if self.cfn.conditions.satisfiable(
-                            r_validator.context.conditions.status,
-                            r_validator.context.ref_values,
-                        ):
-                            yield r_value, r_validator, r_errs
+                        try:
+                            if self.cfn.conditions.satisfiable(
+                                r_validator.context.conditions.status,
+                                r_validator.context.ref_values,
+                            ):
+                                yield r_value, r_validator, r_errs
+                        except UnknownSatisfisfaction as err:
+                            LOGGER.debug(err)
+                            return
                 return
 
             # The return type is a Protocol and we are returning an instance
