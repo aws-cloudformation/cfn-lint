@@ -46,6 +46,10 @@ def rule():
                 )
             ],
         ),
+        (
+            {"Code": "../link/to/my/package.zip", "Runtime": "provided.al2023"},
+            [],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):
