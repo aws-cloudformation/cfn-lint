@@ -1,0 +1,58 @@
+[
+ {
+  "op": "test",
+  "path": "/definitions/Admins",
+  "value": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ {
+  "op": "test",
+  "path": "/definitions/ExternalDataFilteringAllowList",
+  "value": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ {
+  "op": "remove",
+  "path": "/definitions/Admins"
+ },
+ {
+  "op": "remove",
+  "path": "/definitions/ExternalDataFilteringAllowList"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/DataLakePrincipal",
+  "value": {
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/properties/Admins",
+  "value": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/properties/ExternalDataFilteringAllowList",
+  "value": {
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
+  }
+ }
+]
