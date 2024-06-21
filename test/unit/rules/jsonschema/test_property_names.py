@@ -108,7 +108,7 @@ class TestPropertyNames(BaseRuleTestCase):
         )
 
         self.assertEqual(len(errs), 1)
-        self.assertEqual(errs[0].rule.id, "AAAAA")
+        self.assertIsNone(errs[0].rule)
 
     def test_rule_not_object(self):
         validator = CfnTemplateValidator({})

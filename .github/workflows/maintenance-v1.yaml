@@ -20,6 +20,7 @@ jobs:
           latest=`curl "https://pypi.org/pypi/aws-sam-cli/$latest_sam_cli/json" -s | jq -r '.info.requires_dist[] | select(contains("aws-sam-translator"))' | cut -c 21-`
           sed -i -E "s/aws-sam-translator>=[0-9.]+/aws-sam-translator>=$latest/" pyproject.toml
           pip install -e .
+          pip install requests
           rm -rf src/cfnlint/data/DownloadsMetadata/*
           cfn-lint --update-iam-policies
           cfn-lint --update-documentation
