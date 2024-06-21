@@ -304,9 +304,16 @@ class Parameter(_Ref):
 
         if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
             if "Default" in parameter:
-                self.default = parameter.get("Default", "").split(",")
+                default = parameter.get("Default", "")
+                if isinstance(default, str):
+                    self.default = default.split(",")
+                else:
+                    self.default = [default]
             for allowed_value in parameter.get("AllowedValues", []):
-                self.allowed_values.append(allowed_value.split(","))
+                if isinstance(allowed_value, str):
+                    self.allowed_values.append(allowed_value.split(","))
+                else:
+                    self.allowed_values.append([allowed_value])
         else:
             self.default = parameter.get("Default")
             self.allowed_values = parameter.get("AllowedValues")
