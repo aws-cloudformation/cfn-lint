@@ -1,0 +1,344 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyStoreId"
+ ],
+ "definitions": {
+  "CognitoGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupEntityType": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^([_a-zA-Z][_a-zA-Z0-9]*::)*[_a-zA-Z][_a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupEntityType"
+   ],
+   "type": "object"
+  },
+  "CognitoUserPoolConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 0,
+     "type": "array"
+    },
+    "GroupConfiguration": {
+     "$ref": "#/definitions/CognitoGroupConfiguration"
+    },
+    "UserPoolArn": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^arn:[a-zA-Z0-9-]+:cognito-idp:(([a-zA-Z0-9-]+:\\d{12}:userpool/[\\w-]+_[0-9a-zA-Z]+))$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPoolArn"
+   ],
+   "type": "object"
+  },
+  "IdentitySourceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CognitoUserPoolConfiguration": {
+       "$ref": "#/definitions/CognitoUserPoolConfiguration"
+      }
+     },
+     "required": [
+      "CognitoUserPoolConfiguration"
+     ],
+     "title": "CognitoUserPoolConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OpenIdConnectConfiguration": {
+       "$ref": "#/definitions/OpenIdConnectConfiguration"
+      }
+     },
+     "required": [
+      "OpenIdConnectConfiguration"
+     ],
+     "title": "OpenIdConnectConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "IdentitySourceDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 0,
+     "type": "array"
+    },
+    "DiscoveryUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://.*$",
+     "type": "string"
+    },
+    "OpenIdIssuer": {
+     "$ref": "#/definitions/OpenIdIssuer"
+    },
+    "UserPoolArn": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^arn:[a-zA-Z0-9-]+:cognito-idp:(([a-zA-Z0-9-]+:\\d{12}:userpool/[\\w-]+_[0-9a-zA-Z]+))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIdConnectAccessTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Audiences": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 255,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PrincipalIdClaim": {
+     "default": "sub",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIdConnectConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityIdPrefix": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "GroupConfiguration": {
+     "$ref": "#/definitions/OpenIdConnectGroupConfiguration"
+    },
+    "Issuer": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://.*$",
+     "type": "string"
+    },
+    "TokenSelection": {
+     "$ref": "#/definitions/OpenIdConnectTokenSelection"
+    }
+   },
+   "required": [
+    "Issuer",
+    "TokenSelection"
+   ],
+   "type": "object"
+  },
+  "OpenIdConnectGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupClaim": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "GroupEntityType": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^([_a-zA-Z][_a-zA-Z0-9]*::)*[_a-zA-Z][_a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupClaim",
+    "GroupEntityType"
+   ],
+   "type": "object"
+  },
+  "OpenIdConnectIdentityTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 0,
+     "type": "array"
+    },
+    "PrincipalIdClaim": {
+     "default": "sub",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIdConnectTokenSelection": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AccessTokenOnly": {
+       "$ref": "#/definitions/OpenIdConnectAccessTokenConfiguration"
+      }
+     },
+     "required": [
+      "AccessTokenOnly"
+     ],
+     "title": "AccessTokenOnly",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IdentityTokenOnly": {
+       "$ref": "#/definitions/OpenIdConnectIdentityTokenConfiguration"
+      }
+     },
+     "required": [
+      "IdentityTokenOnly"
+     ],
+     "title": "IdentityTokenOnly",
+     "type": "object"
+    }
+   ]
+  },
+  "OpenIdIssuer": {
+   "enum": [
+    "COGNITO"
+   ],
+   "type": "string"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/Details"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "verifiedpermissions:CreateIdentitySource",
+    "verifiedpermissions:GetIdentitySource",
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListUserPoolClients"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "verifiedpermissions:DeleteIdentitySource",
+    "verifiedpermissions:GetIdentitySource",
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListUserPoolClients"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "PolicyStoreId": {
+      "$ref": "resource-schema.json#/properties/PolicyStoreId"
+     }
+    },
+    "required": [
+     "PolicyStoreId"
+    ]
+   },
+   "permissions": [
+    "verifiedpermissions:ListIdentitySources",
+    "verifiedpermissions:GetIdentitySource",
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListUserPoolClients"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "verifiedpermissions:GetIdentitySource",
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListUserPoolClients"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "verifiedpermissions:UpdateIdentitySource",
+    "verifiedpermissions:GetIdentitySource",
+    "cognito-idp:DescribeUserPool",
+    "cognito-idp:ListUserPoolClients"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdentitySourceId",
+  "/properties/PolicyStoreId"
+ ],
+ "properties": {
+  "Configuration": {
+   "$ref": "#/definitions/IdentitySourceConfiguration"
+  },
+  "Details": {
+   "$ref": "#/definitions/IdentitySourceDetails"
+  },
+  "IdentitySourceId": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "PolicyStoreId": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "PrincipalEntityType": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^.*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Details",
+  "/properties/IdentitySourceId"
+ ],
+ "required": [
+  "Configuration",
+  "PolicyStoreId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::VerifiedPermissions::IdentitySource"
+}
