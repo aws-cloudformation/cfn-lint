@@ -1,3 +1,13 @@
+### v1.3.3
+## What's Changed
+* Remove rule setting in `PropertyNames` rule by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3365
+* update logic in rule [E3686](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3686) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3367
+* Patch `AWS::Glue::SecurityConfiguration` and other resource issues by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3371
+* Parameter of `List<Number>` can have an integer default by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3372
+* Better comparison of json schema types for cfn usage by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3373
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.2...v1.3.3
+
 ### v1.3.2
 ## What's Changed
 * Switch max condition logic to attemptes over returned by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3359
