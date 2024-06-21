@@ -1458,7 +1458,6 @@ cached: List[str] = [
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
     "aws-apigatewayv2-routeresponse.json",
-    "aws-cloudwatch-metricstream.json",
     "aws-sso-applicationassignment.json",
     "aws-dms-dataprovider.json",
     "aws-ssm-parameter.json",

@@ -1417,7 +1417,6 @@ cached: List[str] = [
     "aws-rds-dbsecuritygroup.json",
     "aws-mediapackage-channel.json",
     "aws-apigatewayv2-routeresponse.json",
-    "aws-cloudwatch-metricstream.json",
     "aws-sso-applicationassignment.json",
     "aws-dms-dataprovider.json",
     "aws-ssm-parameter.json",

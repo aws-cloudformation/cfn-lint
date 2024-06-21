@@ -1,6 +1,6 @@
 {
  "additionalProperties": false,
- "allOf": [
+ "anyOf": [
   {
    "required": [
     "FirehoseArn",
@@ -9,11 +9,25 @@
    ]
   },
   {
-   "oneOf": [
-    {},
+   "allOf": [
     {
      "required": [
-      "IncludeFilters",
+      "FirehoseArn",
+      "RoleArn",
+      "OutputFormat"
+     ]
+    }
+   ]
+  },
+  {
+   "oneOf": [
+    {
+     "required": [
+      "IncludeFilters"
+     ]
+    },
+    {
+     "required": [
       "ExcludeFilters"
      ]
     }
@@ -103,7 +117,7 @@
     },
     "Value": {
      "maxLength": 256,
-     "minLength": 0,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -246,6 +260,11 @@
   "/properties/CreationDate",
   "/properties/LastUpdateDate",
   "/properties/State"
+ ],
+ "required": [
+  "FirehoseArn",
+  "RoleArn",
+  "OutputFormat"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
  "taggable": true,

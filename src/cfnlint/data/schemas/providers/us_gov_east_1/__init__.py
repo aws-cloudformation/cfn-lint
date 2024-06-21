@@ -1126,7 +1126,6 @@ cached: List[str] = [
     "aws-lakeformation-datalakesettings.json",
     "aws-greengrassv2-deployment.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-cloudwatch-metricstream.json",
     "aws-sso-applicationassignment.json",
     "aws-ssm-parameter.json",
     "aws-apigatewayv2-apigatewaymanagedoverrides.json",

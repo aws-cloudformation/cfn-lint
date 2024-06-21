@@ -2282,6 +2282,7 @@ cached: List[str] = [
     "aws-mediapackage-channel.json",
     "aws-apigatewayv2-routeresponse.json",
     "aws-codeartifact-packagegroup.json",
+    "aws-cloudwatch-metricstream.json",
     "aws-sso-applicationassignment.json",
     "aws-dms-dataprovider.json",
     "aws-location-geofencecollection.json",

@@ -868,7 +868,6 @@ cached: List[str] = [
     "aws-ecr-registrypolicy.json",
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-cloudwatch-metricstream.json",
     "aws-dms-dataprovider.json",
     "aws-ssm-parameter.json",
     "aws-config-deliverychannel.json",
