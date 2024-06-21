@@ -14,11 +14,11 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 
 class DbClusterServerlessExclusive(CfnLintJsonSchema):
     id = "E3686"
-    shortdesc = (
-        "Validate when using a serverless RDS DB certain properties aren't needed"
-    )
+    shortdesc = "Validate allowed properties when using a serverless RDS DB cluster"
     description = (
-        "When creating a serverless 'EngineMode' don't specify 'ScalingConfiguration'"
+        "Validate that when EngineMode is 'serverless' or 'provisioned' that the "
+        "appropriate allowed properties are provided. If 'EngineMode' is not provided "
+        "make sure serverless properties don't exist at all."
     )
     tags = ["resources"]
 
@@ -32,4 +32,15 @@ class DbClusterServerlessExclusive(CfnLintJsonSchema):
         )
 
     def message(self, instance: Any, err: ValidationError) -> str:
-        return "Additional properties are not allowed ('ScalingConfiguration')"
+
+        # validator None means the schema is falsy
+        if err.validator is None:
+            if instance.get("EngineMode") in ["serverless", "provisioned"]:
+                return (
+                    f"EngineMode {instance.get('EngineMode')!r} "
+                    f" doesn't allow additional properties {err.path[0]!r}"
+                )
+            else:
+                return "Additional properties are not allowed " f"({err.path[0]!r})"
+
+        return err.message
