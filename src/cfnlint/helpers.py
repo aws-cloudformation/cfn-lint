@@ -19,7 +19,7 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import Any
+from typing import Any, Sequence
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -535,6 +535,54 @@ def is_function(instance: Any) -> tuple[str | None, Any]:
                     return key, value
 
     return None, None
+
+
+def _translate_types(types: Sequence[str]) -> list[str]:
+    """
+    Return compatible types. This is an adventitious result
+    meaning a string could be an integer.
+
+    Args:
+        types (Sequence[str]): The types
+
+    Returns:
+        bool: If any type of source is compatible with any type in the destination
+    """
+    compatible_types = []
+    for t in types:
+        if t == "string":
+            compatible_types.extend([t, "number", "boolean", "integer"])
+        if t == "integer":
+            compatible_types.extend([t, "number", "string"])
+        if t == "boolean":
+            compatible_types.extend([t, "string"])
+        if t == "number":
+            compatible_types.extend([t, "string"])
+        else:
+            compatible_types.append(t)
+    return compatible_types
+
+
+def is_types_compatible(
+    source_types: str | Sequence[str], destination_types: str | Sequence[str]
+) -> bool:
+    """
+    Validate if desination types are compatible with source types.
+
+    Args:
+        source_types (str | Sequence[str]): The source types
+        destination_types (str | Sequence[str]): The destination types
+
+    Returns:
+        bool: If any type of source is compatible with any type in the destination
+    """
+    source_types = _translate_types(ensure_list(source_types))
+    destination_types = ensure_list(destination_types)
+
+    if any(schema_type in source_types for schema_type in destination_types):
+        return True
+
+    return False
 
 
 def format_json_string(json_string):

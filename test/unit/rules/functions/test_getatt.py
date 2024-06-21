@@ -26,7 +26,10 @@ def cfn():
     return Template(
         "",
         {
-            "Resources": {"MyBucket": {"Type": "AWS::S3::Bucket"}},
+            "Resources": {
+                "MyBucket": {"Type": "AWS::S3::Bucket"},
+                "MyCodePipeline": {"Type": "AWS::CodePipeline::Pipeline"},
+            },
             "Parameters": {
                 "MyResourceParameter": {"Type": "String", "Default": "MyBucket"},
                 "MyAttributeParameter": {"Type": "String", "AllowedValues": ["Arn"]},
@@ -99,7 +102,7 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    "'Foo' is not one of ['MyBucket']",
+                    "'Foo' is not one of ['MyBucket', 'MyCodePipeline']",
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",
@@ -150,6 +153,14 @@ class _Fail(CfnLintKeyword):
                     validator="fn_getatt",
                 ),
             ],
+        ),
+        (
+            "Valid GetAtt with integer to string",
+            {"Fn::GetAtt": "MyCodePipeline.Version"},
+            {"type": ["integer"]},
+            {},
+            {},
+            [],
         ),
         (
             "Valid GetAtt with one good response type",
@@ -203,7 +214,7 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     (
-                        "'Arn' is not one of ['MyBucket'] when "
+                        "'Arn' is not one of ['MyBucket', 'MyCodePipeline'] when "
                         "{'Ref': 'MyAttributeParameter'} is resolved"
                     ),
                     path=deque(["Fn::GetAtt", 0]),
