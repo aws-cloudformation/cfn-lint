@@ -10,7 +10,7 @@ from typing import Any, Sequence
 
 import regex as re
 
-from cfnlint.helpers import ensure_list
+from cfnlint.helpers import ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
@@ -132,7 +132,7 @@ class GetAtt(BaseFn):
 
                         types = ensure_list(s.get("type"))
 
-                        if any(schema_type in types for schema_type in schema_types):
+                        if is_types_compatible(types, schema_types):
                             continue
 
                         reprs = ", ".join(repr(type) for type in types)
