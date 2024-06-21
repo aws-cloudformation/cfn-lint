@@ -1,20 +1,26 @@
 {
  "additionalProperties": false,
  "definitions": {
-  "Admins": {
-   "additionalProperties": false,
+  "DataLakePrincipal": {
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
    "type": "object"
   },
-  "CreateDatabaseDefaultPermissions": {
-   "additionalProperties": false,
-   "type": "object"
-  },
-  "CreateTableDefaultPermissions": {
-   "additionalProperties": false,
-   "type": "object"
-  },
-  "ExternalDataFilteringAllowList": {
-   "additionalProperties": false,
+  "PrincipalPermissions": {
+   "properties": {
+    "Permissions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Principal": {
+     "type": "string"
+    }
+   },
    "type": "object"
   }
  },
@@ -23,7 +29,10 @@
  ],
  "properties": {
   "Admins": {
-   "$ref": "#/definitions/Admins"
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
   },
   "AllowExternalDataFiltering": {
    "type": "boolean"
@@ -39,13 +48,22 @@
    "uniqueItems": false
   },
   "CreateDatabaseDefaultPermissions": {
-   "$ref": "#/definitions/CreateDatabaseDefaultPermissions"
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
   },
   "CreateTableDefaultPermissions": {
-   "$ref": "#/definitions/CreateTableDefaultPermissions"
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
   },
   "ExternalDataFilteringAllowList": {
-   "$ref": "#/definitions/ExternalDataFilteringAllowList"
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
   },
   "Id": {
    "type": "string"

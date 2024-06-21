@@ -1,0 +1,64 @@
+[
+ {
+  "op": "test",
+  "path": "/definitions/CreateDatabaseDefaultPermissions",
+  "value": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ {
+  "op": "test",
+  "path": "/definitions/CreateTableDefaultPermissions",
+  "value": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ {
+  "op": "remove",
+  "path": "/definitions/CreateDatabaseDefaultPermissions"
+ },
+ {
+  "op": "remove",
+  "path": "/definitions/CreateTableDefaultPermissions"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/PrincipalPermissions",
+  "value": {
+   "properties": {
+    "Permissions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Principal": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/properties/CreateDatabaseDefaultPermissions",
+  "value": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  }
+ },
+ {
+  "op": "replace",
+  "path": "/properties/CreateTableDefaultPermissions",
+  "value": {
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  }
+ }
+]
