@@ -75,6 +75,18 @@ from cfnlint.context.context import Parameter, _init_parameters
             "Number",
             [("10", deque(["MinValue"])), ("20", deque(["MaxValue"]))],
         ),
+        (
+            "Valid list parameter with an integer value",
+            {"Type": "List<Number>", "Default": 10},
+            "List<Number>",
+            [(["10"], deque(["Default"]))],
+        ),
+        (
+            "Valid list parameter with an integer value",
+            {"Type": "List<Number>", "AllowedValues": [10]},
+            "List<Number>",
+            [(["10"], deque(["AllowedValues", 0]))],
+        ),
     ],
 )
 def test_parameter(name, instance, expected_type, expected_ref):
