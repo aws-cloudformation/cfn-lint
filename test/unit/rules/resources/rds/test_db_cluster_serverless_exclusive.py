@@ -35,14 +35,82 @@ def rule():
             [],
         ),
         (
-            {"EngineMode": "serverless", "ScalingConfiguration": "foo"},
+            {"EngineMode": "serverless", "ServerlessV2ScalingConfiguration": "foo"},
             [
                 ValidationError(
-                    "Additional properties are not allowed ('ScalingConfiguration')",
+                    (
+                        "EngineMode 'serverless'  doesn't allow additional "
+                        "properties 'ServerlessV2ScalingConfiguration'"
+                    ),
+                    rule=DbClusterServerlessExclusive(),
+                    path=deque(["ServerlessV2ScalingConfiguration"]),
+                    validator=None,
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            1,
+                            "then",
+                            "properties",
+                            "ServerlessV2ScalingConfiguration",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"EngineMode": "provisioned", "ScalingConfiguration": "foo"},
+            [
+                ValidationError(
+                    (
+                        "EngineMode 'provisioned'  doesn't allow "
+                        "additional properties 'ScalingConfiguration'"
+                    ),
                     rule=DbClusterServerlessExclusive(),
                     path=deque(["ScalingConfiguration"]),
                     validator=None,
-                    schema_path=deque(["then", "properties", "ScalingConfiguration"]),
+                    schema_path=deque(
+                        ["allOf", 0, "then", "properties", "ScalingConfiguration"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"ServerlessV2ScalingConfiguration": "foo"},
+            [
+                ValidationError(
+                    (
+                        "Additional properties are not allowed "
+                        "('ServerlessV2ScalingConfiguration')"
+                    ),
+                    rule=DbClusterServerlessExclusive(),
+                    path=deque(["ServerlessV2ScalingConfiguration"]),
+                    validator=None,
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            2,
+                            "then",
+                            "properties",
+                            "ServerlessV2ScalingConfiguration",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        (
+            {"ScalingConfiguration": "foo"},
+            [
+                ValidationError(
+                    (
+                        "Additional properties are not allowed "
+                        "('ScalingConfiguration')"
+                    ),
+                    rule=DbClusterServerlessExclusive(),
+                    path=deque(["ScalingConfiguration"]),
+                    validator=None,
+                    schema_path=deque(
+                        ["allOf", 2, "then", "properties", "ScalingConfiguration"]
+                    ),
                 )
             ],
         ),
@@ -50,5 +118,4 @@ def rule():
 )
 def test_validate(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
-
     assert errs == expected, f"Expected {expected} got {errs}"
