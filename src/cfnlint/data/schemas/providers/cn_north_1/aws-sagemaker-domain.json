@@ -16,7 +16,7 @@
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
-     "maxItems": 30,
+     "maxItems": 200,
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
@@ -122,11 +122,26 @@
   "DefaultSpaceSettings": {
    "additionalProperties": false,
    "properties": {
+    "CustomFileSystemConfigs": {
+     "items": {
+      "$ref": "#/definitions/CustomFileSystemConfig"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CustomPosixUserConfig": {
+     "$ref": "#/definitions/CustomPosixUserConfig"
+    },
     "ExecutionRole": {
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
      "type": "string"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/JupyterLabAppSettings"
     },
     "JupyterServerAppSettings": {
      "$ref": "#/definitions/JupyterServerAppSettings"
@@ -147,6 +162,9 @@
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/DefaultSpaceStorageSettings"
     }
    },
    "required": [
@@ -177,10 +195,11 @@
      "insertionOrder": false,
      "items": {
       "maxLength": 12,
-      "pattern": "^[0-9]$",
+      "minLength": 12,
+      "pattern": "^\\d+$",
       "type": "string"
      },
-     "maxItems": 10,
+     "maxItems": 20,
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
@@ -251,7 +270,7 @@
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
-     "maxItems": 30,
+     "maxItems": 200,
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
@@ -288,7 +307,7 @@
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
-     "maxItems": 30,
+     "maxItems": 200,
      "minItems": 0,
      "type": "array",
      "uniqueItems": false
@@ -307,7 +326,7 @@
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
-     "maxItems": 30,
+     "maxItems": 200,
      "minItems": 0,
      "type": "array",
      "uniqueItems": false

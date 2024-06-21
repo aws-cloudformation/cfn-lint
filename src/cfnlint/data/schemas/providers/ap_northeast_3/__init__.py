@@ -1060,7 +1060,6 @@ cached: List[str] = [
     "aws-ssm-maintenancewindowtask.json",
     "aws-ec2-transitgatewaymulticastdomain.json",
     "aws-verifiedpermissions-policytemplate.json",
-    "aws-eks-cluster.json",
     "aws-codebuild-project.json",
     "aws-efs-filesystem.json",
     "aws-logs-querydefinition.json",
