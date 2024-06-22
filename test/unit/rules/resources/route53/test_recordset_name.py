@@ -30,6 +30,13 @@ def rule():
         (
             {
                 "HostedZoneName": "bar.",
+                "Name": "bar",
+            },
+            [],
+        ),
+        (
+            {
+                "HostedZoneName": "bar.",
                 "Name": {"Ref": "pName"},
             },
             [],
@@ -60,7 +67,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "'bar.foo.' must be a subdomain of 'bar.'",
+                    "'bar.foo.' must be a subdomain of or equal to 'bar.'",
                     path=deque(["Name"]),
                 )
             ],
@@ -72,7 +79,7 @@ def rule():
             },
             [
                 ValidationError(
-                    "'foobar.' must be a subdomain of 'bar.'",
+                    "'foobar.' must be a subdomain of or equal to 'bar.'",
                     path=deque(["Name"]),
                 )
             ],
