@@ -1,3 +1,9 @@
+### v0.87.8
+###### CloudFormation Specifications
+- Update CloudFormation specs to `179.0.0` (pull #[3308](https://github.com/aws-cloudformation/cfn-lint/pull/3308))
+###### Fixes
+- Update rules to better handle null/None values for Outputs (pull #[3302](https://github.com/aws-cloudformation/cfn-lint/pull/3302))
+
 ### v0.87.7
 ###### Fixes
 - Update rule [W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2531) to validate when the specified runtime is deprecated (pull #[3297](https://github.com/aws-cloudformation/cfn-lint/pull/3297))
