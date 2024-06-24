@@ -62,20 +62,34 @@ class BaseFn(CloudFormationLintRule):
     ) -> ValidationResult:
         key, _ = self.key_value(instance)
 
+        return_err: ValidationError | None = None
         for value, v, resolve_err in validator.resolve_value(instance):
             if resolve_err:
                 yield resolve_err
                 continue
-            for err in self.fix_errors(
-                v.descend(
-                    instance=value,
-                    schema=s,
-                    path=key,
+            errs = list(
+                self.fix_errors(
+                    v.descend(
+                        instance=value,
+                        schema=s,
+                        path=key,
+                    )
                 )
-            ):
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                yield err
+            )
+
+            if not errs:
+                return
+
+            return_err = errs[0]
+
+        if return_err:
+            return_err.message = return_err.message.replace(
+                f"{value!r}", f"{instance!r}"
+            )
+            return_err.message = (
+                f"{return_err.message} when {self.fn.name!r} is resolved"
+            )
+            yield return_err
 
     def _resolve_ref(self, validator, schema) -> Any:
 

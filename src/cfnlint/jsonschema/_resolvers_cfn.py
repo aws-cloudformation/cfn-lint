@@ -11,7 +11,7 @@ from typing import Any, Iterator
 
 import regex as re
 
-from cfnlint.helpers import AVAILABILITY_ZONES
+from cfnlint.helpers import AVAILABILITY_ZONES, REGEX_SUB_PARAMETERS
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import ResolutionResult
 from cfnlint.jsonschema._utils import equal
@@ -313,7 +313,21 @@ def sub(validator: Validator, instance: Any) -> ResolutionResult:
         return
 
     # its a string
-    yield from _sub_string(validator, instance)
+    sub_parameters = REGEX_SUB_PARAMETERS.findall(instance)
+    parameters = {}
+    for parameter in sub_parameters:
+        if "." in parameter:
+            parameters[parameter] = {"Fn::GetAtt": parameter}
+        else:
+            parameters[parameter] = {"Ref": parameter}
+    for resolved_parameters in _sub_parameter_expansion(validator, parameters):
+        resolved_validator = validator.evolve(
+            context=validator.context.evolve(
+                ref_values=resolved_parameters,
+            )
+        )
+        yield from _sub_string(resolved_validator, instance)
+        # yield from _sub_string(validator, instance)
 
 
 def if_(validator: Validator, instance: Any) -> ResolutionResult:
