@@ -26,6 +26,15 @@ def cfn():
     return Template(
         "",
         {
+            "Parameters": {
+                "MyParameter": {
+                    "Type": "String",
+                    "AllowedValues": [
+                        "one",
+                        "two",
+                    ],
+                }
+            },
             "Resources": {
                 "MyResource": {"Type": "AWS::S3::Bucket"},
                 "MySimpleAd": {"Type": "AWS::DirectoryService::SimpleAD"},
@@ -96,8 +105,8 @@ def context(cfn):
                 ValidationError(
                     (
                         "'bar' is not one of ["
-                        "'MyResource', 'MySimpleAd', 'MyPolicy', 'AWS::AccountId', "
-                        "'AWS::NoValue', 'AWS::NotificationARNs', "
+                        "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
+                        "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
                         "'AWS::Partition', 'AWS::Region', "
                         "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
@@ -115,8 +124,8 @@ def context(cfn):
                 ValidationError(
                     (
                         "'foo' is not one of ["
-                        "'MyResource', 'MySimpleAd', 'MyPolicy', 'AWS::AccountId', "
-                        "'AWS::NoValue', 'AWS::NotificationARNs', "
+                        "'MyParameter', 'MyResource', 'MySimpleAd', 'MyPolicy', "
+                        "'AWS::AccountId', 'AWS::NoValue', 'AWS::NotificationARNs', "
                         "'AWS::Partition', 'AWS::Region', "
                         "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
@@ -260,6 +269,25 @@ def context(cfn):
                     instance="MySimpleAd.DnsIpAddresses",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
+                    validator="fn_sub",
+                ),
+            ],
+        ),
+        (
+            "One valid resolution",
+            {"Fn::Sub": "${MyParameter}"},
+            {"type": "string", "const": "two"},
+            [],
+        ),
+        (
+            "No valid resolution",
+            {"Fn::Sub": "${MyParameter}"},
+            {"type": "string", "const": "three"},
+            [
+                ValidationError(
+                    ("'three' was expected when 'Fn::Sub' is resolved"),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque(["const"]),
                     validator="fn_sub",
                 ),
             ],
