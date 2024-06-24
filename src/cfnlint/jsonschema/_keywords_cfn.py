@@ -59,7 +59,8 @@ class FnItems:
             for (index, item), subschema in zip(enumerate(instance), s):
                 yield from validator.evolve(
                     context=validator.context.evolve(
-                        functions=subschema.get("functions", [])
+                        functions=subschema.get("functions", []),
+                        strict_types=False,
                     ),
                 ).descend(
                     instance=item,
@@ -69,7 +70,10 @@ class FnItems:
         else:
             for index, item in enumerate(instance):
                 yield from validator.evolve(
-                    context=validator.context.evolve(functions=s.get("functions", [])),
+                    context=validator.context.evolve(
+                        functions=s.get("functions", []),
+                        strict_types=False,
+                    ),
                 ).descend(
                     instance=item,
                     schema=s.get("schema", {}),

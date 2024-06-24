@@ -8,7 +8,7 @@ from collections import namedtuple
 from typing import List
 
 from cfnlint.context import Context
-from cfnlint.jsonschema._keywords_cfn import cfn_type
+from cfnlint.jsonschema._keywords_cfn import FnItems, cfn_type
 from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -136,3 +136,18 @@ class TestCfnTypeFailure(Base):
         self.assertIn(
             "Unknown type 'bar' for validator with schema", str(err.exception)
         )
+
+
+class TestFnItems(Base):
+
+    def test_change_type(self):
+        schema = [
+            {
+                "schema": {"type": "string"},
+            },
+        ]
+        validator = CfnTemplateValidator({})
+
+        items = list(FnItems().validate(validator, schema, [1], {}))
+
+        self.assertListEqual(items, [])

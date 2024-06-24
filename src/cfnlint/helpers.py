@@ -564,7 +564,9 @@ def _translate_types(types: Sequence[str]) -> list[str]:
 
 
 def is_types_compatible(
-    source_types: str | Sequence[str], destination_types: str | Sequence[str]
+    source_types: str | Sequence[str],
+    destination_types: str | Sequence[str],
+    strict_types: bool = False,
 ) -> bool:
     """
     Validate if desination types are compatible with source types.
@@ -576,7 +578,8 @@ def is_types_compatible(
     Returns:
         bool: If any type of source is compatible with any type in the destination
     """
-    source_types = _translate_types(ensure_list(source_types))
+    if not strict_types:
+        source_types = _translate_types(ensure_list(source_types))
     destination_types = ensure_list(destination_types)
 
     if any(schema_type in source_types for schema_type in destination_types):
