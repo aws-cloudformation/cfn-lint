@@ -16,7 +16,17 @@
    ]
   },
   "AwsArn": {
-   "pattern": "^(arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*(:(?:\\d{12}|\\*|aws)?:(.+|\\*)$|$))",
+   "anyOf": [
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*:(?:\\d{12}|\\*|aws)?:.+$"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):[^:]+:\\*$"
+    },
+    {
+     "const": "*"
+    }
+   ],
    "type": "string"
   },
   "AwsPrincipalArn": {
