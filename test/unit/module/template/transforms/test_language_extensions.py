@@ -188,7 +188,12 @@ class TestFindInMap(TestCase):
                             "Development": "1",
                             "Stage": ["1", "2"],
                             "Production": ["1", "2", "3"],
-                        }
+                        },
+                        "Instances": {
+                            "Development": "A",
+                            "Stage": ["A", "B"],
+                            "Production": ["A", "B", "C"],
+                        },
                     },
                 },
             }
@@ -288,6 +293,17 @@ class TestFindInMap(TestCase):
             self.assertEqual(map.value(self.cfn, None, False, True), "bar")
         with self.assertRaises(_ResolveError):
             map.value(self.cfn, None, False, False)
+
+    def test_second_key_resolution(self):
+        map = _ForEachValueFnFindInMap("a", ["Config", {"Ref": "Value"}, "Production"])
+
+        self.assertEqual(
+            map.value(self.cfn, {"Value": "DBInstances"}, False, True), ["1", "2", "3"]
+        )
+
+        self.assertEqual(
+            map.value(self.cfn, {"Value": "Instances"}, False, True), ["A", "B", "C"]
+        )
 
     def test_find_in_map_values_without_default_resolve_error(self):
         map = _ForEachValueFnFindInMap(

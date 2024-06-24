@@ -364,7 +364,7 @@ class _ForEachValueFnFindInMap(_ForEachValue):
 
         if mapping:
             try:
-                t_map[1].value(cfn)
+                t_map[1].value(cfn, params, only_params)
             except _ResolveError:
                 try:
                     t_map[2].value(cfn)
