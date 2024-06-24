@@ -132,7 +132,9 @@ class GetAtt(BaseFn):
 
                         types = ensure_list(s.get("type"))
 
-                        if is_types_compatible(types, schema_types):
+                        if is_types_compatible(
+                            types, schema_types, validator.context.strict_types
+                        ):
                             continue
 
                         reprs = ", ".join(repr(type) for type in types)

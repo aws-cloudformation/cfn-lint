@@ -90,6 +90,7 @@ class Sub(BaseFn):
                 path=validator.context.path.descend(
                     path=key,
                 ),
+                strict_types=True,
             ),
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=False,

@@ -158,9 +158,31 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with integer to string",
             {"Fn::GetAtt": "MyCodePipeline.Version"},
             {"type": ["integer"]},
-            {},
+            {
+                "strict_types": False,
+            },
             {},
             [],
+        ),
+        (
+            "Invalid GetAtt with integer to string",
+            {"Fn::GetAtt": "MyCodePipeline.Version"},
+            {"type": ["integer"]},
+            {
+                "strict_types": True,
+            },
+            {},
+            [
+                ValidationError(
+                    (
+                        "{'Fn::GetAtt': 'MyCodePipeline.Version'} "
+                        "is not of type 'integer'"
+                    ),
+                    path=deque(["Fn::GetAtt"]),
+                    schema_path=deque(["type"]),
+                    validator="fn_getatt",
+                )
+            ],
         ),
         (
             "Valid GetAtt with one good response type",
@@ -244,4 +266,9 @@ def test_validate(
     rule.child_rules = child_rules
     validator = CfnTemplateValidator({}, context=context, cfn=cfn)
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
+
+    for err in errs:
+        print(err.validator)
+        print(err.path)
+        print(err.schema_path)
     assert errs == expected, f"Test {name!r} got {errs!r}"
