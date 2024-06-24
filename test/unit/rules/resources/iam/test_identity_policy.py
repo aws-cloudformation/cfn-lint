@@ -102,6 +102,7 @@ class TestIdentityPolicies(TestCase):
                                 "arn:${AWS::Partition}:iam::123456789012:role/object-role"
                             ]
                         },
+                        "arn:aws:medialive:*",
                     ],
                 }
             ],
