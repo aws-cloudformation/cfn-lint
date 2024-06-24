@@ -1,3 +1,16 @@
+### v1.3.4
+## What's Changed
+* Clean up errors in the schemas by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3375
+* Relax [E3041](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3041) to support DNS root records by @jakob-keller in https://github.com/aws-cloudformation/cfn-lint/pull/3377
+* Allow `AllowedPattern` with AWS type parameters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3388
+* Default fn validator context will be not strict type checking by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3386
+* Update IAM resource ARN patterns by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3389
+* Update resolution validation to only return an error if there are no valid values by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3390
+* Better resolution of mappings in transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3392
+
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.3...v1.3.4
+
 ### v1.3.3
 ## What's Changed
 * Remove rule setting in `PropertyNames` rule by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3365
