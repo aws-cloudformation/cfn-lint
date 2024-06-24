@@ -74,6 +74,16 @@ def context(cfn):
             [],
         ),
         (
+            "AWS type allowed allowed pattern",
+            {
+                "AWS": {
+                    "Type": "AWS::EC2::Image::Id",
+                    "AllowedPattern": "^ami-[0-9a-f]+$",
+                }
+            },
+            [],
+        ),
+        (
             "Number type with AllowedPattern",
             {
                 "MyNumber": {
