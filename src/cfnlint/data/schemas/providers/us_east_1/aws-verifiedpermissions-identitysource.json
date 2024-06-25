@@ -63,6 +63,19 @@
      ],
      "title": "CognitoUserPoolConfiguration",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OpenIdConnectConfiguration": {
+       "$ref": "#/definitions/OpenIdConnectConfiguration"
+      }
+     },
+     "required": [
+      "OpenIdConnectConfiguration"
+     ],
+     "title": "OpenIdConnectConfiguration",
+     "type": "object"
     }
    ]
   },
@@ -98,6 +111,128 @@
     }
    },
    "type": "object"
+  },
+  "OpenIdConnectAccessTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Audiences": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 255,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PrincipalIdClaim": {
+     "default": "sub",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIdConnectConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EntityIdPrefix": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "GroupConfiguration": {
+     "$ref": "#/definitions/OpenIdConnectGroupConfiguration"
+    },
+    "Issuer": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://.*$",
+     "type": "string"
+    },
+    "TokenSelection": {
+     "$ref": "#/definitions/OpenIdConnectTokenSelection"
+    }
+   },
+   "required": [
+    "Issuer",
+    "TokenSelection"
+   ],
+   "type": "object"
+  },
+  "OpenIdConnectGroupConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupClaim": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "GroupEntityType": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^([_a-zA-Z][_a-zA-Z0-9]*::)*[_a-zA-Z][_a-zA-Z0-9]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupClaim",
+    "GroupEntityType"
+   ],
+   "type": "object"
+  },
+  "OpenIdConnectIdentityTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 0,
+     "type": "array"
+    },
+    "PrincipalIdClaim": {
+     "default": "sub",
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIdConnectTokenSelection": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AccessTokenOnly": {
+       "$ref": "#/definitions/OpenIdConnectAccessTokenConfiguration"
+      }
+     },
+     "required": [
+      "AccessTokenOnly"
+     ],
+     "title": "AccessTokenOnly",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IdentityTokenOnly": {
+       "$ref": "#/definitions/OpenIdConnectIdentityTokenConfiguration"
+      }
+     },
+     "required": [
+      "IdentityTokenOnly"
+     ],
+     "title": "IdentityTokenOnly",
+     "type": "object"
+    }
+   ]
   },
   "OpenIdIssuer": {
    "enum": [
