@@ -40,6 +40,7 @@ class Join(BaseFn):
                 },
                 {
                     "functions": [
+                        "Fn::Cidr",
                         "Fn::FindInMap",
                         "Fn::GetAtt",
                         "Fn::If",
