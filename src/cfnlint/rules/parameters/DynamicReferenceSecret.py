@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.jsonschema import CfnLintKeyword
 
@@ -44,6 +45,9 @@ class DynamicReferenceSecret(CfnLintKeyword):
         self.parent_rules = ["E1020"]
 
     def validate(self, validator: Validator, _, instance: Any, schema: Any):
+        functions = set(FUNCTIONS) - set(["Fn::If"])
+        if any(p in functions for p in validator.context.path.path):
+            return
         value = instance.get("Ref")
 
         if not validator.is_type(value, "string"):

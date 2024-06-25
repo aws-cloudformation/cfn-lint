@@ -3,9 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
+
 import pytest
 
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Path, create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.parameters.DynamicReferenceSecret import DynamicReferenceSecret
 from cfnlint.template import Template
@@ -39,21 +41,24 @@ def context(cfn):
 
 
 @pytest.mark.parametrize(
-    "name,instance,expected",
+    "name,instance,path,expected",
     [
         (
             "REFing a parameter without a string",
             {"Ref": []},
+            deque([]),
             [],
         ),
         (
             "REFing a resource=",
             {"Ref": "MyResource"},
+            deque([]),
             [],
         ),
         (
             "REFing a parameter",
             {"Ref": "MyParameter"},
+            deque([]),
             [
                 ValidationError(
                     "Use dynamic references over parameters for secrets",
@@ -61,9 +66,15 @@ def context(cfn):
                 )
             ],
         ),
+        (
+            "REFing a parameter in a sub",
+            {"Ref": "MyParameter"},
+            deque(["Fn::Sub"]),
+            [],
+        ),
     ],
 )
-def test_validate(name, instance, expected, rule, context, cfn):
-    validator = CfnTemplateValidator(context=context, cfn=cfn)
+def test_validate(name, instance, path, expected, rule, context, cfn):
+    validator = CfnTemplateValidator(context=context.evolve(path=Path(path)), cfn=cfn)
     errs = list(rule.validate(validator, {}, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"
