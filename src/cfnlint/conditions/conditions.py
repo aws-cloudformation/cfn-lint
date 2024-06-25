@@ -19,7 +19,6 @@ from cfnlint.conditions._condition import ConditionNamed
 from cfnlint.conditions._equals import Equal, EqualParameter
 from cfnlint.conditions._errors import UnknownSatisfisfaction
 from cfnlint.conditions._utils import get_hash
-from cfnlint.helpers import PSEUDOPARAMS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -371,20 +370,20 @@ class Conditions:
 
         cnf = self._cnf.copy()
         at_least_one_param_found = False
+
         for condition_name, opt in conditions.items():
             for c_equals in self._conditions[condition_name].equals:
                 found_params = {}
                 for param, value in parameter_values.items():
-                    if param in PSEUDOPARAMS:
-                        continue
-
                     ref_hash = get_hash({"Ref": param})
+
                     for c_equal_param in c_equals.parameters:
                         if isinstance(c_equal_param, EqualParameter):
                             if c_equal_param.satisfiable is False:
                                 raise UnknownSatisfisfaction(
                                     f"Can't resolve satisfaction for {condition_name!r}"
                                 )
+
                     if ref_hash in c_equals.parameters:
                         found_params = {ref_hash: value}
 
