@@ -180,6 +180,8 @@ def create(
                         except UnknownSatisfisfaction as err:
                             LOGGER.debug(err)
                             return
+                    else:
+                        yield None, self, r_errs  # type: ignore
                 return
 
             # The return type is a Protocol and we are returning an instance
