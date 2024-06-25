@@ -148,6 +148,20 @@ def context(cfn):
             ],
         ),
         (
+            "Invalid Fn::FindInMap with a bad map key",
+            {"Fn::FindInMap": ["A", "C", "B"]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [ValidationError("Foo")],
+            [
+                ValidationError(
+                    "'C' is not one of ['B']",
+                    path=deque(["Fn::FindInMap", 1]),
+                    schema_path=deque([]),
+                ),
+            ],
+        ),
+        (
             "Valid Fn::FindInMap with a Ref to AWS::NoValue",
             {
                 "Fn::FindInMap": [
