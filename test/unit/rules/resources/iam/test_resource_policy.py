@@ -180,3 +180,47 @@ class TestResourcePolicy(TestCase):
             errs[2].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
         )
         self.assertListEqual(list(errs[2].path), ["Version"])
+
+    def test_principal_wildcard(self):
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(functions=FUNCTIONS)
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": {
+                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                    },
+                    "Principal": "*",
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": {
+                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                    },
+                    "Principal": {
+                        "AWS": "*",
+                    },
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": {
+                        "Fn::Sub": "arn:${AWS::Partition}:iam::123456789012:role/object-role"
+                    },
+                    "Principal": {"Fn::Sub": "*"},
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])

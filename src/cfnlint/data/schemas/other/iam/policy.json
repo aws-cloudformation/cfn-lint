@@ -151,31 +151,33 @@
    "type": "object"
   },
   "Principal": {
-   "anyOf": [
-    {
-     "$ref": "#/definitions/Wildcard"
+   "if": {
+    "type": "string"
+   },
+   "properties": {
+    "AWS": {
+     "scalarOrArray": {
+      "$ref": "#/definitions/AwsPrincipalArn"
+     }
     },
-    {
-     "properties": {
-      "AWS": {
-       "scalarOrArray": {
-        "$ref": "#/definitions/AwsPrincipalArn"
-       }
-      },
-      "CanonicalUser": {
-       "$ref": "#/definitions/StringOrStringArray"
-      },
-      "Federated": {
-       "$ref": "#/definitions/StringOrStringArray"
-      },
-      "Service": {
-       "scalarOrArray": {
-        "type": "string"
-       }
-      }
-     },
-     "type": "object"
+    "CanonicalUser": {
+     "$ref": "#/definitions/StringOrStringArray"
+    },
+    "Federated": {
+     "$ref": "#/definitions/StringOrStringArray"
+    },
+    "Service": {
+     "scalarOrArray": {
+      "type": "string"
+     }
     }
+   },
+   "then": {
+    "$ref": "#/definitions/Wildcard"
+   },
+   "type": [
+    "object",
+    "string"
    ]
   },
   "Resource": {

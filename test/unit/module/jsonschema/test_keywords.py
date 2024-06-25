@@ -12,17 +12,6 @@ from cfnlint.jsonschema.validators import CfnTemplateValidator
 from cfnlint.rules import CloudFormationLintRule
 
 
-class Warning(CloudFormationLintRule):
-    id = "W1111"
-
-    def validate(self, validator, s, instance, schema):
-        if s:
-            yield ValidationError(
-                "Warning",
-                rule=self,
-            )
-
-
 class Error(CloudFormationLintRule):
     id = "E1111"
 
@@ -40,7 +29,6 @@ def validator():
     validator = CfnTemplateValidator(schema={})
     validator = validator.extend(
         validators={
-            "warning": Warning().validate,
             "error": Error().validate,
         }
     )
@@ -54,12 +42,6 @@ def validator():
             "Valid anyOf",
             "foo",
             [{"const": "foo"}, {"const": "bar"}],
-            [],
-        ),
-        (
-            "Valid anyOf with warning rule",
-            "foo",
-            [{"const": "foo"}, {"warning": True}],
             [],
         ),
         (
