@@ -36,18 +36,18 @@ class FunctionFilter:
         init=False,
         default_factory=lambda: [
             "dependencies",
-            "if",
-            "then",
-            "else",
-            "required",
-            "requiredXor",
-            "requiredAtLeastOne",
             "dependentExcluded",
             "dependentRequired",
-            "minItems",
-            "minProperties",
+            "else",
+            "if",
             "maxItems",
             "maxProperties",
+            "minItems",
+            "minProperties",
+            "required",
+            "requiredAtLeastOne",
+            "requiredXor",
+            "then",
             "uniqueItems",
         ],
     )
@@ -115,6 +115,12 @@ class FunctionFilter:
                     yield (instance, {"dynamicReference": schema})
                     return
                 return
+
+        # if there are no functions then we don't need to worry
+        # about ref AWS::NoValue or If conditions
+        if not validator.context.functions:
+            yield instance, schema
+            return
 
         # dependencies, required, minProperties, maxProperties
         # need to have filtered properties to validate

@@ -62,24 +62,62 @@ class FindInMap(BaseFn):
                 scalar_schema,
                 scalar_schema,
                 {
+                    "functions": [],
                     "schema": {
+                        "findinmap_parameters": True,
                         "type": ["object"],
                         "properties": {
                             "DefaultValue": {
-                                "type": ("array",) + singular_types,
+                                "default_value": True,
                             }
                         },
                         "additionalProperties": False,
                         "required": ["DefaultValue"],
-                    }
+                    },
                 },
             ]
 
         return schema
 
+    def _default_value(
+        self, validator: Validator, s: Any, instance: Any, schema: Any
+    ) -> ValidationResult:
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                functions=["Ref"],
+            ),
+        )
+        yield from validator.descend(
+            instance,
+            {
+                "type": ("array",) + singular_types,
+            },
+        )
+
     def fn_findinmap(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
+
+        if validator.context.transforms.has_language_extensions_transform():
+            # we have to use a special validator for this
+            # as we don't want DefaultValue: !Ref AWS::NoValue
+            # is valid
+            mapping_validator = validator.extend(
+                validators={
+                    "default_value": self._default_value,
+                },
+            )(validator.schema)
+            validator = mapping_validator.evolve(
+                context=validator.context.evolve(
+                    resources={},
+                ),
+                cfn=validator.cfn,
+                function_filter=validator.function_filter,
+                resolver=validator.resolver,
+            )
+            yield from super().validate(validator, s, instance, schema)
+            return
+
         validator = validator.evolve(
             context=validator.context.evolve(
                 resources={},
