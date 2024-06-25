@@ -46,7 +46,7 @@ def context(cfn):
             {"Fn::FindInMap": ["A", "B", "C"]},
             {"type": "string"},
             {},
-            [],
+            None,
             [],
         ),
         (
@@ -54,7 +54,7 @@ def context(cfn):
             {"Fn::FindInMap": ["foo", "bar", "key", "key2"]},
             {"type": "string"},
             {},
-            [],
+            None,
             [
                 ValidationError(
                     "['foo', 'bar', 'key', 'key2'] is too long (3)",
@@ -69,7 +69,7 @@ def context(cfn):
             {"Fn::FindInMap": {"foo": "bar"}},
             {"type": "string"},
             {},
-            [],
+            None,
             [
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array'",
@@ -84,7 +84,7 @@ def context(cfn):
             {"Fn::FindInMap": [{"Fn::GetAtt": "MyResource.Arn"}, "foo", "bar"]},
             {"type": "string"},
             {},
-            [],
+            None,
             [
                 ValidationError(
                     "{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'string'",
@@ -99,7 +99,7 @@ def context(cfn):
             {"Fn::FindInMap": ["A", "B", "C", {"DefaultValue": "D"}]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
-            [],
+            None,
             [],
         ),
         (
@@ -107,7 +107,7 @@ def context(cfn):
             {"Fn::FindInMap": ["A", "B", "C", []]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
-            [],
+            None,
             [
                 ValidationError(
                     "[] is not of type 'object'",
@@ -122,7 +122,7 @@ def context(cfn):
             {"Fn::FindInMap": ["A", "B", "C", {}]},
             {"type": "string"},
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
-            [],
+            None,
             [
                 ValidationError(
                     "'DefaultValue' is a required property",
@@ -147,6 +147,21 @@ def context(cfn):
                 ),
             ],
         ),
+        (
+            "Valid Fn::FindInMap with a Ref to AWS::NoValue",
+            {
+                "Fn::FindInMap": [
+                    "A",
+                    "B",
+                    "C",
+                    {"DefaultValue": {"Ref": "AWS::NoValue"}},
+                ]
+            },
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+            [],
+        ),
     ],
 )
 def test_validate(
@@ -162,10 +177,14 @@ def test_validate(
 ):
     context = context.evolve(**context_evolve)
     ref_mock = MagicMock()
-    ref_mock.return_value = iter(ref_mock_values)
+    ref_mock.return_value = iter(ref_mock_values or [])
     validator = CfnTemplateValidator({}).extend(validators={"ref": ref_mock})(
         context=context, cfn=cfn
     )
     errs = list(rule.fn_findinmap(validator, schema, instance, {}))
-    assert ref_mock.call_count == len(ref_mock_values)
+
+    if ref_mock_values is None:
+        ref_mock.assert_not_called()
+    else:
+        assert ref_mock.call_count == len(ref_mock_values) or 1
     assert errs == expected, f"Test {name!r} got {errs!r}"

@@ -20,7 +20,7 @@ def filter():
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,path,expected",
+    "name,instance,schema,path,functions,expected",
     [
         (
             "Don't validate dynamic references inside of function",
@@ -28,21 +28,60 @@ def filter():
             {"enum": "Foo"},
             deque(["Foo", "Test", "Fn::Sub"]),
             [],
+            [],
         ),
         (
             "Validate dynamic references",
             "{{resolve:ssm:secret}}",
             {"enum": "Foo"},
             deque(["Foo", "Test"]),
+            [],
             [
                 ("{{resolve:ssm:secret}}", {"dynamicReference": {"enum": "Foo"}}),
             ],
         ),
+        (
+            "Lack of functions returns the schema and instance",
+            {
+                "Foo": {"Ref": "AWS::NoValue"},
+            },
+            {"required": ["Foo"]},
+            deque([]),
+            [],
+            [
+                (
+                    {
+                        "Foo": {"Ref": "AWS::NoValue"},
+                    },
+                    {"required": ["Foo"]},
+                ),
+            ],
+        ),
+        (
+            "Filtered schemas",
+            {
+                "Foo": {"Ref": "AWS::NoValue"},
+            },
+            {"required": ["Foo"]},
+            deque([]),
+            ["Ref", "Fn::If"],
+            [
+                (
+                    {},
+                    {"required": ["Foo"]},
+                ),
+                ({"Foo": {"Ref": "AWS::NoValue"}}, {"cfnLint": [""]}),
+            ],
+        ),
     ],
 )
-def test_filter(name, instance, schema, path, expected, filter):
+def test_filter(name, instance, schema, path, functions, expected, filter):
     validator = CfnTemplateValidator(
-        context=Context(regions=["us-east-1"], path=Path(path)),
+        context=Context(
+            regions=["us-east-1"],
+            path=Path(path),
+            functions=functions,
+        ),
         schema=schema,
     )
     results = list(filter.filter(validator, instance, schema))

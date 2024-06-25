@@ -342,22 +342,6 @@ def rule():
             },
             [
                 ValidationError(
-                    "['cname1.example.com', 'foo√bar'] is too long (1)",
-                    rule=RecordSet(),
-                    path=deque(["ResourceRecords"]),
-                    validator="maxItems",
-                    schema_path=deque(
-                        [
-                            "allOf",
-                            3,
-                            "then",
-                            "properties",
-                            "ResourceRecords",
-                            "maxItems",
-                        ]
-                    ),
-                ),
-                ValidationError(
                     "'foo√bar' is not valid under any of the given schemas",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords", 1]),
@@ -395,6 +379,22 @@ def rule():
                             "ResourceRecords",
                             "items",
                             "anyOf",
+                        ]
+                    ),
+                ),
+                ValidationError(
+                    "['cname1.example.com', 'foo√bar'] is too long (1)",
+                    rule=RecordSet(),
+                    path=deque(["ResourceRecords"]),
+                    validator="maxItems",
+                    schema_path=deque(
+                        [
+                            "allOf",
+                            3,
+                            "then",
+                            "properties",
+                            "ResourceRecords",
+                            "maxItems",
                         ]
                     ),
                 ),

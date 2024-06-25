@@ -57,8 +57,8 @@ def rule():
                     "At least one essential container is required",
                     rule=TaskDefinitionEssentialContainer(),
                     path=deque([]),
-                    validator="minItems",
-                    schema_path=deque(["minItems"]),
+                    validator="contains",
+                    schema_path=deque(["contains"]),
                 )
             ],
         ),
