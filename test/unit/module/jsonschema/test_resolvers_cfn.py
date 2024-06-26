@@ -222,6 +222,14 @@ def test_invalid_functions(name, instance, response):
             [("default", deque([4, "DefaultValue"]), None)],
         ),
         (
+            "Valid FindInMap with a default value",
+            {"Fn::FindInMap": ["foo", "first", "second", {"DefaultValue": "default"}]},
+            [
+                ("default", deque([4, "DefaultValue"]), None),
+                ("bar", deque([2]), None),
+            ],
+        ),
+        (
             "Valid FindInMap with a bad mapping",
             {"Fn::FindInMap": ["bar", "first", "second"]},
             [
@@ -239,6 +247,18 @@ def test_invalid_functions(name, instance, response):
             "Valid FindInMap with a bad mapping and default",
             {"Fn::FindInMap": ["bar", "first", "second", {"DefaultValue": "default"}]},
             [("default", deque([4, "DefaultValue"]), None)],
+        ),
+        (
+            "Valid FindInMap with a bad mapping and aws no value",
+            {
+                "Fn::FindInMap": [
+                    "bar",
+                    "first",
+                    "second",
+                    {"DefaultValue": {"Ref": "AWS::NoValue"}},
+                ]
+            },
+            [],
         ),
         (
             "Valid FindInMap with a bad top key",
