@@ -35,6 +35,10 @@ def rule():
             [],
         ),
         (
+            {"MasterUserPassword": "Test"},
+            [],
+        ),
+        (
             {
                 "Engine": "aurora",
                 "DeletionProtection": True,
