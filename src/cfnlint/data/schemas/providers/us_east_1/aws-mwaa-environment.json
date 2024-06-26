@@ -357,7 +357,11 @@
  ],
  "properties": {
   "AirflowConfigurationOptions": {
-   "type": "object"
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
   },
   "AirflowVersion": {
    "$ref": "#/definitions/AirflowVersion"
@@ -432,7 +436,23 @@
    "$ref": "#/definitions/RelativePath"
   },
   "Tags": {
-   "type": "object"
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "type": "string"
+     },
+     "Value": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "Value",
+     "Key"
+    ],
+    "type": "object"
+   },
+   "type": "array"
   },
   "WebserverAccessMode": {
    "$ref": "#/definitions/WebserverAccessMode"

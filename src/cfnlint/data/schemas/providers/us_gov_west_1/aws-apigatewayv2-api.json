@@ -77,7 +77,11 @@
    "type": "string"
   },
   "Body": {
-   "type": "object"
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
   },
   "BodyS3Location": {
    "$ref": "#/definitions/BodyS3Location"
@@ -116,6 +120,12 @@
    "type": "string"
   },
   "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
    "type": "object"
   },
   "Target": {

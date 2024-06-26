@@ -22,7 +22,7 @@ class RuleWithFunction(CloudFormationLintRule):
     shortdesc = "Test Rule"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
     def bar(validator, bar, instance, schema):
         pass
@@ -35,7 +35,7 @@ class RuleWithOutFunction(CloudFormationLintRule):
     shortdesc = "Test Rule"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
 
 class TestBaseJsonSchema(BaseRuleTestCase):
