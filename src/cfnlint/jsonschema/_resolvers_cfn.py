@@ -85,6 +85,8 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
 
         top_key = map.keys.get(instance[1])
         if top_key is None:
+            if map.is_transform:
+                return
             if not default_value_found:
                 yield None, validator, ValidationError(
                     (
@@ -98,6 +100,8 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
 
         value = top_key.keys.get(instance[2])
         if value is None:
+            if top_key.is_transform:
+                return
             if not default_value_found:
                 yield value, validator, ValidationError(
                     (

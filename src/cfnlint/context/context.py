@@ -384,11 +384,15 @@ class _MappingSecondaryKey:
         init=False, default_factory=dict
     )
     instance: InitVar[Any]
+    is_transform: bool = field(init=False, default=False)
 
     def __post_init__(self, instance) -> None:
         if not isinstance(instance, dict):
             raise ValueError("Secondary keys must be a object")
         for k, v in instance.items():
+            if k == "Fn::Transform":
+                self.is_transform = True
+                continue
             if isinstance(v, (str, list, int, float)):
                 self.keys[k] = v
             else:
@@ -408,12 +412,16 @@ class Map:
 
     keys: dict[str, _MappingSecondaryKey] = field(init=False, default_factory=dict)
     resource: InitVar[Any]
+    is_transform: bool = field(init=False, default=False)
 
     def __post_init__(self, mapping) -> None:
         if not isinstance(mapping, dict):
             raise ValueError("Mapping must be a object")
         for k, v in mapping.items():
-            self.keys[k] = _MappingSecondaryKey(v)
+            if k == "Fn::Transform":
+                self.is_transform = True
+            else:
+                self.keys[k] = _MappingSecondaryKey(v)
 
     def find_in_map(self, top_key: str, secondary_key: str) -> Iterator[Any]:
         if top_key not in self.keys:
