@@ -78,6 +78,14 @@
                 {
                     "$comment": "The following subset of draft-07 property references is supported for resource definitions. Nested properties are disallowed and should be specified as a $ref to a definitions block.",
                     "type": ["object", "boolean"],
+                    "not": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "type": {
+                                "const": "object"
+                            }
+                        }
+                    },
                     "properties": {
                         "insertionOrder": {
                             "description": "When set to true, this flag indicates that the order of insertion of the array will be honored, and that changing the order of the array would indicate a diff",
