@@ -240,7 +240,10 @@ def test_invalid_functions(name, instance, response):
                     None,
                     deque([]),
                     ValidationError(
-                        ("'bar' is not one of ['foo']"),
+                        (
+                            "'bar' is not one of ['foo', "
+                            "'transformFirstKey', 'transformSecondKey']"
+                        ),
                         path=deque(["Fn::FindInMap", 0]),
                     ),
                 )
@@ -305,6 +308,16 @@ def test_invalid_functions(name, instance, response):
             [("default", deque([4, "DefaultValue"]), None)],
         ),
         (
+            "Valid FindInMap with a transform on first key",
+            {"Fn::FindInMap": ["transformFirstKey", "first", "third"]},
+            [],
+        ),
+        (
+            "Valid FindInMap with a transform on second key",
+            {"Fn::FindInMap": ["transformSecondKey", "first", "third"]},
+            [],
+        ),
+        (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
             [("foo-bar", deque([]), None)],
@@ -319,6 +332,8 @@ def test_invalid_functions(name, instance, response):
 def test_valid_functions(name, instance, response):
     context = Context()
     context.mappings["foo"] = Map({"first": {"second": "bar"}})
+    context.mappings["transformFirstKey"] = Map({"Fn::Transform": {"second": "bar"}})
+    context.mappings["transformSecondKey"] = Map({"first": {"Fn::Transform": "bar"}})
 
     _resolve(name, instance, response, context=context)
 
