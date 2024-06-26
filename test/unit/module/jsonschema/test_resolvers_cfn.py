@@ -8,6 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context.context import Context, Map
+from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
 
@@ -19,6 +20,10 @@ def _resolve(name, instance, expected_results, **kwargs):
     for i, (instance, v, errors) in enumerate(resolutions):
         assert instance == expected_results[i][0]
         assert v.context.path.value_path == expected_results[i][1]
+        if errors:
+            print(errors.validator)
+            print(errors.path)
+            print(errors.schema_path)
         assert errors == expected_results[i][2]
 
 
@@ -214,6 +219,66 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
+            [("default", deque([4, "DefaultValue"]), None)],
+        ),
+        (
+            "Valid FindInMap with a bad mapping",
+            {"Fn::FindInMap": ["bar", "first", "second"]},
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        ("'bar' is not one of ['foo']"),
+                        path=deque(["Fn::FindInMap", 0]),
+                    ),
+                )
+            ],
+        ),
+        (
+            "Valid FindInMap with a bad mapping and default",
+            {"Fn::FindInMap": ["bar", "first", "second", {"DefaultValue": "default"}]},
+            [("default", deque([4, "DefaultValue"]), None)],
+        ),
+        (
+            "Valid FindInMap with a bad top key",
+            {"Fn::FindInMap": ["foo", "second", "first"]},
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        ("'second' is not one of ['first'] for " "mapping 'foo'"),
+                        path=deque(["Fn::FindInMap", 1]),
+                    ),
+                )
+            ],
+        ),
+        (
+            "Valid FindInMap with a bad top key and default",
+            {"Fn::FindInMap": ["foo", "second", "first", {"DefaultValue": "default"}]},
+            [("default", deque([4, "DefaultValue"]), None)],
+        ),
+        (
+            "Valid FindInMap with a bad third key",
+            {"Fn::FindInMap": ["foo", "first", "third"]},
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        (
+                            "'third' is not one of ['second'] for "
+                            "mapping 'foo' and key 'first'"
+                        ),
+                        path=deque(["Fn::FindInMap", 2]),
+                    ),
+                )
+            ],
+        ),
+        (
+            "Valid FindInMap with a bad second key and default",
+            {"Fn::FindInMap": ["foo", "first", "third", {"DefaultValue": "default"}]},
             [("default", deque([4, "DefaultValue"]), None)],
         ),
         (

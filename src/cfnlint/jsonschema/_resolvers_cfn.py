@@ -14,7 +14,6 @@ import regex as re
 from cfnlint.helpers import AVAILABILITY_ZONES, REGEX_SUB_PARAMETERS
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import ResolutionResult
-from cfnlint.jsonschema._utils import equal
 
 
 def unresolvable(validator: Validator, instance: Any) -> ResolutionResult:
@@ -55,94 +54,50 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     ), None
                     default_value = value
 
-    for map_name, map_v, _ in validator.resolve_value(instance[0]):
-        if not validator.is_type(map_name, "string"):
-            continue
-        for top_level_key, top_v, _ in validator.resolve_value(instance[1]):
-            if validator.is_type(top_level_key, "integer"):
-                top_level_key = str(top_level_key)
-            if not validator.is_type(top_level_key, "string"):
-                continue
-            for second_level_key, second_v, err in validator.resolve_value(instance[2]):
-                if validator.is_type(second_level_key, "integer"):
-                    second_level_key = str(second_level_key)
-                if not validator.is_type(second_level_key, "string"):
-                    continue
-                try:
-                    mappings = list(validator.context.mappings.keys())
-                    if not default_value and all(
-                        not (equal(map_name, each)) for each in mappings
-                    ):
-                        yield None, map_v.evolve(
-                            context=map_v.context.evolve(
-                                path=map_v.context.path.evolve(value_path=deque([0])),
-                            ),
-                        ), ValidationError(
-                            f"{map_name!r} is not one of {mappings!r}", path=[0]
-                        )
-                        continue
+    if (
+        validator.is_type(instance[0], "string")
+        and (
+            validator.is_type(instance[1], "string")
+            or validator.is_type(instance[1], "integer")
+        )
+        and validator.is_type(instance[2], "string")
+    ):
+        map = validator.context.mappings.get(instance[0])
+        if not map:
+            if not default_value:
+                yield None, validator, ValidationError(
+                    (
+                        f"{instance[0]!r} is not one of "
+                        f"{list(validator.context.mappings.keys())!r}"
+                    ),
+                    path=deque([0]),
+                )
+            return
 
-                    top_level_keys = list(
-                        validator.context.mappings[map_name].keys.keys()
-                    )
-                    if not default_value and all(
-                        not (equal(top_level_key, each)) for each in top_level_keys
-                    ):
-                        yield None, top_v.evolve(
-                            context=top_v.context.evolve(
-                                path=top_v.context.path.evolve(value_path=deque([1])),
-                            ),
-                        ), ValidationError(
-                            f"{top_level_key!r} is not one of {top_level_keys!r}",
-                            path=[1],
-                        )
-                        continue
+        top_key = map.keys.get(instance[1])
+        if not top_key:
+            if not default_value:
+                yield None, validator, ValidationError(
+                    (
+                        f"{instance[1]!r} is not one of "
+                        f"{list(map.keys.keys())!r} for "
+                        f"mapping {instance[0]!r}"
+                    ),
+                    path=deque([1]),
+                )
+            return
 
-                    second_level_keys = list(
-                        validator.context.mappings[map_name]
-                        .keys[top_level_key]
-                        .keys.keys()
-                    )
-                    if not default_value and all(
-                        not (equal(second_level_key, each))
-                        for each in second_level_keys
-                    ):
-                        yield None, second_v.evolve(
-                            context=second_v.context.evolve(
-                                path=second_v.context.path.evolve(
-                                    value_path=deque([2])
-                                ),
-                            ),
-                        ), ValidationError(
-                            f"{second_level_key!r} is not one of {second_level_keys!r}",
-                            path=[2],
-                        )
-                        continue
-
-                    for value in validator.context.mappings[map_name].find_in_map(
-                        top_level_key,
-                        second_level_key,
-                    ):
-                        yield (
-                            value,
-                            validator.evolve(
-                                context=validator.context.evolve(
-                                    path=validator.context.path.evolve(
-                                        value_path=deque(
-                                            [
-                                                "Mappings",
-                                                map_name,
-                                                top_level_key,
-                                                second_level_key,
-                                            ]
-                                        )
-                                    )
-                                )
-                            ),
-                            None,
-                        )
-                except KeyError:
-                    pass
+        value = top_key.keys.get(instance[2])
+        if not value:
+            if not default_value:
+                yield default_value, validator, ValidationError(
+                    (
+                        f"{instance[2]!r} is not one of "
+                        f"{list(top_key.keys.keys())!r} for mapping "
+                        f"{instance[0]!r} and key {instance[1]!r}"
+                    ),
+                    path=deque([2]),
+                )
 
 
 def get_azs(validator: Validator, instance: Any) -> ResolutionResult:

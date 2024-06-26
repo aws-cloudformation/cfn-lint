@@ -26,6 +26,12 @@ def cfn():
     return Template(
         "",
         {
+            "Parameters": {
+                "MyParameter": {
+                    "Type": "String",
+                    "AllowedValues": ["A", "B", "C"],
+                }
+            },
             "Resources": {"MyResource": Resource({"Type": "AWS::SSM::Parameter"})},
             "Mappings": {"A": {"B": {"C": "Value"}}},
         },
@@ -155,11 +161,19 @@ def context(cfn):
             [ValidationError("Foo")],
             [
                 ValidationError(
-                    "'C' is not one of ['B']",
+                    "'C' is not one of ['B'] for mapping 'A'",
                     path=deque(["Fn::FindInMap", 1]),
                     schema_path=deque([]),
                 ),
             ],
+        ),
+        (
+            "Valid Fn::FindInMap as the Ref could work",
+            {"Fn::FindInMap": ["A", {"Ref": "MyParameter"}, "C"]},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+            [],
         ),
         (
             "Valid Fn::FindInMap with a Ref to AWS::NoValue",
@@ -201,4 +215,5 @@ def test_validate(
         ref_mock.assert_not_called()
     else:
         assert ref_mock.call_count == len(ref_mock_values) or 1
+
     assert errs == expected, f"Test {name!r} got {errs!r}"
