@@ -53,6 +53,13 @@ class Transform:
                 return matches
             cfn.template = template
 
+        if len(transform_type) > 1:
+            # SAM will erase the entire Transform section
+            # this sets it back with all transforms except SAM
+            cfn.template["Transform"] = [
+                t for t in transform_type if t != "AWS::Serverless-2016-10-31"
+            ]
+
         LOGGER.info("Transformed template: \n%s", format_json_string(cfn.template))
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
