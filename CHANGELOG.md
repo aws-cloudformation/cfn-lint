@@ -1,3 +1,11 @@
+### v1.3.6
+## What's Changed
+* Remove falsy issues with FindInMap resolution by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3410
+* Remove resolution errors when default value Ref AWS::NoValue and bad mappings in FindInMap by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3410
+* Patch AWS::ImageBuilder::ContainerRecipe.InstanceConfiguration by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3413
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.5...v1.3.6
+
 ### v1.3.5
 ## What's Changed
 * Allow Ref AWS::NoValue in FindInMap parameters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3399
