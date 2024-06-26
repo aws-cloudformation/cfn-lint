@@ -1,3 +1,12 @@
+### v1.3.7
+## What's Changed
+* Consider output conditions in [E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3414
+* Bring back `Transform` after SAM removes them by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3417
+* Handle `Fn::Transform`s inside Mappings by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3419
+* Add logic to update [E3682](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3682) to require `Engine` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3419
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.6...v1.3.7
+
 ### v1.3.6
 ## What's Changed
 * Remove falsy issues with FindInMap resolution by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3410
