@@ -554,7 +554,6 @@ cached: List[str] = [
     "aws-route53-dnssec.json",
     "aws-redshift-endpointauthorization.json",
     "aws-ec2-transitgatewayroutetable.json",
-    "aws-controltower-enabledcontrol.json",
     "aws-route53-recordset.json",
     "aws-eks-accessentry.json",
     "aws-elasticache-securitygroup.json",
