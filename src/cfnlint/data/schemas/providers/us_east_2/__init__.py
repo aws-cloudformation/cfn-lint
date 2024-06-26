@@ -2179,6 +2179,7 @@ cached: List[str] = [
     "aws-mediatailor-playbackconfiguration.json",
     "aws-pcaconnectorad-serviceprincipalname.json",
     "aws-datazone-projectmembership.json",
+    "aws-elasticbeanstalk-environment.json",
     "aws-proton-servicetemplate.json",
     "aws-opensearchserverless-lifecyclepolicy.json",
     "aws-cognito-userpoolclient.json",
