@@ -39,7 +39,7 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
     if len(instance) not in [3, 4]:
         return
 
-    default_value = None
+    default_value_found = None
     if len(instance) == 4:
         options = instance[3]
         if validator.is_type(options, "object"):
@@ -52,7 +52,16 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                             )
                         ),
                     ), None
-                    default_value = value
+                default_value_found = True
+
+    if not default_value_found and not validator.context.mappings:
+        yield None, validator, ValidationError(
+            (
+                f"{instance[0]!r} is not one of "
+                f"{list(validator.context.mappings.keys())!r}"
+            ),
+            path=deque([0]),
+        )
 
     if (
         validator.is_type(instance[0], "string")
@@ -63,8 +72,8 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         and validator.is_type(instance[2], "string")
     ):
         map = validator.context.mappings.get(instance[0])
-        if not map:
-            if not default_value:
+        if map is None:
+            if not default_value_found:
                 yield None, validator, ValidationError(
                     (
                         f"{instance[0]!r} is not one of "
@@ -75,8 +84,8 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             return
 
         top_key = map.keys.get(instance[1])
-        if not top_key:
-            if not default_value:
+        if top_key is None:
+            if not default_value_found:
                 yield None, validator, ValidationError(
                     (
                         f"{instance[1]!r} is not one of "
@@ -88,9 +97,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             return
 
         value = top_key.keys.get(instance[2])
-        if not value:
-            if not default_value:
-                yield default_value, validator, ValidationError(
+        if value is None:
+            if not default_value_found:
+                yield value, validator, ValidationError(
                     (
                         f"{instance[2]!r} is not one of "
                         f"{list(top_key.keys.keys())!r} for mapping "
