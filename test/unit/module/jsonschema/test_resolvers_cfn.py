@@ -182,7 +182,10 @@ def test_resolvers_ref(name, instance, response):
     ],
 )
 def test_invalid_functions(name, instance, response):
-    _resolve(name, instance, response)
+    context = Context()
+    context.mappings["foo"] = Map({"first": {"second": "bar"}})
+
+    _resolve(name, instance, response, context=context)
 
 
 @pytest.mark.parametrize(
@@ -318,3 +321,31 @@ def test_valid_functions(name, instance, response):
     context.mappings["foo"] = Map({"first": {"second": "bar"}})
 
     _resolve(name, instance, response, context=context)
+
+
+@pytest.mark.parametrize(
+    "name,instance,response",
+    [
+        (
+            "Invalid FindInMap with no mappings",
+            {"Fn::FindInMap": [{"Ref": "MyParameter"}, "B", "C"]},
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        ("{'Ref': 'MyParameter'} is not one of []"),
+                        path=deque(["Fn::FindInMap", 0]),
+                    ),
+                )
+            ],
+        ),
+        (
+            "Invalid FindInMap with no mappings and default value",
+            {"Fn::FindInMap": ["A", "B", "C", {"DefaultValue": "default"}]},
+            [("default", deque([4, "DefaultValue"]), None)],
+        ),
+    ],
+)
+def test_no_mapping(name, instance, response):
+    _resolve(name, instance, response)

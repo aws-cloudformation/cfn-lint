@@ -54,6 +54,15 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     ), None
                 default_value_found = True
 
+    if not default_value_found and not validator.context.mappings:
+        yield None, validator, ValidationError(
+            (
+                f"{instance[0]!r} is not one of "
+                f"{list(validator.context.mappings.keys())!r}"
+            ),
+            path=deque([0]),
+        )
+
     if (
         validator.is_type(instance[0], "string")
         and (
