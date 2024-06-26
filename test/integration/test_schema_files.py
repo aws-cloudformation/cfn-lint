@@ -34,6 +34,7 @@ class TestSchemaFiles(TestCase):
         "Metadata/AWS::CloudFormation::Interface",
         "Metadata/cfn-lint",
         "Outputs",
+        "Outputs/*",
         "Outputs/*/Condition",
         "Outputs/*/Export/Name",
         "Outputs/*/Value",

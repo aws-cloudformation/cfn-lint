@@ -23,14 +23,25 @@ class Value(CfnLintJsonSchema):
 
     def __init__(self):
         super().__init__(
-            keywords=["Outputs/*/Value"],
+            keywords=["Outputs/*"],
             all_matches=True,
         )
 
     def validate(self, validator: Validator, _: Any, instance: Any, schema: Any):
+        value = instance.get("Value")
+        if not value:
+            return
+
+        conditions = {}
+        condition = instance.get("Condition")
+        if condition:
+            conditions = {condition: True}
         validator = validator.evolve(
             context=validator.context.evolve(
                 functions=list(FUNCTIONS),
+                conditions=validator.context.conditions.evolve(
+                    conditions,
+                ),
             ),
             schema={
                 "type": ["array", "string"],
@@ -40,4 +51,6 @@ class Value(CfnLintJsonSchema):
             },
         )
 
-        yield from self._iter_errors(validator, instance)
+        for err in self._iter_errors(validator, value):
+            err.path.appendleft("Value")
+            yield err
