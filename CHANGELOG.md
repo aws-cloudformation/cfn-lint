@@ -1,3 +1,9 @@
+### v1.4.1
+## What's Changed
+* Fix JSON based tags for many of the Glue types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3434
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.4.0...v1.4.1
+
 ### v1.4.0
 ## What's Changed
 * Default `EngineMode` for [E3686](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3686) is `provisioned` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3425
