@@ -303,7 +303,10 @@ class RulesCollection:
     def run_check(self, check, filename, rule_id, *args):
         """Run a check"""
         try:
-            matches = list(check(*args))
+            matches = []
+            for match in check(*args):
+                if self.is_rule_enabled(match.rule):
+                    matches.append(match)
             return matches
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled(RuleError()):
