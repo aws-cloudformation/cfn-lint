@@ -1,3 +1,9 @@
+### v1.4.2
+## What's Changed
+* Fix JSON based tags for many types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3437
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.4.1...v1.4.2
+
 ### v1.4.1
 ## What's Changed
 * Fix JSON based tags for many of the Glue types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3434
