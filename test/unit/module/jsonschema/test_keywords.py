@@ -16,7 +16,6 @@ class Error(CloudFormationLintRule):
     id = "E1111"
 
     def validate(self, validator, s, instance, schema):
-        print(instance)
         if s:
             yield ValidationError(
                 "Error",
