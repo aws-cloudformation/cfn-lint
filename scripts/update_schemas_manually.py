@@ -631,7 +631,7 @@ patches.extend(
             resource_type="AWS::DocDB::DBCluster",
             patches=[
                 Patch(
-                    values={"enum": ["3.6.0", "4.0", "4.0.0"]},
+                    values={"enum": ["3.6.0", "4.0", "4.0.0", "5.0.0"]},
                     path="/properties/EngineVersion",
                 ),
                 Patch(
