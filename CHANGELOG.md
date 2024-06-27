@@ -1,3 +1,13 @@
+### v1.4.0
+## What's Changed
+* Default `EngineMode` for [E3686](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3686) is `provisioned` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3425
+* Update docdb engine version to have `5.0.0` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3428
+* In legacy RulesCollection validate the rule is enabled before returning result by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3429
+* Convert all json properties to support `string` and `object` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3423
+* Patch in better validation for `Tags` properties that just have `type` `object` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3423
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.3.7...v1.4.0
+
 ### v1.3.7
 ## What's Changed
 * Consider output conditions in [E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3414
