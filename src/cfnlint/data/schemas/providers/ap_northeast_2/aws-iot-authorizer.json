@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SigningDisabled",
+  "/properties/AuthorizerName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:CreateAuthorizer",
+    "iot:DescribeAuthorizer",
+    "iot:TagResource",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:UpdateAuthorizer",
+    "iot:DeleteAuthorizer",
+    "iot:DescribeAuthorizer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListAuthorizers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeAuthorizer",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:UpdateAuthorizer",
+    "iot:DescribeAuthorizer",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AuthorizerName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AuthorizerFunctionArn": {
+   "type": "string"
+  },
+  "AuthorizerName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\w=,@-]+",
+   "type": "string"
+  },
+  "EnableCachingForHttp": {
+   "type": "boolean"
+  },
+  "SigningDisabled": {
+   "type": "boolean"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TokenKeyName": {
+   "type": "string"
+  },
+  "TokenSigningPublicKeys": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9:_-]+": {
+     "maxLength": 5120,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AuthorizerFunctionArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::Authorizer"
+}

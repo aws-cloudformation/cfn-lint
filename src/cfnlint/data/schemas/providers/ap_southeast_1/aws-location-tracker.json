@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/TrackerName"
+ ],
+ "definitions": {
+  "PositionFiltering": {
+   "enum": [
+    "TimeBased",
+    "DistanceBased",
+    "AccuracyBased"
+   ],
+   "type": "string"
+  },
+  "PricingPlan": {
+   "enum": [
+    "RequestBasedUsage"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 50,
+   "patternProperties": {
+    "^[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 _=@:.+-/]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/PricingPlan",
+  "/properties/PricingPlanDataSource"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:CreateTracker",
+    "geo:DescribeTracker",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "kms:DescribeKey",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DeleteTracker",
+    "geo:DescribeTracker"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListTrackers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:DescribeTracker",
+    "kms:DescribeKey"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "geo:CreateTracker",
+    "geo:DescribeTracker",
+    "geo:TagResource",
+    "geo:UntagResource",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "geo:UpdateTracker"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrackerName"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "CreateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EventBridgeEnabled": {
+   "type": "boolean"
+  },
+  "KmsKeyEnableGeospatialQueries": {
+   "type": "boolean"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PositionFiltering": {
+   "$ref": "#/definitions/PositionFiltering"
+  },
+  "PricingPlan": {
+   "$ref": "#/definitions/PricingPlan"
+  },
+  "PricingPlanDataSource": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrackerArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "TrackerName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  },
+  "UpdateTime": {
+   "$ref": "#/definitions/iso8601UTC"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreateTime",
+  "/properties/Arn",
+  "/properties/TrackerArn",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "TrackerName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Location::Tracker"
+}
