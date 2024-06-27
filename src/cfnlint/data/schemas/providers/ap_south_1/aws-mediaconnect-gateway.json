@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/EgressCidrBlocks",
+  "/properties/Networks",
+  "/properties/Networks/*/Name",
+  "/properties/Networks/*/CidrBlock"
+ ],
+ "definitions": {
+  "GatewayNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrBlock": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "CidrBlock"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "mediaconnect:CreateGateway",
+    "mediaconnect:DescribeGateway"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:CreateServiceLinkedRole",
+    "mediaconnect:DescribeGateway",
+    "mediaconnect:DeleteGateway"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:ListGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeGateway"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayArn"
+ ],
+ "properties": {
+  "EgressCidrBlocks": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "GatewayArn": {
+   "type": "string"
+  },
+  "GatewayState": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "ERROR",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Networks": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/GatewayNetwork"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GatewayArn",
+  "/properties/GatewayState"
+ ],
+ "required": [
+  "Name",
+  "EgressCidrBlocks",
+  "Networks"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MediaConnect::Gateway"
+}
