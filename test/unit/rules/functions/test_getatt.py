@@ -267,8 +267,4 @@ def test_validate(
     validator = CfnTemplateValidator({}, context=context, cfn=cfn)
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
 
-    for err in errs:
-        print(err.validator)
-        print(err.path)
-        print(err.schema_path)
     assert errs == expected, f"Test {name!r} got {errs!r}"

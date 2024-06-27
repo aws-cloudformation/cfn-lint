@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint._typing import RuleMatches
+from cfnlint.helpers import is_function
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -22,6 +23,12 @@ class Used(CloudFormationLintRule):
         findinmap_mappings = []
 
         mappings = cfn.template.get("Mappings", {})
+        k, _ = is_function(mappings)
+        if k == "Fn::Transform":
+            self.logger.debug(
+                (f"Mapping Name has a transform. Disabling check {self.id!r}"),
+            )
+            return matches
 
         if mappings:
             # Get all "FindInMaps" that reference a Mapping
