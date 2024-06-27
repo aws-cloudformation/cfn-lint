@@ -234,10 +234,18 @@
    "additionalProperties": false,
    "properties": {
     "Limits": {
-     "type": "object"
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
     },
     "Requests": {
-     "type": "object"
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
     }
    },
    "type": "object"
@@ -437,7 +445,11 @@
      "type": "string"
     },
     "Options": {
-     "type": "object"
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
     },
     "SecretOptions": {
      "items": {
@@ -456,7 +468,11 @@
    "additionalProperties": false,
    "properties": {
     "Labels": {
-     "type": "object"
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
     }
    },
    "type": "object"
@@ -709,7 +725,11 @@
    "$ref": "#/definitions/NodeProperties"
   },
   "Parameters": {
-   "type": "object"
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
   },
   "PlatformCapabilities": {
    "items": {
@@ -728,7 +748,23 @@
    "type": "integer"
   },
   "Tags": {
-   "type": "object"
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "type": "string"
+     },
+     "Value": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "Value",
+     "Key"
+    ],
+    "type": "object"
+   },
+   "type": "array"
   },
   "Timeout": {
    "$ref": "#/definitions/Timeout"

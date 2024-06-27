@@ -22,7 +22,7 @@ class RuleWithFunction(CloudFormationLintRule):
     shortdesc = "Test Rule"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
 
 class RuleWithOutFunction(CloudFormationLintRule):
@@ -32,7 +32,7 @@ class RuleWithOutFunction(CloudFormationLintRule):
     shortdesc = "Test Rule"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
 
 class RuleRefFunction(CloudFormationLintRule):
@@ -42,7 +42,7 @@ class RuleRefFunction(CloudFormationLintRule):
     shortdesc = "Test Rule"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
 
 class RuleFnIfFunction(CloudFormationLintRule):
@@ -52,7 +52,7 @@ class RuleFnIfFunction(CloudFormationLintRule):
     shortdesc = "Test Rule for Fn::IF function"
     description = "Test Rule"
     source_url = ""
-    tags = []
+    tags: list[str] = []
 
 
 class TestJsonSchema(BaseRuleTestCase):
