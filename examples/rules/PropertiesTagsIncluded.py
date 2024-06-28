@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 
 class PropertiesTagsIncluded(CloudFormationLintRule):
@@ -14,20 +15,6 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
     description = "Check Tags for resources"
     tags = ["resources", "tags"]
 
-    def get_resources_with_tags(self, region):
-        """Get resource types that support tags"""
-        resourcespecs = {}
-        resourcetypes = resourcespecs["ResourceTypes"]
-
-        matches = []
-        for resourcetype, resourceobj in resourcetypes.items():
-            propertiesobj = resourceobj.get("Properties")
-            if propertiesobj:
-                if "Tags" in propertiesobj:
-                    matches.append(resourcetype)
-
-        return matches
-
     def match(self, cfn):
         """Check Tags for required keys"""
 
@@ -35,12 +22,19 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
 
         all_tags = cfn.search_deep_keys("Tags")
         all_tags = [x for x in all_tags if x[0] == "Resources"]
-        resources_tags = self.get_resources_with_tags(cfn.regions[0])
         resources = cfn.get_resources()
         for resource_name, resource_obj in resources.items():
             resource_type = resource_obj.get("Type", "")
             resource_properties = resource_obj.get("Properties", {})
-            if resource_type in resources_tags:
+            if any(
+                "Tags" in schema.schema["properties"]
+                for (
+                    _region,
+                    schema,
+                ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
+                    resource_type, cfn.regions
+                )
+            ):
                 if "Tags" not in resource_properties:
                     message = "Missing Tags Properties for {0}"
                     matches.append(

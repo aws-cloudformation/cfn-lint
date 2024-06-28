@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint.decode.node import dict_node, list_node
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -24,7 +25,12 @@ class PropertiesTagsRequired(CloudFormationLintRule):
         all_tags = cfn.search_deep_keys("Tags")
         all_tags = [x for x in all_tags if x[0] == "Resources"]
         for all_tag in all_tags:
-            all_keys = [d.get("Key") for d in all_tag[-1]]
+            if isinstance(all_tag[-1], list_node):
+                all_keys = [d.get("Key") for d in all_tag[-1]]
+            elif isinstance(all_tag[-1], dict_node):
+                all_keys = all_tag[-1].keys()
+            else:
+                continue
             for required_tag in required_tags:
                 if required_tag not in all_keys:
                     message = "Missing Tag {0} at {1}"
