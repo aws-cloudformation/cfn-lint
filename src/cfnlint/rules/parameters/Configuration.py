@@ -72,7 +72,7 @@ class Configuration(CfnLintJsonSchema):
 
         for err in super()._iter_errors(cfn_validator, instance):
             # we use enum twice.  Once for the type and once for the property
-            # names.  There are seperate error numbers so we do this.
+            # names.  There are separate error numbers so we do this.
             if "propertyNames" in err.schema_path and "enum" in err.schema_path:
                 err.rule = self
             yield err

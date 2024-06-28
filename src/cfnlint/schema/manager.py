@@ -144,7 +144,7 @@ class ProviderSchemaManager:
 
     @lru_cache(maxsize=None)
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
-        """Get the provider resource shcema and cache it to speed up future lookups
+        """Get the provider resource schema and cache it to speed up future lookups
 
         Args:
             region (str): the region in which do get the provider schema for
