@@ -7,7 +7,8 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context.context import Context, Map
+from cfnlint.context._mappings import Mappings
+from cfnlint.context.context import Context
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -20,10 +21,6 @@ def _resolve(name, instance, expected_results, **kwargs):
     for i, (instance, v, errors) in enumerate(resolutions):
         assert instance == expected_results[i][0]
         assert v.context.path.value_path == expected_results[i][1]
-        if errors:
-            print(errors.validator)
-            print(errors.path)
-            print(errors.schema_path)
         assert errors == expected_results[i][2]
 
 
@@ -182,8 +179,9 @@ def test_resolvers_ref(name, instance, response):
     ],
 )
 def test_invalid_functions(name, instance, response):
-    context = Context()
-    context.mappings["foo"] = Map({"first": {"second": "bar"}})
+    context = Context(
+        mappings=Mappings.create_from_dict({"foo": {"first": {"second": "bar"}}})
+    )
 
     _resolve(name, instance, response, context=context)
 
@@ -330,11 +328,15 @@ def test_invalid_functions(name, instance, response):
     ],
 )
 def test_valid_functions(name, instance, response):
-    context = Context()
-    context.mappings["foo"] = Map({"first": {"second": "bar"}})
-    context.mappings["transformFirstKey"] = Map({"Fn::Transform": {"second": "bar"}})
-    context.mappings["transformSecondKey"] = Map({"first": {"Fn::Transform": "bar"}})
-
+    context = Context(
+        mappings=Mappings.create_from_dict(
+            {
+                "foo": {"first": {"second": "bar"}},
+                "transformFirstKey": {"Fn::Transform": {"second": "bar"}},
+                "transformSecondKey": {"first": {"Fn::Transform": "bar"}},
+            }
+        )
+    )
     _resolve(name, instance, response, context=context)
 
 
