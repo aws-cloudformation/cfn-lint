@@ -4516,6 +4516,23 @@
   "AWS::OSIS::Pipeline.CloudWatchLogDestination": "CACHED",
   "AWS::OSIS::Pipeline.EncryptionAtRestOptions": "CACHED",
   "AWS::OSIS::Pipeline.LogPublishingOptions": "CACHED",
+  "AWS::OSIS::Pipeline.VpcAttachmentOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html",
+   "Properties": {
+    "AttachToVpc": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html#cfn-osis-pipeline-vpcattachmentoptions-attachtovpc",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "CidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html#cfn-osis-pipeline-vpcattachmentoptions-cidrblock",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::OSIS::Pipeline.VpcEndpoint": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html",
@@ -4540,6 +4557,21 @@
      "UpdateType": "Mutable",
      "Value": {
       "ValueType": "AWS::OSIS::Pipeline.VpcOptions.SubnetIds"
+     }
+    },
+    "VpcAttachmentOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-vpcattachmentoptions",
+     "Required": false,
+     "Type": "VpcAttachmentOptions",
+     "UpdateType": "Mutable"
+    },
+    "VpcEndpointManagement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-vpcendpointmanagement",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.VpcEndpointManagement"
      }
     }
    }
@@ -7024,6 +7056,11 @@
   "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.IdentitySourceConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectAccessTokenConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectGroupConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectIdentityTokenConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectTokenSelection": "CACHED",
   "AWS::VerifiedPermissions::Policy.EntityIdentifier": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyDefinition": "CACHED",
   "AWS::VerifiedPermissions::Policy.StaticPolicyDefinition": "CACHED",
@@ -7215,6 +7252,9 @@
   "AWS::Wisdom::KnowledgeBase.SourceConfiguration": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias.ConnectionAliasAssociation": "CACHED",
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.Capacity": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings.IpRule": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CookieSpecification": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CookieSynchronizationConfiguration": "CACHED",
@@ -7225,7 +7265,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "179.0.0",
+ "ResourceSpecificationVersion": "180.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -8177,92 +8217,7 @@
   "AWS::NetworkManager::TransitGatewayRouteTableAttachment": "CACHED",
   "AWS::NetworkManager::VpcAttachment": "CACHED",
   "AWS::NimbleStudio::Studio": "CACHED",
-  "AWS::OSIS::Pipeline": {
-   "Attributes": {
-    "IngestEndpointUrls": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "PipelineArn": {
-     "PrimitiveType": "String"
-    },
-    "VpcEndpoints": {
-     "ItemType": "VpcEndpoint",
-     "Type": "List"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html",
-   "Properties": {
-    "BufferOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-bufferoptions",
-     "Required": false,
-     "Type": "BufferOptions",
-     "UpdateType": "Mutable"
-    },
-    "EncryptionAtRestOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-encryptionatrestoptions",
-     "Required": false,
-     "Type": "EncryptionAtRestOptions",
-     "UpdateType": "Mutable"
-    },
-    "LogPublishingOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-logpublishingoptions",
-     "Required": false,
-     "Type": "LogPublishingOptions",
-     "UpdateType": "Mutable"
-    },
-    "MaxUnits": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-maxunits",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OSIS::Pipeline.MaxUnits"
-     }
-    },
-    "MinUnits": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-minunits",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OSIS::Pipeline.MinUnits"
-     }
-    },
-    "PipelineConfigurationBody": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-pipelineconfigurationbody",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OSIS::Pipeline.PipelineConfigurationBody"
-     }
-    },
-    "PipelineName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-pipelinename",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::OSIS::Pipeline.PipelineName"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VpcOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-osis-pipeline.html#cfn-osis-pipeline-vpcoptions",
-     "Required": false,
-     "Type": "VpcOptions",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::OSIS::Pipeline": "CACHED",
   "AWS::Oam::Link": "CACHED",
   "AWS::Oam::Sink": "CACHED",
   "AWS::Omics::AnnotationStore": "CACHED",
@@ -8340,393 +8295,7 @@
   "AWS::RAM::Permission": "CACHED",
   "AWS::RAM::ResourceShare": "CACHED",
   "AWS::RDS::CustomDBEngineVersion": "CACHED",
-  "AWS::RDS::DBCluster": {
-   "Attributes": {
-    "DBClusterArn": {
-     "PrimitiveType": "String"
-    },
-    "DBClusterResourceId": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint": {
-     "Type": "Endpoint"
-    },
-    "Endpoint.Address": {
-     "PrimitiveType": "String"
-    },
-    "Endpoint.Port": {
-     "PrimitiveType": "String"
-    },
-    "MasterUserSecret.SecretArn": {
-     "PrimitiveType": "String"
-    },
-    "ReadEndpoint.Address": {
-     "PrimitiveType": "String"
-    },
-    "StorageThroughput": {
-     "PrimitiveType": "Integer"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html",
-   "Properties": {
-    "AllocatedStorage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-allocatedstorage",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AssociatedRoles": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-associatedroles",
-     "DuplicatesAllowed": false,
-     "ItemType": "DBClusterRole",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "AutoMinorVersionUpgrade": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-autominorversionupgrade",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AvailabilityZones": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-availabilityzones",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ListValueType": "AvailabilityZones",
-      "ValueType": "AvailabilityZone"
-     }
-    },
-    "BacktrackWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-backtrackwindow",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "BackupRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-backupretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBCluster.BackupRetentionPeriod"
-     }
-    },
-    "CopyTagsToSnapshot": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-copytagstosnapshot",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBCluster.DBClusterIdentifier"
-     }
-    },
-    "DBClusterInstanceClass": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbclusterinstanceclass",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBClusterParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbclusterparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBInstanceParameterGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbinstanceparametergroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DBSubnetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbsubnetgroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DBSystemId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbsystemid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DatabaseName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-databasename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DeletionProtection": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-deletionprotection",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Domain": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-domain",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DomainIAMRoleName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-domainiamrolename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableCloudwatchLogsExports": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enablecloudwatchlogsexports",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "EnableGlobalWriteForwarding": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enableglobalwriteforwarding",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableHttpEndpoint": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enablehttpendpoint",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableIAMDatabaseAuthentication": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enableiamdatabaseauthentication",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Engine": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-engine",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional"
-    },
-    "EngineLifecycleSupport": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enginelifecyclesupport",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EngineMode": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enginemode",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "EngineVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-engineversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "GlobalClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-globalclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::RDS::DBCluster.GlobalClusterIdentifier"
-     }
-    },
-    "Iops": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-iops",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ManageMasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-managemasteruserpassword",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserPassword": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-masteruserpassword",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MasterUserSecret": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-masterusersecret",
-     "Required": false,
-     "Type": "MasterUserSecret",
-     "UpdateType": "Mutable"
-    },
-    "MasterUsername": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-masterusername",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Conditional",
-     "Value": {
-      "ValueType": "AWS::RDS::DBCluster.MasterUsername"
-     }
-    },
-    "MonitoringInterval": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-monitoringinterval",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MonitoringRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-monitoringrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NetworkType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-networktype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PerformanceInsightsEnabled": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-performanceinsightsenabled",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PerformanceInsightsKmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-performanceinsightskmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PerformanceInsightsRetentionPeriod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-performanceinsightsretentionperiod",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Port": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-port",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredBackupWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-preferredbackupwindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PreferredMaintenanceWindow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-preferredmaintenancewindow",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PubliclyAccessible": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-publiclyaccessible",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ReplicationSourceIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-replicationsourceidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RestoreToTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-restoretotime",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "RestoreType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-restoretype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ScalingConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-scalingconfiguration",
-     "Required": false,
-     "Type": "ScalingConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "ServerlessV2ScalingConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-serverlessv2scalingconfiguration",
-     "Required": false,
-     "Type": "ServerlessV2ScalingConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "SnapshotIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-snapshotidentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SourceDBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-sourcedbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SourceRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-sourceregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageEncrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-storageencrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-storagetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "UseLatestRestorableTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-uselatestrestorabletime",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "VpcSecurityGroupIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-vpcsecuritygroupids",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RDS::DBCluster": "CACHED",
   "AWS::RDS::DBClusterParameterGroup": "CACHED",
   "AWS::RDS::DBInstance": "CACHED",
   "AWS::RDS::DBParameterGroup": "CACHED",
@@ -8991,6 +8560,7 @@
   "AWS::Wisdom::KnowledgeBase": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias": "CACHED",
   "AWS::WorkSpaces::Workspace": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings": "CACHED",
   "AWS::WorkSpacesWeb::IdentityProvider": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings": "CACHED",
@@ -9497,7 +9067,6 @@
   "AWS::Bedrock::Agent.GuardrailConfiguration.GuardrailIdentifier": "CACHED",
   "AWS::Bedrock::Agent.GuardrailConfiguration.GuardrailVersion": "CACHED",
   "AWS::Bedrock::Agent.IdleSessionTTLInSeconds": "CACHED",
-  "AWS::Bedrock::Agent.Instruction": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.BasePromptTemplate": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.ParserMode": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.PromptCreationMode": "CACHED",
@@ -12314,6 +11883,7 @@
   "AWS::OSIS::Pipeline.PipelineName": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions.SecurityGroupIds": "CACHED",
   "AWS::OSIS::Pipeline.VpcOptions.SubnetIds": "CACHED",
+  "AWS::OSIS::Pipeline.VpcOptions.VpcEndpointManagement": "CACHED",
   "AWS::Oam::Link.LabelTemplate": "CACHED",
   "AWS::Oam::Link.LinkFilter.Filter": "CACHED",
   "AWS::Oam::Link.ResourceTypes": "CACHED",
@@ -15936,6 +15506,14 @@
   "AWS::WorkSpaces::ConnectionAlias.ConnectionString": "CACHED",
   "AWS::WorkSpaces::Workspace.ComputeTypeName": "CACHED",
   "AWS::WorkSpaces::Workspace.RunningMode": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings.SettingsGroup": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings.Status": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.BundleId": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.Description": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.DirectoryId": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.PoolName": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings.DisconnectTimeoutInSeconds": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings.MaxUserDurationInSeconds": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings.BrowserPolicy": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings.CustomerManagedKey": "CACHED",
   "AWS::WorkSpacesWeb::IdentityProvider.IdentityProviderName": "CACHED",
