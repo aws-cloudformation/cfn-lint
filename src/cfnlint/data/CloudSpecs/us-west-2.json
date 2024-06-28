@@ -3630,8 +3630,66 @@
   "AWS::OSIS::Pipeline.CloudWatchLogDestination": "CACHED",
   "AWS::OSIS::Pipeline.EncryptionAtRestOptions": "CACHED",
   "AWS::OSIS::Pipeline.LogPublishingOptions": "CACHED",
+  "AWS::OSIS::Pipeline.VpcAttachmentOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html",
+   "Properties": {
+    "AttachToVpc": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html#cfn-osis-pipeline-vpcattachmentoptions-attachtovpc",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "CidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcattachmentoptions.html#cfn-osis-pipeline-vpcattachmentoptions-cidrblock",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::OSIS::Pipeline.VpcEndpoint": "CACHED",
-  "AWS::OSIS::Pipeline.VpcOptions": "CACHED",
+  "AWS::OSIS::Pipeline.VpcOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html",
+   "Properties": {
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-securitygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.SecurityGroupIds"
+     }
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.SubnetIds"
+     }
+    },
+    "VpcAttachmentOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-vpcattachmentoptions",
+     "Required": false,
+     "Type": "VpcAttachmentOptions",
+     "UpdateType": "Mutable"
+    },
+    "VpcEndpointManagement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-osis-pipeline-vpcoptions.html#cfn-osis-pipeline-vpcoptions-vpcendpointmanagement",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::OSIS::Pipeline.VpcOptions.VpcEndpointManagement"
+     }
+    }
+   }
+  },
   "AWS::Oam::Link.LinkConfiguration": "CACHED",
   "AWS::Oam::Link.LinkFilter": "CACHED",
   "AWS::Omics::AnnotationStore.ReferenceItem": "CACHED",
@@ -6186,6 +6244,11 @@
   "AWS::VerifiedPermissions::IdentitySource.CognitoGroupConfiguration": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.CognitoUserPoolConfiguration": "CACHED",
   "AWS::VerifiedPermissions::IdentitySource.IdentitySourceConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectAccessTokenConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectGroupConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectIdentityTokenConfiguration": "CACHED",
+  "AWS::VerifiedPermissions::IdentitySource.OpenIdConnectTokenSelection": "CACHED",
   "AWS::VerifiedPermissions::Policy.EntityIdentifier": "CACHED",
   "AWS::VerifiedPermissions::Policy.PolicyDefinition": "CACHED",
   "AWS::VerifiedPermissions::Policy.StaticPolicyDefinition": "CACHED",
@@ -6377,6 +6440,9 @@
   "AWS::Wisdom::KnowledgeBase.SourceConfiguration": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias.ConnectionAliasAssociation": "CACHED",
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.Capacity": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings": "CACHED",
   "AWS::WorkSpacesThinClient::Environment.MaintenanceWindow": "CACHED",
   "AWS::WorkSpacesWeb::IpAccessSettings.IpRule": "CACHED",
   "AWS::WorkSpacesWeb::UserSettings.CookieSpecification": "CACHED",
@@ -6388,7 +6454,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "179.0.0",
+ "ResourceSpecificationVersion": "180.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -7780,59 +7846,7 @@
   "AWS::RDS::DBSecurityGroupIngress": "CACHED",
   "AWS::RDS::DBSubnetGroup": "CACHED",
   "AWS::RDS::EventSubscription": "CACHED",
-  "AWS::RDS::GlobalCluster": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html",
-   "Properties": {
-    "DeletionProtection": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-deletionprotection",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Engine": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-engine",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::GlobalCluster.Engine"
-     }
-    },
-    "EngineLifecycleSupport": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-enginelifecyclesupport",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EngineVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-engineversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "GlobalClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-globalclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::RDS::GlobalCluster.GlobalClusterIdentifier"
-     }
-    },
-    "SourceDBClusterIdentifier": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-sourcedbclusteridentifier",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "StorageEncrypted": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-globalcluster.html#cfn-rds-globalcluster-storageencrypted",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::RDS::GlobalCluster": "CACHED",
   "AWS::RDS::Integration": "CACHED",
   "AWS::RDS::OptionGroup": "CACHED",
   "AWS::RUM::AppMonitor": "CACHED",
@@ -8102,6 +8116,7 @@
   "AWS::Wisdom::KnowledgeBase": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias": "CACHED",
   "AWS::WorkSpaces::Workspace": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool": "CACHED",
   "AWS::WorkSpacesThinClient::Environment": "CACHED",
   "AWS::WorkSpacesWeb::BrowserSettings": "CACHED",
   "AWS::WorkSpacesWeb::IdentityProvider": "CACHED",
@@ -8628,7 +8643,6 @@
   "AWS::Bedrock::Agent.GuardrailConfiguration.GuardrailIdentifier": "CACHED",
   "AWS::Bedrock::Agent.GuardrailConfiguration.GuardrailVersion": "CACHED",
   "AWS::Bedrock::Agent.IdleSessionTTLInSeconds": "CACHED",
-  "AWS::Bedrock::Agent.Instruction": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.BasePromptTemplate": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.ParserMode": "CACHED",
   "AWS::Bedrock::Agent.PromptConfiguration.PromptCreationMode": "CACHED",
@@ -15222,6 +15236,14 @@
   "AWS::WorkSpaces::ConnectionAlias.ConnectionString": "CACHED",
   "AWS::WorkSpaces::Workspace.ComputeTypeName": "CACHED",
   "AWS::WorkSpaces::Workspace.RunningMode": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings.SettingsGroup": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.ApplicationSettings.Status": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.BundleId": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.Description": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.DirectoryId": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.PoolName": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings.DisconnectTimeoutInSeconds": "CACHED",
+  "AWS::WorkSpaces::WorkspacesPool.TimeoutSettings.MaxUserDurationInSeconds": "CACHED",
   "AWS::WorkSpacesThinClient::Environment.DesiredSoftwareSetId": "CACHED",
   "AWS::WorkSpacesThinClient::Environment.DesktopArn": "CACHED",
   "AWS::WorkSpacesThinClient::Environment.DesktopEndpoint": "CACHED",
