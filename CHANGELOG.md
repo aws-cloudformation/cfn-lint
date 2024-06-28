@@ -344,7 +344,7 @@
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `170.0.0` (pull #[3149](https://github.com/aws-cloudformation/cfn-lint/pull/3149))
 ###### Fixes
-- Only pick up `.json` files when using registry shcemas (pull #[3150](https://github.com/aws-cloudformation/cfn-lint/pull/3150))
+- Only pick up `.json` files when using registry schemas (pull #[3150](https://github.com/aws-cloudformation/cfn-lint/pull/3150))
 - Update IAM policy validation to not allow `Action` and `NotAction` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
 - Update IAM policy validation to not allow `Principal` and `NotPrincipal` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
 - Update IAM policy validation to not allow `Resource` and `NotResource` (pull #[3145](https://github.com/aws-cloudformation/cfn-lint/pull/3145))
