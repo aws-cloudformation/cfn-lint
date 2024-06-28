@@ -54,11 +54,13 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     ), None
                 default_value_found = True
 
-    if not default_value_found and not validator.context.mappings:
+    if not default_value_found and not validator.context.mappings.maps:
+        if validator.context.mappings.is_transform:
+            return
         yield None, validator, ValidationError(
             (
                 f"{instance[0]!r} is not one of "
-                f"{list(validator.context.mappings.keys())!r}"
+                f"{list(validator.context.mappings.maps.keys())!r}"
             ),
             path=deque([0]),
         )
@@ -71,13 +73,13 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         )
         and validator.is_type(instance[2], "string")
     ):
-        map = validator.context.mappings.get(instance[0])
+        map = validator.context.mappings.maps.get(instance[0])
         if map is None:
             if not default_value_found:
                 yield None, validator, ValidationError(
                     (
                         f"{instance[0]!r} is not one of "
-                        f"{list(validator.context.mappings.keys())!r}"
+                        f"{list(validator.context.mappings.maps.keys())!r}"
                     ),
                     path=deque([0]),
                 )

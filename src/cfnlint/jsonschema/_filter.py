@@ -57,6 +57,11 @@ class FunctionFilter:
         default=True,
     )
 
+    validate_dynamic_references: bool = field(
+        init=True,
+        default=True,
+    )
+
     def _filter_schemas(self, schema, validator: Validator) -> Tuple[Any, Any]:
         """
         Filter the schemas to only include the ones that are required
@@ -104,7 +109,7 @@ class FunctionFilter:
 
     def filter(self, validator: Any, instance: Any, schema: Any):
         # Lets validate dynamic references when appropriate
-        if validator.is_type(instance, "string"):
+        if validator.is_type(instance, "string") and self.validate_dynamic_references:
             if REGEX_DYN_REF.findall(instance):
                 # if we are in a function we can't validate
                 # dynamic references the same way

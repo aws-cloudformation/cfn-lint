@@ -11,6 +11,7 @@ from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Iterator, Sequence, Set, Tuple
 
 from cfnlint.context._conditions import Conditions
+from cfnlint.context._mappings import Mappings
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
@@ -138,7 +139,7 @@ class Context:
     parameters: dict[str, "Parameter"] = field(init=True, default_factory=dict)
     resources: dict[str, "Resource"] = field(init=True, default_factory=dict)
     conditions: Conditions = field(init=True, default_factory=Conditions)
-    mappings: dict[str, "Map"] = field(init=True, default_factory=dict)
+    mappings: Mappings = field(init=True, default_factory=Mappings)
 
     strict_types: bool = field(init=True, default=True)
 
@@ -374,61 +375,6 @@ class Resource(_Ref):
         yield
 
 
-@dataclass
-class _MappingSecondaryKey:
-    """
-    This class holds a mapping value
-    """
-
-    keys: dict[str, list[Any] | str | int | float] = field(
-        init=False, default_factory=dict
-    )
-    instance: InitVar[Any]
-    is_transform: bool = field(init=False, default=False)
-
-    def __post_init__(self, instance) -> None:
-        if not isinstance(instance, dict):
-            raise ValueError("Secondary keys must be a object")
-        for k, v in instance.items():
-            if k == "Fn::Transform":
-                self.is_transform = True
-                continue
-            if isinstance(v, (str, list, int, float)):
-                self.keys[k] = v
-            else:
-                raise ValueError("Third keys must not be an object")
-
-    def value(self, secondary_key: str):
-        if secondary_key not in self.keys:
-            raise KeyError(secondary_key)
-        return self.keys[secondary_key]
-
-
-@dataclass
-class Map:
-    """
-    This class holds a mapping
-    """
-
-    keys: dict[str, _MappingSecondaryKey] = field(init=False, default_factory=dict)
-    resource: InitVar[Any]
-    is_transform: bool = field(init=False, default=False)
-
-    def __post_init__(self, mapping) -> None:
-        if not isinstance(mapping, dict):
-            raise ValueError("Mapping must be a object")
-        for k, v in mapping.items():
-            if k == "Fn::Transform":
-                self.is_transform = True
-            else:
-                self.keys[k] = _MappingSecondaryKey(v)
-
-    def find_in_map(self, top_key: str, secondary_key: str) -> Iterator[Any]:
-        if top_key not in self.keys:
-            raise KeyError(top_key)
-        yield self.keys[top_key].value(secondary_key)
-
-
 def _init_parameters(parameters: Any) -> dict[str, Parameter]:
     obj = {}
     if not isinstance(parameters, dict):
@@ -460,19 +406,6 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
-def _init_mappings(mappings: Any) -> dict[str, Map]:
-    obj = {}
-    if not isinstance(mappings, dict):
-        raise ValueError("Mappings must be a object")
-    for k, v in mappings.items():
-        try:
-            obj[k] = Map(v)
-        except ValueError:
-            pass
-
-    return obj
-
-
 def create_context_for_template(cfn):
     parameters = {}
     try:
@@ -494,11 +427,7 @@ def create_context_for_template(cfn):
     except (ValueError, AttributeError):
         pass
 
-    mappings = {}
-    try:
-        mappings = _init_mappings(cfn.template.get("Mappings", {}))
-    except (ValueError, AttributeError):
-        pass
+    mappings = Mappings.create_from_dict(cfn.template.get("Mappings", {}))
 
     return Context(
         parameters=parameters,

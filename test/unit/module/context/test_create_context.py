@@ -63,7 +63,7 @@ _Counts = namedtuple("_Counts", ["resources", "parameters", "conditions", "mappi
                     },
                 },
             },
-            _Counts(resources=1, parameters=1, conditions=0, mappings=1),
+            _Counts(resources=1, parameters=1, conditions=0, mappings=2),
         ),
         (
             "Invalid mapping second key",
@@ -75,7 +75,7 @@ _Counts = namedtuple("_Counts", ["resources", "parameters", "conditions", "mappi
                     "Map": {"us-east-1": {"foo": "bar"}},
                 },
             },
-            _Counts(resources=0, parameters=0, conditions=0, mappings=1),
+            _Counts(resources=0, parameters=0, conditions=0, mappings=2),
         ),
         (
             "Invalid mapping third key",
@@ -89,7 +89,7 @@ _Counts = namedtuple("_Counts", ["resources", "parameters", "conditions", "mappi
                     "Map": {"us-east-1": {"foo": "bar"}},
                 },
             },
-            _Counts(resources=0, parameters=0, conditions=0, mappings=1),
+            _Counts(resources=0, parameters=0, conditions=0, mappings=2),
         ),
     ],
 )
@@ -101,10 +101,15 @@ def test_create_context(name, instance, counts):
         if i == "conditions":
             assert len(context.conditions.conditions) == getattr(counts, i), (
                 f"Test {name} has {i} {len(getattr(context, i))} "
-                "and expected {getattr(counts, i)}"
+                f"and expected {getattr(counts, i)}"
+            )
+        elif i == "mappings":
+            assert len(context.mappings.maps) == getattr(counts, i), (
+                f"Test {name} has {i} {len(context.mappings.maps)} "
+                f"and expected {getattr(counts, i)}"
             )
         else:
             assert len(getattr(context, i)) == getattr(counts, i), (
                 f"Test {name} has {i} {len(getattr(context, i))} "
-                "and expected {getattr(counts, i)}"
+                f"and expected {getattr(counts, i)}"
             )
