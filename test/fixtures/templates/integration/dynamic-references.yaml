@@ -1,0 +1,31 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  SESEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: '{{resolve:ssm:/SQS_Queue/SQS_ARN}}'
+      FunctionName: MyFunctionNameHere
+  SESEventSourceMappingBadDynamicReference:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: '{{:ssm:/SQS_Queue/SQS_ARN}}'
+      FunctionName: MyFunctionNameHere
+  Broker:
+    Type: AWS::AmazonMQ::Broker
+    Properties:
+        Users:
+        - Username: test
+          Password: '{{resolve:secretsmanager:MyRDSSecret:SecretString:password}}'
+        DeploymentMode: SINGLE_INSTANCE
+        EngineType: RABBITMQ
+        EngineVersion: test
+        # testing dynamic reference against the regional schema validation
+        HostInstanceType: '{{resolve:ssm:/SQS_Queue/SQS_ARN}}'
+        AutoMinorVersionUpgrade: true
+        BrokerName: test
+        PubliclyAccessible: false
