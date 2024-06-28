@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
 from collections import deque
 
 import pytest
@@ -18,6 +20,10 @@ _schema = {
             "type": "string",
         },
         "b": {"type": "object", "properties": {"1": {"type": "string"}}},
+        "c": {
+            "type": "string",
+            "pattern": "^foo$",
+        },
     },
 }
 
@@ -75,6 +81,20 @@ class _BestError(CfnLintJsonSchema):
                     path=deque(["a"]),
                     rule=_BestError(),
                     schema_path=deque(["properties", "a", "type"]),
+                ),
+            ],
+        ),
+        (
+            "Validation error with dynamic reference",
+            _BestError(),
+            {"c": "{{resolve:ssm:/SQS_Queue/SQS_ARN}}"},
+            [
+                ValidationError(
+                    message="Rule that returns the best error",
+                    validator="pattern",
+                    path=deque(["c"]),
+                    rule=_BestError(),
+                    schema_path=deque(["properties", "c", "pattern"]),
                 ),
             ],
         ),

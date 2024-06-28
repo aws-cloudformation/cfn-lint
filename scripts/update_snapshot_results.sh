@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# integration/
+cfn-lint test/fixtures/templates/integration/dynamic-references.yaml -e -c I --format json > test/fixtures/results/integration/dynamic-references.json
+cfn-lint test/fixtures/templates/integration/resources-cloudformation-init.yaml -e -c I --format json > test/fixtures/results/integration/resources-cloudformation-init.json
+
 # public/
 cfn-lint test/fixtures/templates/public/lambda-poller.yaml -e -c I --format json > test/fixtures/results/public/lambda-poller.json
 cfn-lint test/fixtures/templates/public/watchmaker.json -e -x E3012:strict=true -c I --format json > test/fixtures/results/public/watchmaker.json

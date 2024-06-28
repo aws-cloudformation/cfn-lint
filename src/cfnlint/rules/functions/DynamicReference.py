@@ -95,12 +95,17 @@ class DynamicReference(BaseFn):
         # SSM parameters can be used in Resources and Outputs and Parameters
         # SSM secrets are only used in a small number of locations
         # Secrets manager can be used only in resource properties
+        validator = validator.evolve(
+            function_filter=validator.function_filter.evolve(
+                add_cfn_lint_keyword=False,
+            ),
+        )
 
         for v in REGEX_DYN_REF.findall(instance):
             parts = v.split(":")
 
-            evolved = validator.evolve(schema=_all)
             found = False
+            evolved = validator.evolve(schema=_all)
             for err in evolved.iter_errors(parts):
                 yield self._clean_errors(err)
                 found = True
@@ -126,4 +131,3 @@ class DynamicReference(BaseFn):
 
             for err in evolved.iter_errors(parts):
                 yield self._clean_errors(err)
-                found = True

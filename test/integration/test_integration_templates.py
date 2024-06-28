@@ -14,14 +14,23 @@ class TestQuickStartTemplates(BaseCliTestCase):
     scenarios = [
         {
             "filename": (
-                "test/fixtures/templates/integration/good"
+                "test/fixtures/templates/integration"
                 "/resources-cloudformation-init.yaml"
             ),
             "results_filename": (
                 "test/fixtures/results/integration/"
-                "good/resources-cloudformation-init.json"
+                "resources-cloudformation-init.json"
             ),
             "exit_code": 0,
+        },
+        {
+            "filename": (
+                "test/fixtures/templates/integration" "/dynamic-references.yaml"
+            ),
+            "results_filename": (
+                "test/fixtures/results/integration/" "dynamic-references.json"
+            ),
+            "exit_code": 2,
         },
     ]
 

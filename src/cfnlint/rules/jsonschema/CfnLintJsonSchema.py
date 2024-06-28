@@ -67,7 +67,12 @@ class CfnLintJsonSchema(BaseJsonSchema):
             schema = self._schema
 
         cfn_validator = self.extend_validator(
-            validator=validator,
+            validator=validator.evolve(
+                function_filter=validator.function_filter.evolve(
+                    validate_dynamic_references=False,
+                    add_cfn_lint_keyword=False,
+                )
+            ),
             schema=schema,
             context=validator.context.evolve(
                 functions=[],
