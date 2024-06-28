@@ -152,13 +152,14 @@ class ProviderSchemaManager:
         Returns:
             dict: returns the schema
         """
-        resource_type = self._normalize_resource_type(resource_type)
+        reg = ToPy(region)
+        rt = ToPy(resource_type)
+
+        if resource_type not in self._registry_schemas:
+            resource_type = self._normalize_resource_type(resource_type)
 
         if resource_type in self._removed_types:
             raise ResourceNotFoundError(resource_type, region)
-
-        reg = ToPy(region)
-        rt = ToPy(resource_type)
 
         schema = self._schemas[reg.name].get(resource_type)
         if schema is None:
