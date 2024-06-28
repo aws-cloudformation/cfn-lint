@@ -1,0 +1,178 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId"
+ ],
+ "definitions": {
+  "ResponseParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "type": "string"
+    },
+    "Source": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseParameterList": {
+   "items": {
+    "$ref": "#/definitions/ResponseParameter"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TlsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerNameToVerify": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApiId",
+  "/properties/IntegrationId"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "ConnectionId": {
+   "type": "string"
+  },
+  "ConnectionType": {
+   "type": "string"
+  },
+  "ContentHandlingStrategy": {
+   "type": "string"
+  },
+  "CredentialsArn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "IntegrationId": {
+   "type": "string"
+  },
+  "IntegrationMethod": {
+   "type": "string"
+  },
+  "IntegrationSubtype": {
+   "type": "string"
+  },
+  "IntegrationType": {
+   "type": "string"
+  },
+  "IntegrationUri": {
+   "type": "string"
+  },
+  "PassthroughBehavior": {
+   "type": "string"
+  },
+  "PayloadFormatVersion": {
+   "type": "string"
+  },
+  "RequestParameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequestTemplates": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseParameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "$ref": "#/definitions/ResponseParameterList"
+    }
+   },
+   "type": "object"
+  },
+  "TemplateSelectionExpression": {
+   "type": "string"
+  },
+  "TimeoutInMillis": {
+   "type": "integer"
+  },
+  "TlsConfig": {
+   "$ref": "#/definitions/TlsConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationId"
+ ],
+ "required": [
+  "ApiId",
+  "IntegrationType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGatewayV2::Integration"
+}

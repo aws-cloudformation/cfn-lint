@@ -1,0 +1,342 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BrokerName",
+  "/properties/StorageType",
+  "/properties/DeploymentMode",
+  "/properties/EngineType",
+  "/properties/SubnetIds",
+  "/properties/AuthenticationStrategy",
+  "/properties/EncryptionOptions",
+  "/properties/PubliclyAccessible"
+ ],
+ "definitions": {
+  "ConfigurationId": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Revision",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "EncryptionOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "UseAwsOwnedKey": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "UseAwsOwnedKey"
+   ],
+   "type": "object"
+  },
+  "LdapServerMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "Hosts": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RoleBase": {
+     "type": "string"
+    },
+    "RoleName": {
+     "type": "string"
+    },
+    "RoleSearchMatching": {
+     "type": "string"
+    },
+    "RoleSearchSubtree": {
+     "type": "boolean"
+    },
+    "ServiceAccountPassword": {
+     "type": "string"
+    },
+    "ServiceAccountUsername": {
+     "type": "string"
+    },
+    "UserBase": {
+     "type": "string"
+    },
+    "UserRoleName": {
+     "type": "string"
+    },
+    "UserSearchMatching": {
+     "type": "string"
+    },
+    "UserSearchSubtree": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Hosts",
+    "UserSearchMatching",
+    "UserBase",
+    "RoleSearchMatching",
+    "ServiceAccountUsername",
+    "RoleBase",
+    "ServiceAccountPassword"
+   ],
+   "type": "object"
+  },
+  "LogList": {
+   "additionalProperties": false,
+   "properties": {
+    "Audit": {
+     "type": "boolean"
+    },
+    "General": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "DayOfWeek": {
+     "type": "string"
+    },
+    "TimeOfDay": {
+     "type": "string"
+    },
+    "TimeZone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DayOfWeek",
+    "TimeOfDay",
+    "TimeZone"
+   ],
+   "type": "object"
+  },
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "User": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsoleAccess": {
+     "type": "boolean"
+    },
+    "Groups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Password": {
+     "type": "string"
+    },
+    "ReplicationUser": {
+     "type": "boolean"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmqpEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationStrategy": {
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "BrokerName": {
+   "type": "string"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ConfigurationId"
+  },
+  "ConfigurationId": {
+   "type": "string"
+  },
+  "ConfigurationRevision": {
+   "type": "integer"
+  },
+  "DataReplicationMode": {
+   "type": "string"
+  },
+  "DataReplicationPrimaryBrokerArn": {
+   "type": "string"
+  },
+  "DeploymentMode": {
+   "enum": [
+    "ACTIVE_STANDBY_MULTI_AZ",
+    "CLUSTER_MULTI_AZ",
+    "SINGLE_INSTANCE"
+   ],
+   "type": "string"
+  },
+  "EncryptionOptions": {
+   "$ref": "#/definitions/EncryptionOptions"
+  },
+  "EngineType": {
+   "enum": [
+    "ACTIVEMQ",
+    "RABBITMQ"
+   ],
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "HostInstanceType": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpAddresses": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LdapServerMetadata": {
+   "$ref": "#/definitions/LdapServerMetadata"
+  },
+  "Logs": {
+   "$ref": "#/definitions/LogList"
+  },
+  "MaintenanceWindowStartTime": {
+   "$ref": "#/definitions/MaintenanceWindow"
+  },
+  "MqttEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "OpenWireEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StompEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StorageType": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "items": {
+    "$ref": "#/definitions/User"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WssEndpoints": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpAddresses",
+  "/properties/Id",
+  "/properties/MqttEndpoints",
+  "/properties/OpenWireEndpoints",
+  "/properties/ConfigurationId",
+  "/properties/ConfigurationRevision",
+  "/properties/StompEndpoints",
+  "/properties/WssEndpoints",
+  "/properties/AmqpEndpoints",
+  "/properties/Arn"
+ ],
+ "required": [
+  "DeploymentMode",
+  "HostInstanceType",
+  "EngineType",
+  "Users",
+  "PubliclyAccessible",
+  "BrokerName"
+ ],
+ "typeName": "AWS::AmazonMQ::Broker"
+}
