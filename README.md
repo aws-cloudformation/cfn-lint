@@ -51,9 +51,11 @@ Python 3.8+ is supported.
 
 `cfn-lint` has optional dependencies based on certain features you may need.
 
+* `pip install cfn-lint[full]` for installing all the optional dependencies. This will install all the dependencies for graph, junit, and sarif.
 * `pip install cfn-lint[graph]` for installing `pydot` to draw and output template graphs
 * `pip install cfn-lint[junit]` for installing the packages to output the `junit` format
 * `pip install cfn-lint[sarif]` for installing the packages to output the `sarif` format
+
 
 ### Homebrew (macOS)
 
