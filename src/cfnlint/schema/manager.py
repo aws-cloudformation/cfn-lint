@@ -156,7 +156,7 @@ class ProviderSchemaManager:
         rt = ToPy(resource_type)
 
         if resource_type not in self._registry_schemas:
-            resource_type = self._normalize_resource_type(resource_type)
+            rt = ToPy(self._normalize_resource_type(resource_type))
 
         if resource_type in self._removed_types:
             raise ResourceNotFoundError(resource_type, region)
