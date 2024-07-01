@@ -230,6 +230,7 @@ LIMITS: dict[str, Any] = {
 
 valid_snapshot_types = frozenset(
     [
+        "AWS::DocDB::DBCluster",
         "AWS::EC2::Volume",
         "AWS::ElastiCache::CacheCluster",
         "AWS::ElastiCache::ReplicationGroup",
