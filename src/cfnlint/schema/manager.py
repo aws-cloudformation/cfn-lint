@@ -152,7 +152,8 @@ class ProviderSchemaManager:
         Returns:
             dict: returns the schema
         """
-        resource_type = self._normalize_resource_type(resource_type)
+        if resource_type not in self._registry_schemas:
+            resource_type = self._normalize_resource_type(resource_type)
 
         if resource_type in self._removed_types:
             raise ResourceNotFoundError(resource_type, region)
@@ -160,39 +161,40 @@ class ProviderSchemaManager:
         reg = ToPy(region)
         rt = ToPy(resource_type)
 
-        schema = self._schemas[reg.name].get(resource_type)
-        if schema is None:
-            # dynamically import the modules as needed
-            self._provider_schema_modules[reg.name] = __import__(
-                f"{self._root.module}.{reg.py}", fromlist=[""]
-            )
-            # check cfn-lint provided schemas
-            if resource_type in self._registry_schemas:
-                self._schemas[reg.name][rt.name] = self._registry_schemas[rt.name]
-                return self._schemas[reg.name][rt.name]
+        schema = self._schemas[reg.name].get(rt.name)
+        if schema is not None:
+            return schema
 
-            # load the schema
-            if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
-                schema_cached = copy(
-                    self.get_resource_schema(
-                        region=self._region_primary.name,
-                        resource_type=rt.name,
-                    )
-                )
-                schema_cached.is_cached = True
-                self._schemas[reg.name][rt.name] = schema_cached
-                return self._schemas[reg.name][rt.name]
-            try:
-                self._schemas[reg.name][rt.name] = Schema(
-                    load_resource(
-                        self._provider_schema_modules[reg.name],
-                        filename=f"{rt.provider}.json",
-                    )
-                )
-            except Exception as e:
-                raise ResourceNotFoundError(rt.name, region) from e
+        # dynamically import the modules as needed
+        self._provider_schema_modules[reg.name] = __import__(
+            f"{self._root.module}.{reg.py}", fromlist=[""]
+        )
+        # check cfn-lint provided schemas
+        if rt.name in self._registry_schemas:
+            self._schemas[reg.name][rt.name] = self._registry_schemas[rt.name]
             return self._schemas[reg.name][rt.name]
-        return schema
+
+        # load the schema
+        if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
+            schema_cached = copy(
+                self.get_resource_schema(
+                    region=self._region_primary.name,
+                    resource_type=rt.name,
+                )
+            )
+            schema_cached.is_cached = True
+            self._schemas[reg.name][rt.name] = schema_cached
+            return self._schemas[reg.name][rt.name]
+        try:
+            self._schemas[reg.name][rt.name] = Schema(
+                load_resource(
+                    self._provider_schema_modules[reg.name],
+                    filename=f"{rt.provider}.json",
+                )
+            )
+            return self._schemas[reg.name][rt.name]
+        except Exception as e:
+            raise ResourceNotFoundError(rt.name, region) from e
 
     @lru_cache(maxsize=None)
     def get_resource_types(self, region: str) -> list[str]:
