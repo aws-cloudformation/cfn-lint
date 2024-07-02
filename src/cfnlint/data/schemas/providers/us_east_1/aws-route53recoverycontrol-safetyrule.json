@@ -1,10 +1,12 @@
 {
  "additionalProperties": false,
- "createOnlyProperties": [
+ "conditionalCreateOnlyProperties": [
   "/properties/ControlPanelArn",
   "/properties/RuleConfig",
-  "/properties/ControlPanelArn",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/AssertionRule/AssertedControls",
+  "/properties/GatingRule/GatingControls",
+  "/properties/GatingRule/TargetControls"
  ],
  "definitions": {
   "AssertionRule": {
@@ -217,7 +219,13 @@
  ],
  "required": [],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Route53RecoveryControl::SafetyRule",
  "writeOnlyProperties": [
   "/properties/Tags"
