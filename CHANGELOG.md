@@ -1,3 +1,15 @@
+### v1.5.0
+## What's Changed
+* Update mappings to support transforms at the root level by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3439
+* Update `CfnLintJsonSchema` based rules for dynamic references by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3442
+* Fix tagging examples by @michael-k in https://github.com/aws-cloudformation/cfn-lint/pull/3448
+* Add `full` keyword to optional dependencies by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3454
+* Load registry schemas if type match by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3450
+* Update helpers.py with DocDB snapshot type by @marty-sullivan in https://github.com/aws-cloudformation/cfn-lint/pull/3455
+* Update CloudFormation schemas to 2024-07-02 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3447
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.4.2...v1.5.0
+
 ### v1.4.2
 ## What's Changed
 * Fix JSON based tags for many types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3437
