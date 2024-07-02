@@ -30,10 +30,6 @@
      "type": "string"
     },
     "RoleArn": {
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::IAM::Role"
-     },
      "type": "string"
     }
    },
@@ -58,20 +54,6 @@
    "additionalProperties": false,
    "properties": {
     "KmsKeyId": {
-     "anyOf": [
-      {
-       "relationshipRef": {
-        "propertyPath": "/properties/KeyId",
-        "typeName": "AWS::KMS::Key"
-       }
-      },
-      {
-       "relationshipRef": {
-        "propertyPath": "/properties/Arn",
-        "typeName": "AWS::KMS::Key"
-       }
-      }
-     ],
      "type": "string"
     },
     "SecretArn": {
@@ -155,6 +137,8 @@
     "rds:CreateDBCluster",
     "rds:CreateDBInstance",
     "rds:DescribeDBClusters",
+    "rds:DescribeDBClusterSnapshots",
+    "rds:DescribeDBSnapshots",
     "rds:DescribeEvents",
     "rds:EnableHttpEndpoint",
     "rds:ModifyDBCluster",
@@ -330,20 +314,6 @@
    "type": "integer"
   },
   "KmsKeyId": {
-   "anyOf": [
-    {
-     "relationshipRef": {
-      "propertyPath": "/properties/Arn",
-      "typeName": "AWS::KMS::Key"
-     }
-    },
-    {
-     "relationshipRef": {
-      "propertyPath": "/properties/KeyId",
-      "typeName": "AWS::KMS::Key"
-     }
-    }
-   ],
    "type": "string"
   },
   "ManageMasterUserPassword": {
@@ -442,20 +412,6 @@
   },
   "VpcSecurityGroupIds": {
    "items": {
-    "anyOf": [
-     {
-      "relationshipRef": {
-       "propertyPath": "/properties/GroupId",
-       "typeName": "AWS::EC2::SecurityGroup"
-      }
-     },
-     {
-      "relationshipRef": {
-       "propertyPath": "/properties/Id",
-       "typeName": "AWS::EC2::SecurityGroup"
-      }
-     }
-    ],
     "type": "string"
    },
    "type": "array",
