@@ -145,6 +145,9 @@ class PrimaryIdentifiers(CloudFormationLintRule):
                 # by the customer so if any primary identifiers are read
                 # only we have to skip evaluation
                 primary_ids = schema.schema.get("primaryIdentifier", [])
+                if not primary_ids:
+                    continue
+
                 read_only_ids = schema.schema.get("readOnlyProperties", [])
 
                 if any(id in read_only_ids for id in primary_ids):

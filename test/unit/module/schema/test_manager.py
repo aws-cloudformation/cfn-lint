@@ -271,3 +271,15 @@ class TestManagerGetResourceSchema(BaseTestCase):
 
         with self.assertRaises(ResourceNotFoundError):
             self.manager.get_resource_schema(region, rt)
+
+    def test_type_normalization(self):
+
+        rt = "MyCompany::MODULE"
+        schema = self.manager.get_resource_schema("us-east-1", rt)
+
+        assert schema.schema.get("typeName") == "Module"
+
+        self.manager.get_resource_schema.cache_clear()
+        self.manager._registry_schemas[rt] = True
+        schema = self.manager.get_resource_schema("us-east-1", rt)
+        assert schema is True
