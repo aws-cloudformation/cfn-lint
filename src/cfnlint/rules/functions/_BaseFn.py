@@ -8,7 +8,7 @@ from __future__ import annotations
 from collections import namedtuple
 from typing import Any, Tuple
 
-from cfnlint.helpers import ToPy, ensure_list
+from cfnlint.helpers import ToPy, ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules import CloudFormationLintRule
 
@@ -118,7 +118,7 @@ class BaseFn(CloudFormationLintRule):
     ) -> ValidationResult:
         tS = self.resolve_type(validator, s)
         if tS:
-            if not any(t in self.types for t in tS):
+            if not is_types_compatible(self.types, tS):
                 reprs = ", ".join(repr(type) for type in tS)
                 yield ValidationError(f"{instance!r} is not of type {reprs}")
 
