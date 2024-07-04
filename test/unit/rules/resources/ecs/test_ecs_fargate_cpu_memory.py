@@ -92,13 +92,41 @@ def rule():
                 )
             ],
         ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE", "Foo"],
+                "Cpu": 4096,
+                "Memory": 512,
+            },
+            [
+                ValidationError(
+                    "Cpu 4096 is not compatible with memory 512",
+                    rule=FargateCpuMemory(),
+                    path=deque([]),
+                    validator="anyOf",
+                    schema_path=deque(["then", "anyOf"]),
+                )
+            ],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE", "Foo"],
+                "Cpu": 4096,
+                "Memory": 16385,
+            },
+            [
+                ValidationError(
+                    "Cpu 4096 is not compatible with memory 16385",
+                    rule=FargateCpuMemory(),
+                    path=deque([]),
+                    validator="anyOf",
+                    schema_path=deque(["then", "anyOf"]),
+                )
+            ],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
-    for err in errs:
-        print(err.schema_path)
-        print(err.validator)
-        print(err.rule)
-        print(err.path)
+
     assert errs == expected, f"Expected {expected} got {errs}"
