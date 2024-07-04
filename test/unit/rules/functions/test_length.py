@@ -113,6 +113,13 @@ def context(cfn):
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [],
         ),
+        (
+            "Fn::Length output while a number can be a string",
+            {"Fn::Length": []},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+        ),
     ],
 )
 def test_validate(name, instance, schema, context_evolve, expected, rule, context, cfn):
