@@ -78,6 +78,14 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": {"Ref": "MyParameter"},
+                "Memory": "512",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": 128,
                 "Memory": "512",
             },
@@ -87,7 +95,7 @@ def rule():
                     rule=TaskFargateProperties(),
                     path=deque(["Cpu"]),
                     validator="enum",
-                    schema_path=deque(["then", "properties", "Cpu", "enum"]),
+                    schema_path=deque(["then", "then", "properties", "Cpu", "enum"]),
                 )
             ],
         ),
