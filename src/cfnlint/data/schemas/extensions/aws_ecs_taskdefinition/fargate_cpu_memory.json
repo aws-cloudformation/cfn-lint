@@ -1,0 +1,114 @@
+{
+    "if": {
+        "properties": {
+            "RequiresCompatibilities": {
+                "type": "array",
+                "contains": {
+                    "type": "string",
+                    "enum": ["FARGATE"]
+                }
+            },
+            "Cpu": {
+                "type": ["string", "integer"]
+            },
+            "Memory": {
+                "type": ["string", "integer"]
+            }
+        },
+        "required": ["RequiresCompatibilities", "Cpu", "Memory"]
+    },
+    "then": {
+        "anyOf": [
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["256", 256]
+                    },
+                    "Memory": {
+                        "enum": [
+                            "512",
+                            "1024",
+                            "2048",
+                            512,
+                            1024,
+                            2048
+                        ]
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["512", 512]
+                    },
+                    "Memory": {
+                        "minimum": 1024,
+                        "maximum": 4096,
+                        "multipleOf": 1024
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["1024", 1024]
+                    },
+                    "Memory": {
+                        "minimum": 2048,
+                        "maximum": 8192,
+                        "multipleOf": 1024
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["2048", 2048]
+                    },
+                    "Memory": {
+                        "minimum": 4096,
+                        "maximum": 16384,
+                        "multipleOf": 1024
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["4096", 4096]
+                    },
+                    "Memory": {
+                        "minimum": 8192,
+                        "maximum": 30720,
+                        "multipleOf": 1024
+
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["8192", 8192]
+                    },
+                    "Memory": {
+                        "minimum": 16384,
+                        "maximum": 61440,
+                        "multipleOf": 4096
+                    }
+                }
+            },
+            {
+                "properties": {
+                    "Cpu": {
+                        "enum": ["16384", 16384]
+                    },
+                    "Memory": {
+                        "minimum": 32768,
+                        "maximum": 122880,
+                        "multipleOf": 8192
+                    }
+                }
+            }
+        ]
+    }
+}
