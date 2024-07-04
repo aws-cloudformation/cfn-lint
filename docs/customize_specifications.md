@@ -30,23 +30,28 @@ The following example only allows the usage of all `EC2` resources, except for `
 ```
 
 #### Alter Resource/Parameter specifications
-The spec file overwrites values from the Regional spec files which give you the possible to alter the specifications for your own needs. A good example is making optional Parameters required.
+CloudFormation schemas can be patched to change the behavior of how a property works. This can be amazingly useful if you want to require certain properties or add extra validation to a property. You can create a patch by specifying `Patches` at the root, then the resource type you want to patch, followed by a list of patches in [json patch](https://jsonpatch.com/) format.
 
 For example, to enforce tagging on an S3 bucket, the override file looks like this:
 
 ```json
 {
-  "ResourceTypes": {
-    "AWS::S3::Bucket": {
-      "Properties": {
-        "Tags": {
-          "Required": true
-        }
+  "Patches": {
+    "AWS::S3::Bucket": [
+      {
+        "op": "add",
+        "path": "/required",
+        "value": [
+          "Tags"
+        ]
       }
-    }
+    ]
   }
 }
 ```
 
 **WARNING**
-The file is checked for valid JSON syntax, but does not check the contents of the file before merging it into the Specifications. Be careful with your changes because it can possibly corrupt the Specifications and break the linting process.
+JSON patches will fail if they don't apply the schema. Schema structure can change without changing how customers use the resource type. These changes may result in your patch breaking the cfn-lint process.
+
+**WARNING**
+You can patch the schemas so the result is a non properly structured schema. For instance if you patch `/required` to have a value of `{}` cfn-lint will crash many ways as it is expecting an array. We test the schemas on each release to validate their structure before doing a release. We do not test them after you apply your patches.
