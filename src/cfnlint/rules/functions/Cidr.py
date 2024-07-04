@@ -124,18 +124,16 @@ class Cidr(CloudFormationLintRule):
                             if len(value.get("Fn::If")) == 3 and isinstance(
                                 value.get("Fn::If"), list
                             ):
-                                matches.extend(
-                                    self.check_size_mask(
-                                        value.get("Fn::If")[1],
-                                        path=path[:] + [index_key, 1],
-                                    )
+                                _, new_matches = self.check_size_mask(
+                                    value.get("Fn::If")[1],
+                                    path=path[:] + [index_key, 1],
                                 )
-                                matches.extend(
-                                    self.check_size_mask(
-                                        value.get("Fn::If")[2],
-                                        path=path[:] + [index_key, 2],
-                                    )
+                                matches.extend(new_matches)
+                                _, new_matches = self.check_size_mask(
+                                    value.get("Fn::If")[1],
+                                    path=path[:] + [index_key, 1],
                                 )
+                                matches.extend(new_matches)
                         else:
                             message = (
                                 "Cidr sizeMask should be Int, Ref, or Select for {0}"
