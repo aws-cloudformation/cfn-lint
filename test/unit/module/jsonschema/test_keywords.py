@@ -94,7 +94,7 @@ def validator():
             [{"warning": True}, {"error": True}],
             [
                 ValidationError(
-                    "Error",
+                    "Warning",
                     rule=Warning(),
                     path=deque([]),
                     validator="warning",
@@ -108,11 +108,11 @@ def validator():
             [{"error": True}, {"warning": True}],
             [
                 ValidationError(
-                    "Error",
+                    "Warning",
                     rule=Warning(),
                     path=deque([]),
                     validator="warning",
-                    schema_path=deque([0, "warning"]),
+                    schema_path=deque([1, "warning"]),
                 ),
             ],
         ),
