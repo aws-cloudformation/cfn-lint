@@ -105,7 +105,14 @@ def anyOf(
     )
     all_errors = []
     for index, subschema in enumerate(anyOf):
-        errs = list(validator.descend(instance, subschema, schema_path=index))
+        errs = []
+        # warning and informational errors need to be returned but shouldn't
+        # be part of if the anyOf is valid
+        for err in validator.descend(instance, subschema, schema_path=index):
+            if err.rule is not None and not err.rule.id.startswith("E"):
+                yield err
+                continue
+            errs.append(err)
         if not errs:
             break
         all_errors.extend(errs)
