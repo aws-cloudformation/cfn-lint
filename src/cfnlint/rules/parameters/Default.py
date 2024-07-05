@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 import regex as re
 
 from cfnlint._typing import RuleMatches
+from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -127,8 +128,8 @@ class Default(CloudFormationLintRule):
                 matches.extend(self.check_max_length(default_value, max_length, path))
         return matches
 
-    def is_cdl(self, paramvalue):
-        return paramvalue.get("Type") == "CommaDelimitedList"
+    def is_list(self, paramvalue):
+        return paramvalue.get("Type") in VALID_PARAMETER_TYPES_LIST
 
     def match(self, cfn: Template) -> RuleMatches:
         matches = []
@@ -137,7 +138,7 @@ class Default(CloudFormationLintRule):
             param_cdl_matches = []
             param_matches = []
             default_value = paramvalue.get("Default")
-            if default_value is not None and self.is_cdl(paramvalue):
+            if default_value is not None and self.is_list(paramvalue):
                 comma_delimited_default_values = [
                     x.strip() for x in default_value.split(",")
                 ]
@@ -146,7 +147,7 @@ class Default(CloudFormationLintRule):
                         self.match_default_value(paramname, paramvalue, value)
                     )
 
-            if param_cdl_matches or not self.is_cdl(paramvalue):
+            if param_cdl_matches or not self.is_list(paramvalue):
                 param_matches.extend(
                     self.match_default_value(paramname, paramvalue, default_value)
                 )
