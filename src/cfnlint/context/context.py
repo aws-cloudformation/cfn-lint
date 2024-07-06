@@ -38,7 +38,7 @@ class Transforms:
 
         for transform in transforms:
             if not isinstance(transform, str):
-                raise ValueError("Transform must be a string")
+                continue
             self._transforms.append(transform)
 
     def has_language_extensions_transform(self):

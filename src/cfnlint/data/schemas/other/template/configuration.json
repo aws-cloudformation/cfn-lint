@@ -1,5 +1,32 @@
 {
  "additionalProperties": false,
+ "definitions": {
+  "Transform": {
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Properties": {
+     "patternProperties": {
+      ".*": {
+       "type": [
+        "string",
+        "array",
+        "boolean",
+        "object",
+        "number",
+        "integer"
+       ]
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  }
+ },
  "properties": {
   "AWSTemplateFormatVersion": {
    "enum": [
@@ -23,12 +50,18 @@
    "type": "object"
   },
   "Transform": {
+   "$ref": "#/definitions/Transform",
    "items": {
-    "type": "string"
+    "$ref": "#/definitions/Transform",
+    "type": [
+     "string",
+     "object"
+    ]
    },
    "type": [
     "string",
-    "array"
+    "array",
+    "object"
    ]
   }
  },
