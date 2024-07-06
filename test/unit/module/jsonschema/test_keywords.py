@@ -23,12 +23,23 @@ class Error(CloudFormationLintRule):
             )
 
 
+class Warning(CloudFormationLintRule):
+    id = "W1111"
+
+    def validate(self, validator, s, instance, schema):
+        yield ValidationError(
+            "Warning",
+            rule=self,
+        )
+
+
 @pytest.fixture
 def validator():
     validator = CfnTemplateValidator(schema={})
     validator = validator.extend(
         validators={
             "error": Error().validate,
+            "warning": Warning().validate,
         }
     )
     return validator({})
@@ -74,6 +85,34 @@ def validator():
                             schema_path=deque([1, "error"]),
                         ),
                     ],
+                ),
+            ],
+        ),
+        (
+            "Valid anyOf with a warning validation error",
+            "foo",
+            [{"warning": True}, {"error": True}],
+            [
+                ValidationError(
+                    "Warning",
+                    rule=Warning(),
+                    path=deque([]),
+                    validator="warning",
+                    schema_path=deque([0, "warning"]),
+                ),
+            ],
+        ),
+        (
+            "Valid anyOf with a warning validation error",
+            "foo",
+            [{"error": True}, {"warning": True}],
+            [
+                ValidationError(
+                    "Warning",
+                    rule=Warning(),
+                    path=deque([]),
+                    validator="warning",
+                    schema_path=deque([1, "warning"]),
                 ),
             ],
         ),
