@@ -12,7 +12,11 @@ from cfnlint.context.context import Transforms
     "name,instance,expected",
     [
         ("Valid transforms", "AWS::LanguageExtensions", True),
-        ("Valid transforms lists", ["AWS::LanguageExtensions"], True),
+        (
+            "Valid transforms lists",
+            ["AWS::LanguageExtensions", {"Name": "Include"}],
+            True,
+        ),
         ("Valid transforms lists", None, False),
         ("Valid transforms lists", "", False),
     ],
@@ -23,14 +27,3 @@ def test_transforms(name, instance, expected):
     assert (
         expected == transforms.has_language_extensions_transform()
     ), f"{name!r} test got {transforms.has_language_extensions_transform()}"
-
-
-@pytest.mark.parametrize(
-    "name,instance",
-    [
-        ("Invalid Type", {}),
-    ],
-)
-def test_errors(name, instance):
-    with pytest.raises(ValueError):
-        Transforms(instance)

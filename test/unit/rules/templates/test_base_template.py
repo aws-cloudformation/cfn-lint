@@ -40,7 +40,7 @@ class TestBaseTemplate(BaseRuleTestCase):
 
     def test_file_base(self):
         """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/templates/base.yaml", 2)
+        self.helper_file_negative("test/fixtures/templates/bad/templates/base.yaml", 1)
 
     def test_file_base_date(self):
         """Test failure"""
@@ -51,5 +51,5 @@ class TestBaseTemplate(BaseRuleTestCase):
     def test_file_base_null(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/templates/base_null.yaml", 3
+            "test/fixtures/templates/bad/templates/base_null.yaml", 2
         )

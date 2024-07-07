@@ -51,6 +51,7 @@ class TestSchemaFiles(TestCase):
         "Resources/*/Type",
         "Resources/*/UpdatePolicy",
         "Resources/*/UpdateReplacePolicy",
+        "Transform",
     ]
 
     def setUp(self) -> None:

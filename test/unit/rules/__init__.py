@@ -56,5 +56,7 @@ class BaseRuleTestCase(BaseTestCase):
         self.assertEqual(
             err_count,
             len(failures),
-            "Expected {} failures but got {} on {}".format(0, failures, filename),
+            "Expected {} failures but got {} on {}".format(
+                err_count, failures, filename
+            ),
         )
