@@ -15,7 +15,7 @@ class Configuration(CfnLintJsonSchema):
     id = "E1005"
     shortdesc = "Validate Transform configuration"
     description = (
-        "Validate that the transforms section of a " "template is properly configured"
+        "Validate that the transforms section of a template is properly configured"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html"
     tags = ["transform"]

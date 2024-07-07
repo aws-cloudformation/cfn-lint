@@ -74,6 +74,19 @@ def rule():
                 )
             ],
         ),
+        (
+            "Null is not ok",
+            None,
+            [
+                ValidationError(
+                    "None is not of type 'string', 'array', 'object'",
+                    validator="type",
+                    rule=Configuration(),
+                    path=deque([]),
+                    schema_path=deque(["type"]),
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, expected, rule, validator):
