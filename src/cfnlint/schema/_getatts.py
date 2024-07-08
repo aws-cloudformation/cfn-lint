@@ -253,6 +253,14 @@ class GetAtts:
             self._attrs["Outputs\\..*"] = "/properties/CfnLintStringType"
             return
 
+        if schema.type_name == "AWS::ServiceCatalog::CloudFormationProvisionedProduct":
+            for ro_attr in schema.schema.get("readOnlyProperties", []):
+                if ro_attr == "/properties/Outputs":
+                    self._attrs["Outputs\\..*"] = "/properties/CfnLintStringType"
+                else:
+                    self._attrs[self._pointer_to_attr(ro_attr)] = ro_attr
+            return
+
         for unnamed_type in _unnamed_unknown_types:
             if schema.type_name.startswith(unnamed_type):
                 self._attrs[".*"] = "/properties/CfnLintAllTypes"
