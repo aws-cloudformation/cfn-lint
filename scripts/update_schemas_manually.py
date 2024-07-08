@@ -720,10 +720,6 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "requiredXor": [
-                            "ImageId",
-                            "LaunchTemplate",
-                        ],
                         "dependentExcluded": {
                             "NetworkInterfaces": ["SubnetId"],
                             "SubnetId": ["NetworkInterfaces"],
