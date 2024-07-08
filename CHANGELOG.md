@@ -1,3 +1,14 @@
+### v1.5.1
+## What's Changed
+* Switch type comparison in BaseFn to use is_types_compatible by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3461
+* Update [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2015) to split defaults on comma by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3466
+* Don't fail `anyOf` on warnings by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3469
+* Allow `Transform` section to have the full transform def by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3470
+* Update `GetAtt` logic for `AWS::ServiceCatalog::CloudFormationProvisionedProduct` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3475
+* Remove `requiredXor` for `AWS::EC2::Instance` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/#3477
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.5.0...v1.5.1
+
 ### v1.5.0
 ## What's Changed
 * Update mappings to support transforms at the root level by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3439
