@@ -102,10 +102,6 @@ class GetAtt(BaseFn):
                         yield err
                         continue
 
-                    # because of the complexities of schemas ($ref, anyOf, allOf, etc.)
-                    # we will simplify the validator to just have a type check
-                    # then we will provide a simple value to represent the type from the
-                    # getAtt
                     evolved = validator.evolve(schema=s)  # type: ignore
                     evolved.validators = {  # type: ignore
                         "type": validator.validators.get("type"),  # type: ignore
@@ -124,7 +120,6 @@ class GetAtt(BaseFn):
                         t, validator.context.regions
                     ):
                         getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
-
                         if not getatt_schema.get("type") or not s.get("type"):
                             continue
 
