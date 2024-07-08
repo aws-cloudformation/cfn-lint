@@ -13,7 +13,7 @@ from typing import Any, Iterator, Sequence
 
 import cfnlint.formatters
 import cfnlint.maintenance
-from cfnlint.config import ConfigMixIn
+from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.decode.decode import decode
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ParseError, TransformError
@@ -398,6 +398,9 @@ class Runner:
         Raises:
             None: This function does not raise any exceptions.
         """
+        # Add our logging configuration when running CLI
+        configure_logging(self.config.debug, self.config.info)
+
         if self.config.update_specs:
             cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(0)

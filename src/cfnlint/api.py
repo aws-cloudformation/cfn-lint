@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import List
 
-from cfnlint.config import ConfigMixIn, ManualArgs, configure_logging
+from cfnlint.config import ConfigMixIn, ManualArgs
 from cfnlint.decode.decode import decode_str
 from cfnlint.helpers import REGION_PRIMARY, REGIONS
 from cfnlint.rules import Match, RulesCollection
@@ -38,7 +38,6 @@ def lint(
     list
         a list of errors if any were found, else an empty list
     """
-    configure_logging(None, None)
     template, errors = decode_str(s)
     if errors:
         return errors
