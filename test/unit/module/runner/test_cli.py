@@ -3,15 +3,23 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 from cfnlint import ConfigMixIn
 from cfnlint.runner import Runner
 
+LOGGER = logging.getLogger("cfnlint")
+
 
 class TestCli(BaseTestCase):
     """Test CLI with config"""
+
+    def tearDown(self):
+        """Setup"""
+        for handler in LOGGER.handlers:
+            LOGGER.removeHandler(handler)
 
     @patch("cfnlint.maintenance.update_documentation")
     def test_update_documentation(self, mock_maintenance):

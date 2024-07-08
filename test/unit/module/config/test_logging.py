@@ -37,5 +37,5 @@ class TestLogging(BaseTestCase):
         """Test no logging level"""
 
         cfnlint.config.configure_logging(False, False)
-        self.assertEqual(logging.NOTSET, LOGGER.level)
+        self.assertEqual(logging.WARNING, LOGGER.level)
         self.assertEqual(len(LOGGER.handlers), 1)

@@ -30,14 +30,13 @@ _DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
 
 def configure_logging(debug_logging, info_logging):
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
 
     if debug_logging:
         LOGGER.setLevel(logging.DEBUG)
     elif info_logging:
         LOGGER.setLevel(logging.INFO)
     else:
-        LOGGER.setLevel(logging.NOTSET)
+        LOGGER.setLevel(logging.WARNING)
     log_formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
@@ -621,7 +620,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         self._manual_args = kwargs or ManualArgs()
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
-        configure_logging(self.cli_args.debug, self.cli_args.info)  # type: ignore
         TemplateArgs.__init__(self, {})
         ConfigFileArgs.__init__(
             self, config_file=self._get_argument_value("config_file", False, False)
@@ -638,6 +636,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "regions": self.regions,
                 "ignore_bad_template": self.ignore_bad_template,
                 "debug": self.debug,
+                "info": self.info,
                 "format": self.format,
                 "templates": self.templates,
                 "append_rules": self.append_rules,
@@ -716,6 +715,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def debug(self):
         return self._get_argument_value("debug", False, False)
+
+    @property
+    def info(self):
+        return self._get_argument_value("info", False, False)
 
     @property
     def format(self):
