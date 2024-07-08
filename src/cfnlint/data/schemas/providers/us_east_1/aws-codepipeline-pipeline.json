@@ -41,6 +41,7 @@
      "type": "string"
     },
     "RoleArn": {
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
      "type": "string"
     },
     "RunOrder": {
@@ -170,12 +171,12 @@
    "additionalProperties": false,
    "properties": {
     "Result": {
+     "enum": [
+      "ROLLBACK"
+     ],
      "type": "string"
     }
    },
-   "required": [
-    "Result"
-   ],
    "type": "object"
   },
   "GitBranchFilterCriteria": {
@@ -329,6 +330,9 @@
      "$ref": "#/definitions/GitConfiguration"
     },
     "ProviderType": {
+     "enum": [
+      "CodeStarSourceConnection"
+     ],
      "type": "string"
     }
    },
@@ -358,7 +362,8 @@
      "type": "string"
     },
     "OnFailure": {
-     "$ref": "#/definitions/FailureConditions"
+     "$ref": "#/definitions/FailureConditions",
+     "type": "object"
     }
    },
    "required": [
@@ -418,8 +423,55 @@
    "type": "object"
   }
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "codepipeline:GetPipeline",
+    "codepipeline:CreatePipeline",
+    "codepipeline:DisableStageTransition",
+    "codepipeline:GetPipelineState",
+    "codepipeline:TagResource",
+    "codestar-connections:PassConnection"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codepipeline:GetPipeline",
+    "codepipeline:DeletePipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codepipeline:ListPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codepipeline:GetPipeline",
+    "codepipeline:ListTagsForResource",
+    "codepipeline:GetPipelineState"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:GetRole",
+    "iam:PassRole",
+    "codepipeline:EnableStageTransition",
+    "codepipeline:StartPipelineExecution",
+    "codepipeline:GetPipeline",
+    "codepipeline:UpdatePipeline",
+    "codepipeline:GetPipelineState",
+    "codepipeline:DisableStageTransition",
+    "codepipeline:TagResource",
+    "codepipeline:UntagResource",
+    "codestar-connections:PassConnection"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Name"
  ],
  "properties": {
   "ArtifactStore": {
@@ -440,21 +492,29 @@
    "uniqueItems": true
   },
   "ExecutionMode": {
-   "type": "string"
-  },
-  "Id": {
+   "default": "SUPERSEDED",
+   "enum": [
+    "QUEUED",
+    "SUPERSEDED",
+    "PARALLEL"
+   ],
    "type": "string"
   },
   "Name": {
    "type": "string"
   },
   "PipelineType": {
+   "enum": [
+    "V1",
+    "V2"
+   ],
    "type": "string"
   },
   "RestartExecutionOnUpdate": {
    "type": "boolean"
   },
   "RoleArn": {
+   "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
    "type": "string"
   },
   "Stages": {
@@ -490,7 +550,6 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
   "/properties/Version"
  ],
  "required": [
@@ -501,5 +560,16 @@
   "ArtifactStore",
   "ArtifactStores"
  ],
- "typeName": "AWS::CodePipeline::Pipeline"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodePipeline::Pipeline",
+ "writeOnlyProperties": [
+  "/properties/RestartExecutionOnUpdate"
+ ]
 }

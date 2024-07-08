@@ -4,6 +4,12 @@
   "/properties/IdNamespaceName"
  ],
  "definitions": {
+  "AttributeName": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z_0-9- \\t]*$",
+   "type": "string"
+  },
   "EntityName": {
    "maxLength": 255,
    "minLength": 1,
@@ -15,12 +21,16 @@
    "properties": {
     "IdMappingType": {
      "enum": [
-      "PROVIDER"
+      "PROVIDER",
+      "RULE_BASED"
      ],
      "type": "string"
     },
     "ProviderProperties": {
      "$ref": "#/definitions/NamespaceProviderProperties"
+    },
+    "RuleBasedProperties": {
+     "$ref": "#/definitions/NamespaceRuleBasedProperties"
     }
    },
    "required": [
@@ -65,10 +75,85 @@
    ],
    "type": "object"
   },
+  "NamespaceRuleBasedProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeMatchingModel": {
+     "enum": [
+      "ONE_TO_ONE",
+      "MANY_TO_MANY"
+     ],
+     "type": "string"
+    },
+    "RecordMatchingModels": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RecordMatchingModel"
+     },
+     "type": "array"
+    },
+    "RuleDefinitionTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RuleDefinitionType"
+     },
+     "type": "array"
+    },
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "ProviderServiceArn": {
    "maxLength": 255,
    "minLength": 20,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn):(entityresolution):([a-z]{2}-[a-z]{1,10}-[0-9])::providerservice/([a-zA-Z0-9_-]{1,255})/([a-zA-Z0-9_-]{1,255})$",
+   "type": "string"
+  },
+  "RecordMatchingModel": {
+   "enum": [
+    "ONE_SOURCE_TO_ONE_TARGET",
+    "MANY_SOURCE_TO_ONE_TARGET"
+   ],
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchingKeys": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AttributeName"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RuleName": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z_0-9- \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleName",
+    "MatchingKeys"
+   ],
+   "type": "object"
+  },
+  "RuleDefinitionType": {
+   "enum": [
+    "SOURCE",
+    "TARGET"
+   ],
    "type": "string"
   },
   "Tag": {
