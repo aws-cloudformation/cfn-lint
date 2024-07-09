@@ -1966,7 +1966,6 @@ cached: list[str] = [
     "aws-mediaconnect-flow.json",
     "aws-mediaconnect-flowentitlement.json",
     "aws-mediaconnect-flowoutput.json",
-    "aws-mediaconnect-flowsource.json",
     "aws-mediaconnect-flowvpcinterface.json",
     "aws-mediaconnect-gateway.json",
     "aws-mediaconvert-jobtemplate.json",
