@@ -1,3 +1,15 @@
+### v1.5.2
+## What's Changed
+* Update CloudFormation schemas to 2024-07-09 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3457
+* Update logging configuration to not log when used as a library by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3479
+* Add `AWS::ServiceCatalog::CloudFormationProvisionedProduct` to exceptions for [E1040](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1040) by @kylekluever in https://github.com/aws-cloudformation/cfn-lint/pull/3481
+* Allow ICMP to have `FromPort` other than -1 with `ToPort` -1 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3482
+
+## New Contributors
+* @kylekluever made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3481
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.5.1...v1.5.2
+
 ### v1.5.1
 ## What's Changed
 * Switch type comparison in BaseFn to use is_types_compatible by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3461
