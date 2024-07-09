@@ -24,6 +24,9 @@ def template():
             "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
             "MyCustomResource": {"Type": "Custom::CustomResource"},
             "MySubTemplate": {"Type": "AWS::CloudFormation::Stack"},
+            "MyProvisionedProduct": {
+                "Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
+            },
         },
     }
 
@@ -46,6 +49,12 @@ def template():
         (
             "Valid GetAtt to a sub template ",
             ["MySubTemplate", "Outputs.ImageId"],
+            {"format": "AWS::EC2::VPC.Id"},
+            [],
+        ),
+        (
+            "Valid GetAtt to a provisioned product ",
+            ["MyProvisionedProduct", "Outputs.VpcId"],
             {"format": "AWS::EC2::VPC.Id"},
             [],
         ),
