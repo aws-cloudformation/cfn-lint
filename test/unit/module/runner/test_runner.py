@@ -3,110 +3,93 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
 
-import cfnlint.decode.cfn_json  # pylint: disable=E0401
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from cfnlint import ConfigMixIn
-from cfnlint.config import _DEFAULT_RULESDIR
-from cfnlint.rules import Rules
-from cfnlint.runner import TemplateRunner
+import pytest
+
+from cfnlint.config import ConfigMixIn
+from cfnlint.runner import PROVIDER_SCHEMA_MANAGER, Runner
+from cfnlint.schema import Schema
 
 
-class TestRunner(BaseTestCase):
-    """Test Duplicates Parsing"""
-
-    def setUp(self):
-        """SetUp template object"""
-        self.rules = Rules.create_from_directory(_DEFAULT_RULESDIR)
-        (self.template, _) = cfnlint.decode.decode_str(
-            """
-            AWSTemplateFormatVersion: "2010-09-09"
-            Description: >
-                Template with all error levels: Warning, Error and Informational
-            # Adding in an issue outside of the Resources for validating
-            Conditions:
-                IsUsEast1: !Equals ["a", "b", "c"]
-            Resources:
-                myTable:
-                    Metadata:
-                        cfn-lint:
-                            config:
-                                ignore_checks:
-                                - I3011
-                                - W1020
-                                - E8003 # condition error #
-                    Type: "AWS::DynamoDB::Table"
-                    Properties:
-                        TableName: !Sub "TableName"
-                        AttributeDefinitions:
-                            - AttributeName: "Id"
-                              AttributeType: "S" # Valid AllowedValue
-                        KeySchema:
-                            - AttributeName: "Id"
-                              KeyType: "HASH"
-                        ProvisionedThroughput:
-                            ReadCapacityUnits: 5
-                            WriteCapacityUnits: "5"
-                myTable2:
-                    # With no ignore_checks so we
-                    # should still get issues from this
-                    Type: "AWS::DynamoDB::Table"
-                    Properties:
-                        TableName: !Sub "TableName1"
-                        AttributeDefinitions:
-                            - AttributeName: "Id"
-                              AttributeType: "S" # Valid AllowedValue
-                        KeySchema:
-                            - AttributeName: "Id"
-                              KeyType: "HASH"
-                        ProvisionedThroughput:
-                            ReadCapacityUnits: !If [IsUsEast1, 5, 5]
-                            WriteCapacityUnits: "5"
-        """
+def patch_registry(path):
+    PROVIDER_SCHEMA_MANAGER._registry_schemas = {
+        "Foo::Bar::MODULE": Schema(
+            {
+                "typeName": "Foo::Bar::MODULE",
+                "properties": {
+                    "Foo": {
+                        "type": "string",
+                    },
+                    "Bar": {
+                        "type": "string",
+                    },
+                },
+                "primaryIdentifiers": [],
+            }
         )
+    }
 
-    def test_runner(self):
-        """Success test"""
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
-        )
-        failures = list(runner.run())
-        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
 
-    def test_runner_mandatory_rules(self):
-        """Success test"""
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                mandatory_checks=["W1020"],
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
-        )
-        failures = list(runner.run())
-        self.assertEqual(len(failures), 5, "Got failures {}".format(failures))
+def patch_schema(path, regions):
+    PROVIDER_SCHEMA_MANAGER._registry_schemas["Foo::Bar::MODULE"].schema[
+        "primaryIdentifiers"
+    ] = ["/properties/Foo"]
 
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                mandatory_checks=["W9000"],
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
-        )
-        failures = list(runner.run())
-        self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
+
+@pytest.mark.parametrize(
+    "name,registry_path,patch_path,expected",
+    [
+        (
+            "Test no changes to the schema",
+            None,
+            None,
+            False,
+        ),
+        (
+            "Test patching registry resources",
+            "path/to/registry/schemas",
+            "patch.json",
+            False,
+        ),
+        (
+            "Test registry resource with no patching",
+            "path/to/registry/schemas",
+            None,
+            False,
+        ),
+    ],
+)
+def test_init_schemas(name, registry_path, patch_path, expected):
+    params = []
+    if registry_path:
+        params.extend(["--registry-schemas", "path/to/registry/schemas"])
+    if patch_path:
+        params.extend(["--override-spec", "patch.json"])
+    config = ConfigMixIn(params)
+
+    with patch.object(
+        PROVIDER_SCHEMA_MANAGER, "load_registry_schemas", new=patch_registry
+    ):
+        with patch.object(PROVIDER_SCHEMA_MANAGER, "patch", new=patch_schema):
+            Runner(config)
+
+            if registry_path:
+                assert "Foo::Bar::MODULE" in PROVIDER_SCHEMA_MANAGER.get_resource_types(
+                    "us-east-1"
+                )
+                schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                    "us-east-1", "Foo::Bar::MODULE"
+                )
+                if patch_path:
+                    assert schema.schema["primaryIdentifiers"] == ["/properties/Foo"]
+                else:
+                    assert schema.schema["primaryIdentifiers"] == []
+            else:
+                assert (
+                    "Foo::Bar::MODULE"
+                    not in PROVIDER_SCHEMA_MANAGER.get_resource_types("us-east-1")
+                )
+
+    PROVIDER_SCHEMA_MANAGER._registry_schemas = {}
+    PROVIDER_SCHEMA_MANAGER.reset()
