@@ -30,6 +30,7 @@ class GetAttFormat(CfnLintKeyword):
         self._resource_type_exceptions = [
             "AWS::CloudFormation::CustomResource",
             "AWS::CloudFormation::Stack",
+            "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
         ]
 
     def validate(
