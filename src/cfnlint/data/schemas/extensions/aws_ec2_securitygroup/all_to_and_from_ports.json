@@ -1,60 +1,103 @@
 {
- "allOf": [
-  {
-   "if": {
-    "properties": {
-     "ToPort": {
-      "enum": [
-       -1,
-       "-1"
-      ]
-     }
+ "else": {
+  "allOf": [
+   {
+    "if": {
+     "properties": {
+      "ToPort": {
+       "enum": [
+        -1,
+        "-1"
+       ]
+      }
+     },
+     "required": [
+      "ToPort"
+     ]
     },
-    "required": [
-     "ToPort"
-    ]
+    "then": {
+     "properties": {
+      "FromPort": {
+       "enum": [
+        -1,
+        "-1"
+       ]
+      }
+     },
+     "required": [
+      "FromPort"
+     ]
+    }
    },
-   "then": {
-    "properties": {
-     "FromPort": {
-      "enum": [
-       -1,
-       "-1"
-      ]
-     }
+   {
+    "if": {
+     "properties": {
+      "FromPort": {
+       "enum": [
+        -1,
+        "-1"
+       ]
+      }
+     },
+     "required": [
+      "FromPort"
+     ]
     },
-    "required": [
-     "FromPort"
+    "then": {
+     "properties": {
+      "ToPort": {
+       "enum": [
+        -1,
+        "-1"
+       ]
+      }
+     },
+     "required": [
+      "ToPort"
+     ]
+    }
+   }
+  ]
+ },
+ "if": {
+  "properties": {
+   "IpProtocol": {
+    "enum": [
+     "1",
+     "icmp"
     ]
    }
   },
-  {
-   "if": {
-    "properties": {
-     "FromPort": {
-      "enum": [
-       -1,
-       "-1"
-      ]
-     }
-    },
-    "required": [
-     "FromPort"
-    ]
+  "required": [
+   "IpProtocol"
+  ]
+ },
+ "then": {
+  "if": {
+   "properties": {
+    "FromPort": {
+     "enum": [
+      -1,
+      "-1"
+     ]
+    }
    },
-   "then": {
-    "properties": {
-     "ToPort": {
-      "enum": [
-       -1,
-       "-1"
-      ]
-     }
-    },
-    "required": [
-     "ToPort"
-    ]
-   }
+   "required": [
+    "FromPort"
+   ]
+  },
+  "then": {
+   "properties": {
+    "ToPort": {
+     "enum": [
+      -1,
+      "-1"
+     ]
+    }
+   },
+   "required": [
+    "ToPort"
+   ]
   }
- ]
+ }
 }
