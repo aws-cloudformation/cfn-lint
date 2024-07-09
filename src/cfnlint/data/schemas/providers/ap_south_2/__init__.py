@@ -721,6 +721,7 @@ cached: list[str] = [
     "aws-codedeploy-application.json",
     "aws-codedeploy-deploymentconfig.json",
     "aws-codedeploy-deploymentgroup.json",
+    "aws-codepipeline-pipeline.json",
     "aws-cognito-identitypool.json",
     "aws-cognito-identitypoolprincipaltag.json",
     "aws-cognito-identitypoolroleattachment.json",

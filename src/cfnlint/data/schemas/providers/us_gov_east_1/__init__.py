@@ -1012,6 +1012,7 @@ cached: list[str] = [
     "aws-lakeformation-resource.json",
     "aws-lambda-alias.json",
     "aws-lambda-eventinvokeconfig.json",
+    "aws-lambda-function.json",
     "aws-lambda-permission.json",
     "aws-lambda-version.json",
     "aws-launchwizard-deployment.json",

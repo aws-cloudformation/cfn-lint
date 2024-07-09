@@ -1185,7 +1185,6 @@ cached: list[str] = [
     "aws-sso-application.json",
     "aws-sso-applicationassignment.json",
     "aws-sso-assignment.json",
-    "aws-sso-instance.json",
     "aws-sso-instanceaccesscontrolattributeconfiguration.json",
     "aws-sso-permissionset.json",
     "aws-stepfunctions-activity.json",
