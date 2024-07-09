@@ -10334,6 +10334,31 @@
     "aws:TagKeys"
    ]
   },
+  "AWS Systems Manager Quick Setup": {
+   "ARNFormat": "arn:aws:ssm-quicksetup:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:ssm-quicksetup:.+",
+   "Actions": [
+    "CreateConfigurationManager",
+    "DeleteConfigurationManager",
+    "GetConfigurationManager",
+    "GetServiceSettings",
+    "ListConfigurationManagers",
+    "ListQuickSetupTypes",
+    "ListTagsForResource",
+    "TagResource",
+    "UntagResource",
+    "UpdateConfigurationDefinition",
+    "UpdateConfigurationManager",
+    "UpdateServiceSettings"
+   ],
+   "HasResource": true,
+   "StringPrefix": "ssm-quicksetup",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "AWS Systems Manager for SAP": {
    "ARNFormat": "arn:aws:ssm-sap:${Region}:${Account}:${ApplicationType}/${ApplicationId}",
    "ARNRegex": "^arn:aws:ssm-sap:.+",
@@ -19215,12 +19240,14 @@
     "ImportDocumentToQAppSession",
     "ListLibraryItems",
     "ListQApps",
+    "ListTagsForResource",
     "PredictProblemStatementFromConversation",
     "PredictQApp",
     "PredictQAppFromProblemStatement",
     "StartQAppSession",
     "StopQAppSession",
     "TagResource",
+    "UntagResource",
     "UpdateLibraryItem",
     "UpdateQApp",
     "UpdateQAppSession",
@@ -19231,7 +19258,11 @@
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
+    "aws:TagKeys",
+    "qapps:AppIsPublished",
+    "qapps:SessionIsShared",
+    "qapps:UserIsAppOwner",
+    "qapps:UserIsSessionModerator"
    ]
   },
   "Amazon Q in Connect": {
@@ -21149,6 +21180,7 @@
     "CreateFeatureGroup",
     "CreateFlowDefinition",
     "CreateHub",
+    "CreateHubContentReference",
     "CreateHumanTaskUi",
     "CreateHyperParameterTuningJob",
     "CreateImage",
@@ -21208,6 +21240,7 @@
     "DeleteFlowDefinition",
     "DeleteHub",
     "DeleteHubContent",
+    "DeleteHubContentReference",
     "DeleteHumanLoop",
     "DeleteHumanTaskUi",
     "DeleteHyperParameterTuningJob",
@@ -21240,6 +21273,7 @@
     "DeleteUserProfile",
     "DeleteWorkforce",
     "DeleteWorkteam",
+    "DeployHubModel",
     "DeregisterDevices",
     "DescribeAction",
     "DescribeAlgorithm",
