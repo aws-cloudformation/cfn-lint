@@ -24,7 +24,9 @@ def template():
             "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
             "MyCustomResource": {"Type": "Custom::CustomResource"},
             "MySubTemplate": {"Type": "AWS::CloudFormation::Stack"},
-            "MyProvisionedProduct": {"Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"},
+            "MyProvisionedProduct": {
+                "Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
+            },
         },
     }
 
