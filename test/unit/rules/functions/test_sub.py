@@ -290,6 +290,12 @@ def context(cfn):
                     schema_path=deque(["const"]),
                     validator="fn_sub",
                 ),
+                ValidationError(
+                    ("'three' was expected when 'Fn::Sub' is resolved"),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque(["const"]),
+                    validator="fn_sub",
+                ),
             ],
         ),
     ],
