@@ -1,3 +1,10 @@
+### v1.5.3
+## What's Changed
+* Load registry schemas before implementing patching by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3486
+* Force resolve validation to not use strict types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3488
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.5.2...v1.5.3
+
 ### v1.5.2
 ## What's Changed
 * Update CloudFormation schemas to 2024-07-09 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3457
