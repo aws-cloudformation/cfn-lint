@@ -213,13 +213,15 @@ class Runner:
         self.formatter = get_formatter(self.config)
         self.rules: Rules = Rules()
         self._get_rules()
+        # load registry schemas before patching
+        if self.config.registry_schemas:
+            for path in self.config.registry_schemas:
+                PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
+        # now we can patch after loading all registry schemas
         if self.config.override_spec:
             PROVIDER_SCHEMA_MANAGER.patch(
                 self.config.override_spec, self.config.regions
             )
-        if self.config.registry_schemas:
-            for path in self.config.registry_schemas:
-                PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
 
     def _get_rules(self) -> None:
         """
