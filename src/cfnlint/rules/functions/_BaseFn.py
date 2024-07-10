@@ -63,6 +63,11 @@ class BaseFn(CloudFormationLintRule):
         key, _ = self.key_value(instance)
 
         return_err: ValidationError | None = None
+        validator = validator.evolve(
+            context=validator.context.evolve(
+                strict_types=False,
+            ),
+        )
         for value, v, resolve_err in validator.resolve_value(instance):
             if resolve_err:
                 yield resolve_err

@@ -28,6 +28,12 @@ def rule():
         ),
         ("Everything is fine", {"Fn::Sub": "Foo"}, {"enum": ["Foo"]}, []),
         (
+            "Resolved Fn::Sub has no strict type validation",
+            {"Fn::Sub": "2"},
+            {"type": ["integer"]},
+            [],
+        ),
+        (
             "Standard error",
             {"Fn::Sub": "Bar"},
             {"enum": ["Foo"]},
