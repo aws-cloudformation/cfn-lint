@@ -1,3 +1,12 @@
+### v1.6.0
+## What's Changed
+* Update CloudFormation schemas to 2024-07-11 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3484
+* Return all errors from resolution by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3489
+* Disable [W1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1020) when using SAM by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3491
+* Use region when looking for a resolver being satisfied by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3490
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.5.3...v1.6.0
+
 ### v1.5.3
 ## What's Changed
 * Load registry schemas before implementing patching by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3486
