@@ -176,6 +176,11 @@ def create(
                                 r_validator.context.conditions.status,
                                 r_validator.context.ref_values,
                             ):
+                                r_validator = r_validator.evolve(
+                                    context=r_validator.context.evolve(
+                                        is_resolved_value=True,
+                                    )
+                                )
                                 yield r_value, r_validator, r_errs
                         except UnknownSatisfisfaction as err:
                             LOGGER.debug(err)

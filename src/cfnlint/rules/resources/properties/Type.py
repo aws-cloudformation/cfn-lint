@@ -46,7 +46,9 @@ class Type(CloudFormationLintRule):
                 ):
                     return
 
-        if self.config.get("strict") or validator.context.strict_types:
+        if (
+            self.config.get("strict") or validator.context.strict_types
+        ) and not validator.context.is_resolved_value:
             validator = validator.evolve(
                 context=validator.context.evolve(strict_types=True)
             )
