@@ -172,19 +172,18 @@ def create(
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
                         try:
-                            for _, value_context in r_validator.context.ref_value(
+                            for _, region_context in r_validator.context.ref_value(
                                 "AWS::Region"
                             ):
                                 if self.cfn.conditions.satisfiable(
-                                    value_context.conditions.status,
-                                    value_context.ref_values,
+                                    region_context.conditions.status,
+                                    region_context.ref_values,
                                 ):
-                                    value_validator = r_validator.evolve(
-                                        context=value_context.evolve(
+                                    yield r_value, r_validator.evolve(
+                                        context=region_context.evolve(
                                             is_resolved_value=True,
                                         )
-                                    )
-                                    yield r_value, value_validator, r_errs
+                                    ), r_errs
                         except UnknownSatisfisfaction as err:
                             LOGGER.debug(err)
                             return
