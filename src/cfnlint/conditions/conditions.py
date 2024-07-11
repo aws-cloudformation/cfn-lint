@@ -8,6 +8,7 @@ from __future__ import annotations
 import itertools
 import logging
 import traceback
+from functools import lru_cache
 from typing import Any, Iterator, Set, Tuple
 
 from sympy import And, Implies, Not, Symbol
@@ -294,6 +295,7 @@ class Conditions:
             #  formatting or just the wrong condition name
             return True
 
+    @lru_cache()
     def build_scenerios_on_region(
         self, condition_name: str, region: str
     ) -> Iterator[bool]:

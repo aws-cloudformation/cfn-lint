@@ -25,11 +25,11 @@ def ref(validator: Validator, instance: Any) -> ResolutionResult:
     if not isinstance(instance, (str, dict)):
         return
 
-    for instance, _, _ in validator.resolve_value(instance):
+    for instance, instance_validator, _ in validator.resolve_value(instance):
         if validator.is_type(instance, "string"):
             # if the ref is to pseudo-parameter or parameter we can validate the values
-            for v, c in validator.context.ref_value(instance):
-                yield v, validator.evolve(context=c), None
+            for v, c in instance_validator.context.ref_value(instance):
+                yield v, instance_validator.evolve(context=c), None
             return
 
 

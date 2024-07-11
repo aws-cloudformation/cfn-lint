@@ -254,7 +254,7 @@ class TestConditions(TestCase):
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region({"Ref": "Foo"}, "us-east-1")),
+            list(cfn.conditions.build_scenerios_on_region(1, "us-east-1")),
             [],
         )
 
