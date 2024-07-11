@@ -172,21 +172,23 @@ def create(
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
                         try:
-                            if self.cfn.conditions.satisfiable(
-                                r_validator.context.conditions.status,
-                                r_validator.context.ref_values,
+                            for _, region_context in r_validator.context.ref_value(
+                                "AWS::Region"
                             ):
-                                r_validator = r_validator.evolve(
-                                    context=r_validator.context.evolve(
-                                        is_resolved_value=True,
-                                    )
-                                )
-                                yield r_value, r_validator, r_errs
+                                if self.cfn.conditions.satisfiable(
+                                    region_context.conditions.status,
+                                    region_context.ref_values,
+                                ):
+                                    yield r_value, r_validator.evolve(
+                                        context=region_context.evolve(
+                                            is_resolved_value=True,
+                                        )
+                                    ), r_errs
                         except UnknownSatisfisfaction as err:
                             LOGGER.debug(err)
                             return
                     else:
-                        yield None, self, r_errs  # type: ignore
+                        yield None, r_validator, r_errs  # type: ignore
                 return
 
             # The return type is a Protocol and we are returning an instance
