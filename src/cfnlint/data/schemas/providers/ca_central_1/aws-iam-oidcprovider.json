@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Url"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateOpenIDConnectProvider",
+    "iam:TagOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteOpenIDConnectProvider"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetOpenIDConnectProvider"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:UpdateOpenIDConnectProviderThumbprint",
+    "iam:RemoveClientIDFromOpenIDConnectProvider",
+    "iam:AddClientIDToOpenIDConnectProvider",
+    "iam:GetOpenIDConnectProvider",
+    "iam:TagOpenIDConnectProvider",
+    "iam:UntagOpenIDConnectProvider",
+    "iam:ListOpenIDConnectProviderTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "ClientIdList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ThumbprintList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 40,
+    "minLength": 40,
+    "pattern": "[0-9A-Fa-f]{40}",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "Url": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ThumbprintList"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IAM::OIDCProvider"
+}

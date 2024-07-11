@@ -45,6 +45,32 @@
    },
    "type": "object"
   },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsDataKeyReusePeriodSeconds": {
+     "maximum": 900,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CUSTOMER_MANAGED_KMS_KEY",
+      "AWS_OWNED_KEY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
   "LogDestination": {
    "additionalProperties": false,
    "properties": {
@@ -136,7 +162,9 @@
     "states:DescribeStateMachine",
     "states:TagResource",
     "iam:PassRole",
-    "s3:GetObject"
+    "s3:GetObject",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey"
    ]
   },
   "delete": {
@@ -153,7 +181,8 @@
   "read": {
    "permissions": [
     "states:DescribeStateMachine",
-    "states:ListTagsForResource"
+    "states:ListTagsForResource",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -162,7 +191,9 @@
     "states:TagResource",
     "states:UntagResource",
     "states:ListTagsForResource",
-    "iam:PassRole"
+    "iam:PassRole",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey"
    ]
   }
  },
@@ -188,6 +219,9 @@
   },
   "DefinitionSubstitutions": {
    "$ref": "#/definitions/DefinitionSubstitutions"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
   },
   "LoggingConfiguration": {
    "$ref": "#/definitions/LoggingConfiguration"
