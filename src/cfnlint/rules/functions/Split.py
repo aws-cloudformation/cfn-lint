@@ -26,7 +26,7 @@ class Split(BaseFn):
     tags = ["functions", "split"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Split", ("array",))
+        super().__init__("Fn::Split", ("array",), resolved_rule="W1033")
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
         return {

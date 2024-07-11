@@ -21,7 +21,9 @@ class FindInMap(BaseFn):
     tags = ["functions", "findinmap"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::FindInMap", ("array",) + singular_types)
+        super().__init__(
+            "Fn::FindInMap", ("array",) + singular_types, resolved_rule="W1034"
+        )
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
         scalar_schema = {

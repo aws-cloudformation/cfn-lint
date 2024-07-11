@@ -34,6 +34,7 @@ class ToJsonString(BaseFn):
                 "Fn::Split",
                 "Ref",
             ),
+            resolved_rule="W1040",
         )
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:

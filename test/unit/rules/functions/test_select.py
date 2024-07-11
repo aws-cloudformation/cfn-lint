@@ -9,11 +9,13 @@ import pytest
 
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.functions.Select import Select
+from cfnlint.rules.functions.SelectResolved import SelectResolved
 
 
 @pytest.fixture(scope="module")
 def rule():
     rule = Select()
+    rule.child_rules["W1035"] = SelectResolved()
     yield rule
 
 
@@ -116,6 +118,7 @@ def template():
                     path=deque(["Fn::Select"]),
                     schema_path=deque(["type"]),
                     validator="fn_select",
+                    rule=SelectResolved(),
                 ),
             ],
         ),

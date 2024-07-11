@@ -23,11 +23,14 @@ class BaseFn(CloudFormationLintRule):
         name: str = "",
         types: Tuple[str, ...] | None = None,
         functions: Tuple[str, ...] | None = None,
+        resolved_rule: str = "",
     ) -> None:
         super().__init__()
         self.fn = ToPy(name)
         self.types = types or tuple([])
         self.functions = functions or tuple([])
+        self.resolved_rule = resolved_rule
+        self.child_rules[self.resolved_rule] = None
 
     def key_value(self, instance: dict[str, Any]) -> Tuple[str, Any]:
         return list(instance.keys())[0], instance.get(self.fn.name)
@@ -60,6 +63,9 @@ class BaseFn(CloudFormationLintRule):
         instance: Any,
         schema: Any,
     ) -> ValidationResult:
+        if not self.resolved_rule:
+            return
+
         key, _ = self.key_value(instance)
 
         validator = validator.evolve(
@@ -90,7 +96,10 @@ class BaseFn(CloudFormationLintRule):
                 err.message = f"{err.message} when {self.fn.name!r} is resolved"
                 all_errs.append(err)
 
-        yield from iter(all_errs)
+        for err in all_errs:
+            if self.child_rules[self.resolved_rule]:
+                err.rule = self.child_rules[self.resolved_rule]
+                yield err
 
     def _resolve_ref(self, validator, schema) -> Any:
 

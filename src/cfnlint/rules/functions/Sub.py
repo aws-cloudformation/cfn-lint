@@ -25,12 +25,14 @@ class Sub(BaseFn):
     tags = ["functions", "sub"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Sub", ("string",))
+        super().__init__("Fn::Sub", ("string",), resolved_rule="W1031")
         self.sub_parameter_types = ["string", "integer", "number", "boolean"]
-        self.child_rules = {
-            "W1019": None,
-            "W1020": None,
-        }
+        self.child_rules.update(
+            {
+                "W1019": None,
+                "W1020": None,
+            }
+        )
         self._functions = [
             "Fn::Base64",
             "Fn::FindInMap",
