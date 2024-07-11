@@ -7,7 +7,7 @@ from typing import Any
 
 import regex as re
 
-from cfnlint.helpers import REGEX_SUB_PARAMETERS
+from cfnlint.helpers import REGEX_SUB_PARAMETERS, ensure_list
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules import CloudFormationLintRule
 
@@ -24,6 +24,10 @@ class SubUnneeded(CloudFormationLintRule):
     def validate(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
+        if "AWS::Serverless-2016-10-31" in ensure_list(
+            validator.cfn.transform_pre.get("Transform")
+        ):
+            return
         if validator.is_type(instance, "string"):
             variables = re.findall(REGEX_SUB_PARAMETERS, instance)
             path = []

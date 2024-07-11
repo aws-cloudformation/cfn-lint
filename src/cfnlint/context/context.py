@@ -153,6 +153,9 @@ class Context:
 
     transforms: Transforms = field(init=True, default_factory=lambda: Transforms([]))
 
+    # is the value a resolved value
+    is_resolved_value: bool = field(init=True, default=False)
+
     def evolve(self, **kwargs) -> "Context":
         """
         Create a new context without merging together attributes
