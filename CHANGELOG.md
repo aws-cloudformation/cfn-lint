@@ -1,3 +1,10 @@
+### v1.6.1
+## What's Changed
+* SAM transform replace AutoPublishCodeSha256 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3497
+* Change return type of conditions `build_scenerios_on_region` to be a `list[bool]` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3498
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.6.0...v1.6.1
+
 ### v1.6.0
 ## What's Changed
 * Update CloudFormation schemas to 2024-07-11 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3484
