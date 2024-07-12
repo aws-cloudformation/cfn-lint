@@ -105,6 +105,8 @@ class Transform:
                             if k == "Ref":
                                 if v in self._template.get("Parameters"):
                                     self._parameters[v] = "Alias"
+                if isinstance(resource_dict.get("AutoPublishCodeSha256"), dict):
+                    resource_dict["AutoPublishCodeSha256"] = "fakesha"
             if resource_type in ["AWS::Serverless::LayerVersion"]:
                 if resource_dict.get("ContentUri"):
                     Transform._update_to_s3_uri("ContentUri", resource_dict)

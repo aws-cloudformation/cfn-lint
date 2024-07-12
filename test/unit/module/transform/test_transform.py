@@ -118,3 +118,37 @@ class TestTransform(BaseTestCase):
         transformed_template = Transform(filename, template, region)
         results = transformed_template.transform_template()
         self.assertEqual(results, [])
+
+    def test_parameter_for_autopublish_code_sha256(self):
+        filename = (
+            "test/fixtures/templates/good/transform/auto_publish_code_sha256.yaml"
+        )
+        region = "us-east-1"
+        template = cfn_yaml.load(filename)
+        transformed_template = Transform(filename, template, region)
+        transformed_template.transform_template()
+        self.assertDictEqual(transformed_template._parameters, {})
+        self.assertDictEqual(
+            transformed_template._template.get("Resources")
+            .get("LambdaFunction")
+            .get("Properties"),
+            {
+                "Code": {
+                    "S3Bucket": {"Ref": "CodeBucket"},
+                    "S3Key": {"Fn::Sub": "${ Basepath }/lambda.zip"},
+                },
+                "Description": "fakesha",
+                "FunctionName": {"Fn::Sub": "${ AWS::StackName }"},
+                "Handler": "lambda.handler",
+                "MemorySize": 256,
+                "Role": {"Fn::GetAtt": ["LambdaFunctionRole", "Arn"]},
+                "Runtime": "python3.12",
+                "Tags": [{"Key": "lambda:createdBy", "Value": "SAM"}],
+                "Timeout": 30,
+                "TracingConfig": {"Mode": "PassThrough"},
+            },
+        )
+        self.assertIn(
+            "LambdaFunctionVersionfakesha",
+            transformed_template._template.get("Resources").keys(),
+        )
