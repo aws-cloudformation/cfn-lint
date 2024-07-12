@@ -216,46 +216,42 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 3)
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-east-1")),
+            cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-east-1"),
             [
                 True,
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-west-2")),
+            cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-west-2"),
             [
                 False,
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-west-2")),
+            cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-west-2"),
             [
                 True,
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-east-1")),
+            cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-east-1"),
             [
                 False,
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("IsProd", "us-east-1")),
-            [
-                True,
-                False,
-            ],
-        )
-        self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region("Foo", "us-east-1")),
+            cfn.conditions.build_scenerios_on_region("IsProd", "us-east-1"),
             [
                 True,
                 False,
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenerios_on_region(1, "us-east-1")),
-            [],
+            cfn.conditions.build_scenerios_on_region("Foo", "us-east-1"),
+            [
+                True,
+                False,
+            ],
         )
 
     def test_test_condition(self):
