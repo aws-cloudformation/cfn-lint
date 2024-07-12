@@ -1,0 +1,25 @@
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  Basepath:
+    Type: String
+  CodeBucket:
+    Type: String
+  GitCommit:
+    Type: String
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      AutoPublishAlias: live
+      AutoPublishCodeSha256: !Ref GitCommit
+      CodeUri:
+        Bucket: !Ref CodeBucket
+        Key: !Sub ${ Basepath }/lambda.zip
+      DeploymentPreference:
+        Enabled: false
+      FunctionName: !Sub ${ AWS::StackName }
+      Handler: lambda.handler
+      MemorySize: 256
+      Runtime: python3.12
+      Timeout: 30
+      Tracing: PassThrough
