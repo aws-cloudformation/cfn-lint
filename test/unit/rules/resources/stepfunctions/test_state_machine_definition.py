@@ -309,6 +309,85 @@ def rule():
             [],
         ),
         (
+            "Test functions",
+            {
+                "StartAt": "Task1",
+                "States": {
+                    "Task1": {
+                        "Type": "Task",
+                        "Credentials": {
+                            "Data": "input data",
+                            "Algorithm": "SHA-1",
+                        },
+                        "Resource": "arn:aws:states:::batch:submitJob.sync",
+                        "End": True,
+                    },
+                },
+            },
+            [],
+        ),
+        (
+            "Choices",
+            {
+                "StartAt": "ChoiceStateX",
+                "States": {
+                    "ChoiceStateX": {
+                        "Type": "Choice",
+                        "Choices": [
+                            {
+                                "Not": {
+                                    "Variable": "$.type",
+                                    "StringEquals": "Private",
+                                },
+                                "Next": "Public",
+                            },
+                            {
+                                "Variable": "$.value",
+                                "NumericEquals": 0,
+                                "Next": "ValueIsZero",
+                            },
+                            {
+                                "And": [
+                                    {
+                                        "Variable": "$.value",
+                                        "NumericGreaterThanEquals": 20,
+                                    },
+                                    {"Variable": "$.value", "NumericLessThan": 30},
+                                ],
+                                "Next": "ValueInTwenties",
+                            },
+                            {
+                                "Variable": "$.value",
+                                "NumericLessThan": 0,
+                                "Next": "ValueIsNegative",
+                            },
+                        ],
+                        "Default": "DefaultState",
+                    },
+                    "Public": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Foo",
+                        "Next": "NextState",
+                    },
+                    "ValueIsZero": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Zero",
+                        "Next": "NextState",
+                    },
+                    "ValueInTwenties": {
+                        "Type": "Task",
+                        "Resource": "arn:aws:lambda:us-east-1:123456789012:function:Bar",
+                        "Next": "NextState",
+                    },
+                    "ValueIsNegative": {
+                        "Type": "Succeed",
+                    },
+                    "DefaultState": {"Type": "Fail", "Cause": "No Matches!"},
+                },
+            },
+            [],
+        ),
+        (
             "Invalid configuration",
             {
                 "StartAt": "SampleChoice",
