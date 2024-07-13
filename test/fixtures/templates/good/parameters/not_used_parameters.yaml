@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  Version:
+    Type: String
+
+Resources:
+  SomeLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.SomeLambda::handleRequest
+      Runtime: java8
+      MemorySize: 256
+      CodeUri:
+        Bucket: "somebucket"
+        Key: "lambda/code/lambda-shaded.jar"
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-123456
+      InstanceType: t2.micro
+      UserData:
+        'Fn::Base64':
+          'Fn::Sub':
+            'Fn::Transform':  # Doesn't fail on Transform
+              Name: DynamicUserData
