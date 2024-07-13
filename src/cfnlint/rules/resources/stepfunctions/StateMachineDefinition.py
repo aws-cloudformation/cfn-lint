@@ -16,14 +16,15 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 from cfnlint.schema.resolver import RefResolver
 
 
-class Configuration(CfnLintJsonSchema):
+class StateMachineDefinition(CfnLintJsonSchema):
     id = "E3601"
-    shortdesc = "Basic CloudFormation Resource Check"
+    shortdesc = "Validate the structure of a StateMachine definition"
     description = (
-        "Making sure the basic CloudFormation resources are properly configured"
+        "Validate the Definition or DefinitionString inside a "
+        "AWS::StepFunctions::StateMachine resource"
     )
-    source_url = "https://github.com/aws-cloudformation/cfn-lint"
-    tags = ["resources"]
+    source_url = "https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-state-machine-structure.html"
+    tags = ["resources", "statemachine"]
 
     def __init__(self):
         super().__init__(
