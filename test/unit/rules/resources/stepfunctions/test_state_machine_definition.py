@@ -454,6 +454,44 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Invalid string definition",
+            """
+            {
+                "States": {
+                    "NoType": {}
+                }
+            }
+            """,
+            [
+                ValidationError(
+                    "'Type' is a required property at 'States/NoType'",
+                    rule=StateMachineDefinition(),
+                    validator="required",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "required",
+                        ]
+                    ),
+                    path=deque(["States", "NoType"]),
+                ),
+                ValidationError(
+                    "'StartAt' is a required property",
+                    rule=StateMachineDefinition(),
+                    validator="required",
+                    schema_path=deque(
+                        [
+                            "required",
+                        ]
+                    ),
+                    path=deque([]),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(
