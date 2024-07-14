@@ -19,6 +19,7 @@ class TestParameterUsed(BaseRuleTestCase):
             "test/fixtures/templates/good/parameters/used_transforms.yaml",
             "test/fixtures/templates/good/parameters/used_transform_removed.yaml",
             "test/fixtures/templates/good/parameters/used_transform_language_extension.json",
+            "test/fixtures/templates/good/parameters/not_used_parameters.yaml",
         ]
 
     def test_file_positive(self):
@@ -29,10 +30,4 @@ class TestParameterUsed(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/parameters/configuration.yaml", 17
-        )
-
-    def test_file_negative_removed(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/parameters/used_transform_removed.yaml", 1
         )
