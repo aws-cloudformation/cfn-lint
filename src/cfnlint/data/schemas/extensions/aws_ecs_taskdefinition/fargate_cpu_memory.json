@@ -1,0 +1,136 @@
+{
+ "if": {
+  "properties": {
+   "Cpu": {
+    "type": [
+     "string",
+     "integer"
+    ]
+   },
+   "Memory": {
+    "type": [
+     "string",
+     "integer"
+    ]
+   },
+   "RequiresCompatibilities": {
+    "contains": {
+     "enum": [
+      "FARGATE"
+     ],
+     "type": "string"
+    },
+    "type": "array"
+   }
+  },
+  "required": [
+   "RequiresCompatibilities",
+   "Cpu",
+   "Memory"
+  ]
+ },
+ "then": {
+  "anyOf": [
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "256"
+      ]
+     },
+     "Memory": {
+      "enum": [
+       "512",
+       "1024",
+       "2048"
+      ]
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "512"
+      ]
+     },
+     "Memory": {
+      "maximum": 4096,
+      "minimum": 1024,
+      "multipleOf": 1024
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "1024"
+      ]
+     },
+     "Memory": {
+      "maximum": 8192,
+      "minimum": 2048,
+      "multipleOf": 1024
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "2048"
+      ]
+     },
+     "Memory": {
+      "maximum": 16384,
+      "minimum": 4096,
+      "multipleOf": 1024
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "4096"
+      ]
+     },
+     "Memory": {
+      "maximum": 30720,
+      "minimum": 8192,
+      "multipleOf": 1024
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "8192"
+      ]
+     },
+     "Memory": {
+      "maximum": 61440,
+      "minimum": 16384,
+      "multipleOf": 4096
+     }
+    }
+   },
+   {
+    "properties": {
+     "Cpu": {
+      "enum": [
+       "16384"
+      ]
+     },
+     "Memory": {
+      "maximum": 122880,
+      "minimum": 32768,
+      "multipleOf": 8192
+     }
+    }
+   }
+  ]
+ }
+}
