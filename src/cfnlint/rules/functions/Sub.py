@@ -81,7 +81,7 @@ class Sub(BaseFn):
         return err
 
     def _validate_string(
-        self, validator: Validator, key: str, instance: Any
+        self, validator: Validator, key: str, instance: Any, sub_values: dict[str, Any]
     ) -> ValidationResult:
         params = re.findall(REGEX_SUB_PARAMETERS, instance)
         validator = validator.evolve(
@@ -102,47 +102,38 @@ class Sub(BaseFn):
                 for err in validator.descend(
                     instance={"Fn::GetAtt": param},
                     schema={"type": ["string"]},
-                    path=key,
                 ):
                     yield self._clean_error(err, {"Fn::GetAtt": param}, param)
             else:
-                for err in validator.descend(
-                    instance={"Ref": param},
-                    schema={"type": ["string"]},
-                    path=key,
-                ):
-                    yield self._clean_error(err, {"Ref": param}, param)
+                if param not in sub_values:
+                    for err in validator.descend(
+                        instance={"Ref": param},
+                        schema={"type": ["string"]},
+                    ):
+                        yield self._clean_error(err, {"Ref": param}, param)
 
     def fn_sub(
         self, validator: Validator, s: Any, instance: Any, schema: Any
     ) -> ValidationResult:
         validator = validator.evolve(
-            context=validator.context.evolve(strict_types=True)
+            context=validator.context.evolve(strict_types=True),
         )
-        yield from super().validate(validator, s, instance, schema)
+        errs = list(super().validate(validator, s, instance, schema))
+        if errs:
+            yield from iter(errs)
+            return
 
         key, value = self.key_value(instance)
+        sub_values = {}
         if validator.is_type(value, "array"):
-            if len(value) != 2:
-                return
-            if not validator.is_type(value[1], "object"):
-                return
-
             sub_values = value[1].copy()
             for sub_k, sub_v in value[1].items():
                 fn_k, fn_v = is_function(sub_v)
                 if fn_k == "Ref" and fn_v == sub_k:
                     del sub_values[sub_k]
-            validator_string = validator.evolve(
-                context=validator.context.evolve(ref_values=sub_values)
-            )
             value = value[0]
-        elif validator.is_type(value, "string"):
-            validator_string = validator
-        else:
-            return
 
-        errs = list(self._validate_string(validator_string, key, value))
+        errs = list(self._validate_string(validator, key, value, sub_values))
         if errs:
             yield from iter(errs)
             return
