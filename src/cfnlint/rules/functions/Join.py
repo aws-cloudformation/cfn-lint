@@ -22,10 +22,12 @@ class Join(BaseFn):
     tags = ["functions", "join"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Join", ("string",))
-        self.child_rules = {
-            "I1022": None,
-        }
+        super().__init__("Fn::Join", ("string",), resolved_rule="W1032")
+        self.child_rules.update(
+            {
+                "I1022": None,
+            }
+        )
 
     def schema(self, validator, instance) -> dict[str, Any]:
         return {

@@ -21,7 +21,7 @@ class Select(BaseFn):
     tags = ["functions", "select"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Select", all_types)
+        super().__init__("Fn::Select", all_types, resolved_rule="W1035")
         self.fn_select = self.validate
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:

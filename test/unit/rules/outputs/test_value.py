@@ -11,6 +11,7 @@ from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Cidr import Cidr
 from cfnlint.rules.functions.Join import Join
 from cfnlint.rules.functions.Ref import Ref
+from cfnlint.rules.functions.RefResolved import RefResolved
 from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
 
 
@@ -54,10 +55,13 @@ def template():
 
 @pytest.fixture
 def validator(cfn):
+
+    ref = Ref()
+    ref.child_rules["W1030"] = RefResolved()
     yield CfnTemplateValidator(schema={}).extend(
         validators={
             "fn_join": Join().fn_join,
-            "ref": Ref().ref,
+            "ref": ref.ref,
             "fn_cidr": Cidr().fn_cidr,
         }
     )(
@@ -173,6 +177,7 @@ def validator(cfn):
                         ["fn_join", "fn_items", "fn_cidr", "fn_items", "ref", "pattern"]
                     ),
                     path=deque(["Value", "Fn::Join", 1, "Fn::Cidr", 0, "Ref"]),
+                    rule=RefResolved(),
                 )
             ],
         ),

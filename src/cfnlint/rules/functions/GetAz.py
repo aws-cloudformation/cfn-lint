@@ -22,7 +22,7 @@ class GetAz(BaseFn):
     tags = ["functions", "getaz"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::GetAZs", ("array",), ("Ref",))
+        super().__init__("Fn::GetAZs", ("array",), ("Ref",), resolved_rule="W1036")
         self.fn_getazs = self.validate
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:

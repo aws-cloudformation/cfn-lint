@@ -22,11 +22,11 @@ class Ref(BaseFn):
     tags = ["functions", "ref"]
 
     def __init__(self) -> None:
-        super().__init__("Ref", all_types)
+        super().__init__("Ref", all_types, resolved_rule="W1030")
         self._all_refs = [
             "W2010",
         ]
-        self.child_rules = dict.fromkeys(self._all_refs)
+        self.child_rules.update(dict.fromkeys(self._all_refs))
 
     def schema(self, validator, instance) -> dict[str, Any]:
         return {
@@ -93,6 +93,8 @@ class Ref(BaseFn):
         keyword = validator.context.path.cfn_path_string
         for rule in self.child_rules.values():
             if not rule or rule.id in self._all_refs:
+                continue
+            if not hasattr(rule, "keywords"):
                 continue
             if keyword in rule.keywords:
                 yield from rule.validate(validator, keyword, instance, schema)

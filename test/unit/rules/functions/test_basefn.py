@@ -8,12 +8,18 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.functions._BaseFn import BaseFn
+
+
+class _ChildRule(CloudFormationLintRule):
+    id = "XXXXX"
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = BaseFn()
+    rule = BaseFn(resolved_rule="XXXXX")
+    rule.child_rules["XXXXX"] = _ChildRule()
     yield rule
 
 
@@ -46,6 +52,7 @@ def rule():
                     path=deque(["Fn::Sub"]),
                     validator="",
                     schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
                 )
             ],
         ),
