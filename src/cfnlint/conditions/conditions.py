@@ -354,7 +354,8 @@ class Conditions:
         determine if the conditions are satisfied
 
         Args:
-            condition_names (list[str]): A list of condition names
+            condition_names (dict[str, bool]): A list of condition names with if
+              they are True or False
 
         Returns:
             bool: True if the conditions are satisfied

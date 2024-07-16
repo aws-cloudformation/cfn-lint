@@ -5,9 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 from cfnlint.rules._rule import CloudFormationLintRule, Match, RuleMatch
 from cfnlint.rules._rules import Rules, RulesCollection
+
+# type: ignore
 from cfnlint.rules.jsonschema import (
     CfnLintJsonSchema,
     CfnLintJsonSchemaRegional,
     CfnLintKeyword,
+    CfnLintRelationship,
     SchemaDetails,
 )
