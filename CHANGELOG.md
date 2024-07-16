@@ -1,3 +1,15 @@
+### v1.7.0
+## What's Changed
+* Don't validate [W2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2001) when using Transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3501
+* Fix an issue with endless loops in Fn::Sub by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3503
+* Move rule to [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) to [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3502
+* Add start to SSM json schemas by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3471
+* Add two new rules to validate fargate tasks by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3464
+* Update CloudFormation schemas to 2024-07-15 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3494
+* Convert resolver errors to warnings by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3493
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.6.1...v1.7.0
+
 ### v1.6.1
 ## What's Changed
 * SAM transform replace AutoPublishCodeSha256 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3497
