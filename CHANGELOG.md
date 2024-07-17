@@ -1,3 +1,9 @@
+### v1.7.2
+## What's Changed
+* Add 1.0 to SSM document versions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3511
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.7.1...v1.7.2
+
 ### v1.7.1
 ## What's Changed
 * Fix sub regex resolver to always return a string by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3508
