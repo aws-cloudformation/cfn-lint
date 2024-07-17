@@ -1,3 +1,9 @@
+### v1.7.1
+## What's Changed
+* Fix sub regex resolver to always return a string by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3508
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.7.0...v1.7.1
+
 ### v1.7.0
 ## What's Changed
 * Don't validate [W2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2001) when using Transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3501
