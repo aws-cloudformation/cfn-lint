@@ -39,6 +39,14 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": ".5 vCPU",
+                "Memory": "1 GB",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": "1024",
                 "Memory": "2048",
             },
@@ -55,7 +63,7 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
-                "Cpu": 4096,
+                "Cpu": "4 vcpu",
                 "Memory": 30720,
             },
             [],
@@ -63,15 +71,23 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
-                "Cpu": 8192,
-                "Memory": 16384,
+                "Cpu": "4 vcpu",
+                "Memory": "22 gb",
             },
             [],
         ),
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
-                "Cpu": 16384,
+                "Cpu": 8192,
+                "Memory": "16 GB",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": "16     vCpU",
                 "Memory": 122880,
             },
             [],
@@ -85,6 +101,22 @@ def rule():
             [
                 ValidationError(
                     "Cpu 16384 is not compatible with memory 123904",
+                    rule=FargateCpuMemory(),
+                    path=deque([]),
+                    validator="anyOf",
+                    schema_path=deque(["then", "anyOf"]),
+                )
+            ],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": 16384,
+                "Memory": "1 GB",
+            },
+            [
+                ValidationError(
+                    "Cpu 16384 is not compatible with memory '1 GB'",
                     rule=FargateCpuMemory(),
                     path=deque([]),
                     validator="anyOf",

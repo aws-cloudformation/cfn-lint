@@ -31,6 +31,14 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": ".25     vCpU",
+                "Memory": "512",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": 16384,
             },
             [
@@ -92,13 +100,15 @@ def rule():
             [
                 ValidationError(
                     (
-                        "128 is not one of ['256', '512', '1024', "
-                        "'2048', '4096', '8192', '16384']"
+                        "128 is not one of ['256', '512', '1024', '2048', "
+                        "'4096', '8192', '16384']"
                     ),
                     rule=TaskFargateProperties(),
                     path=deque(["Cpu"]),
                     validator="enum",
-                    schema_path=deque(["then", "then", "properties", "Cpu", "enum"]),
+                    schema_path=deque(
+                        ["then", "then", "properties", "Cpu", "then", "enum"]
+                    ),
                 )
             ],
         ),
