@@ -32,6 +32,7 @@ def template():
         },
         "Conditions": {
             "IsUsEast1": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+            "IsNotUsEast1": {"Fn::Not": [{"Condition": "IsUsEast1"}]},
             "IsImageIdSpecified": {
                 "Fn::Not": [{"Fn::Equals": [{"Ref": "ImageId"}, ""]}]
             },
@@ -99,6 +100,34 @@ def template():
                 "Condition": "IsImageIdSpecified",
                 "Properties": {"ImageId": {"Fn::GetAtt": ["Four", "ImageId"]}},
             },
+            "ParentFive": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsImageIdSpecified",
+                "Properties": {"ImageId": {"Fn::If": ["IsUsEast1", "ImageId"]}},
+            },
+            "ParentSix": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsImageIdSpecified",
+                "Properties": [],
+            },
+            "Seven": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsNotUsEast1",
+                "Properties": {
+                    "ImageId": {
+                        "Fn::If": [
+                            "IsImageIdSpecified",
+                            {"Ref": "ImageId"},
+                            {"Ref": "AWS::NoValue"},
+                        ]
+                    },
+                },
+            },
+            "ParentSeven": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsUsEast1",
+                "Properties": {"ImageId": {"Fn::GetAtt": ["Sevent", "ImageId"]}},
+            },
         },
     }
 
@@ -138,6 +167,30 @@ def template():
             [
                 ({"Ref": "ImageId"}, {"IsUsEast1": True, "IsImageIdSpecified": True}),
             ],
+        ),
+        (
+            "Five",
+            deque(["Resources", "ParentFive", "Properties", "ImageId"]),
+            {},
+            [],
+        ),
+        (
+            "Six",
+            deque(["Resources", "ParentSix", "Properties", "ImageId"]),
+            {},
+            [],
+        ),
+        (
+            "Seven",
+            deque(["Resources", "ParentSeven", "Properties", "ImageId"]),
+            {},
+            [],
+        ),
+        (
+            "Short Path",
+            deque(["Resources", "ParentSix"]),
+            {},
+            [],
         ),
     ],
 )

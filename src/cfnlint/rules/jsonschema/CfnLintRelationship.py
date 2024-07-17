@@ -9,7 +9,7 @@ from collections import deque
 from typing import Any, Iterator, Sequence
 
 from cfnlint.helpers import is_function
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -21,9 +21,6 @@ class CfnLintRelationship(CloudFormationLintRule):
         self.keywords = keywords or []
         self.relationship = relationship or ""
         self.parent_rules = ["E1101"]
-
-    def message(self, instance: Any, err: ValidationError) -> str:
-        return self.shortdesc
 
     def _get_relationship(
         self, validator: Validator, instance: Any, path: deque[str | int]
@@ -158,5 +155,3 @@ class CfnLintRelationship(CloudFormationLintRule):
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
         raise NotImplementedError("validate not implemented")
-        return
-        yield
