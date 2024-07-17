@@ -1137,6 +1137,7 @@ types: list[str] = [
     "AWS::SageMaker::ImageVersion",
     "AWS::SageMaker::InferenceComponent",
     "AWS::SageMaker::InferenceExperiment",
+    "AWS::SageMaker::MlflowTrackingServer",
     "AWS::SageMaker::Model",
     "AWS::SageMaker::ModelBiasJobDefinition",
     "AWS::SageMaker::ModelCard",
