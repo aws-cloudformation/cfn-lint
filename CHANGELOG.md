@@ -1,3 +1,11 @@
+### v1.8.0
+## What's Changed
+* Add rule [E3663](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3663) to validate lambda fn env vars by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3505
+* Allow for vCPU and GB in ECS task rules [E3047](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3047) and [E3048](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3048) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3515
+* Update CloudFormation schemas to 2024-07-17 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3504
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.7.2...v1.8.0
+
 ### v1.7.2
 ## What's Changed
 * Add 1.0 to SSM document versions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3511
