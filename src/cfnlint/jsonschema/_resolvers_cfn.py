@@ -246,7 +246,7 @@ def _sub_string(validator: Validator, string: str) -> ResolutionResult:
                     ref_values=c.ref_values,
                 )
             )
-            return value
+            return str(value)
         raise ValueError(f"No matches for {matchobj.group(2)!r}")
 
     try:

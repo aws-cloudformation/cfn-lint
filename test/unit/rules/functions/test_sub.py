@@ -157,6 +157,12 @@ def context(cfn):
             [],
         ),
         (
+            "Valid Fn::Sub with an integer parameter",
+            {"Fn::Sub": ["${Foo}", {"Foo": 1}]},
+            {"type": "string"},
+            [],
+        ),
+        (
             "Invalid Fn::Sub with a too to many elements",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
             {"type": "string"},
