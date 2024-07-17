@@ -71,6 +71,14 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
+                "Cpu": "4 vcpu",
+                "Memory": "22 gb",
+            },
+            [],
+        ),
+        (
+            {
+                "RequiresCompatibilities": ["FARGATE"],
                 "Cpu": 8192,
                 "Memory": "16 GB",
             },
@@ -79,7 +87,7 @@ def rule():
         (
             {
                 "RequiresCompatibilities": ["FARGATE"],
-                "Cpu": 16384,
+                "Cpu": "16     vCpU",
                 "Memory": 122880,
             },
             [],
