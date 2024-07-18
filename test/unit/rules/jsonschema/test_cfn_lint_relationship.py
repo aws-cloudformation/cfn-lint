@@ -100,15 +100,32 @@ def template():
                 "Condition": "IsImageIdSpecified",
                 "Properties": {"ImageId": {"Fn::GetAtt": ["Four", "ImageId"]}},
             },
+            "Five": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsUsEast1",
+                "Properties": {
+                    "ImageId": {
+                        "Fn::If": [
+                            "IsImageIdSpecified",
+                            {"Ref": "ImageId"},
+                        ]
+                    },
+                },
+            },
             "ParentFive": {
                 "Type": "AWS::EC2::Instance",
                 "Condition": "IsImageIdSpecified",
-                "Properties": {"ImageId": {"Fn::If": ["IsUsEast1", "ImageId"]}},
+                "Properties": {"ImageId": {"Fn::GetAtt": ["Five", "ImageId"]}},
+            },
+            "Six": {
+                "Type": "AWS::EC2::Instance",
+                "Condition": "IsUsEast1",
+                "Properties": "Foo",
             },
             "ParentSix": {
                 "Type": "AWS::EC2::Instance",
                 "Condition": "IsImageIdSpecified",
-                "Properties": [],
+                "Properties": {"ImageId": {"Fn::GetAtt": ["Six", "ImageId"]}},
             },
             "Seven": {
                 "Type": "AWS::EC2::Instance",
@@ -126,7 +143,22 @@ def template():
             "ParentSeven": {
                 "Type": "AWS::EC2::Instance",
                 "Condition": "IsUsEast1",
-                "Properties": {"ImageId": {"Fn::GetAtt": ["Sevent", "ImageId"]}},
+                "Properties": {"ImageId": {"Fn::GetAtt": ["Seven", "ImageId"]}},
+            },
+            "Eight": {
+                "Properties": {
+                    "ImageId": {
+                        "Fn::If": [
+                            "IsImageIdSpecified",
+                            {"Ref": "ImageId"},
+                            {"Ref": "AWS::NoValue"},
+                        ]
+                    },
+                },
+            },
+            "ParentEight": {
+                "Type": "AWS::EC2::Instance",
+                "Properties": {"ImageId": {"Fn::GetAtt": ["Eight", "ImageId"]}},
             },
         },
     }
@@ -183,12 +215,26 @@ def template():
         (
             "Seven",
             deque(["Resources", "ParentSeven", "Properties", "ImageId"]),
+            {
+                "IsUsEast1": True,
+            },
+            [()],
+        ),
+        (
+            "Short Path",
+            deque(["Resources"]),
             {},
             [],
         ),
         (
-            "Short Path",
-            deque(["Resources", "ParentSix"]),
+            "Not in resources",
+            deque(["Outputs", "MyOutput"]),
+            {},
+            [],
+        ),
+        (
+            "No type on relationshiop",
+            deque(["Resources", "ParentEight", "Properties", "ImageId"]),
             {},
             [],
         ),

@@ -240,7 +240,7 @@ class Conditions:
             #  formatting or just the wrong condition name
             return
 
-    def check_implies(self, scenarios: dict[str, bool], implies: str) -> bool:
+    def implies(self, scenarios: dict[str, bool], implies: str) -> bool:
         """Based on a bunch of scenario conditions and their Truth/False value
         determine if implies condition is True any time the scenarios are satisfied
         solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
@@ -275,17 +275,18 @@ class Conditions:
                         )
                     )
 
-            implies_condition = self._conditions[implies].build_true_cnf(
-                self._solver_params
-            )
-
             and_condition = And(*conditions)
-            cnf.add_prop(and_condition)
 
             # if the implies condition has to be true already then we don't
             # need to imply it
             if not scenarios.get(implies):
+                implies_condition = self._conditions[implies].build_true_cnf(
+                    self._solver_params
+                )
                 cnf.add_prop(Not(Implies(and_condition, implies_condition)))
+            else:
+                cnf.add_prop(and_condition)
+
             if satisfiable(cnf):
                 return True
 

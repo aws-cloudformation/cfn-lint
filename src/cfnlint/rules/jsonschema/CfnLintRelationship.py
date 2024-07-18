@@ -27,43 +27,37 @@ class CfnLintRelationship(CloudFormationLintRule):
     ) -> Iterator[tuple[Any, Validator]]:
         fn_k, fn_v = is_function(instance)
         if fn_k == "Fn::If":
-            if not isinstance(fn_v, list) and len(fn_v) != 3:
+            if not isinstance(fn_v, list) or len(fn_v) != 3:
                 return
             condition = fn_v[0]
             # True path
-            for i in [1, 2]:
-                try:
-                    if_validator = validator.evolve(
-                        context=validator.context.evolve(
-                            conditions=validator.context.conditions.evolve(
-                                status={
-                                    condition: i == 1,
-                                }
-                            )
+            status = {
+                k: set([v]) for k, v in validator.context.conditions.status.items()
+            }
+            if condition not in status:
+                status[condition] = set([True, False])
+            for scenario in validator.cfn.conditions.build_scenarios(status):
+                if_validator = validator.evolve(
+                    context=validator.context.evolve(
+                        conditions=validator.context.conditions.evolve(
+                            status=scenario,
                         )
                     )
-                    status = {
-                        k: set([v])
-                        for k, v in if_validator.context.conditions.status.items()
-                    }
-                    if next(
-                        validator.cfn.conditions.build_scenarios(status),
-                        if_validator.context.regions[0],
-                    ):
-                        for r, v in self._get_relationship(
-                            validator.evolve(
-                                context=if_validator.context.evolve(
-                                    path=if_validator.context.path.descend(
-                                        path=fn_k
-                                    ).descend(path=i)
-                                )
-                            ),
-                            fn_v[i],
-                            path.copy(),
-                        ):
-                            yield r, v
-                except ValueError:
-                    return
+                )
+
+                i = 1 if scenario[condition] else 2
+                for r, v in self._get_relationship(
+                    validator.evolve(
+                        context=if_validator.context.evolve(
+                            path=if_validator.context.path.descend(path=fn_k).descend(
+                                path=i
+                            )
+                        )
+                    ),
+                    fn_v[i],
+                    path.copy(),
+                ):
+                    yield r, v
             return
 
         if fn_k == "Ref" and fn_v == "AWS::NoValue":
@@ -131,7 +125,7 @@ class CfnLintRelationship(CloudFormationLintRule):
 
             condition = other_resource.get("Condition", None)
             if condition:
-                if not validator.cfn.conditions.check_implies(
+                if not validator.cfn.conditions.implies(
                     validator.context.conditions.status, condition
                 ):
                     continue
