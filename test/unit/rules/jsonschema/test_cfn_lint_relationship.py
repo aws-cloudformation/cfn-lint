@@ -66,11 +66,11 @@ def template():
             },
             "Three": {
                 "Type": "AWS::EC2::Instance",
-                "Condition": "IsUsEast1",
+                "Condition": "IsImageIdSpecified",
                 "Properties": {
                     "ImageId": {
                         "Fn::If": [
-                            "IsImageIdSpecified",
+                            "IsUsEast1",
                             {"Ref": "ImageId"},
                             {"Ref": "AWS::NoValue"},
                         ],
@@ -102,7 +102,6 @@ def template():
             },
             "Five": {
                 "Type": "AWS::EC2::Instance",
-                "Condition": "IsUsEast1",
                 "Properties": {
                     "ImageId": {
                         "Fn::If": [
@@ -114,17 +113,14 @@ def template():
             },
             "ParentFive": {
                 "Type": "AWS::EC2::Instance",
-                "Condition": "IsImageIdSpecified",
                 "Properties": {"ImageId": {"Fn::GetAtt": ["Five", "ImageId"]}},
             },
             "Six": {
                 "Type": "AWS::EC2::Instance",
-                "Condition": "IsUsEast1",
                 "Properties": "Foo",
             },
             "ParentSix": {
                 "Type": "AWS::EC2::Instance",
-                "Condition": "IsImageIdSpecified",
                 "Properties": {"ImageId": {"Fn::GetAtt": ["Six", "ImageId"]}},
             },
             "Seven": {
@@ -168,7 +164,7 @@ def template():
     "name,path,status,expected",
     [
         (
-            "One",
+            "Condition for value",
             deque(["Resources", "ParentOne", "Properties", "ImageId"]),
             {},
             [
@@ -177,48 +173,49 @@ def template():
             ],
         ),
         (
-            "Two",
+            "Standard",
             deque(["Resources", "ParentTwo", "Properties", "ImageId"]),
             {},
             [({"Ref": "ImageId"}, {})],
         ),
         (
-            "Three",
+            "Lots of conditions along the way",
             deque(["Resources", "ParentThree", "Properties", "ImageId"]),
-            {
-                "IsImageIdSpecified": True,
-            },
-            [({"Ref": "ImageId"}, {"IsUsEast1": True, "IsImageIdSpecified": True})],
-        ),
-        (
-            "Four",
-            deque(["Resources", "ParentFour", "Properties", "ImageId"]),
             {
                 "IsImageIdSpecified": True,
             },
             [
                 ({"Ref": "ImageId"}, {"IsUsEast1": True, "IsImageIdSpecified": True}),
+                (None, {"IsUsEast1": False, "IsImageIdSpecified": True}),
             ],
         ),
         (
-            "Five",
+            "Unrelated conditions",
+            deque(["Resources", "ParentFour", "Properties", "ImageId"]),
+            {
+                "IsImageIdSpecified": True,
+            },
+            [],
+        ),
+        (
+            "Destiniation Fn::If isn't properly formatted",
             deque(["Resources", "ParentFive", "Properties", "ImageId"]),
             {},
             [],
         ),
         (
-            "Six",
+            "Properties isn't an object",
             deque(["Resources", "ParentSix", "Properties", "ImageId"]),
             {},
             [],
         ),
         (
-            "Seven",
+            "Condition's don't align",
             deque(["Resources", "ParentSeven", "Properties", "ImageId"]),
             {
                 "IsUsEast1": True,
             },
-            [()],
+            [],
         ),
         (
             "Short Path",

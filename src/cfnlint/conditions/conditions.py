@@ -277,20 +277,16 @@ class Conditions:
 
             and_condition = And(*conditions)
 
-            # if the implies condition has to be true already then we don't
-            # need to imply it
-            if not scenarios.get(implies):
-                implies_condition = self._conditions[implies].build_true_cnf(
-                    self._solver_params
-                )
-                cnf.add_prop(Not(Implies(and_condition, implies_condition)))
-            else:
-                cnf.add_prop(and_condition)
+            implies_condition = self._conditions[implies].build_true_cnf(
+                self._solver_params
+            )
+            cnf.add_prop(Not(Implies(and_condition, implies_condition)))
 
-            if satisfiable(cnf):
-                return True
+            results = satisfiable(cnf)
+            if results:
+                return False
 
-            return False
+            return True
         except KeyError:
             # KeyError is because the listed condition doesn't exist because of bad
             #  formatting or just the wrong condition name
