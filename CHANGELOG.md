@@ -1,3 +1,9 @@
+### v1.8.1
+## What's Changed
+* Don't scan `DefinitionString` in rule [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3519
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.8.0...v1.8.1
+
 ### v1.8.0
 ## What's Changed
 * Add rule [E3663](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3663) to validate lambda fn env vars by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3505
