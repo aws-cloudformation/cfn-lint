@@ -30,7 +30,8 @@ class StateMachineDefinition(CfnLintJsonSchema):
         super().__init__(
             keywords=[
                 "Resources/AWS::StepFunctions::StateMachine/Properties/Definition",
-                "Resources/AWS::StepFunctions::StateMachine/Properties/DefinitionString",
+                # https://github.com/aws-cloudformation/cfn-lint/issues/3518
+                # Resources/AWS::StepFunctions::StateMachine/Properties/DefinitionString
             ],
             schema_details=SchemaDetails(
                 cfnlint.data.schemas.other.step_functions, "statemachine.json"
