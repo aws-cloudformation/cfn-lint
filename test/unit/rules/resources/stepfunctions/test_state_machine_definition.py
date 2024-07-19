@@ -95,7 +95,7 @@ def rule():
                         "End": True,
                         "ItemsPath": "$",
                         "Parameters": {"BatchNumber.$": "$$.Map.Item.Value"},
-                        "Iterator": {
+                        "ItemProcessor": {
                             "StartAt": "Submit Batch Job",
                             "States": {
                                 "Submit Batch Job": {
@@ -257,7 +257,7 @@ def rule():
                             "MessageNumber.$": "$$.Map.Item.Index",
                             "MessageDetails.$": "$$.Map.Item.Value",
                         },
-                        "Iterator": {
+                        "ItemProcessor": {
                             "StartAt": "Write message to DynamoDB",
                             "States": {
                                 "Write message to DynamoDB": {
