@@ -28,7 +28,6 @@ class PermissionSourceAccount(CfnLintKeyword):
     tags = ["resources", "lambda", "permission"]
 
     def __init__(self):
-        """Init"""
         super().__init__(
             keywords=["Resources/AWS::Lambda::Permission/Properties"],
         )

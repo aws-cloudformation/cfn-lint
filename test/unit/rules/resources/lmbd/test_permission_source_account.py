@@ -44,6 +44,16 @@ def template():
             [],
         ),
         (
+            [],
+            [],
+        ),
+        (
+            {
+                "SourceArn": [],
+            },
+            [],
+        ),
+        (
             {
                 "SourceArn": "arn:aws:s3:::bucket_name",
             },
@@ -81,6 +91,12 @@ def template():
                     validator="required",
                 )
             ],
+        ),
+        (
+            {
+                "SourceArn": {"Fn::Sub": [[], {}]},
+            },
+            [],
         ),
         (
             {
