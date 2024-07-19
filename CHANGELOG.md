@@ -1,3 +1,10 @@
+### v1.8.2
+## What's Changed
+* `AutoMinorVersionUpgrade` can be used with Aurora clusters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3522
+* A bunch of fixes for state machines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3528
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.8.1...v1.8.2
+
 ### v1.8.1
 ## What's Changed
 * Don't scan `DefinitionString` in rule [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3519
