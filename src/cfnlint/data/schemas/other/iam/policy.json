@@ -3,32 +3,66 @@
  "additionalProperties": false,
  "definitions": {
   "Action": {
-   "anyOf": [
-    {
-     "$ref": "#/definitions/Wildcard"
-    },
-    {
-     "$ref": "#/definitions/StringOrStringArray"
-    }
-   ],
    "cfnLint": [
     "AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"
+   ],
+   "items": {
+    "type": "string"
+   },
+   "type": [
+    "string",
+    "array"
    ]
   },
   "AwsArn": {
-   "pattern": "(^arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*(:(?:\\d{12}|\\*|aws)?:.+|)|\\*)$",
-   "type": "string"
+   "pattern": "(^arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*(:(?:\\d{12}|\\*|aws)?:.+|)|\\*)$"
   },
   "AwsPrincipalArn": {
    "anyOf": [
     {
-     "pattern": "^((arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)|\\d{12})"
+     "const": "*"
+    },
+    {
+     "pattern": "^\\d{12}$"
+    },
+    {
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)"
     },
     {
      "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::cloudfront:user/.+$"
     }
-   ],
-   "type": "string"
+   ]
+  },
+  "Boolean": {
+   "enum": [
+    "true",
+    "false",
+    true,
+    false
+   ]
+  },
+  "Booleans": {
+   "if": {
+    "type": [
+     "string",
+     "boolean"
+    ]
+   },
+   "items": {
+    "$ref": "#/definitions/Boolean",
+    "type": [
+     "string",
+     "boolean"
+    ]
+   },
+   "then": {
+    "$ref": "#/definitions/Boolean"
+   },
+   "type": [
+    "string",
+    "array",
+    "boolean"
+   ]
   },
   "Condition": {
    "patternProperties": {
@@ -114,14 +148,7 @@
     },
     "Null": {
      "additionalProperties": {
-      "scalarOrArray": {
-       "enum": [
-        "true",
-        "false",
-        true,
-        false
-       ]
-      }
+      "$ref": "#/definitions/Booleans"
      },
      "type": "object"
     }
@@ -130,22 +157,23 @@
   },
   "ConditionSetValue": {
    "additionalProperties": {
-    "$ref": "#/definitions/StringArray"
+    "items": {
+     "type": "string"
+    },
+    "type": "array"
    },
    "type": "object"
   },
   "ConditionValue": {
    "additionalProperties": {
-    "anyOf": [
-     {
-      "$ref": "#/definitions/StringOrStringArray"
-     },
-     {
-      "type": "boolean"
-     },
-     {
-      "type": "number"
-     }
+    "items": {
+     "type": "string"
+    },
+    "type": [
+     "boolean",
+     "number",
+     "string",
+     "array"
     ]
    },
    "type": "object"
@@ -156,20 +184,42 @@
    },
    "properties": {
     "AWS": {
-     "scalarOrArray": {
-      "$ref": "#/definitions/AwsPrincipalArn"
-     }
+     "$ref": "#/definitions/AwsPrincipalArn",
+     "items": {
+      "$ref": "#/definitions/AwsPrincipalArn",
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
     },
     "CanonicalUser": {
-     "$ref": "#/definitions/StringOrStringArray"
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
     },
     "Federated": {
-     "$ref": "#/definitions/StringOrStringArray"
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
     },
     "Service": {
-     "scalarOrArray": {
+     "items": {
       "type": "string"
-     }
+     },
+     "type": [
+      "string",
+      "array"
+     ]
     }
    },
    "then": {
@@ -181,9 +231,15 @@
    ]
   },
   "Resource": {
-   "scalarOrArray": {
-    "$ref": "#/definitions/AwsArn"
-   }
+   "$ref": "#/definitions/AwsArn",
+   "items": {
+    "$ref": "#/definitions/AwsArn",
+    "type": "string"
+   },
+   "type": [
+    "string",
+    "array"
+   ]
   },
   "Statement": {
    "additionalProperties": false,
@@ -252,16 +308,7 @@
    },
    "required": [
     "Effect"
-   ],
-   "type": "object"
-  },
-  "StringArray": {
-   "type": "string"
-  },
-  "StringOrStringArray": {
-   "scalarOrArray": {
-    "$ref": "#/definitions/StringArray"
-   }
+   ]
   },
   "Wildcard": {
    "const": "*"
@@ -272,9 +319,15 @@
    "type": "string"
   },
   "Statement": {
-   "scalarOrArray": {
-    "$ref": "#/definitions/Statement"
-   }
+   "$ref": "#/definitions/Statement",
+   "items": {
+    "$ref": "#/definitions/Statement",
+    "type": "object"
+   },
+   "type": [
+    "object",
+    "array"
+   ]
   },
   "Version": {
    "cfnLint": [

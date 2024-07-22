@@ -14,15 +14,6 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.resolver import RefResolver
 
 
-# pylint: disable=unused-argument
-def _scalar_or_array(validator: Validator, subschema: Any, instance: Any, schema: Any):
-    if validator.is_type(instance, "array"):
-        for index, i in enumerate(instance):
-            yield from validator.descend(i, subschema, path=index)
-    else:
-        yield from validator.descend(instance, subschema)
-
-
 class Policy(CfnLintJsonSchema):
     """Check IAM policies"""
 
@@ -61,28 +52,22 @@ class Policy(CfnLintJsonSchema):
         # so we can run this now
         if validator.is_type(policy, "string"):
             try:
-                iam_validator = validator.extend(
-                    validators={
-                        "scalarOrArray": _scalar_or_array,
-                    },
-                )(schema=self.identity_schema).evolve(
+                iam_validator = validator.evolve(
                     context=validator.context.evolve(
                         functions=[],
                     ),
                     resolver=self.resolver,
+                    schema=self.identity_schema,
                 )
                 policy = json.loads(policy)
             except json.JSONDecodeError:
                 return
         else:
-            iam_validator = validator.extend(
-                validators={
-                    "scalarOrArray": _scalar_or_array,
-                },
-            )(schema=self.identity_schema).evolve(
+            iam_validator = validator.evolve(
                 cfn=validator.cfn,
                 context=validator.context,
                 resolver=self.resolver,
+                schema=self.identity_schema,
             )
 
         for err in iam_validator.iter_errors(policy):
