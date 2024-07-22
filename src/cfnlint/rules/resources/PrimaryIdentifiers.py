@@ -63,7 +63,7 @@ class PrimaryIdentifiers(CloudFormationLintRule):
                 # and add it to the scenario as needed
                 if condition:
                     if scenario:
-                        if not cfn.conditions.implies(scenario, condition):
+                        if not cfn.conditions.has_to_imply(scenario, condition):
                             continue
                     conditions[condition] = set([True])
 

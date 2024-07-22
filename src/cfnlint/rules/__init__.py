@@ -8,5 +8,4 @@ from cfnlint.rules._rules import Rules, RulesCollection
 from cfnlint.rules.jsonschema import CfnLintJsonSchema  # type: ignore
 from cfnlint.rules.jsonschema import CfnLintJsonSchemaRegional  # type: ignore
 from cfnlint.rules.jsonschema import CfnLintKeyword  # type: ignore
-from cfnlint.rules.jsonschema import CfnLintRelationship  # type: ignore
 from cfnlint.rules.jsonschema import SchemaDetails

@@ -7,7 +7,6 @@ from cfnlint.rules.jsonschema.Base import BaseJsonSchema
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 from cfnlint.rules.jsonschema.CfnLintJsonSchemaRegional import CfnLintJsonSchemaRegional
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
-from cfnlint.rules.jsonschema.CfnLintRelationship import CfnLintRelationship
 from cfnlint.rules.jsonschema.MaxProperties import MaxProperties
 from cfnlint.rules.jsonschema.PropertyNames import PropertyNames
 
@@ -16,7 +15,6 @@ __all__ = [
     "CfnLintJsonSchema",
     "CfnLintJsonSchemaRegional",
     "CfnLintKeyword",
-    "CfnLintRelationship",
     "MaxProperties",
     "PropertyNames",
     "SchemaDetails",

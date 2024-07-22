@@ -33,24 +33,82 @@ def rule():
                             },
                         },
                     },
-                    "Instance": {
-                        "Type": "AWS::EC2::Instance",
-                        "Properties": {
-                            "LaunchTemplate": {
-                                "LaunchTemplateId": {
-                                    "Fn::GetAtt": [
-                                        "LaunchTemplate",
-                                        "LaunchTemplateId",
-                                    ],
-                                }
-                            },
-                            "ImageId": "ami-12345678",
-                        },
-                    },
                 }
             },
             {
+                "LaunchTemplate": {
+                    "LaunchTemplateId": {
+                        "Fn::GetAtt": [
+                            "LaunchTemplate",
+                            "LaunchTemplateId",
+                        ],
+                    }
+                },
                 "ImageId": "ami-12345678",
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Valid with no ImageId and a string launch template",
+            {
+                "Resources": {},
+            },
+            {
+                "LaunchTemplate": {"LaunchTemplateId": "foo"},
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Valid with no ImageId and a parameter",
+            {
+                "Parameters": {
+                    "LaunchTemplateId": {
+                        "Type": "String",
+                    }
+                },
+                "Resources": {},
+            },
+            {
+                "LaunchTemplate": {"LaunchTemplateId": {"Ref": "LaunchTemplateId"}},
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Valid with no ImageId a random ref",
+            {
+                "Resources": {},
+            },
+            {
+                "LaunchTemplate": {"LaunchTemplateName": {"Ref": "AWS::StackName"}},
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Valid with no ImageId and another function",
+            {
+                "Parameters": {
+                    "LaunchTemplateId": {
+                        "Type": "String",
+                    }
+                },
+                "Resources": {},
+            },
+            {
+                "LaunchTemplate": {
+                    "LaunchTemplateId": {"Fn::FindInMap": ["One", "Two", "Three"]}
+                },
             },
             {
                 "path": ["Resources", "Instance", "Properties"],
@@ -71,22 +129,46 @@ def rule():
                             },
                         },
                     },
-                    "Instance": {
-                        "Type": "AWS::EC2::Instance",
+                }
+            },
+            {
+                "LaunchTemplate": {
+                    "LaunchTemplateId": {
+                        "Fn::GetAtt": [
+                            "LaunchTemplate",
+                            "LaunchTemplateId",
+                        ],
+                    }
+                },
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Valid with ImageId in LaunchTemplate using Name",
+            {
+                "Resources": {
+                    "LaunchTemplate": {
+                        "Type": "AWS::EC2::LaunchTemplate",
                         "Properties": {
-                            "LaunchTemplate": {
-                                "LaunchTemplateId": {
-                                    "Fn::GetAtt": [
-                                        "LaunchTemplate",
-                                        "LaunchTemplateId",
-                                    ],
-                                }
+                            "LaunchTemplateName": "a-template",
+                            "LaunchTemplateData": {
+                                "Monitoring": {"Enabled": True},
+                                "ImageId": "ami-12345678",
                             },
                         },
                     },
                 }
             },
-            {},
+            {
+                "LaunchTemplate": {
+                    "LaunchTemplateName": {
+                        "Ref": "LaunchTemplate",
+                    }
+                },
+            },
             {
                 "path": ["Resources", "Instance", "Properties"],
             },
@@ -94,19 +176,19 @@ def rule():
         ),
         (
             "Invalid with no relationship",
-            {
-                "Resources": {
-                    "Instance": {
-                        "Type": "AWS::EC2::Instance",
-                        "Properties": {},
-                    },
-                }
-            },
+            {},
             {},
             {
                 "path": ["Resources", "Instance", "Properties"],
             },
-            [ValidationError("'ImageId' is a required property")],
+            [
+                ValidationError(
+                    "'ImageId' is a required property",
+                    path_override=deque(
+                        ["Resources", "Instance", "Properties", "ImageId"]
+                    ),
+                )
+            ],
         ),
         (
             "Invalid with no ImageId in LaunchTemplate",
@@ -121,28 +203,27 @@ def rule():
                             },
                         },
                     },
-                    "Instance": {
-                        "Type": "AWS::EC2::Instance",
-                        "Properties": {
-                            "LaunchTemplate": {
-                                "LaunchTemplateId": {
-                                    "Fn::GetAtt": [
-                                        "LaunchTemplate",
-                                        "LaunchTemplateId",
-                                    ],
-                                }
-                            },
-                        },
-                    },
                 }
             },
-            {},
+            {
+                "LaunchTemplate": {
+                    "LaunchTemplateId": {
+                        "Fn::GetAtt": [
+                            "LaunchTemplate",
+                            "LaunchTemplateId",
+                        ],
+                    }
+                },
+            },
             {
                 "path": ["Resources", "Instance", "Properties"],
             },
             [
                 ValidationError(
                     "'ImageId' is a required property",
+                    path_override=deque(
+                        ["Resources", "Instance", "Properties", "ImageId"]
+                    ),
                 )
             ],
         ),
@@ -162,32 +243,24 @@ def rule():
                             },
                         },
                     },
-                    "Instance": {
-                        "Type": "AWS::EC2::Instance",
-                        "Properties": {
-                            "LaunchTemplate": {
-                                "LaunchTemplateId": {
-                                    "Fn::GetAtt": [
-                                        "LaunchTemplate",
-                                        "LaunchTemplateId",
-                                    ],
-                                }
-                            },
-                            "ImageId": {
-                                "Fn::If": [
-                                    "IsUsEast1",
-                                    "ami-12345678",
-                                    {"Ref": "AWS::NoValue"},
-                                ]
-                            },
-                        },
-                    },
                 },
             },
             {
+                "LaunchTemplate": {
+                    "LaunchTemplateId": {
+                        "Fn::GetAtt": [
+                            "LaunchTemplate",
+                            "LaunchTemplateId",
+                        ],
+                    }
+                },
                 "ImageId": {
-                    "Fn::If": ["IsUsEast1", "ami-12345678", {"Ref": "AWS::NoValue"}]
-                }
+                    "Fn::If": [
+                        "IsUsEast1",
+                        "ami-12345678",
+                        {"Ref": "AWS::NoValue"},
+                    ]
+                },
             },
             {
                 "path": ["Resources", "Instance", "Properties"],
@@ -214,6 +287,7 @@ def rule():
 )
 def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
+
     assert (
         errs == expected
     ), f"Expected test {name!r} to have {expected!r} but got {errs!r}"
