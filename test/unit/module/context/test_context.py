@@ -7,27 +7,33 @@ import unittest
 from collections import deque
 
 from cfnlint.context import Context, Path
-from cfnlint.context._conditions import Condition, Conditions
+from cfnlint.context.conditions._conditions import Condition, Conditions
 
 
 class TestCfnContext(unittest.TestCase):
     def test_class(self):
         context = Context(
             conditions=Conditions.create_from_instance(
-                {
-                    "Foo": {},
-                    "Bar": {},
-                }
-            )
+                conditions={
+                    "Foo": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
+                    "Bar": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
+                },
+                parameters={},
+            ),
         )
         self.assertEqual(context.regions, ["us-east-1"])
+        print(context.conditions)
         self.assertEqual(
             context.conditions,
             Conditions(
                 {
-                    "Foo": Condition({}),
-                    "Bar": Condition({}),
-                }
+                    "Foo": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}, {}
+                    ),
+                    "Bar": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]}, {}
+                    ),
+                },
             ),
         )
         self.assertEqual(context.path, Path())
@@ -66,8 +72,12 @@ class TestCfnContext(unittest.TestCase):
             context.conditions,
             Conditions(
                 {
-                    "Foo": Condition({}),
-                    "Bar": Condition({}),
+                    "Foo": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}, {}
+                    ),
+                    "Bar": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]}, {}
+                    ),
                 }
             ),
         )
@@ -79,8 +89,12 @@ class TestCfnContext(unittest.TestCase):
             no_path.conditions,
             Conditions(
                 {
-                    "Foo": Condition({}),
-                    "Bar": Condition({}),
+                    "Foo": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]}, {}
+                    ),
+                    "Bar": Condition.create_from_instance(
+                        {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]}, {}
+                    ),
                 }
             ),
         )

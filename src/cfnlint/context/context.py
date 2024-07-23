@@ -10,8 +10,8 @@ from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from typing import Any, Deque, Iterator, Sequence, Set, Tuple
 
-from cfnlint.context._conditions import Conditions
 from cfnlint.context._mappings import Mappings
+from cfnlint.context.conditions._conditions import Conditions
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
@@ -424,11 +424,12 @@ def create_context_for_template(cfn):
 
     transforms = _init_transforms(cfn.template.get("Transform", []))
 
-    conditions = Conditions({})
     try:
-        conditions = Conditions.create_from_instance(cfn.template.get("Conditions", {}))
+        conditions = Conditions.create_from_instance(
+            cfn.template.get("Conditions", {}), parameters
+        )
     except (ValueError, AttributeError):
-        pass
+        conditions = Conditions.create_from_instance({}, {})
 
     mappings = Mappings.create_from_dict(cfn.template.get("Mappings", {}))
 
