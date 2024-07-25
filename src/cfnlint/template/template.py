@@ -824,7 +824,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     return results
                 scenario[condition_name] = list(condition_bool)[0]
 
-            if not self.conditions.has_to_imply(scenario, resource_condition):
+            if not self.conditions.check_implies(scenario, resource_condition):
                 return [{**{resource_condition: False}, **scenario}]
 
         # if resource condition isn't available then the resource is available

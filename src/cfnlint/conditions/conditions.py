@@ -256,44 +256,7 @@ class Conditions:
 
         return And(*conditions)
 
-    def can_imply(self, scenarios: dict[str, bool], implies: str) -> bool:
-        """Based on a bunch of scenario conditions and their Truth/False value
-        determine if implies condition is True any time the scenarios are satisfied
-        solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
-
-        Args:
-            scenarios (dict[str, bool]): A list of condition names
-            and if they are True or False implies: the condition name that
-            we are implying will also be True
-
-        Returns:
-            bool: if the implied condition will be True if the scenario is True
-        """
-        try:
-            cnf = self._cnf.copy()
-            # if the implies condition has to be false in the scenarios we
-            # know it can never be true
-            if not scenarios.get(implies, True):
-                return False
-
-            and_condition = self._build_cfn_implies(scenarios)
-            cnf.add_prop(and_condition)
-            implies_condition = self._conditions[implies].build_true_cnf(
-                self._solver_params
-            )
-            cnf.add_prop(Implies(and_condition, implies_condition))
-
-            results = satisfiable(cnf)
-            if results:
-                return True
-
-            return False
-        except KeyError:
-            # KeyError is because the listed condition doesn't exist because of bad
-            #  formatting or just the wrong condition name
-            return True
-
-    def has_to_imply(self, scenarios: dict[str, bool], implies: str) -> bool:
+    def check_implies(self, scenarios: dict[str, bool], implies: str) -> bool:
         """Based on a bunch of scenario conditions and their Truth/False value
         determine if implies condition is True any time the scenarios are satisfied
         solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])

@@ -31,7 +31,7 @@ class TestConditions(TestCase):
         )  # would be 2 but IsProd fails
         # test coverage for KeyErrors in the following functions
         self.assertTrue(
-            cfn.conditions.has_to_imply(
+            cfn.conditions.check_implies(
                 {
                     "Test": True,
                 },
@@ -84,11 +84,13 @@ class TestConditions(TestCase):
 
         cfn = Template("", template)
         self.assertFalse(
-            cfn.conditions.has_to_imply({"aCondition": False}, "aCondition")
+            cfn.conditions.check_implies({"aCondition": False}, "aCondition")
         )
-        self.assertTrue(cfn.conditions.has_to_imply({"aCondition": True}, "aCondition"))
         self.assertTrue(
-            cfn.conditions.has_to_imply(
+            cfn.conditions.check_implies({"aCondition": True}, "aCondition")
+        )
+        self.assertTrue(
+            cfn.conditions.check_implies(
                 {"aCondition": True, "bCondition": False}, "aCondition"
             )
         )
@@ -110,7 +112,7 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         # test coverage for KeyErrors in the following functions
-        self.assertTrue(cfn.conditions.has_to_imply({"IsTrue": True}, "IsFalse"))
+        self.assertTrue(cfn.conditions.check_implies({"IsTrue": True}, "IsFalse"))
 
     def test_check_never_false(self):
         """With allowed values two conditions can not both be false"""
