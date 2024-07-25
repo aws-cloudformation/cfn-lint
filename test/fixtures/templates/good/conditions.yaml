@@ -15,10 +15,6 @@ Conditions:
     "Fn::Equals":
     - !Ref myEnvironment
     - "prod"
-  isDev:
-    "Fn::Equals":
-    - !Ref myEnvironment
-    - "dev"
   EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
   EnableGeoBlockingAlias: !Condition EnableGeoBlocking
   PrimaryRegion:
@@ -38,11 +34,8 @@ Resources:
         - isProd
         - Key: Environment1
           Value: Prod
-        - Fn::If:
-          - isDev
-          - Key: Environment2
-            Value: Dev
-          - !Ref AWS::NoValue
+        - Key: Environment2
+          Value: Dev
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
