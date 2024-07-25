@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.If import If
 
 
@@ -32,6 +32,20 @@ def template():
         },
         "Resources": {},
     }
+
+
+@pytest.fixture
+def validator(cfn, context):
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "fn_if": If().fn_if,
+        }
+    )
+    return validator(
+        context=context,
+        cfn=cfn,
+        schema={},
+    )
 
 
 @pytest.mark.parametrize(
@@ -114,10 +128,31 @@ def template():
                 ),
             ],
         ),
+        (
+            "Invalid path",
+            {"Fn::If": ["IsUsEast1", True, {"Fn::If": ["IsUsEast1", "foo", False]}]},
+            {"type": "boolean"},
+            [
+                ValidationError(
+                    (
+                        "['Fn::If', 1] is not reachable. When setting condition "
+                        "'IsUsEast1' to True from current status False"
+                    ),
+                    path=deque(["Fn::If", 2, "Fn::If", 1]),
+                    schema_path=deque(["fn_if"]),
+                    validator="fn_if",
+                ),
+                ValidationError(
+                    ("'foo' is not of type 'boolean'"),
+                    path=deque(["Fn::If", 2, "Fn::If", 1]),
+                    schema_path=deque(["fn_if", "type"]),
+                    validator="type",
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):
 
     errs = list(rule.fn_if(validator, schema, instance, {}))
-
     assert errs == expected, f"Test {name!r} got {errs!r}"

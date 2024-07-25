@@ -91,18 +91,14 @@ class Conditions:
                         )
             except ValueError as e:
                 raise Unsatisfiable(
-                    f"Error evolving condition {condition}",
-                    name=condition,
-                    value=s,
-                    condition_status=self.status,
+                    new_status=status,
+                    current_status=self.status,
                 ) from e
 
         if not satisfiable(cnf):
             raise Unsatisfiable(
-                f"Error evolving conditions with {status!r}",
-                name=condition,
-                value=s,
-                condition_status=self.status,
+                new_status=status,
+                current_status=self.status,
             )
 
         return cls(

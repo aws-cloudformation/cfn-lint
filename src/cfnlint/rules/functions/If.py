@@ -5,9 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+from collections import deque
 from typing import Any
 
-from cfnlint.jsonschema import ValidationResult, Validator
+from cfnlint.context.conditions.exceptions import Unsatisfiable
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 
 
@@ -22,6 +24,7 @@ class If(BaseFn):
 
     def __init__(self) -> None:
         super().__init__("Fn::If", all_types)
+        self.child_rules["W1028"] = None
 
     def schema(self, validator, instance) -> dict[str, Any]:
         return {
@@ -82,6 +85,21 @@ class If(BaseFn):
                 ):
                     err.path.appendleft(key)
                     yield err
-            except ValueError:
-                # impossible code path
-                pass
+            except Unsatisfiable as e:
+                yield ValidationError(
+                    f"{[key, i]!r} is not reachable. {e.message}",
+                    path=deque([key, i]),
+                    rule=self.child_rules["W1028"],
+                )
+                element_validator = validator.evolve(
+                    context=validator.context.evolve(
+                        path=validator.context.path.descend(
+                            path=key,
+                        ),
+                    )
+                )
+                for err in element_validator.descend(
+                    instance=value[i], schema=s, path=i
+                ):
+                    err.path.appendleft(key)
+                    yield err

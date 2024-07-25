@@ -22,7 +22,6 @@ class TestCfnContext(unittest.TestCase):
             ),
         )
         self.assertEqual(context.regions, ["us-east-1"])
-        print(context.conditions)
         self.assertEqual(
             context.conditions,
             Conditions(

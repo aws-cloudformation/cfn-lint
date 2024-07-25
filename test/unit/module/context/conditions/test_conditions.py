@@ -20,6 +20,11 @@ def template():
                 "Default": "dev",
                 "AllowedValues": ["dev", "prod"],
             },
+            "Name": {
+                "Type": "String",
+                "Default": "bi",
+                "AllowedValues": ["bi", "ai"],
+            },
             "AmiId": {
                 "Type": "String",
                 "Default": "",
@@ -32,6 +37,8 @@ def template():
             "IsProd": {"Fn::Equals": [{"Ref": "Environment"}, "prod"]},
             "IsDev": {"Fn::Equals": [{"Ref": "Environment"}, "dev"]},
             "IsAmiProvided": {"Fn::Not": [{"Fn::Equals": [{"Ref": "AmiId"}, ""]}]},
+            "IsAi": {"Fn::Equals": [{"Ref": "Name"}, "ai"]},
+            "IsBi": {"Fn::Equals": [{"Ref": "Name"}, "bi"]},
             "IsUsEast1OrUsWest2": {
                 "Fn::Or": [
                     {"Condition": "IsUsEast1"},
@@ -65,6 +72,12 @@ def template():
             "UseBadCondition": {"Condition": []},
             "EqualsTooLong": {"Fn::Equals": ["a", "b", "c"]},
             "EqualsWrongTypes": {"Fn::Equals": ["a", []]},
+            "NotWithTwoItems": {
+                "Fn::Not": [
+                    {"Condition": "IsAi"},
+                    {"Condition": "IsBi"},
+                ]
+            },
         },
     }
 
@@ -73,7 +86,7 @@ def test_conditions():
     cfn = Template(None, template(), regions=["us-east-1"])
     context = create_context_for_template(cfn)
 
-    assert len(context.conditions.conditions) == 19
+    assert len(context.conditions.conditions) == 22
     assert context.conditions.conditions["IsStaticTrue"].fn_equals.is_static is True
     assert context.conditions.conditions["IsStaticFalse"].fn_equals.is_static is False
     assert (
@@ -91,7 +104,7 @@ def test_conditions():
     ]:
         assert context.conditions.conditions[k].is_region is True
 
-    for k in ["IsAmiProvided", "IsProd", "IsDev"]:
+    for k in ["IsAmiProvided", "IsProd", "IsDev", "IsAi", "IsBi"]:
         assert context.conditions.conditions[k].is_region is False
 
     for k in [
@@ -101,6 +114,7 @@ def test_conditions():
         "UseBadCondition",
         "EqualsTooLong",
         "EqualsWrongTypes",
+        "NotWithTwoItems",
     ]:
         assert context.conditions.conditions[k].fn_equals.left.instance is None
         assert context.conditions.conditions[k].fn_equals.right.instance is None
@@ -129,29 +143,29 @@ def test_conditions():
             {"IsUsEast1": True},
             {"IsUsEast1": False},
             Unsatisfiable(
-                "", name="IsUsEast1", value=False, condition_status={"IsUsEast1": True}
+                new_status={"IsUsEast1": False}, current_status={"IsUsEast1": True}
             ),
         ),
         (
             {"IsUsEast1": True},
             {"IsNotUsEast1": True},
             Unsatisfiable(
-                "", name="IsUsEast1", value=False, condition_status={"IsUsEast1": True}
+                new_status={"IsNotUsEast1": True},
+                current_status={"IsUsEast1": True},
             ),
         ),
         (
             {"IsUsEast1": False, "IsUsWest2": False},
             {"IsUsEast1OrUsWest2": True},
             Unsatisfiable(
-                "", name="IsUsEast1", value=False, condition_status={"IsUsEast1": True}
+                new_status={"IsUsEast1OrUsWest2": True},
+                current_status={"IsUsEast1": True},
             ),
         ),
         (
             {"IsDev": False},
             {"IsProd": False},
-            Unsatisfiable(
-                "", name="IsProd", value=False, condition_status={"IsDev": True}
-            ),
+            Unsatisfiable(new_status={"IsProd": False}, current_status={"IsDev": True}),
         ),
         ({}, {"BadFn": True}, {"BadFn": True}),
         ({}, {"BadFn": False}, {"BadFn": False}),
