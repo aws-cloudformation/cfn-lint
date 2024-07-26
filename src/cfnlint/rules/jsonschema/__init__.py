@@ -12,10 +12,10 @@ from cfnlint.rules.jsonschema.PropertyNames import PropertyNames
 
 __all__ = [
     "BaseJsonSchema",
-    "CfnLintKeyword",
     "CfnLintJsonSchema",
-    "SchemaDetails",
     "CfnLintJsonSchemaRegional",
+    "CfnLintKeyword",
     "MaxProperties",
     "PropertyNames",
+    "SchemaDetails",
 ]

@@ -357,6 +357,7 @@ class Resource(_Ref):
     """
 
     type: str = field(init=False)
+    condition: str | None = field(init=False, default=None)
     resource: InitVar[Any]
 
     def __post_init__(self, resource) -> None:
@@ -368,6 +369,11 @@ class Resource(_Ref):
         self.type = t
         if self.type.startswith("Custom::"):
             self.type = "AWS::CloudFormation::CustomResource"
+
+        c = resource.get("Condition")
+        if not isinstance(t, str):
+            raise ValueError("Condition must be a string")
+        self.condition = c
 
     @property
     def get_atts(self, region: str = "us-east-1") -> AttributeDict:

@@ -240,6 +240,22 @@ class Conditions:
             #  formatting or just the wrong condition name
             return
 
+    def _build_cfn_implies(self, scenarios) -> And:
+        conditions = []
+        for condition_name, opt in scenarios.items():
+            if opt:
+                conditions.append(
+                    self._conditions[condition_name].build_true_cnf(self._solver_params)
+                )
+            else:
+                conditions.append(
+                    self._conditions[condition_name].build_false_cnf(
+                        self._solver_params
+                    )
+                )
+
+        return And(*conditions)
+
     def check_implies(self, scenarios: dict[str, bool], implies: str) -> bool:
         """Based on a bunch of scenario conditions and their Truth/False value
         determine if implies condition is True any time the scenarios are satisfied
@@ -260,36 +276,18 @@ class Conditions:
             if not scenarios.get(implies, True):
                 return False
 
-            conditions = []
-            for condition_name, opt in scenarios.items():
-                if opt:
-                    conditions.append(
-                        self._conditions[condition_name].build_true_cnf(
-                            self._solver_params
-                        )
-                    )
-                else:
-                    conditions.append(
-                        self._conditions[condition_name].build_false_cnf(
-                            self._solver_params
-                        )
-                    )
-
+            and_condition = self._build_cfn_implies(scenarios)
+            cnf.add_prop(and_condition)
             implies_condition = self._conditions[implies].build_true_cnf(
                 self._solver_params
             )
+            cnf.add_prop(Not(Implies(and_condition, implies_condition)))
 
-            and_condition = And(*conditions)
-            cnf.add_prop(and_condition)
+            results = satisfiable(cnf)
+            if results:
+                return False
 
-            # if the implies condition has to be true already then we don't
-            # need to imply it
-            if not scenarios.get(implies):
-                cnf.add_prop(Not(Implies(and_condition, implies_condition)))
-            if satisfiable(cnf):
-                return True
-
-            return False
+            return True
         except KeyError:
             # KeyError is because the listed condition doesn't exist because of bad
             #  formatting or just the wrong condition name
@@ -354,7 +352,8 @@ class Conditions:
         determine if the conditions are satisfied
 
         Args:
-            condition_names (list[str]): A list of condition names
+            condition_names (dict[str, bool]): A list of condition names with if
+              they are True or False
 
         Returns:
             bool: True if the conditions are satisfied
