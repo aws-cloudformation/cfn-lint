@@ -40,23 +40,23 @@ class TestTemplate(BaseTestCase):
         dot = "test/fixtures/templates/good/generic.yaml.dot"
 
         expected_content = """digraph "template" {
-MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type="Resource"];
-RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type="Resource"];
-RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type="Resource"];
-RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type="Resource"];
-MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
-mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type="Resource"];
-MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type="Resource"];
-ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type="Resource"];
-ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type="Resource"];
-IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type="Resource"];
-CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type="Resource"];
-WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type="Resource"];
-LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type="Resource"];
-RolePolicies -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
-RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
-MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, source_paths="['Properties', 'IamInstanceProfile']"];
-ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_paths="['Properties', 'Instances', 0]"];
+MyModule [label="MyModule\\n<My::Organization::Custom::MODULE>", color=black, shape=ellipse, type="Resource"];
+RootRole [label="RootRole\\n<AWS::IAM::Role>", color=black, shape=ellipse, type="Resource"];
+RolePolicies [label="RolePolicies\\n<AWS::IAM::Policy>", color=black, shape=ellipse, type="Resource"];
+RootInstanceProfile [label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", color=black, shape=ellipse, type="Resource"];
+MyEC2Instance [label="MyEC2Instance\\n<AWS::EC2::Instance>", color=black, shape=ellipse, type="Resource"];
+mySnsTopic [label="mySnsTopic\\n<AWS::SNS::Topic>", color=black, shape=ellipse, type="Resource"];
+MyEC2Instance1 [label="MyEC2Instance1\\n<AWS::EC2::Instance>", color=black, shape=ellipse, type="Resource"];
+ElasticIP [label="ElasticIP\\n<AWS::EC2::EIP>", color=black, shape=ellipse, type="Resource"];
+ElasticLoadBalancer [label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", color=black, shape=ellipse, type="Resource"];
+IamPipeline [label="IamPipeline\\n<AWS::CloudFormation::Stack>", color=black, shape=ellipse, type="Resource"];
+CustomResource [label="CustomResource\\n<Custom::Function>", color=black, shape=ellipse, type="Resource"];
+WaitCondition [label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", color=black, shape=ellipse, type="Resource"];
+LambdaFunction [label="LambdaFunction\\n<AWS::Lambda::Function>", color=black, shape=ellipse, type="Resource"];
+RolePolicies -> RootRole [key=0, source_paths="['Properties', 'Roles', 0]", label=Ref, color=black];
+RootInstanceProfile -> RootRole [key=0, source_paths="['Properties', 'Roles', 0]", label=Ref, color=black];
+MyEC2Instance -> RootInstanceProfile [key=0, source_paths="['Properties', 'IamInstanceProfile']", label=Ref, color=black];
+ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="['Properties', 'Instances', 0]", label=Ref, color=black];
 }
 """.split(
             "\n"
