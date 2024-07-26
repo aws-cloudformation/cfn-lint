@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Resource": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointId": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "globalaccelerator:DescribeCrossAccountAttachment",
+    "globalaccelerator:CreateCrossAccountAttachment",
+    "globalaccelerator:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "globalaccelerator:DescribeCrossAccountAttachment",
+    "globalaccelerator:DeleteCrossAccountAttachment"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "globalaccelerator:ListCrossAccountAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "globalaccelerator:DescribeCrossAccountAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "globalaccelerator:UpdateCrossAccountAttachment",
+    "globalaccelerator:DescribeCrossAccountAttachment",
+    "globalaccelerator:TagResource",
+    "globalaccelerator:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentArn"
+ ],
+ "properties": {
+  "AttachmentArn": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]{0,64}$",
+   "type": "string"
+  },
+  "Principals": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Resources": {
+   "items": {
+    "$ref": "#/definitions/Resource"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AttachmentArn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GlobalAccelerator::CrossAccountAttachment",
+ "writeOnlyProperties": [
+  "/properties/Resources/*/Region"
+ ]
+}

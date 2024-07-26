@@ -1,0 +1,169 @@
+{
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "allOf": [
+    {
+     "required": [
+      "ResourceIdentifier"
+     ]
+    }
+   ],
+   "anyOf": [
+    {
+     "required": [
+      "ZonalAutoshiftStatus"
+     ]
+    },
+    {
+     "required": [
+      "PracticeRunConfiguration"
+     ]
+    }
+   ]
+  }
+ ],
+ "createOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ],
+ "definitions": {
+  "ControlCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmIdentifier": {
+     "maxLength": 1024,
+     "minLength": 8,
+     "pattern": "^arn:.*$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/ControlConditionType"
+    }
+   },
+   "required": [
+    "AlarmIdentifier",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ControlConditionType": {
+   "enum": [
+    "CLOUDWATCH"
+   ],
+   "type": "string"
+  },
+  "PracticeRunConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockedDates": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 10,
+      "minLength": 10,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "type": "string"
+     },
+     "maxItems": 15,
+     "minItems": 0,
+     "type": "array"
+    },
+    "BlockedWindows": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 19,
+      "minLength": 19,
+      "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun):[0-9]{2}:[0-9]{2}-(Mon|Tue|Wed|Thu|Fri|Sat|Sun):[0-9]{2}:[0-9]{2}$",
+      "type": "string"
+     },
+     "maxItems": 15,
+     "minItems": 0,
+     "type": "array"
+    },
+    "BlockingAlarms": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ControlCondition"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "OutcomeAlarms": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ControlCondition"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "OutcomeAlarms"
+   ],
+   "type": "object"
+  },
+  "ZonalAutoshiftStatus": {
+   "enum": [
+    "ENABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "arc-zonal-shift:CreatePracticeRunConfiguration",
+    "arc-zonal-shift:GetManagedResource",
+    "arc-zonal-shift:UpdateZonalAutoshiftConfiguration",
+    "cloudwatch:DescribeAlarms",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "arc-zonal-shift:DeletePracticeRunConfiguration",
+    "arc-zonal-shift:GetManagedResource",
+    "arc-zonal-shift:UpdateZonalAutoshiftConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "arc-zonal-shift:ListManagedResources"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "arc-zonal-shift:GetManagedResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "arc-zonal-shift:GetManagedResource",
+    "arc-zonal-shift:UpdatePracticeRunConfiguration",
+    "arc-zonal-shift:UpdateZonalAutoshiftConfiguration",
+    "cloudwatch:DescribeAlarms"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceIdentifier"
+ ],
+ "properties": {
+  "PracticeRunConfiguration": {
+   "$ref": "#/definitions/PracticeRunConfiguration"
+  },
+  "ResourceIdentifier": {
+   "maxLength": 1024,
+   "minLength": 8,
+   "type": "string"
+  },
+  "ZonalAutoshiftStatus": {
+   "$ref": "#/definitions/ZonalAutoshiftStatus"
+  }
+ },
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ARCZonalShift::ZonalAutoshiftConfiguration"
+}

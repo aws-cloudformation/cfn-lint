@@ -145,6 +145,54 @@
    },
    "type": "object"
   },
+  "RemoteNodeNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Cidrs"
+   ],
+   "type": "object"
+  },
+  "RemoteNodeNetworks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RemoteNodeNetwork"
+   },
+   "type": "array"
+  },
+  "RemotePodNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Cidrs"
+   ],
+   "type": "object"
+  },
+  "RemotePodNetworks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RemotePodNetwork"
+   },
+   "type": "array"
+  },
   "ResourcesVpcConfig": {
    "additionalProperties": false,
    "properties": {
@@ -204,6 +252,19 @@
     "Key",
     "Value"
    ],
+   "type": "object"
+  },
+  "UpgradePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "SupportType": {
+     "enum": [
+      "STANDARD",
+      "EXTENDED"
+     ],
+     "type": "string"
+    }
+   },
    "type": "object"
   }
  },
@@ -325,6 +386,9 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "UpgradePolicy": {
+   "$ref": "#/definitions/UpgradePolicy"
   },
   "Version": {
    "pattern": "1\\.\\d\\d",

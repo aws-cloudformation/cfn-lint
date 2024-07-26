@@ -5,6 +5,26 @@
   "/properties/KnowledgeBaseConfiguration"
  ],
  "definitions": {
+  "BedrockEmbeddingModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "EmbeddingModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockEmbeddingModelConfiguration": {
+     "$ref": "#/definitions/BedrockEmbeddingModelConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "KnowledgeBaseConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -36,7 +56,8 @@
    "enum": [
     "OPENSEARCH_SERVERLESS",
     "PINECONE",
-    "RDS"
+    "RDS",
+    "MONGO_DB_ATLAS"
    ],
    "type": "string"
   },
@@ -45,6 +66,78 @@
     "VECTOR"
    ],
    "type": "string"
+  },
+  "MongoDbAtlasConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionName": {
+     "maxLength": 63,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 63,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Endpoint": {
+     "maxLength": 2048,
+     "pattern": "^[a-zA-Z0-9_-]+\\.[a-zA-Z0-9_-]+\\.mongodb\\.net$",
+     "type": "string"
+    },
+    "EndpointServiceName": {
+     "maxLength": 255,
+     "pattern": "^(?:arn:aws(?:-us-gov|-cn|-iso|-iso-[a-z])*:.+:.*:\\d+:.+/.+$|[a-zA-Z0-9*]+[a-zA-Z0-9._-]*)$",
+     "type": "string"
+    },
+    "FieldMapping": {
+     "$ref": "#/definitions/MongoDbAtlasFieldMapping"
+    },
+    "VectorIndexName": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint",
+    "CredentialsSecretArn",
+    "DatabaseName",
+    "CollectionName",
+    "VectorIndexName",
+    "FieldMapping"
+   ],
+   "type": "object"
+  },
+  "MongoDbAtlasFieldMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "TextField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "VectorField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VectorField",
+    "MetadataField",
+    "TextField"
+   ],
+   "type": "object"
   },
   "OpenSearchServerlessConfiguration": {
    "additionalProperties": false,
@@ -282,9 +375,17 @@
      "required": [
       "RdsConfiguration"
      ]
+    },
+    {
+     "required": [
+      "MongoDbAtlasConfiguration"
+     ]
     }
    ],
    "properties": {
+    "MongoDbAtlasConfiguration": {
+     "$ref": "#/definitions/MongoDbAtlasConfiguration"
+    },
     "OpensearchServerlessConfiguration": {
      "$ref": "#/definitions/OpenSearchServerlessConfiguration"
     },
@@ -321,8 +422,11 @@
     "EmbeddingModelArn": {
      "maxLength": 2048,
      "minLength": 20,
-     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}/[a-z0-9]{12})|(:foundation-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|([0-9]{12}:provisioned-model/[a-z0-9]{12})))|([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|(([0-9a-zA-Z][_-]?)+)$",
+     "pattern": "^(arn:aws(-[^:]+)?:[a-z0-9-]+:[a-z0-9-]{1,20}:[0-9]{0,12}:[a-zA-Z0-9-:/._+]+)$",
      "type": "string"
+    },
+    "EmbeddingModelConfiguration": {
+     "$ref": "#/definitions/EmbeddingModelConfiguration"
     }
    },
    "required": [

@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "InsightsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InsightsEnabled": {
+     "type": "boolean"
+    },
+    "NotificationsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "xray:CreateGroup",
+    "xray:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "xray:DeleteGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "xray:GetGroups",
+    "xray:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "xray:GetGroup",
+    "xray:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "xray:UpdateGroup",
+    "xray:TagResource",
+    "xray:UntagResource",
+    "xray:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupARN"
+ ],
+ "properties": {
+  "FilterExpression": {
+   "type": "string"
+  },
+  "GroupARN": {
+   "maxLength": 400,
+   "minLength": 1,
+   "type": "string"
+  },
+  "GroupName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InsightsConfiguration": {
+   "$ref": "#/definitions/InsightsConfiguration"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GroupARN"
+ ],
+ "required": [
+  "GroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::XRay::Group"
+}
