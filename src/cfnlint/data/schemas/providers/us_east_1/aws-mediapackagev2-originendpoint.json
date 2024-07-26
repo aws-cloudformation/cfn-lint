@@ -200,6 +200,15 @@
    },
    "type": "object"
   },
+  "EndpointErrorCondition": {
+   "enum": [
+    "STALE_MANIFEST",
+    "INCOMPLETE_MANIFEST",
+    "MISSING_DRM_KEY",
+    "SLATE_INPUT"
+   ],
+   "type": "string"
+  },
   "FilterConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -220,6 +229,18 @@
      "maximum": 1209600,
      "minimum": 0,
      "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ForceEndpointErrorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointErrorConditions": {
+     "items": {
+      "$ref": "#/definitions/EndpointErrorCondition"
+     },
+     "type": "array"
     }
    },
    "type": "object"
@@ -549,6 +570,9 @@
    "maxLength": 1024,
    "minLength": 0,
    "type": "string"
+  },
+  "ForceEndpointErrorConfiguration": {
+   "$ref": "#/definitions/ForceEndpointErrorConfiguration"
   },
   "HlsManifestUrls": {
    "items": {
