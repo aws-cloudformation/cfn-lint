@@ -1,0 +1,241 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MembershipIdentifier",
+  "/properties/InputReferenceConfig"
+ ],
+ "definitions": {
+  "Document": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "IdMappingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowUseAsDimensionColumn": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AllowUseAsDimensionColumn"
+   ],
+   "type": "object"
+  },
+  "IdNamespaceAssociationInputReferenceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputReferenceArn": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "ManageResourcePolicies": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "InputReferenceArn",
+    "ManageResourcePolicies"
+   ],
+   "type": "object"
+  },
+  "IdNamespaceAssociationInputReferenceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "IdMappingWorkflowsSupported": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Document"
+     },
+     "type": "array"
+    },
+    "IdNamespaceType": {
+     "enum": [
+      "SOURCE",
+      "TARGET"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UUID": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cleanrooms:CreateIdNamespaceAssociation",
+    "cleanrooms:GetIdNamespaceAssociation",
+    "cleanrooms:ListIdNamespaceAssociations",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:GetMembership",
+    "cleanrooms:GetCollaboration",
+    "entityresolution:GetIdNamespace",
+    "entityresolution:AddPolicyStatement"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cleanrooms:DeleteIdNamespaceAssociation",
+    "cleanrooms:GetIdNamespaceAssociation",
+    "cleanrooms:ListIdNamespaceAssociations",
+    "cleanrooms:GetMembership",
+    "cleanrooms:GetCollaboration",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:UntagResource",
+    "entityresolution:GetIdNamespace",
+    "entityresolution:DeletePolicyStatement"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "MembershipIdentifier": {
+      "$ref": "resource-schema.json#/properties/MembershipIdentifier"
+     }
+    },
+    "required": [
+     "MembershipIdentifier"
+    ]
+   },
+   "permissions": [
+    "cleanrooms:ListIdNamespaceAssociations",
+    "cleanrooms:GetMembership",
+    "cleanrooms:GetCollaboration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cleanrooms:GetIdNamespaceAssociation",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:GetMembership",
+    "cleanrooms:GetCollaboration",
+    "entityresolution:GetIdNamespace"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cleanrooms:UpdateIdNamespaceAssociation",
+    "cleanrooms:GetIdNamespaceAssociation",
+    "cleanrooms:GetMembership",
+    "cleanrooms:GetCollaboration",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:UntagResource",
+    "entityresolution:GetIdNamespace",
+    "entityresolution:AddPolicyStatement"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IdNamespaceAssociationIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "IdMappingConfig": {
+   "$ref": "#/definitions/IdMappingConfig"
+  },
+  "IdNamespaceAssociationIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "InputReferenceConfig": {
+   "$ref": "#/definitions/IdNamespaceAssociationInputReferenceConfig"
+  },
+  "InputReferenceProperties": {
+   "$ref": "#/definitions/IdNamespaceAssociationInputReferenceProperties"
+  },
+  "MembershipArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "$ref": "#/definitions/UUID"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IdNamespaceAssociationIdentifier",
+  "/properties/Arn",
+  "/properties/MembershipArn",
+  "/properties/CollaborationIdentifier",
+  "/properties/CollaborationArn",
+  "/properties/InputReferenceProperties"
+ ],
+ "required": [
+  "MembershipIdentifier",
+  "InputReferenceConfig",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "permissions": [
+   "cleanrooms:ListTagsForResource",
+   "cleanrooms:UntagResource",
+   "cleanrooms:TagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::IdNamespaceAssociation"
+}
