@@ -1,3 +1,8 @@
+### v0.87.10
+###### CloudFormation Specifications
+- Update CloudFormation specs to `182.0.0` (pull #[3391](https://github.com/aws-cloudformation/cfn-lint/pull/3443))
+- Patch in AWS::CloudFormation::StackSet.OperationPreferences.ConcurrencyMode (pull #[3462](https://github.com/aws-cloudformation/cfn-lint/pull/3462))
+
 ### v0.87.9
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `180.0.0` (pull #[3391](https://github.com/aws-cloudformation/cfn-lint/pull/3391))
