@@ -1,3 +1,15 @@
+### v1.9.0
+## What's Changed
+* Better iam policies by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3530
+* Create rule [W3663](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3663) to validate lmbd permission account by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3523
+* Context condition logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3532
+* Create rule [E3673](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3673) to validate ImageId being required on an instance by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3513
+* Create rule [E3049](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3049) to validate ECS Task/Service and LB target configuration with dynamic host ports by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3513
+* Allow more types in Metadata by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3536
+* Update CloudFormation schemas to 2024-07-29 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3533
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.8.2...v1.9.0
+
 ### v1.8.2
 ## What's Changed
 * `AutoMinorVersionUpgrade` can be used with Aurora clusters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3522
