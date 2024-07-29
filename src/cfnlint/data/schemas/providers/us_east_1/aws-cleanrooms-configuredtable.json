@@ -6,6 +6,14 @@
   "/properties/TableReference"
  ],
  "definitions": {
+  "AdditionalAnalyses": {
+   "enum": [
+    "ALLOWED",
+    "REQUIRED",
+    "NOT_ALLOWED"
+   ],
+   "type": "string"
+  },
   "AggregateColumn": {
    "additionalProperties": false,
    "properties": {
@@ -118,6 +126,9 @@
   "AnalysisRuleAggregation": {
    "additionalProperties": false,
    "properties": {
+    "AdditionalAnalyses": {
+     "$ref": "#/definitions/AdditionalAnalyses"
+    },
     "AggregateColumns": {
      "insertionOrder": false,
      "items": {
@@ -185,6 +196,9 @@
   "AnalysisRuleCustom": {
    "additionalProperties": false,
    "properties": {
+    "AdditionalAnalyses": {
+     "$ref": "#/definitions/AdditionalAnalyses"
+    },
     "AllowedAnalyses": {
      "$ref": "#/definitions/AllowedAnalyses"
     },
@@ -193,6 +207,9 @@
     },
     "DifferentialPrivacy": {
      "$ref": "#/definitions/DifferentialPrivacy"
+    },
+    "DisallowedOutputColumns": {
+     "$ref": "#/definitions/DisallowedOutputColumns"
     }
    },
    "required": [
@@ -203,6 +220,9 @@
   "AnalysisRuleList": {
    "additionalProperties": false,
    "properties": {
+    "AdditionalAnalyses": {
+     "$ref": "#/definitions/AdditionalAnalyses"
+    },
     "AllowedJoinOperators": {
      "insertionOrder": false,
      "items": {
@@ -325,6 +345,14 @@
     "Name"
    ],
    "type": "object"
+  },
+  "DisallowedOutputColumns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AnalysisRuleColumnName"
+   },
+   "minItems": 0,
+   "type": "array"
   },
   "GlueTableReference": {
    "additionalProperties": false,
@@ -569,6 +597,11 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": true,
+  "permissions": [
+   "cleanrooms:ListTagsForResource",
+   "cleanrooms:UntagResource",
+   "cleanrooms:TagResource"
+  ],
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
   "tagUpdatable": true,

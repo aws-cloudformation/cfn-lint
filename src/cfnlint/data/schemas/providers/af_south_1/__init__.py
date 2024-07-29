@@ -1223,6 +1223,7 @@ cached: list[str] = [
     "aws-glue-schemaversionmetadata.json",
     "aws-glue-securityconfiguration.json",
     "aws-glue-table.json",
+    "aws-glue-trigger.json",
     "aws-glue-workflow.json",
     "aws-groundstation-config.json",
     "aws-groundstation-dataflowendpointgroup.json",

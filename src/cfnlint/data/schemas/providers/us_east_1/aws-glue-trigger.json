@@ -109,41 +109,8 @@
    "type": "object"
   }
  },
- "handlers": {
-  "create": {
-   "permissions": [
-    "glue:CreateTrigger",
-    "glue:GetTrigger",
-    "glue:TagResource"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "glue:DeleteTrigger",
-    "glue:GetTrigger"
-   ]
-  },
-  "list": {
-   "permissions": [
-    "glue:ListTriggers"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "glue:GetTrigger",
-    "glue:GetTags"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "glue:UpdateTrigger",
-    "glue:UntagResource",
-    "glue:TagResource"
-   ]
-  }
- },
  "primaryIdentifier": [
-  "/properties/Name"
+  "/properties/Id"
  ],
  "properties": {
   "Actions": {
@@ -158,6 +125,9 @@
   },
   "EventBatchingCondition": {
    "$ref": "#/definitions/EventBatchingCondition"
+  },
+  "Id": {
+   "type": "string"
   },
   "Name": {
    "type": "string"
@@ -191,20 +161,12 @@
    "type": "string"
   }
  },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
  "required": [
   "Type",
   "Actions"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
- "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": true,
-  "tagProperty": "/properties/Tags",
-  "tagUpdatable": true,
-  "taggable": true
- },
- "typeName": "AWS::Glue::Trigger",
- "writeOnlyProperties": [
-  "/properties/StartOnCreation"
- ]
+ "typeName": "AWS::Glue::Trigger"
 }
