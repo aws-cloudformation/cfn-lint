@@ -268,6 +268,7 @@ _service = {
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]
                     ),
+                    rule=ServiceDynamicPorts(),
                 )
             ],
         ),
@@ -330,6 +331,7 @@ _service = {
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]
                     ),
+                    rule=ServiceDynamicPorts(),
                 )
             ],
         ),
@@ -359,6 +361,7 @@ _service = {
                     path_override=deque(
                         ["Resources", "TargetGroup", "Properties", "HealthCheckPort"]
                     ),
+                    rule=ServiceDynamicPorts(),
                 )
             ],
         ),
@@ -546,6 +549,29 @@ _service = {
                             {"op": "remove", "path": "/Properties/HealthCheckPort"},
                         ],
                     ),
+                    "Service": dict(_service),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "replace",
+                                "path": (
+                                    "/Properties/ContainerDefinitions/"
+                                    "0/PortMappings/0/HostPort"
+                                ),
+                                "value": "30",
+                            },
+                        ],
+                    ),
+                    "TargetGroup": dict(_target_group),
                     "Service": dict(_service),
                 }
             },
