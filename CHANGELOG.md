@@ -1,3 +1,9 @@
+### v1.9.1
+## What's Changed
+* Update rule [E3049](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3049) to only trigger when host port is 0 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3543
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.0...v1.9.1
+
 ### v1.9.0
 ## What's Changed
 * Better iam policies by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3530
