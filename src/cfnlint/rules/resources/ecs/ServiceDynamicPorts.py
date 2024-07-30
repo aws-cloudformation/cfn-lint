@@ -172,12 +172,13 @@ class ServiceDynamicPorts(CfnLintKeyword):
                 if not isinstance(container_port, (str, int)):
                     continue
                 if str(port) == str(container_port):
-                    for _, host_part_validator in get_value_from_path(
+                    for host_port, host_part_validator in get_value_from_path(
                         container_port_validator,
                         port_mapping,
                         path=deque(["HostPort"]),
                     ):
-                        yield host_part_validator
+                        if str(host_port) == "0":
+                            yield host_part_validator
 
     def validate(
         self, validator: Validator, _: Any, instance: Any, schema: dict[str, Any]
@@ -212,4 +213,5 @@ class ServiceDynamicPorts(CfnLintKeyword):
                             "has to have a 'HealthCheckPort' of 'traffic-port'",
                             path_override=health_check_port_validator.context.path.path,
                             validator=err_validator,
+                            rule=self,
                         )
