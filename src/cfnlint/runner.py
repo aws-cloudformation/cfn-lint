@@ -15,6 +15,7 @@ import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.decode.decode import decode
+from cfnlint.helpers import REGIONS
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ParseError, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
@@ -122,6 +123,18 @@ class TemplateRunner:
             Match: The matches found by running the rules against the template.
         """
         LOGGER.info("Run scan of template %s", self.cfn.filename)
+        if not set(self.config.regions).issubset(set(REGIONS)):
+            unsupported_regions = list(
+                set(self.config.regions).difference(set(REGIONS))
+            )
+            raise InvalidRegionException(
+                (
+                    f"Regions {unsupported_regions!r} are unsupported. "
+                    f"Supported regions are {REGIONS!r}"
+                ),
+                32,
+            )
+
         matches = self.cfn.transform()
         if matches:
             if self.rules.is_rule_enabled(TransformError(), self.config):
@@ -425,7 +438,11 @@ class Runner:
                 self.config.parser.print_help()
                 sys.exit(1)
 
-        self._cli_output(list(self.run()))
+        try:
+            self._cli_output(list(self.run()))
+        except CfnLintExitException as e:
+            LOGGER.error(str(e))
+            sys.exit(e.exit_code)
 
 
 def main() -> None:

@@ -80,3 +80,20 @@ class TestCli(BaseTestCase):
         self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
         mock_isatty.assert_called_once()
+
+    def test_bad_regions(self):
+        config = ConfigMixIn(
+            [
+                "--regions",
+                "us-north-5",
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ]
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 32)
