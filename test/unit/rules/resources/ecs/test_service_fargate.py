@@ -62,6 +62,122 @@ _service = {
                             },
                         ],
                     ),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Fn::Sub": "${TaskDefinition.Arn}"},
+                            },
+                        ],
+                    ),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Fn::GetAtt": "TaskDefinition.Arn"},
+                            },
+                        ],
+                    ),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [
+                ValidationError(
+                    ("'RequiresCompatibilities' is a required property"),
+                    validator="required",
+                    rule=ServiceFargate(),
+                    path_override=deque(["Resources", "TaskDefinition", "Properties"]),
+                )
+            ],
+        ),
+        (
+            {
+                "Parameters": {"MyTask": {"Type": "String"}},
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Ref": "MyTask"},
+                            },
+                        ],
+                    ),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": "MyTask",
+                            },
+                        ],
+                    ),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
                     "Service": dict(_service),
                 }
             },

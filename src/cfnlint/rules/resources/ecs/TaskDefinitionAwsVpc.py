@@ -49,7 +49,7 @@ class TaskDefinitionAwsVpc(CfnLintKeyword):
                     container_definition,
                     path=deque(["ContainerPort"]),
                 ):
-                    if not isinstance(host_port, (str, int)):
+                    if not isinstance(container_port, (str, int)):
                         continue
                     if str(host_port) != str(container_port):
                         yield host_port, container_port, host_port_validator
