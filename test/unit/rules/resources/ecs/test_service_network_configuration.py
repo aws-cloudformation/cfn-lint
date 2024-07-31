@@ -158,6 +158,105 @@ _service = {
                 )
             ],
         ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/NetworkConfiguration",
+                            },
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Fn::GetAtt": "TaskDefinition.Arn"},
+                            },
+                        ],
+                    ),
+                }
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [
+                ValidationError(
+                    ("'NetworkConfiguration' is a required property"),
+                    validator="required",
+                    rule=ServiceNetworkConfiguration(),
+                )
+            ],
+        ),
+        (
+            {
+                "Parameters": {"MyTargetGroup": {"Type": "String"}},
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/NetworkConfiguration",
+                            },
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Ref": "MyTargetGroup"},
+                            },
+                        ],
+                    ),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/NetworkConfiguration",
+                            },
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Foo": "Bar"},
+                            },
+                        ],
+                    ),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": dict(_task_definition),
+                    "Service": jsonpatch.apply_patch(
+                        dict(_service),
+                        [
+                            {
+                                "op": "remove",
+                                "path": "/Properties/NetworkConfiguration",
+                            },
+                            {
+                                "op": "replace",
+                                "path": "/Properties/TaskDefinition",
+                                "value": {"Fn::Sub": "${TaskDefinition.Arn}"},
+                            },
+                        ],
+                    ),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
     ],
     indirect=["template"],
 )

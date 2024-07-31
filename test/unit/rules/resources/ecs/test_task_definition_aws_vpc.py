@@ -75,6 +75,35 @@ _task_definition = {
         ),
         (
             {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "add",
+                                "path": (
+                                    "/Properties/ContainerDefinitions/"
+                                    "0/PortMappings/0/HostPort"
+                                ),
+                                "value": "8080",
+                            },
+                            {
+                                "op": "replace",
+                                "path": (
+                                    "/Properties/ContainerDefinitions/"
+                                    "0/PortMappings/0/ContainerPort"
+                                ),
+                                "value": {"Fn::Sub": "8080"},
+                            },
+                        ],
+                    ),
+                }
+            },
+            deque(["Resources", "TaskDefinition", "Properties"]),
+            [],
+        ),
+        (
+            {
                 "Parameters": {
                     "MyPort": {"Type": "String"},
                     "MySecondPort": {"Type": "String"},
@@ -102,6 +131,32 @@ _task_definition = {
                         ],
                     ),
                 },
+            },
+            deque(["Resources", "TaskDefinition", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "add",
+                                "path": (
+                                    "/Properties/ContainerDefinitions/0"
+                                    "/PortMappings/0/HostPort"
+                                ),
+                                "value": "80",
+                            },
+                            {
+                                "op": "replace",
+                                "path": ("/Properties/NetworkMode"),
+                                "value": "bridge",
+                            },
+                        ],
+                    ),
+                }
             },
             deque(["Resources", "TaskDefinition", "Properties"]),
             [],

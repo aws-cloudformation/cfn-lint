@@ -19,8 +19,8 @@ class ServiceNetworkConfiguration(CfnLintKeyword):
     id = "E3052"
     shortdesc = "Validate ECS service requires NetworkConfiguration"
     description = (
-        "When using an ECS task definition has 'awsvpc' "
-        "then 'NetworkConfiguration' is required"
+        "When using an ECS task definition has NetworkMode set to "
+        "'awsvpc' then 'NetworkConfiguration' is required"
     )
     tags = ["resources", "ecs"]
 

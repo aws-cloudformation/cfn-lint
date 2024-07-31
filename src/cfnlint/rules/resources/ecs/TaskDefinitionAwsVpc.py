@@ -16,7 +16,7 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 class TaskDefinitionAwsVpc(CfnLintKeyword):
     id = "E3053"
-    shortdesc = "Validate ECS task definition is has correct values for " "'HostPort'"
+    shortdesc = "Validate ECS task definition is has correct values for 'HostPort'"
     description = (
         "The 'HostPort' must either be undefined or equal to "
         "the 'ContainerPort' value"
@@ -49,7 +49,7 @@ class TaskDefinitionAwsVpc(CfnLintKeyword):
                     container_definition,
                     path=deque(["ContainerPort"]),
                 ):
-                    if not isinstance(host_port, (str, int)):
+                    if not isinstance(container_port, (str, int)):
                         continue
                     if str(host_port) != str(container_port):
                         yield host_port, container_port, host_port_validator
