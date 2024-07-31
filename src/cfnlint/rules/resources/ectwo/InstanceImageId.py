@@ -70,11 +70,20 @@ class InstanceImageId(CfnLintKeyword):
             launch_templates = list(
                 self._get_related_launch_template(instance_image_id_validator, instance)
             )
+            path: deque[str | int] = deque([])
+            if "ImageId" != instance_image_id_validator.context.path.path[-1]:
+                path = deque(
+                    list(instance_image_id_validator.context.path.path)[
+                        len(validator.context.path.path) :
+                    ]
+                )
 
             if not launch_templates:
                 yield ValidationError(
                     "'ImageId' is a required property",
-                    path_override=instance_image_id_validator.context.path.path,
+                    validator="required",
+                    path=path,
+                    rule=self,
                 )
                 continue
 
@@ -123,5 +132,7 @@ class InstanceImageId(CfnLintKeyword):
                     if launch_template_image_id is None and instance_image_id is None:
                         yield ValidationError(
                             "'ImageId' is a required property",
-                            path_override=instance_image_id_validator.context.path.path,
+                            validator="required",
+                            path=path,
+                            rule=self,
                         )

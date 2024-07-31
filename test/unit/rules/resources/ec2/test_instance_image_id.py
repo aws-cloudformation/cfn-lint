@@ -184,9 +184,9 @@ def rule():
             [
                 ValidationError(
                     "'ImageId' is a required property",
-                    path_override=deque(
-                        ["Resources", "Instance", "Properties", "ImageId"]
-                    ),
+                    validator="required",
+                    rule=InstanceImageId(),
+                    path=deque([]),
                 )
             ],
         ),
@@ -221,9 +221,9 @@ def rule():
             [
                 ValidationError(
                     "'ImageId' is a required property",
-                    path_override=deque(
-                        ["Resources", "Instance", "Properties", "ImageId"]
-                    ),
+                    validator="required",
+                    rule=InstanceImageId(),
+                    path=deque([]),
                 )
             ],
         ),
@@ -268,17 +268,9 @@ def rule():
             [
                 ValidationError(
                     "'ImageId' is a required property",
-                    path_override=deque(
-                        [
-                            "Resources",
-                            "Instance",
-                            "Properties",
-                            "ImageId",
-                            "Fn::If",
-                            2,
-                            "Ref",
-                        ]
-                    ),
+                    validator="required",
+                    rule=InstanceImageId(),
+                    path=deque(["ImageId", "Fn::If", 2, "Ref"]),
                 )
             ],
         ),
@@ -288,6 +280,10 @@ def rule():
 def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
+    for err in errs:
+        print(err.path)
+        print(err.validator)
+        print(err.rule)
     assert (
         errs == expected
     ), f"Expected test {name!r} to have {expected!r} but got {errs!r}"
