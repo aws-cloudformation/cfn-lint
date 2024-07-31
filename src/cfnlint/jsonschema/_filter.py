@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from dataclasses import dataclass, field, fields
-from typing import TYPE_CHECKING, Any, Sequence, Tuple
+from typing import TYPE_CHECKING, Any, Iterator, Sequence, Tuple
 
 from cfnlint.helpers import FUNCTIONS, REGEX_DYN_REF, ToPy, ensure_list
 
@@ -107,7 +107,9 @@ class FunctionFilter:
 
         return standard_schema, group_schema
 
-    def filter(self, validator: Any, instance: Any, schema: Any):
+    def filter(
+        self, validator: Any, instance: Any, schema: Any
+    ) -> Iterator[tuple[Any, dict[str, Any], "Validator"]]:
         # Lets validate dynamic references when appropriate
         if validator.is_type(instance, "string") and self.validate_dynamic_references:
             if REGEX_DYN_REF.findall(instance):
@@ -117,14 +119,14 @@ class FunctionFilter:
                     p in set(FUNCTIONS) - set(["Fn::If"])
                     for p in validator.context.path.path
                 ):
-                    yield (instance, {"dynamicReference": schema})
+                    yield (instance, {"dynamicReference": schema}, validator)
                     return
                 return
 
         # if there are no functions then we don't need to worry
         # about ref AWS::NoValue or If conditions
         if not validator.context.functions:
-            yield instance, schema
+            yield instance, schema, validator
             return
 
         # dependencies, required, minProperties, maxProperties
@@ -133,9 +135,14 @@ class FunctionFilter:
         standard_schema, group_schema = self._filter_schemas(schema, validator)
 
         if group_schema:
-            scenarios = validator.cfn.get_object_without_conditions(instance)
-            for scenario in scenarios:
-                yield (scenario.get("Object"), group_schema)
+            for (
+                scenario_instance,
+                scenario,
+            ) in validator.context.conditions.evolve_from_instance(instance):
+                scenario_validator = validator.evolve(
+                    context=validator.context.evolve(conditions=scenario)
+                )
+                yield (scenario_instance, group_schema, scenario_validator)
 
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
@@ -145,10 +152,10 @@ class FunctionFilter:
                         k_schema = {
                             k_py.py: standard_schema,
                         }
-                        yield (instance, k_schema)
+                        yield (instance, k_schema, validator)
                         return
 
-        yield (instance, standard_schema)
+        yield (instance, standard_schema, validator)
 
     def evolve(self, **kwargs) -> "FunctionFilter":
         """

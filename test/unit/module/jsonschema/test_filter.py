@@ -86,4 +86,8 @@ def test_filter(name, instance, schema, path, functions, expected, filter):
     )
     results = list(filter.filter(validator, instance, schema))
 
-    assert results == expected, f"For test {name} got {results!r}"
+    assert len(results) == len(expected), f"For test {name} got {len(results)} results"
+
+    for result, (exp_instance, exp_schema) in zip(results, expected):
+        assert result[0] == exp_instance, f"For test {name} got {result.instance!r}"
+        assert result[1] == exp_schema, f"For test {name} got {result.schema!r}"
