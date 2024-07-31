@@ -1,3 +1,10 @@
+### v1.9.2
+## What's Changed
+* Update [W3663](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3663) to skip validation when Sub by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3548
+* Update [E3673](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3673) to return the rule in `ValidationError` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3548
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.1...v1.9.2
+
 ### v1.9.1
 ## What's Changed
 * Update rule [E3049](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3049) to only trigger when host port is 0 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3543
