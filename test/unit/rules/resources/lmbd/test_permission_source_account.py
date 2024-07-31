@@ -61,6 +61,7 @@ def template():
                 ValidationError(
                     "'SourceAccount' is a required property",
                     validator="required",
+                    rule=PermissionSourceAccount(),
                 )
             ],
         ),
@@ -85,24 +86,6 @@ def template():
             {
                 "SourceArn": {"Fn::Sub": "arn:${AWS::Partition}:s3:::bucket"},
             },
-            [
-                ValidationError(
-                    "'SourceAccount' is a required property",
-                    validator="required",
-                )
-            ],
-        ),
-        (
-            {
-                "SourceArn": {"Fn::Sub": [[], {}]},
-            },
-            [],
-        ),
-        (
-            {
-                "SourceArn": {"Fn::Sub": "arn:${AWS::Partition}:s3:::bucket"},
-                "SourceAccount": {"Ref": "AWS::AccountId"},
-            },
             [],
         ),
         (
@@ -120,6 +103,7 @@ def template():
                 ValidationError(
                     "'SourceAccount' is a required property",
                     validator="required",
+                    rule=PermissionSourceAccount(),
                 )
             ],
         ),
@@ -182,6 +166,7 @@ def template():
                 ValidationError(
                     "'SourceAccount' is a required property",
                     validator="required",
+                    rule=PermissionSourceAccount(),
                 )
             ],
         ),
