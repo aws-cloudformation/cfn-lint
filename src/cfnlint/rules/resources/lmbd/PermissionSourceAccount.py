@@ -32,16 +32,6 @@ class PermissionSourceAccount(CfnLintKeyword):
             keywords=["Resources/AWS::Lambda::Permission/Properties"],
         )
 
-    def _validate_sub_has_account_id(self, validator: Validator, value: Any) -> bool:
-        value = ensure_list(value)
-
-        if isinstance(value[0], str):
-            if re.search(r":(\d{12}|\${AWS::AccountId}):", value[0]):
-                return True
-
-            return False
-        return True
-
     def _validate_is_gettatt_to_bucket(self, validator: Validator, value: Any) -> bool:
         value = ensure_list(value)[0].split(".")[0]
 
@@ -81,10 +71,7 @@ class PermissionSourceAccount(CfnLintKeyword):
 
             fn_k, fn_v = is_function(source_arn)
             if fn_k is not None:
-                if fn_k == "Fn::Sub":
-                    if self._validate_sub_has_account_id(scenario_validator, fn_v):
-                        continue
-                elif fn_k == "Fn::GetAtt":
+                if fn_k == "Fn::GetAtt":
                     if not self._validate_is_gettatt_to_bucket(
                         scenario_validator, fn_v
                     ):
@@ -96,4 +83,5 @@ class PermissionSourceAccount(CfnLintKeyword):
                 yield ValidationError(
                     "'SourceAccount' is a required property",
                     validator="required",
+                    rule=self,
                 )
