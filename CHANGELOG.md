@@ -1,3 +1,12 @@
+### v1.9.3
+## What's Changed
+* Update schema filtering to use new condition logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3552
+* Update [E3615](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3615) to validate all CloudWatch Alarm periods by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3556
+* Better type checking for `null` types by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3557
+* Add `dependentExcluded` for `AbortIncompleteMultipartUpload` in `AWS::S3::Bucket` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3558
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.2...v1.9.3
+
 ### v1.9.2
 ## What's Changed
 * Update [W3663](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3663) to skip validation when Sub by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3548
