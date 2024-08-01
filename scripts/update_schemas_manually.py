@@ -1497,6 +1497,15 @@ patches.extend(
                     },
                     path="/definitions/RedirectAllRequestsTo",
                 ),
+                Patch(
+                    values={
+                        "dependentExcluded": {
+                            "ObjectSizeLessThan": ["AbortIncompleteMultipartUpload"],
+                            "ObjectSizeGreaterThan": ["AbortIncompleteMultipartUpload"],
+                        },
+                    },
+                    path="/definitions/Rule",
+                ),
             ],
         ),
         ResourcePatch(

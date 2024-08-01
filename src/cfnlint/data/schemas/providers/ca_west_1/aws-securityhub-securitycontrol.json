@@ -1,0 +1,206 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SecurityControlArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "anyOf": [
+  {
+   "required": [
+    "SecurityControlId"
+   ]
+  },
+  {
+   "required": [
+    "SecurityControlArn"
+   ]
+  }
+ ],
+ "definitions": {
+  "IntegerList": {
+   "items": {
+    "type": "integer"
+   },
+   "type": "array"
+  },
+  "NonEmptyString": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "NonEmptyStringList": {
+   "items": {
+    "$ref": "#/definitions/NonEmptyString"
+   },
+   "type": "array"
+  },
+  "ParameterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "$ref": "#/definitions/ParameterValue"
+    },
+    "ValueType": {
+     "enum": [
+      "DEFAULT",
+      "CUSTOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "ParameterValue": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Boolean"
+     ]
+    },
+    {
+     "required": [
+      "Double"
+     ]
+    },
+    {
+     "required": [
+      "Enum"
+     ]
+    },
+    {
+     "required": [
+      "EnumList"
+     ]
+    },
+    {
+     "required": [
+      "Integer"
+     ]
+    },
+    {
+     "required": [
+      "IntegerList"
+     ]
+    },
+    {
+     "required": [
+      "String"
+     ]
+    },
+    {
+     "required": [
+      "StringList"
+     ]
+    }
+   ],
+   "properties": {
+    "Boolean": {
+     "type": "boolean"
+    },
+    "Double": {
+     "type": "number"
+    },
+    "Enum": {
+     "$ref": "#/definitions/NonEmptyString"
+    },
+    "EnumList": {
+     "$ref": "#/definitions/NonEmptyStringList"
+    },
+    "Integer": {
+     "type": "integer"
+    },
+    "IntegerList": {
+     "$ref": "#/definitions/IntegerList"
+    },
+    "String": {
+     "$ref": "#/definitions/NonEmptyString"
+    },
+    "StringList": {
+     "$ref": "#/definitions/NonEmptyStringList"
+    }
+   },
+   "type": "object"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*\\S.*": {
+     "$ref": "#/definitions/ParameterConfiguration"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:ListSecurityControlDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "securityhub:BatchGetSecurityControls",
+    "securityhub:DescribeStandardsControls",
+    "securityhub:UpdateSecurityControl",
+    "securityhub:UpdateStandardsControl"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SecurityControlId"
+ ],
+ "properties": {
+  "LastUpdateReason": {
+   "pattern": "^([^\u0000-\u007f]|[-_ a-zA-Z0-9])+$",
+   "type": "string"
+  },
+  "Parameters": {
+   "$ref": "#/definitions/Parameters"
+  },
+  "SecurityControlArn": {
+   "$ref": "#/definitions/NonEmptyString"
+  },
+  "SecurityControlId": {
+   "$ref": "#/definitions/NonEmptyString"
+  }
+ },
+ "required": [
+  "Parameters"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SecurityHub::SecurityControl"
+}
