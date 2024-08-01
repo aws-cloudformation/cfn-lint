@@ -69,6 +69,46 @@
    ],
    "type": "object"
   },
+  "ContextualGroundingFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Threshold": {
+     "minimum": 0,
+     "type": "number"
+    },
+    "Type": {
+     "$ref": "#/definitions/ContextualGroundingFilterType"
+    }
+   },
+   "required": [
+    "Threshold",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ContextualGroundingFilterType": {
+   "enum": [
+    "GROUNDING",
+    "RELEVANCE"
+   ],
+   "type": "string"
+  },
+  "ContextualGroundingPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FiltersConfig": {
+     "items": {
+      "$ref": "#/definitions/ContextualGroundingFilterConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FiltersConfig"
+   ],
+   "type": "object"
+  },
   "FilterStrength": {
    "enum": [
     "NONE",
@@ -451,6 +491,9 @@
   },
   "ContentPolicyConfig": {
    "$ref": "#/definitions/ContentPolicyConfig"
+  },
+  "ContextualGroundingPolicyConfig": {
+   "$ref": "#/definitions/ContextualGroundingPolicyConfig"
   },
   "CreatedAt": {
    "format": "date-time",

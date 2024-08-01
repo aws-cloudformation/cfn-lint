@@ -11,7 +11,8 @@
   "/properties/NetworkConfiguration",
   "/properties/ImageConfiguration",
   "/properties/MonitoringConfiguration",
-  "/properties/RuntimeConfiguration"
+  "/properties/RuntimeConfiguration",
+  "/properties/InteractiveConfiguration"
  ],
  "createOnlyProperties": [
   "/properties/Name",
@@ -198,6 +199,20 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "InteractiveConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LivyEndpointEnabled": {
+     "default": false,
+     "type": "boolean"
+    },
+    "StudioEnabled": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
   },
   "LogGroupName": {
    "maxLength": 512,
@@ -551,6 +566,9 @@
   },
   "InitialCapacity": {
    "$ref": "#/definitions/InitialCapacityConfigMap"
+  },
+  "InteractiveConfiguration": {
+   "$ref": "#/definitions/InteractiveConfiguration"
   },
   "MaximumCapacity": {
    "$ref": "#/definitions/MaximumAllowedResources"
