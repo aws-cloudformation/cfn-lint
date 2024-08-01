@@ -85,7 +85,7 @@ class FnItems:
 # Type checks
 #####
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:
-    if tS in ["object", "array"]:
+    if tS in ["object", "array", "null"] or validator.is_type(instance, "null"):
         return validator.is_type(instance, tS)
     if "string" == tS:
         if validator.is_type(instance, "object") or validator.is_type(

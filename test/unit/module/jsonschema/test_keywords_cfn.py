@@ -101,6 +101,32 @@ class TestCfnTypes(Base):
         self.build_execute_tests(True, ["string", "boolean"])
         self.build_execute_tests("true", ["string", "boolean"])
 
+    def test_null_values(self):
+        self.message_errors(
+            "Null value with string type",
+            None,
+            ["None is not of type 'string'"],
+            {"type": "string"},
+        )
+        self.message_errors(
+            "String value with null type",
+            "foo",
+            ["'foo' is not of type 'null'"],
+            {"type": "null"},
+        )
+        self.message_errors(
+            "Object value with null type",
+            {},
+            ["{} is not of type 'null'"],
+            {"type": "null"},
+        )
+        self.message_errors(
+            "None value with multiple types",
+            None,
+            [],
+            {"type": ["string", "null"]},
+        )
+
 
 class TestMultiCfnTypes(Base):
     def build_execute_tests(self, instance, supported_types, unsupported_type) -> None:
