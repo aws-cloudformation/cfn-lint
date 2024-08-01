@@ -962,7 +962,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         result[key] = new_value
             return result
         if isinstance(obj, list):
-            result = list_node({}, obj.start_mark, obj.end_mark)
+            result = list_node([], obj.start_mark, obj.end_mark)
             for item in obj:
                 element = get_value(item, scenario)
                 if element is not None:

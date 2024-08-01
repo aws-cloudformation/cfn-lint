@@ -185,6 +185,112 @@ def test_condition_status(current_status, new_status, expected):
         assert context.conditions.status == expected
 
 
+@pytest.mark.parametrize(
+    "current_status,instance,expected",
+    [
+        ({}, {"Foo": "Bar"}, [({"Foo": "Bar"}, {})]),
+        (
+            {},
+            {"Fn::If": ["IsUsEast1", {"Foo": "Foo"}, {"Bar": "Bar"}]},
+            [
+                ({"Foo": "Foo"}, {"IsUsEast1": True}),
+                ({"Bar": "Bar"}, {"IsUsEast1": False}),
+            ],
+        ),
+        (
+            {
+                "IsUsEast1": True,
+            },
+            {"Fn::If": ["IsUsEast1", {"Foo": "Foo"}, {"Bar": "Bar"}]},
+            [
+                ({"Foo": "Foo"}, {"IsUsEast1": True}),
+            ],
+        ),
+        (
+            {
+                "IsUsEast1": False,
+            },
+            {"Fn::If": ["IsUsEast1", {"Foo": "Foo"}, {"Bar": "Bar"}]},
+            [
+                ({"Bar": "Bar"}, {"IsUsEast1": False}),
+            ],
+        ),
+        (
+            {},
+            {"Ref": "AWS::NoValue"},
+            [
+                ({}, {}),
+            ],
+        ),
+        (
+            {},
+            [{"Foo": {"Fn::If": ["IsUsEast1", "Foo", "Bar"]}}],
+            [
+                ([{"Foo": {"Fn::If": ["IsUsEast1", "Foo", "Bar"]}}], {}),
+            ],
+        ),
+        (
+            {},
+            [{"Fn::If": ["IsUsEast1", {"Foo": "Bar"}, {"Ref": "AWS::NoValue"}]}],
+            [
+                ([{"Foo": "Bar"}], {"IsUsEast1": True}),
+                ([], {"IsUsEast1": False}),
+            ],
+        ),
+        (
+            {"IsUsEast1": True, "IsProd": True},
+            {
+                "A": {"Fn::If": ["IsUsEast1AndProd", 1, 2]},
+                "B": {"Fn::If": ["IsAi", 10, 11]},
+            },
+            [
+                (
+                    {"A": 1, "B": 10},
+                    {
+                        "IsUsEast1": True,
+                        "IsProd": True,
+                        "IsUsEast1AndProd": True,
+                        "IsAi": True,
+                    },
+                ),
+                (
+                    {"A": 1, "B": 11},
+                    {
+                        "IsUsEast1": True,
+                        "IsProd": True,
+                        "IsUsEast1AndProd": True,
+                        "IsAi": False,
+                    },
+                ),
+            ],
+        ),
+        (
+            {},
+            {
+                "A": {"Fn::If": ["IsUsEast1AndProd", 1]},
+            },
+            [
+                (
+                    {"A": {"Fn::If": ["IsUsEast1AndProd", 1]}},
+                    {},
+                ),
+            ],
+        ),
+    ],
+)
+def test_evolve_from_instance(current_status, instance, expected):
+    cfn = Template(None, template(), regions=["us-east-1"])
+    context = create_context_for_template(cfn)
+
+    context = context.evolve(conditions=context.conditions.evolve(current_status))
+
+    results = list(context.conditions.evolve_from_instance(instance))
+    assert len(results) == len(expected)
+    for result, expected_result in zip(results, expected):
+        assert result[0] == expected_result[0]
+        assert result[1].status == expected_result[1]
+
+
 def test_condition_failures():
     with pytest.raises(ValueError):
         Conditions.create_from_instance([], {})
