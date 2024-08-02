@@ -127,13 +127,19 @@ class Conditions:
             if scenarios_attempted >= self._max_scenarios:
                 return
 
-    def evolve_from_instance(self, instance: Any) -> Iterator[tuple[Any, "Conditions"]]:
+    def evolve_from_instance(
+        self, instance: Any, resolve_fn_if: bool = True, resolve_fn_ref: bool = True
+    ) -> Iterator[tuple[Any, "Conditions"]]:
 
         conditions = get_conditions_from_property(instance)
 
         for scenario in self._build_conditions(conditions):
             yield build_instance_from_scenario(
-                instance, scenario.status, is_root=True
+                instance,
+                scenario.status,
+                is_root=True,
+                resolve_fn_if=resolve_fn_if,
+                resolve_fn_ref=resolve_fn_ref,
             ), scenario
 
     @property

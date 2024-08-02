@@ -219,7 +219,7 @@ def test_condition_status(current_status, new_status, expected):
             {},
             {"Ref": "AWS::NoValue"},
             [
-                ({}, {}),
+                (None, {}),
             ],
         ),
         (

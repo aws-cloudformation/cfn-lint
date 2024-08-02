@@ -50,7 +50,11 @@ def get_conditions_from_property(instance: Any, is_root: bool = True) -> set[str
 
 
 def build_instance_from_scenario(
-    instance: Any, scenario: dict[str, bool], is_root: bool = True
+    instance: Any,
+    scenario: dict[str, bool],
+    is_root: bool = True,
+    resolve_fn_if: bool = True,
+    resolve_fn_ref: bool = True,
 ) -> Any:
     """
     Get object values from a provided scenario.
@@ -76,27 +80,37 @@ def build_instance_from_scenario(
             getattr(instance, "end_mark", Mark(0, 0)),
         )
         for v in instance:
-            new_value = build_instance_from_scenario(v, scenario, is_root=False)
+            new_value = build_instance_from_scenario(
+                v,
+                scenario,
+                is_root=False,
+                resolve_fn_if=resolve_fn_if,
+                resolve_fn_ref=resolve_fn_ref,
+            )
             if new_value is not None:
                 new_list.append(new_value)
         return new_list
 
     if isinstance(instance, dict):
         fn_k, fn_v = is_function(instance)
-        if fn_k == "Fn::If":
+        if fn_k == "Fn::If" and resolve_fn_if:
             if isinstance(fn_v, list) and len(fn_v) == 3:
                 if isinstance(fn_v[0], str):
                     if_path = scenario.get(fn_v[0], None)
                     if if_path is not None:
                         new_value = build_instance_from_scenario(
-                            fn_v[1] if if_path else fn_v[2], scenario, is_root
+                            fn_v[1] if if_path else fn_v[2],
+                            scenario,
+                            is_root,
+                            resolve_fn_if,
+                            resolve_fn_ref,
                         )
                         if new_value is not None:
                             return new_value
                         return None
             return instance
-        if fn_k == "Ref" and fn_v == "AWS::NoValue":
-            return {} if is_root else None
+        if fn_k == "Ref" and fn_v == "AWS::NoValue" and resolve_fn_ref:
+            return None
         if is_root:
             new_obj: dict[str, Any] = dict_node(
                 {},
@@ -104,7 +118,13 @@ def build_instance_from_scenario(
                 getattr(instance, "end_mark", Mark(0, 0)),
             )
             for k, v in instance.items():
-                new_value = build_instance_from_scenario(v, scenario, is_root=False)
+                new_value = build_instance_from_scenario(
+                    v,
+                    scenario,
+                    is_root=False,
+                    resolve_fn_if=resolve_fn_if,
+                    resolve_fn_ref=resolve_fn_ref,
+                )
                 if new_value is not None:
                     new_obj[k] = new_value
             return new_obj
