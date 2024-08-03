@@ -5,10 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from cfnlint.decode.node import Mark, dict_node, list_node
 from cfnlint.helpers import is_function
+
+if TYPE_CHECKING:
+    from cfnlint.context.context import Context
 
 
 def get_conditions_from_property(instance: Any, is_root: bool = True) -> set[str]:
@@ -52,9 +55,8 @@ def get_conditions_from_property(instance: Any, is_root: bool = True) -> set[str
 def build_instance_from_scenario(
     instance: Any,
     scenario: dict[str, bool],
-    is_root: bool = True,
-    resolve_fn_if: bool = True,
-    resolve_fn_ref: bool = True,
+    is_root: bool,
+    context: "Context",
 ) -> Any:
     """
     Get object values from a provided scenario.
@@ -84,8 +86,7 @@ def build_instance_from_scenario(
                 v,
                 scenario,
                 is_root=False,
-                resolve_fn_if=resolve_fn_if,
-                resolve_fn_ref=resolve_fn_ref,
+                context=context,
             )
             if new_value is not None:
                 new_list.append(new_value)
@@ -93,7 +94,7 @@ def build_instance_from_scenario(
 
     if isinstance(instance, dict):
         fn_k, fn_v = is_function(instance)
-        if fn_k == "Fn::If" and resolve_fn_if:
+        if fn_k == "Fn::If" and "Fn::If" in context.functions:
             if isinstance(fn_v, list) and len(fn_v) == 3:
                 if isinstance(fn_v[0], str):
                     if_path = scenario.get(fn_v[0], None)
@@ -102,14 +103,13 @@ def build_instance_from_scenario(
                             fn_v[1] if if_path else fn_v[2],
                             scenario,
                             is_root,
-                            resolve_fn_if,
-                            resolve_fn_ref,
+                            context=context,
                         )
                         if new_value is not None:
                             return new_value
                         return None
             return instance
-        if fn_k == "Ref" and fn_v == "AWS::NoValue" and resolve_fn_ref:
+        if fn_k == "Ref" and fn_v == "AWS::NoValue" and "Ref" in context.functions:
             return None
         if is_root:
             new_obj: dict[str, Any] = dict_node(
@@ -122,8 +122,7 @@ def build_instance_from_scenario(
                     v,
                     scenario,
                     is_root=False,
-                    resolve_fn_if=resolve_fn_if,
-                    resolve_fn_ref=resolve_fn_ref,
+                    context=context,
                 )
                 if new_value is not None:
                     new_obj[k] = new_value

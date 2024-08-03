@@ -32,8 +32,9 @@ class Tagging(CloudFormationLintRule):
         validator = validator.evolve(
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=False,
-            )
+            ),
         )
+
         for err in validator.descend(
             instance=instance,
             schema=self._schema,
