@@ -138,7 +138,12 @@ class FunctionFilter:
             for (
                 scenario_instance,
                 scenario,
-            ) in validator.context.conditions.evolve_from_instance(instance):
+            ) in validator.context.conditions.evolve_from_instance(
+                instance,
+                context=validator.context,
+            ):
+                if scenario_instance is None:
+                    continue
                 scenario_validator = validator.evolve(
                     context=validator.context.evolve(conditions=scenario)
                 )

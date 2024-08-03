@@ -219,7 +219,7 @@ def test_condition_status(current_status, new_status, expected):
             {},
             {"Ref": "AWS::NoValue"},
             [
-                ({}, {}),
+                (None, {}),
             ],
         ),
         (
@@ -282,9 +282,12 @@ def test_evolve_from_instance(current_status, instance, expected):
     cfn = Template(None, template(), regions=["us-east-1"])
     context = create_context_for_template(cfn)
 
-    context = context.evolve(conditions=context.conditions.evolve(current_status))
+    context = context.evolve(
+        conditions=context.conditions.evolve(current_status),
+        functions=["Fn::If", "Ref"],
+    )
 
-    results = list(context.conditions.evolve_from_instance(instance))
+    results = list(context.conditions.evolve_from_instance(instance, context))
     assert len(results) == len(expected)
     for result, expected_result in zip(results, expected):
         assert result[0] == expected_result[0]

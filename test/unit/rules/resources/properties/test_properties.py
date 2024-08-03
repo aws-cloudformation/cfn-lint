@@ -53,6 +53,19 @@ def rule():
                 )
             ],
         ),
+        (
+            "Valid type but no required fields",
+            {"Type": "MyType", "Properties": {"Ref": "AWS::NoValue"}},
+            [(["us-east-1"], Schema({"typeName": "MyType", "required": ["Name"]}))],
+            [
+                ValidationError(
+                    "'Name' is a required property",
+                    validator="required",
+                    path=deque(["Properties"]),
+                    schema_path=deque(["required"]),
+                )
+            ],
+        ),
     ],
 )
 def test_validate(name, instance, patches, expected, rule, validator):

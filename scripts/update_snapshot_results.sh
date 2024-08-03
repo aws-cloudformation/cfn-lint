@@ -3,6 +3,7 @@
 # integration/
 cfn-lint test/fixtures/templates/integration/dynamic-references.yaml -e -c I --format json > test/fixtures/results/integration/dynamic-references.json
 cfn-lint test/fixtures/templates/integration/resources-cloudformation-init.yaml -e -c I --format json > test/fixtures/results/integration/resources-cloudformation-init.json
+cfn-lint test/fixtures/templates/integration/ref-no-value.yaml -e -c I --format json > test/fixtures/results/integration/ref-no-value.json
 
 # public/
 cfn-lint test/fixtures/templates/public/lambda-poller.yaml -e -c I --format json > test/fixtures/results/public/lambda-poller.json

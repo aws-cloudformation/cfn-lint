@@ -22,7 +22,7 @@ from cfnlint.context.conditions._utils import (
 from cfnlint.context.conditions.exceptions import Unsatisfiable
 
 if TYPE_CHECKING:
-    from cfnlint.context.context import Parameter
+    from cfnlint.context.context import Context, Parameter
 
 
 @dataclass(frozen=True)
@@ -127,13 +127,18 @@ class Conditions:
             if scenarios_attempted >= self._max_scenarios:
                 return
 
-    def evolve_from_instance(self, instance: Any) -> Iterator[tuple[Any, "Conditions"]]:
+    def evolve_from_instance(
+        self, instance: Any, context: "Context"
+    ) -> Iterator[tuple[Any, "Conditions"]]:
 
         conditions = get_conditions_from_property(instance)
 
         for scenario in self._build_conditions(conditions):
             yield build_instance_from_scenario(
-                instance, scenario.status, is_root=True
+                instance,
+                scenario.status,
+                is_root=True,
+                context=context,
             ), scenario
 
     @property

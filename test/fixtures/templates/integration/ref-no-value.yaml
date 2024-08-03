@@ -1,0 +1,49 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Conditions:
+  IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
+
+Resources:
+  IamRole1:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      Tags:
+
+        - !If
+          - IsUsEast1
+          - Key: Key1
+            Value: Value1
+          - !Ref AWS::NoValue
+
+        - Key: Key2
+          Value: Value2
+        - !Ref AWS::NoValue
+        - Key: !Ref AWS::NoValue
+          Value: Value3
+  IamRole2:
+    Type: AWS::IAM::Role
+    Properties: !Ref AWS::NoValue
+  IamRole3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      Tags:
+        !If
+          - IsUsEast1
+          - - Key: Key1
+              Value: Value1
+          - !Ref AWS::NoValue
+  CloudFront1:
+    Type: AWS::CloudFront::Distribution
+    Properties: !Ref AWS::NoValue
+  CloudFront2:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultCacheBehavior:
+          Fn::If:
+          - IsUsEast1
+          - !Ref AWS::NoValue
+          - {}

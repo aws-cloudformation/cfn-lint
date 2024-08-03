@@ -24,12 +24,15 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 0,
         },
         {
-            "filename": (
-                "test/fixtures/templates/integration" "/dynamic-references.yaml"
-            ),
+            "filename": ("test/fixtures/templates/integration/dynamic-references.yaml"),
             "results_filename": (
-                "test/fixtures/results/integration/" "dynamic-references.json"
+                "test/fixtures/results/integration/dynamic-references.json"
             ),
+            "exit_code": 2,
+        },
+        {
+            "filename": ("test/fixtures/templates/integration/ref-no-value.yaml"),
+            "results_filename": ("test/fixtures/results/integration/ref-no-value.json"),
             "exit_code": 2,
         },
     ]
