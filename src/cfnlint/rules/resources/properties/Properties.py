@@ -8,7 +8,7 @@ from collections import deque
 from typing import Any
 
 from cfnlint.helpers import FUNCTIONS, is_function
-from cfnlint.jsonschema import ValidationResult, Validator
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
@@ -87,7 +87,14 @@ class Properties(CfnLintJsonSchema):
         properties = instance.get("Properties", {})
         fn_k, fn_v = is_function(properties)
         if fn_k == "Ref" and fn_v == "AWS::NoValue":
-            properties = {}
+            yield ValidationError(
+                # Expected an object, received {"Ref":"AWS::NoValue"}
+                message=f"{properties!r} is not of type object",
+                path=deque(["Properties", fn_k]),
+                rule=self.child_rules.get(self.rule_set.get("type")),  # type: ignore
+                validator="type",
+            )
+            return
 
         for regions, schema in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
             t, validator.context.regions
