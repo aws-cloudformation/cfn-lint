@@ -54,15 +54,15 @@ def rule():
             ],
         ),
         (
-            "Valid type but no required fields",
+            "Invalid with Ref AWS::NoValue",
             {"Type": "MyType", "Properties": {"Ref": "AWS::NoValue"}},
-            [(["us-east-1"], Schema({"typeName": "MyType", "required": ["Name"]}))],
+            [],
             [
                 ValidationError(
-                    "'Name' is a required property",
-                    validator="required",
-                    path=deque(["Properties"]),
-                    schema_path=deque(["required"]),
+                    "{'Ref': 'AWS::NoValue'} is not of type object",
+                    validator="type",
+                    path=deque(["Properties", "Ref"]),
+                    rule=None,
                 )
             ],
         ),
