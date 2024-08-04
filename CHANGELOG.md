@@ -1,3 +1,9 @@
+### v1.9.4
+## What's Changed
+* Add logic to handle Ref `AWS::NoValue` in list by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3563
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.3...v1.9.4
+
 ### v1.9.3
 ## What's Changed
 * Update schema filtering to use new condition logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3552
