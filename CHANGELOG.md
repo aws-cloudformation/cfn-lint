@@ -1,3 +1,13 @@
+### v1.9.5
+## What's Changed
+* Increase the max value of `AWS::Cognito::UserPoolClient#RefreshTokenValidity` to `315360000` by @BR0kEN- in https://github.com/aws-cloudformation/cfn-lint/pull/3567
+* Update CloudFormation schemas to 2024-08-05 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3539
+
+## New Contributors
+* @BR0kEN- made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3567
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.4...v1.9.5
+
 ### v1.9.4
 ## What's Changed
 * Add logic to handle Ref `AWS::NoValue` in list by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3563
