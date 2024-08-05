@@ -448,9 +448,6 @@ class ProviderSchemaManager:
                             str(e),
                         )
                     except Exception as e:  # pylint: disable=broad-exception-caught
-                        print(
-                            "Exception", type(e), e, os.path.join(append_dir, file_path)
-                        )
                         LOGGER.info(
                             "Unknown exception raised applying patch %s: %s",
                             os.path.join(append_dir, file_path),
