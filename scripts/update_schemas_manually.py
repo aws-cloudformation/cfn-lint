@@ -607,18 +607,6 @@ patches.extend(
             ],
         ),
         ResourcePatch(
-            resource_type="AWS::Cognito::UserPoolClient",
-            patches=[
-                Patch(
-                    values={
-                        "maximum": 3650,
-                        "minimum": 0,
-                    },
-                    path="/properties/RefreshTokenValidity",
-                ),
-            ],
-        ),
-        ResourcePatch(
             resource_type="AWS::Config::ConfigRule",
             patches=[
                 Patch(
