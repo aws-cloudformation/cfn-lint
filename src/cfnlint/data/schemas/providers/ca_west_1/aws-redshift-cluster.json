@@ -1,0 +1,445 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterIdentifier",
+  "/properties/OwnerAccount",
+  "/properties/SnapshotIdentifier",
+  "/properties/DBName",
+  "/properties/SnapshotClusterIdentifier",
+  "/properties/ClusterSubnetGroupName",
+  "/properties/MasterUsername"
+ ],
+ "definitions": {
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "relationshipRef": {
+      "propertyPath": "/properties/BucketName",
+      "typeName": "AWS::S3::Bucket"
+     },
+     "type": "string"
+    },
+    "LogDestinationType": {
+     "type": "string"
+    },
+    "LogExports": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 3,
+     "type": "array"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "redshift:DescribeClusters",
+    "redshift:CreateCluster",
+    "redshift:RestoreFromClusterSnapshot",
+    "redshift:EnableLogging",
+    "redshift:DescribeLoggingStatus",
+    "redshift:CreateTags",
+    "redshift:DescribeTags",
+    "redshift:GetResourcePolicy",
+    "redshift:PutResourcePolicy",
+    "redshift:ModifyClusterMaintenance",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeAddresses",
+    "ec2:AssociateAddress",
+    "ec2:CreateNetworkInterface",
+    "ec2:ModifyNetworkInterfaceAttribute",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:ModifyVpcEndpoint",
+    "ec2:AllocateAddress",
+    "ec2:CreateSecurityGroup",
+    "ec2:DescribeVpcAttribute",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeInternetGateways",
+    "ec2:DescribeSecurityGroupRules",
+    "ec2:DescribeAvailabilityZones",
+    "ec2:DescribeNetworkAcls",
+    "ec2:DescribeRouteTables",
+    "cloudwatch:PutMetricData"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusters",
+    "redshift:DeleteCluster"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeClusters",
+    "redshift:DescribeLoggingStatus",
+    "redshift:DescribeSnapshotCopyGrant",
+    "redshift:DescribeClusterDbRevisions",
+    "redshift:DescribeTags",
+    "redshift:GetResourcePolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "redshift:DescribeClusters",
+    "redshift:ModifyCluster",
+    "redshift:ModifyClusterIamRoles",
+    "redshift:EnableLogging",
+    "redshift:CreateTags",
+    "redshift:DeleteTags",
+    "redshift:DescribeTags",
+    "redshift:DisableLogging",
+    "redshift:DescribeLoggingStatus",
+    "redshift:RebootCluster",
+    "redshift:EnableSnapshotCopy",
+    "redshift:DisableSnapshotCopy",
+    "redshift:ModifySnapshotCopyRetentionPeriod",
+    "redshift:ModifyAquaConfiguration",
+    "redshift:ResizeCluster",
+    "redshift:ModifyClusterMaintenance",
+    "redshift:DescribeClusterDbRevisions",
+    "redshift:ModifyClusterDbRevisions",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:RotateEncryptionKey",
+    "redshift:FailoverPrimaryCompute",
+    "redshift:PutResourcePolicy",
+    "redshift:GetResourcePolicy",
+    "redshift:DeleteResourcePolicy",
+    "cloudwatch:PutMetricData"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterIdentifier"
+ ],
+ "properties": {
+  "AllowVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AquaConfigurationStatus": {
+   "type": "string"
+  },
+  "AutomatedSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailabilityZoneRelocation": {
+   "type": "boolean"
+  },
+  "AvailabilityZoneRelocationStatus": {
+   "type": "string"
+  },
+  "Classic": {
+   "type": "boolean"
+  },
+  "ClusterIdentifier": {
+   "maxLength": 63,
+   "type": "string"
+  },
+  "ClusterNamespaceArn": {
+   "type": "string"
+  },
+  "ClusterParameterGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ClusterSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::Redshift::ClusterSecurityGroup"
+      }
+     }
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ClusterSubnetGroupName": {
+   "type": "string"
+  },
+  "ClusterType": {
+   "type": "string"
+  },
+  "ClusterVersion": {
+   "type": "string"
+  },
+  "DBName": {
+   "type": "string"
+  },
+  "DeferMaintenance": {
+   "type": "boolean"
+  },
+  "DeferMaintenanceDuration": {
+   "type": "integer"
+  },
+  "DeferMaintenanceEndTime": {
+   "type": "string"
+  },
+  "DeferMaintenanceIdentifier": {
+   "type": "string"
+  },
+  "DeferMaintenanceStartTime": {
+   "type": "string"
+  },
+  "DestinationRegion": {
+   "type": "string"
+  },
+  "ElasticIp": {
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "EnhancedVpcRouting": {
+   "type": "boolean"
+  },
+  "HsmClientCertificateIdentifier": {
+   "type": "string"
+  },
+  "HsmConfigurationIdentifier": {
+   "type": "string"
+  },
+  "IamRoles": {
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/Arn",
+     "typeName": "AWS::IAM::Role"
+    },
+    "type": "string"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "KmsKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
+   "type": "string"
+  },
+  "LoggingProperties": {
+   "$ref": "#/definitions/LoggingProperties"
+  },
+  "MaintenanceTrackName": {
+   "type": "string"
+  },
+  "ManageMasterPassword": {
+   "type": "boolean"
+  },
+  "ManualSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "MasterPasswordSecretArn": {
+   "type": "string"
+  },
+  "MasterPasswordSecretKmsKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
+   "type": "string"
+  },
+  "MasterUserPassword": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "MasterUsername": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "MultiAZ": {
+   "type": "boolean"
+  },
+  "NamespaceResourcePolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "NodeType": {
+   "type": "string"
+  },
+  "NumberOfNodes": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "ResourceAction": {
+   "type": "string"
+  },
+  "RevisionTarget": {
+   "type": "string"
+  },
+  "RotateEncryptionKey": {
+   "type": "boolean"
+  },
+  "SnapshotClusterIdentifier": {
+   "type": "string"
+  },
+  "SnapshotCopyGrantName": {
+   "type": "string"
+  },
+  "SnapshotCopyManual": {
+   "type": "boolean"
+  },
+  "SnapshotCopyRetentionPeriod": {
+   "type": "integer"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/VpcId",
+     "typeName": "AWS::EC2::VPC"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DeferMaintenanceIdentifier",
+  "/properties/Endpoint/Port",
+  "/properties/Endpoint/Address",
+  "/properties/ClusterNamespaceArn",
+  "/properties/MasterPasswordSecretArn"
+ ],
+ "required": [
+  "NodeType",
+  "MasterUsername",
+  "DBName",
+  "ClusterType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::Cluster",
+ "writeOnlyProperties": [
+  "/properties/MasterUserPassword",
+  "/properties/Classic",
+  "/properties/SnapshotIdentifier",
+  "/properties/DeferMaintenance",
+  "/properties/DeferMaintenanceDuration",
+  "/properties/ManageMasterPassword"
+ ]
+}

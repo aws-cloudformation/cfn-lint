@@ -132,6 +132,19 @@
    ],
    "type": "object"
   },
+  "BeforeEntryConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "BlockerDeclaration": {
    "additionalProperties": false,
    "properties": {
@@ -149,6 +162,22 @@
     "Type",
     "Name"
    ],
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Result": {
+     "type": "string"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/RuleDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
    "type": "object"
   },
   "EncryptionKey": {
@@ -170,6 +199,13 @@
   "FailureConditions": {
    "additionalProperties": false,
    "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
     "Result": {
      "enum": [
       "ROLLBACK"
@@ -341,6 +377,53 @@
    ],
    "type": "object"
   },
+  "RuleDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+     "type": "string"
+    },
+    "RuleTypeId": {
+     "$ref": "#/definitions/RuleTypeId"
+    }
+   },
+   "type": "object"
+  },
+  "RuleTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "StageDeclaration": {
    "additionalProperties": false,
    "properties": {
@@ -350,6 +433,10 @@
      },
      "type": "array",
      "uniqueItems": true
+    },
+    "BeforeEntry": {
+     "$ref": "#/definitions/BeforeEntryConditions",
+     "type": "object"
     },
     "Blockers": {
      "items": {
@@ -363,6 +450,10 @@
     },
     "OnFailure": {
      "$ref": "#/definitions/FailureConditions",
+     "type": "object"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/SuccessConditions",
      "type": "object"
     }
    },
@@ -386,6 +477,19 @@
     "StageName",
     "Reason"
    ],
+   "type": "object"
+  },
+  "SuccessConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
    "type": "object"
   },
   "Tag": {
