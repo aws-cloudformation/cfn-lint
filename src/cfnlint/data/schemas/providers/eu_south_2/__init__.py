@@ -1098,7 +1098,6 @@ cached: list[str] = [
     "aws-sagemaker-imageversion.json",
     "aws-sagemaker-mlflowtrackingserver.json",
     "aws-sagemaker-modelcard.json",
-    "aws-sagemaker-modelpackage.json",
     "aws-sagemaker-modelpackagegroup.json",
     "aws-sagemaker-pipeline.json",
     "aws-sagemaker-project.json",
