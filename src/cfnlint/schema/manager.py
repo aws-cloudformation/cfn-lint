@@ -20,6 +20,7 @@ from functools import lru_cache
 from typing import Any, Dict, Iterator, Sequence
 
 import jsonpatch
+import jsonpointer
 
 from cfnlint.helpers import (
     REGION_PRIMARY,
@@ -403,7 +404,7 @@ class ProviderSchemaManager:
         Returns:
             Dict: returns the patched content
         """
-        for patch_type in ["extensions", "providers"]:
+        for patch_type in ["providers", "extensions"]:
             source_dir = source_filename.replace("-", "_").replace(".json", "")
             append_dir = os.path.join(
                 self._patches.path_relative, patch_type, region, source_dir
@@ -428,13 +429,28 @@ class ProviderSchemaManager:
                             os.path.join(append_dir, file_path),
                             str(e),
                         )
+                    except jsonpatch.JsonPatchTestFailed as e:
+                        LOGGER.info(
+                            "Patch test failed %s: %s",
+                            os.path.join(append_dir, file_path),
+                            str(e),
+                        )
                     except jsonpatch.JsonPatchException as e:
                         LOGGER.info(
                             "Patch exception raised for %s: %s",
                             os.path.join(append_dir, file_path),
                             str(e),
                         )
+                    except jsonpointer.JsonPointerException as e:
+                        LOGGER.info(
+                            "Patch exception with pointer %s: %s",
+                            os.path.join(append_dir, file_path),
+                            str(e),
+                        )
                     except Exception as e:  # pylint: disable=broad-exception-caught
+                        print(
+                            "Exception", type(e), e, os.path.join(append_dir, file_path)
+                        )
                         LOGGER.info(
                             "Unknown exception raised applying patch %s: %s",
                             os.path.join(append_dir, file_path),

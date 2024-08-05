@@ -1657,7 +1657,6 @@ cached: list[str] = [
     "aws-sagemaker-modelbiasjobdefinition.json",
     "aws-sagemaker-modelcard.json",
     "aws-sagemaker-modelexplainabilityjobdefinition.json",
-    "aws-sagemaker-modelpackage.json",
     "aws-sagemaker-modelpackagegroup.json",
     "aws-sagemaker-modelqualityjobdefinition.json",
     "aws-sagemaker-monitoringschedule.json",

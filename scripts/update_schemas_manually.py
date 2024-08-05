@@ -78,10 +78,6 @@ patches.extend(
                     path="/definitions/LaunchTemplateSpecification",
                 ),
                 Patch(
-                    values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
-                    path="/definitions/BlockDeviceMapping/properties/VirtualName",
-                ),
-                Patch(
                     values={
                         "dependentExcluded": {
                             "InstanceId": [
