@@ -1,5 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
+Parameters:
+  DynamoDBTableArn:
+    Description: "DynamoDB Table ARN"
+    Type: String
 Resources:
   S3BadBucket:
     Type: AWS::S3::Bucket
@@ -78,3 +82,25 @@ Resources:
               - !Sub arn:${AWS::Partition}:sns:${AWS::Partition}:${AWS::AccountId}:TestTopic
       Roles:
         - !Ref SampleRole
+
+  IngestionPipeline:
+    Type: AWS::OSIS::Pipeline
+    Properties:
+      PipelineName: mypipeline
+      MaxUnits: 1
+      MinUnits: 1
+      PipelineConfigurationBody: !Sub |
+          version: "2"
+          dynamodb-pipeline:
+            source:
+              dynamodb:
+                acknowledgments: true
+                tables:
+                  - table_arn: ${DynamoDBTableArn}
+                  - export:
+                      s3_bucket: mybucket
+                      s3_prefix: prod
+                    stream:
+                      start_position: "LATEST"
+                aws:
+                  region: us-east-1

@@ -24,8 +24,10 @@ class HardCodedArnProperties(CloudFormationLintRule):
     )
     source_url = ""
     tags = ["resources"]
+    # using \r\n inside ${ } because there can be spaces in the sub parameter naming
+    # using \s for matching outside of Sub parameters as no space will work
     regex = re.compile(
-        r"arn:(\$\{[^:]*::[^:]*}|[^:]*):[^:]+:(\$\{[^:]*::[^:]*}|[^:]*):(\$\{[^:]*::[^:]*}|[^:]*)"
+        r"arn:(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*):[^:\s]+:(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*):(\$\{[^:\r\n]*::[^:\r\n]*}|[^:\s]*)"
     )
 
     def __init__(self):
