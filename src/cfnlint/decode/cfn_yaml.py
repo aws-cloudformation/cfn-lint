@@ -17,6 +17,7 @@ from yaml.reader import Reader
 from yaml.resolver import Resolver
 from yaml.scanner import Scanner
 
+from cfnlint.decode.mark import Mark
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.rules import Match
 from cfnlint.rules.errors import ParseError
@@ -291,7 +292,7 @@ def loads(yaml_string, fname=None):
     template = loader.get_single_data()
     # Convert an empty file to an empty dict
     if template is None:
-        template = {}
+        template = dict_node({}, Mark(0, 0), Mark(0, 0))
 
     return template
 

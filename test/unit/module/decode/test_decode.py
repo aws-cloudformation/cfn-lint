@@ -138,3 +138,7 @@ class TestDecode(BaseTestCase):
             """
             )
         self.assertEqual(str(e.exception), err_msg)
+
+    def test_decode_yaml_empty(self):
+        template = cfnlint.decode.cfn_yaml.loads("")
+        self.assertEqual(template, {})
