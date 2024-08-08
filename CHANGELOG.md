@@ -1,3 +1,13 @@
+### v1.9.6
+## What's Changed
+* Update schema patching and fix some issues by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3570
+* Update regex pattern for rule I3042 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3572
+* Better logic for empty yaml files by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3574
+* Update pre-commit to 2024-08-08 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3575
+* Update CloudFormation schemas to 2024-08-08 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3569
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.5...v1.9.6
+
 ### v1.9.5
 ## What's Changed
 * Increase the max value of `AWS::Cognito::UserPoolClient#RefreshTokenValidity` to `315360000` by @BR0kEN- in https://github.com/aws-cloudformation/cfn-lint/pull/3567
