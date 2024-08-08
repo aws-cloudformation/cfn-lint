@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransportTransitGatewayAttachmentId",
+  "/properties/Options"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TransitGatewayConnectOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateTransitGatewayConnect",
+    "ec2:DescribeTransitGatewayConnects",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteTransitGatewayConnect",
+    "ec2:DescribeTransitGatewayConnects",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnects"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnects"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayConnects",
+    "ec2:DeleteTags",
+    "ec2:CreateTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayAttachmentId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/TransitGatewayConnectOptions"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "TransportTransitGatewayAttachmentId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayAttachmentId",
+  "/properties/State",
+  "/properties/CreationTime",
+  "/properties/TransitGatewayId"
+ ],
+ "required": [
+  "TransportTransitGatewayAttachmentId",
+  "Options"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-myservice",
+ "typeName": "AWS::EC2::TransitGatewayConnect"
+}

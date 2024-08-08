@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserPoolId"
+ ],
+ "definitions": {
+  "CloudWatchLogsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroupArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FirehoseConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsConfiguration": {
+     "$ref": "#/definitions/CloudWatchLogsConfiguration"
+    },
+    "EventSource": {
+     "type": "string"
+    },
+    "FirehoseConfiguration": {
+     "$ref": "#/definitions/FirehoseConfiguration"
+    },
+    "LogLevel": {
+     "type": "string"
+    },
+    "S3Configuration": {
+     "$ref": "#/definitions/S3Configuration"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfigurations": {
+   "items": {
+    "$ref": "#/definitions/LogConfiguration"
+   },
+   "type": "array"
+  },
+  "S3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cognito-idp:GetLogDeliveryConfiguration",
+    "cognito-idp:SetLogDeliveryConfiguration",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "delete": {
+   "permissions": [
+    "cognito-idp:GetLogDeliveryConfiguration",
+    "cognito-idp:SetLogDeliveryConfiguration",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2
+  },
+  "read": {
+   "permissions": [
+    "cognito-idp:GetLogDeliveryConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cognito-idp:GetLogDeliveryConfiguration",
+    "cognito-idp:SetLogDeliveryConfiguration",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:PutResourcePolicy",
+    "logs:DescribeResourcePolicies",
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
+   ],
+   "timeoutInMinutes": 2
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "LogConfigurations": {
+   "$ref": "#/definitions/LogConfigurations"
+  },
+  "UserPoolId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "UserPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::LogDeliveryConfiguration"
+}

@@ -31,6 +31,42 @@
    },
    "type": "object"
   },
+  "CoreNetworkNetworkFunctionGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "EdgeLocations": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Segments": {
+     "additionalProperties": false,
+     "properties": {
+      "SendTo": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "SendVia": {
+       "insertionOrder": false,
+       "items": {
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "CoreNetworkSegment": {
    "additionalProperties": false,
    "properties": {
@@ -144,6 +180,13 @@
   "GlobalNetworkId": {
    "type": "string"
   },
+  "NetworkFunctionGroups": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkNetworkFunctionGroup"
+   },
+   "type": "array"
+  },
   "OwnerAccount": {
    "type": "string"
   },
@@ -180,6 +223,7 @@
   "/properties/CreatedAt",
   "/properties/State",
   "/properties/Segments",
+  "/properties/NetworkFunctionGroups",
   "/properties/Edges"
  ],
  "required": [
