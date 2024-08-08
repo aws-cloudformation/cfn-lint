@@ -18,10 +18,16 @@ def _resolve(name, instance, expected_results, **kwargs):
 
     resolutions = list(validator.resolve_value(instance))
 
+    assert len(resolutions) == len(
+        expected_results
+    ), f"{name!r} got {len(resolutions)!r}"
+
     for i, (instance, v, errors) in enumerate(resolutions):
-        assert instance == expected_results[i][0]
-        assert v.context.path.value_path == expected_results[i][1]
-        assert errors == expected_results[i][2]
+        assert instance == expected_results[i][0], f"{name!r} got {instance!r}"
+        assert (
+            v.context.path.value_path == expected_results[i][1]
+        ), f"{name!r} got {v.context.path.value_path!r}"
+        assert errors == expected_results[i][2], f"{name!r} got {errors!r}"
 
 
 @pytest.mark.parametrize(
@@ -153,7 +159,7 @@ def test_resolvers_ref(name, instance, response):
         ),
         (
             "Invalid FindInMap with an invalid type for third element",
-            {"Fn::FindInMap": ["foo", "bar", ["value"]]},
+            {"Fn::FindInMap": ["foo", "first", ["value"]]},
             [],
         ),
         (
@@ -218,16 +224,16 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
-            "Valid FindInMap with a default value",
+            "Valid FindInMap with bad keys and a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
             [("default", deque([4, "DefaultValue"]), None)],
         ),
         (
-            "Valid FindInMap with a default value",
+            "Valid FindInMap with valid keys and a default value",
             {"Fn::FindInMap": ["foo", "first", "second", {"DefaultValue": "default"}]},
             [
                 ("default", deque([4, "DefaultValue"]), None),
-                ("bar", deque([2]), None),
+                ("bar", deque(["Mappings", "foo", "first", "second"]), None),
             ],
         ),
         (
