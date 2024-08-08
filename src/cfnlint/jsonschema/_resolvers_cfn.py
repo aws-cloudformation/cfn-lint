@@ -128,61 +128,56 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                     second_level_key = str(second_level_key)
                 if not validator.is_type(second_level_key, "string"):
                     continue
-                try:
-
-                    second_level_keys = list(
-                        validator.context.mappings.maps[map_name]
-                        .keys[top_level_key]
-                        .keys.keys()
-                    )
-                    if all(
-                        not (equal(second_level_key, each))
-                        for each in second_level_keys
-                    ):
-                        if not default_value_found:
-                            results.append(
-                                (
-                                    None,
-                                    second_v,
-                                    ValidationError(
-                                        (
-                                            f"{second_level_key!r} is not "
-                                            f"one of {second_level_keys!r} "
-                                            f"for mapping {map_name!r} and "
-                                            f"key {top_level_key!r}"
-                                        ),
-                                        path=deque([2]),
+                second_level_keys = list(
+                    validator.context.mappings.maps[map_name]
+                    .keys[top_level_key]
+                    .keys.keys()
+                )
+                if all(
+                    not (equal(second_level_key, each)) for each in second_level_keys
+                ):
+                    if not default_value_found:
+                        results.append(
+                            (
+                                None,
+                                second_v,
+                                ValidationError(
+                                    (
+                                        f"{second_level_key!r} is not "
+                                        f"one of {second_level_keys!r} "
+                                        f"for mapping {map_name!r} and "
+                                        f"key {top_level_key!r}"
                                     ),
-                                )
+                                    path=deque([2]),
+                                ),
                             )
-                        continue
+                        )
+                    continue
 
-                    found_valid_combination = True
+                found_valid_combination = True
 
-                    for value in validator.context.mappings.maps[map_name].find_in_map(
-                        top_level_key,
-                        second_level_key,
-                    ):
-                        yield (
-                            value,
-                            validator.evolve(
-                                context=validator.context.evolve(
-                                    path=validator.context.path.evolve(
-                                        value_path=deque(
-                                            [
-                                                "Mappings",
-                                                map_name,
-                                                top_level_key,
-                                                second_level_key,
-                                            ]
-                                        )
+                for value in validator.context.mappings.maps[map_name].find_in_map(
+                    top_level_key,
+                    second_level_key,
+                ):
+                    yield (
+                        value,
+                        validator.evolve(
+                            context=validator.context.evolve(
+                                path=validator.context.path.evolve(
+                                    value_path=deque(
+                                        [
+                                            "Mappings",
+                                            map_name,
+                                            top_level_key,
+                                            second_level_key,
+                                        ]
                                     )
                                 )
-                            ),
-                            None,
-                        )
-                except KeyError:
-                    pass
+                            )
+                        ),
+                        None,
+                    )
 
     if not found_valid_combination:
         yield from iter(results)
