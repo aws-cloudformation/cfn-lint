@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TransitGatewayId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMulticastDomains",
+    "ec2:CreateTransitGatewayMulticastDomain",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMulticastDomains",
+    "ec2:DeleteTransitGatewayMulticastDomain",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMulticastDomains"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMulticastDomains"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeTransitGatewayMulticastDomains",
+    "ec2:DeleteTags",
+    "ec2:CreateTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TransitGatewayMulticastDomainId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoAcceptSharedAssociations": {
+     "type": "string"
+    },
+    "Igmpv2Support": {
+     "type": "string"
+    },
+    "StaticSourcesSupport": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "TransitGatewayMulticastDomainArn": {
+   "type": "string"
+  },
+  "TransitGatewayMulticastDomainId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TransitGatewayMulticastDomainId",
+  "/properties/State",
+  "/properties/CreationTime",
+  "/properties/TransitGatewayMulticastDomainArn"
+ ],
+ "required": [
+  "TransitGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway/aws-ec2-transitgatewaymulticastdomain",
+ "typeName": "AWS::EC2::TransitGatewayMulticastDomain"
+}

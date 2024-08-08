@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/DomainName",
+  "/properties/DomainOwner"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codeartifact:CreateRepository",
+    "codeartifact:DescribeRepository",
+    "codeartifact:PutRepositoryPermissionsPolicy",
+    "codeartifact:AssociateExternalConnection",
+    "codeartifact:AssociateWithDownstreamRepository",
+    "codeartifact:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codeartifact:DeleteRepository",
+    "codeartifact:DescribeRepository"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codeartifact:ListRepositories"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codeartifact:DescribeRepository",
+    "codeartifact:GetRepositoryPermissionsPolicy",
+    "codeartifact:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codeartifact:PutRepositoryPermissionsPolicy",
+    "codeartifact:DeleteRepositoryPermissionsPolicy",
+    "codeartifact:AssociateExternalConnection",
+    "codeartifact:DisassociateExternalConnection",
+    "codeartifact:UpdateRepository",
+    "codeartifact:DescribeRepository",
+    "codeartifact:AssociateWithDownstreamRepository",
+    "codeartifact:TagResource",
+    "codeartifact:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 50,
+   "minLength": 2,
+   "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+   "type": "string"
+  },
+  "DomainOwner": {
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "ExternalConnections": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 2,
+   "pattern": "^([A-Za-z0-9][A-Za-z0-9._\\-]{1,99})$",
+   "type": "string"
+  },
+  "PermissionsPolicyDocument": {
+   "maxLength": 5120,
+   "minLength": 2,
+   "type": "object"
+  },
+  "RepositoryName": {
+   "maxLength": 100,
+   "minLength": 2,
+   "pattern": "^([A-Za-z0-9][A-Za-z0-9._\\-]{1,99})$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Upstreams": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Name",
+  "/properties/DomainOwner",
+  "/properties/Arn"
+ ],
+ "required": [
+  "RepositoryName",
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeArtifact::Repository"
+}

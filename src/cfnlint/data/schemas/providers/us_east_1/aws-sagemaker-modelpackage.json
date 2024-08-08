@@ -1,5 +1,9 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/ModelCard",
+  "/properties/SourceUri"
+ ],
  "createOnlyProperties": [
   "/properties/ModelPackageGroupName",
   "/properties/ModelPackageDescription",
@@ -12,7 +16,8 @@
   "/properties/DriftCheckBaselines",
   "/properties/Domain",
   "/properties/Task",
-  "/properties/SamplePayloadUrl"
+  "/properties/SamplePayloadUrl",
+  "/properties/SecurityConfig"
  ],
  "definitions": {
   "AdditionalInferenceSpecificationDefinition": {
@@ -377,6 +382,18 @@
    ],
    "type": "object"
   },
+  "ModelAccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceptEula": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AcceptEula"
+   ],
+   "type": "object"
+  },
   "ModelApprovalStatus": {
    "enum": [
     "Approved",
@@ -384,6 +401,31 @@
     "PendingManualApproval"
    ],
    "type": "string"
+  },
+  "ModelCard": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelCardContent": {
+     "maxLength": 100000,
+     "minLength": 0,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ModelCardStatus": {
+     "enum": [
+      "Draft",
+      "PendingReview",
+      "Approved",
+      "Archived"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelCardContent",
+    "ModelCardStatus"
+   ],
+   "type": "object"
   },
   "ModelDataQuality": {
    "additionalProperties": false,
@@ -393,6 +435,15 @@
     },
     "Statistics": {
      "$ref": "#/definitions/MetricsSource"
+    }
+   },
+   "type": "object"
+  },
+  "ModelDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "S3DataSource": {
+     "$ref": "#/definitions/S3ModelDataSource"
     }
    },
    "type": "object"
@@ -451,6 +502,9 @@
      "maxLength": 72,
      "pattern": "^[Ss][Hh][Aa]256:[0-9a-fA-F]{64}$",
      "type": "string"
+    },
+    "ModelDataSource": {
+     "$ref": "#/definitions/ModelDataSource"
     },
     "ModelDataUrl": {
      "maxLength": 1024,
@@ -590,10 +644,57 @@
    ],
    "type": "object"
   },
+  "S3ModelDataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "CompressionType": {
+     "enum": [
+      "None",
+      "Gzip"
+     ],
+     "type": "string"
+    },
+    "ModelAccessConfig": {
+     "$ref": "#/definitions/ModelAccessConfig"
+    },
+    "S3DataType": {
+     "enum": [
+      "S3Prefix",
+      "S3Object"
+     ],
+     "type": "string"
+    },
+    "S3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3DataType",
+    "S3Uri",
+    "CompressionType"
+   ],
+   "type": "object"
+  },
   "SamplePayloadUrl": {
    "maxLength": 1024,
    "pattern": "^(https|s3)://([^/]+)/?(.*)$",
    "type": "string"
+  },
+  "SecurityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 2048,
+     "pattern": "^[a-zA-Z0-9:/_-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KmsKeyId"
+   ],
+   "type": "object"
   },
   "SkipModelValidation": {
    "enum": [
@@ -640,6 +741,12 @@
     "SourceAlgorithms"
    ],
    "type": "object"
+  },
+  "SourceUri": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{N}\\p{P}]{0,1024}",
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
@@ -853,14 +960,22 @@
     "sagemaker:DescribeTransformJob",
     "sagemaker:DescribeModelPackage",
     "sagemaker:ListTags",
+    "sagemaker:UpdateModelPackage",
     "iam:PassRole",
-    "s3:GetObject"
+    "s3:GetObject",
+    "s3:ListBucket",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "delete": {
    "permissions": [
     "sagemaker:DeleteModelPackage",
-    "sagemaker:DescribeModelPackage"
+    "sagemaker:DescribeModelPackage",
+    "kms:DescribeKey",
+    "kms:Decrypt"
    ]
   },
   "list": {
@@ -878,16 +993,25 @@
   "read": {
    "permissions": [
     "sagemaker:DescribeModelPackage",
-    "sagemaker:ListTags"
+    "sagemaker:ListTags",
+    "kms:DescribeKey",
+    "kms:Decrypt"
    ]
   },
   "update": {
    "permissions": [
+    "ecr:BatchGetImage",
     "sagemaker:UpdateModelPackage",
     "sagemaker:DescribeModelPackage",
     "sagemaker:ListTags",
     "sagemaker:AddTags",
-    "sagemaker:DeleteTags"
+    "sagemaker:DeleteTags",
+    "s3:GetObject",
+    "s3:ListBucket",
+    "kms:CreateGrant",
+    "kms:DescribeKey",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   }
  },
@@ -934,6 +1058,9 @@
   "ModelApprovalStatus": {
    "$ref": "#/definitions/ModelApprovalStatus"
   },
+  "ModelCard": {
+   "$ref": "#/definitions/ModelCard"
+  },
   "ModelMetrics": {
    "$ref": "#/definitions/ModelMetrics"
   },
@@ -961,11 +1088,17 @@
   "SamplePayloadUrl": {
    "$ref": "#/definitions/SamplePayloadUrl"
   },
+  "SecurityConfig": {
+   "$ref": "#/definitions/SecurityConfig"
+  },
   "SkipModelValidation": {
    "$ref": "#/definitions/SkipModelValidation"
   },
   "SourceAlgorithmSpecification": {
    "$ref": "#/definitions/SourceAlgorithmSpecification"
+  },
+  "SourceUri": {
+   "$ref": "#/definitions/SourceUri"
   },
   "Tags": {
    "items": {
