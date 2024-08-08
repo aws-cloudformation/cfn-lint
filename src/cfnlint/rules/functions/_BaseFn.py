@@ -56,6 +56,18 @@ class BaseFn(CloudFormationLintRule):
             ),
         )
 
+    def _clean_resolve_errors(
+        self, err: ValidationError, value: Any, instance: Any
+    ) -> ValidationError:
+        err.message = err.message.replace(f"{value!r}", f"{instance!r}")
+        err.message = f"{err.message} when {self.fn.name!r} is resolved"
+        if self.child_rules[self.resolved_rule]:
+            err.rule = self.child_rules[self.resolved_rule]
+            for i, err_ctx in enumerate(err.context):
+                err.context[i] = self._clean_resolve_errors(err_ctx, value, instance)
+            return err
+        return err
+
     def resolve(
         self,
         validator: Validator,
@@ -92,14 +104,9 @@ class BaseFn(CloudFormationLintRule):
                 return
 
             for err in errs:
-                err.message = err.message.replace(f"{value!r}", f"{instance!r}")
-                err.message = f"{err.message} when {self.fn.name!r} is resolved"
-                all_errs.append(err)
+                all_errs.append(self._clean_resolve_errors(err, value, instance))
 
-        for err in all_errs:
-            if self.child_rules[self.resolved_rule]:
-                err.rule = self.child_rules[self.resolved_rule]
-                yield err
+        yield from iter(all_errs)
 
     def _resolve_ref(self, validator, schema) -> Any:
 
