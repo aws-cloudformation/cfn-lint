@@ -1,3 +1,10 @@
+### v1.9.7
+## What's Changed
+* Add Value to path in [E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101) as we descend by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3582
+* Smarter flow to rule [E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3583
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.6...v1.9.7
+
 ### v1.9.6
 ## What's Changed
 * Update schema patching and fix some issues by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3570
