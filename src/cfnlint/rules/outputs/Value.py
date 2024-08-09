@@ -28,7 +28,8 @@ class Value(CfnLintJsonSchema):
         )
 
     def validate(self, validator: Validator, _: Any, instance: Any, schema: Any):
-        value = instance.get("Value")
+        key = "Value"
+        value = instance.get(key)
         if not value:
             return
 
@@ -42,6 +43,10 @@ class Value(CfnLintJsonSchema):
                 conditions=validator.context.conditions.evolve(
                     conditions,
                 ),
+                path=validator.context.path.descend(
+                    path=key,
+                    cfn_path=key,
+                ),
             ),
             schema={
                 "type": ["array", "string"],
@@ -52,5 +57,5 @@ class Value(CfnLintJsonSchema):
         )
 
         for err in self._iter_errors(validator, value):
-            err.path.appendleft("Value")
+            err.path.appendleft(key)
             yield err

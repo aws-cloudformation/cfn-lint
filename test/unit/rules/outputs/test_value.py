@@ -7,11 +7,14 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context import Path
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Cidr import Cidr
+from cfnlint.rules.functions.ImportValue import ImportValue
 from cfnlint.rules.functions.Join import Join
 from cfnlint.rules.functions.Ref import Ref
 from cfnlint.rules.functions.RefResolved import RefResolved
+from cfnlint.rules.outputs.ImportValue import ImportValue as OutputsImportValue
 from cfnlint.rules.outputs.Value import Value  # pylint: disable=E0401
 
 
@@ -54,19 +57,34 @@ def template():
 
 
 @pytest.fixture
-def validator(cfn):
+def path():
+    return Path(
+        path=deque(["Outputs", "Test"]),
+        value_path=deque(),
+        cfn_path=deque(["Outputs", "*"]),
+    )
+
+
+@pytest.fixture
+def validator(cfn, context):
 
     ref = Ref()
     ref.child_rules["W1030"] = RefResolved()
+
+    importvalue = ImportValue()
+    importvalue.child_rules["W6001"] = OutputsImportValue()
+
     yield CfnTemplateValidator(schema={}).extend(
         validators={
             "fn_join": Join().fn_join,
             "ref": ref.ref,
             "fn_cidr": Cidr().fn_cidr,
+            "fn_importvalue": importvalue.fn_importvalue,
         }
     )(
         schema={},
         cfn=cfn,
+        context=context,
     )
 
 
@@ -140,6 +158,23 @@ def validator(cfn):
                     schema_path=deque(["type"]),
                     path=deque(["Value"]),
                     rule=Value(),
+                )
+            ],
+        ),
+        (
+            {
+                "Value": {"Fn::ImportValue": "test-stack-value"},
+            },
+            [
+                ValidationError(
+                    (
+                        "The output value {'Fn::ImportValue': 'test-stack-value'} "
+                        "is an import from another output"
+                    ),
+                    validator="fn_importvalue",
+                    schema_path=deque(["fn_importvalue"]),
+                    path=deque(["Value", "Fn::ImportValue"]),
+                    rule=OutputsImportValue(),
                 )
             ],
         ),
