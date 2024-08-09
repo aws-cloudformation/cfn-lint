@@ -32,7 +32,7 @@ class Mappings:
             for k, v in instance.items():
                 if k == "Fn::Transform":
                     is_transform = True
-                else:
+                elif isinstance(k, str):
                     result[k] = Map.create_from_dict(v)
             return cls(result, is_transform)
         except (ValueError, AttributeError) as e:
@@ -65,10 +65,8 @@ class _MappingSecondaryKey:
         for k, v in instance.items():
             if k == "Fn::Transform":
                 is_transform = True
-            elif isinstance(v, (str, list, int, float)):
+            elif isinstance(k, str) and isinstance(v, (str, list, int, float)):
                 keys[k] = v
-            else:
-                continue
         return cls(keys, is_transform)
 
 
@@ -95,6 +93,6 @@ class Map:
         for k, v in instance.items():
             if k == "Fn::Transform":
                 is_transform = True
-            else:
+            elif isinstance(k, str):
                 keys[k] = _MappingSecondaryKey.create_from_dict(v)
         return cls(keys, is_transform)

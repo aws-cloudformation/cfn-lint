@@ -246,7 +246,8 @@ def test_invalid_functions(name, instance, response):
                     ValidationError(
                         (
                             "'bar' is not one of ['foo', "
-                            "'transformFirstKey', 'transformSecondKey']"
+                            "'transformFirstKey', 'transformSecondKey', "
+                            "'integers']"
                         ),
                         path=deque(["Fn::FindInMap", 0]),
                     ),
@@ -307,6 +308,11 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
+            "Valid FindInMap with integer types",
+            {"Fn::FindInMap": ["integers", 1, 2]},
+            [("Value", deque(["Mappings", "integers", "1", "2"]), None)],
+        ),
+        (
             "Valid FindInMap with a bad second key and default",
             {"Fn::FindInMap": ["foo", "first", "third", {"DefaultValue": "default"}]},
             [("default", deque([4, "DefaultValue"]), None)],
@@ -340,6 +346,7 @@ def test_valid_functions(name, instance, response):
                 "foo": {"first": {"second": "bar"}},
                 "transformFirstKey": {"Fn::Transform": {"second": "bar"}},
                 "transformSecondKey": {"first": {"Fn::Transform": "bar"}},
+                "integers": {"1": {"2": "Value"}},
             }
         )
     )

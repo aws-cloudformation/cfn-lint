@@ -65,7 +65,6 @@ class BaseFn(CloudFormationLintRule):
             err.rule = self.child_rules[self.resolved_rule]
             for i, err_ctx in enumerate(err.context):
                 err.context[i] = self._clean_resolve_errors(err_ctx, value, instance)
-            return err
         return err
 
     def resolve(
