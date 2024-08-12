@@ -13,6 +13,15 @@
    },
    "type": "object"
   },
+  "FirehoseConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "LogConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -22,8 +31,14 @@
     "EventSource": {
      "type": "string"
     },
+    "FirehoseConfiguration": {
+     "$ref": "#/definitions/FirehoseConfiguration"
+    },
     "LogLevel": {
      "type": "string"
+    },
+    "S3Configuration": {
+     "$ref": "#/definitions/S3Configuration"
     }
    },
    "type": "object"
@@ -33,6 +48,15 @@
     "$ref": "#/definitions/LogConfiguration"
    },
    "type": "array"
+  },
+  "S3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "handlers": {
@@ -47,7 +71,14 @@
     "logs:ListLogDeliveries",
     "logs:PutResourcePolicy",
     "logs:DescribeResourcePolicies",
-    "logs:DescribeLogGroups"
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
    ],
    "timeoutInMinutes": 2
   },
@@ -62,7 +93,14 @@
     "logs:ListLogDeliveries",
     "logs:PutResourcePolicy",
     "logs:DescribeResourcePolicies",
-    "logs:DescribeLogGroups"
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
    ],
    "timeoutInMinutes": 2
   },
@@ -82,7 +120,14 @@
     "logs:ListLogDeliveries",
     "logs:PutResourcePolicy",
     "logs:DescribeResourcePolicies",
-    "logs:DescribeLogGroups"
+    "logs:DescribeLogGroups",
+    "s3:GetBucketPolicy",
+    "s3:PutBucketPolicy",
+    "s3:ListBucket",
+    "s3:PutObject",
+    "s3:GetBucketAcl",
+    "firehose:TagDeliveryStream",
+    "iam:CreateServiceLinkedRole"
    ],
    "timeoutInMinutes": 2
   }
