@@ -1449,7 +1449,6 @@ cached: list[str] = [
     "aws-codestarconnections-repositorylink.json",
     "aws-codestarconnections-syncconfiguration.json",
     "aws-codestarnotifications-notificationrule.json",
-    "aws-cognito-identitypool.json",
     "aws-cognito-identitypoolprincipaltag.json",
     "aws-cognito-identitypoolroleattachment.json",
     "aws-cognito-userpoolclient.json",
