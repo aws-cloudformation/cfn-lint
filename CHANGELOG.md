@@ -1,3 +1,12 @@
+### v1.10.0
+## What's Changed
+* Add rule [E3052](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3052), [E3053](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3053), [E3054](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3054) to validate ECS configs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3546
+* Remove experimental flag from rule [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3037) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3560
+* Add rule to [E3057](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3057) to validate TargetOriginId in a DefaultCacheBehavior by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3561
+* Update CloudFormation schemas to 2024-08-12 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3581
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.9.7...v1.10.0
+
 ### v1.9.7
 ## What's Changed
 * Add Value to path in [E6101](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6101) as we descend by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3582
