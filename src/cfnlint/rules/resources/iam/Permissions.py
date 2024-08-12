@@ -21,6 +21,7 @@ class Permissions(CfnLintKeyword):
     description = "Check for valid IAM Permissions"
     source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_action.html"
     tags = ["properties", "iam", "permissions"]
+    experimental = True
 
     def __init__(self):
         """Init"""
