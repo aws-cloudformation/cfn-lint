@@ -2196,7 +2196,6 @@ cached: list[str] = [
     "aws-verifiedpermissions-policystore.json",
     "aws-verifiedpermissions-policytemplate.json",
     "aws-vpclattice-accesslogsubscription.json",
-    "aws-vpclattice-authpolicy.json",
     "aws-vpclattice-listener.json",
     "aws-vpclattice-resourcepolicy.json",
     "aws-vpclattice-rule.json",
