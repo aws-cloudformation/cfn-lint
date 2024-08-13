@@ -86,7 +86,8 @@ class _Fail(CfnLintKeyword):
                 ValidationError(
                     (
                         "'foo' is not one of ['Arn', 'DomainName', "
-                        "'DualStackDomainName', 'RegionalDomainName', 'WebsiteURL']"
+                        "'DualStackDomainName', 'RegionalDomainName', 'WebsiteURL'] "
+                        "in ['us-east-1']"
                     ),
                     path=deque(["Fn::GetAtt", 1]),
                     schema_path=deque([]),
@@ -219,7 +220,7 @@ class _Fail(CfnLintKeyword):
                     (
                         "'MyBucket' is not one of ['Arn', 'DomainName', "
                         "'DualStackDomainName', 'RegionalDomainName', "
-                        "'WebsiteURL'] when "
+                        "'WebsiteURL'] in ['us-east-1'] when "
                         "{'Ref': 'MyResourceParameter'} is resolved"
                     ),
                     path=deque(["Fn::GetAtt", 1]),

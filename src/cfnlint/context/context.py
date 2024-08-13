@@ -375,7 +375,6 @@ class Resource(_Ref):
             raise ValueError("Condition must be a string")
         self.condition = c
 
-    @property
     def get_atts(self, region: str = "us-east-1") -> AttributeDict:
         return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
 
