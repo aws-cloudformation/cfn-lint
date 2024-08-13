@@ -42,18 +42,19 @@ class GetAttFormat(CfnLintKeyword):
 
         resource, attr = instance[0:2]
 
-        getatt_ptr = validator.context.resources[resource].get_atts[attr]
         t = validator.context.resources[resource].type
-
-        if t in self._resource_type_exceptions:
-            return
-
         for (
-            _,
+            regions,
             resource_schema,
         ) in PROVIDER_SCHEMA_MANAGER.get_resource_schemas_by_regions(
             t, validator.context.regions
         ):
+            region = regions[0]
+            getatt_ptr = validator.context.resources[resource].get_atts(region)[attr]
+
+            if t in self._resource_type_exceptions:
+                return
+
             getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
             getatt_fmt = getatt_schema.get("format")
             if getatt_fmt != fmt:

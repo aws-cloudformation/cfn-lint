@@ -249,7 +249,7 @@ def context(cfn):
                         "'DomainName', "
                         "'DualStackDomainName', "
                         "'RegionalDomainName', "
-                        "'WebsiteURL']"
+                        "'WebsiteURL'] in ['us-east-1']"
                     ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
