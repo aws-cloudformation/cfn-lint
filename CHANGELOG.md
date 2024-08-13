@@ -1,3 +1,9 @@
+### v1.10.1
+## What's Changed
+* Update rule [E3054](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3054) to not alert when `NetworkMode` is set to `awsvpc` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3593
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.10.0...v1.10.1
+
 ### v1.10.0
 ## What's Changed
 * Add rule [E3052](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3052), [E3053](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3053), [E3054](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3054) to validate ECS configs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3546
