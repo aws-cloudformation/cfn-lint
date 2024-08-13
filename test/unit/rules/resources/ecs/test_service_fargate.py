@@ -315,6 +315,83 @@ _service = {
             deque(["Resources", "Service", "Properties"]),
             [],
         ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "add",
+                                "path": "/Properties/NetworkMode",
+                                "value": "awsvpc",
+                            },
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": dict(_service),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Parameters": {"MyNetworkMode": {"Type": "String"}},
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "add",
+                                "path": "/Properties/NetworkMode",
+                                "value": {"Ref": "MyNetworkMode"},
+                            },
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": dict(_service),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "TaskDefinition": jsonpatch.apply_patch(
+                        dict(_task_definition),
+                        [
+                            {
+                                "op": "add",
+                                "path": "/Properties/NetworkMode",
+                                "value": "host",
+                            },
+                            {
+                                "op": "remove",
+                                "path": "/Properties/RequiresCompatibilities",
+                            },
+                        ],
+                    ),
+                    "Service": dict(_service),
+                },
+            },
+            deque(["Resources", "Service", "Properties"]),
+            [
+                ValidationError(
+                    ("'RequiresCompatibilities' is a required property"),
+                    validator="required",
+                    rule=ServiceFargate(),
+                    path_override=deque(["Resources", "TaskDefinition", "Properties"]),
+                )
+            ],
+        ),
     ],
     indirect=["template"],
 )
