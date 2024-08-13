@@ -35,6 +35,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": ("test/fixtures/results/integration/ref-no-value.json"),
             "exit_code": 2,
         },
+        {
+            "filename": ("test/fixtures/templates/integration/metdata.yaml"),
+            "results_filename": ("test/fixtures/results/integration/metadata.json"),
+            "exit_code": 2,
+        },
     ]
 
     def test_templates(self):
