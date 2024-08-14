@@ -1,3 +1,9 @@
+### v1.10.2
+## What's Changed
+* Update getatt resolution for better regional support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3597
+* Fix an issue when scanning metadata by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3596
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.10.1...v1.10.2
+
 ### v1.10.1
 ## What's Changed
 * Update rule [E3054](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3054) to not alert when `NetworkMode` is set to `awsvpc` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3593
