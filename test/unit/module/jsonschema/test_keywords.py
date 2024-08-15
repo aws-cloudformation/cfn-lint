@@ -91,30 +91,43 @@ def validator():
         (
             "Valid anyOf with a warning validation error",
             "foo",
-            [{"warning": True}, {"error": True}],
+            [{"warning": True, "error": True}, {"error": True}],
             [
                 ValidationError(
-                    "Warning",
-                    rule=Warning(),
+                    "'foo' is not valid under any of the given schemas",
                     path=deque([]),
-                    validator="warning",
-                    schema_path=deque([0, "warning"]),
+                    schema_path=deque([]),
+                    context=[
+                        ValidationError(
+                            "Error",
+                            rule=Error(),
+                            path=deque([]),
+                            validator="error",
+                            schema_path=deque([0, "error"]),
+                        ),
+                        ValidationError(
+                            "Error",
+                            rule=Error(),
+                            path=deque([]),
+                            validator="error",
+                            schema_path=deque([1, "error"]),
+                        ),
+                        ValidationError(
+                            "Warning",
+                            rule=Warning(),
+                            path=deque([]),
+                            validator="warning",
+                            schema_path=deque([0, "warning"]),
+                        ),
+                    ],
                 ),
             ],
         ),
         (
-            "Valid anyOf with a warning validation error",
+            "Valid anyOf without a warning validation error",
             "foo",
             [{"error": True}, {"warning": True}],
-            [
-                ValidationError(
-                    "Warning",
-                    rule=Warning(),
-                    path=deque([]),
-                    validator="warning",
-                    schema_path=deque([1, "warning"]),
-                ),
-            ],
+            [],
         ),
     ],
 )
