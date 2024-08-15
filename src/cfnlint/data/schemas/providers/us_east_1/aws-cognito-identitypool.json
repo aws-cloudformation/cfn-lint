@@ -51,6 +51,26 @@
     }
    },
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "handlers": {
@@ -59,6 +79,7 @@
     "cognito-identity:CreateIdentityPool",
     "cognito-sync:SetIdentityPoolConfiguration",
     "cognito-sync:SetCognitoEvents",
+    "cognito-identity:TagResource",
     "iam:PassRole"
    ]
   },
@@ -83,6 +104,8 @@
     "cognito-identity:DescribeIdentityPool",
     "cognito-sync:SetIdentityPoolConfiguration",
     "cognito-sync:SetCognitoEvents",
+    "cognito-identity:TagResource",
+    "cognito-identity:UntagResource",
     "iam:PassRole"
    ]
   }
@@ -124,6 +147,14 @@
   "IdentityPoolName": {
    "type": "string"
   },
+  "IdentityPoolTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "Name": {
    "type": "string"
   },
@@ -164,9 +195,14 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "permissions": [
+   "cognito-identity:TagResource",
+   "cognito-identity:UntagResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/IdentityPoolTags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::Cognito::IdentityPool",
  "writeOnlyProperties": [

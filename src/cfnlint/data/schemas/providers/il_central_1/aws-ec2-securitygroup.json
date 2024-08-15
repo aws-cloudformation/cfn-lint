@@ -1,0 +1,239 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupDescription",
+  "/properties/GroupName",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Egress": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "DestinationPrefixListId": {
+     "type": "string"
+    },
+    "DestinationSecurityGroupId": {
+     "format": "AWS::EC2::SecurityGroup.GroupId",
+     "type": "string"
+    },
+    "FromPort": {
+     "minimum": -1,
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "ToPort": {
+     "minimum": -1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "requiredXor": [
+    "CidrIp",
+    "CidrIpv6",
+    "DestinationSecurityGroupId",
+    "DestinationPrefixListId"
+   ],
+   "type": "object"
+  },
+  "Ingress": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "FromPort": {
+     "minimum": -1,
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "SourcePrefixListId": {
+     "type": "string"
+    },
+    "SourceSecurityGroupId": {
+     "format": "AWS::EC2::SecurityGroup.GroupId",
+     "type": "string"
+    },
+    "SourceSecurityGroupName": {
+     "format": "AWS::EC2::SecurityGroup.GroupName",
+     "type": "string"
+    },
+    "SourceSecurityGroupOwnerId": {
+     "type": "string"
+    },
+    "ToPort": {
+     "minimum": -1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "requiredXor": [
+    "CidrIp",
+    "CidrIpv6",
+    "SourcePrefixListId",
+    "SourceSecurityGroupId",
+    "SourceSecurityGroupName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentRequired": {
+  "SecurityGroupEgress": [
+   "VpcId"
+  ]
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateSecurityGroup",
+    "ec2:DescribeSecurityGroups",
+    "ec2:RevokeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupIngress",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteSecurityGroup",
+    "ec2:DescribeInstances"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:RevokeSecurityGroupEgress",
+    "ec2:RevokeSecurityGroupIngress",
+    "ec2:DescribeSecurityGroups",
+    "ec2:AuthorizeSecurityGroupEgress",
+    "ec2:AuthorizeSecurityGroupIngress",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "GroupDescription": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+   "type": "string"
+  },
+  "GroupId": {
+   "format": "AWS::EC2::SecurityGroup.GroupId",
+   "type": "string"
+  },
+  "GroupName": {
+   "format": "AWS::EC2::SecurityGroup.GroupName",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SecurityGroupEgress": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Egress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecurityGroupIngress": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Ingress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/SecurityGroupEgress/*/FromPort": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$ipProtocol := $mapVal ? $mapVal : $lowercase(IpProtocol);$ipProtocol in ['imcp', 'tcp', 'udp', 'imcp'] ? FromPort : -1)",
+  "/properties/SecurityGroupEgress/*/IpProtocol": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$mapVal ? $mapVal : $lowercase(IpProtocol))",
+  "/properties/SecurityGroupEgress/*/ToPort": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$ipProtocol := $mapVal ? $mapVal : $lowercase(IpProtocol);$ipProtocol in ['imcp', 'tcp', 'udp', 'imcp'] ? ToPort : -1)",
+  "/properties/SecurityGroupIngress/*/FromPort": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$ipProtocol := $mapVal ? $mapVal : $lowercase(IpProtocol);$ipProtocol in ['imcp', 'tcp', 'udp', 'imcp'] ? FromPort : -1)",
+  "/properties/SecurityGroupIngress/*/IpProtocol": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$mapVal ? $mapVal : $lowercase(IpProtocol))",
+  "/properties/SecurityGroupIngress/*/ToPort": "($mapVal := $lookup({'1': 'icmp','6': 'tcp','17': 'udp','58': 'icmpv6'}, IpProtocol);$ipProtocol := $mapVal ? $mapVal : $lowercase(IpProtocol);$ipProtocol in ['imcp', 'tcp', 'udp', 'imcp'] ? ToPort : -1)"
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/GroupId"
+ ],
+ "required": [
+  "GroupDescription"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::SecurityGroup",
+ "writeOnlyProperties": [
+  "/properties/SecurityGroupIngress/*/SourceSecurityGroupName"
+ ]
+}
