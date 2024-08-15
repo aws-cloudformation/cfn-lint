@@ -1,7 +1,10 @@
 ### v1.10.2
 ## What's Changed
-* Update getatt resolution for better regional support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3597
 * Fix an issue when scanning metadata by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3596
+* Update getatt resolution for better regional support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3597
+* anyOf only returns Ws and Is when there are Es by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3600
+* Update CloudFormation schemas to 2024-08-15 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3591
+
 **Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.10.1...v1.10.2
 
 ### v1.10.1
