@@ -154,6 +154,14 @@ def template():
             },
             [],
         ),
+        (
+            "Invalid but integer name ",
+            {"ResourceSignal": {"Timeout": "PT15M", "Count": "five"}},
+            {
+                "path": deque(["Resources", 1, "CreationPolicy"]),
+            },
+            [],
+        ),
     ],
     indirect=["path"],
 )

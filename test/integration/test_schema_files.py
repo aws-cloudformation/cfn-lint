@@ -43,6 +43,7 @@ class TestSchemaFiles(TestCase):
         "Resources",
         "Resources/*",
         "Resources/*/Condition",
+        "Resources/*/CreationPolicy",
         "Resources/*/DeletionPolicy",
         "Resources/*/DependsOn",
         "Resources/*/DependsOn/*",
