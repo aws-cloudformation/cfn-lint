@@ -293,12 +293,9 @@ class Runner:
                     "E0000".startswith(x) for x in self.config.ignore_checks
                 ):
                     matches = [match for match in matches if match.rule.id != "E0000"]
-                    if matches:
-                        yield from iter(matches)
-                    return
-                else:
-                    yield from iter(matches)
-                    return
+
+                yield from iter(matches)
+                continue
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
     def validate_template(
