@@ -304,15 +304,13 @@ def load(filename):
 
     content = ""
 
-    if not sys.stdin.isatty():
-        filename = "-" if filename is None else filename
-        if sys.version_info.major <= 3 and sys.version_info.minor <= 9:
-            for line in fileinput.input(files=filename):
-                content = content + line
-        else:
-            for line in fileinput.input(  # pylint: disable=unexpected-keyword-arg
-                files=filename, encoding="utf-8"
-            ):
+    if (filename is None) and (not sys.stdin.isatty()):
+        filename = "-"  # no filename provided, it's stdin
+        fileinput_args = {"files": filename}
+        if sys.version_info.major <= 3 and sys.version_info.minor >= 10:
+            fileinput_args["encoding"] = "utf-8"
+        with fileinput.input(**fileinput_args) as f:
+            for line in f:
                 content = content + line
     else:
         with open(filename, encoding="utf-8") as fp:
