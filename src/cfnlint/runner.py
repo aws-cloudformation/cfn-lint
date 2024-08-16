@@ -295,9 +295,10 @@ class Runner:
                     matches = [match for match in matches if match.rule.id != "E0000"]
                     if matches:
                         yield from iter(matches)
+                        continue
                 else:
                     yield from iter(matches)
-                continue
+                    continue
             yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
 
     def validate_template(
