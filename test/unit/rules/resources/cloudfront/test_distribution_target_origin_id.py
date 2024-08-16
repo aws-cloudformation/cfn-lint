@@ -74,7 +74,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("'origin-id' is not one of " "['foo', 'bar']"),
+                    ("'origin-id' is not one of ['foo', 'bar']"),
                     rule=DistributionTargetOriginId(),
                     path=deque([]),
                     validator="enum",
@@ -114,6 +114,95 @@ def rule():
                         "Id": "bar",
                     },
                 ],
+            },
+            [],
+        ),
+        (
+            {
+                "DefaultCacheBehavior": {
+                    "TargetOriginId": "origin-id",
+                },
+                "Origins": [
+                    {
+                        "Id": "foo",
+                    },
+                    {
+                        "Id": "bar",
+                    },
+                ],
+                "OriginGroups": {
+                    "Items": [
+                        {
+                            "Id": "group-1",
+                        },
+                        {
+                            "Id": "group-2",
+                        },
+                    ]
+                },
+            },
+            [
+                ValidationError(
+                    (
+                        "'origin-id' is not one of "
+                        "['foo', 'bar', 'group-1', 'group-2']"
+                    ),
+                    rule=DistributionTargetOriginId(),
+                    path=deque([]),
+                    validator="enum",
+                    path_override=deque(["DefaultCacheBehavior", "TargetOriginId"]),
+                )
+            ],
+        ),
+        (
+            {
+                "DefaultCacheBehavior": {
+                    "TargetOriginId": "origin-id",
+                },
+                "Origins": [
+                    {
+                        "Id": "foo",
+                    },
+                    {
+                        "Id": "bar",
+                    },
+                ],
+                "OriginGroups": {
+                    "Items": [
+                        {
+                            "Id": "group-1",
+                        },
+                        {
+                            "Id": "origin-id",
+                        },
+                    ]
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "DefaultCacheBehavior": {
+                    "TargetOriginId": "origin-id",
+                },
+                "Origins": [
+                    {
+                        "Id": "foo",
+                    },
+                    {
+                        "Id": "bar",
+                    },
+                ],
+                "OriginGroups": {
+                    "Items": [
+                        {
+                            "Id": "group-1",
+                        },
+                        {
+                            "Id": {"Ref": "MyParameter"},
+                        },
+                    ]
+                },
             },
             [],
         ),
