@@ -1,3 +1,10 @@
+### v1.10.3
+## What's Changed
+* Look at `OriginGroups` too for rule [E3057](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3057) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3607
+* Continue on template decode errors by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3605
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.10.2...v1.10.3
+
 ### v1.10.2
 ## What's Changed
 * Fix an issue when scanning metadata by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3596
