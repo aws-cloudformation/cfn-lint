@@ -16,12 +16,33 @@ from cfnlint.runner import Runner
             "Test decode errors with multiple files",
             ConfigMixIn(
                 cli_args=[
-                    "-t",
+                    "--template",
                     "test/fixtures/templates/bad/duplicate.yaml",
                     "test/fixtures/templates/bad/duplicate.json",
                 ]
             ),
             6,
+        ),
+        (
+            "Test decode errors with E0000 being ignored",
+            ConfigMixIn(
+                cli_args=[
+                    "--template",
+                    "test/fixtures/templates/bad/core/parse_invalid_map.yaml",
+                    "--ignore-bad-template",
+                ]
+            ),
+            0,
+        ),
+        (
+            "Test decode return E0000 errors",
+            ConfigMixIn(
+                cli_args=[
+                    "--template",
+                    "test/fixtures/templates/bad/core/parse_invalid_map.yaml",
+                ]
+            ),
+            1,
         ),
     ],
 )
