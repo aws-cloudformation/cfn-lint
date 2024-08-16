@@ -79,28 +79,12 @@ patches.extend(
                 ),
                 Patch(
                     values={
-                        "dependentExcluded": {
-                            "InstanceId": [
-                                "LaunchConfigurationName",
-                                "LaunchTemplate",
-                                "MixedInstancesPolicy",
-                            ],
-                            "LaunchConfigurationName": [
-                                "InstanceId",
-                                "LaunchTemplate",
-                                "MixedInstancesPolicy",
-                            ],
-                            "LaunchTemplate": [
-                                "InstanceId",
-                                "LaunchConfigurationName",
-                                "MixedInstancesPolicy",
-                            ],
-                            "MixedInstancesPolicy": [
-                                "InstanceId",
-                                "LaunchConfigurationName",
-                                "LaunchTemplate",
-                            ],
-                        },
+                        "requiredXor": [
+                            "InstanceId",
+                            "LaunchConfigurationName",
+                            "LaunchTemplate",
+                            "MixedInstancesPolicy",
+                        ]
                     },
                     path="/",
                 ),
