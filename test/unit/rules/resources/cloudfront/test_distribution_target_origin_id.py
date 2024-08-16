@@ -180,6 +180,32 @@ def rule():
             },
             [],
         ),
+        (
+            {
+                "DefaultCacheBehavior": {
+                    "TargetOriginId": "origin-id",
+                },
+                "Origins": [
+                    {
+                        "Id": "foo",
+                    },
+                    {
+                        "Id": "bar",
+                    },
+                ],
+                "OriginGroups": {
+                    "Items": [
+                        {
+                            "Id": "group-1",
+                        },
+                        {
+                            "Id": {"Ref": "MyParameter"},
+                        },
+                    ]
+                },
+            },
+            [],
+        ),
     ],
 )
 def test_validate(instance, expected, rule, validator):
