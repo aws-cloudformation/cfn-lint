@@ -2,7 +2,7 @@ name: "[CD] Create release"
 on:
   push:
     tags:
-      - "*"
+      - "v1.*"
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
         run: scripts/release_schemas/create_cfn_schema_rule.py
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/v1')
         with:
           files: |
             build/schemas-cfnlint.zip
