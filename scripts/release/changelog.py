@@ -23,7 +23,7 @@ for line in text.splitlines():
     if line.startswith("### "):
         if args.version == line[3:].strip():
             found = True
-        else:
+        elif found:
             break
     else:
         if found:
