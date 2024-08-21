@@ -18,13 +18,14 @@ jobs:
         run: |
           pip install -e .
           scripts/release_schemas/generator.py
+          scripts/release_schemas/changelog.py --version ${{ github.ref_name }}
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v1')
         with:
           name: Release ${{ github.ref_name }}
           token: ${{ secrets.GH_PAT }}
-          generate_release_notes: true
+          body_path: ${{ github.workspace }}/build/CHANGELOG.txt
           files: |
             build/schemas-cfnlint.zip
             build/schemas-draft7.zip
