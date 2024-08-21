@@ -17,8 +17,8 @@ jobs:
       - name: Build
         run: |
           pip install -e .
-          scripts/release_schemas/generator.py
-          scripts/release_schemas/changelog.py --version ${{ github.ref_name }}
+          scripts/release/generator.py
+          scripts/release/changelog.py --version ${{ github.ref_name }}
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v1')
