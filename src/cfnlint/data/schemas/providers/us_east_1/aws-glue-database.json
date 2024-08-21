@@ -1,7 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/CatalogId"
+  "/properties/DatabaseName"
  ],
  "definitions": {
   "DataLakePrincipal": {
@@ -32,6 +32,7 @@
    "additionalProperties": false,
    "properties": {
     "CreateTableDefaultPermissions": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/PrincipalPrivileges"
      },
@@ -79,6 +80,7 @@
    "additionalProperties": false,
    "properties": {
     "Permissions": {
+     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -92,8 +94,58 @@
    "type": "object"
   }
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "glue:CreateDatabase",
+    "glue:GetDatabase",
+    "glue:PassConnection",
+    "glue:CreateConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "glue:DeleteDatabase",
+    "glue:GetDatabase",
+    "glue:DeleteConnection",
+    "glue:GetConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "glue:GetDatabases",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "glue:GetDatabase",
+    "glue:GetConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "glue:UpdateDatabase",
+    "glue:UpdateConnection",
+    "lakeformation:ListResources",
+    "lakeformation:DescribeResource",
+    "lakeformation:DescribeLakeFormationIdentityCenterConfiguration"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/DatabaseName"
  ],
  "properties": {
   "CatalogId": {
@@ -102,16 +154,20 @@
   "DatabaseInput": {
    "$ref": "#/definitions/DatabaseInput"
   },
-  "Id": {
+  "DatabaseName": {
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
   "DatabaseInput",
   "CatalogId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::Glue::Database"
 }

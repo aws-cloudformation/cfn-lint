@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CatalogId"
+ ],
+ "definitions": {
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DatabaseInput": {
+   "additionalProperties": false,
+   "properties": {
+    "CreateTableDefaultPermissions": {
+     "items": {
+      "$ref": "#/definitions/PrincipalPrivileges"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Description": {
+     "type": "string"
+    },
+    "FederatedDatabase": {
+     "$ref": "#/definitions/FederatedDatabase"
+    },
+    "LocationUri": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Parameters": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "TargetDatabase": {
+     "$ref": "#/definitions/DatabaseIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "FederatedDatabase": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "Identifier": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPrivileges": {
+   "additionalProperties": false,
+   "properties": {
+    "Permissions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CatalogId": {
+   "type": "string"
+  },
+  "DatabaseInput": {
+   "$ref": "#/definitions/DatabaseInput"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DatabaseInput",
+  "CatalogId"
+ ],
+ "typeName": "AWS::Glue::Database"
+}

@@ -1,6 +1,38 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "AutoParticipantRecordingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MediaTypes": {
+     "default": [
+      "AUDIO_VIDEO"
+     ],
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "AUDIO_VIDEO",
+       "AUDIO_ONLY"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "StorageConfigurationArn": {
+     "maxLength": 128,
+     "minLength": 0,
+     "pattern": "^$|^arn:aws:ivs:[a-z0-9-]+:[0-9]+:storage-configuration/[a-zA-Z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StorageConfigurationArn"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -34,7 +66,7 @@
   "delete": {
    "permissions": [
     "ivs:DeleteStage",
-    "ivs:UnTagResource"
+    "ivs:UntagResource"
    ]
   },
   "list": {
@@ -54,7 +86,7 @@
     "ivs:GetStage",
     "ivs:UpdateStage",
     "ivs:TagResource",
-    "ivs:UnTagResource",
+    "ivs:UntagResource",
     "ivs:ListTagsForResource"
    ]
   }
@@ -74,6 +106,9 @@
    "minLength": 0,
    "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:stage/[a-zA-Z0-9-]+$",
    "type": "string"
+  },
+  "AutoParticipantRecordingConfiguration": {
+   "$ref": "#/definitions/AutoParticipantRecordingConfiguration"
   },
   "Name": {
    "maxLength": 128,
@@ -97,6 +132,11 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
   "cloudFormationSystemTags": false,
+  "permissions": [
+   "ivs:TagResource",
+   "ivs:UntagResource",
+   "ivs:ListTagsForResource"
+  ],
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
   "tagUpdatable": true,

@@ -640,6 +640,7 @@ types: list[str] = [
     "AWS::IVS::EncoderConfiguration",
     "AWS::IVS::PlaybackKeyPair",
     "AWS::IVS::PlaybackRestrictionPolicy",
+    "AWS::IVS::PublicKey",
     "AWS::IVS::RecordingConfiguration",
     "AWS::IVS::Stage",
     "AWS::IVS::StorageConfiguration",

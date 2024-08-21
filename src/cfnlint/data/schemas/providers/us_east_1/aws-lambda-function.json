@@ -165,6 +165,13 @@
    },
    "type": "object"
   },
+  "RecursiveLoop": {
+   "enum": [
+    "Allow",
+    "Terminate"
+   ],
+   "type": "string"
+  },
   "RuntimeManagementConfig": {
    "additionalProperties": false,
    "properties": {
@@ -303,7 +310,9 @@
     "lambda:GetLayerVersion",
     "lambda:GetRuntimeManagementConfig",
     "lambda:PutRuntimeManagementConfig",
-    "lambda:TagResource"
+    "lambda:TagResource",
+    "lambda:PutFunctionRecursionConfig",
+    "lambda:GetFunctionRecursionConfig"
    ]
   },
   "delete": {
@@ -321,7 +330,8 @@
   "read": {
    "permissions": [
     "lambda:GetFunction",
-    "lambda:GetFunctionCodeSigningConfig"
+    "lambda:GetFunctionCodeSigningConfig",
+    "lambda:GetFunctionRecursionConfig"
    ]
   },
   "update": {
@@ -349,7 +359,9 @@
     "lambda:PutFunctionCodeSigningConfig",
     "lambda:DeleteFunctionCodeSigningConfig",
     "lambda:GetCodeSigningConfig",
-    "lambda:GetFunctionCodeSigningConfig"
+    "lambda:GetFunctionCodeSigningConfig",
+    "lambda:PutFunctionRecursionConfig",
+    "lambda:GetFunctionRecursionConfig"
    ]
   }
  },
@@ -440,6 +452,9 @@
     "Zip"
    ],
    "type": "string"
+  },
+  "RecursiveLoop": {
+   "$ref": "#/definitions/RecursiveLoop"
   },
   "ReservedConcurrentExecutions": {
    "minimum": 0,
