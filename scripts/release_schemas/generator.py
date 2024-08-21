@@ -4,6 +4,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+import tarfile
 from collections import deque
 from pathlib import Path
 
@@ -136,12 +137,18 @@ for rule in rules:
         logger.info(f"Patch {rule.id} for {resource_type} in {schemas[resource_type]}")
 
 
+build_dir = Path("build")
+schemas_dir = build_dir / "schemas"
+schemas_cfnlint_dir = schemas_dir / "cfnlint"
+schemas_cfnlint_dir.mkdir(parents=True, exist_ok=True)
+
+schemas_draft7_dir = schemas_dir / "draft7"
+schemas_draft7_dir.mkdir(parents=True, exist_ok=True)
+
 for resource_type, region in schemas.items():
     rt_py = ToPy(resource_type)
 
-    _translator.translator(resource_type, region)
-
-    with open(f"local/release_schemas/{rt_py.py}.json", "w") as f:
+    with open(schemas_cfnlint_dir / f"{rt_py.py}.json", "w") as f:
         f.write(
             format_json_string(
                 PROVIDER_SCHEMA_MANAGER.get_resource_schema(
@@ -149,3 +156,21 @@ for resource_type, region in schemas.items():
                 ).schema
             )
         )
+
+    _translator.translator(resource_type, region)
+
+    with open(schemas_draft7_dir / f"{rt_py.py}.json", "w") as f:
+        f.write(
+            format_json_string(
+                PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                    region, resource_type
+                ).schema
+            )
+        )
+
+logger.info("Create schema package")
+with tarfile.open(build_dir / "schemas-cfnlint.zip", "w:gz") as tar:
+    tar.add(schemas_cfnlint_dir, arcname="schemas")
+
+with tarfile.open(build_dir / "schemas-draft7.zip", "w:gz") as tar:
+    tar.add(schemas_draft7_dir, arcname="schemas")
