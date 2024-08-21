@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ivs:CreatePlaybackRestrictionPolicy",
+    "ivs:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ivs:DeletePlaybackRestrictionPolicy",
+    "ivs:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ivs:ListPlaybackRestrictionPolicies",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ivs:GetPlaybackRestrictionPolicy",
+    "ivs:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ivs:GetPlaybackRestrictionPolicy",
+    "ivs:UpdatePlaybackRestrictionPolicy",
+    "ivs:ListTagsForResource",
+    "ivs:UntagResource",
+    "ivs:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AllowedCountries": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AllowedOrigins": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:aws:ivs:[a-z0-9-]+:[0-9]+:playback-restriction-policy/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "EnableStrictOriginEnforcement": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AllowedCountries",
+  "AllowedOrigins"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVS::PlaybackRestrictionPolicy"
+}
