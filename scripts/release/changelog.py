@@ -5,8 +5,6 @@ SPDX-License-Identifier: MIT-0
 """
 
 import argparse
-
-# version = "v1.10.3"
 from pathlib import Path
 
 parser = argparse.ArgumentParser()
