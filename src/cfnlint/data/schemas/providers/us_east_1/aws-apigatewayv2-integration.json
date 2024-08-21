@@ -4,6 +4,44 @@
   "/properties/ApiId"
  ],
  "definitions": {
+  "ResponseParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "type": "string"
+    },
+    "Source": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseParameterList": {
+   "items": {
+    "$ref": "#/definitions/ResponseParameter"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "TlsConfig": {
    "additionalProperties": false,
    "properties": {
@@ -14,8 +52,39 @@
    "type": "object"
   }
  },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:PATCH",
+    "apigateway:GET",
+    "apigateway:PUT"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ApiId",
+  "/properties/IntegrationId"
  ],
  "properties": {
   "ApiId": {
@@ -36,7 +105,7 @@
   "Description": {
    "type": "string"
   },
-  "Id": {
+  "IntegrationId": {
    "type": "string"
   },
   "IntegrationMethod": {
@@ -58,25 +127,31 @@
    "type": "string"
   },
   "RequestParameters": {
-   "format": "json",
-   "type": [
-    "object",
-    "string"
-   ]
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "RequestTemplates": {
-   "format": "json",
-   "type": [
-    "object",
-    "string"
-   ]
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "ResponseParameters": {
-   "format": "json",
-   "type": [
-    "object",
-    "string"
-   ]
+   "additionalProperties": false,
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "$ref": "#/definitions/ResponseParameterList"
+    }
+   },
+   "type": "object"
   },
   "TemplateSelectionExpression": {
    "type": "string"
@@ -89,11 +164,15 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/IntegrationId"
  ],
  "required": [
   "ApiId",
   "IntegrationType"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::ApiGatewayV2::Integration"
 }
