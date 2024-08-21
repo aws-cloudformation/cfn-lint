@@ -802,6 +802,7 @@ cached: list[str] = [
     "aws-ec2-prefixlist.json",
     "aws-ec2-route.json",
     "aws-ec2-routetable.json",
+    "aws-ec2-securitygroup.json",
     "aws-ec2-securitygroupegress.json",
     "aws-ec2-securitygroupingress.json",
     "aws-ec2-snapshotblockpublicaccess.json",

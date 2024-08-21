@@ -1423,7 +1423,6 @@ cached: list[str] = [
     "aws-codeartifact-domain.json",
     "aws-codeartifact-packagegroup.json",
     "aws-codeartifact-repository.json",
-    "aws-codebuild-fleet.json",
     "aws-codebuild-project.json",
     "aws-codebuild-reportgroup.json",
     "aws-codebuild-sourcecredential.json",

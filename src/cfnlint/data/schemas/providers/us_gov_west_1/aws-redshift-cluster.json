@@ -1,0 +1,330 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterIdentifier",
+  "/properties/OwnerAccount",
+  "/properties/SnapshotIdentifier",
+  "/properties/DBName",
+  "/properties/SnapshotClusterIdentifier",
+  "/properties/ClusterSubnetGroupName",
+  "/properties/MasterUsername"
+ ],
+ "definitions": {
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:DescribeClusters",
+    "redshift:CreateCluster",
+    "redshift:RestoreFromClusterSnapshot",
+    "redshift:EnableLogging",
+    "redshift:DescribeTags"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusters",
+    "redshift:DeleteCluster"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeTags",
+    "redshift:DescribeClusters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeClusters",
+    "redshift:DescribeLoggingStatus",
+    "redshift:DescribeSnapshotCopyGrant",
+    "redshift:DescribeClusterDbRevisions",
+    "redshift:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:DescribeClusters",
+    "redshift:ModifyCluster",
+    "redshift:ModifyClusterIamRoles",
+    "redshift:EnableLogging",
+    "redshift:CreateTags",
+    "redshift:DeleteTags",
+    "redshift:DescribeTags",
+    "redshift:DisableLogging",
+    "redshift:RebootCluster",
+    "redshift:EnableSnapshotCopy",
+    "redshift:DisableSnapshotCopy",
+    "redshift:ModifySnapshotCopyRetentionPeriod",
+    "redshift:ModifyAquaConfiguration",
+    "redshift:ResizeCluster",
+    "redshift:ModifyClusterMaintenance",
+    "redshift:DescribeClusterDbRevisions",
+    "redshift:ModifyClusterDbRevisions",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:RotateEncryptionKey",
+    "redshift:FailoverPrimaryCompute"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterIdentifier"
+ ],
+ "properties": {
+  "AllowVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AquaConfigurationStatus": {
+   "type": "string"
+  },
+  "AutomatedSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailabilityZoneRelocation": {
+   "type": "boolean"
+  },
+  "AvailabilityZoneRelocationStatus": {
+   "type": "string"
+  },
+  "Classic": {
+   "type": "boolean"
+  },
+  "ClusterIdentifier": {
+   "maxLength": 63,
+   "type": "string"
+  },
+  "ClusterParameterGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "ClusterSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ClusterSubnetGroupName": {
+   "type": "string"
+  },
+  "ClusterType": {
+   "type": "string"
+  },
+  "ClusterVersion": {
+   "type": "string"
+  },
+  "DBName": {
+   "type": "string"
+  },
+  "DeferMaintenance": {
+   "type": "boolean"
+  },
+  "DeferMaintenanceDuration": {
+   "type": "integer"
+  },
+  "DeferMaintenanceEndTime": {
+   "type": "string"
+  },
+  "DeferMaintenanceIdentifier": {
+   "type": "string"
+  },
+  "DeferMaintenanceStartTime": {
+   "type": "string"
+  },
+  "DestinationRegion": {
+   "type": "string"
+  },
+  "ElasticIp": {
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "EnhancedVpcRouting": {
+   "type": "boolean"
+  },
+  "HsmClientCertificateIdentifier": {
+   "type": "string"
+  },
+  "HsmConfigurationIdentifier": {
+   "type": "string"
+  },
+  "IamRoles": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LoggingProperties": {
+   "$ref": "#/definitions/LoggingProperties"
+  },
+  "MaintenanceTrackName": {
+   "type": "string"
+  },
+  "ManualSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "MasterUserPassword": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "MasterUsername": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "MultiAZ": {
+   "type": "boolean"
+  },
+  "NodeType": {
+   "type": "string"
+  },
+  "NumberOfNodes": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "OwnerAccount": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "ResourceAction": {
+   "type": "string"
+  },
+  "RevisionTarget": {
+   "type": "string"
+  },
+  "RotateEncryptionKey": {
+   "type": "boolean"
+  },
+  "SnapshotClusterIdentifier": {
+   "type": "string"
+  },
+  "SnapshotCopyGrantName": {
+   "type": "string"
+  },
+  "SnapshotCopyManual": {
+   "type": "boolean"
+  },
+  "SnapshotCopyRetentionPeriod": {
+   "type": "integer"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/DeferMaintenanceIdentifier",
+  "/properties/Endpoint/Port",
+  "/properties/Endpoint/Address"
+ ],
+ "required": [
+  "MasterUserPassword",
+  "NodeType",
+  "MasterUsername",
+  "DBName",
+  "ClusterType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::Cluster",
+ "writeOnlyProperties": [
+  "/properties/MasterUserPassword",
+  "/properties/Classic",
+  "/properties/SnapshotIdentifier"
+ ]
+}
