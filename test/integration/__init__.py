@@ -6,11 +6,15 @@ SPDX-License-Identifier: MIT-0
 import json
 import subprocess
 import unittest
+from copy import deepcopy
+from io import StringIO
 from pathlib import Path
 from typing import Any, Dict, List
+from unittest.mock import patch
 
 from cfnlint.config import configure_logging
 from cfnlint.decode import cfn_yaml
+from cfnlint.formatters import JsonFormatter
 from cfnlint.runner import Runner
 
 
@@ -102,16 +106,22 @@ class BaseCliTestCase(unittest.TestCase):
             for result in expected_results:
                 result["Filename"] = str(Path(result.get("Filename")))
 
-            template = cfn_yaml.load(filename)
+            # template = cfn_yaml.load(filename)
+            scenario_config = deepcopy(config)
+            scenario_config.cli_args.template_alt = [filename]
+            scenario_config.cli_args.format = "json"
 
-            runner = Runner(config)
-            matches = list(runner.validate_template(filename, template))
+            runner = Runner(scenario_config)
 
-            # Only check that the error count matches as the formats are different
-            self.assertEqual(
-                len(expected_results),
-                len(matches),
-                "Expected {} failures, got {} on {}".format(
-                    len(expected_results), matches, filename
-                ),
-            )
+            print(f"Running test for {filename!r}")
+            with patch("sys.exit") as exit:
+                with patch("sys.stdout", new=StringIO()) as out:
+                    runner.cli()
+                    exit.assert_called_once_with(scenario.get("exit_code", 0))
+
+                    output = json.loads(out.getvalue())
+                    self.assertEqual(
+                        expected_results,
+                        output,
+                        f"Test for {filename!r} got results: {output!r}",
+                    )
