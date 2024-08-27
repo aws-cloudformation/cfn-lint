@@ -224,3 +224,29 @@ class TestResourcePolicy(TestCase):
             )
         )
         self.assertListEqual(errs, [])
+
+    def test_assumed_role(self):
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(functions=FUNCTIONS)
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "arn:aws:s3:::bucket",
+                    "Principal": {
+                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                    },
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
