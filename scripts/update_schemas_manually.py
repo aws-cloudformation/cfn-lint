@@ -617,6 +617,12 @@ patches.extend(
                             {
                                 "if": {
                                     "type": "object",
+                                    "properties": {
+                                        "LocalSecondaryIndexes": {
+                                            "type": "array",
+                                            "minItems": 1,
+                                        }
+                                    },
                                     "required": ["LocalSecondaryIndexes"],
                                 },
                                 "then": {
