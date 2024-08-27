@@ -213,6 +213,20 @@ class TestFormatters(BaseTestCase):
                 ),
             )
 
+    def test_pretty_formatter_pipe(self):
+        """Test pretty formatter"""
+        formatter = PrettyFormatter()
+        self.config.cli_args.templates = None
+        results = formatter.print_matches(
+            self.results, rules=self.rules, config=self.config
+        ).splitlines()
+
+        if sys.stdout.isatty():
+            self.assertIn("Cfn-lint scanned 1 templates", results[5])
+        else:
+            # Check the errors
+            self.assertIn("Cfn-lint scanned 1 templates", results[5])
+
     def test_json_formatter(self):
         """Test JSON formatter"""
         formatter = JsonFormatter()
