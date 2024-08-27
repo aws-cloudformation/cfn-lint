@@ -28,7 +28,8 @@ class PrettyFormatter(BaseFormatter):
 
         # ruff: noqa: E501
         results.append(
-            f"Cfn-lint scanned {colored(len(config.templates), color.bold_reset)} templates against "
+            f"Cfn-lint scanned {colored(len(config.templates) if config.templates else 1, color.bold_reset)}"
+            " templates against "
             f"{colored(len(rules.used_rules), color.bold_reset)} rules and found "
             f'{colored(len([i for i in matches if i.rule.severity.lower() == "error"]), color.error)} '
             f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
