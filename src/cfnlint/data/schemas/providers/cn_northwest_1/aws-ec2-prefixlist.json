@@ -1,0 +1,141 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Entry": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "maxLength": 46,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Description": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Cidr"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "EC2:CreateManagedPrefixList",
+    "EC2:DescribeManagedPrefixLists",
+    "EC2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "EC2:DeleteManagedPrefixList",
+    "EC2:DescribeManagedPrefixLists"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "EC2:DescribeManagedPrefixLists",
+    "EC2:GetManagedPrefixListEntries"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "EC2:GetManagedPrefixListEntries",
+    "EC2:DescribeManagedPrefixLists"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "EC2:DescribeManagedPrefixLists",
+    "EC2:GetManagedPrefixListEntries",
+    "EC2:ModifyManagedPrefixList",
+    "EC2:CreateTags",
+    "EC2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PrefixListId"
+ ],
+ "properties": {
+  "AddressFamily": {
+   "enum": [
+    "IPv4",
+    "IPv6"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Entries": {
+   "items": {
+    "$ref": "#/definitions/Entry"
+   },
+   "type": "array"
+  },
+  "MaxEntries": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "PrefixListId": {
+   "type": "string"
+  },
+  "PrefixListName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Version": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PrefixListId",
+  "/properties/OwnerId",
+  "/properties/Version",
+  "/properties/Arn"
+ ],
+ "required": [
+  "PrefixListName",
+  "AddressFamily"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::PrefixList"
+}

@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/Encrypted",
+  "/properties/PerformanceMode"
+ ],
+ "definitions": {
+  "ElasticFileSystemTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "LifecyclePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "TransitionToIA": {
+     "enum": [
+      "AFTER_14_DAYS",
+      "AFTER_180_DAYS",
+      "AFTER_1_DAY",
+      "AFTER_270_DAYS",
+      "AFTER_30_DAYS",
+      "AFTER_365_DAYS",
+      "AFTER_60_DAYS",
+      "AFTER_7_DAYS",
+      "AFTER_90_DAYS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TransitionToIA"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "FileSystemTags": {
+   "items": {
+    "$ref": "#/definitions/ElasticFileSystemTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LifecyclePolicies": {
+   "items": {
+    "$ref": "#/definitions/LifecyclePolicy"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PerformanceMode": {
+   "enum": [
+    "generalPurpose",
+    "maxIO"
+   ],
+   "type": "string"
+  },
+  "ProvisionedThroughputInMibps": {
+   "type": "number"
+  },
+  "ThroughputMode": {
+   "enum": [
+    "bursting",
+    "elastic",
+    "provisioned"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::EFS::FileSystem"
+}

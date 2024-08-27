@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Size",
+  "/properties/VpcSettings",
+  "/properties/Name",
+  "/properties/Password",
+  "/properties/ShortName",
+  "/properties/Description",
+  "/properties/CreateAlias"
+ ],
+ "definitions": {
+  "VpcSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcId",
+    "SubnetIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Alias": {
+   "type": "string"
+  },
+  "CreateAlias": {
+   "type": "boolean"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DnsIpAddresses": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableSso": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Password": {
+   "type": "string"
+  },
+  "ShortName": {
+   "type": "string"
+  },
+  "Size": {
+   "enum": [
+    "Large",
+    "Small"
+   ],
+   "type": "string"
+  },
+  "VpcSettings": {
+   "$ref": "#/definitions/VpcSettings"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Alias",
+  "/properties/DnsIpAddresses"
+ ],
+ "required": [
+  "VpcSettings",
+  "Size",
+  "Name",
+  "Password"
+ ],
+ "typeName": "AWS::DirectoryService::SimpleAD"
+}

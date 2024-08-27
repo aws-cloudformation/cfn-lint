@@ -1,0 +1,178 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GroupDescription",
+  "/properties/GroupName",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Egress": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "DestinationPrefixListId": {
+     "type": "string"
+    },
+    "DestinationSecurityGroupId": {
+     "format": "AWS::EC2::SecurityGroup.GroupId",
+     "type": "string"
+    },
+    "FromPort": {
+     "minimum": -1,
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "ToPort": {
+     "minimum": -1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "requiredXor": [
+    "CidrIp",
+    "CidrIpv6",
+    "DestinationSecurityGroupId",
+    "DestinationPrefixListId"
+   ],
+   "type": "object"
+  },
+  "Ingress": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "FromPort": {
+     "minimum": -1,
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "SourcePrefixListId": {
+     "type": "string"
+    },
+    "SourceSecurityGroupId": {
+     "format": "AWS::EC2::SecurityGroup.GroupId",
+     "type": "string"
+    },
+    "SourceSecurityGroupName": {
+     "format": "AWS::EC2::SecurityGroup.GroupName",
+     "type": "string"
+    },
+    "SourceSecurityGroupOwnerId": {
+     "type": "string"
+    },
+    "ToPort": {
+     "minimum": -1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "requiredXor": [
+    "CidrIp",
+    "CidrIpv6",
+    "SourcePrefixListId",
+    "SourceSecurityGroupId",
+    "SourceSecurityGroupName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentRequired": {
+  "SecurityGroupEgress": [
+   "VpcId"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "GroupDescription": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+   "type": "string"
+  },
+  "GroupId": {
+   "format": "AWS::EC2::SecurityGroup.GroupId",
+   "type": "string"
+  },
+  "GroupName": {
+   "format": "AWS::EC2::SecurityGroup.GroupName",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SecurityGroupEgress": {
+   "items": {
+    "$ref": "#/definitions/Egress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecurityGroupIngress": {
+   "items": {
+    "$ref": "#/definitions/Ingress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/GroupId"
+ ],
+ "required": [
+  "GroupDescription"
+ ],
+ "typeName": "AWS::EC2::SecurityGroup"
+}

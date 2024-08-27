@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Egress",
+  "/properties/RuleNumber",
+  "/properties/NetworkAclId"
+ ],
+ "definitions": {
+  "Icmp": {
+   "additionalProperties": false,
+   "properties": {
+    "Code": {
+     "type": "integer"
+    },
+    "Type": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "From": {
+     "type": "integer"
+    },
+    "To": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateNetworkAclEntry",
+    "ec2:DescribeNetworkAcls"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteNetworkAclEntry",
+    "ec2:DescribeNetworkAcls"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ReplaceNetworkAclEntry",
+    "ec2:DescribeNetworkAcls"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CidrBlock": {
+   "type": "string"
+  },
+  "Egress": {
+   "type": "boolean"
+  },
+  "Icmp": {
+   "$ref": "#/definitions/Icmp"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Ipv6CidrBlock": {
+   "type": "string"
+  },
+  "NetworkAclId": {
+   "type": "string"
+  },
+  "PortRange": {
+   "$ref": "#/definitions/PortRange"
+  },
+  "Protocol": {
+   "type": "integer"
+  },
+  "RuleAction": {
+   "enum": [
+    "allow",
+    "deny"
+   ],
+   "type": "string"
+  },
+  "RuleNumber": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "NetworkAclId",
+  "RuleAction",
+  "RuleNumber",
+  "Protocol"
+ ],
+ "requiredXor": [
+  "Ipv6CidrBlock",
+  "CidrBlock"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::NetworkAclEntry"
+}

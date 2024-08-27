@@ -1,0 +1,403 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CustomizedMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "Statistic": {
+     "enum": [
+      "Average",
+      "Maximum",
+      "Minimum",
+      "SampleCount",
+      "Sum"
+     ],
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Statistic",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Metric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "MetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/MetricStat"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "PredefinedMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "enum": [
+      "ALBRequestCountPerTarget",
+      "ASGAverageCPUUtilization",
+      "ASGAverageNetworkIn",
+      "ASGAverageNetworkOut"
+     ],
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacityBreachBehavior": {
+     "type": "string"
+    },
+    "MaxCapacityBuffer": {
+     "type": "integer"
+    },
+    "MetricSpecifications": {
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "SchedulingBufferTime": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MetricSpecifications"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingCustomizedCapacityMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "items": {
+      "$ref": "#/definitions/MetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingCustomizedLoadMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "items": {
+      "$ref": "#/definitions/MetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingCustomizedScalingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "items": {
+      "$ref": "#/definitions/MetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedCapacityMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedCapacityMetric"
+    },
+    "CustomizedLoadMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedLoadMetric"
+    },
+    "CustomizedScalingMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedScalingMetric"
+    },
+    "PredefinedLoadMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedLoadMetric"
+    },
+    "PredefinedMetricPairSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedMetricPair"
+    },
+    "PredefinedScalingMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedScalingMetric"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedLoadMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedMetricPair": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedScalingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "StepAdjustment": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricIntervalLowerBound": {
+     "type": "number"
+    },
+    "MetricIntervalUpperBound": {
+     "type": "number"
+    },
+    "ScalingAdjustment": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScalingAdjustment"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedMetricSpecification": {
+     "$ref": "#/definitions/CustomizedMetricSpecification"
+    },
+    "DisableScaleIn": {
+     "type": "boolean"
+    },
+    "PredefinedMetricSpecification": {
+     "$ref": "#/definitions/PredefinedMetricSpecification"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AdjustmentType": {
+   "enum": [
+    "ChangeInCapacity",
+    "ExactCapacity",
+    "PercentChangeInCapacity"
+   ],
+   "type": "string"
+  },
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "Cooldown": {
+   "type": "string"
+  },
+  "EstimatedInstanceWarmup": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MetricAggregationType": {
+   "enum": [
+    "Average",
+    "Maximum",
+    "Minimum"
+   ],
+   "type": "string"
+  },
+  "MinAdjustmentMagnitude": {
+   "type": "integer"
+  },
+  "PolicyType": {
+   "enum": [
+    "PredictiveScaling",
+    "SimpleScaling",
+    "StepScaling",
+    "TargetTrackingScaling"
+   ],
+   "type": "string"
+  },
+  "PredictiveScalingConfiguration": {
+   "$ref": "#/definitions/PredictiveScalingConfiguration"
+  },
+  "ScalingAdjustment": {
+   "type": "integer"
+  },
+  "StepAdjustments": {
+   "items": {
+    "$ref": "#/definitions/StepAdjustment"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetTrackingConfiguration": {
+   "$ref": "#/definitions/TargetTrackingConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "AutoScalingGroupName"
+ ],
+ "typeName": "AWS::AutoScaling::ScalingPolicy"
+}
