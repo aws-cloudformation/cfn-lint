@@ -97,10 +97,7 @@ rules = load_plugins(
 )
 
 for rule in rules:
-    if rule.__class__.__base__ == (
-        "cfnlint.rules.jsonschema."
-        "CfnLintJsonSchemaRegional.CfnLintJsonSchemaRegional"
-    ):
+    if rule.__class__.__base__.__name__ == "CfnLintJsonSchemaRegional":
         continue
     if not rule.id or rule.schema == {}:
         continue
