@@ -25,7 +25,7 @@ class Select(BaseFn):
         self.fn_select = self.validate
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
+        schema = {
             "type": "array",
             "maxItems": 2,
             "minItems": 2,
@@ -63,3 +63,8 @@ class Select(BaseFn):
                 },
             ],
         }
+
+        if validator.context.transforms.has_language_extensions_transform():
+            schema["fn_items"][0]["functions"].append("Fn::Length")  # type: ignore
+
+        return schema

@@ -55,12 +55,12 @@ def template():
             ],
         ),
         (
-            "Invalid Fn::Select using an invalid function for index",
-            {"Fn::Select": [{"Fn::GetAtt": "MyResource"}, ["bar"]]},
+            "Invalid Fn::Length using an invalid function for index",
+            {"Fn::Select": [{"Fn::Length": [1, 2]}, ["bar"]]},
             {"type": "string"},
             [
                 ValidationError(
-                    "{'Fn::GetAtt': 'MyResource'} is not of type 'integer'",
+                    "{'Fn::Length': [1, 2]} is not of type 'integer'",
                     path=deque(["Fn::Select", 0]),
                     schema_path=deque(["fn_items", "type"]),
                     validator="fn_select",
