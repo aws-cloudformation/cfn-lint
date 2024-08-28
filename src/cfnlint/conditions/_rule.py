@@ -121,6 +121,9 @@ class Rule:
 
         if self._assertions:
             if self._condition:
-                return Implies(self._condition.build_cnf(params), True)
+                return Implies(
+                    self._condition.build_cnf(params),
+                    self._assertions.build_cnf(params),
+                )
             return self._assertions.build_cnf(params)
         return None
