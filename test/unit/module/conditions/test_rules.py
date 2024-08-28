@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from unittest import TestCase
 
+from cfnlint.conditions._rule import _Assertion
 from cfnlint.decode import decode_str
 from cfnlint.template import Template
 
@@ -31,6 +32,14 @@ class TestConditionsWithRules(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         self.assertEqual(len(cfn.conditions._rules), 1)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "d0f5e92fc5233a6b011342df171f191838491056",
+                "362a2ca660fa34c91feeee4681e8433101d2a687",
+            ],
+        )
 
         self.assertTrue(
             cfn.conditions.satisfiable(
@@ -75,6 +84,14 @@ class TestConditionsWithRules(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         self.assertEqual(len(cfn.conditions._rules), 1)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "d0f5e92fc5233a6b011342df171f191838491056",
+                "362a2ca660fa34c91feeee4681e8433101d2a687",
+            ],
+        )
 
         self.assertTrue(
             cfn.conditions.satisfiable(
@@ -132,6 +149,21 @@ class TestConditionsWithRules(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 4)
         self.assertEqual(len(cfn.conditions._rules), 2)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "d0f5e92fc5233a6b011342df171f191838491056",
+                "362a2ca660fa34c91feeee4681e8433101d2a687",
+            ],
+        )
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[1].equals],
+            [
+                "d2dab653475dd270354fe84c4f80b54883e958bb",
+                "362a2ca660fa34c91feeee4681e8433101d2a687",
+            ],
+        )
 
         self.assertTrue(
             cfn.conditions.satisfiable(
@@ -199,3 +231,18 @@ class TestConditionsWithRules(TestCase):
                 {"AWS::Region": "us-west-2", "Environment": "stage"},
             )
         )
+
+
+class TestAssertion(TestCase):
+    def test_assertions(self):
+        with self.assertRaises(ValueError):
+            _Assertion({"A": "B", "C": "D"}, {})
+
+        with self.assertRaises(ValueError):
+            _Assertion({"Fn::Not": {"C": "D"}}, {})
+
+        with self.assertRaises(ValueError):
+            _Assertion({"Not": {"C": "D"}}, {})
+
+        with self.assertRaises(ValueError):
+            _Assertion({"Condition": {"C": "D"}}, {})

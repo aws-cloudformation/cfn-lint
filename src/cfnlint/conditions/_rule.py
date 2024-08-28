@@ -64,6 +64,8 @@ class _Assertion:
     def equals(self) -> list[Equal]:
         if self._fn_equals:
             return [self._fn_equals]
+        if self._condition:
+            return self._condition.equals
         return []
 
 
