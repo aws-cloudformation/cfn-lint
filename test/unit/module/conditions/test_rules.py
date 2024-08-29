@@ -19,19 +19,24 @@ class TestConditionsWithRules(TestCase):
           IsProd: !Equals [!Ref Environment, "prod"]
           IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
         Rules:
-          Rule:
+          Rule1:
             Assertions:
             - Assert:
                 Fn::And:
                 - !Condition IsProd
                 - !Condition IsUsEast1
-
+          Rule2:
+            Assertions:
+            - Assert:
+                Fn::Or:
+                - !Condition IsProd
+                - !Condition IsUsEast1
         """
         )[0]
 
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
-        self.assertEqual(len(cfn.conditions._rules), 1)
+        self.assertEqual(len(cfn.conditions._rules), 2)
 
         self.assertListEqual(
             [equal.hash for equal in cfn.conditions._rules[0].equals],
@@ -136,11 +141,11 @@ class TestConditionsWithRules(TestCase):
           IsNotUsEast1: !Not [!Condition IsUsEast1]
         Rules:
           Rule1:
-            RuleCondition: !Condition IsProd
+            RuleCondition: !Equals [!Ref Environment, "prod"]
             Assertions:
             - Assert: !Condition IsUsEast1
           Rule2:
-            RuleCondition: !Condition IsDev
+            RuleCondition: !Equals [!Ref Environment, "dev"]
             Assertions:
             - Assert: !Condition IsNotUsEast1
         """
