@@ -147,7 +147,7 @@ class TestConditionsWithRules(TestCase):
           Rule2:
             RuleCondition: !Equals [!Ref Environment, "dev"]
             Assertions:
-            - Assert: !Condition IsNotUsEast1
+            - Assert: !Not [!Condition IsUsEast1]
         """
         )[0]
 
@@ -298,6 +298,7 @@ class TestAssertion(TestCase):
                 Fn::Or:
                 - !Condition IsNotUsEast1
                 - !Condition IsUsEast1
+          Rule3: []
         """
         )[0]
 
