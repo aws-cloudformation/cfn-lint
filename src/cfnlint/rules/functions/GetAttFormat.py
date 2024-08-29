@@ -33,6 +33,8 @@ class GetAttFormat(CfnLintKeyword):
             "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
         ]
 
+        self._resource_type_attribute_exceptions = [("AWS::SSM::Parameter", "Value")]
+
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -50,10 +52,14 @@ class GetAttFormat(CfnLintKeyword):
             t, validator.context.regions
         ):
             region = regions[0]
-            getatt_ptr = validator.context.resources[resource].get_atts(region)[attr]
 
             if t in self._resource_type_exceptions:
                 return
+
+            if (t, attr) in self._resource_type_attribute_exceptions:
+                return
+
+            getatt_ptr = validator.context.resources[resource].get_atts(region)[attr]
 
             getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
             getatt_fmt = getatt_schema.get("format")
