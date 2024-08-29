@@ -239,7 +239,7 @@ class TestConditionsWithRules(TestCase):
 
 
 class TestAssertion(TestCase):
-    def test_assertions(self):
+    def test_assertion_errors(self):
         with self.assertRaises(ValueError):
             _Assertion({"A": "B", "C": "D"}, {})
 
@@ -251,3 +251,55 @@ class TestAssertion(TestCase):
 
         with self.assertRaises(ValueError):
             _Assertion({"Condition": {"C": "D"}}, {})
+
+    def test_init_rules_with_list(self):
+        template = decode_str(
+            """
+        Conditions:
+          IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
+          IsNotUsEast1: !Not [!Condition IsUsEast1]
+        Rules: []
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertListEqual(cfn.conditions._rules, [])
+
+    def test_init_rules_with_wrong_assertions_type(self):
+        template = decode_str(
+            """
+        Conditions:
+          IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
+          IsNotUsEast1: !Not [!Condition IsUsEast1]
+        Rules:
+          Rule1:
+            Assertions: {"Foo": "Bar"}
+          Rule2:
+            Assertions:
+            - Assert: !Condition IsUsEast1
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._rules), 1)
+
+    def test_init_rules_with_no_keys(self):
+        template = decode_str(
+            """
+        Conditions:
+          IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
+          IsNotUsEast1: !Not [!Condition IsUsEast1]
+        Rules:
+          Rule1:
+            Foo: Bar
+          Rule2:
+            Assertions:
+            - Assert:
+                Fn::Or:
+                - !Condition IsNotUsEast1
+                - !Condition IsUsEast1
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._rules), 1)

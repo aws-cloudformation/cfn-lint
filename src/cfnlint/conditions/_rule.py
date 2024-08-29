@@ -108,7 +108,11 @@ class Rule:
         condition = rule.get("RuleCondition")
         if condition:
             self._condition = _Assertion(condition, all_conditions)
-        self._assertions = _Assertions(rule.get("Assertions", []), all_conditions)
+
+        assertions = rule.get("Assertions")
+        if not assertions:
+            raise ValueError("Rule must have Assertions")
+        self._assertions = _Assertions(assertions, all_conditions)
 
     @property
     def equals(self) -> list[Equal]:

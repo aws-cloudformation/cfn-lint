@@ -85,7 +85,6 @@ class Conditions:
         for k, v in rules.items():
             if not isinstance(rules, dict):
                 continue
-
             try:
                 self._rules.append(Rule(v, conditions))
             except ValueError as e:
