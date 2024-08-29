@@ -134,8 +134,8 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     "{'Fn::GetAtt': 'MyBucket.Arn'} is not of type 'array'",
-                    path=deque(["Fn::GetAtt"]),
-                    schema_path=deque(["type"]),
+                    path=deque([]),
+                    schema_path=deque([]),
                     validator="fn_getatt",
                 ),
             ],
@@ -149,8 +149,8 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     "{'Fn::GetAtt': 'MyBucket.Arn'} is not of type 'array', 'object'",
-                    path=deque(["Fn::GetAtt"]),
-                    schema_path=deque(["type"]),
+                    path=deque([]),
+                    schema_path=deque([]),
                     validator="fn_getatt",
                 ),
             ],
