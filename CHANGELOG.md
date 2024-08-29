@@ -1,3 +1,13 @@
+### v1.11.1
+## What's Changed
+* Fix an issue with `dict_node` `get` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3628
+* Add params to findinmap value by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3629
+* Allow `Fn::Length` in `Fn::Select` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3633
+* Allow resource version to be an `integer` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3637
+* Add more exceptions [E1040](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1040) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3636
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.11.0...v1.11.1
+
 ### v1.11.0
 ## What's Changed
 * Create rule [E3055](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3055) to validate CreationPolicy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3609
