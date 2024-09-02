@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Ipv6Pool",
+  "/properties/VpcId",
+  "/properties/AmazonProvidedIpv6CidrBlock",
+  "/properties/Ipv6CidrBlock",
+  "/properties/CidrBlock",
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AssociateVpcCidrBlock",
+    "ec2:DescribeVpcs",
+    "ec2:AllocateIpamPoolCidr"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVpcs",
+    "ec2:DisassociateVpcCidrBlock"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "VpcId": {
+      "format": "AWS::EC2::VPC.Id",
+      "type": "string"
+     }
+    },
+    "required": [
+     "VpcId"
+    ]
+   },
+   "permissions": [
+    "ec2:DescribeVpcs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVpcs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/VpcId"
+ ],
+ "properties": {
+  "AmazonProvidedIpv6CidrBlock": {
+   "type": "boolean"
+  },
+  "CidrBlock": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Ipv4IpamPoolId": {
+   "type": "string"
+  },
+  "Ipv4NetmaskLength": {
+   "type": "integer"
+  },
+  "Ipv6CidrBlock": {
+   "type": "string"
+  },
+  "Ipv6IpamPoolId": {
+   "type": "string"
+  },
+  "Ipv6NetmaskLength": {
+   "type": "integer"
+  },
+  "Ipv6Pool": {
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "VpcId"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::VPCCidrBlock",
+ "writeOnlyProperties": [
+  "/properties/Ipv4IpamPoolId",
+  "/properties/Ipv4NetmaskLength",
+  "/properties/Ipv6IpamPoolId",
+  "/properties/Ipv6NetmaskLength"
+ ]
+}

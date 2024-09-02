@@ -27,6 +27,7 @@ def template():
             "MyProvisionedProduct": {
                 "Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
             },
+            "MySSMParameter": {"Type": "AWS::SSM::Parameter"},
         },
     }
 
@@ -62,6 +63,12 @@ def template():
             "Valid GetAtt because of exception",
             ["MyBucket", "Arn"],
             {"format": "AWS::EC2::SecurityGroup.GroupId"},
+            [],
+        ),
+        (
+            "Valid GetAtt because of exception with attribute",
+            ["MySSMParameter", "Value"],
+            {"format": "AWS::EC2::Image.Id"},
             [],
         ),
         (

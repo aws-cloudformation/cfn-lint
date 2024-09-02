@@ -1,3 +1,25 @@
+### v1.11.1
+## What's Changed
+* Fix an issue with `dict_node` `get` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3628
+* Add params to findinmap value by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3629
+* Allow `Fn::Length` in `Fn::Select` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3633
+* Allow resource version to be an `integer` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3637
+* Add more exceptions [E1040](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1040) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3636
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.11.0...v1.11.1
+
+### v1.11.0
+## What's Changed
+* Create rule [E3055](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3055) to validate CreationPolicy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3609
+* Update CloudFormation schemas to 2024-08-21 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3602
+* Generate schema artifacts on release by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3611
+* Fix integration tests by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3615
+* Add assumed role to policy AWS by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3621
+* Fix pretty print with pipes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3622
+* Require at least one element in LSI `if` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3623
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.10.3...v1.11.0
+
 ### v1.10.3
 ## What's Changed
 * Look at `OriginGroups` too for rule [E3057](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3057) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3607
