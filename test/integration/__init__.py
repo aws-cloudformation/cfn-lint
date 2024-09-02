@@ -113,7 +113,6 @@ class BaseCliTestCase(unittest.TestCase):
 
             runner = Runner(scenario_config)
 
-            print(f"Running test for {filename!r}")
             with patch("sys.exit") as exit:
                 with patch("sys.stdout", new=StringIO()) as out:
                     runner.cli()

@@ -18,6 +18,7 @@ class TestCfnContext(unittest.TestCase):
                     "Foo": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-east-1"]},
                     "Bar": {"Fn::Equals": [{"Ref": "AWS::Region"}, "us-west-2"]},
                 },
+                rules={},
                 parameters={},
             ),
         )

@@ -431,10 +431,12 @@ def create_context_for_template(cfn):
 
     try:
         conditions = Conditions.create_from_instance(
-            cfn.template.get("Conditions", {}), parameters
+            cfn.template.get("Conditions", {}),
+            cfn.template.get("Rules", {}),
+            parameters,
         )
     except (ValueError, AttributeError):
-        conditions = Conditions.create_from_instance({}, {})
+        conditions = Conditions.create_from_instance({}, {}, {})
 
     mappings = Mappings.create_from_dict(cfn.template.get("Mappings", {}))
 

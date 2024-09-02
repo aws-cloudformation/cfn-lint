@@ -296,4 +296,4 @@ def test_evolve_from_instance(current_status, instance, expected):
 
 def test_condition_failures():
     with pytest.raises(ValueError):
-        Conditions.create_from_instance([], {})
+        Conditions.create_from_instance([], {}, {})
