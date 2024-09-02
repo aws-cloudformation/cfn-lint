@@ -34,7 +34,7 @@ class Conditions:
 
     @classmethod
     def create_from_instance(
-        cls, conditions: Any, parameters: dict[str, "Parameter"]
+        cls, conditions: Any, rules: dict[str, dict], parameters: dict[str, "Parameter"]
     ) -> "Conditions":
         obj: dict[str, Condition] = {}
         if not isinstance(conditions, dict):
