@@ -2030,6 +2030,7 @@ cached: list[str] = [
     "aws-opensearchserverless-securityconfig.json",
     "aws-opensearchserverless-securitypolicy.json",
     "aws-opensearchserverless-vpcendpoint.json",
+    "aws-opensearchservice-domain.json",
     "aws-opsworks-app.json",
     "aws-opsworks-elasticloadbalancerattachment.json",
     "aws-opsworks-instance.json",

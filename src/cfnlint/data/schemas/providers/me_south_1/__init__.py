@@ -1320,6 +1320,7 @@ cached: list[str] = [
     "aws-networkmanager-vpcattachment.json",
     "aws-oam-link.json",
     "aws-oam-sink.json",
+    "aws-opensearchservice-domain.json",
     "aws-opsworks-app.json",
     "aws-opsworks-elasticloadbalancerattachment.json",
     "aws-opsworks-instance.json",

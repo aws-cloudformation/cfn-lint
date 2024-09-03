@@ -1337,6 +1337,7 @@ cached: list[str] = [
     "aws-stepfunctions-statemachine.json",
     "aws-stepfunctions-statemachinealias.json",
     "aws-stepfunctions-statemachineversion.json",
+    "aws-synthetics-canary.json",
     "aws-transfer-agreement.json",
     "aws-transfer-certificate.json",
     "aws-transfer-connector.json",

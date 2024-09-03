@@ -4113,8 +4113,8 @@
    ]
   },
   "AWS Elemental Appliances and Software": {
-   "ARNFormat": "arn:aws:elemental-appliances-software:${Region}:${Account}:${ResourceType}/${ResourceName}",
-   "ARNRegex": "^arn:aws:elemental-appliances-software:.+:.+:.+",
+   "ARNFormat": "arn:aws:elemental-appliances-software::${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:elemental-appliances-software::.+:.+",
    "Actions": [
     "CompleteUpload",
     "CreateOrderV1",
@@ -4127,24 +4127,16 @@
     "GetQuote",
     "GetTaxes",
     "ListQuotes",
-    "ListTagsForResource",
     "StartUpload",
     "SubmitOrderV1",
-    "TagResource",
-    "UntagResource",
     "UpdateQuote"
    ],
    "HasResource": true,
-   "StringPrefix": "elemental-appliances-software",
-   "conditionKeys": [
-    "aws:RequestTag/${TagKey}",
-    "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
-   ]
+   "StringPrefix": "elemental-appliances-software"
   },
   "AWS Elemental Appliances and Software Activation Service": {
-   "ARNFormat": "arn:aws:elemental-activations:${Region}:${Account}:${ResourceType}/${ResourceName}",
-   "ARNRegex": "^arn:aws:elemental-activations:.+:.+:.+",
+   "ARNFormat": "arn:${Partition}:elemental-activations::${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:${Partition}:elemental-activations::.+:.+",
    "Actions": [
     "CompleteAccountRegistration",
     "CompleteFileUpload",
@@ -4153,25 +4145,15 @@
     "DownloadSoftware",
     "GenerateLicense",
     "GenerateLicenses",
-    "GetActivation",
     "GetArtifactGroupSoftwareVersions",
     "GetAsset",
     "GetAssets",
     "GetProductAdvisories",
     "GetSoftwareVersions",
-    "ListTagsForResource",
-    "StartAccountRegistration",
-    "StartFileUpload",
-    "TagResource",
-    "UntagResource"
+    "StartFileUpload"
    ],
-   "HasResource": true,
-   "StringPrefix": "elemental-activations",
-   "conditionKeys": [
-    "aws:RequestTag/${TagKey}",
-    "aws:ResourceTag/${TagKey}",
-    "aws:TagKeys"
-   ]
+   "HasResource": false,
+   "StringPrefix": "elemental-activations"
   },
   "AWS Elemental MediaConnect": {
    "ARNFormat": "arn:aws:mediaconnect:${Region}:${Account}:${Namespace}:${RelativeId}:${RelativeName}",
@@ -8452,6 +8434,38 @@
     "aws:TagKeys"
    ]
   },
+  "AWS Parallel Computing Service": {
+   "ARNFormat": "arn:aws:pcs:${Region}:${Account}:${ResourceType}/${ResourcePath}",
+   "ARNRegex": "^arn:aws:pcs:.+:.+:.+",
+   "Actions": [
+    "AllowVendedLogDeliveryForResource",
+    "CreateCluster",
+    "CreateComputeNodeGroup",
+    "CreateQueue",
+    "DeleteCluster",
+    "DeleteComputeNodeGroup",
+    "DeleteQueue",
+    "GetCluster",
+    "GetComputeNodeGroup",
+    "GetQueue",
+    "ListClusters",
+    "ListComputeNodeGroups",
+    "ListQueues",
+    "ListTagsForResource",
+    "RegisterComputeNodeGroupInstance",
+    "TagResource",
+    "UntagResource",
+    "UpdateComputeNodeGroup",
+    "UpdateQueue"
+   ],
+   "HasResource": true,
+   "StringPrefix": "pcs",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "AWS Partner central account management": {
    "Actions": [
     "AssociatePartnerAccount",
@@ -11095,6 +11109,7 @@
    "Actions": [
     "CreateAdminSession",
     "CreateNetwork",
+    "DeleteNetwork",
     "ListNetworks",
     "ListTagsForResource",
     "TagResource",
@@ -11729,6 +11744,7 @@
     "CreateModelCopyJob",
     "CreateModelCustomizationJob",
     "CreateModelEvaluationJob",
+    "CreateModelImportJob",
     "CreateModelInvocationJob",
     "CreatePrompt",
     "CreatePromptVersion",
@@ -11745,6 +11761,7 @@
     "DeleteFlowVersion",
     "DeleteFoundationModelAgreement",
     "DeleteGuardrail",
+    "DeleteImportedModel",
     "DeleteKnowledgeBase",
     "DeleteModelInvocationLoggingConfiguration",
     "DeletePrompt",
@@ -11767,11 +11784,14 @@
     "GetFoundationModel",
     "GetFoundationModelAvailability",
     "GetGuardrail",
+    "GetImportedModel",
+    "GetInferenceProfile",
     "GetIngestionJob",
     "GetKnowledgeBase",
     "GetModelCopyJob",
     "GetModelCustomizationJob",
     "GetModelEvaluationJob",
+    "GetModelImportJob",
     "GetModelInvocationJob",
     "GetModelInvocationLoggingConfiguration",
     "GetPrompt",
@@ -11796,11 +11816,14 @@
     "ListFoundationModelAgreementOffers",
     "ListFoundationModels",
     "ListGuardrails",
+    "ListImportedModels",
+    "ListInferenceProfiles",
     "ListIngestionJobs",
     "ListKnowledgeBases",
     "ListModelCopyJobs",
     "ListModelCustomizationJobs",
     "ListModelEvaluationJobs",
+    "ListModelImportJobs",
     "ListModelInvocationJobs",
     "ListPrompts",
     "ListProvisionedModelThroughputs",
@@ -11837,6 +11860,7 @@
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
+    "bedrock:InferenceProfileArn",
     "bedrock:ThirdPartyKnowledgeBaseCredentialsSecretArn"
    ]
   },
@@ -15462,6 +15486,7 @@
     "DescribeRegistry",
     "DescribeRepositories",
     "DescribeRepositoryCreationTemplates",
+    "GetAccountSetting",
     "GetAuthorizationToken",
     "GetDownloadUrlForLayer",
     "GetLifecyclePolicy",
@@ -15472,6 +15497,7 @@
     "InitiateLayerUpload",
     "ListImages",
     "ListTagsForResource",
+    "PutAccountSetting",
     "PutImage",
     "PutImageScanningConfiguration",
     "PutImageTagMutability",
@@ -19633,6 +19659,7 @@
     "ListDataSources",
     "ListFolderMembers",
     "ListFolders",
+    "ListFoldersForResource",
     "ListGroupMemberships",
     "ListGroups",
     "ListIAMPolicyAssignments",
@@ -20168,6 +20195,7 @@
    "StringPrefix": "redshift-data",
    "conditionKeys": [
     "aws:ResourceTag/${TagKey}",
+    "redshift-data:session-owner-iam-userid",
     "redshift-data:statement-owner-iam-userid"
    ]
   },
