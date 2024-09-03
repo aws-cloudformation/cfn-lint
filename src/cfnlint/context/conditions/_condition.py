@@ -66,7 +66,9 @@ class Condition:
                 raise ValueError(f"Condition value {fn_v!r} must be a string")
             sub_condition = all_conditions.get(fn_v)
             try:
-                c = Condition.create_from_instance(sub_condition, all_conditions)
+                sub_all_conditions = all_conditions.copy()
+                del sub_all_conditions[fn_v]
+                c = Condition.create_from_instance(sub_condition, sub_all_conditions)
             except Exception:
                 c = Condition.create_from_instance(
                     {"Fn::Equals": [None, None]}, all_conditions
