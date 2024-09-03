@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterId"
+ ],
+ "definitions": {
+  "ChannelPlacementGroupState": {
+   "enum": [
+    "UNASSIGNED",
+    "ASSIGNING",
+    "ASSIGNED",
+    "DELETING",
+    "DELETED",
+    "UNASSIGNING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "medialive:CreateChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup",
+    "medialive:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "medialive:DeleteChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterId": {
+      "$ref": "resource-schema.json#/properties/ClusterId"
+     }
+    },
+    "required": [
+     "ClusterId"
+    ]
+   },
+   "permissions": [
+    "medialive:ListChannelPlacementGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "medialive:DescribeChannelPlacementGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "medialive:UpdateChannelPlacementGroup",
+    "medialive:DescribeChannelPlacementGroup",
+    "medialive:CreateTags",
+    "medialive:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/ClusterId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Channels": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Nodes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "State": {
+   "$ref": "#/definitions/ChannelPlacementGroupState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Channels",
+  "/properties/Id",
+  "/properties/State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "medialive:CreateTags",
+   "medialive:DeleteTags"
+  ],
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::ChannelPlacementGroup"
+}

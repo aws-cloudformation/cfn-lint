@@ -1,0 +1,201 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/Scheme"
+ ],
+ "definitions": {
+  "LoadBalancerAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationId": {
+     "type": "string"
+    },
+    "IPv6Address": {
+     "type": "string"
+    },
+    "PrivateIPv4Address": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticloadbalancing:CreateLoadBalancer",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:ModifyLoadBalancerAttributes",
+    "elasticloadbalancing:AddTags"
+   ],
+   "timeoutInMinutes": 30
+  },
+  "delete": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DeleteLoadBalancer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeLoadBalancerAttributes",
+    "elasticloadbalancing:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticloadbalancing:ModifyLoadBalancerAttributes",
+    "elasticloadbalancing:SetSubnets",
+    "elasticloadbalancing:SetIpAddressType",
+    "elasticloadbalancing:SetSecurityGroups",
+    "elasticloadbalancing:AddTags",
+    "elasticloadbalancing:RemoveTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LoadBalancerArn"
+ ],
+ "properties": {
+  "CanonicalHostedZoneID": {
+   "type": "string"
+  },
+  "DNSName": {
+   "type": "string"
+  },
+  "EnforceSecurityGroupInboundRulesOnPrivateLinkTraffic": {
+   "type": "string"
+  },
+  "IpAddressType": {
+   "type": "string"
+  },
+  "LoadBalancerArn": {
+   "type": "string"
+  },
+  "LoadBalancerAttributes": {
+   "arrayType": "AttributeList",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoadBalancerAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LoadBalancerFullName": {
+   "type": "string"
+  },
+  "LoadBalancerName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Scheme": {
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Subnets": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "enum": [
+    "application",
+    "network",
+    "gateway"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerName",
+  "/properties/LoadBalancerFullName",
+  "/properties/CanonicalHostedZoneID",
+  "/properties/LoadBalancerArn",
+  "/properties/DNSName"
+ ],
+ "requiredXor": [
+  "Subnets",
+  "SubnetMappings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+}

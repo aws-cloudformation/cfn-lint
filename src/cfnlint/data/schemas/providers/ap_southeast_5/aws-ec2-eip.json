@@ -1,0 +1,64 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Domain",
+  "/properties/NetworkBorderGroup"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocationId": {
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "standard",
+    "vpc"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "NetworkBorderGroup": {
+   "type": "string"
+  },
+  "PublicIpv4Pool": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AllocationId"
+ ],
+ "typeName": "AWS::EC2::EIP"
+}

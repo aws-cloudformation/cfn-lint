@@ -114,6 +114,19 @@
      ],
      "title": "TimestreamConfig",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MqttTopicConfig": {
+       "$ref": "#/definitions/MqttTopicConfig"
+      }
+     },
+     "required": [
+      "MqttTopicConfig"
+     ],
+     "title": "MqttTopicConfig",
+     "type": "object"
     }
    ]
   },
@@ -131,6 +144,28 @@
     "SEND_ACTIVE_DTCS"
    ],
    "type": "string"
+  },
+  "MqttTopicConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):iam::(\\d{12})?:(role((\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F))[\\w+=,.@-]+)$",
+     "type": "string"
+    },
+    "MqttTopicArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ExecutionRoleArn",
+    "MqttTopicArn"
+   ],
+   "type": "object"
   },
   "S3Config": {
    "additionalProperties": false,

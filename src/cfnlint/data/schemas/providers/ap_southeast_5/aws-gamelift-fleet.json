@@ -1,0 +1,195 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeerVpcAwsAccountId",
+  "/properties/BuildId",
+  "/properties/EC2InstanceType",
+  "/properties/ServerLaunchParameters",
+  "/properties/CertificateConfiguration",
+  "/properties/LogPaths",
+  "/properties/ServerLaunchPath",
+  "/properties/FleetType",
+  "/properties/ScriptId",
+  "/properties/PeerVpcId",
+  "/properties/InstanceRoleARN"
+ ],
+ "definitions": {
+  "CertificateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CertificateType"
+   ],
+   "type": "object"
+  },
+  "IpPermission": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "type": "integer"
+    },
+    "IpRange": {
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpRange",
+    "FromPort",
+    "ToPort",
+    "Protocol"
+   ],
+   "type": "object"
+  },
+  "ResourceCreationLimitPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "NewGameSessionsPerCreator": {
+     "type": "integer"
+    },
+    "PolicyPeriodInMinutes": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RuntimeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GameSessionActivationTimeoutSeconds": {
+     "type": "integer"
+    },
+    "MaxConcurrentGameSessionActivations": {
+     "type": "integer"
+    },
+    "ServerProcesses": {
+     "items": {
+      "$ref": "#/definitions/ServerProcess"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ServerProcess": {
+   "additionalProperties": false,
+   "properties": {
+    "ConcurrentExecutions": {
+     "type": "integer"
+    },
+    "LaunchPath": {
+     "type": "string"
+    },
+    "Parameters": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConcurrentExecutions",
+    "LaunchPath"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "BuildId": {
+   "type": "string"
+  },
+  "CertificateConfiguration": {
+   "$ref": "#/definitions/CertificateConfiguration"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DesiredEC2Instances": {
+   "type": "integer"
+  },
+  "EC2InboundPermissions": {
+   "items": {
+    "$ref": "#/definitions/IpPermission"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EC2InstanceType": {
+   "type": "string"
+  },
+  "FleetType": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceRoleARN": {
+   "type": "string"
+  },
+  "LogPaths": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MaxSize": {
+   "type": "integer"
+  },
+  "MetricGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MinSize": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NewGameSessionProtectionPolicy": {
+   "type": "string"
+  },
+  "PeerVpcAwsAccountId": {
+   "type": "string"
+  },
+  "PeerVpcId": {
+   "type": "string"
+  },
+  "ResourceCreationLimitPolicy": {
+   "$ref": "#/definitions/ResourceCreationLimitPolicy"
+  },
+  "RuntimeConfiguration": {
+   "$ref": "#/definitions/RuntimeConfiguration"
+  },
+  "ScriptId": {
+   "type": "string"
+  },
+  "ServerLaunchParameters": {
+   "type": "string"
+  },
+  "ServerLaunchPath": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "EC2InstanceType",
+  "Name"
+ ],
+ "typeName": "AWS::GameLift::Fleet"
+}

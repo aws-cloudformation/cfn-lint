@@ -1,0 +1,43 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FileSystemId",
+  "/properties/IpAddress",
+  "/properties/SubnetId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "FileSystemId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpAddress": {
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "SecurityGroups",
+  "FileSystemId",
+  "SubnetId"
+ ],
+ "typeName": "AWS::EFS::MountTarget"
+}

@@ -1126,6 +1126,7 @@ types: list[str] = [
     "AWS::SSMContacts::Rotation",
     "AWS::SSMIncidents::ReplicationSet",
     "AWS::SSMIncidents::ResponsePlan",
+    "AWS::SSMQuickSetup::ConfigurationManager",
     "AWS::SSO::Application",
     "AWS::SSO::ApplicationAssignment",
     "AWS::SSO::Assignment",

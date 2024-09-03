@@ -68,6 +68,52 @@
     }
    },
    "type": "object"
+  },
+  "SrtCallerDecryptionRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "type": "string"
+    },
+    "PassphraseSecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SrtCallerSourceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Decryption": {
+     "$ref": "#/definitions/SrtCallerDecryptionRequest"
+    },
+    "MinimumLatency": {
+     "type": "integer"
+    },
+    "SrtListenerAddress": {
+     "type": "string"
+    },
+    "SrtListenerPort": {
+     "type": "string"
+    },
+    "StreamId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SrtSettingsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "SrtCallerSources": {
+     "items": {
+      "$ref": "#/definitions/SrtCallerSourceRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -120,6 +166,9 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "SrtSettings": {
+   "$ref": "#/definitions/SrtSettingsRequest"
   },
   "Tags": {
    "format": "json",

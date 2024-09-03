@@ -985,6 +985,25 @@
    ],
    "type": "string"
   },
+  "CategoryInnerFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Column": {
+     "$ref": "#/definitions/ColumnIdentifier"
+    },
+    "Configuration": {
+     "$ref": "#/definitions/CategoryFilterConfiguration"
+    },
+    "DefaultFilterControlConfiguration": {
+     "$ref": "#/definitions/DefaultFilterControlConfiguration"
+    }
+   },
+   "required": [
+    "Column",
+    "Configuration"
+   ],
+   "type": "object"
+  },
   "ChartAxisLabelOptions": {
    "additionalProperties": false,
    "properties": {
@@ -3482,6 +3501,9 @@
     "CategoryFilter": {
      "$ref": "#/definitions/CategoryFilter"
     },
+    "NestedFilter": {
+     "$ref": "#/definitions/NestedFilter"
+    },
     "NumericEqualityFilter": {
      "$ref": "#/definitions/NumericEqualityFilter"
     },
@@ -5253,6 +5275,15 @@
    ],
    "type": "string"
   },
+  "InnerFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "CategoryInnerFilter": {
+     "$ref": "#/definitions/CategoryInnerFilter"
+    }
+   },
+   "type": "object"
+  },
   "InsightConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -6322,6 +6353,34 @@
     "NEGATIVE"
    ],
    "type": "string"
+  },
+  "NestedFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Column": {
+     "$ref": "#/definitions/ColumnIdentifier"
+    },
+    "FilterId": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[\\w\\-]+$",
+     "type": "string"
+    },
+    "IncludeInnerSet": {
+     "default": false,
+     "type": "boolean"
+    },
+    "InnerFilter": {
+     "$ref": "#/definitions/InnerFilter"
+    }
+   },
+   "required": [
+    "Column",
+    "FilterId",
+    "IncludeInnerSet",
+    "InnerFilter"
+   ],
+   "type": "object"
   },
   "NullValueFormatConfiguration": {
    "additionalProperties": false,
@@ -11383,6 +11442,9 @@
     "quicksight:DescribeTemplate",
     "quicksight:DescribeTheme",
     "quicksight:PassDataSet",
+    "quicksight:CreateFolderMembership",
+    "quicksight:DeleteFolderMembership",
+    "quicksight:ListFoldersForResource",
     "quicksight:TagResource",
     "quicksight:UntagResource",
     "quicksight:ListTagsForResource"
