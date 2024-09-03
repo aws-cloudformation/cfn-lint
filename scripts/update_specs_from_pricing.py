@@ -22,6 +22,7 @@ region_map = {
     "Africa (Cape Town)": "af-south-1",
     "Asia Pacific (Hong Kong)": "ap-east-1",
     "Asia Pacific (Jakarta)": "ap-southeast-3",
+    "Asia Pacific (Malaysia)": "ap-southeast-5",
     "Asia Pacific (Melbourne)": "ap-southeast-4",
     "Asia Pacific (Mumbai)": "ap-south-1",
     "Asia Pacific (Hyderabad)": "ap-south-2",
