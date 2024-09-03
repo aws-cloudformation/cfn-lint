@@ -1632,6 +1632,7 @@ cached: list[str] = [
     "aws-ecr-pullthroughcacherule.json",
     "aws-ecr-registrypolicy.json",
     "aws-ecr-replicationconfiguration.json",
+    "aws-ecr-repository.json",
     "aws-ecr-repositorycreationtemplate.json",
     "aws-ecs-capacityprovider.json",
     "aws-ecs-cluster.json",

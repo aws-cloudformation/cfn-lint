@@ -860,6 +860,7 @@ cached: list[str] = [
     "aws-networkfirewall-tlsinspectionconfiguration.json",
     "aws-oam-link.json",
     "aws-oam-sink.json",
+    "aws-opensearchservice-domain.json",
     "aws-opsworks-app.json",
     "aws-opsworks-elasticloadbalancerattachment.json",
     "aws-opsworks-userprofile.json",

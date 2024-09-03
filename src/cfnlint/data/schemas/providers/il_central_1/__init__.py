@@ -1052,6 +1052,7 @@ cached: list[str] = [
     "aws-omics-sequencestore.json",
     "aws-omics-variantstore.json",
     "aws-omics-workflow.json",
+    "aws-opensearchservice-domain.json",
     "aws-opsworks-app.json",
     "aws-opsworks-elasticloadbalancerattachment.json",
     "aws-opsworks-userprofile.json",
