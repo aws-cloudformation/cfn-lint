@@ -82,6 +82,19 @@ def test_transforms():
             },
             Mappings({}, True),
         ),
+        (
+            "Invalid mappings with wrong types",
+            {
+                "A": {True: {"C": "foo"}},
+                "1": {"2": {False: "foo"}},
+            },
+            Mappings(
+                {
+                    "A": Map({}, False),
+                    "1": Map({"2": _MappingSecondaryKey({}, False)}),
+                }
+            ),
+        ),
     ],
 )
 def test_mapping_creation(name, mappings, expected):

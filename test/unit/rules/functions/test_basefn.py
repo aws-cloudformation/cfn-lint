@@ -56,6 +56,36 @@ def rule():
                 )
             ],
         ),
+        (
+            "Errors with context error",
+            {"Fn::Sub": "Bar"},
+            {"anyOf": [{"enum": ["Foo"]}]},
+            [
+                ValidationError(
+                    message=(
+                        "{'Fn::Sub': 'Bar'} is not valid "
+                        "under any of the given schemas "
+                        "when '' is resolved"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    validator="",
+                    schema_path=deque(["anyOf"]),
+                    rule=_ChildRule(),
+                    context=[
+                        ValidationError(
+                            message=(
+                                "{'Fn::Sub': 'Bar'} is not one of "
+                                "['Foo'] when '' is resolved"
+                            ),
+                            path=deque([]),
+                            validator="enum",
+                            schema_path=deque([0, "enum"]),
+                            rule=_ChildRule(),
+                        )
+                    ],
+                )
+            ],
+        ),
     ],
 )
 def test_resolve(name, instance, schema, expected, validator, rule):
