@@ -1,3 +1,15 @@
+### v1.12.0
+## What's Changed
+* GetAtts to array returns a string by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3639
+* Add Condition logic for template Rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3634
+* Another fix to pretty printer by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3641
+* Add ap-southeast-5 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3624
+* Bring back better findinmap resolution by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3579
+* Prevent infinite loops in conditions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3645
+* Update CloudFormation schemas to 2024-09-03 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3644
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.11.1...v1.12.0
+
 ### v1.11.1
 ## What's Changed
 * Fix an issue with `dict_node` `get` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3628
