@@ -1033,6 +1033,7 @@ cached: list[str] = [
     "aws-ec2-host.json",
     "aws-ec2-instance.json",
     "aws-ec2-instanceconnectendpoint.json",
+    "aws-ec2-internetgateway.json",
     "aws-ec2-ipam.json",
     "aws-ec2-ipamallocation.json",
     "aws-ec2-ipampool.json",

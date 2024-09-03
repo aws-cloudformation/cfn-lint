@@ -274,7 +274,15 @@ def context(cfn):
             "Invalid Fn::Sub with a GetAtt to an array of attributes",
             {"Fn::Sub": "${MySimpleAd.DnsIpAddresses}"},
             {"type": "string"},
-            [],
+            [
+                ValidationError(
+                    ("'MySimpleAd.DnsIpAddresses' is not of type 'string'"),
+                    instance="MySimpleAd.DnsIpAddresses",
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque([]),
+                    validator="fn_sub",
+                ),
+            ],
         ),
         (
             "Invalid Fn::Sub with a GetAtt to an integer",

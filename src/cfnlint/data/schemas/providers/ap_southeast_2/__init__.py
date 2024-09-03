@@ -2253,6 +2253,7 @@ cached: list[str] = [
     "aws-secretsmanager-rotationschedule.json",
     "aws-secretsmanager-secret.json",
     "aws-secretsmanager-secrettargetattachment.json",
+    "aws-securityhub-automationrule.json",
     "aws-securityhub-configurationpolicy.json",
     "aws-securityhub-delegatedadmin.json",
     "aws-securityhub-findingaggregator.json",
