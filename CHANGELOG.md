@@ -1,3 +1,7 @@
+### v1.12.1
+## What's Changed
+* Undo https://github.com/aws-cloudformation/cfn-lint/pull/3639 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3650
+
 ### v1.12.0
 ## What's Changed
 * GetAtts to array returns a string by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3639
