@@ -1574,6 +1574,20 @@ patches.extend(
                 ),
             ],
         ),
+        ResourcePatch(
+            resource_type="AWS::EC2::Subnet",
+            patches=[
+                Patch(
+                    values={
+                        "dependentExcluded": {
+                            "AvailabilityZone": ["AvailabilityZoneId"],
+                            "AvailabilityZoneId": ["AvailabilityZone"],
+                        },
+                    },
+                    path="/",
+                ),
+            ],
+        ),
     ]
 )
 

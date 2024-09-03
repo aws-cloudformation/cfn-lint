@@ -29,6 +29,15 @@ def update_resource_specs(force: bool = False):
     PROVIDER_SCHEMA_MANAGER.update(force)
 
 
+def patch_resource_specs():
+    # Pool() uses cpu count if no number of processors is specified
+    # Pool() only implements the Context Manager protocol from Python3.3 onwards,
+    # so it will fail Python2.7 style linting, as well as throw AttributeError
+
+    # Update provider Schemas
+    PROVIDER_SCHEMA_MANAGER.patch_schemas()
+
+
 def update_documentation(rules):
     # Update the overview of all rules in the linter
     filename = "docs/rules.md"

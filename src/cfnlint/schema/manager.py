@@ -320,31 +320,8 @@ class ProviderSchemaManager:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
                     all_types.append(spec["typeName"])
-                    try:
-                        spec = self._remove_descriptions(spec)
-                        spec = self._patch_provider_schema(spec, filename, "all")
-                        spec = self._patch_provider_schema(
-                            spec, filename, region=reg.py
-                        )
-                    except Exception as e:  # pylint: disable=broad-except
-                        LOGGER.info(
-                            "Issuing patching schema for %s in %s: %s",
-                            filename,
-                            reg.name,
-                            e,
-                        )
-                    # Back to zero to write spec
-                    fh.seek(0)
-                    json.dump(
-                        spec,
-                        fh,
-                        indent=1,
-                        separators=(",", ": "),
-                        sort_keys=True,
-                    )
-                    fh.write("\n")
-                    # Resize doc as needed
-                    fh.truncate()
+
+            self._patch_region_schemas(region)
 
             # if the region is not us-east-1 compare the files to those in us-east-1
             # symlink if the files are the same
@@ -391,6 +368,54 @@ class ProviderSchemaManager:
 
         except Exception as e:  # pylint: disable=broad-except
             LOGGER.info("Issuing updating schemas for %s: %s", region, e)
+
+    def patch_schemas(self) -> None:
+
+        self._patch_region_schemas(self._region_primary.name)
+        # pylint: disable=not-context-manager
+        with multiprocessing.Pool() as pool:
+            # Patch from registry schema
+            provider_pool_tuple = [
+                (k,) for k in REGIONS if k != self._region_primary.name
+            ]
+            pool.starmap(self._patch_region_schemas, provider_pool_tuple)
+
+    def _patch_region_schemas(self, region: str) -> None:
+        reg = ToPy(region)
+        directory = os.path.join(f"{self._root.path_relative}/{reg.py}/")
+
+        filenames = [
+            f
+            for f in os.listdir(directory)
+            if os.path.isfile(os.path.join(directory, f)) and f != "__init__.py"
+        ]
+
+        for filename in filenames:
+            with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
+                spec = json.load(fh)
+                try:
+                    spec = self._remove_descriptions(spec)
+                    spec = self._patch_provider_schema(spec, filename, "all")
+                    spec = self._patch_provider_schema(spec, filename, region=reg.py)
+                except Exception as e:  # pylint: disable=broad-except
+                    LOGGER.info(
+                        "Issuing patching schema for %s in %s: %s",
+                        filename,
+                        reg.name,
+                        e,
+                    )
+                # Back to zero to write spec
+                fh.seek(0)
+                json.dump(
+                    spec,
+                    fh,
+                    indent=1,
+                    separators=(",", ": "),
+                    sort_keys=True,
+                )
+                fh.write("\n")
+                # Resize doc as needed
+                fh.truncate()
 
     def _patch_provider_schema(
         self, content: Dict, source_filename: str, region: str
