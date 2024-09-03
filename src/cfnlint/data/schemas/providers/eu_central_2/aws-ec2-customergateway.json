@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateArn",
+  "/properties/BgpAsn",
+  "/properties/BgpAsnExtended",
+  "/properties/Type",
+  "/properties/IpAddress",
+  "/properties/DeviceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateCustomerGateway",
+    "ec2:DescribeCustomerGateways",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteCustomerGateway",
+    "ec2:DescribeCustomerGateways",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags",
+    "ec2:DescribeCustomerGateways"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CustomerGatewayId"
+ ],
+ "properties": {
+  "BgpAsn": {
+   "default": 65000,
+   "type": "integer"
+  },
+  "BgpAsnExtended": {
+   "maximum": 4294967294,
+   "minimum": 2147483648,
+   "multipleOf": 1,
+   "type": "number"
+  },
+  "CertificateArn": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:acm:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:certificate\\/[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "CustomerGatewayId": {
+   "type": "string"
+  },
+  "DeviceName": {
+   "type": "string"
+  },
+  "IpAddress": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "enum": [
+    "ipsec.1"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomerGatewayId"
+ ],
+ "required": [
+  "IpAddress",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::CustomerGateway"
+}

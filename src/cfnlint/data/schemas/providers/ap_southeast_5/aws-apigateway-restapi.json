@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "EndpointConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Types": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcEndpointIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "ETag": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApiKeySourceType": {
+   "enum": [
+    "AUTHORIZER",
+    "HEADER"
+   ],
+   "type": "string"
+  },
+  "BinaryMediaTypes": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Body": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "BodyS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "CloneFrom": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "type": "boolean"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "FailOnWarnings": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MinimumCompressionSize": {
+   "type": "integer"
+  },
+  "Mode": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Parameters": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Policy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RootResourceId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/RootResourceId"
+ ],
+ "typeName": "AWS::ApiGateway::RestApi"
+}

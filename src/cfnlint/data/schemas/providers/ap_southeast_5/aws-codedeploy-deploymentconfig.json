@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeploymentConfigName",
+  "/properties/MinimumHealthyHosts",
+  "/properties/ComputePlatform",
+  "/properties/TrafficRoutingConfig"
+ ],
+ "definitions": {
+  "MinimumHealthyHosts": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "FLEET_PERCENT",
+      "HOST_COUNT"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeBasedCanary": {
+   "additionalProperties": false,
+   "properties": {
+    "CanaryInterval": {
+     "type": "integer"
+    },
+    "CanaryPercentage": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "CanaryPercentage",
+    "CanaryInterval"
+   ],
+   "type": "object"
+  },
+  "TimeBasedLinear": {
+   "additionalProperties": false,
+   "properties": {
+    "LinearInterval": {
+     "type": "integer"
+    },
+    "LinearPercentage": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LinearInterval",
+    "LinearPercentage"
+   ],
+   "type": "object"
+  },
+  "TrafficRoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TimeBasedCanary": {
+     "$ref": "#/definitions/TimeBasedCanary"
+    },
+    "TimeBasedLinear": {
+     "$ref": "#/definitions/TimeBasedLinear"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ComputePlatform": {
+   "type": "string"
+  },
+  "DeploymentConfigName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MinimumHealthyHosts": {
+   "$ref": "#/definitions/MinimumHealthyHosts"
+  },
+  "TrafficRoutingConfig": {
+   "$ref": "#/definitions/TrafficRoutingConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::CodeDeploy::DeploymentConfig"
+}

@@ -56,6 +56,11 @@ AVAILABILITY_ZONES = {
         "ap-southeast-4b",
         "ap-southeast-4c",
     ],
+    "ap-southeast-5": [
+        "ap-southeast-5a",
+        "ap-southeast-5b",
+        "ap-southeast-5c",
+    ],
     "ca-west-1": [
         "ca-west-1a",
         "ca-west-1b",

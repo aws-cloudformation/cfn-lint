@@ -1,0 +1,212 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/EncryptionConfiguration",
+  "/properties/EncryptionConfiguration/EncryptionType",
+  "/properties/EncryptionConfiguration/KmsKey"
+ ],
+ "definitions": {
+  "EmptyOnDelete": {
+   "type": "boolean"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "$ref": "#/definitions/EncryptionType"
+    },
+    "KmsKey": {
+     "$ref": "#/definitions/KmsKey"
+    }
+   },
+   "required": [
+    "EncryptionType"
+   ],
+   "type": "object"
+  },
+  "EncryptionType": {
+   "enum": [
+    "AES256",
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "ImageScanningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ScanOnPush": {
+     "$ref": "#/definitions/ScanOnPush"
+    }
+   },
+   "type": "object"
+  },
+  "KmsKey": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LifecyclePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "LifecyclePolicyText": {
+     "$ref": "#/definitions/LifecyclePolicyText"
+    },
+    "RegistryId": {
+     "$ref": "#/definitions/RegistryId"
+    }
+   },
+   "type": "object"
+  },
+  "LifecyclePolicyText": {
+   "maxLength": 30720,
+   "minLength": 100,
+   "type": "string"
+  },
+  "RegistryId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "ScanOnPush": {
+   "type": "boolean"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:CreateRepository",
+    "ecr:PutLifecyclePolicy",
+    "ecr:SetRepositoryPolicy",
+    "ecr:TagResource",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:DeleteRepository",
+    "kms:RetireGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:DescribeRepositories"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:DescribeRepositories",
+    "ecr:GetLifecyclePolicy",
+    "ecr:GetRepositoryPolicy",
+    "ecr:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:DescribeRepositories",
+    "ecr:PutLifecyclePolicy",
+    "ecr:SetRepositoryPolicy",
+    "ecr:ListTagsForResource",
+    "ecr:TagResource",
+    "ecr:UntagResource",
+    "ecr:DeleteLifecyclePolicy",
+    "ecr:DeleteRepositoryPolicy",
+    "ecr:PutImageScanningConfiguration",
+    "ecr:PutImageTagMutability",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:RetireGrant"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "EmptyOnDelete": {
+   "$ref": "#/definitions/EmptyOnDelete"
+  },
+  "EncryptionConfiguration": {
+   "$ref": "#/definitions/EncryptionConfiguration"
+  },
+  "ImageScanningConfiguration": {
+   "$ref": "#/definitions/ImageScanningConfiguration"
+  },
+  "ImageTagMutability": {
+   "enum": [
+    "MUTABLE",
+    "IMMUTABLE"
+   ],
+   "type": "string"
+  },
+  "LifecyclePolicy": {
+   "$ref": "#/definitions/LifecyclePolicy"
+  },
+  "RepositoryName": {
+   "maxLength": 256,
+   "minLength": 2,
+   "pattern": "^(?=.{2,256}$)((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)$",
+   "type": "string"
+  },
+  "RepositoryPolicyText": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RepositoryUri": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/RepositoryUri"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECR::Repository",
+ "writeOnlyProperties": [
+  "/properties/EmptyOnDelete"
+ ]
+}

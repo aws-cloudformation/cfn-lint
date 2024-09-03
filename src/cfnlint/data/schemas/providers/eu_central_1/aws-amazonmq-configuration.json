@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthenticationStrategy",
+  "/properties/EngineType",
+  "/properties/EngineVersion",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "TagsEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mq:CreateConfiguration",
+    "mq:CreateTags",
+    "mq:UpdateConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mq:DescribeConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mq:ListConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mq:DescribeConfiguration",
+    "mq:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mq:UpdateConfiguration",
+    "mq:CreateTags",
+    "mq:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationStrategy": {
+   "type": "string"
+  },
+  "Data": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EngineType": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Revision": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagsEntry"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AuthenticationStrategy": "$uppercase(AuthenticationStrategy)",
+  "/properties/EngineType": "$uppercase(EngineType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Revision"
+ ],
+ "required": [
+  "EngineType",
+  "Data",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "mq:ListTags",
+   "mq:CreateTags",
+   "mq:DeleteTags"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmazonMQ::Configuration",
+ "writeOnlyProperties": [
+  "/properties/Data"
+ ]
+}

@@ -24,6 +24,21 @@
    "pattern": "^[a-zA-Z_0-9-]*$",
    "type": "string"
   },
+  "IncrementalRunConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IncrementalRunType": {
+     "enum": [
+      "IMMEDIATE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IncrementalRunType"
+   ],
+   "type": "object"
+  },
   "InputSource": {
    "additionalProperties": false,
    "properties": {
@@ -250,14 +265,23 @@
     "entityresolution:TagResource",
     "kms:CreateGrant",
     "kms:DescribeKey",
-    "iam:PassRole"
+    "iam:PassRole",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:ListTargetsByRule"
    ]
   },
   "delete": {
    "permissions": [
     "entityresolution:DeleteMatchingWorkflow",
     "entityresolution:GetMatchingWorkflow",
-    "entityresolution:UntagResource"
+    "entityresolution:UntagResource",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule"
    ]
   },
   "list": {
@@ -280,7 +304,12 @@
     "entityresolution:UntagResource",
     "iam:PassRole",
     "kms:CreateGrant",
-    "kms:DescribeKey"
+    "kms:DescribeKey",
+    "events:PutRule",
+    "events:DeleteRule",
+    "events:PutTargets",
+    "events:RemoveTargets",
+    "events:ListTargetsByRule"
    ]
   }
  },
@@ -293,6 +322,9 @@
   },
   "Description": {
    "$ref": "#/definitions/Description"
+  },
+  "IncrementalRunConfig": {
+   "$ref": "#/definitions/IncrementalRunConfig"
   },
   "InputSourceConfig": {
    "insertionOrder": false,

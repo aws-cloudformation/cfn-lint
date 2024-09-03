@@ -1735,7 +1735,10 @@
     "logs:ListLogDeliveries",
     "s3:PutBucketPolicy",
     "s3:GetBucketPolicy",
-    "firehose:TagDeliveryStream"
+    "firehose:TagDeliveryStream",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
    ]
   },
   "delete": {
@@ -1756,7 +1759,8 @@
   },
   "read": {
    "permissions": [
-    "pipes:DescribePipe"
+    "pipes:DescribePipe",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -1777,7 +1781,10 @@
     "logs:ListLogDeliveries",
     "s3:PutBucketPolicy",
     "s3:GetBucketPolicy",
-    "firehose:TagDeliveryStream"
+    "firehose:TagDeliveryStream",
+    "kms:DescribeKey",
+    "kms:Decrypt",
+    "kms:GenerateDataKey"
    ]
   }
  },
@@ -1877,6 +1884,11 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
+  "permissions": [
+   "pipes:TagResource",
+   "pipes:UntagResource",
+   "pipes:ListTagsForResource"
+  ],
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
