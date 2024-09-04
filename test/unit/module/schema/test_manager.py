@@ -67,7 +67,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
             "aws_lambda_codesigningconfig.json",
             "__init__.py",
         ]
-        mock_os_path_isfile.side_effect = [True, True]
+        mock_os_path_isfile.side_effect = [True, True, True, True]
         mock_load_resource.return_value = self.schema_patch
         mock_os_walk.return_value = iter(
             [("all", [], ["aws_lambda_codesigningconfig.json"])]
@@ -132,7 +132,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
             "aws-lambda-codesigningconfig.json",
             "__init__.py",
         ]
-        mock_os_path_isfile.side_effect = [True, True]
+        mock_os_path_isfile.side_effect = [True, True, True, True]
         mock_filecmp_cmp.side_effect = [True]
         mock_load_resource.return_value = self.schema_patch
         mock_os_walk.return_value = iter(

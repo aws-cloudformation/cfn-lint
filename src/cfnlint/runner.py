@@ -417,6 +417,10 @@ class Runner:
             cfnlint.maintenance.update_resource_specs(self.config.force)
             sys.exit(0)
 
+        if self.config.patch_specs:
+            cfnlint.maintenance.patch_resource_specs()
+            sys.exit(0)
+
         if self.config.update_iam_policies:
             cfnlint.maintenance.update_iam_policies()
             sys.exit(0)
