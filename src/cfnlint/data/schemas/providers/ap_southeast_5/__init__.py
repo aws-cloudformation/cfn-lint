@@ -472,6 +472,8 @@ cached: list[str] = [
     "aws-elasticloadbalancingv2-listener.json",
     "aws-elasticloadbalancingv2-listenercertificate.json",
     "aws-elasticloadbalancingv2-listenerrule.json",
+    "aws-elasticloadbalancingv2-loadbalancer.json",
+    "aws-elasticloadbalancingv2-targetgroup.json",
     "aws-elasticsearch-domain.json",
     "aws-emr-cluster.json",
     "aws-emr-instancefleetconfig.json",

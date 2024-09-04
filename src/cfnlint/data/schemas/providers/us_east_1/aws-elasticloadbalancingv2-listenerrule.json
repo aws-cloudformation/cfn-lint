@@ -354,65 +354,6 @@
    "type": "object"
   }
  },
- "handlers": {
-  "create": {
-   "permissions": [
-    "elasticloadbalancing:CreateRule",
-    "elasticloadbalancing:DescribeRules",
-    "cognito-idp:DescribeUserPoolClient"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "elasticloadbalancing:DeleteRule",
-    "elasticloadbalancing:DescribeRules"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "oneOf": [
-     {
-      "required": [
-       "ListenerArn"
-      ]
-     },
-     {
-      "required": [
-       "RuleArns"
-      ]
-     }
-    ],
-    "properties": {
-     "ListenerArn": {
-      "$ref": "resource-schema.json#/properties/ListenerArn"
-     },
-     "RuleArns": {
-      "insertionOrder": false,
-      "items": {
-       "$ref": "resource-schema.json#/properties/RuleArn"
-      },
-      "type": "array",
-      "uniqueItems": false
-     }
-    }
-   },
-   "permissions": [
-    "elasticloadbalancing:DescribeRules"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "elasticloadbalancing:DescribeRules"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "elasticloadbalancing:ModifyRule",
-    "elasticloadbalancing:SetRulePriorities",
-    "elasticloadbalancing:DescribeRules"
-   ]
-  }
- },
  "primaryIdentifier": [
   "/properties/RuleArn"
  ],

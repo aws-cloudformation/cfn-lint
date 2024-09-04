@@ -1268,6 +1268,7 @@ cached: list[str] = [
     "aws-apigatewayv2-route.json",
     "aws-apigatewayv2-routeresponse.json",
     "aws-apigatewayv2-stage.json",
+    "aws-apigatewayv2-vpclink.json",
     "aws-appconfig-application.json",
     "aws-appconfig-configurationprofile.json",
     "aws-appconfig-deployment.json",

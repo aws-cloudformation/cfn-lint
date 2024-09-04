@@ -39,50 +39,6 @@
    "type": "object"
   }
  },
- "handlers": {
-  "create": {
-   "permissions": [
-    "lambda:PublishVersion",
-    "lambda:GetFunctionConfiguration",
-    "lambda:PutProvisionedConcurrencyConfig",
-    "lambda:GetProvisionedConcurrencyConfig",
-    "lambda:PutRuntimeManagementConfig",
-    "lambda:GetRuntimeManagementConfig"
-   ],
-   "timeoutInMinutes": 180
-  },
-  "delete": {
-   "permissions": [
-    "lambda:GetFunctionConfiguration",
-    "lambda:DeleteFunction"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "properties": {
-     "FunctionName": {
-      "maxLength": 140,
-      "minLength": 1,
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
-      "type": "string"
-     }
-    },
-    "required": [
-     "FunctionName"
-    ]
-   },
-   "permissions": [
-    "lambda:ListVersionsByFunction"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "lambda:GetFunctionConfiguration",
-    "lambda:GetProvisionedConcurrencyConfig",
-    "lambda:GetRuntimeManagementConfig"
-   ]
-  }
- },
  "primaryIdentifier": [
   "/properties/FunctionArn"
  ],

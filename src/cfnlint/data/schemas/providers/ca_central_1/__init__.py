@@ -1258,6 +1258,7 @@ cached: list[str] = [
     "aws-cloudfront-responseheaderspolicy.json",
     "aws-cloudfront-streamingdistribution.json",
     "aws-cloudtrail-channel.json",
+    "aws-cloudtrail-eventdatastore.json",
     "aws-cloudtrail-resourcepolicy.json",
     "aws-cloudtrail-trail.json",
     "aws-cloudwatch-alarm.json",
