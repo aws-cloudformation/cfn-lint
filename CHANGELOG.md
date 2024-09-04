@@ -1,6 +1,14 @@
+### v1.12.2
+## What's Changed
+* Don't resolve pseudoparams in findinmap by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3653
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.12.1...v1.12.2
+
 ### v1.12.1
 ## What's Changed
 * Undo https://github.com/aws-cloudformation/cfn-lint/pull/3639 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3650
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.12.0...v1.12.1
 
 ### v1.12.0
 ## What's Changed
