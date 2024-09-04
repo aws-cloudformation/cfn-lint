@@ -237,6 +237,71 @@ class TestConditionsWithRules(TestCase):
             )
         )
 
+    def test_fn_equals_assertions_two(self):
+        template = decode_str(
+            """
+        Rules:
+          Rule1:
+            Assertions:
+            - Assert: !Equals ["A", "B"]
+          Rule2:
+            Assertions:
+            - Assert: !Equals ["A", "A"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 0)
+        self.assertEqual(len(cfn.conditions._rules), 2)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "e7e68477799682e53ecb09f476128abaeba0bdae",
+            ],
+        )
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[1].equals],
+            [
+                "da2a95009a205d5caacd42c3c11ebd4c151b3409",
+            ],
+        )
+
+        self.assertFalse(
+            cfn.conditions.satisfiable(
+                {},
+                {},
+            )
+        )
+
+    def test_fn_equals_assertions_one(self):
+        template = decode_str(
+            """
+        Rules:
+          Rule1:
+            Assertions:
+            - Assert: !Equals ["A", "A"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 0)
+        self.assertEqual(len(cfn.conditions._rules), 1)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "da2a95009a205d5caacd42c3c11ebd4c151b3409",
+            ],
+        )
+
+        self.assertTrue(
+            cfn.conditions.satisfiable(
+                {},
+                {},
+            )
+        )
+
 
 class TestAssertion(TestCase):
     def test_assertion_errors(self):

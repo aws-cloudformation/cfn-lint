@@ -9,6 +9,9 @@ import json
 import logging
 from typing import Any, Mapping, Tuple
 
+from sympy import Symbol
+from sympy.logic.boolalg import BooleanFalse, BooleanFunction, BooleanTrue
+
 from cfnlint.conditions._utils import get_hash
 from cfnlint.helpers import is_function
 
@@ -141,6 +144,21 @@ class Equal:
     @property
     def right(self):
         return self._right
+
+    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction:
+        """Build a SymPy CNF solver based on the provided params
+        Args:
+            params dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbol
+        Returns:
+            BooleanFunction: A Not SymPy BooleanFunction
+        """
+        if self._is_static is not None:
+            if self._is_static:
+                return BooleanTrue()
+            return BooleanFalse()
+
+        return params.get(self.hash)
 
     def test(self, scenarios: Mapping[str, str]) -> bool:
         """Do an equals based on the provided scenario"""

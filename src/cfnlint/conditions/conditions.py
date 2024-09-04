@@ -79,11 +79,11 @@ class Conditions:
 
     def _init_rules(self, cfn: Any) -> None:
         rules = cfn.template.get("Rules")
-        conditions = cfn.template.get("Conditions")
+        conditions = cfn.template.get("Conditions", {})
         if not isinstance(rules, dict) or not isinstance(conditions, dict):
             return
         for k, v in rules.items():
-            if not isinstance(rules, dict):
+            if not isinstance(v, dict):
                 continue
             try:
                 self._rules.append(Rule(v, conditions))
@@ -391,7 +391,13 @@ class Conditions:
             UnknownSatisfisfaction: If we don't know how to satisfy a condition
         """
         if not conditions:
-            return True
+            if self._rules:
+                satisfied = satisfiable(self._cnf, all_models=False)
+                if satisfied is False:
+                    return satisfied
+                return True
+            else:
+                return True
 
         cnf = self._cnf.copy()
         at_least_one_param_found = False
@@ -435,7 +441,13 @@ class Conditions:
                     )
 
         if at_least_one_param_found is False:
-            return True
+            if self._rules:
+                satisfied = satisfiable(self._cnf, all_models=False)
+                if satisfied is False:
+                    return satisfied
+                return True
+            else:
+                return True
 
         satisfied = satisfiable(cnf, all_models=False)
         if satisfied is False:
