@@ -6,6 +6,24 @@
  ],
  "additionalProperties": false,
  "definitions": {
+  "AgentFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentAliasArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentAliasArn"
+   ],
+   "type": "object"
+  },
+  "CollectorFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
   "ConditionFlowNodeConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -311,6 +329,71 @@
      ],
      "title": "LambdaFunction",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Agent": {
+       "$ref": "#/definitions/AgentFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Agent"
+     ],
+     "title": "Agent",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Storage": {
+       "$ref": "#/definitions/StorageFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Storage"
+     ],
+     "title": "Storage",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Iterator": {
+       "$ref": "#/definitions/IteratorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Iterator"
+     ],
+     "title": "Iterator",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Collector": {
+       "$ref": "#/definitions/CollectorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Collector"
+     ],
+     "title": "Collector",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Retrieval": {
+       "$ref": "#/definitions/RetrievalFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Retrieval"
+     ],
+     "title": "Retrieval",
+     "type": "object"
     }
    ]
   },
@@ -372,7 +455,12 @@
     "Condition",
     "Lex",
     "Prompt",
-    "LambdaFunction"
+    "LambdaFunction",
+    "Agent",
+    "Storage",
+    "Retrieval",
+    "Iterator",
+    "Collector"
    ],
    "type": "string"
   },
@@ -385,7 +473,30 @@
    ],
    "type": "string"
   },
+  "FlowValidation": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Message"
+   ],
+   "type": "object"
+  },
+  "FlowValidations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FlowValidation"
+   },
+   "type": "array"
+  },
   "InputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "IteratorFlowNodeConfiguration": {
    "additionalProperties": false,
    "type": "object"
   },
@@ -613,6 +724,45 @@
    ],
    "type": "string"
   },
+  "RetrievalFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/RetrievalFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeServiceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/RetrievalFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
+  },
   "S3Location": {
    "additionalProperties": false,
    "properties": {
@@ -638,6 +788,45 @@
     "Key"
    ],
    "type": "object"
+  },
+  "StorageFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/StorageFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeServiceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/StorageFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
   },
   "TagsMap": {
    "additionalProperties": false,
@@ -788,6 +977,9 @@
    "format": "date-time",
    "type": "string"
   },
+  "Validations": {
+   "$ref": "#/definitions/FlowValidations"
+  },
   "Version": {
    "maxLength": 5,
    "minLength": 5,
@@ -801,7 +993,8 @@
   "/properties/Id",
   "/properties/Status",
   "/properties/UpdatedAt",
-  "/properties/Version"
+  "/properties/Version",
+  "/properties/Validations"
  ],
  "required": [
   "ExecutionRoleArn",

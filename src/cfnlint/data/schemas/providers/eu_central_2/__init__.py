@@ -700,7 +700,6 @@ cached: list[str] = [
     "aws-backup-backupvault.json",
     "aws-backup-restoretestingplan.json",
     "aws-backup-restoretestingselection.json",
-    "aws-batch-computeenvironment.json",
     "aws-batch-jobdefinition.json",
     "aws-batch-jobqueue.json",
     "aws-batch-schedulingpolicy.json",

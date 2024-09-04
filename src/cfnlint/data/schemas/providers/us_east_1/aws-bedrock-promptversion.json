@@ -119,6 +119,18 @@
    ],
    "type": "object"
   },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "TextPromptTemplateConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -147,7 +159,11 @@
   "create": {
    "permissions": [
     "bedrock:CreatePromptVersion",
-    "bedrock:GetPrompt"
+    "bedrock:GetPrompt",
+    "bedrock:TagResource",
+    "bedrock:ListTagsForResource",
+    "kms:GenerateDataKey",
+    "kms:Decrypt"
    ]
   },
   "delete": {
@@ -173,7 +189,9 @@
   },
   "read": {
    "permissions": [
-    "bedrock:GetPrompt"
+    "bedrock:GetPrompt",
+    "bedrock:ListTagsForResource",
+    "kms:Decrypt"
    ]
   },
   "update": {
@@ -194,6 +212,12 @@
   },
   "CreatedAt": {
    "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
    "type": "string"
   },
   "DefaultVariant": {
@@ -218,6 +242,9 @@
   "PromptId": {
    "pattern": "^[0-9a-zA-Z]{10}$",
    "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
   },
   "UpdatedAt": {
    "format": "date-time",
@@ -247,14 +274,23 @@
   "/properties/Version",
   "/properties/Name",
   "/properties/DefaultVariant",
-  "/properties/Variants"
+  "/properties/Variants",
+  "/properties/CustomerEncryptionKeyArn"
  ],
  "required": [
   "PromptArn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-prompts",
  "tagging": {
-  "taggable": false
+  "cloudFormationSystemTags": false,
+  "permissions": [
+   "bedrock:TagResource",
+   "bedrock:ListTagsForResource"
+  ],
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
  },
  "typeName": "AWS::Bedrock::PromptVersion"
 }
