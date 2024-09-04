@@ -1,3 +1,11 @@
+### v1.12.3
+## What's Changed
+* Allow for patch in place by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3649
+* Add integration tests for AZ schema changes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3655
+* Better support for rule Equals when static by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3659
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.12.2...v1.12.3
+
 ### v1.12.2
 ## What's Changed
 * Don't resolve pseudoparams in findinmap by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3653
