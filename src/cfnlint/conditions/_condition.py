@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import Any, Dict, Mapping, Sequence, Union
 
 from sympy import And, Not, Or, Symbol
-from sympy.logic.boolalg import BooleanFunction
+from sympy.logic.boolalg import BooleanFunction, BooleanTrue
 
 from cfnlint.conditions._equals import Equal
 from cfnlint.helpers import FUNCTION_CONDITIONS
@@ -80,8 +80,8 @@ class Condition:
         if self._condition:
             return self._condition.build_cnf(params)
         if self._fn_equals:
-            return params.get(self._fn_equals.hash)
-        return None
+            return self._fn_equals.build_cnf(params)
+        return BooleanTrue()
 
     def _test(self, scenarios: Mapping[str, str]) -> bool:
         if self._fn_equals:

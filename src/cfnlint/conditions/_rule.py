@@ -5,10 +5,11 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict
 
 from sympy import And, Implies, Symbol
-from sympy.logic.boolalg import BooleanFunction
+from sympy.logic.boolalg import BooleanFunction, BooleanTrue
 
 from cfnlint.conditions._condition import (
     ConditionAnd,
@@ -19,6 +20,8 @@ from cfnlint.conditions._condition import (
 )
 from cfnlint.conditions._equals import Equal
 from cfnlint.helpers import FUNCTION_CONDITIONS
+
+LOGGER = logging.getLogger(__name__)
 
 # we leave the type hinting here
 _RULE = Dict[str, Any]
@@ -53,12 +56,18 @@ class _Assertion:
 
     def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction | Symbol | None:
         if self._fn_equals:
-            return self._fn_equals.hash
+            try:
+                return self._fn_equals.build_cnf(params)
+            except Exception as e:
+                LOGGER.debug(f"Error building condition: {e}")
 
         if self._condition:
-            return self._condition.build_cnf(params)
+            try:
+                return self._condition.build_cnf(params)
+            except Exception as e:
+                LOGGER.debug(f"Error building condition: {e}")
 
-        return None
+        return BooleanTrue()
 
     @property
     def equals(self) -> list[Equal]:
