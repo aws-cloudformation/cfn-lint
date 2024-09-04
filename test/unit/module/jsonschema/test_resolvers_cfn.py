@@ -291,6 +291,21 @@ def test_invalid_functions(name, instance, response):
             [("default", deque([4, "DefaultValue"]), None)],
         ),
         (
+            "Valid FindInMap with a map name that is a Ref to pseudo param",
+            {"Fn::FindInMap": [{"Ref": "AWS::StackName"}, "first", "second"]},
+            [],
+        ),
+        (
+            "Valid FindInMap with an top level key that is a Ref to pseudo param",
+            {"Fn::FindInMap": ["foo", {"Ref": "AWS::AccountId"}, "second"]},
+            [],
+        ),
+        (
+            "Valid FindInMap with a second level key that is a Ref to pseudo param",
+            {"Fn::FindInMap": ["foo", "first", {"Ref": "AWS::AccountId"}]},
+            [],
+        ),
+        (
             "Valid FindInMap with a bad third key",
             {"Fn::FindInMap": ["foo", "first", "third"]},
             [
