@@ -1,0 +1,17 @@
+Parameters:
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+  SecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+Resources:
+  NetworkInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: "a network interface"
+      GroupSet:
+        - !Ref SecurityGroupId
+      SourceDestCheck: false
+      SubnetId: !Ref SubnetId
+      Ipv6Addresses:
+        - Ipv6Address: abc
+      Ipv6AddressCount: 1
