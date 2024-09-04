@@ -40,6 +40,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "results_filename": ("test/fixtures/results/integration/metadata.json"),
             "exit_code": 4,
         },
+        {
+            "filename": ("test/fixtures/templates/integration/availability-zones.yaml"),
+            "results_filename": (
+                "test/fixtures/results/integration/availability-zones.json"
+            ),
+            "exit_code": 2,
+        },
     ]
 
     def test_templates(self):
