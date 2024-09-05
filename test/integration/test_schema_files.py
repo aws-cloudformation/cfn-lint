@@ -112,47 +112,47 @@ class TestSchemaFiles(TestCase):
                 except RefResolutionError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
-    def _build_keywords(
-        self, obj: Any, schema_resolver: RefResolver, refs: list[str] | None = None
-    ):
-        if refs is None:
-            refs = []
+    def _build_keywords(self, obj: Any, schema_resolver: RefResolver, refs: list[str]):
         if not isinstance(obj, dict):
-            yield []
+            yield [], refs
             return
 
         if "type" in obj:
             if "object" in ensure_list(obj["type"]):
                 if "properties" in obj:
                     for k, v in obj["properties"].items():
-                        for item in self._build_keywords(v, schema_resolver, refs):
-                            yield [k] + item
+                        for item, refs in self._build_keywords(
+                            v, schema_resolver, refs
+                        ):
+                            yield [k] + item, refs
             if "array" in ensure_list(obj["type"]):
                 if "items" in obj:
-                    for item in self._build_keywords(
+                    for item, refs in self._build_keywords(
                         obj["items"], schema_resolver, refs
                     ):
-                        yield ["*"] + item
+                        yield ["*"] + item, refs
 
         if "$ref" in obj:
             ref = obj["$ref"]
             if ref in refs:
-                yield []
+                yield [], refs
                 return
             _, resolved_schema = schema_resolver.resolve(ref)
-            for item in self._build_keywords(
-                resolved_schema, schema_resolver, refs + [ref]
+            refs += [ref]
+            for item, refs in self._build_keywords(
+                resolved_schema, schema_resolver, refs
             ):
-                yield item
+                yield item, refs
 
-        yield []
+        yield [], refs
 
     def build_keywords(self, schema_resolver):
         self._found_keywords.append(
             "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
         )
+        refs = []
         for k, v in schema_resolver.referrer.get("properties").items():
-            for item in self._build_keywords(v, schema_resolver):
+            for item, refs in self._build_keywords(v, schema_resolver, refs):
                 self._found_keywords.append(
                     "/".join(
                         [
