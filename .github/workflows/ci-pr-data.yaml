@@ -1,0 +1,21 @@
+name: "[CI] Test PR Data"
+
+on:
+  pull_request:
+    paths:
+    - "src/cfnlint/data/**"
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Tox and any other packages
+        run: pip install tox
+      - name: Run Tox
+        run: |
+          tox -e py -- -m "data"
