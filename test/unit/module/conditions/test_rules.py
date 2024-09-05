@@ -302,6 +302,37 @@ class TestConditionsWithRules(TestCase):
             )
         )
 
+    def test_fn_equals_assertions_ref_no_data(self):
+        template = decode_str(
+            """
+        Parameters:
+            AccountId:
+                Type: String
+        Rules:
+          Rule1:
+            Assertions:
+            - Assert: !Equals [!Ref AccountId, !Ref AWS::AccountId]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 0)
+        self.assertEqual(len(cfn.conditions._rules), 1)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "f36e61f3d5bf6cdc6ea2e7f01487af728094a439",
+            ],
+        )
+
+        self.assertTrue(
+            cfn.conditions.satisfiable(
+                {},
+                {},
+            )
+        )
+
 
 class TestAssertion(TestCase):
     def test_assertion_errors(self):
