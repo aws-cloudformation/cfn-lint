@@ -394,6 +394,14 @@ class ProviderSchemaManager:
             with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                 spec = json.load(fh)
                 try:
+                    if "handlers" in spec:
+                        del spec["handlers"]
+                    if "tagging" in spec and "permissions" in spec.get("tagging", {}):
+                        del spec["tagging"]["permissions"]
+                        # tagging = spec.get("tagging", {})
+                        # if "permissions" in tagging:
+                        #    del tagging["permissions"]
+                        #    spec["tagging"] = tagging
                     spec = self._remove_descriptions(spec)
                     spec = self._patch_provider_schema(spec, filename, "all")
                     spec = self._patch_provider_schema(spec, filename, region=reg.py)

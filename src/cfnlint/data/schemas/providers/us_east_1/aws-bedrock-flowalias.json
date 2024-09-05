@@ -8,7 +8,7 @@
    "additionalProperties": false,
    "properties": {
     "FlowVersion": {
-     "maxLength": 1,
+     "maxLength": 5,
      "minLength": 1,
      "pattern": "^(DRAFT|[0-9]{0,4}[1-9][0-9]{0,4})$",
      "type": "string"
@@ -27,51 +27,6 @@
     }
    },
    "type": "object"
-  }
- },
- "handlers": {
-  "create": {
-   "permissions": [
-    "bedrock:CreateFlowAlias",
-    "bedrock:GetFlowAlias",
-    "bedrock:TagResource",
-    "bedrock:ListTagsForResource"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "bedrock:DeleteFlowAlias"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "properties": {
-     "FlowArn": {
-      "$ref": "resource-schema.json#/properties/FlowArn"
-     }
-    },
-    "required": [
-     "FlowArn"
-    ]
-   },
-   "permissions": [
-    "bedrock:ListFlowAliases"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "bedrock:GetFlowAlias",
-    "bedrock:ListTagsForResource"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "bedrock:UpdateFlowAlias",
-    "bedrock:GetFlowAlias",
-    "bedrock:TagResource",
-    "bedrock:UntagResource",
-    "bedrock:ListTagsForResource"
-   ]
   }
  },
  "primaryIdentifier": [
@@ -144,11 +99,6 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-flows",
  "tagging": {
   "cloudFormationSystemTags": false,
-  "permissions": [
-   "bedrock:TagResource",
-   "bedrock:UntagResource",
-   "bedrock:ListTagsForResource"
-  ],
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
   "tagUpdatable": true,

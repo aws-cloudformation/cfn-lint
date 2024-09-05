@@ -1,0 +1,603 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ChannelGroupName",
+   "/properties/ChannelName",
+   "/properties/OriginEndpointName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ChannelGroupName",
+  "/properties/ChannelName",
+  "/properties/OriginEndpointName"
+ ],
+ "definitions": {
+  "AdMarkerDash": {
+   "enum": [
+    "BINARY",
+    "XML"
+   ],
+   "type": "string"
+  },
+  "AdMarkerHls": {
+   "enum": [
+    "DATERANGE"
+   ],
+   "type": "string"
+  },
+  "CmafEncryptionMethod": {
+   "enum": [
+    "CENC",
+    "CBCS"
+   ],
+   "type": "string"
+  },
+  "ContainerType": {
+   "enum": [
+    "TS",
+    "CMAF"
+   ],
+   "type": "string"
+  },
+  "DashDrmSignaling": {
+   "enum": [
+    "INDIVIDUAL",
+    "REFERENCED"
+   ],
+   "type": "string"
+  },
+  "DashManifestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DrmSignaling": {
+     "$ref": "#/definitions/DashDrmSignaling"
+    },
+    "FilterConfiguration": {
+     "$ref": "#/definitions/FilterConfiguration"
+    },
+    "ManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "MinBufferTimeSeconds": {
+     "type": "integer"
+    },
+    "MinUpdatePeriodSeconds": {
+     "type": "integer"
+    },
+    "PeriodTriggers": {
+     "items": {
+      "$ref": "#/definitions/DashPeriodTrigger"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    },
+    "ScteDash": {
+     "$ref": "#/definitions/ScteDash"
+    },
+    "SegmentTemplateFormat": {
+     "$ref": "#/definitions/DashSegmentTemplateFormat"
+    },
+    "SuggestedPresentationDelaySeconds": {
+     "type": "integer"
+    },
+    "UtcTiming": {
+     "$ref": "#/definitions/DashUtcTiming"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "DashPeriodTrigger": {
+   "enum": [
+    "AVAILS",
+    "DRM_KEY_ROTATION",
+    "SOURCE_CHANGES",
+    "SOURCE_DISRUPTIONS",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "DashSegmentTemplateFormat": {
+   "enum": [
+    "NUMBER_WITH_TIMELINE"
+   ],
+   "type": "string"
+  },
+  "DashUtcTiming": {
+   "additionalProperties": false,
+   "properties": {
+    "TimingMode": {
+     "$ref": "#/definitions/DashUtcTimingMode"
+    },
+    "TimingSource": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DashUtcTimingMode": {
+   "enum": [
+    "HTTP_HEAD",
+    "HTTP_ISO",
+    "HTTP_XSDATE",
+    "UTC_DIRECT"
+   ],
+   "type": "string"
+  },
+  "DrmSystem": {
+   "enum": [
+    "CLEAR_KEY_AES_128",
+    "FAIRPLAY",
+    "PLAYREADY",
+    "WIDEVINE"
+   ],
+   "type": "string"
+  },
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ConstantInitializationVector": {
+     "maxLength": 32,
+     "minLength": 32,
+     "pattern": "^[0-9a-fA-F]+$",
+     "type": "string"
+    },
+    "EncryptionMethod": {
+     "$ref": "#/definitions/EncryptionMethod"
+    },
+    "KeyRotationIntervalSeconds": {
+     "maximum": 31536000,
+     "minimum": 300,
+     "type": "integer"
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "EncryptionMethod",
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "EncryptionContractConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PresetSpeke20Audio": {
+     "$ref": "#/definitions/PresetSpeke20Audio"
+    },
+    "PresetSpeke20Video": {
+     "$ref": "#/definitions/PresetSpeke20Video"
+    }
+   },
+   "required": [
+    "PresetSpeke20Audio",
+    "PresetSpeke20Video"
+   ],
+   "type": "object"
+  },
+  "EncryptionMethod": {
+   "additionalProperties": false,
+   "properties": {
+    "CmafEncryptionMethod": {
+     "$ref": "#/definitions/CmafEncryptionMethod"
+    },
+    "TsEncryptionMethod": {
+     "$ref": "#/definitions/TsEncryptionMethod"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointErrorCondition": {
+   "enum": [
+    "STALE_MANIFEST",
+    "INCOMPLETE_MANIFEST",
+    "MISSING_DRM_KEY",
+    "SLATE_INPUT"
+   ],
+   "type": "string"
+  },
+  "FilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "End": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "ManifestFilter": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Start": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "TimeDelaySeconds": {
+     "maximum": 1209600,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ForceEndpointErrorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointErrorConditions": {
+     "items": {
+      "$ref": "#/definitions/EndpointErrorCondition"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "HlsManifestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChildManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "FilterConfiguration": {
+     "$ref": "#/definitions/FilterConfiguration"
+    },
+    "ManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "type": "integer"
+    },
+    "ScteHls": {
+     "$ref": "#/definitions/ScteHls"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "LowLatencyHlsManifestConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChildManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "FilterConfiguration": {
+     "$ref": "#/definitions/FilterConfiguration"
+    },
+    "ManifestName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "type": "integer"
+    },
+    "ScteHls": {
+     "$ref": "#/definitions/ScteHls"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestName"
+   ],
+   "type": "object"
+  },
+  "PresetSpeke20Audio": {
+   "enum": [
+    "PRESET_AUDIO_1",
+    "PRESET_AUDIO_2",
+    "PRESET_AUDIO_3",
+    "SHARED",
+    "UNENCRYPTED"
+   ],
+   "type": "string"
+  },
+  "PresetSpeke20Video": {
+   "enum": [
+    "PRESET_VIDEO_1",
+    "PRESET_VIDEO_2",
+    "PRESET_VIDEO_3",
+    "PRESET_VIDEO_4",
+    "PRESET_VIDEO_5",
+    "PRESET_VIDEO_6",
+    "PRESET_VIDEO_7",
+    "PRESET_VIDEO_8",
+    "SHARED",
+    "UNENCRYPTED"
+   ],
+   "type": "string"
+  },
+  "Scte": {
+   "additionalProperties": false,
+   "properties": {
+    "ScteFilter": {
+     "items": {
+      "$ref": "#/definitions/ScteFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ScteDash": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkerDash": {
+     "$ref": "#/definitions/AdMarkerDash"
+    }
+   },
+   "type": "object"
+  },
+  "ScteFilter": {
+   "enum": [
+    "SPLICE_INSERT",
+    "BREAK",
+    "PROVIDER_ADVERTISEMENT",
+    "DISTRIBUTOR_ADVERTISEMENT",
+    "PROVIDER_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+    "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "PROGRAM"
+   ],
+   "type": "string"
+  },
+  "ScteHls": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkerHls": {
+     "$ref": "#/definitions/AdMarkerHls"
+    }
+   },
+   "type": "object"
+  },
+  "Segment": {
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/Encryption"
+    },
+    "IncludeIframeOnlyStreams": {
+     "type": "boolean"
+    },
+    "Scte": {
+     "$ref": "#/definitions/Scte"
+    },
+    "SegmentDurationSeconds": {
+     "maximum": 30,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SegmentName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]+$",
+     "type": "string"
+    },
+    "TsIncludeDvbSubtitles": {
+     "type": "boolean"
+    },
+    "TsUseAudioRenditionGroup": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SpekeKeyProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "DrmSystems": {
+     "items": {
+      "$ref": "#/definitions/DrmSystem"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    },
+    "EncryptionContractConfiguration": {
+     "$ref": "#/definitions/EncryptionContractConfiguration"
+    },
+    "ResourceId": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z_-]+$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Url": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DrmSystems",
+    "EncryptionContractConfiguration",
+    "ResourceId",
+    "RoleArn",
+    "Url"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TsEncryptionMethod": {
+   "enum": [
+    "AES_128",
+    "SAMPLE_AES"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChannelGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ContainerType": {
+   "$ref": "#/definitions/ContainerType"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DashManifestUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DashManifests": {
+   "items": {
+    "$ref": "#/definitions/DashManifestConfiguration"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ForceEndpointErrorConfiguration": {
+   "$ref": "#/definitions/ForceEndpointErrorConfiguration"
+  },
+  "HlsManifestUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "HlsManifests": {
+   "items": {
+    "$ref": "#/definitions/HlsManifestConfiguration"
+   },
+   "type": "array"
+  },
+  "LowLatencyHlsManifestUrls": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "LowLatencyHlsManifests": {
+   "items": {
+    "$ref": "#/definitions/LowLatencyHlsManifestConfiguration"
+   },
+   "type": "array"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "OriginEndpointName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Segment": {
+   "$ref": "#/definitions/Segment"
+  },
+  "StartoverWindowSeconds": {
+   "maximum": 1209600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/DashManifestUrls",
+  "/properties/HlsManifestUrls",
+  "/properties/LowLatencyHlsManifestUrls",
+  "/properties/ModifiedAt",
+  "/properties/LowLatencyHlsManifests/*/Url",
+  "/properties/HlsManifests/*/Url"
+ ],
+ "required": [
+  "ChannelGroupName",
+  "ChannelName",
+  "OriginEndpointName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackageV2::OriginEndpoint"
+}

@@ -1213,6 +1213,9 @@
     "Label": {
      "type": "string"
     },
+    "TooltipTarget": {
+     "$ref": "#/definitions/TooltipTarget"
+    },
     "Visibility": {
      "$ref": "#/definitions/Visibility"
     }
@@ -1306,6 +1309,9 @@
     },
     "SecondaryYAxisLabelOptions": {
      "$ref": "#/definitions/ChartAxisLabelOptions"
+    },
+    "SingleAxisOptions": {
+     "$ref": "#/definitions/SingleAxisOptions"
     },
     "SortConfiguration": {
      "$ref": "#/definitions/ComboChartSortConfiguration"
@@ -3036,6 +3042,9 @@
     },
     "Label": {
      "type": "string"
+    },
+    "TooltipTarget": {
+     "$ref": "#/definitions/TooltipTarget"
     },
     "Visibility": {
      "$ref": "#/definitions/Visibility"
@@ -5570,6 +5579,9 @@
      "maxItems": 2000,
      "minItems": 0,
      "type": "array"
+    },
+    "SingleAxisOptions": {
+     "$ref": "#/definitions/SingleAxisOptions"
     },
     "SmallMultiplesOptions": {
      "$ref": "#/definitions/SmallMultiplesOptions"
@@ -8916,6 +8928,21 @@
    ],
    "type": "string"
   },
+  "SingleAxisOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "YAxisOptions": {
+     "$ref": "#/definitions/YAxisOptions"
+    }
+   },
+   "type": "object"
+  },
+  "SingleYAxisOption": {
+   "enum": [
+    "PRIMARY_Y_AXIS"
+   ],
+   "type": "string"
+  },
   "SliderControlDisplayOptions": {
    "additionalProperties": false,
    "properties": {
@@ -10134,6 +10161,14 @@
    },
    "type": "object"
   },
+  "TooltipTarget": {
+   "enum": [
+    "BOTH",
+    "BAR",
+    "LINE"
+   ],
+   "type": "string"
+  },
   "TooltipTitleType": {
    "enum": [
     "NONE",
@@ -11155,59 +11190,6 @@
     "NORMAL"
    ],
    "type": "string"
-  }
- },
- "handlers": {
-  "create": {
-   "permissions": [
-    "quicksight:DescribeTemplate",
-    "quicksight:DescribeTemplatePermissions",
-    "quicksight:CreateTemplate",
-    "quicksight:DescribeAnalysis",
-    "quicksight:TagResource",
-    "quicksight:UntagResource",
-    "quicksight:ListTagsForResource"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "quicksight:DescribeTemplate",
-    "quicksight:DeleteTemplate"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "properties": {
-     "AwsAccountId": {
-      "$ref": "resource-schema.json#/properties/AwsAccountId"
-     }
-    },
-    "required": [
-     "AwsAccountId"
-    ]
-   },
-   "permissions": [
-    "quicksight:ListTemplates"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "quicksight:DescribeTemplate",
-    "quicksight:DescribeTemplatePermissions",
-    "quicksight:ListTagsForResource"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "quicksight:DescribeTemplate",
-    "quicksight:DescribeTemplatePermissions",
-    "quicksight:UpdateTemplate",
-    "quicksight:UpdateTemplatePermissions",
-    "quicksight:PassDataSet",
-    "quicksight:TagResource",
-    "quicksight:UntagResource",
-    "quicksight:ListTagsForResource"
-   ]
   }
  },
  "primaryIdentifier": [

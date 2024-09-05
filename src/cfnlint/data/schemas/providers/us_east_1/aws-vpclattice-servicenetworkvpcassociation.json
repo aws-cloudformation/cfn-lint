@@ -35,63 +35,6 @@
    "type": "object"
   }
  },
- "handlers": {
-  "create": {
-   "permissions": [
-    "vpc-lattice:CreateServiceNetworkVpcAssociation",
-    "vpc-lattice:GetServiceNetworkVpcAssociation",
-    "vpc-lattice:ListServiceNetworkVpcAssociations",
-    "vpc-lattice:ListTagsForResource",
-    "ec2:DescribeSecurityGroups",
-    "ec2:DescribeVpcs",
-    "vpc-lattice:TagResource"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "vpc-lattice:DeleteServiceNetworkVpcAssociation",
-    "vpc-lattice:GetServiceNetworkVpcAssociation"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "properties": {
-     "ServiceNetworkIdentifier": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
-      "type": "string"
-     },
-     "VpcIdentifier": {
-      "maxLength": 2048,
-      "minLength": 5,
-      "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
-      "type": "string"
-     }
-    },
-    "required": []
-   },
-   "permissions": [
-    "vpc-lattice:ListServiceNetworkVpcAssociations"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "vpc-lattice:GetServiceNetworkVpcAssociation",
-    "vpc-lattice:ListTagsForResource"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "vpc-lattice:TagResource",
-    "vpc-lattice:UntagResource",
-    "vpc-lattice:GetServiceNetworkVpcAssociation",
-    "vpc-lattice:UpdateServiceNetworkVpcAssociation",
-    "ec2:DescribeSecurityGroups",
-    "vpc-lattice:ListTagsForResource"
-   ]
-  }
- },
  "primaryIdentifier": [
   "/properties/Arn"
  ],
