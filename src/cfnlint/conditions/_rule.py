@@ -91,7 +91,11 @@ class _Assertions:
         for assertion in self._assertions:
             assertions.append(assertion.build_cnf(params))
 
-        return And(*assertions)
+        try:
+            return And(*assertions)
+        except Exception as e:
+            LOGGER.debug(f"Error building conditions: {e}")
+            return BooleanTrue()
 
     @property
     def equals(self) -> list[Equal]:
