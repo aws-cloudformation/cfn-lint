@@ -2178,7 +2178,6 @@ cached: list[str] = [
     "aws-redshiftserverless-workgroup.json",
     "aws-refactorspaces-application.json",
     "aws-refactorspaces-environment.json",
-    "aws-refactorspaces-route.json",
     "aws-refactorspaces-service.json",
     "aws-rekognition-collection.json",
     "aws-rekognition-project.json",
