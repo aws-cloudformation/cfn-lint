@@ -5,10 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
-
 import cfnlint.data.schemas.extensions.aws_ecs_service
-from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
 
 
@@ -19,8 +16,7 @@ class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
         "use SchedulingStrategy of REPLICA"
     )
     description = (
-        "When using a TargetType of Fargate or External the SchedulingStrategy "
-        "has to be Replica"
+        "When using a LaunchType of Fargate the SchedulingStrategy " "has to be Replica"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-schedulingstrategy"
     tags = ["properties", "ecs", "service", "container", "fargate"]
@@ -32,7 +28,5 @@ class FargateDeploymentSchedulingStrategy(CfnLintJsonSchema):
                 module=cfnlint.data.schemas.extensions.aws_ecs_service,
                 filename="fargate.json",
             ),
+            all_matches=True,
         )
-
-    def message(self, instance: Any, err: ValidationError) -> str:
-        return err.message

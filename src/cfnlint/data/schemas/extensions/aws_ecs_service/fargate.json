@@ -1,20 +1,48 @@
 {
  "if": {
-  "properties": {
-   "LaunchType": {
-    "enum": [
-     "FARGATE",
-     "EXTERNAL"
-    ]
+  "anyOf": [
+   {
+    "properties": {
+     "LaunchType": {
+      "enum": [
+       "FARGATE"
+      ]
+     },
+     "SchedulingStrategy": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "LaunchType"
+    ],
+    "type": "object"
    },
-   "SchedulingStrategy": {
-    "type": "string"
+   {
+    "properties": {
+     "DeploymentController": {
+      "properties": {
+       "Type": {
+        "enum": [
+         "CODE_DEPLOY",
+         "EXTERNAL"
+        ]
+       }
+      },
+      "required": [
+       "Type"
+      ],
+      "type": "object"
+     },
+     "SchedulingStrategy": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "DeploymentController"
+    ],
+    "type": "object"
    }
-  },
-  "required": [
-   "LaunchType"
-  ],
-  "type": "object"
+  ]
  },
  "then": {
   "properties": {
