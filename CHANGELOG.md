@@ -1,3 +1,10 @@
+### v1.12.4
+## What's Changed
+* Return Symbol instead of None on Fn::Equals logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3663
+* Remove handlers and tagging/permissions from specs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3661
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.12.3...v1.12.4
+
 ### v1.12.3
 ## What's Changed
 * Allow for patch in place by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3649
