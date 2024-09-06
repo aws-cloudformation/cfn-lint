@@ -69,6 +69,38 @@ def rule():
             [],
         ),
         (
+            "Invalid with a private ip address in two spots",
+            {
+                "PrivateIpAddress": "172.31.35.42",
+                "NetworkInterfaces": [
+                    {
+                        "PrivateIpAddress": "172.31.35.42",
+                    }
+                ],
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [
+                ValidationError(
+                    "'Primary' cannot be True when 'PrivateIpAddress' is specified",
+                    validator=None,
+                    rule=PrivateIpWithNetworkInterface(),
+                    path=deque(["NetworkInterfaces", 0, "PrivateIpAddress"]),
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "NetworkInterfaces",
+                            "items",
+                            "properties",
+                            "PrivateIpAddress",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        (
             "Invalid with a private ip address",
             {
                 "PrivateIpAddress": "172.31.35.42",
