@@ -48,8 +48,41 @@ def rule():
         ),
         (
             {
+                "LaunchType": "EXTERNAL",
+                "SchedulingStrategy": "DAEMON",
+            },
+            [],
+        ),
+        (
+            {
+                "LaunchType": "EXTERNAL",
+                "SchedulingStrategy": "DAEMON",
+                "DeploymentController": {"Type": "ECS"},
+            },
+            [],
+        ),
+        (
+            {
+                "LaunchType": "EXTERNAL",
+                "SchedulingStrategy": "DAEMON",
+                "DeploymentController": {"Type": "CODE_DEPLOY"},
+            },
+            [
+                ValidationError(
+                    "'REPLICA' was expected",
+                    rule=FargateDeploymentSchedulingStrategy(),
+                    path=deque(["SchedulingStrategy"]),
+                    validator="const",
+                    schema_path=deque(
+                        ["then", "properties", "SchedulingStrategy", "const"]
+                    ),
+                )
+            ],
+        ),
+        (
+            {
                 "LaunchType": "FARGATE",
-                "SchedulingStrategy": "Foo",
+                "SchedulingStrategy": "DAEMON",
             },
             [
                 ValidationError(
