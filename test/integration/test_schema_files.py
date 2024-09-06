@@ -114,45 +114,40 @@ class TestSchemaFiles(TestCase):
 
     def _build_keywords(self, obj: Any, schema_resolver: RefResolver, refs: list[str]):
         if not isinstance(obj, dict):
-            yield [], refs
+            yield []
             return
+
+        if "$ref" in obj:
+            ref = obj["$ref"]
+            if ref in refs:
+                yield []
+                return
+            _, resolved_schema = schema_resolver.resolve(ref)
+            yield from self._build_keywords(
+                resolved_schema, schema_resolver, refs + [ref]
+            )
 
         if "type" in obj:
             if "object" in ensure_list(obj["type"]):
                 if "properties" in obj:
                     for k, v in obj["properties"].items():
-                        for item, refs in self._build_keywords(
-                            v, schema_resolver, refs
-                        ):
-                            yield [k] + item, refs
+                        for item in self._build_keywords(v, schema_resolver, refs):
+                            yield [k] + item
             if "array" in ensure_list(obj["type"]):
                 if "items" in obj:
-                    for item, refs in self._build_keywords(
+                    for item in self._build_keywords(
                         obj["items"], schema_resolver, refs
                     ):
-                        yield ["*"] + item, refs
+                        yield ["*"] + item
 
-        if "$ref" in obj:
-            ref = obj["$ref"]
-            if ref in refs:
-                yield [], refs
-                return
-            _, resolved_schema = schema_resolver.resolve(ref)
-            refs += [ref]
-            for item, refs in self._build_keywords(
-                resolved_schema, schema_resolver, refs
-            ):
-                yield item, refs
-
-        yield [], refs
+        yield []
 
     def build_keywords(self, schema_resolver):
         self._found_keywords.append(
             "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
         )
-        refs = []
         for k, v in schema_resolver.referrer.get("properties").items():
-            for item, refs in self._build_keywords(v, schema_resolver, refs):
+            for item in self._build_keywords(v, schema_resolver, []):
                 self._found_keywords.append(
                     "/".join(
                         [
@@ -214,7 +209,9 @@ class TestSchemaFiles(TestCase):
                     self.validate_basic_schema_details(
                         schema_resolver, f"{dirpath}/{filename}"
                     )
-                    self.build_keywords(schema_resolver)
+
+                    if region == "us-east-1":
+                        self.build_keywords(schema_resolver)
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)
