@@ -22,6 +22,7 @@ class PrivateIpWithNetworkInterface(CfnLintJsonSchema):
         super().__init__(
             keywords=[
                 "Resources/AWS::EC2::Instance/Properties",
+                "Resources/AWS::EC2::NetworkInterface/Properties",
             ],
             schema_details=SchemaDetails(
                 module=cfnlint.data.schemas.extensions.aws_ec2_instance,

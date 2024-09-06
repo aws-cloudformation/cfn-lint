@@ -69,6 +69,51 @@ def rule():
             [],
         ),
         (
+            "Valid AWS::EC2::NetworkInterface with PrivateIpAddresses",
+            {
+                "PrivateIpAddress": "172.31.35.42",
+                "PrivateIpAddresses": [
+                    {"PrivateIpAddress": "172.31.35.42", "Primary": False}
+                ],
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [],
+        ),
+        (
+            "Invalid with a private ip address in two spots",
+            {
+                "PrivateIpAddress": "172.31.35.42",
+                "NetworkInterfaces": [
+                    {
+                        "PrivateIpAddress": "172.31.35.42",
+                    }
+                ],
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [
+                ValidationError(
+                    "'Primary' cannot be True when 'PrivateIpAddress' is specified",
+                    validator=None,
+                    rule=PrivateIpWithNetworkInterface(),
+                    path=deque(["NetworkInterfaces", 0, "PrivateIpAddress"]),
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "NetworkInterfaces",
+                            "items",
+                            "properties",
+                            "PrivateIpAddress",
+                        ]
+                    ),
+                )
+            ],
+        ),
+        (
             "Invalid with a private ip address",
             {
                 "PrivateIpAddress": "172.31.35.42",
@@ -108,11 +153,47 @@ def rule():
                 )
             ],
         ),
+        (
+            "Invalid AWS::EC2::NetworkInterface with PrivateIpAddresses",
+            {
+                "PrivateIpAddress": "172.31.35.42",
+                "PrivateIpAddresses": [
+                    {"PrivateIpAddress": "172.31.35.42", "Primary": True}
+                ],
+            },
+            {
+                "path": ["Resources", "Instance", "Properties"],
+            },
+            [
+                ValidationError(
+                    "'Primary' cannot be True when 'PrivateIpAddress' is specified",
+                    validator="enum",
+                    rule=PrivateIpWithNetworkInterface(),
+                    path=deque(["PrivateIpAddresses", 0, "Primary"]),
+                    schema_path=deque(
+                        [
+                            "then",
+                            "properties",
+                            "PrivateIpAddresses",
+                            "items",
+                            "properties",
+                            "Primary",
+                            "enum",
+                        ]
+                    ),
+                )
+            ],
+        ),
     ],
     indirect=["path"],
 )
 def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
+
+    for err in errs:
+        print(err.validator)
+        print(err.path)
+        print(err.schema_path)
 
     assert (
         errs == expected
