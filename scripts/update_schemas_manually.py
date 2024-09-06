@@ -728,6 +728,20 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::EC2::NetworkInterface",
+            patches=[
+                Patch(
+                    values={
+                        "dependentExcluded": {
+                            "Ipv6AddressCount": ["Ipv6Addresses"],
+                            "Ipv6Addresses": ["Ipv6AddressCount"],
+                        },
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::EC2::SecurityGroup",
             patches=[
                 Patch(
