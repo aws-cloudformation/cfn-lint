@@ -346,12 +346,17 @@ def get_schema_value_types():
         results = {}
         name = None
 
+        if properties is None:
+            return name, None
+
         if properties.get("$ref"):
             name = properties.get("$ref").split("/")[-1]
             subname, results = resolve_refs(schema.get("definitions").get(name), schema)
             if subname:
                 name = subname
             properties = schema.get("definitions").get(name)
+            if properties is None:
+                return name, None
 
         if properties.get("type") == "array":
             results = properties.get("items")
@@ -374,6 +379,8 @@ def get_schema_value_types():
             if propname == "Tag":
                 continue
             subname, propdetails = resolve_refs(propdetails, schema)
+            if propdetails is None:
+                continue
             t = propdetails.get("type")
             if not t:
                 continue
