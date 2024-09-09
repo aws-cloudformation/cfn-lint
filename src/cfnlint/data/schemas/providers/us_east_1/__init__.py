@@ -935,6 +935,8 @@ types: list[str] = [
     "AWS::PCAConnectorAD::ServicePrincipalName",
     "AWS::PCAConnectorAD::Template",
     "AWS::PCAConnectorAD::TemplateGroupAccessControlEntry",
+    "AWS::PCAConnectorSCEP::Challenge",
+    "AWS::PCAConnectorSCEP::Connector",
     "AWS::Panorama::ApplicationInstance",
     "AWS::Panorama::Package",
     "AWS::Panorama::PackageVersion",

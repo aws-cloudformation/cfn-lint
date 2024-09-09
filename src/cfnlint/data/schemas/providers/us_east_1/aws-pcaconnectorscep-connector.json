@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CertificateAuthorityArn",
+  "/properties/MobileDeviceManagement"
+ ],
+ "definitions": {
+  "ConnectorType": {
+   "enum": [
+    "GENERAL_PURPOSE",
+    "INTUNE"
+   ],
+   "type": "string"
+  },
+  "IntuneConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AzureApplicationId": {
+     "maxLength": 100,
+     "minLength": 15,
+     "pattern": "^[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}$",
+     "type": "string"
+    },
+    "Domain": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9._-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AzureApplicationId",
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "MobileDeviceManagement": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Intune": {
+       "$ref": "#/definitions/IntuneConfiguration"
+      }
+     },
+     "required": [
+      "Intune"
+     ],
+     "title": "Intune"
+    }
+   ],
+   "type": "object"
+  },
+  "OpenIdConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Audience": {
+     "type": "string"
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "Subject": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorArn"
+ ],
+ "properties": {
+  "CertificateAuthorityArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:acm-pca:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Endpoint": {
+   "maxLength": 200,
+   "minLength": 5,
+   "type": "string"
+  },
+  "MobileDeviceManagement": {
+   "$ref": "#/definitions/MobileDeviceManagement"
+  },
+  "OpenIdConfiguration": {
+   "$ref": "#/definitions/OpenIdConfiguration"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Type": {
+   "$ref": "#/definitions/ConnectorType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectorArn",
+  "/properties/Endpoint",
+  "/properties/OpenIdConfiguration",
+  "/properties/Type"
+ ],
+ "required": [
+  "CertificateAuthorityArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorscep",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorSCEP::Connector"
+}
