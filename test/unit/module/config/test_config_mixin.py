@@ -198,18 +198,18 @@ class TestConfigMixIn(BaseTestCase):
         )
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_config_expand_paths_failure(self, yaml_mock):
+    def test_config_expand_paths_nomatch(self, yaml_mock):
         """Test precedence in"""
 
-        filename = "test/fixtures/templates/badpath/*.yaml"
+        filename = "test/fixtures/templates/nonexistant/*.yaml"
         yaml_mock.side_effect = [
-            {"templates": ["test/fixtures/templates/badpath/*.yaml"]},
+            {"templates": [filename]},
             {},
         ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
-        self.assertEqual(config.templates, [str(Path(filename))])
+        self.assertEqual(config.templates, [])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_expand_ignore_templates(self, yaml_mock):

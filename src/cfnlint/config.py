@@ -624,6 +624,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
+        self._templates_to_process = False
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
         TemplateArgs.__init__(self, {})
@@ -732,23 +733,47 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def templates(self):
-        templates_args = self._get_argument_value("templates", False, True)
-        template_alt_args = self._get_argument_value("template_alt", False, False)
-        if template_alt_args:
-            filenames = template_alt_args
-        elif templates_args:
-            filenames = templates_args
+        """
+
+        Returns a list of Cloudformation templates to lint.
+
+        Order of precedence:
+        - Filenames provided via `-t` CLI
+        - Filenames specified in the config file.
+        - Arguments provided via `cfn-lint` CLI.
+        """
+
+        all_filenames = []
+
+        cli_alt_args = self._get_argument_value("template_alt", False, False)
+        file_args = self._get_argument_value("templates", False, True)
+        cli_args = self._get_argument_value("templates", False, False)
+
+        if cli_alt_args:
+            filenames = cli_alt_args
+        elif file_args:
+            filenames = file_args
+        elif cli_args:
+            filenames = cli_args
         else:
+            # No filenames found, could be piped in or be using the api.
             return None
 
-        # if only one is specified convert it to array
+        # If we're still haven't returned, we've got templates to lint.
+        # Build up list of templates to lint.
+        self.templates_to_process = True
+
         if isinstance(filenames, str):
             filenames = [filenames]
 
         ignore_templates = self._ignore_templates()
-        all_filenames = self._glob_filenames(filenames)
+        all_filenames.extend(self._glob_filenames(filenames))
 
-        return [i for i in all_filenames if i not in ignore_templates]
+        found_files = [i for i in all_filenames if i not in ignore_templates]
+        LOGGER.debug(
+            f"List of Cloudformation Templates to lint: {found_files} from {filenames}"
+        )
+        return found_files
 
     def _ignore_templates(self):
         ignore_template_args = self._get_argument_value("ignore_templates", False, True)
@@ -770,12 +795,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
         for filename in filenames:
             add_filenames = glob.glob(filename, recursive=True)
-            # only way to know of the glob failed is to test it
-            # then add the filename as requested
-            if not add_filenames:
-                all_filenames.append(filename)
-            else:
+
+            if isinstance(add_filenames, list):
                 all_filenames.extend(add_filenames)
+            else:
+                LOGGER.error(f"{filename} could not be processed by glob.glob")
 
         return sorted(list(map(str, map(Path, all_filenames))))
 
@@ -845,3 +869,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def force(self):
         return self._get_argument_value("force", False, False)
+
+    @property
+    def templates_to_process(self):
+        return self._templates_to_process
+
+    @templates_to_process.setter
+    def templates_to_process(self, value: bool):
+        self._templates_to_process = value

@@ -223,6 +223,7 @@ class Runner:
                 settings for the template scan.
         """
         self.config = config
+        self.config.templates
         self.formatter = get_formatter(self.config)
         self.rules: Rules = Rules()
         self._get_rules()
@@ -388,7 +389,8 @@ class Runner:
         Raises:
             None: This function does not raise any exceptions.
         """
-        if not sys.stdin.isatty() and not self.config.templates:
+
+        if (not sys.stdin.isatty()) and (not self.config.templates_to_process):
             yield from self._validate_filenames([None])
             return
 
@@ -434,7 +436,7 @@ class Runner:
             print(self.rules)
             sys.exit(0)
 
-        if not self.config.templates:
+        if not self.config.templates_to_process:
             if sys.stdin.isatty():
                 self.config.parser.print_help()
                 sys.exit(1)
