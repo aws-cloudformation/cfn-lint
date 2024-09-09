@@ -1,3 +1,17 @@
+### v1.13.0
+## What's Changed
+* Add rule [E3674](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3674) to validate instance `PrivateIpAddress` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3657
+* Update schemas to not allow `Ipv6Addresses` and  `Ipv6AddressCount` on `AWS::EC2::NetworkInterface` together by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3656
+* Update [E3044](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3044) to allow `EXTERNAL` to not have `REPLICA` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3670
+* Add rule [E3056](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3056) to validate `HealthCheckGracePeriodSeconds` on `AWS::ECS::Service` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3671
+* Update CloudFormation schemas to 2024-09-09 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3647
+* Fail gracefully if no templates match wildcard by @thecodingsysadmin in https://github.com/aws-cloudformation/cfn-lint/pull/3603
+
+## New Contributors
+* @thecodingsysadmin made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3603
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.12.4...v1.13.0
+
 ### v1.12.4
 ## What's Changed
 * Return Symbol instead of None on Fn::Equals logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3663
