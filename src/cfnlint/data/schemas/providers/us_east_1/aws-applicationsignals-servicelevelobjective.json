@@ -162,6 +162,69 @@
    ],
    "type": "object"
   },
+  "MonitoredRequestCountMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "BadCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    },
+    "GoodCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    }
+   },
+   "type": "object"
+  },
+  "RequestBasedSli": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GreaterThanOrEqualTo",
+      "LessThanOrEqualTo",
+      "LessThan",
+      "GreaterThan"
+     ],
+     "type": "string"
+    },
+    "MetricThreshold": {
+     "type": "number"
+    },
+    "RequestBasedSliMetric": {
+     "$ref": "#/definitions/RequestBasedSliMetric"
+    }
+   },
+   "required": [
+    "RequestBasedSliMetric"
+   ],
+   "type": "object"
+  },
+  "RequestBasedSliMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyAttributes": {
+     "$ref": "#/definitions/KeyAttributes"
+    },
+    "MetricType": {
+     "enum": [
+      "LATENCY",
+      "AVAILABILITY"
+     ],
+     "type": "string"
+    },
+    "MonitoredRequestCountMetric": {
+     "$ref": "#/definitions/MonitoredRequestCountMetric"
+    },
+    "OperationName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TotalRequestCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    }
+   },
+   "type": "object"
+  },
   "RollingInterval": {
    "additionalProperties": false,
    "properties": {
@@ -288,6 +351,13 @@
    "minLength": 1,
    "type": "string"
   },
+  "EvaluationType": {
+   "enum": [
+    "PeriodBased",
+    "RequestBased"
+   ],
+   "type": "string"
+  },
   "Goal": {
    "$ref": "#/definitions/Goal"
   },
@@ -299,6 +369,9 @@
    "pattern": "^[0-9A-Za-z][-._0-9A-Za-z ]{0,126}[0-9A-Za-z]$",
    "type": "string"
   },
+  "RequestBasedSli": {
+   "$ref": "#/definitions/RequestBasedSli"
+  },
   "Sli": {
    "$ref": "#/definitions/Sli"
   },
@@ -309,11 +382,11 @@
  "readOnlyProperties": [
   "/properties/Arn",
   "/properties/CreatedTime",
-  "/properties/LastUpdatedTime"
+  "/properties/LastUpdatedTime",
+  "/properties/EvaluationType"
  ],
  "required": [
-  "Name",
-  "Sli"
+  "Name"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationsignals",
  "tagging": {

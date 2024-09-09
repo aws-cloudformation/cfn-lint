@@ -1,0 +1,56 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorArn"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChallengeArn"
+ ],
+ "properties": {
+  "ChallengeArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\/challenge\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ConnectorArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ChallengeArn"
+ ],
+ "required": [
+  "ConnectorArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorscep",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorSCEP::Challenge"
+}

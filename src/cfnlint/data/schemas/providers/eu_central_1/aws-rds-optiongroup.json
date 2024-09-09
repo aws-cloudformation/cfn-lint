@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EngineName",
+  "/properties/MajorEngineVersion",
+  "/properties/OptionGroupDescription",
+  "/properties/OptionGroupName"
+ ],
+ "definitions": {
+  "OptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DBSecurityGroupMemberships": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "OptionName": {
+     "type": "string"
+    },
+    "OptionSettings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/OptionSetting"
+     },
+     "type": "array"
+    },
+    "OptionVersion": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "VpcSecurityGroupMemberships": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "OptionName"
+   ],
+   "type": "object"
+  },
+  "OptionSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OptionGroupName"
+ ],
+ "properties": {
+  "EngineName": {
+   "type": "string"
+  },
+  "MajorEngineVersion": {
+   "type": "string"
+  },
+  "OptionConfigurations": {
+   "arrayType": "AttributeList",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OptionConfiguration"
+   },
+   "type": "array"
+  },
+  "OptionGroupDescription": {
+   "type": "string"
+  },
+  "OptionGroupName": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/OptionGroupName": "$lowercase(OptionGroupName)"
+ },
+ "required": [
+  "EngineName",
+  "MajorEngineVersion",
+  "OptionGroupDescription"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::OptionGroup"
+}

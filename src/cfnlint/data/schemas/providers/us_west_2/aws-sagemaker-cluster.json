@@ -1,0 +1,309 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ClusterName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/VpcConfig",
+  "/properties/Orchestrator",
+  "/properties/InstanceGroups/*/ExecutionRole",
+  "/properties/InstanceGroups/*/InstanceGroupName",
+  "/properties/InstanceGroups/*/InstanceType",
+  "/properties/InstanceGroups/*/ThreadsPerCore"
+ ],
+ "definitions": {
+  "ClusterEbsVolumeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "VolumeSizeInGB": {
+     "maximum": 16384,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterInstanceGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ExecutionRole": {
+     "$ref": "#/definitions/ExecutionRole"
+    },
+    "InstanceCount": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "InstanceGroupName": {
+     "$ref": "#/definitions/InstanceGroupName"
+    },
+    "InstanceStorageConfigs": {
+     "$ref": "#/definitions/ClusterInstanceStorageConfigs"
+    },
+    "InstanceType": {
+     "$ref": "#/definitions/InstanceType"
+    },
+    "LifeCycleConfig": {
+     "$ref": "#/definitions/ClusterLifeCycleConfig"
+    },
+    "OnStartDeepHealthChecks": {
+     "$ref": "#/definitions/OnStartDeepHealthChecks"
+    },
+    "ThreadsPerCore": {
+     "maximum": 2,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ExecutionRole",
+    "InstanceCount",
+    "InstanceGroupName",
+    "InstanceType",
+    "LifeCycleConfig"
+   ],
+   "type": "object"
+  },
+  "ClusterInstanceGroupsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterInstanceGroup"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "ClusterInstanceStorageConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EbsVolumeConfig": {
+       "$ref": "#/definitions/ClusterEbsVolumeConfig"
+      }
+     },
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "ClusterInstanceStorageConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterInstanceStorageConfig"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "ClusterLifeCycleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnCreate": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\S\\s]+$",
+     "type": "string"
+    },
+    "SourceS3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OnCreate",
+    "SourceS3Uri"
+   ],
+   "type": "object"
+  },
+  "ClusterOrchestratorEksConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterArn"
+   ],
+   "type": "object"
+  },
+  "DeepHealthCheckType": {
+   "enum": [
+    "InstanceStress",
+    "InstanceConnectivity"
+   ],
+   "type": "string"
+  },
+  "ExecutionRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "InstanceGroupName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "OnStartDeepHealthChecks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DeepHealthCheckType"
+   },
+   "type": "array"
+  },
+  "Orchestrator": {
+   "additionalProperties": false,
+   "properties": {
+    "Eks": {
+     "$ref": "#/definitions/ClusterOrchestratorEksConfig"
+    }
+   },
+   "required": [
+    "Eks"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Subnets": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "Subnets"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "maxLength": 256,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:cluster/[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "ClusterName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ClusterStatus": {
+   "enum": [
+    "Creating",
+    "Deleting",
+    "Failed",
+    "InService",
+    "RollingBack",
+    "SystemUpdating",
+    "Updating"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "FailureMessage": {
+   "type": "string"
+  },
+  "InstanceGroups": {
+   "$ref": "#/definitions/ClusterInstanceGroupsList"
+  },
+  "NodeRecovery": {
+   "enum": [
+    "Automatic",
+    "None"
+   ],
+   "type": "string"
+  },
+  "Orchestrator": {
+   "$ref": "#/definitions/Orchestrator"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/CreationTime",
+  "/properties/ClusterStatus",
+  "/properties/FailureMessage",
+  "/properties/InstanceGroups/*/CurrentCount"
+ ],
+ "required": [
+  "InstanceGroups"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Cluster"
+}

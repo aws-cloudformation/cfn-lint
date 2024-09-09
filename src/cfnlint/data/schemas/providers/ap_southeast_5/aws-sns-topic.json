@@ -1,10 +1,38 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/FifoTopic",
-  "/properties/TopicName"
+  "/properties/TopicName",
+  "/properties/FifoTopic"
  ],
  "definitions": {
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureFeedbackRoleArn": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "http/s",
+      "sqs",
+      "lambda",
+      "firehose",
+      "application"
+     ],
+     "type": "string"
+    },
+    "SuccessFeedbackRoleArn": {
+     "type": "string"
+    },
+    "SuccessFeedbackSampleRate": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Protocol"
+   ],
+   "type": "object"
+  },
   "Subscription": {
    "additionalProperties": false,
    "properties": {
@@ -39,11 +67,33 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/TopicArn"
  ],
  "properties": {
+  "ArchivePolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
   "ContentBasedDeduplication": {
    "type": "boolean"
+  },
+  "DataProtectionPolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "DeliveryStatusLogging": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoggingConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "DisplayName": {
    "type": "string"
@@ -51,13 +101,14 @@
   "FifoTopic": {
    "type": "boolean"
   },
-  "Id": {
-   "type": "string"
-  },
   "KmsMasterKeyId": {
    "type": "string"
   },
+  "SignatureVersion": {
+   "type": "string"
+  },
   "Subscription": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Subscription"
    },
@@ -65,20 +116,35 @@
    "uniqueItems": false
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
    "type": "array",
    "uniqueItems": false
   },
+  "TopicArn": {
+   "type": "string"
+  },
   "TopicName": {
    "maxLength": 256,
    "minLength": 1,
    "type": "string"
+  },
+  "TracingConfig": {
+   "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/TopicArn"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::SNS::Topic"
 }

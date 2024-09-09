@@ -1,0 +1,528 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/AutoMinorVersionUpgrade",
+  "/properties/AvailabilityZone",
+  "/properties/BackupRetentionPeriod",
+  "/properties/DBClusterSnapshotIdentifier",
+  "/properties/DBParameterGroupName",
+  "/properties/DBSnapshotIdentifier",
+  "/properties/Engine",
+  "/properties/MultiAZ",
+  "/properties/PerformanceInsightsKMSKeyId",
+  "/properties/PreferredMaintenanceWindow",
+  "/properties/RestoreTime",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/SourceDBInstanceAutomatedBackupsArn",
+  "/properties/SourceDBInstanceIdentifier",
+  "/properties/SourceDbiResourceId",
+  "/properties/StorageType",
+  "/properties/UseLatestRestorableTime"
+ ],
+ "createOnlyProperties": [
+  "/properties/CharacterSetName",
+  "/properties/CustomIAMInstanceProfile",
+  "/properties/DBClusterIdentifier",
+  "/properties/DBInstanceIdentifier",
+  "/properties/DBName",
+  "/properties/DBSubnetGroupName",
+  "/properties/KmsKeyId",
+  "/properties/MasterUsername",
+  "/properties/NcharCharacterSetName",
+  "/properties/Port",
+  "/properties/SourceRegion",
+  "/properties/StorageEncrypted",
+  "/properties/Timezone"
+ ],
+ "definitions": {
+  "CertificateDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "CAIdentifier": {
+     "type": "string"
+    },
+    "ValidTill": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DBInstanceRole": {
+   "additionalProperties": false,
+   "properties": {
+    "FeatureName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FeatureName",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "HostedZoneId": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MasterUserSecret": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProcessorFeature": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "coreCount",
+      "threadsPerCore"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependencies": {
+  "KmsKeyId": {
+   "properties": {
+    "StorageEncrypted": {
+     "enum": [
+      "true",
+      "True",
+      true
+     ]
+    }
+   },
+   "required": [
+    "StorageEncrypted"
+   ]
+  }
+ },
+ "dependentExcluded": {
+  "SourceDBInstanceIdentifier": [
+   "CharacterSetName",
+   "MasterUserPassword",
+   "MasterUsername",
+   "StorageEncrypted"
+  ]
+ },
+ "deprecatedProperties": [
+  "/properties/TdeCredentialArn",
+  "/properties/TdeCredentialPassword"
+ ],
+ "primaryIdentifier": [
+  "/properties/DBInstanceIdentifier"
+ ],
+ "properties": {
+  "AllocatedStorage": {
+   "pattern": "^[0-9]*$",
+   "type": "string"
+  },
+  "AllowMajorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AssociatedRoles": {
+   "items": {
+    "$ref": "#/definitions/DBInstanceRole"
+   },
+   "type": "array"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AutomaticBackupReplicationKmsKeyId": {
+   "type": "string"
+  },
+  "AutomaticBackupReplicationRegion": {
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "BackupRetentionPeriod": {
+   "maximum": 35,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "CACertificateIdentifier": {
+   "type": "string"
+  },
+  "CertificateDetails": {
+   "$ref": "#/definitions/CertificateDetails"
+  },
+  "CertificateRotationRestart": {
+   "type": "boolean"
+  },
+  "CharacterSetName": {
+   "type": "string"
+  },
+  "CopyTagsToSnapshot": {
+   "type": "boolean"
+  },
+  "CustomIAMInstanceProfile": {
+   "type": "string"
+  },
+  "DBClusterIdentifier": {
+   "type": "string"
+  },
+  "DBClusterSnapshotIdentifier": {
+   "type": "string"
+  },
+  "DBInstanceArn": {
+   "type": "string"
+  },
+  "DBInstanceClass": {
+   "type": "string"
+  },
+  "DBInstanceIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "DBName": {
+   "type": "string"
+  },
+  "DBParameterGroupName": {
+   "type": "string"
+  },
+  "DBSecurityGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DBSnapshotIdentifier": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "DBSystemId": {
+   "type": "string"
+  },
+  "DbiResourceId": {
+   "type": "string"
+  },
+  "DedicatedLogVolume": {
+   "type": "boolean"
+  },
+  "DeleteAutomatedBackups": {
+   "type": "boolean"
+  },
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "DomainAuthSecretArn": {
+   "type": "string"
+  },
+  "DomainDnsIps": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DomainFqdn": {
+   "type": "string"
+  },
+  "DomainIAMRoleName": {
+   "type": "string"
+  },
+  "DomainOu": {
+   "type": "string"
+  },
+  "EnableCloudwatchLogsExports": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "EnableIAMDatabaseAuthentication": {
+   "type": "boolean"
+  },
+  "EnablePerformanceInsights": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineLifecycleSupport": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "Iops": {
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LicenseModel": {
+   "type": "string"
+  },
+  "ManageMasterUserPassword": {
+   "type": "boolean"
+  },
+  "MasterUserPassword": {
+   "type": "string"
+  },
+  "MasterUserSecret": {
+   "$ref": "#/definitions/MasterUserSecret"
+  },
+  "MasterUsername": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,127}$",
+   "type": "string"
+  },
+  "MaxAllocatedStorage": {
+   "type": "integer"
+  },
+  "MonitoringInterval": {
+   "type": "integer"
+  },
+  "MonitoringRoleArn": {
+   "type": "string"
+  },
+  "MultiAZ": {
+   "type": "boolean"
+  },
+  "NcharCharacterSetName": {
+   "type": "string"
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "OptionGroupName": {
+   "type": "string"
+  },
+  "PerformanceInsightsKMSKeyId": {
+   "type": "string"
+  },
+  "PerformanceInsightsRetentionPeriod": {
+   "enum": [
+    7,
+    31,
+    62,
+    93,
+    124,
+    155,
+    186,
+    217,
+    248,
+    279,
+    310,
+    341,
+    372,
+    403,
+    434,
+    465,
+    496,
+    527,
+    558,
+    589,
+    620,
+    651,
+    682,
+    713,
+    731
+   ],
+   "type": "integer"
+  },
+  "Port": {
+   "pattern": "^\\d*$",
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "ProcessorFeatures": {
+   "items": {
+    "$ref": "#/definitions/ProcessorFeature"
+   },
+   "type": "array"
+  },
+  "PromotionTier": {
+   "maximum": 15,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "ReplicaMode": {
+   "type": "string"
+  },
+  "RestoreTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "type": "string"
+  },
+  "SourceDBInstanceAutomatedBackupsArn": {
+   "type": "string"
+  },
+  "SourceDBInstanceIdentifier": {
+   "type": "string"
+  },
+  "SourceDbiResourceId": {
+   "type": "string"
+  },
+  "SourceRegion": {
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "StorageThroughput": {
+   "type": "integer"
+  },
+  "StorageType": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TdeCredentialArn": {
+   "type": "string"
+  },
+  "TdeCredentialPassword": {
+   "type": "string"
+  },
+  "Timezone": {
+   "type": "string"
+  },
+  "UseDefaultProcessorFeatures": {
+   "type": "boolean"
+  },
+  "UseLatestRestorableTime": {
+   "type": "boolean"
+  },
+  "VPCSecurityGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBClusterSnapshotIdentifier": "$lowercase(DBClusterSnapshotIdentifier)",
+  "/properties/DBInstanceIdentifier": "$lowercase(DBInstanceIdentifier)",
+  "/properties/DBName": "$lowercase(DBName) $OR $uppercase(DBName)",
+  "/properties/DBParameterGroupName": "$lowercase(DBParameterGroupName)",
+  "/properties/DBSnapshotIdentifier": "$lowercase(DBSnapshotIdentifier)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
+  "/properties/Engine": "$lowercase(Engine)",
+  "/properties/EngineVersion": "$join([$string(EngineVersion), \".*\"])",
+  "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
+  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", MasterUserSecret.KmsKeyId])",
+  "/properties/NetworkType": "$lowercase(NetworkType)",
+  "/properties/OptionGroupName": "$lowercase(OptionGroupName)",
+  "/properties/PerformanceInsightsKMSKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", PerformanceInsightsKMSKeyId])",
+  "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)",
+  "/properties/SourceDBInstanceAutomatedBackupsArn": "$lowercase(SourceDBInstanceAutomatedBackupsArn)",
+  "/properties/SourceDBInstanceIdentifier": "$lowercase(SourceDBInstanceIdentifier)",
+  "/properties/StorageType": "$lowercase(StorageType)"
+ },
+ "readOnlyProperties": [
+  "/properties/Endpoint/Address",
+  "/properties/Endpoint/Port",
+  "/properties/Endpoint/HostedZoneId",
+  "/properties/DbiResourceId",
+  "/properties/DBInstanceArn",
+  "/properties/DBSystemId",
+  "/properties/MasterUserSecret/SecretArn",
+  "/properties/CertificateDetails/CAIdentifier",
+  "/properties/CertificateDetails/ValidTill"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::DBInstance",
+ "writeOnlyProperties": [
+  "/properties/AllowMajorVersionUpgrade",
+  "/properties/AutomaticBackupReplicationKmsKeyId",
+  "/properties/CertificateRotationRestart",
+  "/properties/DBSnapshotIdentifier",
+  "/properties/DeleteAutomatedBackups",
+  "/properties/MasterUserPassword",
+  "/properties/Port",
+  "/properties/RestoreTime",
+  "/properties/SourceDBInstanceAutomatedBackupsArn",
+  "/properties/SourceDBInstanceIdentifier",
+  "/properties/SourceDbiResourceId",
+  "/properties/SourceRegion",
+  "/properties/TdeCredentialPassword",
+  "/properties/UseDefaultProcessorFeatures",
+  "/properties/UseLatestRestorableTime"
+ ]
+}
