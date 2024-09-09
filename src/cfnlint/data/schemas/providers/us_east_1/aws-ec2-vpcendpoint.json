@@ -43,6 +43,10 @@
   "RouteTableIds": {
    "insertionOrder": false,
    "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/RouteTableId",
+     "typeName": "AWS::EC2::RouteTable"
+    },
     "type": "string"
    },
    "type": "array",
@@ -52,6 +56,26 @@
    "format": "AWS::EC2::SecurityGroup.Ids",
    "insertionOrder": false,
    "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/GroupId",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/DefaultSecurityGroup",
+       "typeName": "AWS::EC2::VPC"
+      }
+     }
+    ],
     "format": "AWS::EC2::SecurityGroup.GroupId",
     "type": "string"
    },
@@ -64,6 +88,10 @@
   "SubnetIds": {
    "insertionOrder": false,
    "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
     "type": "string"
    },
    "type": "array",

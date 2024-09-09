@@ -1,0 +1,523 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/AvailabilityZone",
+  "/properties/Source/Name"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "ConstantInitializationVector": {
+     "type": "string"
+    },
+    "DeviceId": {
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "enum": [
+      "speke",
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "FailoverConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailoverMode": {
+     "enum": [
+      "MERGE",
+      "FAILOVER"
+     ],
+     "type": "string"
+    },
+    "RecoveryWindow": {
+     "type": "integer"
+    },
+    "SourcePriority": {
+     "additionalProperties": false,
+     "properties": {
+      "PrimarySource": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "PrimarySource"
+     ],
+     "type": "object"
+    },
+    "State": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Fmtp": {
+   "additionalProperties": false,
+   "properties": {
+    "ChannelOrder": {
+     "type": "string"
+    },
+    "Colorimetry": {
+     "enum": [
+      "BT601",
+      "BT709",
+      "BT2020",
+      "BT2100",
+      "ST2065-1",
+      "ST2065-3",
+      "XYZ"
+     ],
+     "type": "string"
+    },
+    "ExactFramerate": {
+     "type": "string"
+    },
+    "Par": {
+     "type": "string"
+    },
+    "Range": {
+     "enum": [
+      "NARROW",
+      "FULL",
+      "FULLPROTECT"
+     ],
+     "type": "string"
+    },
+    "ScanMode": {
+     "enum": [
+      "progressive",
+      "interlace",
+      "progressive-segmented-frame"
+     ],
+     "type": "string"
+    },
+    "Tcs": {
+     "enum": [
+      "SDR",
+      "PQ",
+      "HLG",
+      "LINEAR",
+      "BT2100LINPQ",
+      "BT2100LINHLG",
+      "ST2065-1",
+      "ST428-1",
+      "DENSITY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "properties": {
+    "BridgeArn": {
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment"
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "InputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputPort": {
+     "type": "integer"
+    },
+    "Interface": {
+     "$ref": "#/definitions/Interface"
+    }
+   },
+   "required": [
+    "InputPort",
+    "Interface"
+   ],
+   "type": "object"
+  },
+  "Interface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Maintenance": {
+   "additionalProperties": false,
+   "properties": {
+    "MaintenanceDay": {
+     "enum": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+     ],
+     "type": "string"
+    },
+    "MaintenanceStartHour": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MaintenanceDay",
+    "MaintenanceStartHour"
+   ],
+   "type": "object"
+  },
+  "MediaStream": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/MediaStreamAttributes"
+    },
+    "ClockRate": {
+     "type": "integer"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Fmt": {
+     "type": "integer"
+    },
+    "MediaStreamId": {
+     "type": "integer"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    },
+    "MediaStreamType": {
+     "enum": [
+      "video",
+      "audio",
+      "ancillary-data"
+     ],
+     "type": "string"
+    },
+    "VideoFormat": {
+     "enum": [
+      "2160p",
+      "1080p",
+      "1080i",
+      "720p",
+      "480p"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "MediaStreamId",
+    "MediaStreamType",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "MediaStreamAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Fmtp": {
+     "$ref": "#/definitions/Fmtp"
+    },
+    "Lang": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MediaStreamSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncodingName": {
+     "enum": [
+      "jxsv",
+      "raw",
+      "smpte291",
+      "pcm"
+     ],
+     "type": "string"
+    },
+    "InputConfigurations": {
+     "items": {
+      "$ref": "#/definitions/InputConfiguration"
+     },
+     "type": "array"
+    },
+    "MediaStreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncodingName",
+    "MediaStreamName"
+   ],
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "Decryption": {
+     "$ref": "#/definitions/Encryption"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "EntitlementArn": {
+     "type": "string"
+    },
+    "GatewayBridgeSource": {
+     "$ref": "#/definitions/GatewayBridgeSource"
+    },
+    "IngestIp": {
+     "type": "string"
+    },
+    "IngestPort": {
+     "type": "integer"
+    },
+    "MaxBitrate": {
+     "type": "integer"
+    },
+    "MaxLatency": {
+     "type": "integer"
+    },
+    "MaxSyncBuffer": {
+     "type": "integer"
+    },
+    "MediaStreamSourceConfigurations": {
+     "items": {
+      "$ref": "#/definitions/MediaStreamSourceConfiguration"
+     },
+     "type": "array"
+    },
+    "MinLatency": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "zixi-push",
+      "rtp-fec",
+      "rtp",
+      "rist",
+      "fujitsu-qos",
+      "srt-listener",
+      "srt-caller",
+      "st2110-jpegxs",
+      "cdi"
+     ],
+     "type": "string"
+    },
+    "SenderControlPort": {
+     "type": "integer"
+    },
+    "SenderIpAddress": {
+     "type": "string"
+    },
+    "SourceArn": {
+     "type": "string"
+    },
+    "SourceIngestPort": {
+     "type": "string"
+    },
+    "SourceListenerAddress": {
+     "type": "string"
+    },
+    "SourceListenerPort": {
+     "type": "integer"
+    },
+    "StreamId": {
+     "type": "string"
+    },
+    "VpcInterfaceName": {
+     "type": "string"
+    },
+    "WhitelistCidr": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceMonitoringConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ThumbnailState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThumbnailState"
+   ],
+   "type": "object"
+  },
+  "VpcInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "NetworkInterfaceIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "NetworkInterfaceType": {
+     "enum": [
+      "ena",
+      "efa"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "RoleArn",
+    "SecurityGroupIds",
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcInterfaceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowArn"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "EgressIp": {
+   "type": "string"
+  },
+  "FlowArn": {
+   "type": "string"
+  },
+  "FlowAvailabilityZone": {
+   "type": "string"
+  },
+  "Maintenance": {
+   "$ref": "#/definitions/Maintenance"
+  },
+  "MediaStreams": {
+   "items": {
+    "$ref": "#/definitions/MediaStream"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "SourceFailoverConfig": {
+   "$ref": "#/definitions/FailoverConfig"
+  },
+  "SourceMonitoringConfig": {
+   "$ref": "#/definitions/SourceMonitoringConfig"
+  },
+  "VpcInterfaces": {
+   "items": {
+    "$ref": "#/definitions/VpcInterface"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/FlowAvailabilityZone",
+  "/properties/Source/SourceArn",
+  "/properties/Source/IngestIp",
+  "/properties/Source/SourceIngestPort",
+  "/properties/VpcInterfaces/*/NetworkInterfaceIds",
+  "/properties/MediaStreams/*/Fmt",
+  "/properties/EgressIp"
+ ],
+ "required": [
+  "Name",
+  "Source"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "flowArn": "/FlowArn"
+  },
+  "templateUri": "/mediaconnect/home?region=${awsRegion}#/flows/${flowArn}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::Flow"
+}
