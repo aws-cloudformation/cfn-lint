@@ -112,14 +112,20 @@ class TestSchemaFiles(TestCase):
                 except RefResolutionError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
-    def _build_keywords(
-        self, obj: Any, schema_resolver: RefResolver, refs: list[str] | None = None
-    ):
-        if refs is None:
-            refs = []
+    def _build_keywords(self, obj: Any, schema_resolver: RefResolver, refs: list[str]):
         if not isinstance(obj, dict):
             yield []
             return
+
+        if "$ref" in obj:
+            ref = obj["$ref"]
+            if ref in refs:
+                yield []
+                return
+            _, resolved_schema = schema_resolver.resolve(ref)
+            yield from self._build_keywords(
+                resolved_schema, schema_resolver, refs + [ref]
+            )
 
         if "type" in obj:
             if "object" in ensure_list(obj["type"]):
@@ -134,17 +140,6 @@ class TestSchemaFiles(TestCase):
                     ):
                         yield ["*"] + item
 
-        if "$ref" in obj:
-            ref = obj["$ref"]
-            if ref in refs:
-                yield []
-                return
-            _, resolved_schema = schema_resolver.resolve(ref)
-            for item in self._build_keywords(
-                resolved_schema, schema_resolver, refs + [ref]
-            ):
-                yield item
-
         yield []
 
     def build_keywords(self, schema_resolver):
@@ -152,7 +147,7 @@ class TestSchemaFiles(TestCase):
             "/".join(["Resources", schema_resolver.referrer["typeName"], "Properties"])
         )
         for k, v in schema_resolver.referrer.get("properties").items():
-            for item in self._build_keywords(v, schema_resolver):
+            for item in self._build_keywords(v, schema_resolver, []):
                 self._found_keywords.append(
                     "/".join(
                         [
@@ -214,7 +209,9 @@ class TestSchemaFiles(TestCase):
                     self.validate_basic_schema_details(
                         schema_resolver, f"{dirpath}/{filename}"
                     )
-                    self.build_keywords(schema_resolver)
+
+                    if region == "us-east-1":
+                        self.build_keywords(schema_resolver)
 
     def cfn_lint(self, validator, _, keywords, schema):
         keywords = ensure_list(keywords)

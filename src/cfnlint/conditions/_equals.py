@@ -158,7 +158,10 @@ class Equal:
                 return BooleanTrue()
             return BooleanFalse()
 
-        return params.get(self.hash)
+        if self.hash in params:
+            return params.get(self.hash)
+
+        return Symbol(self.hash)
 
     def test(self, scenarios: Mapping[str, str]) -> bool:
         """Do an equals based on the provided scenario"""

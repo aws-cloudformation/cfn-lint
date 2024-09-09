@@ -413,5 +413,7 @@ CfnTemplateValidator = create(
 
 StandardValidator = create(
     validators=_standard_validators,
-    function_filter=FunctionFilter(),
+    function_filter=FunctionFilter(
+        add_cfn_lint_keyword=False,
+    ),
 )

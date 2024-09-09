@@ -1300,6 +1300,9 @@
     "Label": {
      "type": "string"
     },
+    "TooltipTarget": {
+     "$ref": "#/definitions/TooltipTarget"
+    },
     "Visibility": {
      "$ref": "#/definitions/Visibility"
     }
@@ -1393,6 +1396,9 @@
     },
     "SecondaryYAxisLabelOptions": {
      "$ref": "#/definitions/ChartAxisLabelOptions"
+    },
+    "SingleAxisOptions": {
+     "$ref": "#/definitions/SingleAxisOptions"
     },
     "SortConfiguration": {
      "$ref": "#/definitions/ComboChartSortConfiguration"
@@ -3148,6 +3154,9 @@
     },
     "Label": {
      "type": "string"
+    },
+    "TooltipTarget": {
+     "$ref": "#/definitions/TooltipTarget"
     },
     "Visibility": {
      "$ref": "#/definitions/Visibility"
@@ -5703,6 +5712,9 @@
      "maxItems": 2000,
      "minItems": 0,
      "type": "array"
+    },
+    "SingleAxisOptions": {
+     "$ref": "#/definitions/SingleAxisOptions"
     },
     "SmallMultiplesOptions": {
      "$ref": "#/definitions/SmallMultiplesOptions"
@@ -9087,6 +9099,25 @@
    ],
    "type": "string"
   },
+  "SingleAxisOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "YAxisOptions": {
+     "properties": {
+      "YAxis": {
+       "$ref": "#/definitions/SingleYAxisOption"
+      }
+     }
+    }
+   },
+   "type": "object"
+  },
+  "SingleYAxisOption": {
+   "enum": [
+    "PRIMARY_Y_AXIS"
+   ],
+   "type": "string"
+  },
   "SliderControlDisplayOptions": {
    "additionalProperties": false,
    "properties": {
@@ -10137,6 +10168,14 @@
    },
    "type": "object"
   },
+  "TooltipTarget": {
+   "enum": [
+    "BOTH",
+    "BAR",
+    "LINE"
+   ],
+   "type": "string"
+  },
   "TooltipTitleType": {
    "enum": [
     "NONE",
@@ -11158,66 +11197,6 @@
     "NORMAL"
    ],
    "type": "string"
-  }
- },
- "handlers": {
-  "create": {
-   "permissions": [
-    "quicksight:DescribeAnalysis",
-    "quicksight:DescribeAnalysisPermissions",
-    "quicksight:CreateAnalysis",
-    "quicksight:DescribeTemplate",
-    "quicksight:DescribeTheme",
-    "quicksight:PassDataSet",
-    "quicksight:TagResource",
-    "quicksight:UntagResource",
-    "quicksight:ListTagsForResource"
-   ]
-  },
-  "delete": {
-   "permissions": [
-    "quicksight:DescribeAnalysis",
-    "quicksight:DeleteAnalysis"
-   ]
-  },
-  "list": {
-   "handlerSchema": {
-    "properties": {
-     "AwsAccountId": {
-      "$ref": "resource-schema.json#/properties/AwsAccountId"
-     }
-    },
-    "required": [
-     "AwsAccountId"
-    ]
-   },
-   "permissions": [
-    "quicksight:ListAnalyses"
-   ]
-  },
-  "read": {
-   "permissions": [
-    "quicksight:DescribeAnalysis",
-    "quicksight:DescribeAnalysisPermissions",
-    "quicksight:ListTagsForResource"
-   ]
-  },
-  "update": {
-   "permissions": [
-    "quicksight:DescribeAnalysis",
-    "quicksight:DescribeAnalysisPermissions",
-    "quicksight:UpdateAnalysis",
-    "quicksight:UpdateAnalysisPermissions",
-    "quicksight:CreateFolderMembership",
-    "quicksight:DeleteFolderMembership",
-    "quicksight:ListFoldersForResource",
-    "quicksight:DescribeTemplate",
-    "quicksight:DescribeTheme",
-    "quicksight:PassDataSet",
-    "quicksight:TagResource",
-    "quicksight:UntagResource",
-    "quicksight:ListTagsForResource"
-   ]
   }
  },
  "primaryIdentifier": [
