@@ -32,14 +32,6 @@ jobs:
         with:
           name: coverage-${{ matrix.python }}
           path: coverage-${{ matrix.python }}.xml
-      - name: Save PR number
-        run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-      - uses: actions/upload-artifact@v2
-        with:
-          name: pr
-          path: pr/
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -76,6 +68,13 @@ jobs:
           pip3 install -e .
           pip install --upgrade pip
           pip install --upgrade setuptools
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr
+          path: pr/
+          overwrite: true
       - uses: pypa/gh-action-pip-audit@v1.0.8
         with:
           ignore-vulns: |
