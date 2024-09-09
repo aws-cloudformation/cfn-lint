@@ -26,20 +26,15 @@ jobs:
         run: |
           tox -e py
           mv coverage.xml coverage-${{ matrix.python }}.xml
-      - name: Store coverage file
-        uses: actions/upload-artifact@v4
+      - uses: codecov/codecov-action@v4
         if: matrix.os == 'ubuntu-latest'
         with:
-          name: coverage-${{ matrix.python }}
-          path: coverage-${{ matrix.python }}.xml
-      - name: Save PR number
-        run: |
-          mkdir -p ./pr
-          echo ${{ github.event.number }} > ./pr/NR
-      - uses: actions/upload-artifact@v2
-        with:
-          name: pr
-          path: pr/
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage-${{ matrix.python }}.xml
+          name: py${{ matrix.python }}-${{ matrix.os }}
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
