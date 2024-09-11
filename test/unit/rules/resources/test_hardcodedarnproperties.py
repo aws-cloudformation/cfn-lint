@@ -71,7 +71,7 @@ class TestHardCodedArnProperties(BaseRuleTestCase):
     def test_file_negative_accountid(self):
         self.helper_file_negative(
             "test/fixtures/templates/bad/hard_coded_arn_properties.yaml",
-            1,
+            2,
             ConfigMixIn(
                 [],
                 include_experimental=True,
