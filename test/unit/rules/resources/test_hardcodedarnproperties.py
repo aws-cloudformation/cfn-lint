@@ -19,6 +19,7 @@ class TestHardCodedArnProperties(BaseRuleTestCase):
         super(TestHardCodedArnProperties, self).setUp()
         self.collection.register(HardCodedArnProperties())
         self.success_templates = [
+            "test/fixtures/templates/good/resources/properties/hard_coded_arn_properties.yaml",
             "test/fixtures/templates/good/resources/properties/hard_coded_arn_properties_sam.yaml",
         ]
 
