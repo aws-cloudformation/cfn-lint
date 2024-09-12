@@ -8,6 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
+from functools import lru_cache
 from typing import Any, Deque, Iterator, Sequence, Set, Tuple
 
 from cfnlint.context._mappings import Mappings
@@ -40,6 +41,11 @@ class Transforms:
             if not isinstance(transform, str):
                 continue
             self._transforms.append(transform)
+
+        self.has_sam_transform = lru_cache()(self.has_sam_transform)  # type: ignore
+        self.has_language_extensions_transform = lru_cache()(  # type: ignore
+            self.has_language_extensions_transform
+        )
 
     def has_language_extensions_transform(self):
         lang_extensions_transform = "AWS::LanguageExtensions"
@@ -282,12 +288,16 @@ class Parameter(_Ref):
     default: Any = field(init=False)
     allowed_values: Any = field(init=False)
     description: str | None = field(init=False)
+    ssm_path: str | None = field(init=False, default=None)
 
     parameter: InitVar[Any]
 
     def __post_init__(self, parameter) -> None:
         if not isinstance(parameter, dict):
             raise ValueError("Parameter must be a object")
+
+        self.is_ssm_parameter = lru_cache()(self.is_ssm_parameter)  # type: ignore
+
         self.default = None
         self.allowed_values = []
         self.min_value = None
@@ -303,7 +313,8 @@ class Parameter(_Ref):
 
         # SSM Parameter defaults and allowed values point to
         # SSM paths not to the actual values
-        if self.type.startswith("AWS::SSM::Parameter::"):
+        if self.is_ssm_parameter():
+            self.ssm_path = parameter.get("Default", "")
             return
 
         if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
@@ -348,6 +359,9 @@ class Parameter(_Ref):
 
         if self.max_value is not None:
             yield str(self.max_value), deque(["MaxValue"])
+
+    def is_ssm_parameter(self) -> bool:
+        return self.type.startswith("AWS::SSM::Parameter::")
 
 
 @dataclass
