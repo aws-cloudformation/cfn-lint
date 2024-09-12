@@ -3,8 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from typing import Any
+
 import regex as re
 
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.jsonschema._keywords import pattern
 from cfnlint.rules import CloudFormationLintRule
 
@@ -43,13 +46,22 @@ class Pattern(CloudFormationLintRule):
         return False
 
     # pylint: disable=unused-argument, arguments-renamed
-    def pattern(self, validator, patrn, instance, schema):
+    def pattern(
+        self, validator: Validator, patrn: str, instance: Any, schema: Any
+    ) -> ValidationResult:
+        # https://github.com/aws-cloudformation/cfn-lint/issues/3640
+        if validator.context.transforms.has_sam_transform():
+            for _, param in validator.context.parameters.items():
+                if param.is_ssm_parameter:
+                    if param.ssm_path == instance:
+                        return
+
         if (
             len(validator.context.path.value_path) > 0
             and validator.context.path.value_path[0] == "Parameters"
         ):
             if self.child_rules.get("W2031"):
-                yield from self.child_rules["W2031"].pattern(
+                yield from self.child_rules["W2031"].pattern(  # type: ignore
                     validator, patrn, instance, schema
                 )
             return

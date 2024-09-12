@@ -8,6 +8,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
+from functools import lru_cache
 from typing import Any, Deque, Iterator, Sequence, Set, Tuple
 
 from cfnlint.context._mappings import Mappings
@@ -40,6 +41,11 @@ class Transforms:
             if not isinstance(transform, str):
                 continue
             self._transforms.append(transform)
+
+        self.has_sam_transform = lru_cache()(self.has_sam_transform)  # type: ignore
+        self.has_language_extensions_transform = lru_cache()(  # type: ignore
+            self.has_language_extensions_transform
+        )
 
     def has_language_extensions_transform(self):
         lang_extensions_transform = "AWS::LanguageExtensions"
@@ -282,6 +288,8 @@ class Parameter(_Ref):
     default: Any = field(init=False)
     allowed_values: Any = field(init=False)
     description: str | None = field(init=False)
+    ssm_path: str | None = field(init=False, default=None)
+    is_ssm_parameter: bool = field(init=False, default=False)
 
     parameter: InitVar[Any]
 
@@ -304,6 +312,8 @@ class Parameter(_Ref):
         # SSM Parameter defaults and allowed values point to
         # SSM paths not to the actual values
         if self.type.startswith("AWS::SSM::Parameter::"):
+            self.is_ssm_parameter = True
+            self.ssm_path = parameter.get("Default", "")
             return
 
         if self.type == "CommaDelimitedList" or self.type.startswith("List<"):
