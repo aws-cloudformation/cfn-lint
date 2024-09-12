@@ -289,13 +289,15 @@ class Parameter(_Ref):
     allowed_values: Any = field(init=False)
     description: str | None = field(init=False)
     ssm_path: str | None = field(init=False, default=None)
-    is_ssm_parameter: bool = field(init=False, default=False)
 
     parameter: InitVar[Any]
 
     def __post_init__(self, parameter) -> None:
         if not isinstance(parameter, dict):
             raise ValueError("Parameter must be a object")
+
+        self.is_ssm_parameter = lru_cache()(self.is_ssm_parameter)  # type: ignore
+
         self.default = None
         self.allowed_values = []
         self.min_value = None
@@ -311,8 +313,7 @@ class Parameter(_Ref):
 
         # SSM Parameter defaults and allowed values point to
         # SSM paths not to the actual values
-        if self.type.startswith("AWS::SSM::Parameter::"):
-            self.is_ssm_parameter = True
+        if self.is_ssm_parameter():
             self.ssm_path = parameter.get("Default", "")
             return
 
@@ -358,6 +359,9 @@ class Parameter(_Ref):
 
         if self.max_value is not None:
             yield str(self.max_value), deque(["MaxValue"])
+
+    def is_ssm_parameter(self) -> bool:
+        return self.type.startswith("AWS::SSM::Parameter::")
 
 
 @dataclass

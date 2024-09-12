@@ -52,7 +52,7 @@ class Pattern(CloudFormationLintRule):
         # https://github.com/aws-cloudformation/cfn-lint/issues/3640
         if validator.context.transforms.has_sam_transform():
             for _, param in validator.context.parameters.items():
-                if param.is_ssm_parameter:
+                if param.is_ssm_parameter():
                     if param.ssm_path == instance:
                         return
 
