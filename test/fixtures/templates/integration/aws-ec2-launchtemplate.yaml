@@ -1,0 +1,14 @@
+Resources:
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-abcdefgh
+        InstanceType: t2.micro
+        UserData: !Base64 "#!/bin/bash\necho 'Hello World' > /var/www/html/index.html"
+        NetworkInterfaces:
+          - AssociateCarrierIpAddress: true
+            AssociatePublicIpAddress: true
+            DeviceIndex: 0
+            NetworkInterfaceId: !Ref NetworkInterface
+      LaunchTemplateName: MyLaunchTemplate

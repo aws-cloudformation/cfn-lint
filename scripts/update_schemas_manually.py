@@ -701,6 +701,19 @@ patches.extend(
                     },
                     path="/",
                 ),
+                Patch(
+                    values={
+                        "dependentExcluded": {
+                            "AssociateCarrierIpAddress": ["NetworkInterfaceId"],
+                            "AssociatePublicIpAddress": ["NetworkInterfaceId"],
+                            "NetworkInterfaceId": [
+                                "AssociateCarrierIpAddress",
+                                "AssociatePublicIpAddress",
+                            ],
+                        }
+                    },
+                    path="/definitions/NetworkInterface",
+                ),
             ],
         ),
         ResourcePatch(
@@ -713,6 +726,19 @@ patches.extend(
                 Patch(
                     values={"pattern": "^ephemeral([0-9]|[1][0-9]|[2][0-3])$"},
                     path="/definitions/BlockDeviceMapping/properties/VirtualName",
+                ),
+                Patch(
+                    values={
+                        "dependentExcluded": {
+                            "AssociateCarrierIpAddress": ["NetworkInterfaceId"],
+                            "AssociatePublicIpAddress": ["NetworkInterfaceId"],
+                            "NetworkInterfaceId": [
+                                "AssociateCarrierIpAddress",
+                                "AssociatePublicIpAddress",
+                            ],
+                        }
+                    },
+                    path="/definitions/NetworkInterface",
                 ),
             ],
         ),

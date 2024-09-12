@@ -1,0 +1,20 @@
+Resources:
+  NetworkInterface:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: foobar
+      SourceDestCheck: false
+      SubnetId: subnet-abcdefgh
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-abcdefgh
+      InstanceType: t2.micro
+      NetworkInterfaces:
+        - AssociateCarrierIpAddress: true
+          AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          NetworkInterfaceId: !Ref NetworkInterface
+      Tags:
+        - Key: foo
+          Value: bar

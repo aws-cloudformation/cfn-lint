@@ -56,6 +56,22 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 2,
         },
+        {
+            "filename": ("test/fixtures/templates/integration/aws-ec2-instance.yaml"),
+            "results_filename": (
+                "test/fixtures/results/integration/aws-ec2-instance.json"
+            ),
+            "exit_code": 2,
+        },
+        {
+            "filename": (
+                "test/fixtures/templates/integration/aws-ec2-launchtemplate.yaml"
+            ),
+            "results_filename": (
+                "test/fixtures/results/integration/aws-ec2-launchtemplate.json"
+            ),
+            "exit_code": 2,
+        },
     ]
 
     def test_templates(self):
