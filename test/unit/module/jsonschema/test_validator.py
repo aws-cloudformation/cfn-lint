@@ -948,6 +948,28 @@ def test_validator(name, schema, instance, expected, validator):
             ],
         ),
         (
+            "valid requiredOr",
+            {"requiredOr": ["foo", "bar"]},
+            {"foo": {}},
+            [],
+        ),
+        (
+            "valid requiredOr with wrong type",
+            {"requiredOr": ["foo", "bar"]},
+            [],
+            [],
+        ),
+        (
+            "invalid requiredOr with empty object",
+            {"requiredOr": ["foo", "bar"]},
+            {},
+            [
+                ValidationError(
+                    "One of ['foo', 'bar'] is a required property",
+                )
+            ],
+        ),
+        (
             "valid requiredXor",
             {"requiredXor": ["foo", "bar"]},
             {"foo": {}},

@@ -541,6 +541,17 @@ def required(
             yield ValidationError(f"{property!r} is a required property")
 
 
+def requiredOr(
+    validator: Validator, required: Any, instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    if not validator.is_type(instance, "object"):
+        return
+    matches = set(required).intersection(instance.keys())
+    if not matches:
+        yield ValidationError(f"One of {required!r} is a required property")
+        return
+
+
 def requiredXor(
     validator: Validator, required: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:

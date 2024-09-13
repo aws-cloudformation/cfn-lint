@@ -396,6 +396,7 @@ _standard_validators: dict[str, V] = {
     "properties": _keywords.properties,
     "propertyNames": _keywords.propertyNames,
     "required": _keywords.required,
+    "requiredOr": _keywords.requiredOr,
     "requiredXor": _keywords.requiredXor,
     "type": _keywords.type,
     "uniqueItems": _keywords.uniqueItems,

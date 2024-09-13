@@ -83,6 +83,49 @@ _properties_ provides the key names and a value that represents the schema to va
 
 _required_ defines a list of required properties. [JSON Schema docs](https://json-schema.org/understanding-json-schema/reference/object#required)
 
+##### requiredOr
+
+_requiredOr_ is used to define when at least one property from a set properties is required.
+
+On the following defined object
+
+```json
+{
+  "properties": {
+    "a": true,
+    "b": true,
+    "c": true
+  },
+  "additionalProperties": false
+}
+```
+
+The cfn-lint schema
+
+```json
+{
+  "requiredOr": ["a", "b", "c"]
+}
+```
+
+is equivalent to the JSON schema
+
+```json
+{
+  "anyOf": [
+    {
+      "required": ["a"]
+    },
+    {
+      "required": ["b"]
+    },
+    {
+      "required": ["c"]
+    }
+  ]
+}
+```
+
 ##### requiredXor
 
 _requiredXor_ is used to define when only one property from a set properties is required.
@@ -121,56 +164,6 @@ is equivalent to the JSON schema
     },
     {
       "required": ["c"]
-    }
-  ]
-}
-```
-
-##### propertiesNand
-
-_propertiesNand_ is used to define when none or only one property from a set properties can be defined.
-
-On the following defined object
-
-```json
-{
-  "properties": {
-    "a": true,
-    "b": true,
-    "c": true
-  },
-  "additionalProperties": false
-}
-```
-
-The cfn-lint schema
-
-```json
-{
-  "propertiesNand": ["a", "b", "c"]
-}
-```
-
-is equivalent to the JSON schema
-
-```json
-{
-  "oneOf": [
-    {
-      "required": ["a"]
-    },
-    {
-      "required": ["b"]
-    },
-    {
-      "required": ["c"]
-    },
-    {
-      "properties": {
-        "a": false,
-        "b": false,
-        "c": false
-      }
     }
   ]
 }

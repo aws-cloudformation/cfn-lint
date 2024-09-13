@@ -965,7 +965,7 @@ patches.extend(
             resource_type="AWS::Events::Rule",
             patches=[
                 Patch(
-                    values={"requiredXor": ["EventPattern", "ScheduleExpression"]},
+                    values={"requiredOr": ["EventPattern", "ScheduleExpression"]},
                     path="/",
                 ),
                 Patch(
