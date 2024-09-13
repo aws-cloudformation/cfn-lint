@@ -45,7 +45,7 @@ class FunctionFilter:
             "minItems",
             "minProperties",
             "required",
-            "requiredAtLeastOne",
+            "requiredOr",
             "requiredXor",
             "then",
             "uniqueItems",

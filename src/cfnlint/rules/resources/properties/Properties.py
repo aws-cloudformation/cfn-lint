@@ -37,6 +37,7 @@ class Properties(CfnLintJsonSchema):
             "dependentExcluded": "E3020",
             "dependentRequired": "E3021",
             "required": "E3003",
+            "requiredOr": "E3058",
             "requiredXor": "E3014",
             "enum": "E3030",
             "type": "E3012",
