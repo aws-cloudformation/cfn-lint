@@ -37,6 +37,25 @@
     "UntrustedArtifactOnDeployment"
    ],
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -61,6 +80,14 @@
    "maxLength": 256,
    "minLength": 0,
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -70,5 +97,12 @@
  "required": [
   "AllowedPublishers"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Lambda::CodeSigningConfig"
 }

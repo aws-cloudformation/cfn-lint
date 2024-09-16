@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentStatusArn"
+ ],
+ "properties": {
+  "AgentStatusArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent-state/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DisplayOrder": {
+   "maximum": 50,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "LastModifiedRegion": {
+   "pattern": "[a-z]{2}(-[a-z]+){1,2}(-[0-9])?",
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResetOrderNumber": {
+   "type": "boolean"
+  },
+  "State": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "ROUTABLE",
+    "CUSTOM",
+    "OFFLINE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentStatusArn",
+  "/properties/LastModifiedRegion",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::AgentStatus"
+}

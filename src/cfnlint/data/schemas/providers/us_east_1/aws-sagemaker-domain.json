@@ -9,6 +9,15 @@
   "/properties/Tags"
  ],
  "definitions": {
+  "AppLifecycleManagement": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleSettings": {
+     "$ref": "#/definitions/IdleSettings"
+    }
+   },
+   "type": "object"
+  },
   "AppType": {
    "enum": [
     "JupyterServer",
@@ -266,6 +275,29 @@
    ],
    "type": "object"
   },
+  "IdleSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleTimeoutInMinutes": {
+     "$ref": "#/definitions/IdleTimeoutInMinutes"
+    },
+    "LifecycleManagement": {
+     "$ref": "#/definitions/LifecycleManagement"
+    },
+    "MaxIdleTimeoutInMinutes": {
+     "$ref": "#/definitions/MaxIdleTimeoutInMinutes"
+    },
+    "MinIdleTimeoutInMinutes": {
+     "$ref": "#/definitions/MinIdleTimeoutInMinutes"
+    }
+   },
+   "type": "object"
+  },
+  "IdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
+  },
   "JupyterLabAppSettings": {
    "additionalProperties": false,
    "properties": {
@@ -347,6 +379,23 @@
     }
    },
    "type": "object"
+  },
+  "LifecycleManagement": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "MaxIdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "MinIdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
   },
   "MlTools": {
    "enum": [

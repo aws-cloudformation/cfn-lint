@@ -1,0 +1,118 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/InstanceProfileName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceProfileArn"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileCreationTime": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceProfileName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkType": {
+   "enum": [
+    "IPV4",
+    "DUAL"
+   ],
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "default": false,
+   "type": "boolean"
+  },
+  "SubnetGroupIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcSecurityGroups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InstanceProfileArn",
+  "/properties/InstanceProfileCreationTime"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-csf.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::InstanceProfile",
+ "writeOnlyProperties": [
+  "/properties/InstanceProfileIdentifier"
+ ]
+}

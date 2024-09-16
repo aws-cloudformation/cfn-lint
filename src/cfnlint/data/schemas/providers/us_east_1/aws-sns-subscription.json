@@ -1,16 +1,21 @@
 {
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Region"
+ ],
  "createOnlyProperties": [
   "/properties/Endpoint",
   "/properties/Protocol",
   "/properties/TopicArn"
  ],
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Arn"
  ],
  "properties": {
+  "Arn": {
+   "type": "string"
+  },
   "DeliveryPolicy": {
-   "format": "json",
    "type": [
     "object",
     "string"
@@ -20,16 +25,12 @@
    "type": "string"
   },
   "FilterPolicy": {
-   "format": "json",
    "type": [
     "object",
     "string"
    ]
   },
   "FilterPolicyScope": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "Protocol": {
@@ -39,7 +40,6 @@
    "type": "boolean"
   },
   "RedrivePolicy": {
-   "format": "json",
    "type": [
     "object",
     "string"
@@ -49,7 +49,6 @@
    "type": "string"
   },
   "ReplayPolicy": {
-   "format": "json",
    "type": [
     "object",
     "string"
@@ -63,11 +62,21 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/Arn"
  ],
  "required": [
   "TopicArn",
   "Protocol"
  ],
- "typeName": "AWS::SNS::Subscription"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SNS::Subscription",
+ "writeOnlyProperties": [
+  "/properties/Region"
+ ]
 }

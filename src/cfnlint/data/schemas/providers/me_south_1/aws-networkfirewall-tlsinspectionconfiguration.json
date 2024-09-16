@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TLSInspectionConfigurationName"
+ ],
+ "definitions": {
+  "Address": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressDefinition": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^([a-fA-F\\d:\\.]+/\\d{1,3})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AddressDefinition"
+   ],
+   "type": "object"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "$ref": "#/definitions/PortRangeBound"
+    },
+    "ToPort": {
+     "$ref": "#/definitions/PortRangeBound"
+    }
+   },
+   "required": [
+    "FromPort",
+    "ToPort"
+   ],
+   "type": "object"
+  },
+  "PortRangeBound": {
+   "maximum": 65535,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ProtocolNumber": {
+   "maximum": 255,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "ResourceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(arn:aws.*)$",
+   "type": "string"
+  },
+  "RevokedStatusAction": {
+   "enum": [
+    "PASS",
+    "DROP",
+    "REJECT"
+   ],
+   "type": "string"
+  },
+  "ServerCertificate": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceArn": {
+     "$ref": "#/definitions/ResourceArn"
+    }
+   },
+   "type": "object"
+  },
+  "ServerCertificateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateAuthorityArn": {
+     "$ref": "#/definitions/ResourceArn"
+    },
+    "CheckCertificateRevocationStatus": {
+     "additionalProperties": false,
+     "properties": {
+      "RevokedStatusAction": {
+       "$ref": "#/definitions/RevokedStatusAction"
+      },
+      "UnknownStatusAction": {
+       "$ref": "#/definitions/UnknownStatusAction"
+      }
+     },
+     "type": "object"
+    },
+    "Scopes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerCertificateScope"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ServerCertificates": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ServerCertificate"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ServerCertificateScope": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationPorts": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Destinations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Address"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Protocols": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ProtocolNumber"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourcePorts": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Sources": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Address"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "TLSInspectionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerCertificateConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerCertificateConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnknownStatusAction": {
+   "enum": [
+    "PASS",
+    "DROP",
+    "REJECT"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TLSInspectionConfigurationArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "TLSInspectionConfiguration": {
+   "$ref": "#/definitions/TLSInspectionConfiguration"
+  },
+  "TLSInspectionConfigurationArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "TLSInspectionConfigurationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$",
+   "type": "string"
+  },
+  "TLSInspectionConfigurationName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TLSInspectionConfigurationArn",
+  "/properties/TLSInspectionConfigurationId"
+ ],
+ "required": [
+  "TLSInspectionConfigurationName",
+  "TLSInspectionConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkFirewall::TLSInspectionConfiguration"
+}
