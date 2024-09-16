@@ -1,3 +1,15 @@
+### v1.14.0
+## What's Changed
+* Cloud9 ImageIds can be an alias by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3679
+* Exceptions for hardcoded authorizer uri in I3042 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3684
+* Associate[CarrierIpAddress|PublicIpAddress] not with `NetworkInterfaceId` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3685
+* Escape pattern matching when using SAM and SSM parameter default value by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3686
+* Switch event rule `requiredXor` to `requiredOr` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3688
+* Bump peter-evans/create-pull-request from 6 to 7 by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/3689
+* Bump pypa/gh-action-pip-audit from 1.0.8 to 1.1.0 by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/3690
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.13.0...v1.14.0
+
 ### v1.13.0
 ## What's Changed
 * Add rule [E3674](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3674) to validate instance `PrivateIpAddress` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3657
