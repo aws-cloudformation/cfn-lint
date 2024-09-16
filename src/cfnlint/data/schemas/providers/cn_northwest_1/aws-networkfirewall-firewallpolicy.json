@@ -1,0 +1,328 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FirewallPolicyName"
+ ],
+ "definitions": {
+  "ActionDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "PublishMetricAction": {
+     "$ref": "#/definitions/PublishMetricAction"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAction": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionDefinition": {
+     "$ref": "#/definitions/ActionDefinition"
+    },
+    "ActionName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActionName",
+    "ActionDefinition"
+   ],
+   "type": "object"
+  },
+  "Dimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_ ]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FirewallPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyVariables": {
+     "additionalProperties": false,
+     "properties": {
+      "RuleVariables": {
+       "$ref": "#/definitions/RuleVariables"
+      }
+     },
+     "type": "object"
+    },
+    "StatefulDefaultActions": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatefulEngineOptions": {
+     "$ref": "#/definitions/StatefulEngineOptions"
+    },
+    "StatefulRuleGroupReferences": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/StatefulRuleGroupReference"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatelessCustomActions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CustomAction"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatelessDefaultActions": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatelessFragmentDefaultActions": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StatelessRuleGroupReferences": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/StatelessRuleGroupReference"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TLSInspectionConfigurationArn": {
+     "$ref": "#/definitions/ResourceArn"
+    }
+   },
+   "required": [
+    "StatelessDefaultActions",
+    "StatelessFragmentDefaultActions"
+   ],
+   "type": "object"
+  },
+  "IPSet": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/VariableDefinition"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OverrideAction": {
+   "enum": [
+    "DROP_TO_ALERT"
+   ],
+   "type": "string"
+  },
+  "Priority": {
+   "maximum": 65535,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "PublishMetricAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Dimensions"
+   ],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(arn:aws.*)$",
+   "type": "string"
+  },
+  "RuleOrder": {
+   "enum": [
+    "DEFAULT_ACTION_ORDER",
+    "STRICT_ORDER"
+   ],
+   "type": "string"
+  },
+  "RuleVariables": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9_]{1,32}$": {
+     "$ref": "#/definitions/IPSet"
+    }
+   },
+   "type": "object"
+  },
+  "StatefulEngineOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "RuleOrder": {
+     "$ref": "#/definitions/RuleOrder"
+    },
+    "StreamExceptionPolicy": {
+     "$ref": "#/definitions/StreamExceptionPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "StatefulRuleGroupOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/OverrideAction"
+    }
+   },
+   "type": "object"
+  },
+  "StatefulRuleGroupReference": {
+   "additionalProperties": false,
+   "properties": {
+    "Override": {
+     "$ref": "#/definitions/StatefulRuleGroupOverride"
+    },
+    "Priority": {
+     "$ref": "#/definitions/Priority"
+    },
+    "ResourceArn": {
+     "$ref": "#/definitions/ResourceArn"
+    }
+   },
+   "required": [
+    "ResourceArn"
+   ],
+   "type": "object"
+  },
+  "StatelessRuleGroupReference": {
+   "additionalProperties": false,
+   "properties": {
+    "Priority": {
+     "$ref": "#/definitions/Priority"
+    },
+    "ResourceArn": {
+     "$ref": "#/definitions/ResourceArn"
+    }
+   },
+   "required": [
+    "ResourceArn",
+    "Priority"
+   ],
+   "type": "object"
+  },
+  "StreamExceptionPolicy": {
+   "enum": [
+    "DROP",
+    "CONTINUE",
+    "REJECT"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VariableDefinition": {
+   "minLength": 1,
+   "pattern": "^.*$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FirewallPolicyArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "FirewallPolicy": {
+   "$ref": "#/definitions/FirewallPolicy"
+  },
+  "FirewallPolicyArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FirewallPolicyId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$",
+   "type": "string"
+  },
+  "FirewallPolicyName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FirewallPolicyArn",
+  "/properties/FirewallPolicyId"
+ ],
+ "required": [
+  "FirewallPolicyName",
+  "FirewallPolicy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkFirewall::FirewallPolicy"
+}

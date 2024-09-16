@@ -9,7 +9,9 @@
   "/properties/DomainIdentifier",
   "/properties/EnvironmentProfileIdentifier",
   "/properties/ProjectIdentifier",
-  "/properties/UserParameters"
+  "/properties/UserParameters",
+  "/properties/EnvironmentAccountIdentifier",
+  "/properties/EnvironmentAccountRegion"
  ],
  "definitions": {
   "EnvironmentParameter": {
@@ -75,16 +77,27 @@
    "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
+  "EnvironmentAccountIdentifier": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "EnvironmentAccountRegion": {
+   "pattern": "^[a-z]{2}-[a-z]{4,10}-\\d$",
+   "type": "string"
+  },
   "EnvironmentBlueprintId": {
    "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentProfileId": {
-   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "pattern": "^[a-zA-Z0-9_-]{0,36}$",
    "type": "string"
   },
   "EnvironmentProfileIdentifier": {
-   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "pattern": "^[a-zA-Z0-9_-]{0,36}$",
+   "type": "string"
+  },
+  "EnvironmentRoleArn": {
    "type": "string"
   },
   "GlossaryTerms": {
@@ -148,7 +161,6 @@
   "/properties/UpdatedAt"
  ],
  "required": [
-  "EnvironmentProfileIdentifier",
   "Name",
   "ProjectIdentifier",
   "DomainIdentifier"
@@ -161,6 +173,9 @@
  "writeOnlyProperties": [
   "/properties/EnvironmentProfileIdentifier",
   "/properties/ProjectIdentifier",
-  "/properties/DomainIdentifier"
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentAccountIdentifier",
+  "/properties/EnvironmentAccountRegion",
+  "/properties/EnvironmentRoleArn"
  ]
 }

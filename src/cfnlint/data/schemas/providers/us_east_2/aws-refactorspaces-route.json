@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationIdentifier",
+  "/properties/EnvironmentIdentifier",
+  "/properties/RouteType",
+  "/properties/ServiceIdentifier",
+  "/properties/UriPathRoute/SourcePath",
+  "/properties/UriPathRoute/Methods",
+  "/properties/UriPathRoute/IncludeChildPaths",
+  "/properties/UriPathRoute/AppendSourcePath"
+ ],
+ "definitions": {
+  "DefaultRouteInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ActivationState": {
+     "$ref": "#/definitions/RouteActivationState"
+    }
+   },
+   "required": [
+    "ActivationState"
+   ],
+   "type": "object"
+  },
+  "Method": {
+   "enum": [
+    "DELETE",
+    "GET",
+    "HEAD",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT"
+   ],
+   "type": "string"
+  },
+  "RouteActivationState": {
+   "enum": [
+    "INACTIVE",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "RouteType": {
+   "enum": [
+    "DEFAULT",
+    "URI_PATH"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UriPathRouteInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ActivationState": {
+     "$ref": "#/definitions/RouteActivationState"
+    },
+    "AppendSourcePath": {
+     "type": "boolean"
+    },
+    "IncludeChildPaths": {
+     "type": "boolean"
+    },
+    "Methods": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Method"
+     },
+     "type": "array"
+    },
+    "SourcePath": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(/([a-zA-Z0-9._:-]+|\\{[a-zA-Z0-9._:-]+\\}))+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActivationState"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/ApplicationIdentifier",
+  "/properties/RouteIdentifier"
+ ],
+ "properties": {
+  "ApplicationIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^app-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:refactor-spaces:[a-zA-Z0-9\\-]+:\\w{12}:[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "DefaultRoute": {
+   "$ref": "#/definitions/DefaultRouteInput"
+  },
+  "EnvironmentIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^env-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "PathResourceToId": {
+   "type": "string"
+  },
+  "RouteIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^rte-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "RouteType": {
+   "$ref": "#/definitions/RouteType"
+  },
+  "ServiceIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^svc-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UriPathRoute": {
+   "$ref": "#/definitions/UriPathRouteInput"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RouteIdentifier",
+  "/properties/PathResourceToId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "EnvironmentIdentifier",
+  "ApplicationIdentifier",
+  "ServiceIdentifier",
+  "RouteType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-refactor-spaces",
+ "taggable": true,
+ "typeName": "AWS::RefactorSpaces::Route",
+ "writeOnlyProperties": [
+  "/properties/RouteType",
+  "/properties/ServiceIdentifier",
+  "/properties/DefaultRoute",
+  "/properties/UriPathRoute"
+ ]
+}

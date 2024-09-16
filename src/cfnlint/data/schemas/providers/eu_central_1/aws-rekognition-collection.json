@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CollectionId"
+ ],
+ "definitions": {
+  "Arn": {
+   "$comment": "Use the `definitions` block to provide shared resource property schemas",
+   "format": "(^arn:[a-z\\d-]+:rekognition:[a-z\\d-]+:\\d{12}:collection\\/([a-zA-Z0-9_.\\-]+){1,255})",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "CollectionId": {
+   "maxLength": 255,
+   "pattern": "\\A[a-zA-Z0-9_\\.\\-]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "pattern": "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CollectionId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CollectionId": {
+   "$ref": "#/definitions/CollectionId"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "CollectionId"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/rekognition/latest/dg/collections.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Rekognition::Collection"
+}

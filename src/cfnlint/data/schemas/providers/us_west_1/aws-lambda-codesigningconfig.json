@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AllowedPublishers": {
+   "additionalProperties": false,
+   "properties": {
+    "SigningProfileVersionArns": {
+     "items": {
+      "maxLength": 1024,
+      "minLength": 12,
+      "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SigningProfileVersionArns"
+   ],
+   "type": "object"
+  },
+  "CodeSigningPolicies": {
+   "additionalProperties": false,
+   "properties": {
+    "UntrustedArtifactOnDeployment": {
+     "default": "Warn",
+     "enum": [
+      "Warn",
+      "Enforce"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "UntrustedArtifactOnDeployment"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CodeSigningConfigArn"
+ ],
+ "properties": {
+  "AllowedPublishers": {
+   "$ref": "#/definitions/AllowedPublishers"
+  },
+  "CodeSigningConfigArn": {
+   "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}",
+   "type": "string"
+  },
+  "CodeSigningConfigId": {
+   "pattern": "csc-[a-zA-Z0-9-_\\.]{17}",
+   "type": "string"
+  },
+  "CodeSigningPolicies": {
+   "$ref": "#/definitions/CodeSigningPolicies"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CodeSigningConfigId",
+  "/properties/CodeSigningConfigArn"
+ ],
+ "required": [
+  "AllowedPublishers"
+ ],
+ "typeName": "AWS::Lambda::CodeSigningConfig"
+}

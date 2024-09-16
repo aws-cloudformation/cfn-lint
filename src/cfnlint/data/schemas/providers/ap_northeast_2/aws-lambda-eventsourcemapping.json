@@ -1,0 +1,335 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EventSourceArn",
+  "/properties/StartingPosition",
+  "/properties/StartingPositionTimestamp",
+  "/properties/SelfManagedEventSource",
+  "/properties/AmazonManagedKafkaEventSourceConfig",
+  "/properties/SelfManagedKafkaEventSourceConfig"
+ ],
+ "definitions": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId"
+    }
+   },
+   "type": "object"
+  },
+  "ConsumerGroupId": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+   "type": "string"
+  },
+  "DestinationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "$ref": "#/definitions/OnFailure"
+    }
+   },
+   "type": "object"
+  },
+  "DocumentDBEventSourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionName": {
+     "maxLength": 57,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FullDocument": {
+     "enum": [
+      "UpdateLookup",
+      "Default"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoints": {
+   "additionalProperties": false,
+   "properties": {
+    "KafkaBootstrapServers": {
+     "items": {
+      "maxLength": 300,
+      "minLength": 1,
+      "pattern": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]):[0-9]{1,5}",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "properties": {
+    "Pattern": {
+     "maxLength": 4096,
+     "minLength": 0,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "MaximumConcurrency": {
+   "maximum": 1000,
+   "minimum": 2,
+   "type": "integer"
+  },
+  "OnFailure": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumConcurrency": {
+     "$ref": "#/definitions/MaximumConcurrency"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedEventSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoints": {
+     "$ref": "#/definitions/Endpoints"
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId"
+    }
+   },
+   "type": "object"
+  },
+  "SourceAccessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "BASIC_AUTH",
+      "VPC_SUBNET",
+      "VPC_SECURITY_GROUP",
+      "SASL_SCRAM_512_AUTH",
+      "SASL_SCRAM_256_AUTH",
+      "VIRTUAL_HOST",
+      "CLIENT_CERTIFICATE_TLS_AUTH",
+      "SERVER_ROOT_CA_CERTIFICATE"
+     ],
+     "type": "string"
+    },
+    "URI": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/AmazonManagedKafkaEventSourceConfig"
+  },
+  "BatchSize": {
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "BisectBatchOnFunctionError": {
+   "type": "boolean"
+  },
+  "DestinationConfig": {
+   "$ref": "#/definitions/DestinationConfig"
+  },
+  "DocumentDBEventSourceConfig": {
+   "$ref": "#/definitions/DocumentDBEventSourceConfig"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "EventSourceArn": {
+   "maxLength": 1024,
+   "minLength": 12,
+   "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+   "type": "string"
+  },
+  "FilterCriteria": {
+   "$ref": "#/definitions/FilterCriteria"
+  },
+  "FunctionName": {
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?",
+   "type": "string"
+  },
+  "FunctionResponseTypes": {
+   "items": {
+    "enum": [
+     "ReportBatchItemFailures"
+    ],
+    "type": "string"
+   },
+   "maxLength": 1,
+   "minLength": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 12,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()",
+   "type": "string"
+  },
+  "MaximumBatchingWindowInSeconds": {
+   "maximum": 300,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MaximumRecordAgeInSeconds": {
+   "maximum": 604800,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "MaximumRetryAttempts": {
+   "maximum": 10000,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "ParallelizationFactor": {
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Queues": {
+   "items": {
+    "maxLength": 1000,
+    "minLength": 1,
+    "pattern": "[\\s\\S]*",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ScalingConfig": {
+   "$ref": "#/definitions/ScalingConfig"
+  },
+  "SelfManagedEventSource": {
+   "$ref": "#/definitions/SelfManagedEventSource"
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/SelfManagedKafkaEventSourceConfig"
+  },
+  "SourceAccessConfigurations": {
+   "items": {
+    "$ref": "#/definitions/SourceAccessConfiguration"
+   },
+   "maxItems": 22,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StartingPosition": {
+   "enum": [
+    "AT_TIMESTAMP",
+    "LATEST",
+    "TRIM_HORIZON"
+   ],
+   "maxLength": 12,
+   "minLength": 6,
+   "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+   "type": "string"
+  },
+  "StartingPositionTimestamp": {
+   "type": "number"
+  },
+  "Topics": {
+   "items": {
+    "maxLength": 249,
+    "minLength": 1,
+    "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TumblingWindowInSeconds": {
+   "maximum": 900,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "propertyTransform": {
+  "/properties/StartingPositionTimestamp": "StartingPositionTimestamp * 1000"
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "FunctionName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Lambda::EventSourceMapping"
+}
