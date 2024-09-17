@@ -1445,6 +1445,7 @@ cached: list[str] = [
     "aws-dms-dataprovider.json",
     "aws-dms-endpoint.json",
     "aws-dms-eventsubscription.json",
+    "aws-dms-instanceprofile.json",
     "aws-dms-migrationproject.json",
     "aws-dms-replicationconfig.json",
     "aws-dms-replicationinstance.json",

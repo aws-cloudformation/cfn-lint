@@ -1,0 +1,505 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FunctionName"
+ ],
+ "definitions": {
+  "Code": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageUri": {
+     "type": "string"
+    },
+    "S3Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[0-9A-Za-z\\.\\-_]*(?<!\\.)$",
+     "type": "string"
+    },
+    "S3Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "S3ObjectVersion": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SourceKMSKeyArn": {
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    },
+    "ZipFile": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeadLetterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetArn": {
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Environment": {
+   "additionalProperties": false,
+   "properties": {
+    "Variables": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z][a-zA-Z0-9_]+": {
+       "type": [
+        "string",
+        "number",
+        "integer",
+        "object",
+        "array",
+        "boolean"
+       ]
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "EphemeralStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "maximum": 10240,
+     "minimum": 512,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Size"
+   ],
+   "type": "object"
+  },
+  "FileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 200,
+     "pattern": "^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}$",
+     "type": "string"
+    },
+    "LocalMountPath": {
+     "maxLength": 160,
+     "pattern": "^/mnt/[a-zA-Z0-9-_.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn",
+    "LocalMountPath"
+   ],
+   "type": "object"
+  },
+  "ImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1500,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EntryPoint": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1500,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "WorkingDirectory": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationLogLevel": {
+     "enum": [
+      "TRACE",
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR",
+      "FATAL"
+     ],
+     "type": "string"
+    },
+    "LogFormat": {
+     "enum": [
+      "Text",
+      "JSON"
+     ],
+     "type": "string"
+    },
+    "LogGroup": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+     "type": "string"
+    },
+    "SystemLogLevel": {
+     "enum": [
+      "DEBUG",
+      "INFO",
+      "WARN"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PublicAccessBlockConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "RestrictPublicResource": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RecursiveLoop": {
+   "enum": [
+    "Allow",
+    "Terminate"
+   ],
+   "type": "string"
+  },
+  "RuntimeManagementConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RuntimeVersionArn": {
+     "type": "string"
+    },
+    "UpdateRuntimeOn": {
+     "enum": [
+      "Auto",
+      "FunctionUpdate",
+      "Manual"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "UpdateRuntimeOn"
+   ],
+   "type": "object"
+  },
+  "SnapStart": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyOn": {
+     "enum": [
+      "PublishedVersions",
+      "None"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApplyOn"
+   ],
+   "type": "object"
+  },
+  "SnapStartResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplyOn": {
+     "enum": [
+      "PublishedVersions",
+      "None"
+     ],
+     "type": "string"
+    },
+    "OptimizationStatus": {
+     "enum": [
+      "On",
+      "Off"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TracingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "enum": [
+      "Active",
+      "PassThrough"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6AllowedForDualStack": {
+     "type": "boolean"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 16,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FunctionName"
+ ],
+ "properties": {
+  "Architectures": {
+   "items": {
+    "enum": [
+     "x86_64",
+     "arm64"
+    ],
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Code": {
+   "$ref": "#/definitions/Code"
+  },
+  "CodeSigningConfigArn": {
+   "pattern": "arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}",
+   "type": "string"
+  },
+  "DeadLetterConfig": {
+   "$ref": "#/definitions/DeadLetterConfig"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Environment": {
+   "$ref": "#/definitions/Environment"
+  },
+  "EphemeralStorage": {
+   "$ref": "#/definitions/EphemeralStorage"
+  },
+  "FileSystemConfigs": {
+   "items": {
+    "$ref": "#/definitions/FileSystemConfig"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "FunctionName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Handler": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "ImageConfig": {
+   "$ref": "#/definitions/ImageConfig"
+  },
+  "KmsKeyArn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "Layers": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LoggingConfig": {
+   "$ref": "#/definitions/LoggingConfig"
+  },
+  "MemorySize": {
+   "maximum": 10240,
+   "minimum": 128,
+   "type": "integer"
+  },
+  "PackageType": {
+   "enum": [
+    "Image",
+    "Zip"
+   ],
+   "type": "string"
+  },
+  "PublicAccessBlockConfig": {
+   "$ref": "#/definitions/PublicAccessBlockConfig"
+  },
+  "RecursiveLoop": {
+   "$ref": "#/definitions/RecursiveLoop"
+  },
+  "ReservedConcurrentExecutions": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Role": {
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Runtime": {
+   "enum": [
+    "dotnet6",
+    "dotnet8",
+    "dotnetcore1.0",
+    "dotnetcore2.0",
+    "dotnetcore2.1",
+    "dotnetcore3.1",
+    "go1.x",
+    "java11",
+    "java17",
+    "java21",
+    "java8",
+    "java8.al2",
+    "nodejs",
+    "nodejs10.x",
+    "nodejs12.x",
+    "nodejs14.x",
+    "nodejs16.x",
+    "nodejs18.x",
+    "nodejs20.x",
+    "nodejs4.3",
+    "nodejs4.3-edge",
+    "nodejs6.10",
+    "nodejs8.10",
+    "provided",
+    "provided.al2",
+    "provided.al2023",
+    "python2.7",
+    "python3.10",
+    "python3.11",
+    "python3.12",
+    "python3.6",
+    "python3.7",
+    "python3.8",
+    "python3.9",
+    "ruby2.5",
+    "ruby2.7",
+    "ruby3.2",
+    "ruby3.3"
+   ],
+   "type": "string"
+  },
+  "RuntimeManagementConfig": {
+   "$ref": "#/definitions/RuntimeManagementConfig"
+  },
+  "SnapStart": {
+   "$ref": "#/definitions/SnapStart"
+  },
+  "SnapStartResponse": {
+   "$ref": "#/definitions/SnapStartResponse"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Timeout": {
+   "maximum": 900,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "TracingConfig": {
+   "$ref": "#/definitions/TracingConfig"
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SnapStartResponse",
+  "/properties/SnapStartResponse/ApplyOn",
+  "/properties/SnapStartResponse/OptimizationStatus",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Code",
+  "Role"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lambda::Function",
+ "writeOnlyProperties": [
+  "/properties/SnapStart",
+  "/properties/SnapStart/ApplyOn",
+  "/properties/Code",
+  "/properties/Code/ImageUri",
+  "/properties/Code/S3Bucket",
+  "/properties/Code/S3Key",
+  "/properties/Code/S3ObjectVersion",
+  "/properties/Code/ZipFile"
+ ]
+}
