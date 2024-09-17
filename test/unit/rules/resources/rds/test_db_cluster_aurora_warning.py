@@ -21,14 +21,28 @@ def rule():
     "instance,expected",
     [
         (
+            {"Engine": "aurora-mysql", "EngineMode": "serverless"},
+            [],
+        ),
+        (
             {
                 "Engine": "aurora-mysql",
+                "EngineMode": "provisioned",
+                "PerformanceInsightsEnabled": True,
             },
             [],
         ),
         (
             {
                 "Engine": "aurora-mysql",
+                "PerformanceInsightsEnabled": True,
+            },
+            [],
+        ),
+        (
+            {
+                "Engine": "aurora-mysql",
+                "EngineMode": "serverless",
                 "PerformanceInsightsEnabled": True,
             },
             [

@@ -14,7 +14,7 @@ from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, Schema
 
 class DbClusterAuroraWarning(CfnLintJsonSchema):
     id = "W3693"
-    shortdesc = "Validate Aurora DB cluster configuration"
+    shortdesc = "Validate Aurora DB cluster configuration for ignored properties"
     description = (
         "When creating an Aurora DB Cluster there are fields that "
         "will allow for successful deployment but are ignored"
@@ -32,9 +32,6 @@ class DbClusterAuroraWarning(CfnLintJsonSchema):
             all_matches=True,
         )
 
-    # DBClusterInstanceClass is required
-    # AllocatedStorage is required
-    # Iops is required
     def validate(
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
