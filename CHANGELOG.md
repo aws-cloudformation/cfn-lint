@@ -1,3 +1,11 @@
+### v1.14.1
+## What's Changed
+* Add [W3693](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3693) for aurora cluster properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3695
+* Update ARN AWS regex in [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3696
+* Update CloudFormation schemas to `2024-09-17` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3692
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.14.0...v1.14.1
+
 ### v1.14.0
 ## What's Changed
 * Cloud9 ImageIds can be an alias by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3679
