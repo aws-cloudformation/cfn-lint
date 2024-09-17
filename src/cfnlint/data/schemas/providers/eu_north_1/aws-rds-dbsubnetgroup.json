@@ -1,8 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/SubscriptionName",
-  "/properties/SnsTopicArn"
+  "/properties/DBSubnetGroupName"
  ],
  "definitions": {
   "Tag": {
@@ -26,37 +25,22 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/SubscriptionName"
+  "/properties/DBSubnetGroupName"
  ],
  "properties": {
-  "Enabled": {
-   "default": true,
-   "type": "boolean"
-  },
-  "EventCategories": {
-   "items": {
-    "type": "string"
-   },
-   "type": "array",
-   "uniqueItems": true
-  },
-  "SnsTopicArn": {
+  "DBSubnetGroupDescription": {
    "type": "string"
   },
-  "SourceIds": {
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "SubnetIds": {
    "insertionOrder": false,
    "items": {
     "type": "string"
    },
    "type": "array",
-   "uniqueItems": true
-  },
-  "SourceType": {
-   "type": "string"
-  },
-  "SubscriptionName": {
-   "maxLength": 255,
-   "type": "string"
+   "uniqueItems": false
   },
   "Tags": {
    "insertionOrder": false,
@@ -69,11 +53,19 @@
   }
  },
  "propertyTransform": {
-  "/properties/SubscriptionName": "$lowercase(SubscriptionName)"
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
  },
  "required": [
-  "SnsTopicArn"
+  "DBSubnetGroupDescription",
+  "SubnetIds"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
- "typeName": "AWS::RDS::EventSubscription"
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::DBSubnetGroup"
 }

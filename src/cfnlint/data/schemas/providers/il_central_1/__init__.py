@@ -927,6 +927,7 @@ cached: list[str] = [
     "aws-elasticache-user.json",
     "aws-elasticache-usergroup.json",
     "aws-elasticloadbalancing-loadbalancer.json",
+    "aws-elasticloadbalancingv2-listener.json",
     "aws-elasticloadbalancingv2-listenercertificate.json",
     "aws-elasticloadbalancingv2-listenerrule.json",
     "aws-elasticloadbalancingv2-loadbalancer.json",

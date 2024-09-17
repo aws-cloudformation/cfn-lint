@@ -335,6 +335,7 @@ types: list[str] = [
     "AWS::DataZone::DataSource",
     "AWS::DataZone::Domain",
     "AWS::DataZone::Environment",
+    "AWS::DataZone::EnvironmentActions",
     "AWS::DataZone::EnvironmentBlueprintConfiguration",
     "AWS::DataZone::EnvironmentProfile",
     "AWS::DataZone::GroupProfile",

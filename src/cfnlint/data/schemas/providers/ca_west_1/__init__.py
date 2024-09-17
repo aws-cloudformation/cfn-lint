@@ -666,7 +666,6 @@ cached: list[str] = [
     "aws-datasync-task.json",
     "aws-dlm-lifecyclepolicy.json",
     "aws-dms-dataprovider.json",
-    "aws-dms-instanceprofile.json",
     "aws-dms-migrationproject.json",
     "aws-dms-replicationconfig.json",
     "aws-dynamodb-globaltable.json",
