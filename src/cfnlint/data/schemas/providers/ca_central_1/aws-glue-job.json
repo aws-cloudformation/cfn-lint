@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ConnectionsList": {
+   "additionalProperties": false,
+   "properties": {
+    "Connections": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "ExecutionProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrentRuns": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "JobCommand": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "PythonVersion": {
+     "type": "string"
+    },
+    "Runtime": {
+     "type": "string"
+    },
+    "ScriptLocation": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "NotifyDelayAfter": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocatedCapacity": {
+   "type": "number"
+  },
+  "Command": {
+   "$ref": "#/definitions/JobCommand"
+  },
+  "Connections": {
+   "$ref": "#/definitions/ConnectionsList"
+  },
+  "DefaultArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Description": {
+   "type": "string"
+  },
+  "ExecutionClass": {
+   "type": "string"
+  },
+  "ExecutionProperty": {
+   "$ref": "#/definitions/ExecutionProperty"
+  },
+  "GlueVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LogUri": {
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "number"
+  },
+  "MaxRetries": {
+   "type": "number"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NonOverridableArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "NotificationProperty": {
+   "$ref": "#/definitions/NotificationProperty"
+  },
+  "NumberOfWorkers": {
+   "maximum": 299,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "SecurityConfiguration": {
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Timeout": {
+   "type": "integer"
+  },
+  "WorkerType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Role",
+  "Command"
+ ],
+ "typeName": "AWS::Glue::Job"
+}
