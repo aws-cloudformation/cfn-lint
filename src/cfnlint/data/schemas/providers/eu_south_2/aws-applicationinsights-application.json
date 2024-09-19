@@ -1,0 +1,606 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceGroupName",
+  "/properties/GroupingType"
+ ],
+ "definitions": {
+  "Alarm": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Severity": {
+     "enum": [
+      "HIGH",
+      "MEDIUM",
+      "LOW"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlarmName"
+   ],
+   "type": "object"
+  },
+  "AlarmMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmMetricName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlarmMetricName"
+   ],
+   "type": "object"
+  },
+  "ComponentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfigurationDetails": {
+     "$ref": "#/definitions/ConfigurationDetails"
+    },
+    "SubComponentTypeConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SubComponentTypeConfiguration"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ComponentMonitoringSetting": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "ComponentName"
+     ]
+    },
+    {
+     "required": [
+      "ComponentARN"
+     ]
+    }
+   ],
+   "properties": {
+    "ComponentARN": {
+     "maxLength": 300,
+     "minLength": 20,
+     "pattern": "^arn:aws(-[\\w]+)*:[\\w\\d-]+:([\\w\\d-]*)?:[\\w\\d_-]*([:/].+)*$",
+     "type": "string"
+    },
+    "ComponentConfigurationMode": {
+     "enum": [
+      "DEFAULT",
+      "DEFAULT_WITH_OVERWRITE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "ComponentName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\d\\w\\-_.+]*$",
+     "type": "string"
+    },
+    "CustomComponentConfiguration": {
+     "$ref": "#/definitions/ComponentConfiguration"
+    },
+    "DefaultOverwriteComponentConfiguration": {
+     "$ref": "#/definitions/ComponentConfiguration"
+    },
+    "Tier": {
+     "pattern": "^[A-Z][[A-Z]_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Tier",
+    "ComponentConfigurationMode"
+   ],
+   "type": "object"
+  },
+  "ConfigurationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmMetrics": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AlarmMetric"
+     },
+     "type": "array"
+    },
+    "Alarms": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Alarm"
+     },
+     "type": "array"
+    },
+    "HAClusterPrometheusExporter": {
+     "$ref": "#/definitions/HAClusterPrometheusExporter"
+    },
+    "HANAPrometheusExporter": {
+     "$ref": "#/definitions/HANAPrometheusExporter"
+    },
+    "JMXPrometheusExporter": {
+     "$ref": "#/definitions/JMXPrometheusExporter"
+    },
+    "Logs": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Log"
+     },
+     "type": "array"
+    },
+    "NetWeaverPrometheusExporter": {
+     "$ref": "#/definitions/NetWeaverPrometheusExporter"
+    },
+    "Processes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Process"
+     },
+     "type": "array"
+    },
+    "SQLServerPrometheusExporter": {
+     "$ref": "#/definitions/SQLServerPrometheusExporter"
+    },
+    "WindowsEvents": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WindowsEvent"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CustomComponent": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\d\\w\\-_.+]*$",
+     "type": "string"
+    },
+    "ResourceList": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 300,
+      "minLength": 20,
+      "pattern": "^arn:aws(-[\\w]+)*:[\\w\\d-]+:([\\w\\d-]*)?:[\\w\\d_-]*([:/].+)*$",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ComponentName",
+    "ResourceList"
+   ],
+   "type": "object"
+  },
+  "EventLevel": {
+   "enum": [
+    "INFORMATION",
+    "WARNING",
+    "ERROR",
+    "CRITICAL",
+    "VERBOSE"
+   ],
+   "type": "string"
+  },
+  "HAClusterPrometheusExporter": {
+   "additionalProperties": false,
+   "properties": {
+    "PrometheusPort": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HANAPrometheusExporter": {
+   "additionalProperties": false,
+   "properties": {
+    "AgreeToInstallHANADBClient": {
+     "type": "boolean"
+    },
+    "HANAPort": {
+     "type": "string"
+    },
+    "HANASID": {
+     "type": "string"
+    },
+    "HANASecretName": {
+     "type": "string"
+    },
+    "PrometheusPort": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HANASID",
+    "HANAPort",
+    "HANASecretName",
+    "AgreeToInstallHANADBClient"
+   ],
+   "type": "object"
+  },
+  "JMXPrometheusExporter": {
+   "additionalProperties": false,
+   "properties": {
+    "HostPort": {
+     "type": "string"
+    },
+    "JMXURL": {
+     "type": "string"
+    },
+    "PrometheusPort": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Log": {
+   "additionalProperties": false,
+   "properties": {
+    "Encoding": {
+     "enum": [
+      "utf-8",
+      "utf-16",
+      "ascii"
+     ],
+     "type": "string"
+    },
+    "LogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+     "type": "string"
+    },
+    "LogPath": {
+     "maxLength": 260,
+     "minLength": 1,
+     "pattern": "^([a-zA-Z]:\\\\[\\\\\\S|*\\S]?.*|/[^\"']*)$",
+     "type": "string"
+    },
+    "LogType": {
+     "pattern": "^[A-Z][[A-Z]_]*$",
+     "type": "string"
+    },
+    "PatternSet": {
+     "maxLength": 30,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9.-_]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogType"
+   ],
+   "type": "object"
+  },
+  "LogPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "Pattern": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PatternName": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9.-_]*",
+     "type": "string"
+    },
+    "Rank": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "PatternName",
+    "Pattern",
+    "Rank"
+   ],
+   "type": "object"
+  },
+  "LogPatternSet": {
+   "additionalProperties": false,
+   "properties": {
+    "LogPatterns": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LogPattern"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "PatternSetName": {
+     "maxLength": 30,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9.-_]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PatternSetName",
+    "LogPatterns"
+   ],
+   "type": "object"
+  },
+  "NetWeaverPrometheusExporter": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceNumbers": {
+     "items": {
+      "maxLength": 2,
+      "minLength": 1,
+      "pattern": "\\b([0-9]|[0-9][0-9])\\b",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "PrometheusPort": {
+     "type": "string"
+    },
+    "SAPSID": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SAPSID",
+    "InstanceNumbers"
+   ],
+   "type": "object"
+  },
+  "Process": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmMetrics": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AlarmMetric"
+     },
+     "type": "array"
+    },
+    "ProcessName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_,-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProcessName",
+    "AlarmMetrics"
+   ],
+   "type": "object"
+  },
+  "SQLServerPrometheusExporter": {
+   "additionalProperties": false,
+   "properties": {
+    "PrometheusPort": {
+     "type": "string"
+    },
+    "SQLSecretName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrometheusPort",
+    "SQLSecretName"
+   ],
+   "type": "object"
+  },
+  "SubComponentConfigurationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmMetrics": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AlarmMetric"
+     },
+     "type": "array"
+    },
+    "Logs": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Log"
+     },
+     "type": "array"
+    },
+    "Processes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Process"
+     },
+     "type": "array"
+    },
+    "WindowsEvents": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WindowsEvent"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SubComponentTypeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SubComponentConfigurationDetails": {
+     "$ref": "#/definitions/SubComponentConfigurationDetails"
+    },
+    "SubComponentType": {
+     "enum": [
+      "AWS::EC2::Instance",
+      "AWS::EC2::Volume"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubComponentType",
+    "SubComponentConfigurationDetails"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WindowsEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "EventLevels": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EventLevel"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "EventName": {
+     "maxLength": 260,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_ \\\\/-]+$",
+     "type": "string"
+    },
+    "LogGroupName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+     "type": "string"
+    },
+    "PatternSet": {
+     "maxLength": 30,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9.-_]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroupName",
+    "EventName",
+    "EventLevels"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationARN"
+ ],
+ "properties": {
+  "ApplicationARN": {
+   "type": "string"
+  },
+  "AttachMissingPermission": {
+   "type": "boolean"
+  },
+  "AutoConfigurationEnabled": {
+   "type": "boolean"
+  },
+  "CWEMonitorEnabled": {
+   "type": "boolean"
+  },
+  "ComponentMonitoringSettings": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ComponentMonitoringSetting"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "CustomComponents": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/CustomComponent"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "GroupingType": {
+   "enum": [
+    "ACCOUNT_BASED"
+   ],
+   "type": "string"
+  },
+  "LogPatternSets": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/LogPatternSet"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "OpsCenterEnabled": {
+   "type": "boolean"
+  },
+  "OpsItemSNSTopicArn": {
+   "maxLength": 300,
+   "minLength": 20,
+   "pattern": "^arn:aws(-[\\w]+)*:[\\w\\d-]+:([\\w\\d-]*)?:[\\w\\d_-]*([:/].+)*$",
+   "type": "string"
+  },
+  "ResourceGroupName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9.-_]*",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationARN"
+ ],
+ "required": [
+  "ResourceGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationinsights.git",
+ "taggable": true,
+ "typeName": "AWS::ApplicationInsights::Application",
+ "writeOnlyProperties": [
+  "/properties/ComponentMonitoringSettings",
+  "/properties/LogPatternSets",
+  "/properties/CustomComponents",
+  "/properties/GroupingType",
+  "/properties/OpsItemSNSTopicArn",
+  "/properties/AttachMissingPermission"
+ ]
+}

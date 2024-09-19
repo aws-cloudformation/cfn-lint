@@ -846,6 +846,7 @@ cached: list[str] = [
     "aws-appconfig-hostedconfigurationversion.json",
     "aws-applicationautoscaling-scalabletarget.json",
     "aws-applicationautoscaling-scalingpolicy.json",
+    "aws-applicationinsights-application.json",
     "aws-applicationsignals-servicelevelobjective.json",
     "aws-appmesh-gatewayroute.json",
     "aws-appmesh-mesh.json",
