@@ -1,3 +1,10 @@
+### v1.14.2
+## What's Changed
+* Move KMS validation for `SSESpecification` on Tables by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3700
+* Update CloudFormation schemas to `2024-09-19` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3698
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.14.1...v1.14.2
+
 ### v1.14.1
 ## What's Changed
 * Add [W3693](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3693) for aurora cluster properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3695
