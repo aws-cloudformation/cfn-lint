@@ -641,6 +641,14 @@ patches.extend(
                     },
                     path="/",
                 ),
+                Patch(
+                    values={"enum": ["KMS"]},
+                    path="/definitions/SSESpecification/properties/SSEType",
+                ),
+                Patch(
+                    values={"dependentRequired": {"KMSMasterKeyId": ["SSEType"]}},
+                    path="/definitions/SSESpecification",
+                ),
             ],
         ),
         ResourcePatch(
@@ -669,6 +677,10 @@ patches.extend(
                         ]
                     },
                     path="/",
+                ),
+                Patch(
+                    values={"enum": ["AES256", "KMS"]},
+                    path="/definitions/SSESpecification/properties/SSEType",
                 ),
             ],
         ),

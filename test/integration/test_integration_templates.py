@@ -72,6 +72,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ),
             "exit_code": 2,
         },
+        {
+            "filename": ("test/fixtures/templates/integration/aws-dynamodb-table.yaml"),
+            "results_filename": (
+                "test/fixtures/results/integration/aws-dynamodb-table.json"
+            ),
+            "exit_code": 2,
+        },
     ]
 
     def test_templates(self):
