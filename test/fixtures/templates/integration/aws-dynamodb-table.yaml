@@ -1,0 +1,44 @@
+
+Resources:
+  KMS:
+    Type: AWS::KMS::Key
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  Table1:
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: table1
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      SSESpecification:
+        KMSMasterKeyId: !GetAtt KMS.Arn
+        SSEEnabled: true
+        # SSEType: KMS # to provide an error
+  Table2:
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: table2
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      SSESpecification:
+        KMSMasterKeyId: !GetAtt KMS.Arn
+        SSEEnabled: true
+        SSEType: AES256
