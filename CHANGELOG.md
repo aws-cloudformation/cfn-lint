@@ -1,3 +1,12 @@
+### v1.15.0
+## What's Changed
+* Update state machine to support `StringMatches` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3705
+* Add rules for `Rules` section by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3703
+* Allow for secretsmanager dynamic refs in `Parameter` defaults by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3707
+* Update CloudFormation schemas to `2024-09-23` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3702
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.14.2...v1.15.0
+
 ### v1.14.2
 ## What's Changed
 * Move KMS validation for `SSESpecification` on Tables by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3700
