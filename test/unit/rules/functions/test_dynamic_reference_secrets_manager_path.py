@@ -43,6 +43,12 @@ def context(cfn):
             [],
         ),
         (
+            "Valid secrets manager",
+            "{{resolve:secretsmanager:Parameter}}",
+            ["Parameters", "MyParameter", "Default"],
+            [],
+        ),
+        (
             "Short list",
             "{{resolve:secretsmanager:Parameter}}",
             ["Parameters", "MyParameter"],
