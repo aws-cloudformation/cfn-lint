@@ -70,6 +70,12 @@
    ],
    "type": "object"
   },
+  "ResourceToTag": {
+   "enum": [
+    "lambda-function"
+   ],
+   "type": "string"
+  },
   "RunConfig": {
    "additionalProperties": false,
    "properties": {
@@ -218,8 +224,15 @@
    "type": "string"
   },
   "Name": {
-   "pattern": "^[0-9a-z_\\-]{1,21}$",
+   "pattern": "^[0-9a-z_\\-]{1,255}$",
    "type": "string"
+  },
+  "ResourcesToReplicateTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceToTag"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "RunConfig": {
    "$ref": "#/definitions/RunConfig"
@@ -278,6 +291,7 @@
   "/properties/Code/Script",
   "/properties/DeleteLambdaResourcesOnCanaryDeletion",
   "/properties/StartCanaryAfterCreation",
+  "/properties/ResourcesToReplicateTags",
   "/properties/RunConfig/EnvironmentVariables",
   "/properties/VisualReference"
  ]

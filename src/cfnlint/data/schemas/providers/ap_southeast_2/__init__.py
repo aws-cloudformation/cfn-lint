@@ -1281,6 +1281,7 @@ cached: list[str] = [
     "aws-apigatewayv2-authorizer.json",
     "aws-apigatewayv2-deployment.json",
     "aws-apigatewayv2-domainname.json",
+    "aws-apigatewayv2-integration.json",
     "aws-apigatewayv2-integrationresponse.json",
     "aws-apigatewayv2-model.json",
     "aws-apigatewayv2-route.json",
