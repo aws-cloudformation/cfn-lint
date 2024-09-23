@@ -1,0 +1,35 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "assertion": {
+   "properties": {
+    "Assert": {},
+    "AssertDescription": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "rule": {
+   "properties": {
+    "Assertions": {
+     "items": {
+      "$ref": "#/definitions/assertion"
+     },
+     "type": "array"
+    },
+    "RuleCondition": {}
+   },
+   "required": [
+    "Assertions"
+   ],
+   "type": "object"
+  }
+ },
+ "patternProperties": {
+  "^[A-Za-z0-9]+$": {
+   "$ref": "#/definitions/rule"
+  }
+ },
+ "type": "object"
+}

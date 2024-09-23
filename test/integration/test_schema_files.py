@@ -52,6 +52,9 @@ class TestSchemaFiles(TestCase):
         "Resources/*/Type",
         "Resources/*/UpdatePolicy",
         "Resources/*/UpdateReplacePolicy",
+        "Rules",
+        "Rules/*/Assertions/*/Assert",
+        "Rules/*/RuleCondition",
         "Transform",
     ]
 

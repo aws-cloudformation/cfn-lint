@@ -462,7 +462,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 # Checking for conditions inside of conditions
                 if isinstance(item, dict):
                     for sub_key, sub_value in item.items():
-                        if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                        if sub_key == cfnlint.helpers.FUNCTION_IF:
                             results = self.get_condition_values(
                                 sub_value, result["Path"] + [sub_key]
                             )
@@ -521,7 +521,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 is_condition = False
                 is_no_value = False
                 for obj_key, obj_value in value.items():
-                    if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                    if obj_key == cfnlint.helpers.FUNCTION_IF:
                         is_condition = True
                         results = self.get_condition_values(
                             obj_value, path[:] + [obj_key]
@@ -552,7 +552,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         is_condition = False
                         is_no_value = False
                         for obj_key, obj_value in list_value.items():
-                            if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            if obj_key == cfnlint.helpers.FUNCTION_IF:
                                 is_condition = True
                                 results = self.get_condition_values(
                                     obj_value, path[:] + [list_index, obj_key]

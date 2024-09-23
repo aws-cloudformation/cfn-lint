@@ -36,7 +36,7 @@ class RouteTableAssociation(CloudFormationLintRule):
         if isinstance(subnetid, dict):
             if len(subnetid) == 1:
                 for key, value in subnetid.items():
-                    if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                    if key == cfnlint.helpers.FUNCTION_IF:
                         if isinstance(value, list):
                             if len(value) == 3:
                                 property_condition = value[0]
