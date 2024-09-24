@@ -23,14 +23,14 @@ class TestConditionsWithRules(TestCase):
             Assertions:
             - Assert:
                 Fn::And:
-                - !Condition IsProd
-                - !Condition IsUsEast1
+                - !Equals [!Ref Environment, "prod"]
+                - !Equals [!Ref "AWS::Region", "us-east-1"]
           Rule2:
             Assertions:
             - Assert:
                 Fn::Or:
-                - !Condition IsProd
-                - !Condition IsUsEast1
+                - !Equals [!Ref Environment, "prod"]
+                - !Equals [!Ref "AWS::Region", "us-east-1"]
         """
         )[0]
 
@@ -79,9 +79,9 @@ class TestConditionsWithRules(TestCase):
           IsUsEast1: !Equals [!Ref "AWS::Region", "us-east-1"]
         Rules:
           Rule:
-            RuleCondition: !Condition IsProd
+            RuleCondition: !Equals [!Ref Environment, "prod"]
             Assertions:
-            - Assert: !Condition IsUsEast1
+            - Assert: !Equals [!Ref "AWS::Region", "us-east-1"]
 
         """
         )[0]
@@ -143,11 +143,11 @@ class TestConditionsWithRules(TestCase):
           Rule1:
             RuleCondition: !Equals [!Ref Environment, "prod"]
             Assertions:
-            - Assert: !Condition IsUsEast1
+            - Assert: !Equals [!Ref "AWS::Region", "us-east-1"]
           Rule2:
             RuleCondition: !Equals [!Ref Environment, "dev"]
             Assertions:
-            - Assert: !Not [!Condition IsUsEast1]
+            - Assert: !Not [!Equals [!Ref "AWS::Region", "us-east-1"]]
         """
         )[0]
 
@@ -366,6 +366,95 @@ class TestConditionsWithRules(TestCase):
             )
         )
 
+    def test_conditions_with_rules_and_parameters(self):
+        template = decode_str(
+            """
+        Conditions:
+            DeployGateway: !Equals
+                - !Ref 'DeployGateway'
+                - 'true'
+            DeployVpc: !Equals
+                - !Ref 'DeployVpc'
+                - 'true'
+        Parameters:
+            DeployAnything:
+                AllowedValues:
+                - 'false'
+                - 'true'
+                Type: 'String'
+            DeployGateway:
+                AllowedValues:
+                - 'false'
+                - 'true'
+                Type: 'String'
+            DeployVpc:
+                AllowedValues:
+                - 'false'
+                - 'true'
+                Type: 'String'
+        Rules:
+            DeployGateway:
+                Assertions:
+                - Assert: !Or
+                    - !Equals
+                        - !Ref 'DeployAnything'
+                        - 'true'
+                    - !Equals
+                        - !Ref 'DeployGateway'
+                        - 'false'
+            DeployVpc:
+                Assertions:
+                - Assert: !Or
+                    - !Equals
+                        - !Ref 'DeployGateway'
+                        - 'true'
+                    - !Equals
+                        - !Ref 'DeployVpc'
+                        - 'false'
+        Resources:
+            InternetGateway:
+                Condition: 'DeployGateway'
+                Type: 'AWS::EC2::InternetGateway'
+            InternetGatewayAttachment:
+                Condition: 'DeployVpc'
+                Type: 'AWS::EC2::VPCGatewayAttachment'
+                Properties:
+                    InternetGatewayId: !Ref 'InternetGateway'
+                    VpcId: !Ref 'Vpc'
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 2)
+        self.assertEqual(len(cfn.conditions._rules), 2)
+
+        self.assertListEqual(
+            [equal.hash for equal in cfn.conditions._rules[0].equals],
+            [
+                "d0d70a1e66dc83d7a0fce24c2eca396af1f34e53",
+                "bbf5c94c1a4b5a79c7a7863fe9463884cb422450",
+            ],
+        )
+
+        self.assertTrue(
+            cfn.conditions.satisfiable(
+                {},
+                {},
+            )
+        )
+
+        self.assertTrue(
+            cfn.conditions.check_implies({"DeployVpc": True}, "DeployGateway")
+        )
+
+        self.assertFalse(
+            cfn.conditions.check_implies({"DeployVpc": False}, "DeployGateway")
+        )
+
+        self.assertFalse(
+            cfn.conditions.check_implies({"DeployGateway": False}, "DeployVpc")
+        )
+
 
 class TestAssertion(TestCase):
     def test_assertion_errors(self):
@@ -405,7 +494,7 @@ class TestAssertion(TestCase):
             Assertions: {"Foo": "Bar"}
           Rule2:
             Assertions:
-            - Assert: !Condition IsUsEast1
+            - Assert: !Equals [!Ref "AWS::Region", "us-east-1"]
         """
         )[0]
 
@@ -425,8 +514,8 @@ class TestAssertion(TestCase):
             Assertions:
             - Assert:
                 Fn::Or:
-                - !Condition IsNotUsEast1
-                - !Condition IsUsEast1
+                - !Not [!Equals [!Ref "AWS::Region", "us-east-1"]]
+                - !Equals [!Ref "AWS::Region", "us-east-1"]
           Rule3: []
         """
         )[0]

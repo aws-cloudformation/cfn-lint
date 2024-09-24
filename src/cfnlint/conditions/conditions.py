@@ -110,13 +110,12 @@ class Conditions:
         cnf = EncodedCNF()
 
         # build parameters and equals into solver
-        equal_vars: dict[str, Symbol] = {}
+        equal_vars: dict[str, Symbol | BooleanFalse | BooleanTrue] = {}
 
         equals: dict[str, Equal] = {}
-        for condition_name in condition_names:
-            c_equals = self._conditions[condition_name].equals
+
+        def _build_equal_vars(c_equals: list[Equal]):
             for c_equal in c_equals:
-                # check to see if equals already matches another one
                 if c_equal.hash in equal_vars:
                     continue
 
@@ -138,6 +137,12 @@ class Conditions:
                                     ~(equal_vars[c_equal.hash] & equal_vars[e_hash])
                                 )
                 equals[c_equal.hash] = c_equal
+
+        for rule in self._rules:
+            _build_equal_vars(rule.equals)
+
+        for condition_name in condition_names:
+            _build_equal_vars(self._conditions[condition_name].equals)
 
         # Determine if a set of conditions can never be all false
         allowed_values = self._parameters.copy()

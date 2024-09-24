@@ -10,7 +10,7 @@ import logging
 from typing import Any, Mapping, Tuple
 
 from sympy import Symbol
-from sympy.logic.boolalg import BooleanFalse, BooleanFunction, BooleanTrue
+from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 
 from cfnlint.conditions._utils import get_hash
 from cfnlint.helpers import is_function
@@ -145,7 +145,9 @@ class Equal:
     def right(self):
         return self._right
 
-    def build_cnf(self, params: dict[str, Symbol]) -> BooleanFunction:
+    def build_cnf(
+        self, params: dict[str, Symbol]
+    ) -> BooleanTrue | BooleanFalse | Symbol:
         """Build a SymPy CNF solver based on the provided params
         Args:
             params dict[str, Symbol]: params is a dict that represents
@@ -158,10 +160,7 @@ class Equal:
                 return BooleanTrue()
             return BooleanFalse()
 
-        if self.hash in params:
-            return params.get(self.hash)
-
-        return Symbol(self.hash)
+        return params.get(self.hash, Symbol(self.hash))
 
     def test(self, scenarios: Mapping[str, str]) -> bool:
         """Do an equals based on the provided scenario"""
