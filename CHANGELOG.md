@@ -1,3 +1,10 @@
+### v1.15.1
+## What's Changed
+* Switch FN support inside Rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3712
+* Add equal vars for Rules to cnf building by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3714
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.14.2...v1.15.0
+
 ### v1.15.0
 ## What's Changed
 * Update state machine to support `StringMatches` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3705
