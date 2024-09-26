@@ -47,11 +47,6 @@ class HardCodedArnProperties(CloudFormationLintRule):
                 "type": "boolean",
             },
         }
-        self.exceptions = {
-            "AWS::ApiGateway::Authorizer": [
-                ["Properties", "AuthorizerUri"],
-            ]
-        }
 
         self.configure()
 
@@ -101,17 +96,6 @@ class HardCodedArnProperties(CloudFormationLintRule):
         for parameter_string_path in parameter_string_paths:
             path = ["Resources"] + parameter_string_path[:-1]
             candidate = parameter_string_path[-1]
-
-            resource_name = path[1]
-            _type = cfn.template.get("Resources", {}).get(resource_name, {}).get("Type")
-            is_exception = False
-            if _type in self.exceptions:
-                for exception in self.exceptions[_type]:
-                    if all(x[0] == x[1] for x in zip(path[2:], exception)):
-                        is_exception = True
-
-            if is_exception:
-                continue
 
             # ruff: noqa: E501
             # !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
