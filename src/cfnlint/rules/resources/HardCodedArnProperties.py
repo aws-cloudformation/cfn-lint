@@ -135,8 +135,11 @@ class HardCodedArnProperties(CloudFormationLintRule):
                     " incorrectly placed Pseudo Parameters"
                 )
                 matches.append(RuleMatch(path, message.format(path[1])))
+
+            # Lambda is added for authorizer's Uniform Resource Identifier (URI)
+            # https://github.com/aws-cloudformation/cfn-lint/issues/3716
             if self.config["accountId"] and not re.match(
-                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|$", candidate[2]
+                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|lambda|$", candidate[2]
             ):
                 message = (
                     "ARN in Resource {0} contains hardcoded AccountId in ARN or"
