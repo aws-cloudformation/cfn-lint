@@ -47,11 +47,6 @@ class HardCodedArnProperties(CloudFormationLintRule):
                 "type": "boolean",
             },
         }
-        self.exceptions = {
-            "AWS::ApiGateway::Authorizer": [
-                ["Properties", "AuthorizerUri"],
-            ]
-        }
 
         self.configure()
 
@@ -102,17 +97,6 @@ class HardCodedArnProperties(CloudFormationLintRule):
             path = ["Resources"] + parameter_string_path[:-1]
             candidate = parameter_string_path[-1]
 
-            resource_name = path[1]
-            _type = cfn.template.get("Resources", {}).get(resource_name, {}).get("Type")
-            is_exception = False
-            if _type in self.exceptions:
-                for exception in self.exceptions[_type]:
-                    if all(x[0] == x[1] for x in zip(path[2:], exception)):
-                        is_exception = True
-
-            if is_exception:
-                continue
-
             # ruff: noqa: E501
             # !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
             # is valid even with aws as the account #.  This handles empty string
@@ -135,8 +119,11 @@ class HardCodedArnProperties(CloudFormationLintRule):
                     " incorrectly placed Pseudo Parameters"
                 )
                 matches.append(RuleMatch(path, message.format(path[1])))
+
+            # Lambda is added for authorizer's Uniform Resource Identifier (URI)
+            # https://github.com/aws-cloudformation/cfn-lint/issues/3716
             if self.config["accountId"] and not re.match(
-                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|$", candidate[2]
+                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|lambda|$", candidate[2]
             ):
                 message = (
                     "ARN in Resource {0} contains hardcoded AccountId in ARN or"

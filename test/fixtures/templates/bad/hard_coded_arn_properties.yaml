@@ -77,11 +77,3 @@ Resources:
               - !Sub arn:${AWS::Partition}:sns:${AWS::Partition}:${AWS::AccountId}:TestTopic
       Roles:
         - !Ref SampleRole
-
-  Authorizer:
-    Type: AWS::ApiGateway::Authorizer
-    Properties:
-      AuthorizerUri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:Name/invocations
-      RestApiId: RestApiId
-      Type: REQUEST
-      Name: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:Name/invocations
