@@ -1,3 +1,10 @@
+### v1.15.2
+## What's Changed
+* Exception for lambda authorizer uri by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3720
+* Update CloudFormation schemas to 2024-09-30 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3709
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.15.1...v1.15.2
+
 ### v1.15.1
 ## What's Changed
 * Switch FN support inside Rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3712
