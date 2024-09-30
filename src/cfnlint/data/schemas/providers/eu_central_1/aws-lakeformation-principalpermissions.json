@@ -1,0 +1,439 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Catalog",
+  "/properties/Principal",
+  "/properties/Resource",
+  "/properties/Permissions",
+  "/properties/PermissionsWithGrantOption"
+ ],
+ "definitions": {
+  "CatalogIdString": {
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "CatalogResource": {
+   "type": "string"
+  },
+  "ColumnNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NameString"
+   },
+   "type": "array"
+  },
+  "ColumnWildcard": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludedColumnNames": {
+     "$ref": "#/definitions/ColumnNames"
+    }
+   },
+   "type": "object"
+  },
+  "DataCellsFilterResource": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "$ref": "#/definitions/NameString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    },
+    "TableCatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "TableName": {
+     "$ref": "#/definitions/NameString"
+    }
+   },
+   "required": [
+    "TableCatalogId",
+    "DatabaseName",
+    "TableName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "DataLakePrincipal": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipalIdentifier": {
+     "$ref": "#/definitions/DataLakePrincipalString"
+    }
+   },
+   "type": "object"
+  },
+  "DataLakePrincipalList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataLakePrincipal"
+   },
+   "type": "array"
+  },
+  "DataLakePrincipalString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataLocationResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "ResourceArn": {
+     "$ref": "#/definitions/ResourceArnString"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "ResourceArn"
+   ],
+   "type": "object"
+  },
+  "DatabaseResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Expression": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTag"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "IAMRoleArn": {
+   "pattern": "arn:*:iam::[0-9]*:role/.*",
+   "type": "string"
+  },
+  "LFTag": {
+   "additionalProperties": false,
+   "properties": {
+    "TagKey": {
+     "$ref": "#/definitions/LFTagKey"
+    },
+    "TagValues": {
+     "$ref": "#/definitions/TagValueList"
+    }
+   },
+   "type": "object"
+  },
+  "LFTagKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LFTagKeyResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "TagKey": {
+     "$ref": "#/definitions/NameString"
+    },
+    "TagValues": {
+     "$ref": "#/definitions/TagValueList"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "TagKey",
+    "TagValues"
+   ],
+   "type": "object"
+  },
+  "LFTagPair": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "TagKey": {
+     "$ref": "#/definitions/LFTagKey"
+    },
+    "TagValues": {
+     "$ref": "#/definitions/TagValueList"
+    }
+   },
+   "required": [
+    "TagKey",
+    "TagValues"
+   ],
+   "type": "object"
+  },
+  "LFTagPolicyResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "Expression": {
+     "$ref": "#/definitions/Expression"
+    },
+    "ResourceType": {
+     "$ref": "#/definitions/ResourceType"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "ResourceType",
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "LFTagValue": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "LFTagsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTagPair"
+   },
+   "type": "array"
+  },
+  "NameString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NullableBoolean": {
+   "type": [
+    "boolean",
+    "null"
+   ]
+  },
+  "PathString": {
+   "type": "string"
+  },
+  "Permission": {
+   "enum": [
+    "ALL",
+    "SELECT",
+    "ALTER",
+    "DROP",
+    "DELETE",
+    "INSERT",
+    "DESCRIBE",
+    "CREATE_DATABASE",
+    "CREATE_TABLE",
+    "DATA_LOCATION_ACCESS",
+    "CREATE_LF_TAG",
+    "ASSOCIATE",
+    "GRANT_WITH_LF_TAG_EXPRESSION"
+   ],
+   "type": "string"
+  },
+  "PermissionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Permission"
+   },
+   "type": "array"
+  },
+  "PrincipalPermissions": {
+   "additionalProperties": false,
+   "properties": {
+    "DataLakePrincipal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    },
+    "PermissionList": {
+     "$ref": "#/definitions/PermissionList"
+    }
+   },
+   "type": "object"
+  },
+  "PrincipalPermissionsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PrincipalPermissions"
+   },
+   "type": "array"
+  },
+  "PrincipalResourcePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Principal": {
+     "$ref": "#/definitions/DataLakePrincipal"
+    },
+    "Resource": {
+     "$ref": "#/definitions/Resource"
+    }
+   },
+   "required": [
+    "Principal",
+    "Resource"
+   ],
+   "type": "object"
+  },
+  "Resource": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "$ref": "#/definitions/CatalogResource"
+    },
+    "DataCellsFilter": {
+     "$ref": "#/definitions/DataCellsFilterResource"
+    },
+    "DataLocation": {
+     "$ref": "#/definitions/DataLocationResource"
+    },
+    "Database": {
+     "$ref": "#/definitions/DatabaseResource"
+    },
+    "LFTag": {
+     "$ref": "#/definitions/LFTagKeyResource"
+    },
+    "LFTagPolicy": {
+     "$ref": "#/definitions/LFTagPolicyResource"
+    },
+    "Table": {
+     "$ref": "#/definitions/TableResource"
+    },
+    "TableWithColumns": {
+     "$ref": "#/definitions/TableWithColumnsResource"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArnString": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "DATABASE",
+    "TABLE"
+   ],
+   "type": "string"
+  },
+  "TableResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "DatabaseName": {
+     "$ref": "#/definitions/NameString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    },
+    "TableWildcard": {
+     "$ref": "#/definitions/TableWildcard"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "DatabaseName"
+   ],
+   "type": "object"
+  },
+  "TableWildcard": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "TableWithColumnsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "$ref": "#/definitions/CatalogIdString"
+    },
+    "ColumnNames": {
+     "$ref": "#/definitions/ColumnNames"
+    },
+    "ColumnWildcard": {
+     "$ref": "#/definitions/ColumnWildcard"
+    },
+    "DatabaseName": {
+     "$ref": "#/definitions/NameString"
+    },
+    "Name": {
+     "$ref": "#/definitions/NameString"
+    }
+   },
+   "required": [
+    "CatalogId",
+    "DatabaseName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "TagValueList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTagValue"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PrincipalIdentifier",
+  "/properties/ResourceIdentifier"
+ ],
+ "properties": {
+  "Catalog": {
+   "$ref": "#/definitions/CatalogIdString"
+  },
+  "Permissions": {
+   "$ref": "#/definitions/PermissionList"
+  },
+  "PermissionsWithGrantOption": {
+   "$ref": "#/definitions/PermissionList"
+  },
+  "Principal": {
+   "$ref": "#/definitions/DataLakePrincipal"
+  },
+  "PrincipalIdentifier": {
+   "type": "string"
+  },
+  "Resource": {
+   "$ref": "#/definitions/Resource"
+  },
+  "ResourceIdentifier": {
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Permissions": "Permissions=[] ? null : Permissions",
+  "/properties/PermissionsWithGrantOption": "PermissionsWithGrantOption=[] ? null : PermissionsWithGrantOption"
+ },
+ "readOnlyProperties": [
+  "/properties/PrincipalIdentifier",
+  "/properties/ResourceIdentifier"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Principal",
+  "Resource",
+  "Permissions",
+  "PermissionsWithGrantOption"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::LakeFormation::PrincipalPermissions"
+}

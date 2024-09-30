@@ -1,0 +1,194 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdditionalEncryptionContext",
+  "/properties/CustomerManagedKey"
+ ],
+ "definitions": {
+  "CookieSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Domain": {
+     "maxLength": 253,
+     "minLength": 0,
+     "pattern": "^(\\.?)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)*[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 4096,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Path": {
+     "maxLength": 2000,
+     "minLength": 0,
+     "pattern": "^/(\\S)*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "CookieSynchronizationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Allowlist": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CookieSpecification"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Blocklist": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CookieSpecification"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Allowlist"
+   ],
+   "type": "object"
+  },
+  "EnabledType": {
+   "enum": [
+    "Disabled",
+    "Enabled"
+   ],
+   "type": "string"
+  },
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserSettingsArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "AssociatedPortalArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CookieSynchronizationConfiguration": {
+   "$ref": "#/definitions/CookieSynchronizationConfiguration"
+  },
+  "CopyAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "CustomerManagedKey": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DeepLinkAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "DisconnectTimeoutInMinutes": {
+   "default": null,
+   "maximum": 600,
+   "minimum": 1,
+   "type": "number"
+  },
+  "DownloadAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "IdleDisconnectTimeoutInMinutes": {
+   "default": null,
+   "maximum": 60,
+   "minimum": 0,
+   "type": "number"
+  },
+  "PasteAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "PrintAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "UploadAllowed": {
+   "$ref": "#/definitions/EnabledType"
+  },
+  "UserSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociatedPortalArns",
+  "/properties/UserSettingsArn"
+ ],
+ "required": [
+  "CopyAllowed",
+  "DownloadAllowed",
+  "PasteAllowed",
+  "PrintAllowed",
+  "UploadAllowed"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::UserSettings"
+}

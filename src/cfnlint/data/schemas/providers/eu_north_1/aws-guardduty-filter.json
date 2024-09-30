@@ -1,0 +1,160 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorId",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Eq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Equals": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "GreaterThan": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "GreaterThanOrEqual": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "Gt": {
+     "type": "integer"
+    },
+    "Gte": {
+     "type": "integer"
+    },
+    "LessThan": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "LessThanOrEqual": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "Lt": {
+     "type": "integer"
+    },
+    "Lte": {
+     "type": "integer"
+    },
+    "Neq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NotEquals": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "FindingCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Criterion": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/Condition"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorId",
+  "/properties/Name"
+ ],
+ "properties": {
+  "Action": {
+   "enum": [
+    "ARCHIVE",
+    "NOOP"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DetectorId": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FindingCriteria": {
+   "$ref": "#/definitions/FindingCriteria"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Rank": {
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "DetectorId",
+  "Name",
+  "FindingCriteria"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::Filter"
+}
