@@ -4284,6 +4284,7 @@
     "ListPresets",
     "ListQueues",
     "ListTagsForResource",
+    "ListVersions",
     "PutPolicy",
     "SearchJobs",
     "TagResource",
@@ -5687,17 +5688,21 @@
     "EnableExternalIdPConfigurationForDirectory",
     "EnableUser",
     "GetAWSSPConfigurationForDirectory",
+    "GetGroupId",
+    "GetUserId",
     "GetUserPoolInfo",
     "ImportExternalIdPCertificate",
     "IsMemberInGroup",
     "ListBearerTokens",
     "ListExternalIdPCertificates",
     "ListExternalIdPConfigurationsForDirectory",
+    "ListGroups",
     "ListGroupsForMember",
     "ListGroupsForUser",
     "ListMembersInGroup",
     "ListMfaDevicesForUser",
     "ListProvisioningTenants",
+    "ListUsers",
     "RemoveMemberFromGroup",
     "SearchGroups",
     "SearchUsers",
@@ -9081,6 +9086,7 @@
    "ARNRegex": "^arn:aws:resource-groups:.+",
    "Actions": [
     "AssociateResource",
+    "CancelTagSyncTask",
     "CreateGroup",
     "DeleteGroup",
     "DeleteGroupPolicy",
@@ -9090,14 +9096,18 @@
     "GetGroupConfiguration",
     "GetGroupPolicy",
     "GetGroupQuery",
+    "GetTagSyncTask",
     "GetTags",
     "GroupResources",
     "ListGroupResources",
+    "ListGroupingStatuses",
     "ListGroups",
     "ListResourceTypes",
+    "ListTagSyncTasks",
     "PutGroupConfiguration",
     "PutGroupPolicy",
     "SearchResources",
+    "StartTagSyncTask",
     "Tag",
     "UngroupResources",
     "Untag",
@@ -17284,7 +17294,12 @@
     "UpdateStreamMode"
    ],
    "HasResource": true,
-   "StringPrefix": "kinesis"
+   "StringPrefix": "kinesis",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "Amazon Kinesis Firehose": {
    "ARNFormat": "arn:aws:firehose:{Region}:{Account}:deliverystream/${DeliveryStreamName}",
@@ -19271,6 +19286,7 @@
     "DeleteRegistration",
     "DeleteRegistrationAttachment",
     "DeleteRegistrationFieldValue",
+    "DeleteResourcePolicy",
     "DeleteTextMessageSpendLimitOverride",
     "DeleteVerifiedDestinationNumber",
     "DeleteVoiceMessageSpendLimitOverride",
@@ -19297,12 +19313,14 @@
     "DisassociateProtectConfiguration",
     "DiscardRegistrationVersion",
     "GetProtectConfigurationCountryRuleSet",
+    "GetResourcePolicy",
     "ListPoolOriginationIdentities",
     "ListRegistrationAssociations",
     "ListTagsForResource",
     "PutKeyword",
     "PutOptedOutNumber",
     "PutRegistrationFieldValue",
+    "PutResourcePolicy",
     "ReleasePhoneNumber",
     "ReleaseSenderId",
     "RequestPhoneNumber",
@@ -19370,6 +19388,8 @@
    "StringPrefix": "polly"
   },
   "Amazon Q": {
+   "ARNFormat": "arn:aws:codewhisperer:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:codewhisperer:.+:[0-9]+:.+",
    "Actions": [
     "CreateAssignment",
     "DeleteAssignment",
@@ -19384,8 +19404,12 @@
     "StartTroubleshootingResolutionExplanation",
     "UpdateTroubleshootingCommandResult"
    ],
-   "HasResource": false,
-   "StringPrefix": "q"
+   "HasResource": true,
+   "StringPrefix": "q",
+   "conditionKeys": [
+    "identitystore:GroupId",
+    "identitystore:UserId"
+   ]
   },
   "Amazon Q Business": {
    "ARNFormat": "arn:aws:qbusiness:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -19480,6 +19504,7 @@
     "DeleteQApp",
     "DisassociateLibraryItemReview",
     "DisassociateQAppFromUser",
+    "ExportQAppSessionData",
     "GetLibraryItem",
     "GetQApp",
     "GetQAppSession",
@@ -19488,6 +19513,7 @@
     "ImportDocumentToQApp",
     "ImportDocumentToQAppSession",
     "ListLibraryItems",
+    "ListQAppSessionData",
     "ListQApps",
     "ListTagsForResource",
     "PredictProblemStatementFromConversation",

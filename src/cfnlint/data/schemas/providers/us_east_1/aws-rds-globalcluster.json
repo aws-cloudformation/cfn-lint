@@ -6,6 +6,27 @@
   "/properties/StorageEncrypted",
   "/properties/Engine"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "oneOf": [
   {
    "required": [
@@ -58,6 +79,15 @@
   },
   "StorageEncrypted": {
    "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "propertyTransform": {

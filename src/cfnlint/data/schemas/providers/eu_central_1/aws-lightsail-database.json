@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RelationalDatabaseName",
+  "/properties/AvailabilityZone",
+  "/properties/RelationalDatabaseBlueprintId",
+  "/properties/RelationalDatabaseBundleId",
+  "/properties/MasterDatabaseName",
+  "/properties/MasterUsername"
+ ],
+ "definitions": {
+  "RelationalDatabaseParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedValues": {
+     "type": "string"
+    },
+    "ApplyMethod": {
+     "type": "string"
+    },
+    "ApplyType": {
+     "type": "string"
+    },
+    "DataType": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "IsModifiable": {
+     "type": "boolean"
+    },
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RelationalDatabaseName"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BackupRetention": {
+   "type": "boolean"
+  },
+  "CaCertificateIdentifier": {
+   "type": "string"
+  },
+  "DatabaseArn": {
+   "type": "string"
+  },
+  "MasterDatabaseName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MasterUserPassword": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MasterUsername": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "RelationalDatabaseBlueprintId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RelationalDatabaseBundleId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RelationalDatabaseName": {
+   "maxLength": 255,
+   "minLength": 2,
+   "pattern": "\\w[\\w\\-]*\\w",
+   "type": "string"
+  },
+  "RelationalDatabaseParameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RelationalDatabaseParameter"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RotateMasterUserPassword": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)"
+ },
+ "readOnlyProperties": [
+  "/properties/DatabaseArn"
+ ],
+ "required": [
+  "RelationalDatabaseName",
+  "RelationalDatabaseBlueprintId",
+  "RelationalDatabaseBundleId",
+  "MasterDatabaseName",
+  "MasterUsername"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Lightsail::Database",
+ "writeOnlyProperties": [
+  "/properties/MasterUserPassword",
+  "/properties/RelationalDatabaseParameters",
+  "/properties/RotateMasterUserPassword"
+ ]
+}

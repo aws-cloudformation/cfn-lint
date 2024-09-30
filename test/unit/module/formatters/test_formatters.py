@@ -39,6 +39,7 @@ class TestFormatters(BaseTestCase):
         super().setUp()
         self.rules = Rules.create_from_directory(cfnlint.config._DEFAULT_RULESDIR)
         self.filename = str(Path("test/fixtures/templates/bad/formatters.yaml"))
+        self.sarif_schema = str(Path("test/fixtures/schemas/sarif/schema-2.1.0.json"))
         self.config = ConfigMixIn(
             cli_args=[
                 "--include-checks",
@@ -309,8 +310,10 @@ class TestFormatters(BaseTestCase):
             formatter.print_matches(self.results, self.rules, self.config)
         )
 
+        with open(self.sarif_schema, encoding="utf-8") as f:
+            schema = json.load(f)
         # Fetch the SARIF schema
-        schema = json.loads(cfnlint.helpers.get_url_content(sarif["$schema"], False))
+        # schema = json.loads(cfnlint.helpers.get_url_content(sarif["$schema"], False))
         validator = StandardValidator(schema=schema)
         validator.validate(sarif)
 

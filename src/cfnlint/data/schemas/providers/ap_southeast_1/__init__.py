@@ -1328,7 +1328,6 @@ cached: list[str] = [
     "aws-athena-namedquery.json",
     "aws-athena-preparedstatement.json",
     "aws-athena-workgroup.json",
-    "aws-auditmanager-assessment.json",
     "aws-autoscaling-autoscalinggroup.json",
     "aws-autoscaling-launchconfiguration.json",
     "aws-autoscaling-lifecyclehook.json",

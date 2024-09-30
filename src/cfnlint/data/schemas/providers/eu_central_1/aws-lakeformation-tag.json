@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CatalogId",
+  "/properties/TagKey"
+ ],
+ "definitions": {
+  "CatalogIdString": {
+   "maxLength": 12,
+   "minLength": 12,
+   "type": "string"
+  },
+  "LFTagKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([{a-zA-Z}{\\s}{0-9}_.:\\/=+\\-@%]*)$",
+   "type": "string"
+  },
+  "LFTagValue": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^([{a-zA-Z}{\\s}{0-9}_.:\\*\\/=+\\-@%]*)$",
+   "type": "string"
+  },
+  "TagValueList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LFTagValue"
+   },
+   "maxItems": 1000,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TagKey"
+ ],
+ "properties": {
+  "CatalogId": {
+   "$ref": "#/definitions/CatalogIdString"
+  },
+  "TagKey": {
+   "$ref": "#/definitions/LFTagKey"
+  },
+  "TagValues": {
+   "$ref": "#/definitions/TagValueList"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "TagKey",
+  "TagValues"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::LakeFormation::Tag"
+}

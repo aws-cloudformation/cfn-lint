@@ -1,0 +1,304 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FrameworkId",
+  "/properties/AwsAccount"
+ ],
+ "definitions": {
+  "AWSAccount": {
+   "additionalProperties": false,
+   "properties": {
+    "EmailAddress": {
+     "$ref": "#/definitions/EmailAddress"
+    },
+    "Id": {
+     "$ref": "#/definitions/AccountId"
+    },
+    "Name": {
+     "$ref": "#/definitions/AccountName"
+    }
+   },
+   "type": "object"
+  },
+  "AWSService": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceName": {
+     "$ref": "#/definitions/AWSServiceName"
+    }
+   },
+   "type": "object"
+  },
+  "AWSServiceName": {
+   "type": "string"
+  },
+  "AccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "AccountName": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[\\u0020-\\u007E]+$",
+   "type": "string"
+  },
+  "AssessmentArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:.*:auditmanager:.*",
+   "type": "string"
+  },
+  "AssessmentDescription": {
+   "type": "string"
+  },
+  "AssessmentName": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_\\.]+$",
+   "type": "string"
+  },
+  "AssessmentReportDestinationType": {
+   "enum": [
+    "S3"
+   ],
+   "type": "string"
+  },
+  "AssessmentReportsDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/S3Url"
+    },
+    "DestinationType": {
+     "$ref": "#/definitions/AssessmentReportDestinationType"
+    }
+   },
+   "type": "object"
+  },
+  "AssessmentStatus": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "ControlSetId": {
+   "maxLength": 300,
+   "minLength": 1,
+   "pattern": "^[\\w\\W\\s\\S]*$",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:.*:*:.*",
+   "type": "string"
+  },
+  "Delegation": {
+   "additionalProperties": false,
+   "properties": {
+    "AssessmentId": {
+     "$ref": "#/definitions/UUID"
+    },
+    "AssessmentName": {
+     "$ref": "#/definitions/AssessmentName"
+    },
+    "Comment": {
+     "$ref": "#/definitions/DelegationComment"
+    },
+    "ControlSetId": {
+     "$ref": "#/definitions/ControlSetId"
+    },
+    "CreatedBy": {
+     "$ref": "#/definitions/CreatedBy"
+    },
+    "CreationTime": {
+     "$ref": "#/definitions/Timestamp"
+    },
+    "Id": {
+     "$ref": "#/definitions/UUID"
+    },
+    "LastUpdated": {
+     "$ref": "#/definitions/Timestamp"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/IamArn"
+    },
+    "RoleType": {
+     "$ref": "#/definitions/RoleType"
+    },
+    "Status": {
+     "$ref": "#/definitions/DelegationStatus"
+    }
+   },
+   "type": "object"
+  },
+  "DelegationComment": {
+   "maxLength": 350,
+   "pattern": "^[\\w\\W\\s\\S]*$",
+   "type": "string"
+  },
+  "DelegationStatus": {
+   "enum": [
+    "IN_PROGRESS",
+    "UNDER_REVIEW",
+    "COMPLETE"
+   ],
+   "type": "string"
+  },
+  "EmailAddress": {
+   "maxLength": 320,
+   "minLength": 1,
+   "pattern": "^.*@.*$",
+   "type": "string"
+  },
+  "FrameworkId": {
+   "maxLength": 36,
+   "minLength": 32,
+   "pattern": "^([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|.*\\S.*)$",
+   "type": "string"
+  },
+  "IamArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:.*:iam:.*",
+   "type": "string"
+  },
+  "Role": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "$ref": "#/definitions/IamArn"
+    },
+    "RoleType": {
+     "$ref": "#/definitions/RoleType"
+    }
+   },
+   "type": "object"
+  },
+  "RoleType": {
+   "enum": [
+    "PROCESS_OWNER",
+    "RESOURCE_OWNER"
+   ],
+   "type": "string"
+  },
+  "S3Url": {
+   "type": "string"
+  },
+  "Scope": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccounts": {
+     "items": {
+      "$ref": "#/definitions/AWSAccount"
+     },
+     "type": "array"
+    },
+    "AwsServices": {
+     "items": {
+      "$ref": "#/definitions/AWSService"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "number"
+  },
+  "UUID": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssessmentId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/AssessmentArn"
+  },
+  "AssessmentId": {
+   "$ref": "#/definitions/UUID"
+  },
+  "AssessmentReportsDestination": {
+   "$ref": "#/definitions/AssessmentReportsDestination"
+  },
+  "AwsAccount": {
+   "$ref": "#/definitions/AWSAccount"
+  },
+  "CreationTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Delegations": {
+   "items": {
+    "$ref": "#/definitions/Delegation"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "$ref": "#/definitions/AssessmentDescription"
+  },
+  "FrameworkId": {
+   "$ref": "#/definitions/FrameworkId"
+  },
+  "Name": {
+   "$ref": "#/definitions/AssessmentName"
+  },
+  "Roles": {
+   "items": {
+    "$ref": "#/definitions/Role"
+   },
+   "type": "array"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Status": {
+   "$ref": "#/definitions/AssessmentStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssessmentId",
+  "/properties/Arn",
+  "/properties/CreationTime"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::AuditManager::Assessment",
+ "writeOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description"
+ ]
+}

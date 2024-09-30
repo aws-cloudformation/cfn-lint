@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ImageName",
+  "/properties/BaseImage"
+ ],
+ "definitions": {
+  "Alias": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "(?!^[.-])^([a-zA-Z0-9-_.]+)$",
+   "type": "string"
+  },
+  "Aliases": {
+   "items": {
+    "$ref": "#/definitions/Alias"
+   },
+   "type": "array"
+  },
+  "BaseImage": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".+",
+   "type": "string"
+  },
+  "ContainerImage": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".+",
+   "type": "string"
+  },
+  "Horovod": {
+   "type": "boolean"
+  },
+  "ImageArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ImageName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9]([-.]?[A-Za-z0-9])*$",
+   "type": "string"
+  },
+  "ImageVersionArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[\\w]+)*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:image-version\\/[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*\\/[0-9]+$",
+   "type": "string"
+  },
+  "JobType": {
+   "enum": [
+    "TRAINING",
+    "INFERENCE",
+    "NOTEBOOK_KERNEL"
+   ],
+   "type": "string"
+  },
+  "MLFramework": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
+   "type": "string"
+  },
+  "Processor": {
+   "enum": [
+    "CPU",
+    "GPU"
+   ],
+   "type": "string"
+  },
+  "ProgrammingLang": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+ ?\\d+\\.\\d+(\\.\\d+)?$",
+   "type": "string"
+  },
+  "ReleaseNotes": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "VendorGuidance": {
+   "enum": [
+    "NOT_PROVIDED",
+    "STABLE",
+    "TO_BE_ARCHIVED",
+    "ARCHIVED"
+   ],
+   "type": "string"
+  },
+  "Version": {
+   "minimum": 1,
+   "type": "integer"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ImageVersionArn"
+ ],
+ "properties": {
+  "Alias": {
+   "$ref": "#/definitions/Alias"
+  },
+  "Aliases": {
+   "$ref": "#/definitions/Aliases"
+  },
+  "BaseImage": {
+   "$ref": "#/definitions/BaseImage"
+  },
+  "ContainerImage": {
+   "$ref": "#/definitions/ContainerImage"
+  },
+  "Horovod": {
+   "$ref": "#/definitions/Horovod"
+  },
+  "ImageArn": {
+   "$ref": "#/definitions/ImageArn"
+  },
+  "ImageName": {
+   "$ref": "#/definitions/ImageName"
+  },
+  "ImageVersionArn": {
+   "$ref": "#/definitions/ImageVersionArn"
+  },
+  "JobType": {
+   "$ref": "#/definitions/JobType"
+  },
+  "MLFramework": {
+   "$ref": "#/definitions/MLFramework"
+  },
+  "Processor": {
+   "$ref": "#/definitions/Processor"
+  },
+  "ProgrammingLang": {
+   "$ref": "#/definitions/ProgrammingLang"
+  },
+  "ReleaseNotes": {
+   "$ref": "#/definitions/ReleaseNotes"
+  },
+  "VendorGuidance": {
+   "$ref": "#/definitions/VendorGuidance"
+  },
+  "Version": {
+   "$ref": "#/definitions/Version"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ImageVersionArn",
+  "/properties/ImageArn",
+  "/properties/Version",
+  "/properties/ContainerImage"
+ ],
+ "required": [
+  "ImageName",
+  "BaseImage"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SageMaker::ImageVersion",
+ "writeOnlyProperties": [
+  "/properties/Aliases",
+  "/properties/Alias"
+ ]
+}
