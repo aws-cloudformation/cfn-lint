@@ -9,7 +9,7 @@ import logging
 from typing import Any, Callable, Mapping
 
 from cfnlint.conditions import Conditions
-from cfnlint.context import Transforms, create_context_for_template
+from cfnlint.context import create_context_for_template
 from cfnlint.graph import Graph
 from cfnlint.helpers import format_json_string
 from cfnlint.match import Match
@@ -63,7 +63,5 @@ class Transform:
         LOGGER.info("Transformed template: \n%s", format_json_string(cfn.template))
         cfn.graph = Graph(cfn)
         cfn.conditions = Conditions(cfn)
-        cfn.context = create_context_for_template(cfn).evolve(
-            transforms=Transforms(cfn.transform_pre["Transform"])
-        )
+        cfn.context = create_context_for_template(cfn)
         return matches
