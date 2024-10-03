@@ -1,3 +1,14 @@
+### v1.16.0
+## What's Changed
+* Switch SAM validation [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) to use pre-transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3726
+* Bring back stateful resources json by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3728
+* Update GetAtt type checking by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3731
+* Add `MinActiveInstancesPercent` to `AutoScalingRollingUpdate` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3733
+* Update CloudFormation schemas to `2024-10-03` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3732 and https://github.com/aws-cloudformation/cfn-lint/pull/3723
+* Update `requiredXor` for Vpc and Subnets by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3734
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.15.2...v1.15.3
+
 ### v1.15.2
 ## What's Changed
 * Exception for lambda authorizer uri by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3720
