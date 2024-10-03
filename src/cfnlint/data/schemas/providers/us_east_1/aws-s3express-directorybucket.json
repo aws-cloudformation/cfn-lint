@@ -8,6 +8,68 @@
  "definitions": {
   "Arn": {
    "type": "string"
+  },
+  "BucketEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerSideEncryptionConfiguration": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerSideEncryptionRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ServerSideEncryptionConfiguration"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionByDefault": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSMasterKeyID": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      }
+     ],
+     "type": "string"
+    },
+    "SSEAlgorithm": {
+     "enum": [
+      "aws:kms",
+      "AES256"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEAlgorithm"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketKeyEnabled": {
+     "type": "boolean"
+    },
+    "ServerSideEncryptionByDefault": {
+     "$ref": "#/definitions/ServerSideEncryptionByDefault"
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -26,7 +88,9 @@
    ],
    "type": "string"
   },
-  "BucketEncryption": {},
+  "BucketEncryption": {
+   "$ref": "#/definitions/BucketEncryption"
+  },
   "BucketName": {
    "maxLength": 63,
    "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",

@@ -1,0 +1,380 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LoadBalancerArn"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticateCognitoConfig": {
+     "$ref": "#/definitions/AuthenticateCognitoConfig"
+    },
+    "AuthenticateOidcConfig": {
+     "$ref": "#/definitions/AuthenticateOidcConfig"
+    },
+    "FixedResponseConfig": {
+     "$ref": "#/definitions/FixedResponseConfig"
+    },
+    "ForwardConfig": {
+     "$ref": "#/definitions/ForwardConfig"
+    },
+    "Order": {
+     "type": "integer"
+    },
+    "RedirectConfig": {
+     "$ref": "#/definitions/RedirectConfig"
+    },
+    "TargetGroupArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/TargetGroupArn",
+      "typeName": "AWS::ElasticLoadBalancingV2::TargetGroup"
+     },
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AuthenticateCognitoConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationRequestExtraParams": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "OnUnauthenticatedRequest": {
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "SessionCookieName": {
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "type": "string"
+    },
+    "UserPoolArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Cognito::UserPool"
+     },
+     "type": "string"
+    },
+    "UserPoolClientId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/UserPoolId",
+        "typeName": "AWS::Cognito::UserPoolClient"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/ClientId",
+        "typeName": "AWS::Cognito::UserPoolClient"
+       }
+      }
+     ],
+     "type": "string"
+    },
+    "UserPoolDomain": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Id",
+      "typeName": "AWS::Cognito::UserPoolDomain"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPoolClientId",
+    "UserPoolDomain",
+    "UserPoolArn"
+   ],
+   "type": "object"
+  },
+  "AuthenticateOidcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationRequestExtraParams": {
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "AuthorizationEndpoint": {
+     "type": "string"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "OnUnauthenticatedRequest": {
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "SessionCookieName": {
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "type": "string"
+    },
+    "UseExistingClientSecret": {
+     "type": "boolean"
+    },
+    "UserInfoEndpoint": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TokenEndpoint",
+    "Issuer",
+    "UserInfoEndpoint",
+    "ClientId",
+    "AuthorizationEndpoint"
+   ],
+   "type": "object"
+  },
+  "Certificate": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Id",
+        "typeName": "AWS::CertificateManager::Certificate"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::IAM::ServerCertificate"
+       }
+      }
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FixedResponseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentType": {
+     "type": "string"
+    },
+    "MessageBody": {
+     "type": "string"
+    },
+    "StatusCode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "ForwardConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupStickinessConfig": {
+     "$ref": "#/definitions/TargetGroupStickinessConfig"
+    },
+    "TargetGroups": {
+     "items": {
+      "$ref": "#/definitions/TargetGroupTuple"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ListenerAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MutualAuthentication": {
+   "additionalProperties": false,
+   "properties": {
+    "IgnoreClientCertificateExpiry": {
+     "type": "boolean"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "TrustStoreArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RedirectConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    },
+    "Protocol": {
+     "pattern": "^(HTTPS?|#\\{protocol\\})$",
+     "type": "string"
+    },
+    "Query": {
+     "type": "string"
+    },
+    "StatusCode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "TargetGroupStickinessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationSeconds": {
+     "type": "integer"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TargetGroupTuple": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/TargetGroupArn",
+      "typeName": "AWS::ElasticLoadBalancingV2::TargetGroup"
+     },
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ListenerArn"
+ ],
+ "properties": {
+  "AlpnPolicy": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Certificates": {
+   "items": {
+    "$ref": "#/definitions/Certificate"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DefaultActions": {
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ListenerArn": {
+   "type": "string"
+  },
+  "ListenerAttributes": {
+   "arrayType": "AttributeList",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ListenerAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LoadBalancerArn": {
+   "type": "string"
+  },
+  "MutualAuthentication": {
+   "$ref": "#/definitions/MutualAuthentication"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "enum": [
+    "GENEVE",
+    "HTTP",
+    "HTTPS",
+    "TCP",
+    "TCP_UDP",
+    "TLS",
+    "UDP"
+   ],
+   "type": "string"
+  },
+  "SslPolicy": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ListenerArn"
+ ],
+ "required": [
+  "LoadBalancerArn",
+  "DefaultActions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticloadbalancingv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ElasticLoadBalancingV2::Listener",
+ "writeOnlyProperties": [
+  "/properties/DefaultActions/*/AuthenticateOidcConfig/ClientSecret"
+ ]
+}

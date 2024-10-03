@@ -1,0 +1,176 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationDefinitions/*/Type",
+  "/properties/ConfigurationDefinitions/*/TypeVersion"
+ ],
+ "definitions": {
+  "ConfigurationDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "LocalDeploymentAdministrationRoleArn": {
+     "type": "string"
+    },
+    "LocalDeploymentExecutionRoleName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Parameters": {
+     "$ref": "#/definitions/ConfigurationParametersMap"
+    },
+    "Type": {
+     "pattern": "^[a-zA-Z0-9_\\-.:/]{3,200}$",
+     "type": "string"
+    },
+    "TypeVersion": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Parameters",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ConfigurationParametersMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9+=@_\\/\\s-]+$": {
+     "maxLength": 40960,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "enum": [
+    "INITIALIZING",
+    "DEPLOYING",
+    "SUCCEEDED",
+    "DELETING",
+    "STOPPING",
+    "FAILED",
+    "STOPPED",
+    "DELETE_FAILED",
+    "STOP_FAILED",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "StatusDetails": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StatusSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "LastUpdatedAt": {
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/Status"
+    },
+    "StatusDetails": {
+     "$ref": "#/definitions/StatusDetails"
+    },
+    "StatusMessage": {
+     "type": "string"
+    },
+    "StatusType": {
+     "$ref": "#/definitions/StatusType"
+    }
+   },
+   "required": [
+    "LastUpdatedAt",
+    "StatusType"
+   ],
+   "type": "object"
+  },
+  "StatusType": {
+   "enum": [
+    "Deployment",
+    "AsyncExecutions"
+   ],
+   "type": "string"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9+=@_\\/-:]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9+=@_\\/-:]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ManagerArn"
+ ],
+ "properties": {
+  "ConfigurationDefinitions": {
+   "items": {
+    "$ref": "#/definitions/ConfigurationDefinition"
+   },
+   "type": "array"
+  },
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "pattern": "^.{0,512}$",
+   "type": "string"
+  },
+  "LastModifiedAt": {
+   "type": "string"
+  },
+  "ManagerArn": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[ A-Za-z0-9_-]{1,50}$",
+   "type": "string"
+  },
+  "StatusSummaries": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StatusSummary"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/LastModifiedAt",
+  "/properties/ManagerArn",
+  "/properties/StatusSummaries",
+  "/properties/ConfigurationDefinitions/*/id"
+ ],
+ "required": [
+  "ConfigurationDefinitions"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMQuickSetup::ConfigurationManager"
+}

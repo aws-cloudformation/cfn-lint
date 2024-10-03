@@ -1,0 +1,154 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ConfigurationObject": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "DefaultValue"
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "AllowedValues"
+       ]
+      },
+      {
+       "required": [
+        "MinValue",
+        "MaxValue"
+       ]
+      }
+     ]
+    }
+   ],
+   "properties": {
+    "AllowedValues": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DefaultValue": {
+     "type": "string"
+    },
+    "MaxValue": {
+     "type": "string"
+    },
+    "MinValue": {
+     "type": "string"
+    }
+   }
+  },
+  "ProfileConfiguration": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "JobConfiguration"
+     ]
+    },
+    {
+     "required": [
+      "SessionConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "JobConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/ConfigurationObject"
+      }
+     }
+    },
+    "SessionConfiguration": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.+$": {
+       "$ref": "#/definitions/ConfigurationObject"
+      }
+     }
+    }
+   }
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Configuration": {
+   "$ref": "#/definitions/ProfileConfiguration",
+   "minItems": 1
+  },
+  "CreatedOn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9\\-\\:\\_]{1,64}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 5,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedOn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Glue::UsageProfile"
+}

@@ -1,0 +1,72 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ACLName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ACLName"
+ ],
+ "properties": {
+  "ACLName": {
+   "pattern": "[a-z][a-z0-9\\\\-]*",
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserNames": {
+   "$comment": "List of users.",
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ACLName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "taggable": true,
+ "typeName": "AWS::MemoryDB::ACL"
+}
