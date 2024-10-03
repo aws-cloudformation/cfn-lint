@@ -5,6 +5,7 @@ cfn-lint test/fixtures/templates/integration/dynamic-references.yaml -e -c I --f
 cfn-lint test/fixtures/templates/integration/resources-cloudformation-init.yaml -e -c I --format json > test/fixtures/results/integration/resources-cloudformation-init.json
 cfn-lint test/fixtures/templates/integration/ref-no-value.yaml -e -c I --format json > test/fixtures/results/integration/ref-no-value.json
 cfn-lint test/fixtures/templates/integration/availability-zones.yaml -e -c I --format json > test/fixtures/results/integration/availability-zones.json
+cfn-lint test/fixtures/templates/integration/getatt-types.yaml -e -c I --format json > test/fixtures/results/integration/getatt-types.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-networkinterface.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-networkinterface.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-instance.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-instance.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-launchtemplate.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-launchtemplate.json

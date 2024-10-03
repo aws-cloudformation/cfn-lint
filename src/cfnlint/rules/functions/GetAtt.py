@@ -129,9 +129,13 @@ class GetAtt(BaseFn):
                         schema_types = ensure_list(getatt_schema.get("type"))
                         types = ensure_list(s.get("type"))
 
-                        if is_types_compatible(
-                            types, schema_types, validator.context.strict_types
-                        ):
+                        # GetAtt type checking is strict.
+                        # It must match in all cases
+                        if any(t in ["boolean", "integer", "boolean"] for t in types):
+                            # this should be switched to validate the value of the
+                            # property if it was available
+                            continue
+                        if is_types_compatible(types, schema_types, True):
                             continue
 
                         reprs = ", ".join(repr(type) for type in types)

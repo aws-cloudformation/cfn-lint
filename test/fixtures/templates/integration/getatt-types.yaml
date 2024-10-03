@@ -1,0 +1,43 @@
+Parameters:
+  ANumber:
+    Type: Number
+    Default: 1
+Transform: 'AWS::LanguageExtensions'
+Resources:
+  CapacityReservation:
+    Type: AWS::EC2::CapacityReservation
+    Properties:
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      InstanceCount: 1
+      InstanceType: t2.micro
+      InstancePlatform: Linux/UNIX
+  SsmParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !GetAtt CapacityReservation.InstanceCount      # #/Value: expected type: String, found: Integer
+Outputs:
+  Value:
+    Value: 1 # OK
+  Sub:
+    Value: !Sub ["${InstanceCount}", {"InstanceCount": 1}] # OK
+  RefWithParameter:
+    Value: !Ref ANumber # OK
+  SubWithParameter:
+    Value: !Sub "${ANumber}"  # OK
+  SubWithGetAtt:
+    Value: !Sub ["${InstanceCount}", {"InstanceCount": {"Fn::GetAtt": ["CapacityReservation", "InstanceCount"]}}] # Template error: every value of the context object of every Fn::Sub object must be a string or a function that returns a string
+  Ipv4NetmaskLength:
+    Value: !GetAtt CapacityReservation.InstanceCount # Template format error: Every Value member must be a string.
+  String:
+    Value: !Sub "${CapacityReservation.InstanceCount}"  # Template error: variable CapacityReservation.InstanceCount in Fn::Sub expression does not resolve to a string
+  Join:
+    Value: !Join [ "", [1]]  # OK
+  JoinWithGetAtt:
+    Value: !Join [ "", [!GetAtt CapacityReservation.InstanceCount]]  # Template error: every Fn::Join object requires two parameters, (1) a string delimiter and (2) a list of strings to be joined or a function that returns a list of strings (such as Fn::GetAZs) to be joined.
+  Boolean:
+    Value: true # OK
+  BooleanGetAtt:
+    Value: !GetAtt CapacityReservation.EphemeralStorage  # Template format error: Every Value member must be a string.
+  Length:
+    Value: {Fn::Length: [1, 2, 3]} # OK
