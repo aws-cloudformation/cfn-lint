@@ -248,8 +248,8 @@ def join(validator: Validator, instance: Any) -> ResolutionResult:
                 continue
             try:
                 for value in _join_expansion(values_v, values):
-                    yield delimiter.join(value), values_v, None
-            except ValueError:
+                    yield delimiter.join([str(v) for v in value]), values_v, None
+            except (ValueError, TypeError):
                 return
 
 

@@ -103,7 +103,7 @@ def validator(cfn, context):
             },
             [
                 ValidationError(
-                    "1.0 is not of type 'array', 'string'",
+                    "1.0 is not of type 'string'",
                     validator="type",
                     schema_path=deque(["type"]),
                     path=deque(["Value"]),
@@ -117,7 +117,7 @@ def validator(cfn, context):
             },
             [
                 ValidationError(
-                    "1 is not of type 'array', 'string'",
+                    "1 is not of type 'string'",
                     validator="type",
                     schema_path=deque(["type"]),
                     path=deque(["Value"]),
@@ -129,7 +129,7 @@ def validator(cfn, context):
             {"Value": True},
             [
                 ValidationError(
-                    "True is not of type 'array', 'string'",
+                    "True is not of type 'string'",
                     validator="type",
                     schema_path=deque(["type"]),
                     path=deque(["Value"]),
@@ -141,10 +141,10 @@ def validator(cfn, context):
             {"Value": [{}]},
             [
                 ValidationError(
-                    "{} is not of type 'string'",
+                    "[{}] is not of type 'string'",
                     validator="type",
-                    schema_path=deque(["items", "type"]),
-                    path=deque(["Value", 0]),
+                    schema_path=deque(["type"]),
+                    path=deque(["Value"]),
                     rule=Value(),
                 )
             ],
@@ -153,7 +153,7 @@ def validator(cfn, context):
             {"Value": {"foo": "bar"}},
             [
                 ValidationError(
-                    "{'foo': 'bar'} is not of type 'array', 'string'",
+                    "{'foo': 'bar'} is not of type 'string'",
                     validator="type",
                     schema_path=deque(["type"]),
                     path=deque(["Value"]),
