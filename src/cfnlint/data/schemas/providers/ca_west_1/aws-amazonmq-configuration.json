@@ -1,10 +1,10 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/EngineType",
-  "/properties/Name",
   "/properties/AuthenticationStrategy",
-  "/properties/EngineVersion"
+  "/properties/EngineType",
+  "/properties/EngineVersion",
+  "/properties/Name"
  ],
  "definitions": {
   "TagsEntry": {
@@ -56,22 +56,37 @@
    "type": "integer"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/TagsEntry"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   }
  },
+ "propertyTransform": {
+  "/properties/AuthenticationStrategy": "$uppercase(AuthenticationStrategy)",
+  "/properties/EngineType": "$uppercase(EngineType)"
+ },
  "readOnlyProperties": [
-  "/properties/Revision",
+  "/properties/Arn",
   "/properties/Id",
-  "/properties/Arn"
+  "/properties/Revision"
  ],
  "required": [
   "EngineType",
   "Data",
   "Name"
  ],
- "typeName": "AWS::AmazonMQ::Configuration"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AmazonMQ::Configuration",
+ "writeOnlyProperties": [
+  "/properties/Data"
+ ]
 }

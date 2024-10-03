@@ -1,0 +1,149 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParentFolderArn",
+  "/properties/SharingModel",
+  "/properties/FolderType",
+  "/properties/FolderId",
+  "/properties/AwsAccountId"
+ ],
+ "definitions": {
+  "FolderType": {
+   "enum": [
+    "SHARED",
+    "RESTRICTED"
+   ],
+   "type": "string"
+  },
+  "ResourcePermission": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Principal": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^arn:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Principal"
+   ],
+   "type": "object"
+  },
+  "SharingModel": {
+   "enum": [
+    "ACCOUNT",
+    "NAMESPACE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AwsAccountId",
+  "/properties/FolderId"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "AwsAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "FolderId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[\\w\\-]+$",
+   "type": "string"
+  },
+  "FolderType": {
+   "$ref": "#/definitions/FolderType"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ParentFolderArn": {
+   "type": "string"
+  },
+  "Permissions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourcePermission"
+   },
+   "maxItems": 64,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SharingModel": {
+   "$ref": "#/definitions/SharingModel"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QuickSight::Folder",
+ "writeOnlyProperties": [
+  "/properties/ParentFolderArn"
+ ]
+}

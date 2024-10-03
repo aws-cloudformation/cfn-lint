@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParameterGroupName",
+  "/properties/Family",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ParameterGroupName"
+ ],
+ "properties": {
+  "ARN": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Family": {
+   "type": "string"
+  },
+  "ParameterGroupName": {
+   "type": "string"
+  },
+  "Parameters": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ARN"
+ ],
+ "required": [
+  "ParameterGroupName",
+  "Family"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "taggable": true,
+ "typeName": "AWS::MemoryDB::ParameterGroup",
+ "writeOnlyProperties": [
+  "/properties/Parameters"
+ ]
+}

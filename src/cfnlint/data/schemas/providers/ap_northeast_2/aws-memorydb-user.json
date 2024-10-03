@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserName"
+ ],
+ "properties": {
+  "AccessString": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationMode": {
+   "additionalProperties": false,
+   "properties": {
+    "Passwords": {
+     "$comment": "List of passwords.",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Type": {
+     "enum": [
+      "password",
+      "iam"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserName": {
+   "pattern": "[a-z][a-z0-9\\\\-]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Arn"
+ ],
+ "required": [
+  "UserName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "taggable": true,
+ "typeName": "AWS::MemoryDB::User",
+ "writeOnlyProperties": [
+  "/properties/AuthenticationMode",
+  "/properties/AccessString"
+ ]
+}

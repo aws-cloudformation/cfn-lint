@@ -17,6 +17,18 @@
    },
    "type": "object"
   },
+  "DefaultArguments": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ExecutionProperty": {
    "additionalProperties": false,
    "properties": {
@@ -44,6 +56,18 @@
    },
    "type": "object"
   },
+  "NonOverridableArguments": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "NotificationProperty": {
    "additionalProperties": false,
    "properties": {
@@ -55,7 +79,7 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Name"
  ],
  "properties": {
   "AllocatedCapacity": {
@@ -86,11 +110,11 @@
   "GlueVersion": {
    "type": "string"
   },
-  "Id": {
-   "type": "string"
-  },
   "JobMode": {
    "type": "string"
+  },
+  "JobRunQueuingEnabled": {
+   "type": "boolean"
   },
   "LogUri": {
    "type": "string"
@@ -139,15 +163,29 @@
    "type": "integer"
   },
   "WorkerType": {
+   "enum": [
+    "Standard",
+    "G.1X",
+    "G.2X",
+    "G.025X",
+    "G.4X",
+    "G.8X",
+    "Z.2X"
+   ],
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
  "required": [
   "Role",
   "Command"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Glue::Job"
 }
