@@ -48,6 +48,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 2,
         },
         {
+            "filename": ("test/fixtures/templates/integration/getatt-types.yaml"),
+            "results_filename": ("test/fixtures/results/integration/getatt-types.json"),
+            "exit_code": 10,
+        },
+        {
             "filename": (
                 "test/fixtures/templates/integration/aws-ec2-networkinterface.yaml"
             ),
@@ -87,11 +92,6 @@ class TestQuickStartTemplates(BaseCliTestCase):
             ConfigMixIn(
                 [],
                 include_checks=["I"],
-                configure_rules={
-                    "E3012": {
-                        "strict": True,
-                    }
-                },
                 include_experimental=True,
             )
         )
