@@ -78,6 +78,13 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 2,
         },
         {
+            "filename": ("test/fixtures/templates/integration/aws-ec2-subnet.yaml"),
+            "results_filename": (
+                "test/fixtures/results/integration/aws-ec2-subnet.json"
+            ),
+            "exit_code": 2,
+        },
+        {
             "filename": ("test/fixtures/templates/integration/aws-dynamodb-table.yaml"),
             "results_filename": (
                 "test/fixtures/results/integration/aws-dynamodb-table.json"

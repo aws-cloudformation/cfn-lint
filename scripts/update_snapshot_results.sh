@@ -9,6 +9,7 @@ cfn-lint test/fixtures/templates/integration/getatt-types.yaml -e -c I --format 
 cfn-lint test/fixtures/templates/integration/aws-ec2-networkinterface.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-networkinterface.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-instance.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-instance.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-launchtemplate.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-launchtemplate.json
+cfn-lint test/fixtures/templates/integration/aws-ec2-subnet.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-subnet.json
 cfn-lint test/fixtures/templates/integration/aws-dynamodb-table.yaml -e -c I --format json > test/fixtures/results/integration/aws-dynamodb-table.json
 
 # public/
