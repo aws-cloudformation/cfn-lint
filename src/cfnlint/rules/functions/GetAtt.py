@@ -10,10 +10,13 @@ from typing import Any, Sequence
 
 import regex as re
 
-from cfnlint.helpers import ensure_list, is_types_compatible
+from cfnlint.helpers import FUNCTIONS_ALL, ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
+
+# We want all types but FnIf as they will require strict types
+_FUNCTIONS_STRICT_TYPES = frozenset(set(FUNCTIONS_ALL) - set(["Fn::If"]))
 
 
 class GetAtt(BaseFn):
@@ -129,9 +132,24 @@ class GetAtt(BaseFn):
                         schema_types = ensure_list(getatt_schema.get("type"))
                         types = ensure_list(s.get("type"))
 
-                        if is_types_compatible(
-                            types, schema_types, validator.context.strict_types
+                        strict_types = validator.context.strict_types
+                        if any(
+                            p in _FUNCTIONS_STRICT_TYPES
+                            for p in validator.context.path.path
                         ):
+                            strict_types = True
+
+                        # Lack of a better way to do this. We need to apply strict
+                        # types for Outputs Value
+                        # "Value: 1" is valid but
+                        # "Value: !GetAtt Resource.AttributeThatIsInteger" will fail
+                        if len(validator.context.path.path) >= 3:
+                            if (
+                                validator.context.path.path[0] == "Outputs"
+                                and validator.context.path.path[2] == "Value"
+                            ):
+                                strict_types = True
+                        if is_types_compatible(types, schema_types, strict_types):
                             continue
 
                         reprs = ", ".join(repr(type) for type in types)

@@ -50,10 +50,7 @@ class Value(CfnLintJsonSchema):
         for err in validator.descend(
             value,
             schema={
-                "type": ["array", "string"],
-                "items": {
-                    "type": "string",
-                },
+                "type": ["string"],
             },
             path=key,
             property_path=key,
