@@ -884,7 +884,7 @@ patches.extend(
                     path="/definitions/BlockDeviceMapping/properties/VirtualName",
                 ),
                 Patch(
-                    path="/",
+                    path="/definitions/SpotFleetRequestConfigData",
                     values={
                         "requiredXor": ["LaunchSpecifications", "LaunchTemplateConfigs"]
                     },
