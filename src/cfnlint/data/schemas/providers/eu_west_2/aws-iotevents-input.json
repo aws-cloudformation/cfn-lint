@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InputName"
+ ],
+ "definitions": {
+  "Attribute": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^((`[a-zA-Z0-9_\\- ]+`)|([a-zA-Z0-9_\\-]+))(\\.((`[a-zA-Z0-9_\\- ]+`)|([a-zA-Z0-9_\\-]+)))*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "JsonPath"
+   ],
+   "type": "object"
+  },
+  "InputDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Attribute"
+     },
+     "maxItems": 200,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Attributes"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InputName"
+ ],
+ "properties": {
+  "InputDefinition": {
+   "$ref": "#/definitions/InputDefinition"
+  },
+  "InputDescription": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InputName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "InputDefinition"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotevents.git",
+ "taggable": true,
+ "typeName": "AWS::IoTEvents::Input"
+}

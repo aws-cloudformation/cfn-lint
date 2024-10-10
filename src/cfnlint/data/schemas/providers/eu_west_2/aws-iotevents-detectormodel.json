@@ -1,0 +1,603 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorModelName",
+  "/properties/Key"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "ClearTimer": {
+     "$ref": "#/definitions/ClearTimer"
+    },
+    "DynamoDB": {
+     "$ref": "#/definitions/DynamoDB"
+    },
+    "DynamoDBv2": {
+     "$ref": "#/definitions/DynamoDBv2"
+    },
+    "Firehose": {
+     "$ref": "#/definitions/Firehose"
+    },
+    "IotEvents": {
+     "$ref": "#/definitions/IotEvents"
+    },
+    "IotSiteWise": {
+     "$ref": "#/definitions/IotSiteWise"
+    },
+    "IotTopicPublish": {
+     "$ref": "#/definitions/IotTopicPublish"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/Lambda"
+    },
+    "ResetTimer": {
+     "$ref": "#/definitions/ResetTimer"
+    },
+    "SetTimer": {
+     "$ref": "#/definitions/SetTimer"
+    },
+    "SetVariable": {
+     "$ref": "#/definitions/SetVariable"
+    },
+    "Sns": {
+     "$ref": "#/definitions/Sns"
+    },
+    "Sqs": {
+     "$ref": "#/definitions/Sqs"
+    }
+   },
+   "type": "object"
+  },
+  "AssetPropertyTimestamp": {
+   "additionalProperties": false,
+   "properties": {
+    "OffsetInNanos": {
+     "type": "string"
+    },
+    "TimeInSeconds": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Quality": {
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/AssetPropertyTimestamp"
+    },
+    "Value": {
+     "$ref": "#/definitions/AssetPropertyVariant"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyVariant": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "string"
+    },
+    "DoubleValue": {
+     "type": "string"
+    },
+    "IntegerValue": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ClearTimer": {
+   "additionalProperties": false,
+   "properties": {
+    "TimerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "DetectorModelDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "InitialStateName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "States": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/State"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "States",
+    "InitialStateName"
+   ],
+   "type": "object"
+  },
+  "DynamoDB": {
+   "additionalProperties": false,
+   "properties": {
+    "HashKeyField": {
+     "type": "string"
+    },
+    "HashKeyType": {
+     "type": "string"
+    },
+    "HashKeyValue": {
+     "type": "string"
+    },
+    "Operation": {
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "PayloadField": {
+     "type": "string"
+    },
+    "RangeKeyField": {
+     "type": "string"
+    },
+    "RangeKeyType": {
+     "type": "string"
+    },
+    "RangeKeyValue": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HashKeyField",
+    "HashKeyValue",
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "DynamoDBv2": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "Event": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Condition": {
+     "maxLength": 512,
+     "type": "string"
+    },
+    "EventName": {
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventName"
+   ],
+   "type": "object"
+  },
+  "Firehose": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamName": {
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "Separator": {
+     "pattern": "([\\n\\t])|(\\r\\n)|(,)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamName"
+   ],
+   "type": "object"
+  },
+  "IotEvents": {
+   "additionalProperties": false,
+   "properties": {
+    "InputName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "InputName"
+   ],
+   "type": "object"
+  },
+  "IotSiteWise": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetId": {
+     "type": "string"
+    },
+    "EntryId": {
+     "type": "string"
+    },
+    "PropertyAlias": {
+     "type": "string"
+    },
+    "PropertyId": {
+     "type": "string"
+    },
+    "PropertyValue": {
+     "$ref": "#/definitions/AssetPropertyValue"
+    }
+   },
+   "required": [
+    "PropertyValue"
+   ],
+   "type": "object"
+  },
+  "IotTopicPublish": {
+   "additionalProperties": false,
+   "properties": {
+    "MqttTopic": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "MqttTopic"
+   ],
+   "type": "object"
+  },
+  "Lambda": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "OnEnter": {
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OnExit": {
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "OnInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Event"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TransitionEvents": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TransitionEvent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Payload": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentExpression": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContentExpression",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ResetTimer": {
+   "additionalProperties": false,
+   "properties": {
+    "TimerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "SetTimer": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationExpression": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Seconds": {
+     "maximum": 31622400,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "TimerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimerName"
+   ],
+   "type": "object"
+  },
+  "SetVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "VariableName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "VariableName"
+   ],
+   "type": "object"
+  },
+  "Sns": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "TargetArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArn"
+   ],
+   "type": "object"
+  },
+  "Sqs": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "QueueUrl": {
+     "type": "string"
+    },
+    "UseBase64": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "QueueUrl"
+   ],
+   "type": "object"
+  },
+  "State": {
+   "additionalProperties": false,
+   "properties": {
+    "OnEnter": {
+     "$ref": "#/definitions/OnEnter"
+    },
+    "OnExit": {
+     "$ref": "#/definitions/OnExit"
+    },
+    "OnInput": {
+     "$ref": "#/definitions/OnInput"
+    },
+    "StateName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "StateName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TransitionEvent": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Action"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Condition": {
+     "maxLength": 512,
+     "type": "string"
+    },
+    "EventName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NextState": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition",
+    "EventName",
+    "NextState"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorModelName"
+ ],
+ "properties": {
+  "DetectorModelDefinition": {
+   "$ref": "#/definitions/DetectorModelDefinition"
+  },
+  "DetectorModelDescription": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "DetectorModelName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EvaluationMethod": {
+   "enum": [
+    "BATCH",
+    "SERIAL"
+   ],
+   "type": "string"
+  },
+  "Key": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^((`[\\w\\- ]+`)|([\\w\\-]+))(\\.((`[\\w\\- ]+`)|([\\w\\-]+)))*$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "DetectorModelDefinition",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTEvents::DetectorModel"
+}

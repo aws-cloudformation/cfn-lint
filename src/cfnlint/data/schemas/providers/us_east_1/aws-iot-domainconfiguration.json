@@ -23,6 +23,17 @@
    },
    "type": "object"
   },
+  "ClientCertificateConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientCertificateCallbackArn": {
+     "maxLength": 170,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ServerCertificateConfig": {
    "additionalProperties": false,
    "properties": {
@@ -85,11 +96,33 @@
   "/properties/DomainConfigurationName"
  ],
  "properties": {
+  "ApplicationProtocol": {
+   "enum": [
+    "SECURE_MQTT",
+    "MQTT_WSS",
+    "HTTPS",
+    "DEFAULT"
+   ],
+   "type": "string"
+  },
   "Arn": {
+   "type": "string"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "AWS_X509",
+    "CUSTOM_AUTH",
+    "AWS_SIGV4",
+    "CUSTOM_AUTH_X509",
+    "DEFAULT"
+   ],
    "type": "string"
   },
   "AuthorizerConfig": {
    "$ref": "#/definitions/AuthorizerConfig"
+  },
+  "ClientCertificateConfig": {
+   "$ref": "#/definitions/ClientCertificateConfig"
   },
   "DomainConfigurationName": {
    "maxLength": 128,
