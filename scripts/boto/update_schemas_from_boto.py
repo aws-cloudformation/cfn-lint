@@ -28,8 +28,38 @@ patches.extend(
             patches=[
                 Patch(
                     source=["mq", "2017-11-27"],
+                    shape="AuthenticationStrategy",
+                    path="/properties/AuthenticationStrategy",
+                ),
+                Patch(
+                    source=["mq", "2017-11-27"],
+                    shape="DataReplicationMode",
+                    path="/properties/DataReplicationMode",
+                ),
+                Patch(
+                    source=["mq", "2017-11-27"],
                     shape="DeploymentMode",
                     path="/properties/DeploymentMode",
+                ),
+                Patch(
+                    source=["mq", "2017-11-27"],
+                    shape="EngineType",
+                    path="/properties/EngineType",
+                ),
+                Patch(
+                    source=["mq", "2017-11-27"],
+                    shape="BrokerStorageType",
+                    path="/properties/StorageType",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::AmazonMQ::Configuration",
+            patches=[
+                Patch(
+                    source=["mq", "2017-11-27"],
+                    shape="AuthenticationStrategy",
+                    path="/properties/AuthenticationStrategy",
                 ),
                 Patch(
                     source=["mq", "2017-11-27"],
