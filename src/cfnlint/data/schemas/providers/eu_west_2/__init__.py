@@ -1782,6 +1782,8 @@ cached: list[str] = [
     "aws-iot1click-device.json",
     "aws-iot1click-placement.json",
     "aws-iot1click-project.json",
+    "aws-iotevents-alarmmodel.json",
+    "aws-iotevents-input.json",
     "aws-iotfleethub-application.json",
     "aws-kafkaconnect-connector.json",
     "aws-kafkaconnect-customplugin.json",

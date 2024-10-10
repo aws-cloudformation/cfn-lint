@@ -1,0 +1,43 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/ResourceArn"
+ ],
+ "properties": {
+  "ResourceArn": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Kinesis::Stream"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/ConsumerARN",
+      "typeName": "AWS::Kinesis::StreamConsumer"
+     }
+    }
+   ],
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "arn:aws.*:kinesis:.*:\\d{12}:stream/\\S+",
+   "type": "string"
+  },
+  "ResourcePolicy": {
+   "type": "object"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "ResourcePolicy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Kinesis::ResourcePolicy"
+}
