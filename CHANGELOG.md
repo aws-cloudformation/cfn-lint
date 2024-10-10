@@ -1,3 +1,13 @@
+### v1.16.1
+## What's Changed
+* Move `requireXor` to `SpotFleetRequestConfigData` by @stevengubler in https://github.com/aws-cloudformation/cfn-lint/pull/3737
+* Update CloudFormation schemas to `2024-10-10` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3736
+
+## New Contributors
+* @stevengubler made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3737
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.16.0...v1.16.1
+
 ### v1.16.0
 ## What's Changed
 * Switch SAM validation [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) to use pre-transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3726
