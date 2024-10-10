@@ -1,0 +1,456 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlarmModelName",
+  "/properties/Key"
+ ],
+ "definitions": {
+  "AcknowledgeFlow": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": "true",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "AlarmAction": {
+   "additionalProperties": false,
+   "properties": {
+    "DynamoDB": {
+     "$ref": "#/definitions/DynamoDB"
+    },
+    "DynamoDBv2": {
+     "$ref": "#/definitions/DynamoDBv2"
+    },
+    "Firehose": {
+     "$ref": "#/definitions/Firehose"
+    },
+    "IotEvents": {
+     "$ref": "#/definitions/IotEvents"
+    },
+    "IotSiteWise": {
+     "$ref": "#/definitions/IotSiteWise"
+    },
+    "IotTopicPublish": {
+     "$ref": "#/definitions/IotTopicPublish"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/Lambda"
+    },
+    "Sns": {
+     "$ref": "#/definitions/Sns"
+    },
+    "Sqs": {
+     "$ref": "#/definitions/Sqs"
+    }
+   },
+   "type": "object"
+  },
+  "AlarmActions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AlarmAction"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AlarmCapabilities": {
+   "additionalProperties": false,
+   "properties": {
+    "AcknowledgeFlow": {
+     "$ref": "#/definitions/AcknowledgeFlow"
+    },
+    "InitializationConfiguration": {
+     "$ref": "#/definitions/InitializationConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "AlarmEventActions": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmActions": {
+     "$ref": "#/definitions/AlarmActions"
+    }
+   },
+   "type": "object"
+  },
+  "AlarmRule": {
+   "additionalProperties": false,
+   "properties": {
+    "SimpleRule": {
+     "$ref": "#/definitions/SimpleRule"
+    }
+   },
+   "type": "object"
+  },
+  "AssetPropertyTimestamp": {
+   "additionalProperties": false,
+   "properties": {
+    "OffsetInNanos": {
+     "type": "string"
+    },
+    "TimeInSeconds": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeInSeconds"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Quality": {
+     "type": "string"
+    },
+    "Timestamp": {
+     "$ref": "#/definitions/AssetPropertyTimestamp"
+    },
+    "Value": {
+     "$ref": "#/definitions/AssetPropertyVariant"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AssetPropertyVariant": {
+   "additionalProperties": false,
+   "properties": {
+    "BooleanValue": {
+     "type": "string"
+    },
+    "DoubleValue": {
+     "type": "string"
+    },
+    "IntegerValue": {
+     "type": "string"
+    },
+    "StringValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DynamoDB": {
+   "additionalProperties": false,
+   "properties": {
+    "HashKeyField": {
+     "type": "string"
+    },
+    "HashKeyType": {
+     "type": "string"
+    },
+    "HashKeyValue": {
+     "type": "string"
+    },
+    "Operation": {
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "PayloadField": {
+     "type": "string"
+    },
+    "RangeKeyField": {
+     "type": "string"
+    },
+    "RangeKeyType": {
+     "type": "string"
+    },
+    "RangeKeyValue": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HashKeyField",
+    "HashKeyValue",
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "DynamoDBv2": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "TableName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "Firehose": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStreamName": {
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "Separator": {
+     "pattern": "([\\n\\t])|(\\r\\n)|(,)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStreamName"
+   ],
+   "type": "object"
+  },
+  "InitializationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DisabledOnInitialization": {
+     "default": "true",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "DisabledOnInitialization"
+   ],
+   "type": "object"
+  },
+  "IotEvents": {
+   "additionalProperties": false,
+   "properties": {
+    "InputName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "InputName"
+   ],
+   "type": "object"
+  },
+  "IotSiteWise": {
+   "additionalProperties": false,
+   "properties": {
+    "AssetId": {
+     "type": "string"
+    },
+    "EntryId": {
+     "type": "string"
+    },
+    "PropertyAlias": {
+     "type": "string"
+    },
+    "PropertyId": {
+     "type": "string"
+    },
+    "PropertyValue": {
+     "$ref": "#/definitions/AssetPropertyValue"
+    }
+   },
+   "type": "object"
+  },
+  "IotTopicPublish": {
+   "additionalProperties": false,
+   "properties": {
+    "MqttTopic": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "MqttTopic"
+   ],
+   "type": "object"
+  },
+  "Lambda": {
+   "additionalProperties": false,
+   "properties": {
+    "FunctionArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    }
+   },
+   "required": [
+    "FunctionArn"
+   ],
+   "type": "object"
+  },
+  "Payload": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentExpression": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContentExpression",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SimpleRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GREATER",
+      "GREATER_OR_EQUAL",
+      "LESS",
+      "LESS_OR_EQUAL",
+      "EQUAL",
+      "NOT_EQUAL"
+     ],
+     "type": "string"
+    },
+    "InputProperty": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Threshold": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "InputProperty",
+    "ComparisonOperator",
+    "Threshold"
+   ],
+   "type": "object"
+  },
+  "Sns": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "TargetArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetArn"
+   ],
+   "type": "object"
+  },
+  "Sqs": {
+   "additionalProperties": false,
+   "properties": {
+    "Payload": {
+     "$ref": "#/definitions/Payload"
+    },
+    "QueueUrl": {
+     "type": "string"
+    },
+    "UseBase64": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "QueueUrl"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AlarmModelName"
+ ],
+ "properties": {
+  "AlarmCapabilities": {
+   "$ref": "#/definitions/AlarmCapabilities"
+  },
+  "AlarmEventActions": {
+   "$ref": "#/definitions/AlarmEventActions"
+  },
+  "AlarmModelDescription": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "AlarmModelName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "AlarmRule": {
+   "$ref": "#/definitions/AlarmRule"
+  },
+  "Key": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^((`[\\w\\- ]+`)|([\\w\\-]+))(\\.((`[\\w\\- ]+`)|([\\w\\-]+)))*$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Severity": {
+   "maximum": 2147483647,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "RoleArn",
+  "AlarmRule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::IoTEvents::AlarmModel"
+}

@@ -2,7 +2,6 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Name",
-  "/properties/InstanceTypeConfigs",
   "/properties/LaunchSpecifications",
   "/properties/ClusterId",
   "/properties/InstanceFleetType"
@@ -75,6 +74,18 @@
    },
    "type": "object"
   },
+  "InstanceFleetResizingSpecifications": {
+   "additionalProperties": false,
+   "properties": {
+    "OnDemandResizeSpecification": {
+     "$ref": "#/definitions/OnDemandResizingSpecification"
+    },
+    "SpotResizeSpecification": {
+     "$ref": "#/definitions/SpotResizingSpecification"
+    }
+   },
+   "type": "object"
+  },
   "InstanceTypeConfig": {
    "additionalProperties": false,
    "properties": {
@@ -100,6 +111,9 @@
     "InstanceType": {
      "type": "string"
     },
+    "Priority": {
+     "type": "number"
+    },
     "WeightedCapacity": {
      "type": "integer"
     }
@@ -109,16 +123,49 @@
    ],
    "type": "object"
   },
+  "OnDemandCapacityReservationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationPreference": {
+     "type": "string"
+    },
+    "CapacityReservationResourceGroupArn": {
+     "type": "string"
+    },
+    "UsageStrategy": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "OnDemandProvisioningSpecification": {
    "additionalProperties": false,
    "properties": {
     "AllocationStrategy": {
      "type": "string"
+    },
+    "CapacityReservationOptions": {
+     "$ref": "#/definitions/OnDemandCapacityReservationOptions"
     }
    },
    "required": [
     "AllocationStrategy"
    ],
+   "type": "object"
+  },
+  "OnDemandResizingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "type": "string"
+    },
+    "CapacityReservationOptions": {
+     "$ref": "#/definitions/OnDemandCapacityReservationOptions"
+    },
+    "TimeoutDurationMinutes": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "SpotProvisioningSpecification": {
@@ -141,6 +188,18 @@
     "TimeoutDurationMinutes",
     "TimeoutAction"
    ],
+   "type": "object"
+  },
+  "SpotResizingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "type": "string"
+    },
+    "TimeoutDurationMinutes": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "VolumeSpecification": {
@@ -191,6 +250,9 @@
   },
   "Name": {
    "type": "string"
+  },
+  "ResizeSpecifications": {
+   "$ref": "#/definitions/InstanceFleetResizingSpecifications"
   },
   "TargetOnDemandCapacity": {
    "type": "integer"

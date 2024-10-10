@@ -1,0 +1,182 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName"
+ ],
+ "definitions": {
+  "CapacityProviderStrategyItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Name",
+      "typeName": "AWS::ECS::CapacityProvider"
+     },
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecuteCommandConfiguration": {
+     "$ref": "#/definitions/ExecuteCommandConfiguration"
+    },
+    "ManagedStorageConfiguration": {
+     "$ref": "#/definitions/ManagedStorageConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExecuteCommandConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     },
+     "type": "string"
+    },
+    "LogConfiguration": {
+     "$ref": "#/definitions/ExecuteCommandLogConfiguration"
+    },
+    "Logging": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExecuteCommandLogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchEncryptionEnabled": {
+     "type": "boolean"
+    },
+    "CloudWatchLogGroupName": {
+     "relationshipRef": {
+      "propertyPath": "/properties/LogGroupName",
+      "typeName": "AWS::Logs::LogGroup"
+     },
+     "type": "string"
+    },
+    "S3BucketName": {
+     "type": "string"
+    },
+    "S3EncryptionEnabled": {
+     "type": "boolean"
+    },
+    "S3KeyPrefix": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FargateEphemeralStorageKmsKeyId": {
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceConnectDefaults": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CapacityProviders": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterName": {
+   "type": "string"
+  },
+  "ClusterSettings": {
+   "items": {
+    "$ref": "#/definitions/ClusterSettings"
+   },
+   "type": "array"
+  },
+  "Configuration": {
+   "$ref": "#/definitions/ClusterConfiguration"
+  },
+  "DefaultCapacityProviderStrategy": {
+   "items": {
+    "$ref": "#/definitions/CapacityProviderStrategyItem"
+   },
+   "type": "array"
+  },
+  "ServiceConnectDefaults": {
+   "$ref": "#/definitions/ServiceConnectDefaults"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Configuration/ManagedStorageConfiguration/FargateEphemeralStorageKmsKeyId": "$join([\"arn:aws[-a-z]*:kms:[a-z0-9-]+:[0-9]{12}:key/\", FargateEphemeralStorageKmsKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::Cluster",
+ "writeOnlyProperties": [
+  "/properties/ServiceConnectDefaults"
+ ]
+}

@@ -265,6 +265,9 @@
     "Name": {
      "type": "string"
     },
+    "ResizeSpecifications": {
+     "$ref": "#/definitions/InstanceFleetResizingSpecifications"
+    },
     "TargetOnDemandCapacity": {
      "type": "integer"
     },
@@ -282,6 +285,18 @@
     },
     "SpotSpecification": {
      "$ref": "#/definitions/SpotProvisioningSpecification"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceFleetResizingSpecifications": {
+   "additionalProperties": false,
+   "properties": {
+    "OnDemandResizeSpecification": {
+     "$ref": "#/definitions/OnDemandResizingSpecification"
+    },
+    "SpotResizeSpecification": {
+     "$ref": "#/definitions/SpotResizingSpecification"
     }
    },
    "type": "object"
@@ -351,6 +366,9 @@
     },
     "InstanceType": {
      "type": "string"
+    },
+    "Priority": {
+     "type": "number"
     },
     "WeightedCapacity": {
      "type": "integer"
@@ -506,16 +524,49 @@
    ],
    "type": "object"
   },
+  "OnDemandCapacityReservationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationPreference": {
+     "type": "string"
+    },
+    "CapacityReservationResourceGroupArn": {
+     "type": "string"
+    },
+    "UsageStrategy": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "OnDemandProvisioningSpecification": {
    "additionalProperties": false,
    "properties": {
     "AllocationStrategy": {
      "type": "string"
+    },
+    "CapacityReservationOptions": {
+     "$ref": "#/definitions/OnDemandCapacityReservationOptions"
     }
    },
    "required": [
     "AllocationStrategy"
    ],
+   "type": "object"
+  },
+  "OnDemandResizingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "type": "string"
+    },
+    "CapacityReservationOptions": {
+     "$ref": "#/definitions/OnDemandCapacityReservationOptions"
+    },
+    "TimeoutDurationMinutes": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "PlacementGroupConfig": {
@@ -668,6 +719,18 @@
     "TimeoutDurationMinutes",
     "TimeoutAction"
    ],
+   "type": "object"
+  },
+  "SpotResizingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "type": "string"
+    },
+    "TimeoutDurationMinutes": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "StepConfig": {
