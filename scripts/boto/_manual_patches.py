@@ -61,7 +61,10 @@ patches: AllPatches = {
             source=["application-autoscaling", "2016-02-06"],
             shape="PolicyType",
         ),
-        "/definitions/PredefinedMetricSpecification/properties/PredefinedMetricType": Patch(
+        (
+            "/definitions/PredefinedMetricSpecification/"
+            "properties/PredefinedMetricType"
+        ): Patch(
             source=["application-autoscaling", "2016-02-06"],
             shape="MetricType",
         ),
@@ -78,12 +81,6 @@ patches: AllPatches = {
             shape="AuthenticationType",
         ),
     },
-    "AWS::AppSync::Resolver": {
-        "/properties/Kind": Patch(
-            source=["appsync", "2017-07-25"],
-            shape="ResolverKind",
-        ),
-    },
     "AWS::AutoScaling::LaunchConfiguration": {
         "/definitions/BlockDevice/properties/VolumeType": Patch(
             source=["ec2", "2016-11-15"],
@@ -95,7 +92,10 @@ patches: AllPatches = {
             source=["autoscaling", "2011-01-01"],
             shape="MetricStatistic",
         ),
-        "/definitions/PredefinedMetricSpecification/properties/PredefinedMetricType": Patch(
+        (
+            "/definitions/PredefinedMetricSpecification/"
+            "properties/PredefinedMetricType"
+        ): Patch(
             source=["autoscaling", "2011-01-01"],
             shape="MetricType",
         ),
@@ -109,7 +109,10 @@ patches: AllPatches = {
             source=["autoscaling-plans", "2018-01-06"],
             shape="ServiceNamespace",
         ),
-        "/definitions/ScalingInstruction/properties/PredictiveScalingMaxCapacityBehavior": Patch(
+        (
+            "/definitions/ScalingInstruction/properties/"
+            "PredictiveScalingMaxCapacityBehavior"
+        ): Patch(
             source=["autoscaling-plans", "2018-01-06"],
             shape="PredictiveScalingMaxCapacityBehavior",
         ),
@@ -198,20 +201,6 @@ patches: AllPatches = {
             shape="SSLSupportMethod",
         ),
     },
-    "AWS::CloudWatch::Alarm": {
-        "/properties/ComparisonOperator": Patch(
-            source=["cloudwatch", "2010-08-01"],
-            shape="ComparisonOperator",
-        ),
-        "/properties/Statistic": Patch(
-            source=["cloudwatch", "2010-08-01"],
-            shape="Statistic",
-        ),
-        "/properties/Unit": Patch(
-            source=["cloudwatch", "2010-08-01"],
-            shape="StandardUnit",
-        ),
-    },
     "AWS::CodeBuild::Project": {
         "/definitions/Artifacts/properties/Packaging": Patch(
             source=["codebuild", "2016-10-06"],
@@ -246,12 +235,6 @@ patches: AllPatches = {
         "/definitions/RepositoryTrigger/properties/Events/items": Patch(
             source=["codecommit", "2015-04-13"],
             shape="RepositoryTriggerEventEnum",
-        ),
-    },
-    "AWS::CodeDeploy::Application": {
-        "/properties/ComputePlatform": Patch(
-            source=["codedeploy", "2014-10-06"],
-            shape="ComputePlatform",
         ),
     },
     "AWS::CodeDeploy::DeploymentGroup": {
@@ -389,10 +372,6 @@ patches: AllPatches = {
             source=["dynamodb", "2012-08-10"],
             shape="ScalarAttributeType",
         ),
-        "/properties/BillingMode": Patch(
-            source=["dynamodb", "2012-08-10"],
-            shape="BillingMode",
-        ),
         "/definitions/KeySchema/properties/KeyType": Patch(
             source=["dynamodb", "2012-08-10"],
             shape="KeyType",
@@ -406,42 +385,16 @@ patches: AllPatches = {
             shape="StreamViewType",
         ),
     },
-    "AWS::EC2::CapacityReservation": {
-        "/properties/EndDateType": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="EndDateType",
-        ),
-        "/properties/InstanceMatchCriteria": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="InstanceMatchCriteria",
-        ),
-        "/properties/InstancePlatform": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="CapacityReservationInstancePlatform",
-        ),
-    },
     "AWS::EC2::CustomerGateway": {
         "/properties/Type": Patch(
             source=["ec2", "2016-11-15"],
             shape="GatewayType",
         ),
     },
-    "AWS::EC2::EIP": {
-        "/properties/Domain": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="DomainType",
-        ),
-    },
     "AWS::EC2::EC2Fleet": {
         "/definitions/OnDemandOptionsRequest/properties/AllocationStrategy": Patch(
             source=["ec2", "2016-11-15"],
             shape="FleetOnDemandAllocationStrategy",
-        ),
-    },
-    "AWS::EC2::Host": {
-        "/properties/AutoPlacement": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="AutoPlacement",
         ),
     },
     "AWS::EC2::Instance": {
@@ -455,7 +408,10 @@ patches: AllPatches = {
         ),
     },
     "AWS::EC2::LaunchTemplate": {
-        "/definitions/LaunchTemplateData/properties/InstanceInitiatedShutdownBehavior": Patch(
+        (
+            "/definitions/LaunchTemplateData/properties/"
+            "InstanceInitiatedShutdownBehavior"
+        ): Patch(
             source=["ec2", "2016-11-15"],
             shape="ShutdownBehavior",
         ),
@@ -484,22 +440,10 @@ patches: AllPatches = {
             shape="ResourceType",
         ),
     },
-    "AWS::EC2::NetworkAclEntry": {
-        "/properties/RuleAction": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="RuleAction",
-        ),
-    },
     "AWS::EC2::NetworkInterfacePermission": {
         "/properties/Permission": Patch(
             source=["ec2", "2016-11-15"],
             shape="InterfacePermissionType",
-        ),
-    },
-    "AWS::EC2::PlacementGroup": {
-        "/properties/Strategy": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="PlacementGroupStrategy",
         ),
     },
     "AWS::EC2::SpotFleet": {
@@ -509,10 +453,6 @@ patches: AllPatches = {
         ),
     },
     "AWS::ECS::TaskDefinition": {
-        "/properties/NetworkMode": Patch(
-            source=["ecs", "2014-11-13"],
-            shape="NetworkMode",
-        ),
         "/definitions/ProxyConfiguration/properties/Type": Patch(
             source=["ecs", "2014-11-13"],
             shape="ProxyConfigurationType",
@@ -522,14 +462,6 @@ patches: AllPatches = {
         "/definitions/LifecyclePolicy/properties/TransitionToIA": Patch(
             source=["efs", "2015-02-01"],
             shape="TransitionToIARules",
-        ),
-        "/properties/PerformanceMode": Patch(
-            source=["efs", "2015-02-01"],
-            shape="PerformanceMode",
-        ),
-        "/properties/ThroughputMode": Patch(
-            source=["efs", "2015-02-01"],
-            shape="ThroughputMode",
         ),
     },
     "AWS::Glue::Connection": {
@@ -557,57 +489,11 @@ patches: AllPatches = {
             source=["glue", "2017-03-31"],
             shape="LogicalOperator",
         ),
-        "/properties/Type": Patch(
-            source=["glue", "2017-03-31"],
-            shape="TriggerType",
-        ),
-    },
-    "AWS::GuardDuty::Detector": {
-        "/properties/FindingPublishingFrequency": Patch(
-            source=["guardduty", "2017-11-28"],
-            shape="FindingPublishingFrequency",
-        ),
-    },
-    "AWS::GuardDuty::Filter": {
-        "/properties/Action": Patch(
-            source=["guardduty", "2017-11-28"],
-            shape="FilterAction",
-        ),
-    },
-    "AWS::GuardDuty::IPSet": {
-        "/properties/Format": Patch(
-            source=["guardduty", "2017-11-28"],
-            shape="IpSetFormat",
-        ),
-    },
-    "AWS::GuardDuty::ThreatIntelSet": {
-        "/properties/Format": Patch(
-            source=["guardduty", "2017-11-28"],
-            shape="ThreatIntelSetFormat",
-        ),
     },
     "AWS::IAM::AccessKey": {
         "/properties/Status": Patch(
             source=["iam", "2010-05-08"],
             shape="statusType",
-        ),
-    },
-    "AWS::KinesisAnalyticsV2::Application": {
-        "/properties/RuntimeEnvironment": Patch(
-            source=["kinesisanalyticsv2", "2018-05-23"],
-            shape="RuntimeEnvironment",
-        ),
-    },
-    "AWS::Lambda::Function": {
-        "/properties/Runtime": Patch(
-            source=["lambda", "2015-03-31"],
-            shape="Runtime",
-        ),
-    },
-    "AWS::Lambda::EventSourceMapping": {
-        "/properties/StartingPosition": Patch(
-            source=["lambda", "2015-03-31"],
-            shape="EventSourcePosition",
         ),
     },
     "AWS::OpsWorks::Instance": {

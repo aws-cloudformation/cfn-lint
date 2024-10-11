@@ -9,14 +9,20 @@ import logging
 import os
 import tempfile
 import zipfile
+from pathlib import Path
 
+import regex as re
 import requests
+from _automated_patches import build_automated_patches
 from _manual_patches import patches
-from _types import ResourcePatches
+from _types import AllPatches, ResourcePatches
 
 LOGGER = logging.getLogger("cfnlint")
 
 BOTO_URL = "https://github.com/boto/botocore/archive/refs/heads/master.zip"
+SCHEMA_URL = (
+    "https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip"
+)
 
 
 def configure_logging():
@@ -42,37 +48,52 @@ def build_resource_type_patches(
     LOGGER.info(f"Applying patches for {resource_name}")
 
     resource_name = resource_name.lower().replace("::", "_")
-    output_dir = os.path.join("src/cfnlint/data/schemas/patches/extensions/all/")
-    output_file = os.path.join(
-        output_dir,
-        resource_name,
-        "boto.json",
-    )
+    output_path = Path("src/cfnlint/data/schemas/patches/extensions/all/")
+    resource_path = output_path / resource_name
+    if not resource_path.exists():
+        resource_path.mkdir(parents=True)
+        (resource_path / "__init__.py").touch()
+
+    output_file = resource_path / "boto.json"
 
     with open(output_file, "w+") as fh:
         d = []
         boto_d = {}
         for path, patch in resource_patches.items():
-            enums = []
-            print(patch.source)
             service_path = (
                 ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
             )
             with open(os.path.join(dir, *service_path), "r") as f:
                 boto_d = json.load(f)
 
-                try:
-                    enums = boto_d.get("shapes").get(patch.shape).get("enum")  # type: ignore
-                    d.append(
-                        {
-                            "op": "add",
-                            "path": f"{path}/enum",
-                            "value": sorted(enums),
-                        }
-                    )
-                except AttributeError as e:
-                    print(f"{patch.source}, {patch.shape}")
-                    print(e)
+                for field in ["enum", "pattern"]:
+                    value = boto_d.get("shapes", {}).get(patch.shape, {}).get(field)
+                    if not value:
+                        continue
+                    if field == "pattern":
+                        if value == ".*":
+                            continue
+                        try:
+                            re.compile(value)
+                        except Exception:
+                            LOGGER.info(
+                                (
+                                    f"Pattern {value!r} failed to "
+                                    "compile for resource "
+                                    f"{resource_name!r}"
+                                )
+                            )
+                            continue
+                    if value:
+                        d.append(
+                            {
+                                "op": "add",
+                                "path": f"{path}/{field}",
+                                "value": (
+                                    sorted(value) if isinstance(value, list) else value
+                                ),
+                            }
+                        )
 
         json.dump(
             d,
@@ -84,7 +105,10 @@ def build_resource_type_patches(
         fh.write("\n")
 
 
-def build_patches(dir: str):
+def build_patches(
+    dir: str,
+    patches: AllPatches,
+):
     for resource_name, patch in patches.items():
         build_resource_type_patches(
             dir, resource_name=resource_name, resource_patches=patch
@@ -92,14 +116,33 @@ def build_patches(dir: str):
 
 
 def main():
-    """main function"""
     configure_logging()
     with tempfile.TemporaryDirectory() as dir:
+        path = Path(dir)
+        boto_path = path / "botocore"
+        schema_path = path / "schemas"
         r = requests.get(BOTO_URL)
         z = zipfile.ZipFile(io.BytesIO(r.content))
-        z.extractall(dir)
+        z.extractall(boto_path)
 
-        build_patches(dir)
+        r = requests.get(SCHEMA_URL)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        z.extractall(schema_path)
+
+        _patches = patches
+        for k, v in patches.items():
+            _patches[k] = v
+        for k, v in build_automated_patches(boto_path, schema_path).items():
+            if k not in _patches:
+                _patches[k] = v
+            else:
+                for path, patch in v.items():
+                    if path in _patches[k]:
+                        LOGGER.info(f"Patch {path!r} already found in resource {k!r}")
+                    else:
+                        _patches[k][path] = patch
+
+        build_patches(boto_path, _patches)
 
 
 if __name__ == "__main__":
