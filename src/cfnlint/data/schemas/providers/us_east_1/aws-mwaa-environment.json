@@ -333,7 +333,8 @@
    ]
   },
   "AirflowVersion": {
-   "$ref": "#/definitions/AirflowVersion"
+   "$ref": "#/definitions/AirflowVersion",
+   "pattern": "[0-9a-z.]+"
   },
   "Arn": {
    "$ref": "#/definitions/EnvironmentArn"
@@ -348,16 +349,22 @@
    "$ref": "#/definitions/DatabaseVpcEndpointService"
   },
   "EndpointManagement": {
-   "$ref": "#/definitions/EndpointManagement"
+   "$ref": "#/definitions/EndpointManagement",
+   "enum": [
+    "CUSTOMER",
+    "SERVICE"
+   ]
   },
   "EnvironmentClass": {
    "$ref": "#/definitions/EnvironmentClass"
   },
   "ExecutionRoleArn": {
-   "$ref": "#/definitions/ExecutionRoleArn"
+   "$ref": "#/definitions/ExecutionRoleArn",
+   "pattern": "arn:aws(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+"
   },
   "KmsKey": {
-   "$ref": "#/definitions/KmsKey"
+   "$ref": "#/definitions/KmsKey",
+   "pattern": "(((arn:aws(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?key\\/)?[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|(arn:aws(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?alias/.+)"
   },
   "LoggingConfiguration": {
    "$ref": "#/definitions/LoggingConfiguration"
@@ -375,7 +382,8 @@
    "$ref": "#/definitions/MinWorkers"
   },
   "Name": {
-   "$ref": "#/definitions/EnvironmentName"
+   "$ref": "#/definitions/EnvironmentName",
+   "pattern": "[a-zA-Z][0-9a-zA-Z-_]*"
   },
   "NetworkConfiguration": {
    "$ref": "#/definitions/NetworkConfiguration"
@@ -396,7 +404,8 @@
    "$ref": "#/definitions/Schedulers"
   },
   "SourceBucketArn": {
-   "$ref": "#/definitions/S3BucketArn"
+   "$ref": "#/definitions/S3BucketArn",
+   "pattern": "arn:aws(-[a-z]+)?:s3:::[a-z0-9.\\-]+"
   },
   "StartupScriptS3ObjectVersion": {
    "$ref": "#/definitions/S3ObjectVersion"
@@ -412,7 +421,11 @@
    ]
   },
   "WebserverAccessMode": {
-   "$ref": "#/definitions/WebserverAccessMode"
+   "$ref": "#/definitions/WebserverAccessMode",
+   "enum": [
+    "PRIVATE_ONLY",
+    "PUBLIC_ONLY"
+   ]
   },
   "WebserverUrl": {
    "$ref": "#/definitions/WebserverUrl"
@@ -421,7 +434,8 @@
    "$ref": "#/definitions/WebserverVpcEndpointService"
   },
   "WeeklyMaintenanceWindowStart": {
-   "$ref": "#/definitions/WeeklyMaintenanceWindowStart"
+   "$ref": "#/definitions/WeeklyMaintenanceWindowStart",
+   "pattern": ".*(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\\d|2[0-3]):(00|30).*"
   }
  },
  "readOnlyProperties": [

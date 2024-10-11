@@ -61,19 +61,25 @@
    "$ref": "#/definitions/StatementActionList"
   },
   "Arn": {
-   "$ref": "#/definitions/VeniceGlobalArn"
+   "$ref": "#/definitions/VeniceGlobalArn",
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:((schemamapping|matchingworkflow|idmappingworkflow|idnamespace)/[a-zA-Z_0-9-]{1,255})$"
   },
   "Condition": {
    "$ref": "#/definitions/StatementCondition"
   },
   "Effect": {
-   "$ref": "#/definitions/StatementEffect"
+   "$ref": "#/definitions/StatementEffect",
+   "enum": [
+    "Allow",
+    "Deny"
+   ]
   },
   "Principal": {
    "$ref": "#/definitions/StatementPrincipalList"
   },
   "StatementId": {
-   "$ref": "#/definitions/StatementId"
+   "$ref": "#/definitions/StatementId",
+   "pattern": "^[0-9A-Za-z]+$"
   }
  },
  "required": [

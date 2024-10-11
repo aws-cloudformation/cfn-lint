@@ -344,22 +344,29 @@
    "$ref": "#/definitions/CapacityUnitsConfiguration"
   },
   "Description": {
-   "$ref": "#/definitions/Description"
+   "$ref": "#/definitions/Description",
+   "pattern": "^\\P{C}*$"
   },
   "DocumentMetadataConfigurations": {
    "$ref": "#/definitions/DocumentMetadataConfigurationList"
   },
   "Edition": {
-   "$ref": "#/definitions/Edition"
+   "$ref": "#/definitions/Edition",
+   "enum": [
+    "DEVELOPER_EDITION",
+    "ENTERPRISE_EDITION"
+   ]
   },
   "Id": {
    "$ref": "#/definitions/Id"
   },
   "Name": {
-   "$ref": "#/definitions/Name"
+   "$ref": "#/definitions/Name",
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9_-]*"
   },
   "RoleArn": {
-   "$ref": "#/definitions/RoleArn"
+   "$ref": "#/definitions/RoleArn",
+   "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}"
   },
   "ServerSideEncryptionConfiguration": {
    "$ref": "#/definitions/ServerSideEncryptionConfiguration"
@@ -368,7 +375,11 @@
    "$ref": "#/definitions/TagList"
   },
   "UserContextPolicy": {
-   "$ref": "#/definitions/UserContextPolicy"
+   "$ref": "#/definitions/UserContextPolicy",
+   "enum": [
+    "ATTRIBUTE_FILTER",
+    "USER_TOKEN"
+   ]
   },
   "UserTokenConfigurations": {
    "$ref": "#/definitions/UserTokenConfigurationList"

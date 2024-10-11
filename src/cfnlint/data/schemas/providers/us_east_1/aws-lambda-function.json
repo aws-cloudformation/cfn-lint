@@ -339,6 +339,7 @@
   "FunctionName": {
    "maxLength": 64,
    "minLength": 1,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso([a-z]?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)",
    "type": "string"
   },
   "Handler": {
@@ -377,7 +378,11 @@
    "type": "string"
   },
   "RecursiveLoop": {
-   "$ref": "#/definitions/RecursiveLoop"
+   "$ref": "#/definitions/RecursiveLoop",
+   "enum": [
+    "Allow",
+    "Terminate"
+   ]
   },
   "ReservedConcurrentExecutions": {
    "minimum": 0,

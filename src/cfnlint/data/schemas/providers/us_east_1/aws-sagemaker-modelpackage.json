@@ -962,7 +962,8 @@
    "$ref": "#/definitions/CertifyForMarketplace"
   },
   "ClientToken": {
-   "$ref": "#/definitions/ClientToken"
+   "$ref": "#/definitions/ClientToken",
+   "pattern": "^[a-zA-Z0-9-]+$"
   },
   "CreationTime": {
    "$ref": "#/definitions/CreationTime"
@@ -986,7 +987,12 @@
    "$ref": "#/definitions/MetadataProperties"
   },
   "ModelApprovalStatus": {
-   "$ref": "#/definitions/ModelApprovalStatus"
+   "$ref": "#/definitions/ModelApprovalStatus",
+   "enum": [
+    "Approved",
+    "PendingManualApproval",
+    "Rejected"
+   ]
   },
   "ModelCard": {
    "$ref": "#/definitions/ModelCard"
@@ -998,13 +1004,16 @@
    "$ref": "#/definitions/ModelPackageArn"
   },
   "ModelPackageDescription": {
-   "$ref": "#/definitions/ModelPackageDescription"
+   "$ref": "#/definitions/ModelPackageDescription",
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*"
   },
   "ModelPackageGroupName": {
-   "$ref": "#/definitions/ModelPackageGroupName"
+   "$ref": "#/definitions/ModelPackageGroupName",
+   "pattern": "(arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:[a-z\\-]*\\/)?([a-zA-Z0-9]([a-zA-Z0-9-]){0,62})(?<!-)$"
   },
   "ModelPackageName": {
-   "$ref": "#/definitions/ModelPackageName"
+   "$ref": "#/definitions/ModelPackageName",
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$"
   },
   "ModelPackageStatus": {
    "$ref": "#/definitions/ModelPackageStatus"
@@ -1016,19 +1025,25 @@
    "$ref": "#/definitions/ModelPackageVersion"
   },
   "SamplePayloadUrl": {
-   "$ref": "#/definitions/SamplePayloadUrl"
+   "$ref": "#/definitions/SamplePayloadUrl",
+   "pattern": "^(https|s3)://([^/]+)/?(.*)$"
   },
   "SecurityConfig": {
    "$ref": "#/definitions/SecurityConfig"
   },
   "SkipModelValidation": {
-   "$ref": "#/definitions/SkipModelValidation"
+   "$ref": "#/definitions/SkipModelValidation",
+   "enum": [
+    "All",
+    "None"
+   ]
   },
   "SourceAlgorithmSpecification": {
    "$ref": "#/definitions/SourceAlgorithmSpecification"
   },
   "SourceUri": {
-   "$ref": "#/definitions/SourceUri"
+   "$ref": "#/definitions/SourceUri",
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{N}\\p{P}]{0,1024}"
   },
   "Tags": {
    "items": {
