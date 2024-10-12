@@ -1,0 +1,75 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CellName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CellName"
+ ],
+ "properties": {
+  "CellArn": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "CellName": {
+   "maxLength": 64,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "Cells": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "ParentReadinessScopes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 5,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CellArn",
+  "/properties/ParentReadinessScopes"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-reoute53-recovery-readiness.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53RecoveryReadiness::Cell"
+}

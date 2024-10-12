@@ -748,6 +748,7 @@ types: list[str] = [
     "AWS::Kendra::Faq",
     "AWS::Kendra::Index",
     "AWS::KendraRanking::ExecutionPlan",
+    "AWS::Kinesis::ResourcePolicy",
     "AWS::Kinesis::Stream",
     "AWS::Kinesis::StreamConsumer",
     "AWS::KinesisAnalytics::Application",

@@ -9,7 +9,8 @@
   "/properties/PlatformVersion",
   "/properties/Service",
   "/properties/ServiceRegistries",
-  "/properties/TaskDefinition"
+  "/properties/TaskDefinition",
+  "/properties/CapacityProviderStrategy"
  ],
  "definitions": {
   "AwsVpcConfiguration": {
@@ -42,6 +43,21 @@
    "required": [
     "Subnets"
    ],
+   "type": "object"
+  },
+  "CapacityProviderStrategyItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Base": {
+     "type": "integer"
+    },
+    "CapacityProvider": {
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    }
+   },
    "type": "object"
   },
   "LoadBalancer": {
@@ -122,6 +138,12 @@
   "/properties/Id"
  ],
  "properties": {
+  "CapacityProviderStrategy": {
+   "items": {
+    "$ref": "#/definitions/CapacityProviderStrategyItem"
+   },
+   "type": "array"
+  },
   "Cluster": {
    "type": "string"
   },

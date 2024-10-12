@@ -1,0 +1,184 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CFNDataSourceConfigurations": {
+   "additionalProperties": false,
+   "properties": {
+    "Kubernetes": {
+     "$ref": "#/definitions/CFNKubernetesConfiguration"
+    },
+    "MalwareProtection": {
+     "$ref": "#/definitions/CFNMalwareProtectionConfiguration"
+    },
+    "S3Logs": {
+     "$ref": "#/definitions/CFNS3LogsConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "CFNFeatureAdditionalConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Status": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CFNFeatureConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalConfiguration": {
+     "items": {
+      "$ref": "#/definitions/CFNFeatureAdditionalConfiguration"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "CFNKubernetesAuditLogsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enable": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enable"
+   ],
+   "type": "object"
+  },
+  "CFNKubernetesConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuditLogs": {
+     "$ref": "#/definitions/CFNKubernetesAuditLogsConfiguration"
+    }
+   },
+   "required": [
+    "AuditLogs"
+   ],
+   "type": "object"
+  },
+  "CFNMalwareProtectionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ScanEc2InstanceWithFindings": {
+     "$ref": "#/definitions/CFNScanEc2InstanceWithFindingsConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "CFNS3LogsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enable": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enable"
+   ],
+   "type": "object"
+  },
+  "CFNScanEc2InstanceWithFindingsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EbsVolumes": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DataSources": {
+   "$ref": "#/definitions/CFNDataSourceConfigurations"
+  },
+  "Enable": {
+   "type": "boolean"
+  },
+  "Features": {
+   "items": {
+    "$ref": "#/definitions/CFNFeatureConfiguration"
+   },
+   "type": "array"
+  },
+  "FindingPublishingFrequency": {
+   "enum": [
+    "FIFTEEN_MINUTES",
+    "ONE_HOUR",
+    "SIX_HOURS"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Enable"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::Detector"
+}
