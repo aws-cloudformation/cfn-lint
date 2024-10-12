@@ -113,6 +113,15 @@ def _per_resource_patch(
                     continue
                 if p_name.lower() == member.lower():
 
+                    path = f"/properties/{p_name}"
+
+                    if "$ref" in p_data:
+                        pointer = p_data["$ref"].split("/")
+                        p_data = schema_data.get(pointer[1], {}).get(pointer[2], {})
+                        if not p_data:
+                            continue
+                        path = f"/{'/'.join(pointer[1:])}"
+
                     # skip if we already have an enum or pattern
                     if any([p_data.get(field) for field in _fields]):
                         continue
@@ -125,7 +134,7 @@ def _per_resource_patch(
                     if not any([member_shape.get(field) for field in _fields]):
                         continue
 
-                    results[f"/properties/{p_name}"] = Patch(
+                    results[path] = Patch(
                         source=source,
                         shape=member_shape_name,
                     )
@@ -177,7 +186,6 @@ def each_boto_service(boto_path: Path, schema_path: Path) -> AllPatches:
     boto_path = boto_path / "botocore-master" / "botocore" / "data"
 
     for service_dir in boto_path.iterdir():
-        print(service_dir)
         if not service_dir.is_dir():
             continue
 
