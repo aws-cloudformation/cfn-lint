@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "StreamEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "enum": [
+      "KMS"
+     ],
+     "type": "string"
+    },
+    "KeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      }
+     ],
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncryptionType",
+    "KeyId"
+   ],
+   "type": "object"
+  },
+  "StreamModeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamMode": {
+     "enum": [
+      "ON_DEMAND",
+      "PROVISIONED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamMode"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "RetentionPeriodHours": {
+   "maximum": 8760,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ShardCount": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "StreamEncryption": {
+   "$ref": "#/definitions/StreamEncryption"
+  },
+  "StreamModeDetails": {
+   "$ref": "#/definitions/StreamModeDetails",
+   "default": {
+    "StreamMode": "PROVISIONED"
+   }
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Kinesis::Stream"
+}

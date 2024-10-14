@@ -1,0 +1,191 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Cluster",
+  "/properties/ExternalId",
+  "/properties/LaunchType",
+  "/properties/LoadBalancers",
+  "/properties/NetworkConfiguration",
+  "/properties/PlatformVersion",
+  "/properties/Service",
+  "/properties/ServiceRegistries",
+  "/properties/TaskDefinition"
+ ],
+ "definitions": {
+  "AwsVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AssignPublicIp": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    },
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "Subnets": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 16,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  "LoadBalancer": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "type": "string"
+    },
+    "ContainerPort": {
+     "type": "integer"
+    },
+    "TargetGroupArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsVpcConfiguration": {
+     "$ref": "#/definitions/AwsVpcConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Scale": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "enum": [
+      "PERCENT"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceRegistry": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "type": "string"
+    },
+    "ContainerPort": {
+     "type": "integer"
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "RegistryArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Cluster",
+  "/properties/Service",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Cluster": {
+   "type": "string"
+  },
+  "ExternalId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LaunchType": {
+   "enum": [
+    "EC2",
+    "FARGATE"
+   ],
+   "type": "string"
+  },
+  "LoadBalancers": {
+   "items": {
+    "$ref": "#/definitions/LoadBalancer"
+   },
+   "type": "array"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "PlatformVersion": {
+   "type": "string"
+  },
+  "Scale": {
+   "$ref": "#/definitions/Scale"
+  },
+  "Service": {
+   "type": "string"
+  },
+  "ServiceRegistries": {
+   "items": {
+    "$ref": "#/definitions/ServiceRegistry"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TaskDefinition": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Cluster",
+  "Service",
+  "TaskDefinition"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecs.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::TaskSet"
+}
