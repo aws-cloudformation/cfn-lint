@@ -56,45 +56,47 @@ def build_resource_type_patches(
 
     output_file = resource_path / "boto.json"
 
-    with open(output_file, "w+") as fh:
-        d = []
-        boto_d = {}
-        for path, patch in resource_patches.items():
-            service_path = (
-                ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
-            )
-            with open(os.path.join(dir, *service_path), "r") as f:
-                boto_d = json.load(f)
+    d = []
+    boto_d = {}
+    for path, patch in resource_patches.items():
+        service_path = (
+            ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
+        )
+        with open(os.path.join(dir, *service_path), "r") as f:
+            boto_d = json.load(f)
 
-                for field in ["enum", "pattern"]:
-                    value = boto_d.get("shapes", {}).get(patch.shape, {}).get(field)
-                    if not value:
+            for field in ["enum", "pattern"]:
+                value = boto_d.get("shapes", {}).get(patch.shape, {}).get(field)
+                if not value:
+                    continue
+                if field == "pattern":
+                    if value == ".*":
                         continue
-                    if field == "pattern":
-                        if value == ".*":
-                            continue
-                        try:
-                            re.compile(value)
-                        except Exception:
-                            LOGGER.info(
-                                (
-                                    f"Pattern {value!r} failed to "
-                                    "compile for resource "
-                                    f"{resource_name!r}"
-                                )
+                    try:
+                        re.compile(value)
+                    except Exception:
+                        LOGGER.info(
+                            (
+                                f"Pattern {value!r} failed to "
+                                "compile for resource "
+                                f"{resource_name!r}"
                             )
-                            continue
-                    if value:
-                        d.append(
-                            {
-                                "op": "add",
-                                "path": f"{path}/{field}",
-                                "value": (
-                                    sorted(value) if isinstance(value, list) else value
-                                ),
-                            }
                         )
+                        continue
+                if value:
+                    d.append(
+                        {
+                            "op": "add",
+                            "path": f"{path}/{field}",
+                            "value": (
+                                sorted(value) if isinstance(value, list) else value
+                            ),
+                        }
+                    )
 
+    if not d:
+        return
+    with open(output_file, "w+") as fh:
         json.dump(
             d,
             fh,

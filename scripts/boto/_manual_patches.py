@@ -28,16 +28,6 @@ patches: AllPatches = {
             shape="BrokerStorageType",
         ),
     },
-    "AWS::AmazonMQ::Configuration": {
-        "/properties/AuthenticationStrategy": Patch(
-            source=["mq", "2017-11-27"],
-            shape="AuthenticationStrategy",
-        ),
-        "/properties/EngineType": Patch(
-            source=["mq", "2017-11-27"],
-            shape="EngineType",
-        ),
-    },
     "AWS::ApiGateway::RestApi": {
         "/properties/ApiKeySourceType": Patch(
             source=["apigateway", "2015-07-09"],
@@ -57,10 +47,6 @@ patches: AllPatches = {
         ),
     },
     "AWS::ApplicationAutoScaling::ScalingPolicy": {
-        "/properties/PolicyType": Patch(
-            source=["application-autoscaling", "2016-02-06"],
-            shape="PolicyType",
-        ),
         (
             "/definitions/PredefinedMetricSpecification/"
             "properties/PredefinedMetricType"
@@ -383,12 +369,6 @@ patches: AllPatches = {
         "/definitions/StreamSpecification/properties/StreamViewType": Patch(
             source=["dynamodb", "2012-08-10"],
             shape="StreamViewType",
-        ),
-    },
-    "AWS::EC2::CustomerGateway": {
-        "/properties/Type": Patch(
-            source=["ec2", "2016-11-15"],
-            shape="GatewayType",
         ),
     },
     "AWS::EC2::EC2Fleet": {
