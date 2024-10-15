@@ -122,7 +122,8 @@ class TestRef(TestCase):
         self.assertEqual(fe.value(self.cfn), "us-west-2")
 
         fe = _ForEachValue.create({"Ref": "AWS::AccountId"})
-        self.assertEqual(fe.value(self.cfn), "123456789012")
+        with self.assertRaises(_ResolveError):
+            fe.value(self.cfn)
 
         fe = _ForEachValue.create({"Ref": "AWS::NotificationARNs"})
         self.assertListEqual(
@@ -832,3 +833,108 @@ def nested_set(dic, keys, value):
         if isinstance(key, int):
             dic = dic[key]
     dic[keys[-1]] = value
+
+
+class TestTransformValueAccountId(TestCase):
+    def setUp(self) -> None:
+        self.template_obj = convert_dict(
+            {
+                "Transform": ["AWS::LanguageExtensions"],
+                "Mappings": {
+                    "Accounts": {
+                        "111111111111": {"AppName": ["A", "B"]},
+                        "222222222222": {"AppName": ["C", "D"]},
+                    },
+                },
+                "Resources": {
+                    "Fn::ForEach::Regions": [
+                        "AppName",
+                        {
+                            "Fn::FindInMap": [
+                                "Accounts",
+                                {"Ref": "AWS::AccountId"},
+                                "AppName",
+                            ]
+                        },
+                        {
+                            "${AppName}Role": {
+                                "Type": "AWS::IAM::Role",
+                                "Properties": {
+                                    "RoleName": {"Ref": "AppName"},
+                                    "AssumeRolePolicyDocument": {
+                                        "Version": "2012-10-17",
+                                        "Statement": [
+                                            {
+                                                "Effect": "Allow",
+                                                "Principal": {
+                                                    "Service": ["ec2.amazonaws.com"]
+                                                },
+                                                "Action": ["sts:AssumeRole"],
+                                            }
+                                        ],
+                                    },
+                                    "Path": "/",
+                                },
+                            }
+                        },
+                    ],
+                },
+            }
+        )
+
+        self.result = {
+            "Mappings": {
+                "Accounts": {
+                    "111111111111": {"AppName": ["A", "B"]},
+                    "222222222222": {"AppName": ["C", "D"]},
+                },
+            },
+            "Resources": {
+                "ARole": {
+                    "Properties": {
+                        "AssumeRolePolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": ["sts:AssumeRole"],
+                                    "Effect": "Allow",
+                                    "Principal": {"Service": ["ec2.amazonaws.com"]},
+                                }
+                            ],
+                            "Version": "2012-10-17",
+                        },
+                        "Path": "/",
+                        "RoleName": "A",
+                    },
+                    "Type": "AWS::IAM::Role",
+                },
+                "BRole": {
+                    "Properties": {
+                        "AssumeRolePolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": ["sts:AssumeRole"],
+                                    "Effect": "Allow",
+                                    "Principal": {"Service": ["ec2.amazonaws.com"]},
+                                }
+                            ],
+                            "Version": "2012-10-17",
+                        },
+                        "Path": "/",
+                        "RoleName": "B",
+                    },
+                    "Type": "AWS::IAM::Role",
+                },
+            },
+            "Transform": ["AWS::LanguageExtensions"],
+        }
+
+    def test_transform(self):
+        self.maxDiff = None
+        cfn = Template(filename="", template=self.template_obj, regions=["us-east-1"])
+        matches, template = language_extension(cfn)
+        self.assertListEqual(matches, [])
+        self.assertDictEqual(
+            template,
+            self.result,
+            template,
+        )
