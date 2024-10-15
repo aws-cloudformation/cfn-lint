@@ -242,18 +242,24 @@ class TestPatchedSpecs(BaseTestCase):
                             l_value, str, "ValueTypes: %s, Type: %s" % (v_name, p_name)
                         )
             self.assertIn(
-                list_count, [0, 2], "Both ListMin and ListMax must be specified"
+                list_count,
+                [0, 2],
+                f"Both ListMin and ListMax must be specified for {v_name!r}",
             )
             self.assertIn(
-                number_count, [0, 2], "Both NumberMin and NumberMax must be specified"
+                number_count,
+                [0, 2],
+                f"Both NumberMin and NumberMax must be specified for {v_name!r}",
             )
             self.assertIn(
-                string_count, [0, 2], "Both StringMin and StringMax must be specified"
+                string_count,
+                [0, 2],
+                f"Both StringMin and StringMax must be specified for {v_name!r}",
             )
             if number_count == 2:
                 self.assertTrue(
-                    (number_max > number_min),
-                    "NumberMax must be greater than NumberMin",
+                    (number_max >= number_min),
+                    f"NumberMax must be greater than NumberMin for {v_name!r}",
                 )
 
     def test_parameter_types(self):

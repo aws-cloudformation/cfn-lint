@@ -237,7 +237,7 @@ def multi_constructor(loader, tag_suffix, node):
     elif isinstance(node, MappingNode):
         constructor = loader.construct_mapping
     else:
-        raise f"Bad tag: !{tag_suffix}"
+        raise ValueError(f"Bad tag: !{tag_suffix}")
 
     if tag_suffix == "Fn::Sub":
         return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
