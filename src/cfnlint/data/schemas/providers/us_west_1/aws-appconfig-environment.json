@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId"
+ ],
+ "definitions": {
+  "Monitor": {
+   "additionalProperties": false,
+   "properties": {
+    "AlarmArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::CloudWatch::Alarm"
+     },
+     "type": "string"
+    },
+    "AlarmRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^((arn):(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):(iam)::\\d{12}:role[/].*)$",
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::IAM::Role"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "AlarmArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/EnvironmentId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "pattern": "[a-z0-9]{4,7}",
+   "type": "string"
+  },
+  "Monitors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Monitor"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentId"
+ ],
+ "required": [
+  "Name",
+  "ApplicationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::Environment"
+}

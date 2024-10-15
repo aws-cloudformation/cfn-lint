@@ -1,0 +1,128 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/blob/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/CustomerGatewayId",
+  "/properties/VpnGatewayId",
+  "/properties/TransitGatewayId",
+  "/properties/EnableAcceleration",
+  "/properties/LocalIpv4NetworkCidr",
+  "/properties/LocalIpv6NetworkCidr",
+  "/properties/OutsideIpAddressType",
+  "/properties/RemoteIpv4NetworkCidr",
+  "/properties/RemoteIpv6NetworkCidr",
+  "/properties/StaticRoutesOnly",
+  "/properties/TransportTransitGatewayAttachmentId",
+  "/properties/TunnelInsideIpVersion",
+  "/properties/VpnTunnelOptionsSpecifications"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpnTunnelOptionsSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PreSharedKey": {
+     "type": "string"
+    },
+    "TunnelInsideCidr": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VpnConnectionId"
+ ],
+ "properties": {
+  "CustomerGatewayId": {
+   "type": "string"
+  },
+  "EnableAcceleration": {
+   "type": "boolean"
+  },
+  "LocalIpv4NetworkCidr": {
+   "type": "string"
+  },
+  "LocalIpv6NetworkCidr": {
+   "type": "string"
+  },
+  "OutsideIpAddressType": {
+   "type": "string"
+  },
+  "RemoteIpv4NetworkCidr": {
+   "type": "string"
+  },
+  "RemoteIpv6NetworkCidr": {
+   "type": "string"
+  },
+  "StaticRoutesOnly": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitGatewayId": {
+   "type": "string"
+  },
+  "TransportTransitGatewayAttachmentId": {
+   "type": "string"
+  },
+  "TunnelInsideIpVersion": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "VpnConnectionId": {
+   "type": "string"
+  },
+  "VpnGatewayId": {
+   "type": "string"
+  },
+  "VpnTunnelOptionsSpecifications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VpnTunnelOptionsSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VpnConnectionId"
+ ],
+ "required": [
+  "Type",
+  "CustomerGatewayId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPNConnection"
+}
