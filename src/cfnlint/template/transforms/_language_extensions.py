@@ -373,10 +373,11 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                     for k, v in mapping.items():
                         if isinstance(v, dict):
                             if t_map[2].value(cfn, params, only_params) in v:
+                                if isinstance(t_map[1], _ForEachValueRef):
+                                    if t_map[1]._ref._value == "AWS::AccountId":
+                                        global _ACCOUNT_ID
+                                        _ACCOUNT_ID = k
                                 t_map[1] = _ForEachValue.create(k)
-                                if t_map[1].value == {"Ref": "AWS::AccountId"}:
-                                    global _ACCOUNT_ID
-                                    _ACCOUNT_ID = k
                                 break
                 except _ResolveError:
                     pass

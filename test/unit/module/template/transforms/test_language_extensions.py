@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from copy import deepcopy
 from unittest import TestCase, mock
 
+import cfnlint.template.transforms._language_extensions
 from cfnlint.decode import convert_dict
 from cfnlint.template import Template
 from cfnlint.template.transforms._language_extensions import (
@@ -364,6 +365,31 @@ class TestFindInMap(TestCase):
         )
         with self.assertRaises(_ResolveError):
             fe.value(self.cfn)
+
+    def test_account_id(self):
+
+        cfnlint.template.transforms._language_extensions._ACCOUNT_ID = None
+
+        with mock.patch(
+            "cfnlint.template.transforms._language_extensions._ACCOUNT_ID", None
+        ):
+            self.assertIsNone(
+                cfnlint.template.transforms._language_extensions._ACCOUNT_ID
+            )
+            fe = _ForEachValueFnFindInMap(
+                "a",
+                [
+                    "Bucket",
+                    {"Ref": "AWS::AccountId"},
+                    "Names",
+                ],
+            )
+            self.assertListEqual(fe.value(self.cfn), ["foo", "bar"])
+
+            self.assertEqual(
+                cfnlint.template.transforms._language_extensions._ACCOUNT_ID,
+                "Production",
+            )
 
 
 class TestTransform(TestCase):
