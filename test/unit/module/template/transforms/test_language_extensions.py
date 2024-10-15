@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from copy import deepcopy
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from cfnlint.decode import convert_dict
 from cfnlint.template import Template
@@ -124,6 +124,13 @@ class TestRef(TestCase):
         fe = _ForEachValue.create({"Ref": "AWS::AccountId"})
         with self.assertRaises(_ResolveError):
             fe.value(self.cfn)
+
+        with mock.patch(
+            "cfnlint.template.transforms._language_extensions._ACCOUNT_ID",
+            "123456789012",
+        ):
+            fe = _ForEachValue.create({"Ref": "AWS::AccountId"})
+            self.assertEqual(fe.value(self.cfn), "123456789012")
 
         fe = _ForEachValue.create({"Ref": "AWS::NotificationARNs"})
         self.assertListEqual(
