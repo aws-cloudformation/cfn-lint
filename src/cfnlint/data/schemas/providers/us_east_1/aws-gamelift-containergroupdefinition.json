@@ -193,6 +193,34 @@
    ],
    "type": "object"
   },
+  "ContainerMountPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessLevel": {
+     "enum": [
+      "READ_ONLY",
+      "READ_AND_WRITE"
+     ],
+     "type": "string"
+    },
+    "ContainerPath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^(\\/+[^\\/]+\\/*)+$",
+     "type": "string"
+    },
+    "InstancePath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^\\/[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstancePath"
+   ],
+   "type": "object"
+  },
   "ContainerPortRange": {
    "additionalProperties": false,
    "properties": {
@@ -321,6 +349,29 @@
    ],
    "type": "string"
   },
+  "SourceVersionNumber": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Status": {
+   "enum": [
+    "READY",
+    "COPYING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "SupportContainerDefinitions": {
+   "insertionOrder": false,
+   "items": {},
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
   "Tags": {
    "insertionOrder": false,
    "items": {
@@ -345,7 +396,9 @@
  "readOnlyProperties": [
   "/properties/ContainerGroupDefinitionArn",
   "/properties/CreationTime",
-  "/properties/ContainerDefinitions/*/ResolvedImageDigest"
+  "/properties/ContainerDefinitions/*/ResolvedImageDigest",
+  "/properties/Status",
+  "/properties/StatusReason"
  ],
  "required": [
   "Name",
