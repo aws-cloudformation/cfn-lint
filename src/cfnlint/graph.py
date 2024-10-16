@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import json
 import logging
 import warnings
 from typing import Any
@@ -53,6 +54,9 @@ class GraphSettings:
 
         return value
 
+    def _pydot_list_convert(self, value: list[str | int]) -> str:
+        return json.dumps(json.dumps(value))
+
     def subgraph_view(self, graph) -> networkx.MultiDiGraph:
         view = networkx.MultiDiGraph(name="template")
         resources: list[str] = [
@@ -69,9 +73,9 @@ class GraphSettings:
 
         for edge_1, edge_2, edge_data in graph.edges(data=True):
             if edge_1 in resources and edge_2 in resources:
-                edge_data["source_paths"] = [
-                    self._pydot_string_convert(p) for p in edge_data["source_paths"]
-                ]
+                edge_data["source_paths"] = self._pydot_list_convert(
+                    edge_data["source_paths"]
+                )
                 view.add_edge(
                     edge_1,
                     edge_2,
