@@ -54,10 +54,10 @@ IamPipeline [label="IamPipeline\\n<AWS::CloudFormation::Stack>", color=black, sh
 CustomResource [label="CustomResource\\n<Custom::Function>", color=black, shape=ellipse, type=Resource];
 WaitCondition [label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", color=black, shape=ellipse, type=Resource];
 LambdaFunction [label="LambdaFunction\\n<AWS::Lambda::Function>", color=black, shape=ellipse, type=Resource];
-RolePolicies -> RootRole [key=0, source_paths="['Properties', 'Roles', 0]", label=Ref, color=black];
-RootInstanceProfile -> RootRole [key=0, source_paths="['Properties', 'Roles', 0]", label=Ref, color=black];
-MyEC2Instance -> RootInstanceProfile [key=0, source_paths="['Properties', 'IamInstanceProfile']", label=Ref, color=black];
-ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="['Properties', 'Instances', 0]", label=Ref, color=black];
+RolePolicies -> RootRole [key=0, source_paths="[\\"Properties\\", \\"Roles\\", 0]", label=Ref, color=black];
+RootInstanceProfile -> RootRole [key=0, source_paths="[\\"Properties\\", \\"Roles\\", 0]", label=Ref, color=black];
+MyEC2Instance -> RootInstanceProfile [key=0, source_paths="[\\"Properties\\", \\"IamInstanceProfile\\"]", label=Ref, color=black];
+ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\"Instances\\", 0]", label=Ref, color=black];
 }
 """.split(
             "\n"
