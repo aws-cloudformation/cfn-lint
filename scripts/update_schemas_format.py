@@ -36,6 +36,35 @@ def _descend(instance: Any, keywords: Sequence[str]) -> Iterator[deque[str]]:
     return
 
 
+def _create_subnet_ids_patch(type_name: str, ref: str, resolver: RefResolver):
+
+    _, resolved = resolver.resolve(ref)
+    if "$ref" in resolved:
+        return _create_subnet_ids_patch(
+            type_name=type_name,
+            ref=resolved["$ref"],
+            resolver=resolver,
+        )
+    items = resolved.get("items")
+    if items:
+        if "$ref" in items:
+            items_path = items["$ref"]
+        else:
+            items_path = ref + "/items"
+
+    return [
+        Patch(
+            values={"format": "AWS::EC2::Subnet.Ids"},
+            path=ref[1:],
+        ),
+        _create_patch(
+            {"format": "AWS::EC2::Subnet.Id"},
+            items_path,
+            resolver=resolver,
+        ),
+    ]
+
+
 def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefResolver):
     if type_name in ["AWS::Pipes::Pipe", "AWS::EC2::NetworkInsightsAnalysis"]:
         return []
@@ -179,6 +208,24 @@ def main():
                     resource_patches.append(
                         _create_patch(
                             value={"format": "AWS::EC2::Image.Id"},
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                        )
+                    )
+
+            for path in _descend(obj, ["Subnets"]):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_subnet_ids_patch(
+                            resource_type, "#/" + "/".join(path), resolver
+                        )
+                    )
+
+            for path in _descend(obj, ["SubnetId"]):
+                if path[-2] == "properties":
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::EC2::Subnet.Id"},
                             ref="#/" + "/".join(path),
                             resolver=resolver,
                         )
