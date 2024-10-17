@@ -101,41 +101,17 @@ def validator(cfn, context):
             {
                 "Value": 1.0,
             },
-            [
-                ValidationError(
-                    "1.0 is not of type 'string'",
-                    validator="type",
-                    schema_path=deque(["type"]),
-                    path=deque(["Value"]),
-                    rule=Value(),
-                )
-            ],
+            [],
         ),
         (
             {
                 "Value": 1,
             },
-            [
-                ValidationError(
-                    "1 is not of type 'string'",
-                    validator="type",
-                    schema_path=deque(["type"]),
-                    path=deque(["Value"]),
-                    rule=Value(),
-                )
-            ],
+            [],
         ),
         (
             {"Value": True},
-            [
-                ValidationError(
-                    "True is not of type 'string'",
-                    validator="type",
-                    schema_path=deque(["type"]),
-                    path=deque(["Value"]),
-                    rule=Value(),
-                )
-            ],
+            [],
         ),
         (
             {"Value": [{}]},

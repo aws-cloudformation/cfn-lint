@@ -44,6 +44,7 @@ class Value(CfnLintJsonSchema):
                 conditions=validator.context.conditions.evolve(
                     conditions,
                 ),
+                strict_types=False,
             )
         )
 

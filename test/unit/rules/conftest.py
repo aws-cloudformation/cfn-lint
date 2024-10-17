@@ -62,7 +62,7 @@ def functions():
 
 
 @pytest.fixture
-def strict_types(strict_types=False):
+def strict_types(strict_types=True):
     return strict_types
 
 
