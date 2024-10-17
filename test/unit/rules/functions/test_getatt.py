@@ -56,13 +56,12 @@ class _Fail(CfnLintKeyword):
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,strict_types,template,child_rules,expected",
+    "name,instance,schema,template,child_rules,expected",
     [
         (
             "Valid GetAtt with a good attribute",
             {"Fn::GetAtt": ["MyBucket", "Arn"]},
             {"type": "string"},
-            {},
             _template,
             {},
             [],
@@ -71,7 +70,6 @@ class _Fail(CfnLintKeyword):
             "Invalid GetAtt with bad attribute",
             {"Fn::GetAtt": ["MyBucket", "foo"]},
             {"type": "string"},
-            {},
             _template,
             {},
             [
@@ -91,7 +89,6 @@ class _Fail(CfnLintKeyword):
             "Invalid GetAtt with bad resource name",
             {"Fn::GetAtt": ["Foo", "bar"]},
             {"type": "string"},
-            {},
             _template,
             {},
             [
@@ -110,7 +107,6 @@ class _Fail(CfnLintKeyword):
             "Invalid GetAtt with a bad type",
             {"Fn::GetAtt": {"foo": "bar"}},
             {"type": "string"},
-            {},
             _template,
             {},
             [
@@ -126,7 +122,6 @@ class _Fail(CfnLintKeyword):
             "Invalid GetAtt with a bad response type",
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": "array"},
-            {},
             _template,
             {},
             [
@@ -142,7 +137,6 @@ class _Fail(CfnLintKeyword):
             "Invalid GetAtt with a bad response type and multiple types",
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "object"]},
-            {},
             _template,
             {},
             [
@@ -158,7 +152,6 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with integer to string",
             {"Fn::GetAtt": "MyCodePipeline.Version"},
             {"type": ["integer"]},
-            {},
             _template,
             {},
             [],
@@ -167,9 +160,6 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with exception type",
             {"Fn::GetAtt": "DocDBCluster.Port"},
             {"type": ["string"]},
-            {
-                "strict_types": True,
-            },
             _template,
             {},
             [],
@@ -198,7 +188,6 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with one good response type",
             {"Fn::GetAtt": "MyBucket.Arn"},
             {"type": ["array", "string"]},
-            {},
             _template,
             {},
             [],
@@ -207,7 +196,6 @@ class _Fail(CfnLintKeyword):
             "Valid Ref in GetAtt for resource",
             {"Fn::GetAtt": [{"Ref": "MyResourceParameter"}, "Arn"]},
             {"type": "string"},
-            {},
             _template_with_transform,
             {},
             [],
@@ -216,7 +204,6 @@ class _Fail(CfnLintKeyword):
             "Valid Ref in GetAtt for attribute",
             {"Fn::GetAtt": ["MyBucket", {"Ref": "MyAttributeParameter"}]},
             {"type": "string"},
-            {},
             _template_with_transform,
             {},
             [],
@@ -225,7 +212,6 @@ class _Fail(CfnLintKeyword):
             "Invalid Ref in GetAtt for attribute",
             {"Fn::GetAtt": ["MyBucket", {"Ref": "MyResourceParameter"}]},
             {"type": "string"},
-            {},
             _template_with_transform,
             {},
             [
@@ -245,7 +231,6 @@ class _Fail(CfnLintKeyword):
             "Invalid Ref in GetAtt for attribute",
             {"Fn::GetAtt": [{"Ref": "MyAttributeParameter"}, "Arn"]},
             {"type": "string"},
-            {},
             _template_with_transform,
             {},
             [
@@ -265,7 +250,6 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with child rules",
             {"Fn::GetAtt": ["MyBucket", "Arn"]},
             {"type": "string"},
-            {},
             _template,
             {
                 "AAAAA": _Pass(),
@@ -275,7 +259,7 @@ class _Fail(CfnLintKeyword):
             [ValidationError("Fail")],
         ),
     ],
-    indirect=["template", "strict_types"],
+    indirect=["template"],
 )
 def test_validate(name, instance, schema, child_rules, expected, validator, rule):
     rule.child_rules = child_rules
