@@ -1,3 +1,16 @@
+### v1.17.0
+## What's Changed
+* Update test results for `py3.8` deprecation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3745
+* Add automation to creating boto patches by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3742
+* Update `Dockerfile` image location to ECR by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3746
+* Dynamically determine Account ID during transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3749
+* Update graph labels by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3752
+* Update lambda lifecycle runtimes by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3753
+* Update `HealthCheckType` enum for `AWS::AutoScaling::AutoScalingGroup` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3755
+* Update CloudFormation schemas to `2024-10-17` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3748
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.16.1...v1.17.0
+
 ### v1.16.1
 ## What's Changed
 * Move `requireXor` to `SpotFleetRequestConfigData` by @stevengubler in https://github.com/aws-cloudformation/cfn-lint/pull/3737
