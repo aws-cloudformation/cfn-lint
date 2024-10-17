@@ -1,0 +1,577 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Id"
+ ],
+ "definitions": {
+  "AdsOnDeliveryRestrictions": {
+   "enum": [
+    "NONE",
+    "RESTRICTED",
+    "UNRESTRICTED",
+    "BOTH"
+   ],
+   "type": "string"
+  },
+  "Authorization": {
+   "additionalProperties": false,
+   "properties": {
+    "CdnIdentifierSecret": {
+     "type": "string"
+    },
+    "SecretsRoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SecretsRoleArn",
+    "CdnIdentifierSecret"
+   ],
+   "type": "object"
+  },
+  "CmafEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ConstantInitializationVector": {
+     "maxLength": 32,
+     "minLength": 32,
+     "pattern": "\\A[0-9a-fA-F]+\\Z",
+     "type": "string"
+    },
+    "EncryptionMethod": {
+     "enum": [
+      "SAMPLE_AES",
+      "AES_CTR"
+     ],
+     "type": "string"
+    },
+    "KeyRotationIntervalSeconds": {
+     "type": "integer"
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "CmafPackage": {
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/CmafEncryption"
+    },
+    "HlsManifests": {
+     "items": {
+      "$ref": "#/definitions/HlsManifest"
+     },
+     "type": "array"
+    },
+    "SegmentDurationSeconds": {
+     "type": "integer"
+    },
+    "SegmentPrefix": {
+     "type": "string"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    }
+   },
+   "type": "object"
+  },
+  "DashEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyRotationIntervalSeconds": {
+     "type": "integer"
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "DashPackage": {
+   "additionalProperties": false,
+   "properties": {
+    "AdTriggers": {
+     "items": {
+      "enum": [
+       "SPLICE_INSERT",
+       "BREAK",
+       "PROVIDER_ADVERTISEMENT",
+       "DISTRIBUTOR_ADVERTISEMENT",
+       "PROVIDER_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+       "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "AdsOnDeliveryRestrictions": {
+     "$ref": "#/definitions/AdsOnDeliveryRestrictions"
+    },
+    "Encryption": {
+     "$ref": "#/definitions/DashEncryption"
+    },
+    "IncludeIframeOnlyStream": {
+     "type": "boolean"
+    },
+    "ManifestLayout": {
+     "enum": [
+      "FULL",
+      "COMPACT",
+      "DRM_TOP_LEVEL_COMPACT"
+     ],
+     "type": "string"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "MinBufferTimeSeconds": {
+     "type": "integer"
+    },
+    "MinUpdatePeriodSeconds": {
+     "type": "integer"
+    },
+    "PeriodTriggers": {
+     "items": {
+      "enum": [
+       "ADS"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Profile": {
+     "enum": [
+      "NONE",
+      "HBBTV_1_5",
+      "HYBRIDCAST",
+      "DVB_DASH_2014"
+     ],
+     "type": "string"
+    },
+    "SegmentDurationSeconds": {
+     "type": "integer"
+    },
+    "SegmentTemplateFormat": {
+     "enum": [
+      "NUMBER_WITH_TIMELINE",
+      "TIME_WITH_TIMELINE",
+      "NUMBER_WITH_DURATION"
+     ],
+     "type": "string"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    },
+    "SuggestedPresentationDelaySeconds": {
+     "type": "integer"
+    },
+    "UtcTiming": {
+     "enum": [
+      "HTTP-XSDATE",
+      "HTTP-ISO",
+      "HTTP-HEAD",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "UtcTimingUri": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionContractConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PresetSpeke20Audio": {
+     "enum": [
+      "PRESET-AUDIO-1",
+      "PRESET-AUDIO-2",
+      "PRESET-AUDIO-3",
+      "SHARED",
+      "UNENCRYPTED"
+     ],
+     "type": "string"
+    },
+    "PresetSpeke20Video": {
+     "enum": [
+      "PRESET-VIDEO-1",
+      "PRESET-VIDEO-2",
+      "PRESET-VIDEO-3",
+      "PRESET-VIDEO-4",
+      "PRESET-VIDEO-5",
+      "PRESET-VIDEO-6",
+      "PRESET-VIDEO-7",
+      "PRESET-VIDEO-8",
+      "SHARED",
+      "UNENCRYPTED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "PresetSpeke20Audio",
+    "PresetSpeke20Video"
+   ],
+   "type": "object"
+  },
+  "HlsEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ConstantInitializationVector": {
+     "type": "string"
+    },
+    "EncryptionMethod": {
+     "enum": [
+      "AES_128",
+      "SAMPLE_AES"
+     ],
+     "type": "string"
+    },
+    "KeyRotationIntervalSeconds": {
+     "type": "integer"
+    },
+    "RepeatExtXKey": {
+     "type": "boolean"
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "HlsManifest": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkers": {
+     "enum": [
+      "NONE",
+      "SCTE35_ENHANCED",
+      "PASSTHROUGH",
+      "DATERANGE"
+     ],
+     "type": "string"
+    },
+    "AdTriggers": {
+     "items": {
+      "enum": [
+       "SPLICE_INSERT",
+       "BREAK",
+       "PROVIDER_ADVERTISEMENT",
+       "DISTRIBUTOR_ADVERTISEMENT",
+       "PROVIDER_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+       "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "AdsOnDeliveryRestrictions": {
+     "$ref": "#/definitions/AdsOnDeliveryRestrictions"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "IncludeIframeOnlyStream": {
+     "type": "boolean"
+    },
+    "ManifestName": {
+     "type": "string"
+    },
+    "PlaylistType": {
+     "enum": [
+      "NONE",
+      "EVENT",
+      "VOD"
+     ],
+     "type": "string"
+    },
+    "PlaylistWindowSeconds": {
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "type": "integer"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "HlsPackage": {
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkers": {
+     "enum": [
+      "NONE",
+      "SCTE35_ENHANCED",
+      "PASSTHROUGH",
+      "DATERANGE"
+     ],
+     "type": "string"
+    },
+    "AdTriggers": {
+     "items": {
+      "enum": [
+       "SPLICE_INSERT",
+       "BREAK",
+       "PROVIDER_ADVERTISEMENT",
+       "DISTRIBUTOR_ADVERTISEMENT",
+       "PROVIDER_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+       "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+       "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY"
+      ],
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "AdsOnDeliveryRestrictions": {
+     "$ref": "#/definitions/AdsOnDeliveryRestrictions"
+    },
+    "Encryption": {
+     "$ref": "#/definitions/HlsEncryption"
+    },
+    "IncludeDvbSubtitles": {
+     "type": "boolean"
+    },
+    "IncludeIframeOnlyStream": {
+     "type": "boolean"
+    },
+    "PlaylistType": {
+     "enum": [
+      "NONE",
+      "EVENT",
+      "VOD"
+     ],
+     "type": "string"
+    },
+    "PlaylistWindowSeconds": {
+     "type": "integer"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "type": "integer"
+    },
+    "SegmentDurationSeconds": {
+     "type": "integer"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    },
+    "UseAudioRenditionGroup": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MssEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ],
+   "type": "object"
+  },
+  "MssPackage": {
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/MssEncryption"
+    },
+    "ManifestWindowSeconds": {
+     "type": "integer"
+    },
+    "SegmentDurationSeconds": {
+     "type": "integer"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    }
+   },
+   "type": "object"
+  },
+  "SpekeKeyProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    },
+    "EncryptionContractConfiguration": {
+     "$ref": "#/definitions/EncryptionContractConfiguration"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "SystemIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceId",
+    "SystemIds",
+    "Url",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "StreamSelection": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxVideoBitsPerSecond": {
+     "type": "integer"
+    },
+    "MinVideoBitsPerSecond": {
+     "type": "integer"
+    },
+    "StreamOrder": {
+     "enum": [
+      "ORIGINAL",
+      "VIDEO_BITRATE_ASCENDING",
+      "VIDEO_BITRATE_DESCENDING"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/HlsPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Audio",
+  "/properties/HlsPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Video",
+  "/properties/MssPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Audio",
+  "/properties/MssPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Video",
+  "/properties/CmafPackage/HlsManifests/*/Url"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Authorization": {
+   "$ref": "#/definitions/Authorization"
+  },
+  "ChannelId": {
+   "type": "string"
+  },
+  "CmafPackage": {
+   "$ref": "#/definitions/CmafPackage"
+  },
+  "DashPackage": {
+   "$ref": "#/definitions/DashPackage"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "HlsPackage": {
+   "$ref": "#/definitions/HlsPackage"
+  },
+  "Id": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "\\A[0-9a-zA-Z-_]+\\Z",
+   "type": "string"
+  },
+  "ManifestName": {
+   "type": "string"
+  },
+  "MssPackage": {
+   "$ref": "#/definitions/MssPackage"
+  },
+  "Origination": {
+   "enum": [
+    "ALLOW",
+    "DENY"
+   ],
+   "type": "string"
+  },
+  "StartoverWindowSeconds": {
+   "type": "integer"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeDelaySeconds": {
+   "type": "integer"
+  },
+  "Url": {
+   "type": "string"
+  },
+  "Whitelist": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Url"
+ ],
+ "required": [
+  "Id",
+  "ChannelId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaPackage::OriginEndpoint"
+}

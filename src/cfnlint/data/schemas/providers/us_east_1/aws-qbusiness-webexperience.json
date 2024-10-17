@@ -56,6 +56,12 @@
    ],
    "type": "object"
   },
+  "Origin": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(http:\\/\\/|https:\\/\\/)[a-zA-Z0-9-_.]+(?::[0-9]{1,5})?$",
+   "type": "string"
+  },
   "SamlProviderConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -132,6 +138,15 @@
   },
   "IdentityProviderConfiguration": {
    "$ref": "#/definitions/IdentityProviderConfiguration"
+  },
+  "Origins": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Origin"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
   },
   "RoleArn": {
    "maxLength": 1284,

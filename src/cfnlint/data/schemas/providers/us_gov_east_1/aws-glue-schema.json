@@ -1,0 +1,139 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Registry",
+  "/properties/Name",
+  "/properties/DataFormat",
+  "/properties/SchemaDefinition"
+ ],
+ "definitions": {
+  "Registry": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "pattern": "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "IsLatest": {
+     "type": "boolean"
+    },
+    "VersionNumber": {
+     "maximum": 100000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*",
+   "type": "string"
+  },
+  "CheckpointVersion": {
+   "$ref": "#/definitions/SchemaVersion"
+  },
+  "Compatibility": {
+   "enum": [
+    "NONE",
+    "DISABLED",
+    "BACKWARD",
+    "BACKWARD_ALL",
+    "FORWARD",
+    "FORWARD_ALL",
+    "FULL",
+    "FULL_ALL"
+   ],
+   "type": "string"
+  },
+  "DataFormat": {
+   "enum": [
+    "AVRO",
+    "JSON",
+    "PROTOBUF"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "InitialSchemaVersionId": {
+   "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Registry": {
+   "$ref": "#/definitions/Registry"
+  },
+  "SchemaDefinition": {
+   "maxLength": 170000,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/InitialSchemaVersionId"
+ ],
+ "required": [
+  "Name",
+  "DataFormat",
+  "SchemaDefinition",
+  "Compatibility"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+ "typeName": "AWS::Glue::Schema",
+ "writeOnlyProperties": [
+  "/properties/SchemaDefinition"
+ ]
+}

@@ -1,0 +1,941 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AwsAccountId",
+  "/properties/DataSourceId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AmazonElasticsearchParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Domain": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "AmazonOpenSearchParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Domain": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "AthenaParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "WorkGroup": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AuroraParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "AuroraPostgreSqlParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "AwsIotAnalyticsParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSetName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataSetName"
+   ],
+   "type": "object"
+  },
+  "CredentialPair": {
+   "additionalProperties": false,
+   "properties": {
+    "AlternateDataSourceParameters": {
+     "items": {
+      "$ref": "#/definitions/DataSourceParameters"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Password": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Password",
+    "Username"
+   ],
+   "type": "object"
+  },
+  "DataSourceCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "CopySourceArn": {
+     "pattern": "^arn:[-a-z0-9]*:quicksight:[-a-z0-9]*:[0-9]{12}:datasource/.+$",
+     "type": "string"
+    },
+    "CredentialPair": {
+     "$ref": "#/definitions/CredentialPair"
+    },
+    "SecretArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[-a-z0-9]*:secretsmanager:[-a-z0-9]*:[0-9]{12}:secret:.+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceErrorInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Message": {
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSourceErrorInfoType"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceErrorInfoType": {
+   "enum": [
+    "ACCESS_DENIED",
+    "COPY_SOURCE_NOT_FOUND",
+    "TIMEOUT",
+    "ENGINE_VERSION_NOT_SUPPORTED",
+    "UNKNOWN_HOST",
+    "GENERIC_SQL_FAILURE",
+    "CONFLICT",
+    "UNKNOWN"
+   ],
+   "type": "string"
+  },
+  "DataSourceParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AmazonElasticsearchParameters": {
+     "$ref": "#/definitions/AmazonElasticsearchParameters"
+    },
+    "AmazonOpenSearchParameters": {
+     "$ref": "#/definitions/AmazonOpenSearchParameters"
+    },
+    "AthenaParameters": {
+     "$ref": "#/definitions/AthenaParameters"
+    },
+    "AuroraParameters": {
+     "$ref": "#/definitions/AuroraParameters"
+    },
+    "AuroraPostgreSqlParameters": {
+     "$ref": "#/definitions/AuroraPostgreSqlParameters"
+    },
+    "DatabricksParameters": {
+     "$ref": "#/definitions/DatabricksParameters"
+    },
+    "MariaDbParameters": {
+     "$ref": "#/definitions/MariaDbParameters"
+    },
+    "MySqlParameters": {
+     "$ref": "#/definitions/MySqlParameters"
+    },
+    "OracleParameters": {
+     "$ref": "#/definitions/OracleParameters"
+    },
+    "PostgreSqlParameters": {
+     "$ref": "#/definitions/PostgreSqlParameters"
+    },
+    "PrestoParameters": {
+     "$ref": "#/definitions/PrestoParameters"
+    },
+    "RdsParameters": {
+     "$ref": "#/definitions/RdsParameters"
+    },
+    "RedshiftParameters": {
+     "$ref": "#/definitions/RedshiftParameters"
+    },
+    "S3Parameters": {
+     "$ref": "#/definitions/S3Parameters"
+    },
+    "SnowflakeParameters": {
+     "$ref": "#/definitions/SnowflakeParameters"
+    },
+    "SparkParameters": {
+     "$ref": "#/definitions/SparkParameters"
+    },
+    "SqlServerParameters": {
+     "$ref": "#/definitions/SqlServerParameters"
+    },
+    "StarburstParameters": {
+     "$ref": "#/definitions/StarburstParameters"
+    },
+    "TeradataParameters": {
+     "$ref": "#/definitions/TeradataParameters"
+    },
+    "TrinoParameters": {
+     "$ref": "#/definitions/TrinoParameters"
+    }
+   },
+   "type": "object"
+  },
+  "DataSourceType": {
+   "enum": [
+    "ADOBE_ANALYTICS",
+    "AMAZON_ELASTICSEARCH",
+    "AMAZON_OPENSEARCH",
+    "ATHENA",
+    "AURORA",
+    "AURORA_POSTGRESQL",
+    "AWS_IOT_ANALYTICS",
+    "DATABRICKS",
+    "DENODO",
+    "DREMIO",
+    "DYNAMODB",
+    "SAPHANA",
+    "DB2_AS400",
+    "EXASOL",
+    "FILE",
+    "GITHUB",
+    "JIRA",
+    "MARIADB",
+    "MYSQL",
+    "ORACLE",
+    "POSTGRESQL",
+    "PRESTO",
+    "REDSHIFT",
+    "S3",
+    "SALESFORCE",
+    "SERVICENOW",
+    "SNOWFLAKE",
+    "SPARK",
+    "SQLSERVER",
+    "TERADATA",
+    "TIMESTREAM",
+    "TWITTER",
+    "BIGQUERY",
+    "GOOGLE_ANALYTICS",
+    "TRINO",
+    "STARBURST",
+    "MONGO",
+    "MONGO_ATLAS",
+    "DOCUMENTDB",
+    "APPFLOW",
+    "IMPALA",
+    "GLUE"
+   ],
+   "type": "string"
+  },
+  "DatabricksParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "SqlEndpointPath": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Host",
+    "Port",
+    "SqlEndpointPath"
+   ],
+   "type": "object"
+  },
+  "IdentityCenterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableIdentityPropagation": {
+     "default": null,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestFileLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "MariaDbParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "MySqlParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "OracleParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "PostgreSqlParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "PrestoParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "RdsParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InstanceId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Database",
+    "InstanceId"
+   ],
+   "type": "object"
+  },
+  "RedshiftIAMParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoCreateDatabaseUser": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DatabaseGroups": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "DatabaseUser": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "RedshiftParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "IAMParameters": {
+     "$ref": "#/definitions/RedshiftIAMParameters"
+    },
+    "IdentityCenterConfiguration": {
+     "$ref": "#/definitions/IdentityCenterConfiguration"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database"
+   ],
+   "type": "object"
+  },
+  "ResourcePermission": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Principal": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Resource": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Principal"
+   ],
+   "type": "object"
+  },
+  "ResourceStatus": {
+   "enum": [
+    "CREATION_IN_PROGRESS",
+    "CREATION_SUCCESSFUL",
+    "CREATION_FAILED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_SUCCESSFUL",
+    "UPDATE_FAILED",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "S3Parameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ManifestFileLocation": {
+     "$ref": "#/definitions/ManifestFileLocation"
+    },
+    "RoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ManifestFileLocation"
+   ],
+   "type": "object"
+  },
+  "SnowflakeParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Warehouse": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Warehouse"
+   ],
+   "type": "object"
+  },
+  "SparkParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "SqlServerParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "SslProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DisableSsl": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "StarburstParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    },
+    "ProductType": {
+     "$ref": "#/definitions/StarburstProductType"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "StarburstProductType": {
+   "enum": [
+    "GALAXY",
+    "ENTERPRISE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TeradataParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Database": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Database",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "TrinoParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Catalog": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Host": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Port": {
+     "default": 0,
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Catalog",
+    "Host",
+    "Port"
+   ],
+   "type": "object"
+  },
+  "VpcConnectionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcConnectionArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcConnectionArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AwsAccountId",
+  "/properties/DataSourceId"
+ ],
+ "properties": {
+  "AlternateDataSourceParameters": {
+   "items": {
+    "$ref": "#/definitions/DataSourceParameters"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AwsAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Credentials": {
+   "$ref": "#/definitions/DataSourceCredentials"
+  },
+  "DataSourceId": {
+   "type": "string"
+  },
+  "DataSourceParameters": {
+   "$ref": "#/definitions/DataSourceParameters"
+  },
+  "ErrorInfo": {
+   "$ref": "#/definitions/DataSourceErrorInfo"
+  },
+  "LastUpdatedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Permissions": {
+   "items": {
+    "$ref": "#/definitions/ResourcePermission"
+   },
+   "maxItems": 64,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SslProperties": {
+   "$ref": "#/definitions/SslProperties"
+  },
+  "Status": {
+   "$ref": "#/definitions/ResourceStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/DataSourceType"
+  },
+  "VpcConnectionProperties": {
+   "$ref": "#/definitions/VpcConnectionProperties"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
+ "typeName": "AWS::QuickSight::DataSource",
+ "writeOnlyProperties": [
+  "/properties/Credentials"
+ ]
+}

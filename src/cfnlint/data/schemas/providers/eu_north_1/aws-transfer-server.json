@@ -1,0 +1,234 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityProviderType",
+  "/properties/Domain"
+ ],
+ "definitions": {
+  "As2Transport": {
+   "type": "string"
+  },
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressAllocationIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "VpcEndpointId": {
+     "type": "string"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IdentityProviderDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryId": {
+     "type": "string"
+    },
+    "Function": {
+     "type": "string"
+    },
+    "InvocationRole": {
+     "type": "string"
+    },
+    "SftpAuthenticationMethods": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Protocol": {
+   "type": "string"
+  },
+  "ProtocolDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "As2Transports": {
+     "items": {
+      "$ref": "#/definitions/As2Transport"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "PassiveIp": {
+     "type": "string"
+    },
+    "SetStatOption": {
+     "type": "string"
+    },
+    "TlsSessionResumptionMode": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3StorageOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryListingOptimization": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StructuredLogDestination": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "WorkflowDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRole": {
+     "type": "string"
+    },
+    "WorkflowId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "WorkflowId",
+    "ExecutionRole"
+   ],
+   "type": "object"
+  },
+  "WorkflowDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "OnPartialUpload": {
+     "items": {
+      "$ref": "#/definitions/WorkflowDetail"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "OnUpload": {
+     "items": {
+      "$ref": "#/definitions/WorkflowDetail"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServerId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Certificate": {
+   "type": "string"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "EndpointDetails": {
+   "$ref": "#/definitions/EndpointDetails"
+  },
+  "EndpointType": {
+   "type": "string"
+  },
+  "IdentityProviderDetails": {
+   "$ref": "#/definitions/IdentityProviderDetails"
+  },
+  "IdentityProviderType": {
+   "type": "string"
+  },
+  "LoggingRole": {
+   "type": "string"
+  },
+  "PostAuthenticationLoginBanner": {
+   "type": "string"
+  },
+  "PreAuthenticationLoginBanner": {
+   "type": "string"
+  },
+  "ProtocolDetails": {
+   "$ref": "#/definitions/ProtocolDetails"
+  },
+  "Protocols": {
+   "items": {
+    "$ref": "#/definitions/Protocol"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "S3StorageOptions": {
+   "$ref": "#/definitions/S3StorageOptions"
+  },
+  "SecurityPolicyName": {
+   "type": "string"
+  },
+  "ServerId": {
+   "type": "string"
+  },
+  "StructuredLogDestinations": {
+   "items": {
+    "$ref": "#/definitions/StructuredLogDestination"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "WorkflowDetails": {
+   "$ref": "#/definitions/WorkflowDetails"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServerId",
+  "/properties/Arn"
+ ],
+ "typeName": "AWS::Transfer::Server"
+}
