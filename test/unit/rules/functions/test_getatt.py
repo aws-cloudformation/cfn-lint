@@ -22,6 +22,7 @@ _template = {
     "Resources": {
         "MyBucket": {"Type": "AWS::S3::Bucket"},
         "MyCodePipeline": {"Type": "AWS::CodePipeline::Pipeline"},
+        "DocDBCluster": {"Type": "AWS::DocDB::DBCluster"},
     },
     "Parameters": {
         "MyResourceParameter": {"Type": "String", "Default": "MyBucket"},
@@ -92,7 +93,10 @@ class _Fail(CfnLintKeyword):
             {},
             [
                 ValidationError(
-                    "'Foo' is not one of ['MyBucket', 'MyCodePipeline']",
+                    (
+                        "'Foo' is not one of ['MyBucket', "
+                        "'MyCodePipeline', 'DocDBCluster']"
+                    ),
                     path=deque(["Fn::GetAtt", 0]),
                     schema_path=deque(["enum"]),
                     validator="fn_getatt",
@@ -148,6 +152,14 @@ class _Fail(CfnLintKeyword):
             "Valid GetAtt with integer to string",
             {"Fn::GetAtt": "MyCodePipeline.Version"},
             {"type": ["integer"]},
+            _template,
+            {},
+            [],
+        ),
+        (
+            "Valid GetAtt with exception type",
+            {"Fn::GetAtt": "DocDBCluster.Port"},
+            {"type": ["string"]},
             _template,
             {},
             [],
@@ -224,7 +236,8 @@ class _Fail(CfnLintKeyword):
             [
                 ValidationError(
                     (
-                        "'Arn' is not one of ['MyBucket', 'MyCodePipeline'] when "
+                        "'Arn' is not one of ['MyBucket', "
+                        "'MyCodePipeline', 'DocDBCluster'] when "
                         "{'Ref': 'MyAttributeParameter'} is resolved"
                     ),
                     path=deque(["Fn::GetAtt", 0]),
@@ -248,9 +261,7 @@ class _Fail(CfnLintKeyword):
     ],
     indirect=["template"],
 )
-def test_validate(
-    name, instance, schema, template, child_rules, expected, validator, rule
-):
+def test_validate(name, instance, schema, child_rules, expected, validator, rule):
     rule.child_rules = child_rules
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
 

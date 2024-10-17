@@ -16,6 +16,12 @@ Resources:
     Properties:
       Type: String
       Value: !GetAtt CapacityReservation.InstanceCount      # #/Value: expected type: String, found: Integer
+  DocDBCluster:
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Type: AWS::DocDB::DBCluster
+    Properties:
+      BackupRetentionPeriod: 1
 Outputs:
   Value:
     Value: 1 # OK
@@ -41,3 +47,5 @@ Outputs:
     Value: !GetAtt CapacityReservation.EphemeralStorage  # Template format error: Every Value member must be a string.
   Length:
     Value: {Fn::Length: [1, 2, 3]} # OK
+  DocDBClusterPort:
+    Value: !GetAtt DocDBCluster.Port # OK

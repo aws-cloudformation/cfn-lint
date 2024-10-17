@@ -62,10 +62,16 @@ def functions():
 
 
 @pytest.fixture
-def context(cfn, path, functions):
+def strict_types(strict_types=True):
+    return strict_types
+
+
+@pytest.fixture
+def context(cfn, path, functions, strict_types):
     return create_context_for_template(cfn).evolve(
         path=path,
         functions=functions,
+        strict_types=strict_types,
     )
 
 
