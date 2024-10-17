@@ -1,3 +1,9 @@
+### v1.17.1
+## What's Changed
+* Make an exception for DocDB Cluster Port return type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3759
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.17.0...v1.17.1
+
 ### v1.17.0
 ## What's Changed
 * Update test results for `py3.8` deprecation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3745
