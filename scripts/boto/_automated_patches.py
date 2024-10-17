@@ -9,6 +9,8 @@ from typing import Any
 
 from _types import AllPatches, Patch, ResourcePatches
 
+from cfnlint.schema.resolver import RefResolver
+
 skip = [
     "account",
     "chime",
@@ -90,12 +92,63 @@ def get_last_date(service_dir: Path) -> str:
     return last_date
 
 
+def _nested_objects(
+    resolver: RefResolver,
+    schema_data: dict[str, Any],
+    boto_data: dict[str, Any],
+    shape_data: dict[str, Any],
+    start_path: str,
+    source: list[str],
+):
+    results = {}
+    for member, member_data in shape_data.get("members", {}).items():
+        for p_name, p_data in schema_data.get("properties", {}).items():
+            if p_name in skip_property_names:
+                continue
+            if p_name.lower() == member.lower():
+
+                path = f"{start_path}/properties/{p_name}"
+
+                while True:
+                    if "$ref" not in p_data:
+                        break
+                    path = p_data["$ref"][1:]
+                    p_data = resolver.resolve_from_url(p_data["$ref"])
+
+                # skip if we already have an enum or pattern
+                if any([p_data.get(field) for field in _fields]):
+                    continue
+
+                member_shape_name = member_data.get("shape")
+                member_shape = boto_data.get("shapes", {}).get(member_shape_name, {})
+
+                if member_shape.get("type") == "structure":
+                    if p_data.get("type") == "object":
+                        results.update(
+                            _nested_objects(
+                                resolver, p_data, boto_data, member_shape, path, source
+                            )
+                        )
+
+                if not any([member_shape.get(field) for field in _fields]):
+                    continue
+
+                results[path] = Patch(
+                    source=source,
+                    shape=member_shape_name,
+                )
+
+    return results
+
+
 def _per_resource_patch(
     schema_data: dict[str, Any], boto_data: dict[str, Any], source: list[str]
 ) -> ResourcePatches:
     results: ResourcePatches = {}
     create_operations = get_schema_create_operations(schema_data)
     shapes = {}
+
+    resolver = RefResolver.from_schema(schema_data)
     for create_operation in create_operations:
         shapes.update(get_shapes(boto_data, create_operation))
         create_shape = (
@@ -105,39 +158,16 @@ def _per_resource_patch(
             .get("shape")
         )
 
-        for member, member_data in (
-            boto_data.get("shapes", {}).get(create_shape, {}).get("members", {}).items()
-        ):
-            for p_name, p_data in schema_data.get("properties", {}).items():
-                if p_name in skip_property_names:
-                    continue
-                if p_name.lower() == member.lower():
-
-                    path = f"/properties/{p_name}"
-
-                    if "$ref" in p_data:
-                        pointer = p_data["$ref"].split("/")
-                        p_data = schema_data.get(pointer[1], {}).get(pointer[2], {})
-                        if not p_data:
-                            continue
-                        path = f"/{'/'.join(pointer[1:])}"
-
-                    # skip if we already have an enum or pattern
-                    if any([p_data.get(field) for field in _fields]):
-                        continue
-
-                    member_shape_name = member_data.get("shape")
-                    member_shape = boto_data.get("shapes", {}).get(
-                        member_shape_name, {}
-                    )
-
-                    if not any([member_shape.get(field) for field in _fields]):
-                        continue
-
-                    results[path] = Patch(
-                        source=source,
-                        shape=member_shape_name,
-                    )
+        results.update(
+            _nested_objects(
+                resolver,
+                schema_data,
+                boto_data,
+                boto_data.get("shapes", {}).get(create_shape, {}),
+                "",
+                source,
+            )
+        )
 
     return results
 
