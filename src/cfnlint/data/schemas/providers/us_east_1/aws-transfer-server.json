@@ -1,40 +1,72 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/ServerId"
+  ]
+ ],
  "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/EndpointDetails",
+  "/properties/EndpointDetails/AddressAllocationIds"
+ ],
  "createOnlyProperties": [
-  "/properties/IdentityProviderType",
-  "/properties/Domain"
+  "/properties/Domain",
+  "/properties/IdentityProviderType"
  ],
  "definitions": {
   "As2Transport": {
+   "enum": [
+    "HTTP"
+   ],
+   "type": "string"
+  },
+  "DirectoryListingOptimization": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Domain": {
+   "enum": [
+    "S3",
+    "EFS"
+   ],
    "type": "string"
   },
   "EndpointDetails": {
    "additionalProperties": false,
    "properties": {
     "AddressAllocationIds": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": "array"
     },
     "SecurityGroupIds": {
      "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
      "items": {
       "format": "AWS::EC2::SecurityGroup.GroupId",
+      "maxLength": 20,
+      "minLength": 11,
+      "pattern": "^sg-[0-9a-f]{8,17}$",
       "type": "string"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": "array"
     },
     "SubnetIds": {
+     "insertionOrder": true,
      "items": {
       "type": "string"
      },
-     "type": "array",
-     "uniqueItems": false
+     "type": "array"
     },
     "VpcEndpointId": {
+     "maxLength": 22,
+     "minLength": 22,
+     "pattern": "^vpce-[0-9a-f]{17}$",
      "type": "string"
     },
     "VpcId": {
@@ -44,48 +76,86 @@
    },
    "type": "object"
   },
+  "EndpointType": {
+   "enum": [
+    "PUBLIC",
+    "VPC",
+    "VPC_ENDPOINT"
+   ],
+   "type": "string"
+  },
   "IdentityProviderDetails": {
    "additionalProperties": false,
    "properties": {
     "DirectoryId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^d-[0-9a-f]{10}$",
      "type": "string"
     },
     "Function": {
+     "maxLength": 170,
+     "minLength": 1,
+     "pattern": "^arn:[a-z-]+:lambda:.*$",
      "type": "string"
     },
     "InvocationRole": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:.*role/\\S+$",
      "type": "string"
     },
     "SftpAuthenticationMethods": {
-     "type": "string"
+     "$ref": "#/definitions/SftpAuthenticationMethods"
     },
     "Url": {
+     "maxLength": 255,
+     "minLength": 0,
      "type": "string"
     }
    },
    "type": "object"
   },
+  "IdentityProviderType": {
+   "enum": [
+    "SERVICE_MANAGED",
+    "API_GATEWAY",
+    "AWS_DIRECTORY_SERVICE",
+    "AWS_LAMBDA"
+   ],
+   "type": "string"
+  },
   "Protocol": {
+   "enum": [
+    "SFTP",
+    "FTP",
+    "FTPS",
+    "AS2"
+   ],
    "type": "string"
   },
   "ProtocolDetails": {
    "additionalProperties": false,
    "properties": {
     "As2Transports": {
+     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/As2Transport"
      },
-     "type": "array",
-     "uniqueItems": false
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
     },
     "PassiveIp": {
+     "maxLength": 15,
+     "minLength": 0,
      "type": "string"
     },
     "SetStatOption": {
-     "type": "string"
+     "$ref": "#/definitions/SetStatOption"
     },
     "TlsSessionResumptionMode": {
-     "type": "string"
+     "$ref": "#/definitions/TlsSessionResumptionMode"
     }
    },
    "type": "object"
@@ -94,43 +164,74 @@
    "additionalProperties": false,
    "properties": {
     "DirectoryListingOptimization": {
-     "type": "string"
+     "$ref": "#/definitions/DirectoryListingOptimization"
     }
    },
    "type": "object"
   },
-  "StructuredLogDestination": {
+  "SetStatOption": {
+   "enum": [
+    "DEFAULT",
+    "ENABLE_NO_OP"
+   ],
+   "type": "string"
+  },
+  "SftpAuthenticationMethods": {
+   "enum": [
+    "PASSWORD",
+    "PUBLIC_KEY",
+    "PUBLIC_KEY_OR_PASSWORD",
+    "PUBLIC_KEY_AND_PASSWORD"
+   ],
    "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 0,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
+     "minLength": 0,
      "type": "string"
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
+  },
+  "TlsSessionResumptionMode": {
+   "enum": [
+    "DISABLED",
+    "ENABLED",
+    "ENFORCED"
+   ],
+   "type": "string"
   },
   "WorkflowDetail": {
    "additionalProperties": false,
    "properties": {
     "ExecutionRole": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:.*role/\\S+$",
      "type": "string"
     },
     "WorkflowId": {
+     "maxLength": 19,
+     "minLength": 19,
+     "pattern": "^w-([a-z0-9]{17})$",
      "type": "string"
     }
    },
    "required": [
-    "WorkflowId",
-    "ExecutionRole"
+    "ExecutionRole",
+    "WorkflowId"
    ],
    "type": "object"
   },
@@ -138,97 +239,150 @@
    "additionalProperties": false,
    "properties": {
     "OnPartialUpload": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/WorkflowDetail"
      },
-     "type": "array",
-     "uniqueItems": false
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array"
     },
     "OnUpload": {
+     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/WorkflowDetail"
      },
-     "type": "array",
-     "uniqueItems": false
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/ServerId"
+  "/properties/Arn"
  ],
  "properties": {
   "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "^arn:\\S+$",
    "type": "string"
   },
+  "As2ServiceManagedEgressIpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
   "Certificate": {
+   "maxLength": 1600,
+   "minLength": 0,
    "type": "string"
   },
   "Domain": {
-   "type": "string"
+   "$ref": "#/definitions/Domain"
   },
   "EndpointDetails": {
    "$ref": "#/definitions/EndpointDetails"
   },
   "EndpointType": {
-   "type": "string"
+   "$ref": "#/definitions/EndpointType"
   },
   "IdentityProviderDetails": {
    "$ref": "#/definitions/IdentityProviderDetails"
   },
   "IdentityProviderType": {
-   "type": "string"
+   "$ref": "#/definitions/IdentityProviderType"
   },
   "LoggingRole": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^(|arn:.*role/\\S+)$",
    "type": "string"
   },
   "PostAuthenticationLoginBanner": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^[\\x09-\\x0D\\x20-\\x7E]*$",
    "type": "string"
   },
   "PreAuthenticationLoginBanner": {
+   "maxLength": 4096,
+   "minLength": 0,
+   "pattern": "^[\\x09-\\x0D\\x20-\\x7E]*$",
    "type": "string"
   },
   "ProtocolDetails": {
    "$ref": "#/definitions/ProtocolDetails"
   },
   "Protocols": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Protocol"
    },
-   "type": "array",
-   "uniqueItems": false
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
   },
   "S3StorageOptions": {
    "$ref": "#/definitions/S3StorageOptions"
   },
   "SecurityPolicyName": {
+   "maxLength": 100,
+   "minLength": 0,
+   "pattern": "^TransferSecurityPolicy-.+$",
    "type": "string"
   },
   "ServerId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^s-([0-9a-f]{17})$",
    "type": "string"
   },
   "StructuredLogDestinations": {
+   "insertionOrder": false,
    "items": {
-    "$ref": "#/definitions/StructuredLogDestination"
+    "maxLength": 1600,
+    "minLength": 20,
+    "pattern": "^arn:\\S+$",
+    "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array",
-   "uniqueItems": false
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
   },
   "WorkflowDetails": {
    "$ref": "#/definitions/WorkflowDetails"
   }
  },
  "readOnlyProperties": [
-  "/properties/ServerId",
-  "/properties/Arn"
+  "/properties/Arn",
+  "/properties/As2ServiceManagedEgressIpAddresses",
+  "/properties/ServerId"
  ],
- "typeName": "AWS::Transfer::Server"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Server",
+ "writeOnlyProperties": [
+  "/properties/IdentityProviderType"
+ ]
 }

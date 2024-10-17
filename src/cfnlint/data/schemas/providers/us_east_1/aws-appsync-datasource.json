@@ -190,8 +190,11 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/ElasticsearchConfig"
+ ],
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/DataSourceArn"
  ],
  "properties": {
   "ApiId": {
@@ -215,16 +218,18 @@
   "HttpConfig": {
    "$ref": "#/definitions/HttpConfig"
   },
-  "Id": {
-   "type": "string"
-  },
   "LambdaConfig": {
    "$ref": "#/definitions/LambdaConfig"
   },
   "MetricsConfig": {
+   "enum": [
+    "DISABLED",
+    "ENABLED"
+   ],
    "type": "string"
   },
   "Name": {
+   "pattern": "[_A-Za-z][_0-9A-Za-z]*",
    "type": "string"
   },
   "OpenSearchServiceConfig": {
@@ -251,7 +256,6 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
   "/properties/DataSourceArn"
  ],
  "required": [
@@ -259,5 +263,9 @@
   "ApiId",
   "Name"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appsync",
+ "tagging": {
+  "taggable": false
+ },
  "typeName": "AWS::AppSync::DataSource"
 }
