@@ -126,10 +126,6 @@ _exceptions = {
     "AWS::DocDB::DBCluster": [
         "Port",
     ],
-    "AWS::EC2::Instance": [
-        "AvailabilityZone",
-    ],
-    "AWS::EC2::SecurityGroup": ["VpcId"],
     "AWS::Greengrass::ConnectorDefinition": [
         "Name",
     ],

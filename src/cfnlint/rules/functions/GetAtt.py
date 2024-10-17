@@ -123,6 +123,17 @@ class GetAtt(BaseFn):
                         pointer = getatts.match(region, [resource_name, attribute_name])
 
                         getatt_schema = schema.resolver.resolve_cfn_pointer(pointer)
+                        # there is one exception we need to handle.  The resource type
+                        # has a mix of types the input is integer and the output
+                        # is string.  Since this is the only occurence
+                        # we are putting in an exception to it.
+                        if (
+                            validator.context.resources[resource_name].type
+                            == "AWS::DocDB::DBCluster"
+                            and attribute_name == "Port"
+                        ):
+                            getatt_schema = {"type": "string"}
+
                         if not getatt_schema.get("type") or not s.get("type"):
                             continue
 
