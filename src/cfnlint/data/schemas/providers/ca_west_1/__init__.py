@@ -698,7 +698,6 @@ cached: list[str] = [
     "aws-dms-replicationconfig.json",
     "aws-dynamodb-globaltable.json",
     "aws-dynamodb-table.json",
-    "aws-ec2-capacityreservation.json",
     "aws-ec2-capacityreservationfleet.json",
     "aws-ec2-customergateway.json",
     "aws-ec2-dhcpoptions.json",

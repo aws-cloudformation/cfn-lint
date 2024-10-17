@@ -1,0 +1,101 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/NetworkFabricType"
+ ],
+ "definitions": {
+  "NetworkFabricType": {
+   "enum": [
+    "TRANSIT_GATEWAY",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:refactor-spaces:[a-zA-Z0-9\\-]+:\\w{12}:[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_\\s\\.\\!\\*\\#\\@\\']+$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^env-([0-9A-Za-z]{10}$)",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!env-)[a-zA-Z0-9]+[a-zA-Z0-9-_ ]+$",
+   "type": "string"
+  },
+  "NetworkFabricType": {
+   "$ref": "#/definitions/NetworkFabricType"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransitGatewayId": {
+   "maxLength": 21,
+   "minLength": 21,
+   "pattern": "^tgw-[-a-f0-9]{17}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/Arn",
+  "/properties/TransitGatewayId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RefactorSpaces::Environment",
+ "writeOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/NetworkFabricType"
+ ]
+}
