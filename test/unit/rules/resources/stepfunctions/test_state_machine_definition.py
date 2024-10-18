@@ -689,6 +689,11 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Using a function",
+            {"Definition": {"Fn::Join": ["\n", []]}},
+            [],
+        ),
     ],
 )
 def test_validate(
