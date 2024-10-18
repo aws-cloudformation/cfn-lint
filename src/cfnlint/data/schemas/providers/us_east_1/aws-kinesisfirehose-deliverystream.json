@@ -254,6 +254,7 @@
      "type": "boolean"
     },
     "LogGroupName": {
+     "pattern": "[\\.\\-_/#A-Za-z0-9]*",
      "relationshipRef": {
       "propertyPath": "/properties/LogGroupName",
       "typeName": "AWS::Logs::LogGroup"
@@ -261,6 +262,7 @@
      "type": "string"
     },
     "LogStreamName": {
+     "pattern": "[^:*]*",
      "relationshipRef": {
       "propertyPath": "/properties/LogStreamName",
       "typeName": "AWS::Logs::LogStream"
@@ -680,11 +682,13 @@
     "Name": {
      "maxLength": 256,
      "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
      "type": "string"
     },
     "Url": {
      "maxLength": 1000,
      "minLength": 1,
+     "pattern": "https://.*",
      "type": "string"
     }
    },
@@ -725,6 +729,10 @@
      "type": "string"
     },
     "S3BackupMode": {
+     "enum": [
+      "AllData",
+      "FailedDataOnly"
+     ],
      "type": "string"
     },
     "S3Configuration": {
@@ -824,6 +832,7 @@
    "additionalProperties": false,
    "properties": {
     "AWSKMSKeyARN": {
+     "pattern": "arn:.*",
      "relationshipRef": {
       "propertyPath": "/properties/Arn",
       "typeName": "AWS::KMS::Key"
@@ -937,6 +946,11 @@
      "type": "number"
     },
     "Compression": {
+     "enum": [
+      "NONE",
+      "SNAPPY",
+      "ZLIB"
+     ],
      "type": "string"
     },
     "DictionaryKeyThreshold": {
@@ -946,6 +960,10 @@
      "type": "boolean"
     },
     "FormatVersion": {
+     "enum": [
+      "V0_11",
+      "V0_12"
+     ],
      "type": "string"
     },
     "PaddingTolerance": {
@@ -976,6 +994,11 @@
      "type": "integer"
     },
     "Compression": {
+     "enum": [
+      "GZIP",
+      "SNAPPY",
+      "UNCOMPRESSED"
+     ],
      "type": "string"
     },
     "EnableDictionaryCompression": {
@@ -988,6 +1011,10 @@
      "type": "integer"
     },
     "WriterVersion": {
+     "enum": [
+      "V1",
+      "V2"
+     ],
      "type": "string"
     }
    },
@@ -1081,6 +1108,7 @@
     "ClusterJDBCURL": {
      "maxLength": 512,
      "minLength": 1,
+     "pattern": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.]+):\\d{1,5}/[a-zA-Z0-9_$-]+",
      "type": "string"
     },
     "CopyCommand": {
@@ -1218,9 +1246,11 @@
    "additionalProperties": false,
    "properties": {
     "CatalogId": {
+     "pattern": "^\\S+$",
      "type": "string"
     },
     "DatabaseName": {
+     "pattern": "^\\S+$",
      "relationshipRef": {
       "propertyPath": "/properties/Id",
       "typeName": "AWS::Glue::Database"
@@ -1228,6 +1258,7 @@
      "type": "string"
     },
     "Region": {
+     "pattern": "^\\S+$",
      "type": "string"
     },
     "RoleARN": {
@@ -1241,6 +1272,7 @@
      "type": "string"
     },
     "TableName": {
+     "pattern": "^\\S+$",
      "relationshipRef": {
       "propertyPath": "/properties/Id",
       "typeName": "AWS::Glue::Table"
@@ -1248,6 +1280,7 @@
      "type": "string"
     },
     "VersionId": {
+     "pattern": "^\\S+$",
      "type": "string"
     }
    },
@@ -1507,6 +1540,10 @@
      "$ref": "#/definitions/SplunkRetryOptions"
     },
     "S3BackupMode": {
+     "enum": [
+      "AllEvents",
+      "FailedEventsOnly"
+     ],
      "type": "string"
     },
     "S3Configuration": {
