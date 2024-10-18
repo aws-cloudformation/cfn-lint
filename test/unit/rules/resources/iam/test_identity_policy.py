@@ -162,3 +162,35 @@ class TestIdentityPolicies(TestCase):
             errs[1].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
         )
         self.assertListEqual(list(errs[1].path), ["Version"])
+
+    def test_string_statements_with_condition(self):
+        validator = CfnTemplateValidator()
+
+        policy = """
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": "*",
+                        "Resource": "*",
+                        "Condition": {
+                            "iam:PassedToService": "cloudformation.amazonaws.com"
+                        }
+                    }
+                ]
+            }
+        """
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertTrue(
+            errs[0].message.startswith("'iam:PassedToService' does not match")
+        )
+        self.assertListEqual(
+            list(errs[0].path), ["Statement", 0, "Condition", "iam:PassedToService"]
+        )
