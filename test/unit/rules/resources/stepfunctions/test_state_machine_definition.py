@@ -515,6 +515,180 @@ def rule():
                 ),
             ],
         ),
+        (
+            "Valid string json with definition substitution",
+            {
+                "DefinitionSubstitutions": {"jobqueue": {"Ref": "MyJob"}},
+                "Definition": {
+                    "Comment": (
+                        "An example of the Amazon States "
+                        "Language for notification on an "
+                        "AWS Batch job completion"
+                    ),
+                    "StartAt": "Submit Batch Job",
+                    "TimeoutSeconds": 3600,
+                    "States": {
+                        "Submit Batch Job": {
+                            "Type": "Task",
+                            "Resource": "${jobqueue}",
+                            "Parameters": {
+                                "JobName": "BatchJobNotification",
+                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
+                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                            },
+                            "Next": "Notify Success",
+                            "Catch": [
+                                {
+                                    "ErrorEquals": ["States.ALL"],
+                                    "Next": "Notify Failure",
+                                }
+                            ],
+                        },
+                        "Notify Success": {
+                            "Type": "Task",
+                            "Resource": "${invalid}",
+                            "Parameters": {
+                                "Message": "Batch job submitted through Step Functions succeeded",
+                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                            },
+                            "End": True,
+                        },
+                        "Notify Failure": {
+                            "Type": "Task",
+                            "Resource": [],
+                            "Parameters": {
+                                "Message": "Batch job submitted through Step Functions failed",
+                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                            },
+                            "End": True,
+                        },
+                    },
+                },
+            },
+            [
+                ValidationError(
+                    (
+                        "'${invalid}' does not match "
+                        "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="pattern",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Resource",
+                            "pattern",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Notify Success", "Resource"]),
+                ),
+                ValidationError(
+                    ("[] is not of type 'string'"),
+                    rule=StateMachineDefinition(),
+                    validator="type",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Resource",
+                            "type",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Notify Failure", "Resource"]),
+                ),
+            ],
+        ),
+        (
+            "Valid string json",
+            {
+                "DefinitionSubstitutions": "jobqueue",
+                "Definition": {
+                    "Comment": (
+                        "An example of the Amazon States "
+                        "Language for notification on an "
+                        "AWS Batch job completion"
+                    ),
+                    "StartAt": "Submit Batch Job",
+                    "TimeoutSeconds": 3600,
+                    "States": {
+                        "Submit Batch Job": {
+                            "Type": "Task",
+                            "Resource": "${jobqueue}",
+                            "Parameters": {
+                                "JobName": "BatchJobNotification",
+                                "JobQueue": "arn:aws:batch:us-east-1:123456789012:job-queue/BatchJobQueue-7049d367474b4dd",
+                                "JobDefinition": "arn:aws:batch:us-east-1:123456789012:job-definition/BatchJobDefinition-74d55ec34c4643c:1",
+                            },
+                            "Next": "Notify Success",
+                            "Catch": [
+                                {
+                                    "ErrorEquals": ["States.ALL"],
+                                    "Next": "Notify Failure",
+                                }
+                            ],
+                        },
+                        "Notify Success": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::sns:publish",
+                            "Parameters": {
+                                "Message": "Batch job submitted through Step Functions succeeded",
+                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                            },
+                            "End": True,
+                        },
+                        "Notify Failure": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::sns:publish",
+                            "Parameters": {
+                                "Message": "Batch job submitted through Step Functions failed",
+                                "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
+                            },
+                            "End": True,
+                        },
+                    },
+                },
+            },
+            [
+                ValidationError(
+                    (
+                        "'${jobqueue}' does not match "
+                        "'^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\\\$LATEST|[a-zA-Z0-9-_\\\\.]+))?$'"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="pattern",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            5,
+                            "then",
+                            "properties",
+                            "Resource",
+                            "pattern",
+                        ]
+                    ),
+                    path=deque(
+                        ["Definition", "States", "Submit Batch Job", "Resource"]
+                    ),
+                ),
+            ],
+        ),
     ],
 )
 def test_validate(
