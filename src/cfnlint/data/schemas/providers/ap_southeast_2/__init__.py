@@ -2101,8 +2101,6 @@ cached: list[str] = [
     "aws-nimblestudio-streamingimage.json",
     "aws-nimblestudio-studio.json",
     "aws-nimblestudio-studiocomponent.json",
-    "aws-oam-link.json",
-    "aws-oam-sink.json",
     "aws-opensearchserverless-accesspolicy.json",
     "aws-opensearchserverless-collection.json",
     "aws-opensearchserverless-lifecyclepolicy.json",

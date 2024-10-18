@@ -2235,6 +2235,7 @@ cached: list[str] = [
     "aws-transfer-certificate.json",
     "aws-transfer-connector.json",
     "aws-transfer-profile.json",
+    "aws-transfer-server.json",
     "aws-transfer-user.json",
     "aws-transfer-workflow.json",
     "aws-verifiedpermissions-identitysource.json",
