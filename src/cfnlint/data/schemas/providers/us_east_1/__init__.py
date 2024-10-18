@@ -1031,6 +1031,7 @@ types: list[str] = [
     "AWS::Redshift::EndpointAccess",
     "AWS::Redshift::EndpointAuthorization",
     "AWS::Redshift::EventSubscription",
+    "AWS::Redshift::Integration",
     "AWS::Redshift::ScheduledAction",
     "AWS::RedshiftServerless::Namespace",
     "AWS::RedshiftServerless::Workgroup",
