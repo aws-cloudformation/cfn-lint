@@ -60,6 +60,7 @@ Tox test suites available:
 * **py310**: Unit tests (Python 3.10)
 * **py311**: Unit tests (Python 3.11)
 * **py312**: Unit tests (Python 3.12)
+* **py313**: Unit tests (Python 3.13)
 * **style**: Python syntax check
 
 ## Contributing via Pull Requests
