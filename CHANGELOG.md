@@ -1,3 +1,10 @@
+### v1.17.2
+## What's Changed
+* Update language extensions `Fn::ForEach` for empty lists by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3764
+* Support Python 3.13 by @michael-k in https://github.com/aws-cloudformation/cfn-lint/pull/3765
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.17.1...v1.17.2
+
 ### v1.17.1
 ## What's Changed
 * Make an exception for DocDB Cluster Port return type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3759
