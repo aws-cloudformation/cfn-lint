@@ -2079,7 +2079,6 @@ cached: list[str] = [
     "aws-mediatailor-sourcelocation.json",
     "aws-mediatailor-vodsource.json",
     "aws-memorydb-acl.json",
-    "aws-memorydb-cluster.json",
     "aws-memorydb-parametergroup.json",
     "aws-memorydb-subnetgroup.json",
     "aws-memorydb-user.json",

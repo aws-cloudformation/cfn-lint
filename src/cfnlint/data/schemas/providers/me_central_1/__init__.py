@@ -1141,6 +1141,7 @@ cached: list[str] = [
     "aws-organizations-account.json",
     "aws-organizations-organization.json",
     "aws-organizations-organizationalunit.json",
+    "aws-organizations-policy.json",
     "aws-organizations-resourcepolicy.json",
     "aws-pcaconnectorad-connector.json",
     "aws-pcaconnectorad-directoryregistration.json",
