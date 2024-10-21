@@ -1464,7 +1464,6 @@ cached: list[str] = [
     "aws-docdbelastic-cluster.json",
     "aws-dynamodb-globaltable.json",
     "aws-dynamodb-table.json",
-    "aws-ec2-capacityreservation.json",
     "aws-ec2-capacityreservationfleet.json",
     "aws-ec2-clientvpnauthorizationrule.json",
     "aws-ec2-clientvpnendpoint.json",

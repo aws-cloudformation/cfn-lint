@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tenancy",
+  "/properties/InstancePlatform",
+  "/properties/InstanceType",
+  "/properties/AvailabilityZone",
+  "/properties/TagSpecifications",
+  "/properties/OutPostArn",
+  "/properties/EphemeralStorage",
+  "/properties/EbsOptimized",
+  "/properties/PlacementGroupArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailableInstanceCount": {
+   "type": "integer"
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "EndDate": {
+   "type": "string"
+  },
+  "EndDateType": {
+   "enum": [
+    "limited",
+    "unlimited"
+   ],
+   "type": "string"
+  },
+  "EphemeralStorage": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceCount": {
+   "type": "integer"
+  },
+  "InstanceMatchCriteria": {
+   "enum": [
+    "open",
+    "targeted"
+   ],
+   "type": "string"
+  },
+  "InstancePlatform": {
+   "enum": [
+    "Linux with SQL Server Enterprise",
+    "Linux with SQL Server Standard",
+    "Linux with SQL Server Web",
+    "Linux/UNIX",
+    "RHEL with HA",
+    "RHEL with HA and SQL Server Enterprise",
+    "RHEL with HA and SQL Server Standard",
+    "RHEL with SQL Server Enterprise",
+    "RHEL with SQL Server Standard",
+    "RHEL with SQL Server Web",
+    "Red Hat Enterprise Linux",
+    "SUSE Linux",
+    "Ubuntu Pro",
+    "Windows",
+    "Windows with SQL Server",
+    "Windows with SQL Server Enterprise",
+    "Windows with SQL Server Standard",
+    "Windows with SQL Server Web"
+   ],
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "OutPostArn": {
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
+   "type": "string"
+  },
+  "PlacementGroupArn": {
+   "pattern": "^arn:aws([a-z-]+)?:ec2:[a-z\\d-]+:\\d{12}:placement-group/^.{1,255}$",
+   "type": "string"
+  },
+  "TagSpecifications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tenancy": {
+   "enum": [
+    "dedicated",
+    "default"
+   ],
+   "type": "string"
+  },
+  "TotalInstanceCount": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AvailableInstanceCount",
+  "/properties/TotalInstanceCount"
+ ],
+ "required": [
+  "InstanceCount",
+  "AvailabilityZone",
+  "InstancePlatform",
+  "InstanceType"
+ ],
+ "typeName": "AWS::EC2::CapacityReservation"
+}
