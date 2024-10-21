@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BackupVaultName",
+  "/properties/MinRetentionDays",
+  "/properties/MaxRetentionDays"
+ ],
+ "definitions": {
+  "BackupVaultNamePattern": {
+   "pattern": "^[a-zA-Z0-9\\-\\_]{2,50}$",
+   "type": "string"
+  },
+  "NotificationObjectType": {
+   "additionalProperties": false,
+   "properties": {
+    "BackupVaultEvents": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SNSTopicArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SNSTopicArn",
+    "BackupVaultEvents"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BackupVaultName"
+ ],
+ "properties": {
+  "AccessPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "BackupVaultArn": {
+   "type": "string"
+  },
+  "BackupVaultName": {
+   "$ref": "#/definitions/BackupVaultNamePattern"
+  },
+  "BackupVaultTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{1,128}$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionKeyArn": {
+   "type": "string"
+  },
+  "MaxRetentionDays": {
+   "type": "integer"
+  },
+  "MinRetentionDays": {
+   "type": "integer"
+  },
+  "Notifications": {
+   "$ref": "#/definitions/NotificationObjectType"
+  },
+  "VaultState": {
+   "type": "string"
+  },
+  "VaultType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BackupVaultArn",
+  "/properties/EncryptionKeyArn"
+ ],
+ "required": [
+  "BackupVaultName",
+  "MinRetentionDays",
+  "MaxRetentionDays"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/BackupVaultTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::LogicallyAirGappedBackupVault"
+}

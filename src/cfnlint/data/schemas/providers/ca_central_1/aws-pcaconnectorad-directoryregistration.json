@@ -1,0 +1,49 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DirectoryId"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DirectoryRegistrationArn"
+ ],
+ "properties": {
+  "DirectoryId": {
+   "pattern": "^d-[0-9a-f]{10}$",
+   "type": "string"
+  },
+  "DirectoryRegistrationArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:directory-registration(\\/[\\w-]+)$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DirectoryRegistrationArn"
+ ],
+ "required": [
+  "DirectoryId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorAD::DirectoryRegistration"
+}
