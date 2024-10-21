@@ -74,6 +74,11 @@ class Cidr(CloudFormationLintRule):
     def check_count(self, value, path):
         matches = []
         count_parameters = []
+        if isinstance(value, str):
+            try:
+                value = int(value)
+            except Exception:  # pylint: disable=broad-exception-caught
+                pass
         if isinstance(value, dict):
             if len(value) == 1:
                 for index_key, index_value in value.items():
@@ -116,6 +121,11 @@ class Cidr(CloudFormationLintRule):
     def check_size_mask(self, value, path):
         matches = []
         size_mask_parameters = []
+        if isinstance(value, str):
+            try:
+                value = int(value)
+            except Exception:  # pylint: disable=broad-exception-caught
+                pass
         if isinstance(value, dict):
             if len(value) == 1:
                 for index_key, index_value in value.items():
