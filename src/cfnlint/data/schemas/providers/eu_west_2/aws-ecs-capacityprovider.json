@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupProvider/AutoScalingGroupArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AutoScalingGroupProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoScalingGroupArn": {
+     "type": "string"
+    },
+    "ManagedDraining": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    },
+    "ManagedScaling": {
+     "$ref": "#/definitions/ManagedScaling"
+    },
+    "ManagedTerminationProtection": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AutoScalingGroupArn"
+   ],
+   "type": "object"
+  },
+  "ManagedScaling": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceWarmupPeriod": {
+     "type": "integer"
+    },
+    "MaximumScalingStepSize": {
+     "type": "integer"
+    },
+    "MinimumScalingStepSize": {
+     "type": "integer"
+    },
+    "Status": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
+     "type": "string"
+    },
+    "TargetCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AutoScalingGroupProvider": {
+   "$ref": "#/definitions/AutoScalingGroupProvider"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AutoScalingGroupProvider/AutoScalingGroupArn": "$split(AutoScalingGroupProvider.AutoScalingGroupArn, \"autoScalingGroupName/\")[-1] $OR $split(AutoScalingGroupArn, \"autoScalingGroupName/\")[-1]"
+ },
+ "required": [
+  "AutoScalingGroupProvider"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::CapacityProvider"
+}
