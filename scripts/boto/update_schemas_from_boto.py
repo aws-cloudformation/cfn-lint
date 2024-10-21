@@ -70,7 +70,7 @@ def build_resource_type_patches(
                 if not value:
                     continue
                 if field == "pattern":
-                    if value == ".*":
+                    if value in [".*", "^.*$"]:
                         continue
                     try:
                         re.compile(value)
