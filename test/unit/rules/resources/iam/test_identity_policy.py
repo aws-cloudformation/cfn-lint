@@ -186,7 +186,10 @@ class TestIdentityPolicies(TestCase):
                             "IpAddress": {"aws:SourceIp": "203.0.113.0/24"},
                             "ArnEquals": {"aws:SourceArn": "arn:aws:sns:REGION:123456789012:TOPIC-ID"},
                             "StringLikeIfExists": { "ec2:InstanceType": [ "t1.*", "t2.*" ]},
-                            "Null":{"aws:TokenIssueTime":"true"}
+                            "Null":{"aws:TokenIssueTime":"true"},
+                            "ForAllValues:StringEquals":{"aws:PrincipalTag/job-category":["iamuser-admin","iamuser-read-only"]},
+                            "ForAnyValue:StringEquals":{"aws:PrincipalTag/job-category":"iamuser-admin"},
+                            "ForAllValues:StringLike": {"aws:TagKeys": ["key1*"]}
                         }
                     }
                 ]
