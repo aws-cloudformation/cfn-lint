@@ -1,3 +1,9 @@
+### v1.18.1
+## What's Changed
+* Fix policy schema condition key patterns by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3779
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.0...v1.18.1
+
 ### v1.18.0
 ## What's Changed
 * Add `additionalProperties` false to IAM conditions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3767
