@@ -47,6 +47,7 @@
    ],
    "properties": {
     "Handler": {
+     "pattern": "^([0-9a-zA-Z_-]+\\/)*[0-9A-Za-z_\\\\-]+\\.[A-Za-z_][A-Za-z0-9_]*$",
      "type": "string"
     },
     "S3Bucket": {
@@ -104,9 +105,14 @@
    "additionalProperties": false,
    "properties": {
     "EncryptionMode": {
+     "enum": [
+      "SSE_KMS",
+      "SSE_S3"
+     ],
      "type": "string"
     },
     "KmsKeyArn": {
+     "pattern": "arn:(aws[a-zA-Z-]*)?:kms:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:key/[\\w\\-\\/]+",
      "type": "string"
     }
    },
