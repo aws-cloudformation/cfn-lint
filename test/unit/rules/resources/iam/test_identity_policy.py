@@ -175,7 +175,18 @@ class TestIdentityPolicies(TestCase):
                         "Action": "*",
                         "Resource": "*",
                         "Condition": {
-                            "iam:PassedToService": "cloudformation.amazonaws.com"
+                            "iam:PassedToService": "cloudformation.amazonaws.com",
+                            "StringEquals": {"aws:PrincipalTag/job-category": "iamuser-admin"},
+                            "StringLike": {"s3:prefix": ["", "home/", "home/${aws:username}/"]},
+                            "ArnLike": {"aws:SourceArn": "arn:aws:cloudtrail:*:111122223333:trail/*"},
+                            "NumericLessThanEquals": {"s3:max-keys": "10"},
+                            "DateGreaterThan": {"aws:TokenIssueTime": "2020-01-01T00:00:01Z"},
+                            "Bool": { "aws:SecureTransport": "false"},
+                            "BinaryEquals": { "key" : "QmluYXJ5VmFsdWVJbkJhc2U2NA=="},
+                            "IpAddress": {"aws:SourceIp": "203.0.113.0/24"},
+                            "ArnEquals": {"aws:SourceArn": "arn:aws:sns:REGION:123456789012:TOPIC-ID"},
+                            "StringLikeIfExists": { "ec2:InstanceType": [ "t1.*", "t2.*" ]},
+                            "Null":{"aws:TokenIssueTime":"true"}
                         }
                     }
                 ]

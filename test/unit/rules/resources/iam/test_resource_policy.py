@@ -60,8 +60,8 @@ class TestResourcePolicy(TestCase):
                     },
                     "Condition": {
                         "Null": {
-                            "s3:x-amz-server-side-encryption": [False],
-                            "aws:TagKeys": False,
+                            "s3:x-amz-server-side-encryption": ["false"],
+                            "aws:TagKeys": "false",
                         }
                     },
                 }
