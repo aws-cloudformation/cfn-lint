@@ -1,3 +1,8 @@
+### v0.87.11
+###### CloudFormation Specifications
+- Update CloudFormation specs to `186.0.0` (pull #[3578](https://github.com/aws-cloudformation/cfn-lint/pull/3578))
+- Add region `ap-southeast-5` (pull #[3673](https://github.com/aws-cloudformation/cfn-lint/pull/3673))
+
 ### v0.87.10
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `182.0.0` (pull #[3391](https://github.com/aws-cloudformation/cfn-lint/pull/3443))
