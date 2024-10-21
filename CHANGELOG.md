@@ -1,3 +1,16 @@
+### v1.18.0
+## What's Changed
+* Add `additionalProperties` false to IAM conditions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3767
+* Update [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) to handle substitutions in rule by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3768
+* Update [E3601](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3601) to skip state machine validation when using a function by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3770
+* Add `^.*$` to exceptions for boto pattern detection by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3772
+* Bump `docker/library/python` from `3.12-alpine3.20` to `3.13-alpine3.20` by @dependabot in https://github.com/aws-cloudformation/cfn-lint/pull/3773
+* Expand boto auto detection to include sub properties by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3763
+* Update CloudFormation schemas to `2024-10-21` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3758
+* Add logic for `AWS::EC2::Subnet.Id` format by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3761
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.17.2...v1.18.0
+
 ### v1.17.2
 ## What's Changed
 * Update language extensions `Fn::ForEach` for empty lists by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3764
