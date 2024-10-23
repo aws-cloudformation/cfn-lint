@@ -400,7 +400,11 @@ class Runner:
             yield from self._validate_filenames([None])
             return
 
-        yield from self._validate_filenames(self.config.templates)
+        if self.config.templates:
+            yield from self._validate_filenames(self.config.templates)
+            return
+
+        yield from self._validate_filenames(self.config.deployment_files)
 
     def cli(self) -> None:
         """
@@ -442,10 +446,14 @@ class Runner:
             print(self.rules)
             sys.exit(0)
 
-        if not self.config.templates_to_process:
+        if not self.config.templates_to_process and not self.config.deployment_files:
             if sys.stdin.isatty():
                 self.config.parser.print_help()
                 sys.exit(1)
+
+        if self.config.templates and self.config.deployment_files:
+            self.config.parser.print_help()
+            sys.exit(1)
 
         try:
             self._cli_output(list(self.run()))

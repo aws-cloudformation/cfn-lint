@@ -392,6 +392,14 @@ class CliArgs:
             default=[],
             action="extend",
         )
+        standard.add_argument(
+            "--deployment-files",
+            dest="deployment_files",
+            help="Deployment files",
+            nargs="+",
+            default=[],
+            action="extend",
+        )
         advanced.add_argument(
             "-D", "--debug", help="Enable debug logging", action="store_true"
         )
@@ -871,6 +879,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def configure_rules(self):
         return self._get_argument_value("configure_rules", True, True)
+
+    @property
+    def deployment_files(self):
+        return self._get_argument_value("deployment_files", False, True)
 
     @property
     def config_file(self):
