@@ -247,7 +247,7 @@ def test_invalid_functions(name, instance, response):
                         (
                             "'bar' is not one of ['foo', "
                             "'transformFirstKey', 'transformSecondKey', "
-                            "'integers']"
+                            "'integers', 'accounts']"
                         ),
                         path=deque(["Fn::FindInMap", 0]),
                     ),
@@ -296,9 +296,61 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
-            "Valid FindInMap with an top level key that is a Ref to pseudo param",
+            "Valid FindInMap with an top level key that is a Ref to an account",
+            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::AccountId"}, "foo"]},
+            [
+                (
+                    "bar",
+                    deque(["Mappings", "accounts", "123456789012", "foo"]),
+                    None,
+                )
+            ],
+        ),
+        (
+            "Valid FindInMap with an top level key that is a Ref to a region",
+            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::Region"}, "bar"]},
+            [
+                (
+                    "foo",
+                    deque(["Mappings", "accounts", "us-east-1", "bar"]),
+                    None,
+                )
+            ],
+        ),
+        (
+            "Invalid FindInMap with an top level key that is a Ref to an account",
+            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::AccountId"}, "bar"]},
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        (
+                            "'bar' is not a second level key "
+                            "when {'Ref': 'AWS::AccountId'} is "
+                            "resolved for mapping 'accounts'"
+                        ),
+                        path=deque(["Fn::FindInMap", 2]),
+                    ),
+                )
+            ],
+        ),
+        (
+            "Invalid FindInMap with an top level key that is a Ref to pseudo param",
             {"Fn::FindInMap": ["foo", {"Ref": "AWS::AccountId"}, "second"]},
-            [],
+            [
+                (
+                    None,
+                    deque([]),
+                    ValidationError(
+                        (
+                            "{'Ref': 'AWS::AccountId'} is not a "
+                            "first level key for mapping 'foo'"
+                        ),
+                        path=deque(["Fn::FindInMap", 1]),
+                    ),
+                )
+            ],
         ),
         (
             "Valid FindInMap with a second level key that is a Ref to pseudo param",
@@ -362,6 +414,10 @@ def test_valid_functions(name, instance, response):
                 "transformFirstKey": {"Fn::Transform": {"second": "bar"}},
                 "transformSecondKey": {"first": {"Fn::Transform": "bar"}},
                 "integers": {"1": {"2": "Value"}},
+                "accounts": {
+                    "123456789012": {"foo": "bar"},
+                    "us-east-1": {"bar": "foo"},
+                },
             }
         )
     )
