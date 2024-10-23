@@ -307,6 +307,20 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
+            (
+                "Valid FindInMap with an top level key "
+                "that is a Ref to non account non region"
+            ),
+            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::StackName"}, "dev"]},
+            [
+                (
+                    "bar",
+                    deque(["Mappings", "accounts", "123456789012", "dev"]),
+                    None,
+                )
+            ],
+        ),
+        (
             "Valid FindInMap with an top level key that is a Ref to a region",
             {"Fn::FindInMap": ["accounts", {"Ref": "AWS::Region"}, "bar"]},
             [
