@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context._mappings import Mappings
-from cfnlint.context.context import Context
+from cfnlint.context.context import Context, Parameter
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -247,7 +247,7 @@ def test_invalid_functions(name, instance, response):
                         (
                             "'bar' is not one of ['foo', "
                             "'transformFirstKey', 'transformSecondKey', "
-                            "'integers', 'accounts']"
+                            "'integers', 'accounts', 'environments']"
                         ),
                         path=deque(["Fn::FindInMap", 0]),
                     ),
@@ -297,11 +297,11 @@ def test_invalid_functions(name, instance, response):
         ),
         (
             "Valid FindInMap with an top level key that is a Ref to an account",
-            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::AccountId"}, "foo"]},
+            {"Fn::FindInMap": ["accounts", {"Ref": "AWS::AccountId"}, "dev"]},
             [
                 (
                     "bar",
-                    deque(["Mappings", "accounts", "123456789012", "foo"]),
+                    deque(["Mappings", "accounts", "123456789012", "dev"]),
                     None,
                 )
             ],
@@ -380,6 +380,78 @@ def test_invalid_functions(name, instance, response):
             [("Value", deque(["Mappings", "integers", "1", "2"]), None)],
         ),
         (
+            (
+                "Valid FindInMap with a Ref to a parameter "
+                "with allowed values for top level key"
+            ),
+            {"Fn::FindInMap": ["environments", {"Ref": "Environment"}, "foo"]},
+            [
+                ("one", deque(["Mappings", "environments", "dev", "foo"]), None),
+                ("two", deque(["Mappings", "environments", "test", "foo"]), None),
+            ],
+        ),
+        (
+            "Valid FindInMap with a Ref to a parameter for top level key",
+            {"Fn::FindInMap": ["environments", {"Ref": "RandomString"}, "foo"]},
+            [],
+        ),
+        (
+            (
+                "Valid FindInMap with a Ref to accounts for top level "
+                "key Ref to a ramom string for second level key"
+            ),
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Ref": "AWS::AccountId"},
+                    {"Ref": "RandomString"},
+                ]
+            },
+            [],
+        ),
+        (
+            (
+                "Valid FindInMap with a Ref to accounts for top level "
+                "key Ref to an allowed value parameter for second level key"
+            ),
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Ref": "AWS::AccountId"},
+                    {"Ref": "Environment"},
+                ]
+            },
+            [],
+        ),
+        (
+            (
+                "Valid FindInMap with a Ref to a parameter "
+                "with allowed values for second level key"
+            ),
+            {"Fn::FindInMap": ["environments", "lion", {"Ref": "Environment"}]},
+            [
+                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
+                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+            ],
+        ),
+        (
+            "Valid FindInMap with a Ref to a parameter for top level key",
+            {"Fn::FindInMap": ["environments", {"Ref": "RandomString"}, "foo"]},
+            [],
+        ),
+        (
+            "Valid FindInMap with a Ref to a parameter and a Ref to pseudo parameter",
+            {
+                "Fn::FindInMap": [
+                    "accounts",
+                    {"Ref": "AWS::AccountId"},
+                    {"Ref": "RandomString"},
+                ]
+            },
+            [],
+        ),
+        (
             "Valid FindInMap with a bad second key and default",
             {"Fn::FindInMap": ["foo", "first", "third", {"DefaultValue": "default"}]},
             [("default", deque([4, "DefaultValue"]), None)],
@@ -408,6 +480,19 @@ def test_invalid_functions(name, instance, response):
 )
 def test_valid_functions(name, instance, response):
     context = Context(
+        parameters={
+            "RandomString": Parameter(
+                {
+                    "Type": "String",
+                }
+            ),
+            "Environment": Parameter(
+                {
+                    "Type": "String",
+                    "AllowedValues": ["dev", "test", "prod"],
+                }
+            ),
+        },
         mappings=Mappings.create_from_dict(
             {
                 "foo": {"first": {"second": "bar"}},
@@ -415,11 +500,21 @@ def test_valid_functions(name, instance, response):
                 "transformSecondKey": {"first": {"Fn::Transform": "bar"}},
                 "integers": {"1": {"2": "Value"}},
                 "accounts": {
-                    "123456789012": {"foo": "bar"},
+                    "123456789012": {"dev": "bar"},
                     "us-east-1": {"bar": "foo"},
                 },
+                "environments": {
+                    "dev": {"foo": "one"},
+                    "test": {"foo": "two"},
+                    "prod": {"bar": "three"},
+                    "lion": {
+                        "dev": "one",
+                        "test": "two",
+                        "prod": "three",
+                    },
+                },
             }
-        )
+        ),
     )
     _resolve(name, instance, response, context=context)
 
