@@ -15,6 +15,7 @@ from cfnlint.helpers import (
     AVAILABILITY_ZONES,
     PSEUDOPARAMS,
     REGEX_SUB_PARAMETERS,
+    REGIONS,
     is_function,
 )
 from cfnlint.jsonschema import ValidationError, Validator
@@ -98,9 +99,75 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         if validator.context.mappings.maps[map_name].is_transform:
             continue
 
-        k, v = is_function(instance[1])
+        k, v = is_function(instance[2])
         if k == "Ref" and v in PSEUDOPARAMS:
             continue
+
+        k, v = is_function(instance[1])
+        if k == "Ref" and v in PSEUDOPARAMS:
+            if isinstance(instance[2], str):
+                found_top_level_key = False
+                found_second_key = False
+                for top_level_key, top_values in validator.context.mappings.maps[
+                    map_name
+                ].keys.items():
+                    if v == "AWS::AccountId":
+                        if not re.match("^[0-9]{12}$", top_level_key):
+                            continue
+                    elif v == "AWS::Region":
+                        if top_level_key not in REGIONS:
+                            continue
+                    found_top_level_key = True
+                    for second_level_key, second_v, _ in validator.resolve_value(
+                        instance[2]
+                    ):
+                        if second_level_key in top_values.keys:
+                            for value in validator.context.mappings.maps[
+                                map_name
+                            ].find_in_map(
+                                top_level_key,
+                                second_level_key,
+                            ):
+                                found_second_key = True
+                                yield (
+                                    value,
+                                    validator.evolve(
+                                        context=validator.context.evolve(
+                                            path=validator.context.path.evolve(
+                                                value_path=deque(
+                                                    [
+                                                        "Mappings",
+                                                        map_name,
+                                                        top_level_key,
+                                                        second_level_key,
+                                                    ]
+                                                )
+                                            )
+                                        )
+                                    ),
+                                    None,
+                                )
+
+                if not found_top_level_key:
+                    yield None, validator, ValidationError(
+                        (
+                            f"{instance[1]!r} is not a "
+                            f"first level key for mapping {map_name!r}"
+                        ),
+                        path=deque([1]),
+                    )
+                elif not found_second_key:
+                    yield None, validator, ValidationError(
+                        (
+                            f"{instance[2]!r} is not a "
+                            "second level key when "
+                            f"{instance[1]!r} is resolved "
+                            f"for mapping {map_name!r}"
+                        ),
+                        path=deque([2]),
+                    )
+            continue
+
         for top_level_key, top_v, _ in validator.resolve_value(instance[1]):
             if validator.is_type(top_level_key, "integer"):
                 top_level_key = str(top_level_key)
@@ -134,9 +201,6 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             ):
                 continue
 
-            k, v = is_function(instance[2])
-            if k == "Ref" and v in PSEUDOPARAMS:
-                continue
             for second_level_key, second_v, err in validator.resolve_value(instance[2]):
                 if validator.is_type(second_level_key, "integer"):
                     second_level_key = str(second_level_key)
