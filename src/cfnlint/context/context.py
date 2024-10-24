@@ -278,6 +278,12 @@ class _Ref(ABC):
         pass
 
 
+def _strip(value: Any) -> Any:
+    if isinstance(value, str):
+        return value.strip()
+    return value
+
+
 @dataclass
 class Parameter(_Ref):
     """
@@ -321,14 +327,17 @@ class Parameter(_Ref):
             if "Default" in parameter:
                 default = parameter.get("Default", "")
                 if isinstance(default, str):
-                    self.default = default.split(",")
+                    self.default = [_strip(value) for value in default.split(",")]
                 else:
-                    self.default = [default]
+                    self.default = [_strip(default)]
+
             for allowed_value in parameter.get("AllowedValues", []):
                 if isinstance(allowed_value, str):
-                    self.allowed_values.append(allowed_value.split(","))
+                    self.allowed_values.append(
+                        [_strip(value) for value in allowed_value.split(",")]
+                    )
                 else:
-                    self.allowed_values.append([allowed_value])
+                    self.allowed_values.append([_strip(allowed_value)])
         else:
             self.default = parameter.get("Default")
             self.allowed_values = parameter.get("AllowedValues")
