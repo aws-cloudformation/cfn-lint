@@ -374,6 +374,7 @@ _standard_validators: dict[str, V] = {
     "dependentRequired": _keywords.dependentRequired,
     "dependentExcluded": _keywords.dependentExcluded,
     "enum": _keywords.enum,
+    "enumCaseInsensitive": _keywords.enumCaseInsensitive,
     "exclusiveMaximum": _keywords.exclusiveMaximum,
     "exclusiveMinimum": _keywords.exclusiveMinimum,
     "format": _keywords.format,
