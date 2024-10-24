@@ -40,6 +40,7 @@ class Properties(CfnLintJsonSchema):
             "requiredOr": "E3058",
             "requiredXor": "E3014",
             "enum": "E3030",
+            "enumCaseInsensitive": "E3030",
             "type": "E3012",
             "minLength": "E3033",
             "maxLength": "E3033",

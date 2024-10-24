@@ -218,6 +218,24 @@ def enum(
             yield ValidationError(f"{instance!r} is not one of {enums!r}")
 
 
+def enumCaseInsensitive(
+    validator: Validator, enums: list[Any], instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    if validator.is_type(instance, "string"):
+        instance = instance.lower()
+
+    lower_enums = []
+    for e in enums:
+        if validator.is_type(e, "string"):
+            lower_enums.append(e.lower())
+        else:
+            lower_enums.append(e)
+
+    for err in enum(validator, lower_enums, instance, schema):
+        err.message = err.message + " (case-insensitive)"
+        yield err
+
+
 def exclusiveMaximum(
     validator: Validator, m: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:

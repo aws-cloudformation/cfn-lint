@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.jsonschema._keywords import enum
+from cfnlint.jsonschema._keywords import enum, enumCaseInsensitive
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -25,6 +25,12 @@ class Enum(CloudFormationLintRule):
 
     def enum(self, validator, enums, instance, schema):
         for err in enum(validator, enums, instance, schema):
+            err.rule = self
+            err.path_override = validator.context.path.value_path
+            yield err
+
+    def enumCaseInsensitive(self, validator, enums, instance, schema):
+        for err in enumCaseInsensitive(validator, enums, instance, schema):
             err.rule = self
             err.path_override = validator.context.path.value_path
             yield err
