@@ -24,6 +24,10 @@ SCHEMA_URL = (
     "https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip"
 )
 
+case_insensitive_services = [
+    "batch",
+]
+
 
 def configure_logging():
     """Setup Logging"""
@@ -84,6 +88,9 @@ def build_resource_type_patches(
                         )
                         continue
                 if value:
+                    if patch.source[0] in case_insensitive_services and field == "enum":
+                        field = "enumCaseInsensitive"
+                        value = [v.lower() for v in value]
                     d.append(
                         {
                             "op": "add",

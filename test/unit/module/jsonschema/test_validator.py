@@ -1110,6 +1110,32 @@ def test_validator(name, schema, instance, expected, validator):
                 ValidationError("1 is not of type 'string'"),
             ],
         ),
+        (
+            "valid enum case insensitive",
+            {"enumCaseInsensitive": ["A"]},
+            "a",
+            [],
+        ),
+        (
+            "valid enum case insensitive with non string",
+            {"enumCaseInsensitive": ["a", 1]},
+            "A",
+            [],
+        ),
+        (
+            "valid enum case insensitive with non string value",
+            {"enumCaseInsensitive": ["A", 1]},
+            1,
+            [],
+        ),
+        (
+            "valid enum case insensitive with non string value",
+            {"enumCaseInsensitive": ["A"]},
+            "b",
+            [
+                ValidationError("'b' is not one of ['a'] (case-insensitive)"),
+            ],
+        ),
     ],
 )
 @patch.object(ValidationError, "__eq__", spec=True, new=_eq)
