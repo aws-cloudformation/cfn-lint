@@ -78,6 +78,30 @@ class SubNeeded(CloudFormationLintRule):
             return re.match(custom_search, value)
         return False
 
+    def _validate_step_functions(self, var, parameter_string_path, cfn) -> bool:
+        # Step Function State Machine has a Definition Substitution
+        # that allows usage of special variables outside of a !Sub
+        # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stepfunctions-statemachine-definitionsubstitutions.html
+
+        for key in ["DefinitionString", "Definition"]:
+            if key in parameter_string_path:
+                modified_parameter_string_path = copy.copy(parameter_string_path)
+                index = parameter_string_path.index(key)
+                modified_parameter_string_path[index] = "DefinitionSubstitutions"
+                modified_parameter_string_path = modified_parameter_string_path[
+                    : index + 1
+                ]
+                modified_parameter_string_path.append(var[2:-1])
+
+                if reduce(
+                    lambda c, k: c.get(k, {}),
+                    modified_parameter_string_path,
+                    cfn.template,
+                ):
+                    return True
+
+        return False
+
     def match(self, cfn: Template) -> RuleMatches:
         matches = []
 
@@ -93,24 +117,8 @@ class SubNeeded(CloudFormationLintRule):
             # Get variable
             var = parameter_string_path[-1]
 
-            # Step Function State Machine has a Definition Substitution
-            # that allows usage of special variables outside of a !Sub
-            # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stepfunctions-statemachine-definitionsubstitutions.html
-
-            if "DefinitionString" in parameter_string_path:
-                modified_parameter_string_path = copy.copy(parameter_string_path)
-                index = parameter_string_path.index("DefinitionString")
-                modified_parameter_string_path[index] = "DefinitionSubstitutions"
-                modified_parameter_string_path = modified_parameter_string_path[
-                    : index + 1
-                ]
-                modified_parameter_string_path.append(var[2:-1])
-                if reduce(
-                    lambda c, k: c.get(k, {}),
-                    modified_parameter_string_path,
-                    cfn.template,
-                ):
-                    continue
+            if self._validate_step_functions(var, parameter_string_path, cfn):
+                continue
 
             # Exclude variables that match custom exclude filters, if configured
             # (for third-party tools that pre-process templates
