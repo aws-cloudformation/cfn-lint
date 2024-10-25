@@ -3,7 +3,6 @@
  "conditionalCreateOnlyProperties": [
   "/properties/LaunchConfigurationName",
   "/properties/VPCZoneIdentifier",
-  "/properties/PlacementGroup",
   "/properties/LaunchTemplate",
   "/properties/MixedInstancesPolicy"
  ],
@@ -447,6 +446,22 @@
    },
    "type": "object"
   },
+  "TrafficSourceIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Identifier": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier",
+    "Type"
+   ],
+   "type": "object"
+  },
   "VCpuCountRequest": {
    "additionalProperties": false,
    "properties": {
@@ -601,6 +616,14 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "TrafficSources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TrafficSourceIdentifier"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "VPCZoneIdentifier": {
    "insertionOrder": false,

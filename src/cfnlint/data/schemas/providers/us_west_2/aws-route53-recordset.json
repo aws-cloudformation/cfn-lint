@@ -1,0 +1,287 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneName",
+  "/properties/HostedZoneId"
+ ],
+ "definitions": {
+  "AliasTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "DNSName": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "EvaluateTargetHealth": {
+     "default": false,
+     "type": "boolean"
+    },
+    "HostedZoneId": {
+     "$ref": "#/definitions/HostedZoneId"
+    }
+   },
+   "required": [
+    "HostedZoneId",
+    "DNSName"
+   ],
+   "type": "object"
+  },
+  "CidrRoutingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CollectionId": {
+     "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+     "type": "string"
+    },
+    "LocationName": {
+     "maxLength": 16,
+     "minLength": 1,
+     "pattern": "[0-9A-Za-z_\\-\\*]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CollectionId",
+    "LocationName"
+   ],
+   "type": "object"
+  },
+  "Comment": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Coordinates": {
+   "additionalProperties": false,
+   "properties": {
+    "Latitude": {
+     "pattern": "[-+]?[0-9]{1,2}(\\.[0-9]{0,2})?",
+     "type": "string"
+    },
+    "Longitude": {
+     "pattern": "[-+]?[0-9]{1,3}(\\.[0-9]{0,2})?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Longitude",
+    "Latitude"
+   ],
+   "type": "object"
+  },
+  "Failover": {
+   "enum": [
+    "PRIMARY",
+    "SECONDARY"
+   ],
+   "type": "string"
+  },
+  "GeoLocation": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "ContinentCode"
+     ]
+    },
+    {
+     "required": [
+      "CountryCode"
+     ]
+    }
+   ],
+   "properties": {
+    "ContinentCode": {
+     "maxLength": 2,
+     "minLength": 2,
+     "type": "string"
+    },
+    "CountryCode": {
+     "maxLength": 2,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SubdivisionCode": {
+     "maxLength": 3,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GeoProximityLocation": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AWSRegion"
+     ]
+    },
+    {
+     "required": [
+      "LocalZoneGroup"
+     ]
+    },
+    {
+     "required": [
+      "Coordinates"
+     ]
+    }
+   ],
+   "properties": {
+    "AWSRegion": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Bias": {
+     "maximum": 99,
+     "minimum": -99,
+     "type": "integer"
+    },
+    "Coordinates": {
+     "$ref": "#/definitions/Coordinates"
+    },
+    "LocalZoneGroup": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HealthCheckId": {
+   "maxLength": 64,
+   "type": "string"
+  },
+  "HostedZoneId": {
+   "maxLength": 44,
+   "type": "string"
+  },
+  "HostedZoneName": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "MultiValueAnswer": {
+   "type": "boolean"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Region": {
+   "type": "string"
+  },
+  "ResourceRecords": {
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 4000,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SetIdentifier": {
+   "maxLength": 128,
+   "minLength": 0,
+   "type": "string"
+  },
+  "TTL": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "Weight": {
+   "type": "integer"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "HostedZoneId"
+   ]
+  },
+  {
+   "required": [
+    "HostedZoneName"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Name",
+  "/properties/HostedZoneId",
+  "/properties/Type",
+  "/properties/SetIdentifier"
+ ],
+ "properties": {
+  "AliasTarget": {
+   "$ref": "#/definitions/AliasTarget"
+  },
+  "CidrRoutingConfig": {
+   "$ref": "#/definitions/CidrRoutingConfig"
+  },
+  "Comment": {
+   "$ref": "#/definitions/Comment"
+  },
+  "Failover": {
+   "$ref": "#/definitions/Failover"
+  },
+  "GeoLocation": {
+   "$ref": "#/definitions/GeoLocation"
+  },
+  "HealthCheckId": {
+   "$ref": "#/definitions/HealthCheckId"
+  },
+  "HostedZoneId": {
+   "$ref": "#/definitions/HostedZoneId"
+  },
+  "HostedZoneName": {
+   "$ref": "#/definitions/HostedZoneName"
+  },
+  "MultiValueAnswer": {
+   "$ref": "#/definitions/MultiValueAnswer"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "Region": {
+   "$ref": "#/definitions/Region"
+  },
+  "ResourceRecords": {
+   "$ref": "#/definitions/ResourceRecords"
+  },
+  "SetIdentifier": {
+   "$ref": "#/definitions/SetIdentifier"
+  },
+  "TTL": {
+   "$ref": "#/definitions/TTL"
+  },
+  "Type": {
+   "$ref": "#/definitions/Type"
+  },
+  "Weight": {
+   "$ref": "#/definitions/Weight"
+  }
+ },
+ "propertyTransform": {
+  "/properties/AliasTarget/DNSName": "$join([DNSName, \".\"])",
+  "/properties/Name": "$lowercase($replace(Name, /(.*)\\.$/, \"$1\"))"
+ },
+ "required": [
+  "Type",
+  "Name"
+ ],
+ "requiredXor": [
+  "HostedZoneId",
+  "HostedZoneName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recordset",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Route53::RecordSet",
+ "writeOnlyProperties": [
+  "/properties/Comment",
+  "/properties/HostedZoneName"
+ ]
+}

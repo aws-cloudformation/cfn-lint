@@ -1,0 +1,234 @@
+{
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/PrivateIpAddresses",
+  "/properties/EnablePrimaryIpv6",
+  "/properties/ConnectionTrackingSpecification"
+ ],
+ "createOnlyProperties": [
+  "/properties/PrivateIpAddress",
+  "/properties/InterfaceType",
+  "/properties/SubnetId"
+ ],
+ "definitions": {
+  "ConnectionTrackingSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "TcpEstablishedTimeout": {
+     "type": "integer"
+    },
+    "UdpStreamTimeout": {
+     "type": "integer"
+    },
+    "UdpTimeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceIpv6Address": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Address": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv6Address"
+   ],
+   "type": "object"
+  },
+  "Ipv4PrefixSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv4Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv4Prefix"
+   ],
+   "type": "object"
+  },
+  "Ipv6PrefixSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv6Prefix"
+   ],
+   "type": "object"
+  },
+  "PrivateIpAddressSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Primary": {
+     "type": "boolean"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrivateIpAddress",
+    "Primary"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentExcluded": {
+  "Ipv6AddressCount": [
+   "Ipv6Addresses"
+  ],
+  "Ipv6Addresses": [
+   "Ipv6AddressCount"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ConnectionTrackingSpecification": {
+   "$ref": "#/definitions/ConnectionTrackingSpecification"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EnablePrimaryIpv6": {
+   "type": "boolean"
+  },
+  "GroupSet": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InterfaceType": {
+   "enum": [
+    "branch",
+    "efa",
+    "efa-only",
+    "trunk"
+   ],
+   "type": "string"
+  },
+  "Ipv4PrefixCount": {
+   "type": "integer"
+  },
+  "Ipv4Prefixes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Ipv4PrefixSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Ipv6AddressCount": {
+   "type": "integer"
+  },
+  "Ipv6Addresses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InstanceIpv6Address"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Ipv6PrefixCount": {
+   "type": "integer"
+  },
+  "Ipv6Prefixes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Ipv6PrefixSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PrimaryIpv6Address": {
+   "type": "string"
+  },
+  "PrimaryPrivateIpAddress": {
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  },
+  "PrivateIpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PrivateIpAddressSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecondaryPrivateIpAddressCount": {
+   "type": "integer"
+  },
+  "SecondaryPrivateIpAddresses": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SourceDestCheck": {
+   "type": "boolean"
+  },
+  "SubnetId": {
+   "format": "AWS::EC2::Subnet.Id",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/SecondaryPrivateIpAddresses",
+  "/properties/PrimaryPrivateIpAddress",
+  "/properties/PrimaryIpv6Address",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2/networkinterface",
+ "taggable": true,
+ "typeName": "AWS::EC2::NetworkInterface"
+}

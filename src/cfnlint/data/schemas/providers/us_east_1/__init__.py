@@ -129,6 +129,7 @@ types: list[str] = [
     "AWS::Backup::BackupSelection",
     "AWS::Backup::BackupVault",
     "AWS::Backup::Framework",
+    "AWS::Backup::LogicallyAirGappedBackupVault",
     "AWS::Backup::ReportPlan",
     "AWS::Backup::RestoreTestingPlan",
     "AWS::Backup::RestoreTestingSelection",

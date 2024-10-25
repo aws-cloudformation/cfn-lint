@@ -50,14 +50,14 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/RestApiId"
  ],
  "properties": {
   "ApiKeySourceType": {
@@ -75,7 +75,6 @@
    "uniqueItems": true
   },
   "Body": {
-   "format": "json",
    "type": [
     "object",
     "string"
@@ -99,9 +98,6 @@
   "FailOnWarnings": {
    "type": "boolean"
   },
-  "Id": {
-   "type": "string"
-  },
   "MinimumCompressionSize": {
    "type": "integer"
   },
@@ -112,19 +108,25 @@
    "type": "string"
   },
   "Parameters": {
+   "additionalProperties": false,
    "patternProperties": {
     "[a-zA-Z0-9]+": {
      "type": "string"
     }
    },
-   "type": "object"
-  },
-  "Policy": {
-   "format": "json",
    "type": [
     "object",
     "string"
    ]
+  },
+  "Policy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RestApiId": {
+   "type": "string"
   },
   "RootResourceId": {
    "type": "string"
@@ -138,8 +140,24 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
+  "/properties/RestApiId",
   "/properties/RootResourceId"
  ],
- "typeName": "AWS::ApiGateway::RestApi"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::RestApi",
+ "writeOnlyProperties": [
+  "/properties/Body",
+  "/properties/BodyS3Location",
+  "/properties/CloneFrom",
+  "/properties/FailOnWarnings",
+  "/properties/Mode",
+  "/properties/Parameters"
+ ]
 }

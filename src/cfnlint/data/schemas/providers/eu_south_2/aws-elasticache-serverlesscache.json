@@ -1,0 +1,205 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerlessCacheName",
+  "/properties/Engine",
+  "/properties/MajorEngineVersion",
+  "/properties/KmsKeyId",
+  "/properties/SnapshotArnsToRestore",
+  "/properties/SubnetIds"
+ ],
+ "definitions": {
+  "CacheUsageLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "DataStorage": {
+     "$ref": "#/definitions/DataStorage"
+    },
+    "ECPUPerSecond": {
+     "$ref": "#/definitions/ECPUPerSecond"
+    }
+   },
+   "type": "object"
+  },
+  "DataStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "Maximum": {
+     "type": "integer"
+    },
+    "Minimum": {
+     "type": "integer"
+    },
+    "Unit": {
+     "enum": [
+      "GB"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "ECPUPerSecond": {
+   "additionalProperties": false,
+   "properties": {
+    "Maximum": {
+     "type": "integer"
+    },
+    "Minimum": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServerlessCacheName"
+ ],
+ "properties": {
+  "ARN": {
+   "type": "string"
+  },
+  "CacheUsageLimits": {
+   "$ref": "#/definitions/CacheUsageLimits"
+  },
+  "CreateTime": {
+   "type": "string"
+  },
+  "DailySnapshotTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "FinalSnapshotName": {
+   "type": "string"
+  },
+  "FullEngineVersion": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "MajorEngineVersion": {
+   "type": "string"
+  },
+  "ReaderEndpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServerlessCacheName": {
+   "type": "string"
+  },
+  "SnapshotArnsToRestore": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotRetentionLimit": {
+   "type": "integer"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserGroupId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FullEngineVersion",
+  "/properties/CreateTime",
+  "/properties/Status",
+  "/properties/Endpoint/Address",
+  "/properties/Endpoint/Port",
+  "/properties/ReaderEndpoint/Address",
+  "/properties/ReaderEndpoint/Port",
+  "/properties/ARN"
+ ],
+ "required": [
+  "ServerlessCacheName",
+  "Engine"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::ServerlessCache",
+ "writeOnlyProperties": [
+  "/properties/SnapshotArnsToRestore",
+  "/properties/FinalSnapshotName"
+ ]
+}

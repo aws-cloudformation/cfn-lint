@@ -1,0 +1,143 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Reference",
+  "/properties/SseConfig",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EncryptionType": {
+   "enum": [
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "ReferenceItem": {
+   "additionalProperties": false,
+   "properties": {
+    "ReferenceArn": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^arn:.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReferenceArn"
+   ],
+   "type": "object"
+  },
+  "SseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/EncryptionType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "StoreStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "DELETING",
+    "ACTIVE",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([a-z]){1}([a-z0-9_]){2,254}",
+   "type": "string"
+  },
+  "Reference": {
+   "$ref": "#/definitions/ReferenceItem"
+  },
+  "SseConfig": {
+   "$ref": "#/definitions/SseConfig"
+  },
+  "Status": {
+   "$ref": "#/definitions/StoreStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "type": "string"
+  },
+  "StoreArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)$",
+   "type": "string"
+  },
+  "StoreSizeBytes": {
+   "type": "number"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "UpdateTime": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/StoreArn",
+  "/properties/StoreSizeBytes",
+  "/properties/UpdateTime"
+ ],
+ "required": [
+  "Name",
+  "Reference"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::VariantStore"
+}

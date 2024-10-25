@@ -1,0 +1,157 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/NetworkInsightsPathArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceIp",
+  "/properties/DestinationIp",
+  "/properties/Source",
+  "/properties/Destination",
+  "/properties/Protocol",
+  "/properties/DestinationPort",
+  "/properties/FilterAtSource",
+  "/properties/FilterAtDestination"
+ ],
+ "definitions": {
+  "FilterPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "type": "integer"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "IpAddress": {
+   "pattern": "^([0-9]{1,3}.){3}[0-9]{1,3}$",
+   "type": "string"
+  },
+  "PathFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "DestinationPortRange": {
+     "$ref": "#/definitions/FilterPortRange"
+    },
+    "SourceAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "SourcePortRange": {
+     "$ref": "#/definitions/FilterPortRange"
+    }
+   },
+   "type": "object"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "Protocol": {
+   "enum": [
+    "tcp",
+    "udp"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NetworkInsightsPathId"
+ ],
+ "properties": {
+  "CreatedDate": {
+   "type": "string"
+  },
+  "Destination": {
+   "type": "string"
+  },
+  "DestinationArn": {
+   "type": "string"
+  },
+  "DestinationIp": {
+   "$ref": "#/definitions/IpAddress"
+  },
+  "DestinationPort": {
+   "$ref": "#/definitions/Port"
+  },
+  "FilterAtDestination": {
+   "$ref": "#/definitions/PathFilter"
+  },
+  "FilterAtSource": {
+   "$ref": "#/definitions/PathFilter"
+  },
+  "NetworkInsightsPathArn": {
+   "type": "string"
+  },
+  "NetworkInsightsPathId": {
+   "type": "string"
+  },
+  "Protocol": {
+   "$ref": "#/definitions/Protocol"
+  },
+  "Source": {
+   "type": "string"
+  },
+  "SourceArn": {
+   "type": "string"
+  },
+  "SourceIp": {
+   "$ref": "#/definitions/IpAddress"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInsightsPathId",
+  "/properties/NetworkInsightsPathArn",
+  "/properties/CreatedDate",
+  "/properties/SourceArn",
+  "/properties/DestinationArn"
+ ],
+ "required": [
+  "Protocol",
+  "Source"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::NetworkInsightsPath"
+}
