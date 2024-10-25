@@ -1,0 +1,84 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ReplicateTo"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DeploymentDurationInMinutes": {
+   "type": "number"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "FinalBakeTimeInMinutes": {
+   "type": "number"
+  },
+  "GrowthFactor": {
+   "type": "number"
+  },
+  "GrowthType": {
+   "enum": [
+    "EXPONENTIAL",
+    "LINEAR"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ReplicateTo": {
+   "enum": [
+    "NONE",
+    "SSM_DOCUMENT"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DeploymentDurationInMinutes",
+  "GrowthFactor",
+  "Name",
+  "ReplicateTo"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::DeploymentStrategy"
+}

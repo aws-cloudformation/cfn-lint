@@ -1,0 +1,668 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ActionDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionTypeId": {
+     "$ref": "#/definitions/ActionTypeId"
+    },
+    "Commands": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Configuration": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "OutputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/OutputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "OutputVariables": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+     "type": "string"
+    },
+    "RunOrder": {
+     "type": "integer"
+    },
+    "TimeoutInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ActionTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ActionTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "enum": [
+      "Approval",
+      "Build",
+      "Compute",
+      "Deploy",
+      "Invoke",
+      "Source",
+      "Test"
+     ],
+     "type": "string"
+    },
+    "Owner": {
+     "enum": [
+      "AWS",
+      "Custom",
+      "ThirdParty"
+     ],
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner",
+    "Category",
+    "Version",
+    "Provider"
+   ],
+   "type": "object"
+  },
+  "ArtifactStore": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKey": {
+     "$ref": "#/definitions/EncryptionKey"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "ArtifactStoreMap": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactStore": {
+     "$ref": "#/definitions/ArtifactStore"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactStore",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "BeforeEntryConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "BlockerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "Schedule"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Result": {
+     "type": "string"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/RuleDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionKey": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "FailureConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Result": {
+     "enum": [
+      "ROLLBACK",
+      "RETRY"
+     ],
+     "type": "string"
+    },
+    "RetryConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "RetryMode": {
+       "enum": [
+        "ALL_ACTIONS",
+        "FAILED_ACTIONS"
+       ],
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "GitBranchFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PullRequest": {
+     "items": {
+      "$ref": "#/definitions/GitPullRequestFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Push": {
+     "items": {
+      "$ref": "#/definitions/GitPushFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceActionName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceActionName"
+   ],
+   "type": "object"
+  },
+  "GitFilePathFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "GitPullRequestFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "Events": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitPushFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Branches": {
+     "$ref": "#/definitions/GitBranchFilterCriteria"
+    },
+    "FilePaths": {
+     "$ref": "#/definitions/GitFilePathFilterCriteria"
+    },
+    "Tags": {
+     "$ref": "#/definitions/GitTagFilterCriteria"
+    }
+   },
+   "type": "object"
+  },
+  "GitTagFilterCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Excludes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Includes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "InputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Files": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PipelineTriggerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "GitConfiguration": {
+     "$ref": "#/definitions/GitConfiguration"
+    },
+    "ProviderType": {
+     "enum": [
+      "CodeStarSourceConnection"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ProviderType"
+   ],
+   "type": "object"
+  },
+  "RuleDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+     "type": "string"
+    },
+    "RuleTypeId": {
+     "$ref": "#/definitions/RuleTypeId"
+    }
+   },
+   "type": "object"
+  },
+  "RuleTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StageDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/ActionDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "BeforeEntry": {
+     "$ref": "#/definitions/BeforeEntryConditions",
+     "type": "object"
+    },
+    "Blockers": {
+     "items": {
+      "$ref": "#/definitions/BlockerDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "OnFailure": {
+     "$ref": "#/definitions/FailureConditions",
+     "type": "object"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/SuccessConditions",
+     "type": "object"
+    }
+   },
+   "required": [
+    "Actions",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StageTransition": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "type": "string"
+    },
+    "StageName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StageName",
+    "Reason"
+   ],
+   "type": "object"
+  },
+  "SuccessConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VariableDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "ArtifactStore": {
+   "$ref": "#/definitions/ArtifactStore"
+  },
+  "ArtifactStores": {
+   "items": {
+    "$ref": "#/definitions/ArtifactStoreMap"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DisableInboundStageTransitions": {
+   "items": {
+    "$ref": "#/definitions/StageTransition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ExecutionMode": {
+   "default": "SUPERSEDED",
+   "enum": [
+    "QUEUED",
+    "SUPERSEDED",
+    "PARALLEL"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PipelineType": {
+   "enum": [
+    "V1",
+    "V2"
+   ],
+   "type": "string"
+  },
+  "RestartExecutionOnUpdate": {
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "Stages": {
+   "items": {
+    "$ref": "#/definitions/StageDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Triggers": {
+   "items": {
+    "$ref": "#/definitions/PipelineTriggerDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Variables": {
+   "items": {
+    "$ref": "#/definitions/VariableDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Version"
+ ],
+ "required": [
+  "Stages",
+  "RoleArn"
+ ],
+ "requiredXor": [
+  "ArtifactStore",
+  "ArtifactStores"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodePipeline::Pipeline",
+ "writeOnlyProperties": [
+  "/properties/RestartExecutionOnUpdate"
+ ]
+}
