@@ -1931,6 +1931,7 @@ cached: list[str] = [
     "aws-neptunegraph-graph.json",
     "aws-neptunegraph-privategraphendpoint.json",
     "aws-networkfirewall-firewall.json",
+    "aws-networkfirewall-firewallpolicy.json",
     "aws-networkfirewall-loggingconfiguration.json",
     "aws-networkfirewall-rulegroup.json",
     "aws-networkfirewall-tlsinspectionconfiguration.json",
