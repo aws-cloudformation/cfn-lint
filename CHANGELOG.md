@@ -1,3 +1,15 @@
+### v1.18.2
+## What's Changed
+* Update more tests for condition keys by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3781
+* Update `Fn::FindInMap` resolver to handle `Ref` to psedueparams by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3785
+* Create a new jsonschema keyword `enumCaseInsensitive` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3789
+* Trim comma delimited lists for context by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3790
+* Update [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1029) to support `Definition` in exceptions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3792
+* Allow `5.7`/`8.0` for DB Engine Version by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3796
+* Update CloudFormation schemas to `2024-10-28` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3795
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.1...v1.18.2
+
 ### v1.18.1
 ## What's Changed
 * Fix policy schema condition key patterns by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3779
