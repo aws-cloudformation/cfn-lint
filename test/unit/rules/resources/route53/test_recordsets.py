@@ -383,7 +383,7 @@ def rule():
                     ),
                 ),
                 ValidationError(
-                    "['cname1.example.com', 'foo√bar'] is too long (1)",
+                    "expected maximum item count: 1, found: 2",
                     rule=RecordSet(),
                     path=deque(["ResourceRecords"]),
                     validator="maxItems",

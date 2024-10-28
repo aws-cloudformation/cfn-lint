@@ -110,7 +110,7 @@ def context(cfn):
             },
             [
                 ValidationError(
-                    "['resolve', 'ssm'] is too short (3)",
+                    "expected minimum item count: 3, found: 2",
                     validator="minItems",
                     rule=DynamicReference(),
                 )
@@ -182,10 +182,7 @@ def context(cfn):
             },
             [
                 ValidationError(
-                    "['resolve', 'secretsmanager', 'arn', 'aws', "
-                    "'secretsmanager', 'us-east-1', '012345678901', "
-                    "'secret', 'my-secret', 'SecretString', "
-                    "'', '', '', ''] is too long (13)",
+                    "expected maximum item count: 13, found: 14",
                     validator="maxItems",
                     rule=DynamicReference(),
                 )

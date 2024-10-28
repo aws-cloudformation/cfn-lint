@@ -78,7 +78,7 @@ def context(cfn):
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [
                 ValidationError(
-                    "{} does not have enough properties",
+                    "expected minimum property count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
                     schema_path=deque(["minProperties"]),
                     validator="fn_tojsonstring",
@@ -93,7 +93,7 @@ def context(cfn):
             {"transforms": Transforms(["AWS::LanguageExtensions"])},
             [
                 ValidationError(
-                    "[] is too short (1)",
+                    "expected minimum item count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
                     schema_path=deque(["minItems"]),
                     validator="fn_tojsonstring",

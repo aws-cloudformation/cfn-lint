@@ -189,11 +189,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
             schema_patches=schema_patch,
             expected_errs=[
                 ValidationError(
-                    message=(
-                        "[{'Key': 'Name', 'Value': 'Value'}, "
-                        "{'Key': 'Name', 'Value': 'Value'}] has "
-                        "non-unique elements"
-                    ),
+                    message=("array items are not unique"),
                     path=deque(["Tags"]),
                     validator="uniqueItems",
                     validator_value=True,
@@ -220,11 +216,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
             schema_patches=schema_patch,
             expected_errs=[
                 ValidationError(
-                    message=(
-                        "[{'Key': 'Name', 'Value': 'Value'}, "
-                        "{'Key': 'Name', 'Value': 'Value'}] has "
-                        "non-unique elements"
-                    ),
+                    message=("array items are not unique"),
                     path=deque(["Tags"]),
                     validator="uniqueItems",
                     validator_value=True,
@@ -289,11 +281,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
             schema_patches=schema_patch,
             expected_errs=[
                 ValidationError(
-                    message=(
-                        "[{'Key': 'Name', 'Value': 'Value'}, "
-                        "{'Key': 'Name', 'Value': 'Value'}] has "
-                        "non-unique elements"
-                    ),
+                    message=("array items are not unique"),
                     path=deque(["Tags"]),
                     validator="uniqueItems",
                     validator_value=True,

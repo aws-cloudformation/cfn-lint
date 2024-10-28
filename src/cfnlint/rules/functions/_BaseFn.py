@@ -87,7 +87,7 @@ class BaseFn(CloudFormationLintRule):
         all_errs = []
         for value, v, resolve_err in validator.resolve_value(instance):
             if resolve_err:
-                yield resolve_err
+                yield from self.fix_errors(iter([resolve_err]))
                 continue
             errs = list(
                 self.fix_errors(

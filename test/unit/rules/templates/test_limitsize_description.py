@@ -41,7 +41,7 @@ def rule():
             None,
             [
                 ValidationError(
-                    ("'FooBar' is longer than 3"),
+                    ("expected maximum length: 3, found: 6"),
                 )
             ],
         ),

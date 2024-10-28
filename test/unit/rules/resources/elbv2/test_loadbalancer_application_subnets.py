@@ -40,7 +40,7 @@ def rule():
             {"Subnets": ["SubnetA"]},
             [
                 ValidationError(
-                    ("['SubnetA'] is too short (2)"),
+                    "expected minimum item count: 2, found: 1",
                     rule=LoadBalancerApplicationSubnets(),
                     path=deque(["Subnets"]),
                     validator="minItems",
@@ -55,7 +55,7 @@ def rule():
             },
             [
                 ValidationError(
-                    ("['SubnetA'] is too short (2)"),
+                    "expected minimum item count: 2, found: 1",
                     rule=LoadBalancerApplicationSubnets(),
                     path=deque(["Subnets"]),
                     validator="minItems",

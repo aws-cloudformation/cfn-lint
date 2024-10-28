@@ -63,7 +63,7 @@ def validator(cfn, context):
             {"type": "string"},
             [
                 ValidationError(
-                    "['IsUsEast1', 'foo', 'bar', 'key'] is too long (3)",
+                    "expected maximum item count: 3, found: 4",
                     path=deque(["Fn::If"]),
                     schema_path=deque(["maxItems"]),
                     validator="fn_if",

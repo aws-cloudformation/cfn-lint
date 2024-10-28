@@ -63,7 +63,7 @@ def context(cfn):
             None,
             [
                 ValidationError(
-                    "['foo', 'bar', 'key', 'key2'] is too long (3)",
+                    "expected maximum item count: 3, found: 4",
                     path=deque(["Fn::FindInMap"]),
                     schema_path=deque(["maxItems"]),
                     validator="fn_findinmap",
@@ -164,6 +164,7 @@ def context(cfn):
                     "'C' is not one of ['B'] for mapping 'A'",
                     path=deque(["Fn::FindInMap", 1]),
                     schema_path=deque([]),
+                    validator="fn_findinmap",
                 ),
             ],
         ),

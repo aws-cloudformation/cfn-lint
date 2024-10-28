@@ -532,7 +532,7 @@ def test_validator(name, schema, instance, expected, validator):
             [],
             [
                 ValidationError(
-                    "[] is too short (2)",
+                    "expected minimum item count: 2, found: 0",
                 )
             ],
         ),
@@ -552,11 +552,7 @@ def test_validator(name, schema, instance, expected, validator):
             "maxItems",
             {"maxItems": 0},
             ["foo"],
-            [
-                ValidationError(
-                    "['foo'] is too long (0)",
-                )
-            ],
+            [ValidationError("expected maximum item count: 0, found: 1")],
         ),
         (
             "valid minLength",
@@ -576,7 +572,7 @@ def test_validator(name, schema, instance, expected, validator):
             "",
             [
                 ValidationError(
-                    "'' is shorter than 2",
+                    "expected minimum length: 2, found: 0",
                 )
             ],
         ),
@@ -598,7 +594,7 @@ def test_validator(name, schema, instance, expected, validator):
             "foo",
             [
                 ValidationError(
-                    "'foo' is longer than 0",
+                    "expected maximum length: 0, found: 3",
                 )
             ],
         ),
@@ -768,7 +764,7 @@ def test_validator(name, schema, instance, expected, validator):
             {},
             [
                 ValidationError(
-                    "{} does not have enough properties",
+                    "expected minimum property count: 1, found: 0",
                 )
             ],
         ),
@@ -790,7 +786,7 @@ def test_validator(name, schema, instance, expected, validator):
             {"foo": {}, "bar": {}},
             [
                 ValidationError(
-                    "{'foo': {}, 'bar': {}} has too many properties",
+                    "expected maximum property count: 1, found: 2",
                 )
             ],
         ),
@@ -943,7 +939,7 @@ def test_validator(name, schema, instance, expected, validator):
             [1, 2, "1"],
             [
                 ValidationError(
-                    "[1, 2, '1'] has non-unique elements",
+                    "array items are not unique",
                 )
             ],
         ),
@@ -1035,8 +1031,7 @@ def test_validator(name, schema, instance, expected, validator):
             ],
             [
                 ValidationError(
-                    "[{'Name': 'foo'}, {'Name': 'foo'}] has non-unique "
-                    "elements for keys ['Name']",
+                    "array items are not unique " "for keys ['Name']",
                 )
             ],
         ),
