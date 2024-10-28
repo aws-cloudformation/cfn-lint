@@ -1066,6 +1066,7 @@ cached: list[str] = [
     "aws-msk-vpcconnection.json",
     "aws-mwaa-environment.json",
     "aws-networkfirewall-firewall.json",
+    "aws-networkfirewall-firewallpolicy.json",
     "aws-networkfirewall-loggingconfiguration.json",
     "aws-networkfirewall-rulegroup.json",
     "aws-networkfirewall-tlsinspectionconfiguration.json",

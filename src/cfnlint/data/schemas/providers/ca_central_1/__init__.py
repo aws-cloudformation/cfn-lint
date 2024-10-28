@@ -1812,6 +1812,7 @@ cached: list[str] = [
     "aws-neptune-dbsubnetgroup.json",
     "aws-neptune-eventsubscription.json",
     "aws-networkfirewall-firewall.json",
+    "aws-networkfirewall-firewallpolicy.json",
     "aws-networkfirewall-loggingconfiguration.json",
     "aws-networkfirewall-rulegroup.json",
     "aws-networkfirewall-tlsinspectionconfiguration.json",
