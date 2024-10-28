@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/SseConfig",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EncryptionType": {
+   "enum": [
+    "KMS"
+   ],
+   "type": "string"
+  },
+  "SseConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/EncryptionType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReferenceStoreId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^arn:.+$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "ReferenceStoreId": {
+   "maxLength": 36,
+   "minLength": 10,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "SseConfig": {
+   "$ref": "#/definitions/SseConfig"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationTime",
+  "/properties/ReferenceStoreId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Omics::ReferenceStore",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

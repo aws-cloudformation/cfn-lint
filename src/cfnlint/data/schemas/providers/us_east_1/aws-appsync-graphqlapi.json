@@ -73,7 +73,7 @@
    "additionalProperties": false,
    "properties": {
     "AuthorizerResultTtlInSeconds": {
-     "type": "number"
+     "type": "integer"
     },
     "AuthorizerUri": {
      "type": "string"
@@ -164,7 +164,7 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ApiId"
  ],
  "properties": {
   "AdditionalAuthenticationProviders": {
@@ -172,7 +172,7 @@
     "$ref": "#/definitions/AdditionalAuthenticationProvider"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   },
   "ApiId": {
    "type": "string"
@@ -201,11 +201,13 @@
    "$ref": "#/definitions/EnhancedMetricsConfig"
   },
   "EnvironmentVariables": {
-   "format": "json",
-   "type": [
-    "object",
-    "string"
-   ]
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z]+\\w*$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "GraphQLDns": {
    "type": "string"
@@ -214,9 +216,6 @@
    "type": "string"
   },
   "GraphQLUrl": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "IntrospectionConfig": {
@@ -261,7 +260,7 @@
     "$ref": "#/definitions/Tag"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   },
   "UserPoolConfig": {
    "$ref": "#/definitions/UserPoolConfig"
@@ -279,17 +278,23 @@
  },
  "readOnlyProperties": [
   "/properties/ApiId",
+  "/properties/Arn",
   "/properties/GraphQLEndpointArn",
-  "/properties/Id",
   "/properties/GraphQLDns",
   "/properties/GraphQLUrl",
   "/properties/RealtimeDns",
-  "/properties/RealtimeUrl",
-  "/properties/Arn"
+  "/properties/RealtimeUrl"
  ],
  "required": [
   "Name",
   "AuthenticationType"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::AppSync::GraphQLApi"
 }

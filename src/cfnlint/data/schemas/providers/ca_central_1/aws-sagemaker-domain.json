@@ -1,0 +1,854 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthMode",
+  "/properties/DomainName",
+  "/properties/DomainSettings/RStudioServerProDomainSettings/DefaultResourceSpec",
+  "/properties/KmsKeyId",
+  "/properties/VpcId",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AppLifecycleManagement": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleSettings": {
+     "$ref": "#/definitions/IdleSettings"
+    }
+   },
+   "type": "object"
+  },
+  "AppType": {
+   "enum": [
+    "JupyterServer",
+    "TensorBoard",
+    "RStudioServerPro",
+    "JupyterLab",
+    "CodeEditor",
+    "DetailedProfiler",
+    "Canvas"
+   ],
+   "type": "string"
+  },
+  "CodeEditorAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomImages": {
+     "items": {
+      "$ref": "#/definitions/CustomImage"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    },
+    "LifecycleConfigArns": {
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "CodeRepository": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryUrl": {
+     "maxLength": 256,
+     "pattern": "^https://([.\\-_a-zA-Z0-9]+/?){3,1016}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryUrl"
+   ],
+   "type": "object"
+  },
+  "CustomFileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EFSFileSystemConfig": {
+     "$ref": "#/definitions/EFSFileSystemConfig"
+    }
+   },
+   "type": "object"
+  },
+  "CustomImage": {
+   "additionalProperties": false,
+   "properties": {
+    "AppImageConfigName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+     "type": "string"
+    },
+    "ImageName": {
+     "maxLength": 63,
+     "pattern": "^[a-zA-Z0-9]([-.]?[a-zA-Z0-9]){0,62}$",
+     "type": "string"
+    },
+    "ImageVersionNumber": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AppImageConfigName",
+    "ImageName"
+   ],
+   "type": "object"
+  },
+  "CustomPosixUserConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "maximum": 4000000,
+     "minimum": 1001,
+     "type": "integer"
+    },
+    "Uid": {
+     "maximum": 4000000,
+     "minimum": 10000,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Uid",
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "DefaultEbsStorageSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultEbsVolumeSizeInGb": {
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb"
+    },
+    "MaximumEbsVolumeSizeInGb": {
+     "$ref": "#/definitions/SpaceEbsVolumeSizeInGb"
+    }
+   },
+   "required": [
+    "DefaultEbsVolumeSizeInGb",
+    "MaximumEbsVolumeSizeInGb"
+   ],
+   "type": "object"
+  },
+  "DefaultSpaceSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomFileSystemConfigs": {
+     "items": {
+      "$ref": "#/definitions/CustomFileSystemConfig"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CustomPosixUserConfig": {
+     "$ref": "#/definitions/CustomPosixUserConfig"
+    },
+    "ExecutionRole": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/JupyterLabAppSettings"
+    },
+    "JupyterServerAppSettings": {
+     "$ref": "#/definitions/JupyterServerAppSettings"
+    },
+    "KernelGatewayAppSettings": {
+     "$ref": "#/definitions/KernelGatewayAppSettings"
+    },
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/DefaultSpaceStorageSettings"
+    }
+   },
+   "required": [
+    "ExecutionRole"
+   ],
+   "type": "object"
+  },
+  "DefaultSpaceStorageSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultEbsStorageSettings": {
+     "$ref": "#/definitions/DefaultEbsStorageSettings"
+    }
+   },
+   "type": "object"
+  },
+  "DockerSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableDockerAccess": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "VpcOnlyTrustedAccounts": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 12,
+      "minLength": 12,
+      "pattern": "^\\d+$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DomainSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DockerSettings": {
+     "$ref": "#/definitions/DockerSettings"
+    },
+    "RStudioServerProDomainSettings": {
+     "$ref": "#/definitions/RStudioServerProDomainSettings"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "EFSFileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "maxLength": 21,
+     "minLength": 11,
+     "pattern": "^(fs-[0-9a-f]{8,})$",
+     "type": "string"
+    },
+    "FileSystemPath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\/\\S*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId"
+   ],
+   "type": "object"
+  },
+  "IdleSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "IdleTimeoutInMinutes": {
+     "$ref": "#/definitions/IdleTimeoutInMinutes"
+    },
+    "LifecycleManagement": {
+     "$ref": "#/definitions/LifecycleManagement"
+    },
+    "MaxIdleTimeoutInMinutes": {
+     "$ref": "#/definitions/MaxIdleTimeoutInMinutes"
+    },
+    "MinIdleTimeoutInMinutes": {
+     "$ref": "#/definitions/MinIdleTimeoutInMinutes"
+    }
+   },
+   "type": "object"
+  },
+  "IdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "JupyterLabAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeRepositories": {
+     "items": {
+      "$ref": "#/definitions/CodeRepository"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CustomImages": {
+     "items": {
+      "$ref": "#/definitions/CustomImage"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    },
+    "LifecycleConfigArns": {
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "JupyterServerAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    },
+    "LifecycleConfigArns": {
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "KernelGatewayAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomImages": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CustomImage"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    },
+    "LifecycleConfigArns": {
+     "items": {
+      "$ref": "#/definitions/StudioLifecycleConfigArn"
+     },
+     "maxItems": 30,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "LifecycleManagement": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "MaxIdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "MinIdleTimeoutInMinutes": {
+   "maximum": 525600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "MlTools": {
+   "enum": [
+    "DataWrangler",
+    "FeatureStore",
+    "EmrClusters",
+    "AutoMl",
+    "Experiments",
+    "Training",
+    "ModelEvaluation",
+    "Pipelines",
+    "Models",
+    "JumpStart",
+    "InferenceRecommender",
+    "Endpoints",
+    "Projects",
+    "InferenceOptimization"
+   ],
+   "type": "string"
+  },
+  "RSessionAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomImages": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/CustomImage"
+     },
+     "maxItems": 200,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    }
+   },
+   "type": "object"
+  },
+  "RStudioServerProAppSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessStatus": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "UserGroup": {
+     "enum": [
+      "R_STUDIO_ADMIN",
+      "R_STUDIO_USER"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RStudioServerProDomainSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultResourceSpec": {
+     "$ref": "#/definitions/ResourceSpec"
+    },
+    "DomainExecutionRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    },
+    "RStudioConnectUrl": {
+     "pattern": "^(https:|http:|www\\.)\\S*",
+     "type": "string"
+    },
+    "RStudioPackageManagerUrl": {
+     "pattern": "^(https:|http:|www\\.)\\S*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DomainExecutionRoleArn"
+   ],
+   "type": "object"
+  },
+  "ResourceSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceType": {
+     "enum": [
+      "system",
+      "ml.t3.micro",
+      "ml.t3.small",
+      "ml.t3.medium",
+      "ml.t3.large",
+      "ml.t3.xlarge",
+      "ml.t3.2xlarge",
+      "ml.m5.large",
+      "ml.m5.xlarge",
+      "ml.m5.2xlarge",
+      "ml.m5.4xlarge",
+      "ml.m5.8xlarge",
+      "ml.m5.12xlarge",
+      "ml.m5.16xlarge",
+      "ml.m5.24xlarge",
+      "ml.c5.large",
+      "ml.c5.xlarge",
+      "ml.c5.2xlarge",
+      "ml.c5.4xlarge",
+      "ml.c5.9xlarge",
+      "ml.c5.12xlarge",
+      "ml.c5.18xlarge",
+      "ml.c5.24xlarge",
+      "ml.p3.2xlarge",
+      "ml.p3.8xlarge",
+      "ml.p3.16xlarge",
+      "ml.g4dn.xlarge",
+      "ml.g4dn.2xlarge",
+      "ml.g4dn.4xlarge",
+      "ml.g4dn.8xlarge",
+      "ml.g4dn.12xlarge",
+      "ml.g4dn.16xlarge",
+      "ml.r5.large",
+      "ml.r5.xlarge",
+      "ml.r5.2xlarge",
+      "ml.r5.4xlarge",
+      "ml.r5.8xlarge",
+      "ml.r5.12xlarge",
+      "ml.r5.16xlarge",
+      "ml.r5.24xlarge",
+      "ml.p3dn.24xlarge",
+      "ml.m5d.large",
+      "ml.m5d.xlarge",
+      "ml.m5d.2xlarge",
+      "ml.m5d.4xlarge",
+      "ml.m5d.8xlarge",
+      "ml.m5d.12xlarge",
+      "ml.m5d.16xlarge",
+      "ml.m5d.24xlarge",
+      "ml.g5.xlarge",
+      "ml.g5.2xlarge",
+      "ml.g5.4xlarge",
+      "ml.g5.8xlarge",
+      "ml.g5.12xlarge",
+      "ml.g5.16xlarge",
+      "ml.g5.24xlarge",
+      "ml.g5.48xlarge",
+      "ml.p4d.24xlarge",
+      "ml.p4de.24xlarge",
+      "ml.geospatial.interactive",
+      "ml.trn1.2xlarge",
+      "ml.trn1.32xlarge",
+      "ml.trn1n.32xlarge"
+     ],
+     "type": "string"
+    },
+    "LifecycleConfigArn": {
+     "maxLength": 256,
+     "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
+     "type": "string"
+    },
+    "SageMakerImageArn": {
+     "maxLength": 256,
+     "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$",
+     "type": "string"
+    },
+    "SageMakerImageVersionArn": {
+     "maxLength": 256,
+     "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SharingSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "NotebookOutputOption": {
+     "enum": [
+      "Allowed",
+      "Disabled"
+     ],
+     "type": "string"
+    },
+    "S3KmsKeyId": {
+     "maxLength": 2048,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "S3OutputPath": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SpaceEbsVolumeSizeInGb": {
+   "maximum": 16384,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "StudioLifecycleConfigArn": {
+   "maxLength": 256,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
+   "type": "string"
+  },
+  "StudioWebPortalSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "HiddenAppTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AppType"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "HiddenMlTools": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MlTools"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UserSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeEditorAppSettings": {
+     "$ref": "#/definitions/CodeEditorAppSettings"
+    },
+    "CustomFileSystemConfigs": {
+     "items": {
+      "$ref": "#/definitions/CustomFileSystemConfig"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CustomPosixUserConfig": {
+     "$ref": "#/definitions/CustomPosixUserConfig"
+    },
+    "DefaultLandingUri": {
+     "maxLength": 1023,
+     "type": "string"
+    },
+    "ExecutionRole": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+     "type": "string"
+    },
+    "JupyterLabAppSettings": {
+     "$ref": "#/definitions/JupyterLabAppSettings"
+    },
+    "JupyterServerAppSettings": {
+     "$ref": "#/definitions/JupyterServerAppSettings"
+    },
+    "KernelGatewayAppSettings": {
+     "$ref": "#/definitions/KernelGatewayAppSettings"
+    },
+    "RSessionAppSettings": {
+     "$ref": "#/definitions/RSessionAppSettings"
+    },
+    "RStudioServerProAppSettings": {
+     "$ref": "#/definitions/RStudioServerProAppSettings"
+    },
+    "SecurityGroups": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SharingSettings": {
+     "$ref": "#/definitions/SharingSettings"
+    },
+    "SpaceStorageSettings": {
+     "$ref": "#/definitions/DefaultSpaceStorageSettings"
+    },
+    "StudioWebPortal": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "StudioWebPortalSettings": {
+     "$ref": "#/definitions/StudioWebPortalSettings"
+    }
+   },
+   "required": [
+    "ExecutionRole"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId"
+ ],
+ "properties": {
+  "AppNetworkAccessType": {
+   "enum": [
+    "PublicInternetOnly",
+    "VpcOnly"
+   ],
+   "type": "string"
+  },
+  "AppSecurityGroupManagement": {
+   "enum": [
+    "Service",
+    "Customer"
+   ],
+   "type": "string"
+  },
+  "AuthMode": {
+   "enum": [
+    "SSO",
+    "IAM"
+   ],
+   "type": "string"
+  },
+  "DefaultSpaceSettings": {
+   "$ref": "#/definitions/DefaultSpaceSettings"
+  },
+  "DefaultUserSettings": {
+   "$ref": "#/definitions/UserSettings"
+  },
+  "DomainArn": {
+   "maxLength": 256,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:domain/.*",
+   "type": "string"
+  },
+  "DomainId": {
+   "maxLength": 63,
+   "pattern": "^d-(-*[a-z0-9])+",
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+   "type": "string"
+  },
+  "DomainSettings": {
+   "$ref": "#/definitions/DomainSettings"
+  },
+  "HomeEfsFileSystemId": {
+   "maxLength": 32,
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "SecurityGroupIdForDomainBoundary": {
+   "maxLength": 32,
+   "pattern": "[-0-9a-zA-Z]+",
+   "type": "string"
+  },
+  "SingleSignOnApplicationArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::[0-9]+:application/[a-zA-Z0-9-_.]+/apl-[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "SingleSignOnManagedApplicationInstanceId": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 32,
+    "pattern": "[-0-9a-zA-Z]+",
+    "type": "string"
+   },
+   "maxItems": 16,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Url": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 32,
+   "pattern": "[-0-9a-zA-Z]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainArn",
+  "/properties/Url",
+  "/properties/DomainId",
+  "/properties/HomeEfsFileSystemId",
+  "/properties/SecurityGroupIdForDomainBoundary",
+  "/properties/SingleSignOnManagedApplicationInstanceId",
+  "/properties/SingleSignOnApplicationArn"
+ ],
+ "required": [
+  "AuthMode",
+  "DefaultUserSettings",
+  "DomainName",
+  "SubnetIds",
+  "VpcId"
+ ],
+ "typeName": "AWS::SageMaker::Domain",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

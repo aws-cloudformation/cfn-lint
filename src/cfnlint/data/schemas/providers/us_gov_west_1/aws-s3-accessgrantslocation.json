@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessGrantsLocationId"
+ ],
+ "properties": {
+  "AccessGrantsLocationArn": {
+   "examples": [
+    "arn:aws:s3:us-east-2:479290226168:access-grants/default/location/125f332b-a499-4eb6-806f-8a6a1aa4cb96"
+   ],
+   "type": "string"
+  },
+  "AccessGrantsLocationId": {
+   "type": "string"
+  },
+  "IamRoleArn": {
+   "examples": [
+    "arn:aws:iamw::123456789012:role/rolename"
+   ],
+   "type": "string"
+  },
+  "LocationScope": {
+   "examples": [
+    "s3://test-bucket-access-grants-cmh/prefixA"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessGrantsLocationArn",
+  "/properties/AccessGrantsLocationId"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3",
+ "tagging": {
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::AccessGrantsLocation",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

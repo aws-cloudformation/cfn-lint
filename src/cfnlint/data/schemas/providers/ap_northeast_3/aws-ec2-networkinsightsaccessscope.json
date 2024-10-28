@@ -1,0 +1,201 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/NetworkInsightsAccessScopeArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MatchPaths",
+  "/properties/ExcludePaths"
+ ],
+ "definitions": {
+  "AccessScopePathRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/PathStatementRequest"
+    },
+    "Source": {
+     "$ref": "#/definitions/PathStatementRequest"
+    },
+    "ThroughResources": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ThroughResourcesStatementRequest"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "PacketHeaderStatementRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationAddresses": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DestinationPorts": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DestinationPrefixLists": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Protocols": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Protocol"
+     },
+     "type": "array"
+    },
+    "SourceAddresses": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SourcePorts": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SourcePrefixLists": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "PathStatementRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "PacketHeaderStatement": {
+     "$ref": "#/definitions/PacketHeaderStatementRequest"
+    },
+    "ResourceStatement": {
+     "$ref": "#/definitions/ResourceStatementRequest"
+    }
+   },
+   "type": "object"
+  },
+  "Protocol": {
+   "enum": [
+    "tcp",
+    "udp"
+   ],
+   "type": "string"
+  },
+  "ResourceStatementRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Resources": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThroughResourcesStatementRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceStatement": {
+     "$ref": "#/definitions/ResourceStatementRequest"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NetworkInsightsAccessScopeId"
+ ],
+ "properties": {
+  "CreatedDate": {
+   "type": "string"
+  },
+  "ExcludePaths": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AccessScopePathRequest"
+   },
+   "type": "array"
+  },
+  "MatchPaths": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AccessScopePathRequest"
+   },
+   "type": "array"
+  },
+  "NetworkInsightsAccessScopeArn": {
+   "type": "string"
+  },
+  "NetworkInsightsAccessScopeId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "UpdatedDate": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInsightsAccessScopeId",
+  "/properties/NetworkInsightsAccessScopeArn",
+  "/properties/CreatedDate",
+  "/properties/UpdatedDate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
+ "typeName": "AWS::EC2::NetworkInsightsAccessScope",
+ "writeOnlyProperties": [
+  "/properties/MatchPaths",
+  "/properties/ExcludePaths"
+ ]
+}

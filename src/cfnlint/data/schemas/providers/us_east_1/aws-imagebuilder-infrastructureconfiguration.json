@@ -29,6 +29,29 @@
    },
    "type": "object"
   },
+  "Placement": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "HostId": {
+     "type": "string"
+    },
+    "HostResourceGroupArn": {
+     "type": "string"
+    },
+    "Tenancy": {
+     "enum": [
+      "default",
+      "dedicated",
+      "host"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "S3Logs": {
    "additionalProperties": false,
    "properties": {
@@ -91,6 +114,9 @@
   "Name": {
    "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
    "type": "string"
+  },
+  "Placement": {
+   "$ref": "#/definitions/Placement"
   },
   "ResourceTags": {
    "additionalProperties": false,

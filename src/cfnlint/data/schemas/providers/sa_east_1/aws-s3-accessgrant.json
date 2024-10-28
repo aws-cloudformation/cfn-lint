@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/S3PrefixType",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AccessGrantArn": {
+   "type": "string"
+  },
+  "AccessGrantsLocationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3SubPrefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3SubPrefix"
+   ],
+   "type": "object"
+  },
+  "Grantee": {
+   "additionalProperties": false,
+   "properties": {
+    "GranteeIdentifier": {
+     "type": "string"
+    },
+    "GranteeType": {
+     "enum": [
+      "IAM",
+      "DIRECTORY_USER",
+      "DIRECTORY_GROUP"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "GranteeType",
+    "GranteeIdentifier"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessGrantId"
+ ],
+ "properties": {
+  "AccessGrantArn": {
+   "$ref": "#/definitions/AccessGrantArn",
+   "examples": [
+    "arn:aws:s3:us-east-2:111122223333:access-grants/default/grant/7c89cbd1-0f4e-40e3-861d-afb906952b77"
+   ]
+  },
+  "AccessGrantId": {
+   "examples": [
+    "7c89cbd1-0f4e-40e3-861d-afb906952b77"
+   ],
+   "type": "string"
+  },
+  "AccessGrantsLocationConfiguration": {
+   "$ref": "#/definitions/AccessGrantsLocationConfiguration"
+  },
+  "AccessGrantsLocationId": {
+   "examples": [
+    "125f332b-a499-4eb6-806f-8a6a1aa4cb96"
+   ],
+   "type": "string"
+  },
+  "ApplicationArn": {
+   "type": "string"
+  },
+  "GrantScope": {
+   "type": "string"
+  },
+  "Grantee": {
+   "$ref": "#/definitions/Grantee"
+  },
+  "Permission": {
+   "enum": [
+    "READ",
+    "WRITE",
+    "READWRITE"
+   ],
+   "type": "string"
+  },
+  "S3PrefixType": {
+   "enum": [
+    "Object"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessGrantId",
+  "/properties/AccessGrantArn",
+  "/properties/GrantScope"
+ ],
+ "required": [
+  "Grantee",
+  "Permission",
+  "AccessGrantsLocationId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3",
+ "tagging": {
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::AccessGrant",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/S3PrefixType"
+ ]
+}

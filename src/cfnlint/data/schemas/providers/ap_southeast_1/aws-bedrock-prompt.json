@@ -1,0 +1,262 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "PromptInferenceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/PromptModelInferenceConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInputVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PromptModelInferenceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopK": {
+     "maximum": 500,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "PromptTemplateConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/TextPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptTemplateType": {
+   "enum": [
+    "TEXT"
+   ],
+   "type": "string"
+  },
+  "PromptVariant": {
+   "additionalProperties": false,
+   "properties": {
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "ModelId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}/[a-z0-9]{12})|(:foundation-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|([0-9]{12}:provisioned-model/[a-z0-9]{12})))|([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|(([0-9a-zA-Z][_-]?)+)$",
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/PromptTemplateConfiguration"
+    },
+    "TemplateType": {
+     "$ref": "#/definitions/PromptTemplateType"
+    }
+   },
+   "required": [
+    "Name",
+    "TemplateType"
+   ],
+   "type": "object"
+  },
+  "TagsMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputVariables": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Text": {
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TextS3Location": {
+     "$ref": "#/definitions/TextS3Location"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "TextS3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "Key": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "DefaultVariant": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagsMap"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Variants": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptVariant"
+   },
+   "maxItems": 3,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Version": {
+   "maxLength": 5,
+   "minLength": 5,
+   "pattern": "^DRAFT$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/UpdatedAt",
+  "/properties/Version"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Prompt",
+ "writeOnlyProperties": [
+  "/properties/Variants/*/TemplateConfiguration/Text/TextS3Location"
+ ]
+}
