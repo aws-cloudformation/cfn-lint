@@ -74,6 +74,15 @@ def write_db_cluster(results):
     for engine in engines:
         if not results.get(engine):
             continue
+
+        engine_versions = sorted(results.get(engine))
+        if engine == "aurora-mysql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = ".".join(engine_version.split(".")[0:2])
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
+
         schema["allOf"].append(
             {
                 "if": {
@@ -85,11 +94,7 @@ def write_db_cluster(results):
                     },
                     "required": ["Engine", "EngineVersion"],
                 },
-                "then": {
-                    "properties": {
-                        "EngineVersion": {"enum": sorted(results.get(engine))}
-                    }
-                },
+                "then": {"properties": {"EngineVersion": {"enum": engine_versions}}},
             }
         )
 
@@ -145,6 +150,14 @@ def write_db_instance(results):
     for engine in engines:
         if not results.get(engine):
             continue
+
+        engine_versions = sorted(results.get(engine))
+        if engine == "aurora-mysql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = ".".join(engine_version.split(".")[0:2])
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
         schema["allOf"].append(
             {
                 "if": {
@@ -159,9 +172,7 @@ def write_db_instance(results):
                     "required": ["Engine", "EngineVersion"],
                 },
                 "then": {
-                    "properties": {
-                        "EngineVersion": {"enum": sorted(results.get(engine))}
-                    }
+                    "properties": {"EngineVersion": {"enum": sorted(engine_versions)}}
                 },
             }
         )
