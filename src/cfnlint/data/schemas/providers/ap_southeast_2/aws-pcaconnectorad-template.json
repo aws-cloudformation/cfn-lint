@@ -1,0 +1,994 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectorArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ApplicationPolicies": {
+   "additionalProperties": false,
+   "properties": {
+    "Critical": {
+     "type": "boolean"
+    },
+    "Policies": {
+     "items": {
+      "$ref": "#/definitions/ApplicationPolicy"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Policies"
+   ],
+   "type": "object"
+  },
+  "ApplicationPolicy": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PolicyType": {
+       "$ref": "#/definitions/ApplicationPolicyType"
+      }
+     },
+     "required": [
+      "PolicyType"
+     ],
+     "title": "PolicyType",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PolicyObjectIdentifier": {
+       "maxLength": 64,
+       "minLength": 1,
+       "pattern": "^([0-2])\\.([0-9]|([0-3][0-9]))(\\.([0-9]+)){0,126}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "PolicyObjectIdentifier"
+     ],
+     "title": "PolicyObjectIdentifier",
+     "type": "object"
+    }
+   ]
+  },
+  "ApplicationPolicyType": {
+   "enum": [
+    "ALL_APPLICATION_POLICIES",
+    "ANY_PURPOSE",
+    "ATTESTATION_IDENTITY_KEY_CERTIFICATE",
+    "CERTIFICATE_REQUEST_AGENT",
+    "CLIENT_AUTHENTICATION",
+    "CODE_SIGNING",
+    "CTL_USAGE",
+    "DIGITAL_RIGHTS",
+    "DIRECTORY_SERVICE_EMAIL_REPLICATION",
+    "DISALLOWED_LIST",
+    "DNS_SERVER_TRUST",
+    "DOCUMENT_ENCRYPTION",
+    "DOCUMENT_SIGNING",
+    "DYNAMIC_CODE_GENERATOR",
+    "EARLY_LAUNCH_ANTIMALWARE_DRIVER",
+    "EMBEDDED_WINDOWS_SYSTEM_COMPONENT_VERIFICATION",
+    "ENCLAVE",
+    "ENCRYPTING_FILE_SYSTEM",
+    "ENDORSEMENT_KEY_CERTIFICATE",
+    "FILE_RECOVERY",
+    "HAL_EXTENSION",
+    "IP_SECURITY_END_SYSTEM",
+    "IP_SECURITY_IKE_INTERMEDIATE",
+    "IP_SECURITY_TUNNEL_TERMINATION",
+    "IP_SECURITY_USER",
+    "ISOLATED_USER_MODE",
+    "KDC_AUTHENTICATION",
+    "KERNEL_MODE_CODE_SIGNING",
+    "KEY_PACK_LICENSES",
+    "KEY_RECOVERY",
+    "KEY_RECOVERY_AGENT",
+    "LICENSE_SERVER_VERIFICATION",
+    "LIFETIME_SIGNING",
+    "MICROSOFT_PUBLISHER",
+    "MICROSOFT_TIME_STAMPING",
+    "MICROSOFT_TRUST_LIST_SIGNING",
+    "OCSP_SIGNING",
+    "OEM_WINDOWS_SYSTEM_COMPONENT_VERIFICATION",
+    "PLATFORM_CERTIFICATE",
+    "PREVIEW_BUILD_SIGNING",
+    "PRIVATE_KEY_ARCHIVAL",
+    "PROTECTED_PROCESS_LIGHT_VERIFICATION",
+    "PROTECTED_PROCESS_VERIFICATION",
+    "QUALIFIED_SUBORDINATION",
+    "REVOKED_LIST_SIGNER",
+    "ROOT_PROGRAM_AUTO_UPDATE_CA_REVOCATION",
+    "ROOT_PROGRAM_AUTO_UPDATE_END_REVOCATION",
+    "ROOT_PROGRAM_NO_OSCP_FAILOVER_TO_CRL",
+    "ROOT_LIST_SIGNER",
+    "SECURE_EMAIL",
+    "SERVER_AUTHENTICATION",
+    "SMART_CARD_LOGIN",
+    "SPC_ENCRYPTED_DIGEST_RETRY_COUNT",
+    "SPC_RELAXED_PE_MARKER_CHECK",
+    "TIME_STAMPING",
+    "WINDOWS_HARDWARE_DRIVER_ATTESTED_VERIFICATION",
+    "WINDOWS_HARDWARE_DRIVER_EXTENDED_VERIFICATION",
+    "WINDOWS_HARDWARE_DRIVER_VERIFICATION",
+    "WINDOWS_HELLO_RECOVERY_KEY_ENCRYPTION",
+    "WINDOWS_KITS_COMPONENT",
+    "WINDOWS_RT_VERIFICATION",
+    "WINDOWS_SOFTWARE_EXTENSION_VERIFICATION",
+    "WINDOWS_STORE",
+    "WINDOWS_SYSTEM_COMPONENT_VERIFICATION",
+    "WINDOWS_TCB_COMPONENT",
+    "WINDOWS_THIRD_PARTY_APPLICATION_COMPONENT",
+    "WINDOWS_UPDATE"
+   ],
+   "type": "string"
+  },
+  "CertificateValidity": {
+   "additionalProperties": false,
+   "properties": {
+    "RenewalPeriod": {
+     "$ref": "#/definitions/ValidityPeriod"
+    },
+    "ValidityPeriod": {
+     "$ref": "#/definitions/ValidityPeriod"
+    }
+   },
+   "required": [
+    "RenewalPeriod",
+    "ValidityPeriod"
+   ],
+   "type": "object"
+  },
+  "ClientCompatibilityV2": {
+   "enum": [
+    "WINDOWS_SERVER_2003",
+    "WINDOWS_SERVER_2008",
+    "WINDOWS_SERVER_2008_R2",
+    "WINDOWS_SERVER_2012",
+    "WINDOWS_SERVER_2012_R2",
+    "WINDOWS_SERVER_2016"
+   ],
+   "type": "string"
+  },
+  "ClientCompatibilityV3": {
+   "enum": [
+    "WINDOWS_SERVER_2008",
+    "WINDOWS_SERVER_2008_R2",
+    "WINDOWS_SERVER_2012",
+    "WINDOWS_SERVER_2012_R2",
+    "WINDOWS_SERVER_2016"
+   ],
+   "type": "string"
+  },
+  "ClientCompatibilityV4": {
+   "enum": [
+    "WINDOWS_SERVER_2012",
+    "WINDOWS_SERVER_2012_R2",
+    "WINDOWS_SERVER_2016"
+   ],
+   "type": "string"
+  },
+  "EnrollmentFlagsV2": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableKeyReuseOnNtTokenKeysetStorageFull": {
+     "type": "boolean"
+    },
+    "IncludeSymmetricAlgorithms": {
+     "type": "boolean"
+    },
+    "NoSecurityExtension": {
+     "type": "boolean"
+    },
+    "RemoveInvalidCertificateFromPersonalStore": {
+     "type": "boolean"
+    },
+    "UserInteractionRequired": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EnrollmentFlagsV3": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableKeyReuseOnNtTokenKeysetStorageFull": {
+     "type": "boolean"
+    },
+    "IncludeSymmetricAlgorithms": {
+     "type": "boolean"
+    },
+    "NoSecurityExtension": {
+     "type": "boolean"
+    },
+    "RemoveInvalidCertificateFromPersonalStore": {
+     "type": "boolean"
+    },
+    "UserInteractionRequired": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EnrollmentFlagsV4": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableKeyReuseOnNtTokenKeysetStorageFull": {
+     "type": "boolean"
+    },
+    "IncludeSymmetricAlgorithms": {
+     "type": "boolean"
+    },
+    "NoSecurityExtension": {
+     "type": "boolean"
+    },
+    "RemoveInvalidCertificateFromPersonalStore": {
+     "type": "boolean"
+    },
+    "UserInteractionRequired": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ExtensionsV2": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationPolicies": {
+     "$ref": "#/definitions/ApplicationPolicies"
+    },
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    }
+   },
+   "required": [
+    "KeyUsage"
+   ],
+   "type": "object"
+  },
+  "ExtensionsV3": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationPolicies": {
+     "$ref": "#/definitions/ApplicationPolicies"
+    },
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    }
+   },
+   "required": [
+    "KeyUsage"
+   ],
+   "type": "object"
+  },
+  "ExtensionsV4": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationPolicies": {
+     "$ref": "#/definitions/ApplicationPolicies"
+    },
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    }
+   },
+   "required": [
+    "KeyUsage"
+   ],
+   "type": "object"
+  },
+  "GeneralFlagsV2": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoEnrollment": {
+     "type": "boolean"
+    },
+    "MachineType": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "GeneralFlagsV3": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoEnrollment": {
+     "type": "boolean"
+    },
+    "MachineType": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "GeneralFlagsV4": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoEnrollment": {
+     "type": "boolean"
+    },
+    "MachineType": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HashAlgorithm": {
+   "enum": [
+    "SHA256",
+    "SHA384",
+    "SHA512"
+   ],
+   "type": "string"
+  },
+  "KeySpec": {
+   "enum": [
+    "KEY_EXCHANGE",
+    "SIGNATURE"
+   ],
+   "type": "string"
+  },
+  "KeyUsage": {
+   "additionalProperties": false,
+   "properties": {
+    "Critical": {
+     "type": "boolean"
+    },
+    "UsageFlags": {
+     "$ref": "#/definitions/KeyUsageFlags"
+    }
+   },
+   "required": [
+    "UsageFlags"
+   ],
+   "type": "object"
+  },
+  "KeyUsageFlags": {
+   "additionalProperties": false,
+   "properties": {
+    "DataEncipherment": {
+     "type": "boolean"
+    },
+    "DigitalSignature": {
+     "type": "boolean"
+    },
+    "KeyAgreement": {
+     "type": "boolean"
+    },
+    "KeyEncipherment": {
+     "type": "boolean"
+    },
+    "NonRepudiation": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "KeyUsageProperty": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PropertyType": {
+       "$ref": "#/definitions/KeyUsagePropertyType"
+      }
+     },
+     "required": [
+      "PropertyType"
+     ],
+     "title": "PropertyType",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PropertyFlags": {
+       "$ref": "#/definitions/KeyUsagePropertyFlags"
+      }
+     },
+     "required": [
+      "PropertyFlags"
+     ],
+     "title": "PropertyFlags",
+     "type": "object"
+    }
+   ]
+  },
+  "KeyUsagePropertyFlags": {
+   "additionalProperties": false,
+   "properties": {
+    "Decrypt": {
+     "type": "boolean"
+    },
+    "KeyAgreement": {
+     "type": "boolean"
+    },
+    "Sign": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "KeyUsagePropertyType": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "PrivateKeyAlgorithm": {
+   "enum": [
+    "RSA",
+    "ECDH_P256",
+    "ECDH_P384",
+    "ECDH_P521"
+   ],
+   "type": "string"
+  },
+  "PrivateKeyAttributesV2": {
+   "additionalProperties": false,
+   "properties": {
+    "CryptoProviders": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KeySpec": {
+     "$ref": "#/definitions/KeySpec"
+    },
+    "MinimalKeyLength": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "KeySpec",
+    "MinimalKeyLength"
+   ],
+   "type": "object"
+  },
+  "PrivateKeyAttributesV3": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "$ref": "#/definitions/PrivateKeyAlgorithm"
+    },
+    "CryptoProviders": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KeySpec": {
+     "$ref": "#/definitions/KeySpec"
+    },
+    "KeyUsageProperty": {
+     "$ref": "#/definitions/KeyUsageProperty"
+    },
+    "MinimalKeyLength": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Algorithm",
+    "KeySpec",
+    "KeyUsageProperty",
+    "MinimalKeyLength"
+   ],
+   "type": "object"
+  },
+  "PrivateKeyAttributesV4": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "$ref": "#/definitions/PrivateKeyAlgorithm"
+    },
+    "CryptoProviders": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KeySpec": {
+     "$ref": "#/definitions/KeySpec"
+    },
+    "KeyUsageProperty": {
+     "$ref": "#/definitions/KeyUsageProperty"
+    },
+    "MinimalKeyLength": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "KeySpec",
+    "MinimalKeyLength"
+   ],
+   "type": "object"
+  },
+  "PrivateKeyFlagsV2": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientVersion": {
+     "$ref": "#/definitions/ClientCompatibilityV2"
+    },
+    "ExportableKey": {
+     "type": "boolean"
+    },
+    "StrongKeyProtectionRequired": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ClientVersion"
+   ],
+   "type": "object"
+  },
+  "PrivateKeyFlagsV3": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientVersion": {
+     "$ref": "#/definitions/ClientCompatibilityV3"
+    },
+    "ExportableKey": {
+     "type": "boolean"
+    },
+    "RequireAlternateSignatureAlgorithm": {
+     "type": "boolean"
+    },
+    "StrongKeyProtectionRequired": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ClientVersion"
+   ],
+   "type": "object"
+  },
+  "PrivateKeyFlagsV4": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientVersion": {
+     "$ref": "#/definitions/ClientCompatibilityV4"
+    },
+    "ExportableKey": {
+     "type": "boolean"
+    },
+    "RequireAlternateSignatureAlgorithm": {
+     "type": "boolean"
+    },
+    "RequireSameKeyRenewal": {
+     "type": "boolean"
+    },
+    "StrongKeyProtectionRequired": {
+     "type": "boolean"
+    },
+    "UseLegacyProvider": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ClientVersion"
+   ],
+   "type": "object"
+  },
+  "SubjectNameFlagsV2": {
+   "additionalProperties": false,
+   "properties": {
+    "RequireCommonName": {
+     "type": "boolean"
+    },
+    "RequireDirectoryPath": {
+     "type": "boolean"
+    },
+    "RequireDnsAsCn": {
+     "type": "boolean"
+    },
+    "RequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireDirectoryGuid": {
+     "type": "boolean"
+    },
+    "SanRequireDns": {
+     "type": "boolean"
+    },
+    "SanRequireDomainDns": {
+     "type": "boolean"
+    },
+    "SanRequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireSpn": {
+     "type": "boolean"
+    },
+    "SanRequireUpn": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SubjectNameFlagsV3": {
+   "additionalProperties": false,
+   "properties": {
+    "RequireCommonName": {
+     "type": "boolean"
+    },
+    "RequireDirectoryPath": {
+     "type": "boolean"
+    },
+    "RequireDnsAsCn": {
+     "type": "boolean"
+    },
+    "RequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireDirectoryGuid": {
+     "type": "boolean"
+    },
+    "SanRequireDns": {
+     "type": "boolean"
+    },
+    "SanRequireDomainDns": {
+     "type": "boolean"
+    },
+    "SanRequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireSpn": {
+     "type": "boolean"
+    },
+    "SanRequireUpn": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SubjectNameFlagsV4": {
+   "additionalProperties": false,
+   "properties": {
+    "RequireCommonName": {
+     "type": "boolean"
+    },
+    "RequireDirectoryPath": {
+     "type": "boolean"
+    },
+    "RequireDnsAsCn": {
+     "type": "boolean"
+    },
+    "RequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireDirectoryGuid": {
+     "type": "boolean"
+    },
+    "SanRequireDns": {
+     "type": "boolean"
+    },
+    "SanRequireDomainDns": {
+     "type": "boolean"
+    },
+    "SanRequireEmail": {
+     "type": "boolean"
+    },
+    "SanRequireSpn": {
+     "type": "boolean"
+    },
+    "SanRequireUpn": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TemplateDefinition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TemplateV2": {
+       "$ref": "#/definitions/TemplateV2"
+      }
+     },
+     "required": [
+      "TemplateV2"
+     ],
+     "title": "TemplateV2",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TemplateV3": {
+       "$ref": "#/definitions/TemplateV3"
+      }
+     },
+     "required": [
+      "TemplateV3"
+     ],
+     "title": "TemplateV3",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TemplateV4": {
+       "$ref": "#/definitions/TemplateV4"
+      }
+     },
+     "required": [
+      "TemplateV4"
+     ],
+     "title": "TemplateV4",
+     "type": "object"
+    }
+   ]
+  },
+  "TemplateV2": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateValidity": {
+     "$ref": "#/definitions/CertificateValidity"
+    },
+    "EnrollmentFlags": {
+     "$ref": "#/definitions/EnrollmentFlagsV2"
+    },
+    "Extensions": {
+     "$ref": "#/definitions/ExtensionsV2"
+    },
+    "GeneralFlags": {
+     "$ref": "#/definitions/GeneralFlagsV2"
+    },
+    "PrivateKeyAttributes": {
+     "$ref": "#/definitions/PrivateKeyAttributesV2"
+    },
+    "PrivateKeyFlags": {
+     "$ref": "#/definitions/PrivateKeyFlagsV2"
+    },
+    "SubjectNameFlags": {
+     "$ref": "#/definitions/SubjectNameFlagsV2"
+    },
+    "SupersededTemplates": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^(?!^\\s+$)((?![\\x5c'\\x2b,;<=>#\\x22])([\\x20-\\x7E]))+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CertificateValidity",
+    "EnrollmentFlags",
+    "Extensions",
+    "GeneralFlags",
+    "PrivateKeyAttributes",
+    "PrivateKeyFlags",
+    "SubjectNameFlags"
+   ],
+   "type": "object"
+  },
+  "TemplateV3": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateValidity": {
+     "$ref": "#/definitions/CertificateValidity"
+    },
+    "EnrollmentFlags": {
+     "$ref": "#/definitions/EnrollmentFlagsV3"
+    },
+    "Extensions": {
+     "$ref": "#/definitions/ExtensionsV3"
+    },
+    "GeneralFlags": {
+     "$ref": "#/definitions/GeneralFlagsV3"
+    },
+    "HashAlgorithm": {
+     "$ref": "#/definitions/HashAlgorithm"
+    },
+    "PrivateKeyAttributes": {
+     "$ref": "#/definitions/PrivateKeyAttributesV3"
+    },
+    "PrivateKeyFlags": {
+     "$ref": "#/definitions/PrivateKeyFlagsV3"
+    },
+    "SubjectNameFlags": {
+     "$ref": "#/definitions/SubjectNameFlagsV3"
+    },
+    "SupersededTemplates": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^(?!^\\s+$)((?![\\x5c'\\x2b,;<=>#\\x22])([\\x20-\\x7E]))+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CertificateValidity",
+    "EnrollmentFlags",
+    "Extensions",
+    "GeneralFlags",
+    "HashAlgorithm",
+    "PrivateKeyAttributes",
+    "PrivateKeyFlags",
+    "SubjectNameFlags"
+   ],
+   "type": "object"
+  },
+  "TemplateV4": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateValidity": {
+     "$ref": "#/definitions/CertificateValidity"
+    },
+    "EnrollmentFlags": {
+     "$ref": "#/definitions/EnrollmentFlagsV4"
+    },
+    "Extensions": {
+     "$ref": "#/definitions/ExtensionsV4"
+    },
+    "GeneralFlags": {
+     "$ref": "#/definitions/GeneralFlagsV4"
+    },
+    "HashAlgorithm": {
+     "$ref": "#/definitions/HashAlgorithm"
+    },
+    "PrivateKeyAttributes": {
+     "$ref": "#/definitions/PrivateKeyAttributesV4"
+    },
+    "PrivateKeyFlags": {
+     "$ref": "#/definitions/PrivateKeyFlagsV4"
+    },
+    "SubjectNameFlags": {
+     "$ref": "#/definitions/SubjectNameFlagsV4"
+    },
+    "SupersededTemplates": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^(?!^\\s+$)((?![\\x5c'\\x2b,;<=>#\\x22])([\\x20-\\x7E]))+$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CertificateValidity",
+    "EnrollmentFlags",
+    "Extensions",
+    "GeneralFlags",
+    "PrivateKeyAttributes",
+    "PrivateKeyFlags",
+    "SubjectNameFlags"
+   ],
+   "type": "object"
+  },
+  "ValidityPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Period": {
+     "maximum": 8766000,
+     "minimum": 1,
+     "type": "number"
+    },
+    "PeriodType": {
+     "$ref": "#/definitions/ValidityPeriodType"
+    }
+   },
+   "required": [
+    "Period",
+    "PeriodType"
+   ],
+   "type": "object"
+  },
+  "ValidityPeriodType": {
+   "enum": [
+    "HOURS",
+    "DAYS",
+    "WEEKS",
+    "MONTHS",
+    "YEARS"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TemplateArn"
+ ],
+ "properties": {
+  "ConnectorArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Definition": {
+   "$ref": "#/definitions/TemplateDefinition"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(?!^\\s+$)((?![\\x5c'\\x2b,;<=>#\\x22])([\\x20-\\x7E]))+$",
+   "type": "string"
+  },
+  "ReenrollAllCertificateHolders": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TemplateArn": {
+   "maxLength": 200,
+   "minLength": 5,
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\\/template\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TemplateArn"
+ ],
+ "required": [
+  "ConnectorArn",
+  "Definition",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorad",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::PCAConnectorAD::Template",
+ "writeOnlyProperties": [
+  "/properties/ConnectorArn",
+  "/properties/Definition",
+  "/properties/Name",
+  "/properties/ReenrollAllCertificateHolders",
+  "/properties/Tags"
+ ]
+}

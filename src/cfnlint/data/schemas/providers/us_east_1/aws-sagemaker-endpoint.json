@@ -24,7 +24,7 @@
       "$ref": "#/definitions/Alarm"
      },
      "type": "array",
-     "uniqueItems": false
+     "uniqueItems": true
     }
    },
    "required": [
@@ -54,6 +54,10 @@
    "additionalProperties": false,
    "properties": {
     "Type": {
+     "enum": [
+      "CAPACITY_PERCENT",
+      "INSTANCE_COUNT"
+     ],
      "type": "string"
     },
     "Value": {
@@ -129,6 +133,11 @@
      "$ref": "#/definitions/CapacitySize"
     },
     "Type": {
+     "enum": [
+      "ALL_AT_ONCE",
+      "CANARY",
+      "LINEAR"
+     ],
      "type": "string"
     },
     "WaitIntervalInSeconds": {
@@ -151,16 +160,21 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/EndpointArn"
  ],
  "properties": {
   "DeploymentConfig": {
    "$ref": "#/definitions/DeploymentConfig"
   },
+  "EndpointArn": {
+   "type": "string"
+  },
   "EndpointConfigName": {
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
   "EndpointName": {
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
   "ExcludeRetainedVariantProperties": {
@@ -169,9 +183,6 @@
    },
    "type": "array",
    "uniqueItems": false
-  },
-  "Id": {
-   "type": "string"
   },
   "RetainAllVariantProperties": {
    "type": "boolean"
@@ -188,10 +199,23 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/EndpointArn",
+  "/properties/EndpointName"
  ],
  "required": [
   "EndpointConfigName"
  ],
- "typeName": "AWS::SageMaker::Endpoint"
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Endpoint",
+ "writeOnlyProperties": [
+  "/properties/ExcludeRetainedVariantProperties",
+  "/properties/RetainAllVariantProperties",
+  "/properties/RetainDeploymentConfig"
+ ]
 }

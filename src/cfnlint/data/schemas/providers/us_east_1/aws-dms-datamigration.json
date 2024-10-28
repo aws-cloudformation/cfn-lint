@@ -1,0 +1,152 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DataMigrationName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "DataMigrationSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudwatchLogsEnabled": {
+     "type": "boolean"
+    },
+    "NumberOfJobs": {
+     "maximum": 50,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SelectionRules": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceDataSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "CDCStartPosition": {
+     "maxLength": 40,
+     "type": "string"
+    },
+    "CDCStartTime": {
+     "maxLength": 40,
+     "type": "string"
+    },
+    "CDCStopTime": {
+     "maxLength": 40,
+     "type": "string"
+    },
+    "SlotName": {
+     "maxLength": 255,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DataMigrationArn"
+ ],
+ "properties": {
+  "DataMigrationArn": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataMigrationCreateTime": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataMigrationIdentifier": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataMigrationName": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataMigrationSettings": {
+   "$ref": "#/definitions/DataMigrationSettings"
+  },
+  "DataMigrationType": {
+   "enum": [
+    "full-load",
+    "cdc",
+    "full-load-and-cdc"
+   ],
+   "type": "string"
+  },
+  "MigrationProjectIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ServiceAccessRoleArn": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SourceDataSettings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SourceDataSettings"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataMigrationArn",
+  "/properties/DataMigrationCreateTime"
+ ],
+ "required": [
+  "DataMigrationType",
+  "MigrationProjectIdentifier",
+  "ServiceAccessRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::DataMigration",
+ "writeOnlyProperties": [
+  "/properties/DataMigrationIdentifier"
+ ]
+}

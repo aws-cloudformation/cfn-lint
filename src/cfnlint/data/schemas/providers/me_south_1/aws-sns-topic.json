@@ -1,0 +1,184 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TopicName",
+  "/properties/FifoTopic"
+ ],
+ "definitions": {
+  "LoggingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureFeedbackRoleArn": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "http/s",
+      "sqs",
+      "lambda",
+      "firehose",
+      "application"
+     ],
+     "type": "string"
+    },
+    "SuccessFeedbackRoleArn": {
+     "type": "string"
+    },
+    "SuccessFeedbackSampleRate": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Protocol"
+   ],
+   "type": "object"
+  },
+  "Subscription": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::Lambda::Function"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::SQS::Queue"
+       }
+      }
+     ],
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint",
+    "Protocol"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TopicArn"
+ ],
+ "properties": {
+  "ArchivePolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ContentBasedDeduplication": {
+   "type": "boolean"
+  },
+  "DataProtectionPolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "DeliveryStatusLogging": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoggingConfig"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "FifoTopic": {
+   "type": "boolean"
+  },
+  "KmsMasterKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/AliasName",
+      "typeName": "AWS::KMS::Alias"
+     }
+    }
+   ],
+   "type": "string"
+  },
+  "SignatureVersion": {
+   "type": "string"
+  },
+  "Subscription": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Subscription"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TopicArn": {
+   "type": "string"
+  },
+  "TopicName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TracingConfig": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TopicArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SNS::Topic"
+}

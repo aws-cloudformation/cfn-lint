@@ -1,25 +1,24 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/JobDefinitionName",
-  "/properties/ContainerProperties",
-  "/properties/EcsProperties",
-  "/properties/EksProperties",
-  "/properties/NodeProperties",
-  "/properties/Parameters",
-  "/properties/PlatformCapabilities",
   "/properties/PropagateTags",
-  "/properties/RetryStrategy",
+  "/properties/PlatformCapabilities",
+  "/properties/ContainerProperties",
+  "/properties/NodeProperties",
+  "/properties/EcsProperties",
+  "/properties/Parameters",
+  "/properties/EksProperties",
+  "/properties/Type",
   "/properties/SchedulingPriority",
-  "/properties/Timeout",
-  "/properties/Type"
+  "/properties/JobDefinitionName",
+  "/properties/RetryStrategy",
+  "/properties/Timeout"
  ],
  "definitions": {
   "ContainerProperties": {
    "additionalProperties": false,
    "properties": {
     "Command": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -27,7 +26,6 @@
      "uniqueItems": false
     },
     "Environment": {
-     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Environment"
      },
@@ -41,13 +39,7 @@
      "type": "string"
     },
     "FargatePlatformConfiguration": {
-     "additionalProperties": false,
-     "properties": {
-      "PlatformVersion": {
-       "type": "string"
-      }
-     },
-     "type": "object"
+     "$ref": "#/definitions/FargatePlatformConfiguration"
     },
     "Image": {
      "type": "string"
@@ -68,7 +60,6 @@
      "type": "integer"
     },
     "MountPoints": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/MountPoint"
      },
@@ -88,7 +79,6 @@
      "$ref": "#/definitions/RepositoryCredentials"
     },
     "ResourceRequirements": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/ResourceRequirement"
      },
@@ -99,7 +89,6 @@
      "$ref": "#/definitions/RuntimePlatform"
     },
     "Secrets": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Secret"
      },
@@ -107,7 +96,6 @@
      "uniqueItems": false
     },
     "Ulimits": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Ulimit"
      },
@@ -121,7 +109,6 @@
      "type": "integer"
     },
     "Volumes": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Volume"
      },
@@ -144,7 +131,6 @@
      "type": "string"
     },
     "Permissions": {
-     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -194,7 +180,6 @@
    "additionalProperties": false,
    "properties": {
     "TaskProperties": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EcsTaskProperties"
      },
@@ -211,7 +196,6 @@
    "additionalProperties": false,
    "properties": {
     "Containers": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/TaskContainerProperties"
      },
@@ -243,7 +227,6 @@
      "type": "string"
     },
     "Volumes": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Volume"
      },
@@ -257,7 +240,6 @@
    "additionalProperties": false,
    "properties": {
     "Args": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -265,7 +247,6 @@
      "uniqueItems": false
     },
     "Command": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -273,7 +254,6 @@
      "uniqueItems": false
     },
     "Env": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainerEnvironmentVariable"
      },
@@ -296,7 +276,6 @@
      "$ref": "#/definitions/EksContainerSecurityContext"
     },
     "VolumeMounts": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainerVolumeMount"
      },
@@ -328,18 +307,16 @@
    "additionalProperties": false,
    "properties": {
     "Limits": {
-     "additionalProperties": false,
      "patternProperties": {
-      ".*": {
+      "[a-zA-Z0-9]+": {
        "type": "string"
       }
      },
      "type": "object"
     },
     "Requests": {
-     "additionalProperties": false,
      "patternProperties": {
-      ".*": {
+      "[a-zA-Z0-9]+": {
        "type": "string"
       }
      },
@@ -351,9 +328,6 @@
   "EksContainerSecurityContext": {
    "additionalProperties": false,
    "properties": {
-    "AllowPrivilegeEscalation": {
-     "type": "boolean"
-    },
     "Privileged": {
      "type": "boolean"
     },
@@ -412,9 +386,8 @@
    "additionalProperties": false,
    "properties": {
     "Labels": {
-     "additionalProperties": false,
      "patternProperties": {
-      ".*": {
+      "[a-zA-Z0-9]+": {
        "type": "string"
       }
      },
@@ -427,7 +400,6 @@
    "additionalProperties": false,
    "properties": {
     "Containers": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainer"
      },
@@ -440,16 +412,7 @@
     "HostNetwork": {
      "type": "boolean"
     },
-    "ImagePullSecrets": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/ImagePullSecret"
-     },
-     "type": "array",
-     "uniqueItems": false
-    },
     "InitContainers": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksContainer"
      },
@@ -466,7 +429,6 @@
      "type": "boolean"
     },
     "Volumes": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EksVolume"
      },
@@ -566,19 +528,19 @@
    ],
    "type": "object"
   },
-  "Host": {
+  "FargatePlatformConfiguration": {
    "additionalProperties": false,
    "properties": {
-    "SourcePath": {
+    "PlatformVersion": {
      "type": "string"
     }
    },
    "type": "object"
   },
-  "ImagePullSecret": {
+  "Host": {
    "additionalProperties": false,
    "properties": {
-    "Name": {
+    "SourcePath": {
      "type": "string"
     }
    },
@@ -597,7 +559,6 @@
    "additionalProperties": false,
    "properties": {
     "Devices": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Device"
      },
@@ -617,7 +578,6 @@
      "type": "integer"
     },
     "Tmpfs": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Tmpfs"
      },
@@ -634,16 +594,14 @@
      "type": "string"
     },
     "Options": {
-     "additionalProperties": false,
      "patternProperties": {
-      ".*": {
+      "[a-zA-Z0-9]+": {
        "type": "string"
       }
      },
      "type": "object"
     },
     "SecretOptions": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Secret"
      },
@@ -687,7 +645,6 @@
      "type": "integer"
     },
     "NodeRangeProperties": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/NodeRangeProperty"
      },
@@ -699,9 +656,9 @@
     }
    },
    "required": [
-    "NumNodes",
     "MainNode",
-    "NodeRangeProperties"
+    "NodeRangeProperties",
+    "NumNodes"
    ],
    "type": "object"
   },
@@ -714,11 +671,7 @@
     "EcsProperties": {
      "$ref": "#/definitions/EcsProperties"
     },
-    "EksProperties": {
-     "$ref": "#/definitions/EksProperties"
-    },
     "InstanceTypes": {
-     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -765,7 +718,6 @@
      "type": "integer"
     },
     "EvaluateOnExit": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/EvaluateOnExit"
      },
@@ -798,8 +750,8 @@
     }
    },
    "required": [
-    "Name",
-    "ValueFrom"
+    "ValueFrom",
+    "Name"
    ],
    "type": "object"
   },
@@ -814,8 +766,8 @@
     }
    },
    "required": [
-    "ContainerName",
-    "Condition"
+    "Condition",
+    "ContainerName"
    ],
    "type": "object"
   },
@@ -823,7 +775,6 @@
    "additionalProperties": false,
    "properties": {
     "Command": {
-     "insertionOrder": true,
      "items": {
       "type": "string"
      },
@@ -831,7 +782,6 @@
      "uniqueItems": false
     },
     "DependsOn": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/TaskContainerDependency"
      },
@@ -839,7 +789,6 @@
      "uniqueItems": false
     },
     "Environment": {
-     "insertionOrder": true,
      "items": {
       "$ref": "#/definitions/Environment"
      },
@@ -859,7 +808,6 @@
      "$ref": "#/definitions/LogConfiguration"
     },
     "MountPoints": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/MountPoint"
      },
@@ -879,7 +827,6 @@
      "$ref": "#/definitions/RepositoryCredentials"
     },
     "ResourceRequirements": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/ResourceRequirement"
      },
@@ -887,7 +834,6 @@
      "uniqueItems": false
     },
     "Secrets": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Secret"
      },
@@ -895,7 +841,6 @@
      "uniqueItems": false
     },
     "Ulimits": {
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Ulimit"
      },
@@ -918,7 +863,6 @@
      "type": "string"
     },
     "MountOptions": {
-     "insertionOrder": false,
      "items": {
       "type": "string"
      },
@@ -930,8 +874,8 @@
     }
    },
    "required": [
-    "ContainerPath",
-    "Size"
+    "Size",
+    "ContainerPath"
    ],
    "type": "object"
   },
@@ -949,9 +893,9 @@
     }
    },
    "required": [
+    "SoftLimit",
     "HardLimit",
-    "Name",
-    "SoftLimit"
+    "Name"
    ],
    "type": "object"
   },
@@ -972,7 +916,7 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/JobDefinitionArn"
+  "/properties/Id"
  ],
  "properties": {
   "ContainerOrchestrationType": {
@@ -987,27 +931,27 @@
   "EksProperties": {
    "$ref": "#/definitions/EksProperties"
   },
+  "Id": {
+   "type": "string"
+  },
   "JobDefinitionArn": {
    "type": "string"
   },
   "JobDefinitionName": {
-   "maxLength": 128,
    "type": "string"
   },
   "NodeProperties": {
    "$ref": "#/definitions/NodeProperties"
   },
   "Parameters": {
-   "additionalProperties": false,
    "patternProperties": {
-    ".*": {
+    "[a-zA-Z0-9]+": {
      "type": "string"
     }
    },
    "type": "object"
   },
   "PlatformCapabilities": {
-   "insertionOrder": true,
    "items": {
     "type": "string"
    },
@@ -1030,9 +974,8 @@
    "type": "string"
   },
   "Tags": {
-   "additionalProperties": false,
    "patternProperties": {
-    ".*": {
+    "[a-zA-Z0-9]+": {
      "type": "string"
     }
    },
@@ -1046,30 +989,14 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/ContainerOrchestrationType",
-  "/properties/JobDefinitionArn",
   "/properties/Revision",
-  "/properties/Status"
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/JobDefinitionArn",
+  "/properties/ContainerOrchestrationType"
  ],
  "required": [
   "Type"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
- "tagging": {
-  "cloudFormationSystemTags": false,
-  "tagOnCreate": true,
-  "tagProperty": "/properties/Tags",
-  "tagUpdatable": true,
-  "taggable": true
- },
- "typeName": "AWS::Batch::JobDefinition",
- "writeOnlyProperties": [
-  "/properties/ContainerProperties/InstanceType",
-  "/properties/NodeProperties/NodeRangeProperties/*/Container/FargatePlatformConfiguration/PlatformVersion",
-  "/properties/NodeProperties/NodeRangeProperties/*/Container/NetworkConfiguration/AssignPublicIp",
-  "/properties/NodeProperties/NodeRangeProperties/*/EcsProperties/TaskProperties/*/NetworkConfiguration/AssignPublicIp",
-  "/properties/NodeProperties/NodeRangeProperties/*/EcsProperties/TaskProperties/*/PlatformVersion",
-  "/properties/NodeProperties/NodeRangeProperties/*/EcsProperties/TaskProperties/*/EphemeralStorage",
-  "/properties/NodeProperties/NodeRangeProperties/*/EcsProperties/TaskProperties/*/RuntimePlatform"
- ]
+ "typeName": "AWS::Batch::JobDefinition"
 }
