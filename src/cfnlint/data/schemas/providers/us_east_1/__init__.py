@@ -932,6 +932,7 @@ types: list[str] = [
     "AWS::OpenSearchServerless::SecurityConfig",
     "AWS::OpenSearchServerless::SecurityPolicy",
     "AWS::OpenSearchServerless::VpcEndpoint",
+    "AWS::OpenSearchService::Application",
     "AWS::OpenSearchService::Domain",
     "AWS::OpsWorks::App",
     "AWS::OpsWorks::ElasticLoadBalancerAttachment",

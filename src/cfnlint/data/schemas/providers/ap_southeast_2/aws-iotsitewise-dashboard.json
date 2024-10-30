@@ -1,0 +1,82 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DashboardArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DashboardId"
+ ],
+ "properties": {
+  "DashboardArn": {
+   "type": "string"
+  },
+  "DashboardDefinition": {
+   "pattern": ".+",
+   "type": "string"
+  },
+  "DashboardDescription": {
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "DashboardId": {
+   "type": "string"
+  },
+  "DashboardName": {
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "ProjectId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DashboardArn",
+  "/properties/DashboardId"
+ ],
+ "required": [
+  "DashboardDefinition",
+  "DashboardDescription",
+  "DashboardName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotsitewise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::Dashboard"
+}

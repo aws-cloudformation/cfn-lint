@@ -2,7 +2,8 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/PromptArn",
-  "/properties/Description"
+  "/properties/Description",
+  "/properties/Tags"
  ],
  "definitions": {
   "PromptInferenceConfiguration": {
@@ -54,11 +55,6 @@
      "minimum": 0,
      "type": "number"
     },
-    "TopK": {
-     "maximum": 500,
-     "minimum": 0,
-     "type": "number"
-    },
     "TopP": {
      "maximum": 1,
      "minimum": 0,
@@ -99,7 +95,7 @@
     "ModelId": {
      "maxLength": 2048,
      "minLength": 1,
-     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}/[a-z0-9]{12})|(:foundation-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|([0-9]{12}:provisioned-model/[a-z0-9]{12})))|([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|(([0-9a-zA-Z][_-]?)+)$",
+     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}/[a-z0-9]{12})|(:foundation-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|([0-9]{12}:imported-model/[a-z0-9]{12})|([0-9]{12}:provisioned-model/[a-z0-9]{12})))|([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.:]?[a-z0-9-]{1,63}))|(([0-9a-zA-Z][_-]?)+)|(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{1,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)|([a-zA-Z0-9-:.]+)$",
      "type": "string"
     },
     "Name": {
@@ -115,7 +111,8 @@
    },
    "required": [
     "Name",
-    "TemplateType"
+    "TemplateType",
+    "TemplateConfiguration"
    ],
    "type": "object"
   },
@@ -140,7 +137,7 @@
       "$ref": "#/definitions/PromptInputVariable"
      },
      "maxItems": 5,
-     "minItems": 1,
+     "minItems": 0,
      "type": "array"
     },
     "Text": {
@@ -210,7 +207,7 @@
    "items": {
     "$ref": "#/definitions/PromptVariant"
    },
-   "maxItems": 3,
+   "maxItems": 1,
    "minItems": 1,
    "type": "array"
   },
