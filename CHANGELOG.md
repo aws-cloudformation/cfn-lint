@@ -1,3 +1,10 @@
+### v1.18.3
+## What's Changed
+* Enhanced monitoring can be configured on aurora clusters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3801
+* Update CloudFormation schemas to `2024-10-30` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3799
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.2...v1.18.3
+
 ### v1.18.2
 ## What's Changed
 * Update more tests for condition keys by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3781
