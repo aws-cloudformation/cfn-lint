@@ -1,0 +1,826 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseId",
+  "/properties/VectorIngestionConfiguration/ChunkingConfiguration",
+  "/properties/VectorIngestionConfiguration/ParsingConfiguration",
+  "/properties/DataSourceConfiguration/Type"
+ ],
+ "definitions": {
+  "BedrockFoundationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2})|(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{1,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)$",
+     "type": "string"
+    },
+    "ParsingPrompt": {
+     "$ref": "#/definitions/ParsingPrompt"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "ChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChunkingStrategy": {
+     "$ref": "#/definitions/ChunkingStrategy"
+    },
+    "FixedSizeChunkingConfiguration": {
+     "$ref": "#/definitions/FixedSizeChunkingConfiguration"
+    },
+    "HierarchicalChunkingConfiguration": {
+     "$ref": "#/definitions/HierarchicalChunkingConfiguration"
+    },
+    "SemanticChunkingConfiguration": {
+     "$ref": "#/definitions/SemanticChunkingConfiguration"
+    }
+   },
+   "required": [
+    "ChunkingStrategy"
+   ],
+   "type": "object"
+  },
+  "ChunkingStrategy": {
+   "enum": [
+    "FIXED_SIZE",
+    "NONE",
+    "HIERARCHICAL",
+    "SEMANTIC"
+   ],
+   "type": "string"
+  },
+  "ConfluenceCrawlerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "ConfluenceDataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/ConfluenceCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/ConfluenceSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "ConfluenceSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "enum": [
+      "BASIC",
+      "OAUTH2_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "HostType": {
+     "enum": [
+      "SAAS"
+     ],
+     "type": "string"
+    },
+    "HostUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostUrl",
+    "HostType",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "CrawlFilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PatternObjectFilter": {
+     "$ref": "#/definitions/PatternObjectFilterConfiguration"
+    },
+    "Type": {
+     "enum": [
+      "PATTERN"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CustomTransformationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IntermediateStorage": {
+     "$ref": "#/definitions/IntermediateStorage"
+    },
+    "Transformations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Transformation"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "IntermediateStorage",
+    "Transformations"
+   ],
+   "type": "object"
+  },
+  "DataDeletionPolicy": {
+   "enum": [
+    "RETAIN",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "DataSourceConfiguration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "S3Configuration"
+     ]
+    },
+    {
+     "required": [
+      "ConfluenceConfiguration"
+     ]
+    },
+    {
+     "required": [
+      "SalesforceConfiguration"
+     ]
+    },
+    {
+     "required": [
+      "SharePointConfiguration"
+     ]
+    },
+    {
+     "required": [
+      "WebConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "ConfluenceConfiguration": {
+     "$ref": "#/definitions/ConfluenceDataSourceConfiguration"
+    },
+    "S3Configuration": {
+     "$ref": "#/definitions/S3DataSourceConfiguration"
+    },
+    "SalesforceConfiguration": {
+     "$ref": "#/definitions/SalesforceDataSourceConfiguration"
+    },
+    "SharePointConfiguration": {
+     "$ref": "#/definitions/SharePointDataSourceConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/DataSourceType"
+    },
+    "WebConfiguration": {
+     "$ref": "#/definitions/WebDataSourceConfiguration"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DataSourceStatus": {
+   "enum": [
+    "AVAILABLE",
+    "DELETING",
+    "DELETE_UNSUCCESSFUL"
+   ],
+   "type": "string"
+  },
+  "DataSourceType": {
+   "enum": [
+    "S3",
+    "CONFLUENCE",
+    "SALESFORCE",
+    "SHAREPOINT",
+    "WEB"
+   ],
+   "type": "string"
+  },
+  "FilterList": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 1000,
+    "type": "string"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "FixedSizeChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "OverlapPercentage": {
+     "maximum": 99,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTokens",
+    "OverlapPercentage"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LevelConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/HierarchicalChunkingLevelConfiguration"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    },
+    "OverlapTokens": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LevelConfigurations",
+    "OverlapTokens"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingLevelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "maximum": 8192,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxTokens"
+   ],
+   "type": "object"
+  },
+  "IntermediateStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "ParsingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockFoundationModelConfiguration": {
+     "$ref": "#/definitions/BedrockFoundationModelConfiguration"
+    },
+    "ParsingStrategy": {
+     "$ref": "#/definitions/ParsingStrategy"
+    }
+   },
+   "required": [
+    "ParsingStrategy"
+   ],
+   "type": "object"
+  },
+  "ParsingPrompt": {
+   "additionalProperties": false,
+   "properties": {
+    "ParsingPromptText": {
+     "maxLength": 10000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParsingPromptText"
+   ],
+   "type": "object"
+  },
+  "ParsingStrategy": {
+   "enum": [
+    "BEDROCK_FOUNDATION_MODEL"
+   ],
+   "type": "string"
+  },
+  "PatternObjectFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "ExclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "InclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "ObjectType": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectType"
+   ],
+   "type": "object"
+  },
+  "PatternObjectFilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Filters": {
+     "$ref": "#/definitions/PatternObjectFilterList"
+    }
+   },
+   "required": [
+    "Filters"
+   ],
+   "type": "object"
+  },
+  "PatternObjectFilterList": {
+   "items": {
+    "$ref": "#/definitions/PatternObjectFilter"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "S3DataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(|-cn|-us-gov):s3:::[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+     "type": "string"
+    },
+    "BucketOwnerAccountId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "InclusionPrefixes": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 300,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "BucketArn"
+   ],
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "URI": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^s3://.{1,128}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "URI"
+   ],
+   "type": "object"
+  },
+  "SalesforceCrawlerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "SalesforceDataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/SalesforceCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/SalesforceSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "SalesforceSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "enum": [
+      "OAUTH2_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "HostUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostUrl",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "SeedUrl": {
+   "additionalProperties": false,
+   "properties": {
+    "Url": {
+     "pattern": "^https?://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Url"
+   ],
+   "type": "object"
+  },
+  "SeedUrls": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SeedUrl"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SemanticChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BreakpointPercentileThreshold": {
+     "maximum": 99,
+     "minimum": 50,
+     "type": "integer"
+    },
+    "BufferSize": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "BreakpointPercentileThreshold",
+    "BufferSize",
+    "MaxTokens"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SharePointCrawlerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterConfiguration": {
+     "$ref": "#/definitions/CrawlFilterConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "SharePointDataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/SharePointCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/SharePointSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "SharePointSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "enum": [
+      "OAUTH2_CLIENT_CREDENTIALS"
+     ],
+     "type": "string"
+    },
+    "CredentialsSecretArn": {
+     "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+     "type": "string"
+    },
+    "Domain": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "HostType": {
+     "enum": [
+      "ONLINE"
+     ],
+     "type": "string"
+    },
+    "SiteUrls": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "^https://[A-Za-z0-9][^\\s]*$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "TenantId": {
+     "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Domain",
+    "SiteUrls",
+    "HostType",
+    "AuthType",
+    "CredentialsSecretArn"
+   ],
+   "type": "object"
+  },
+  "Transformation": {
+   "additionalProperties": false,
+   "properties": {
+    "StepToApply": {
+     "enum": [
+      "POST_CHUNKING"
+     ],
+     "type": "string"
+    },
+    "TransformationFunction": {
+     "$ref": "#/definitions/TransformationFunction"
+    }
+   },
+   "required": [
+    "StepToApply",
+    "TransformationFunction"
+   ],
+   "type": "object"
+  },
+  "TransformationFunction": {
+   "additionalProperties": false,
+   "properties": {
+    "TransformationLambdaConfiguration": {
+     "$ref": "#/definitions/TransformationLambdaConfiguration"
+    }
+   },
+   "required": [
+    "TransformationLambdaConfiguration"
+   ],
+   "type": "object"
+  },
+  "TransformationLambdaConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "maxLength": 2048,
+     "minLength": 0,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "UrlConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SeedUrls": {
+     "$ref": "#/definitions/SeedUrls"
+    }
+   },
+   "required": [
+    "SeedUrls"
+   ],
+   "type": "object"
+  },
+  "VectorIngestionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChunkingConfiguration": {
+     "$ref": "#/definitions/ChunkingConfiguration"
+    },
+    "CustomTransformationConfiguration": {
+     "$ref": "#/definitions/CustomTransformationConfiguration"
+    },
+    "ParsingConfiguration": {
+     "$ref": "#/definitions/ParsingConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "WebCrawlerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerLimits": {
+     "$ref": "#/definitions/WebCrawlerLimits"
+    },
+    "ExclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "InclusionFilters": {
+     "$ref": "#/definitions/FilterList"
+    },
+    "Scope": {
+     "$ref": "#/definitions/WebScopeType"
+    }
+   },
+   "type": "object"
+  },
+  "WebCrawlerLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "RateLimit": {
+     "maximum": 300,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WebDataSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerConfiguration": {
+     "$ref": "#/definitions/WebCrawlerConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/WebSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "WebScopeType": {
+   "enum": [
+    "HOST_ONLY",
+    "SUBDOMAINS"
+   ],
+   "type": "string"
+  },
+  "WebSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "UrlConfiguration": {
+     "$ref": "#/definitions/UrlConfiguration"
+    }
+   },
+   "required": [
+    "UrlConfiguration"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KnowledgeBaseId",
+  "/properties/DataSourceId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "DataDeletionPolicy": {
+   "$ref": "#/definitions/DataDeletionPolicy"
+  },
+  "DataSourceConfiguration": {
+   "$ref": "#/definitions/DataSourceConfiguration"
+  },
+  "DataSourceId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "DataSourceStatus": {
+   "$ref": "#/definitions/DataSourceStatus"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FailureReasons": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "type": "string"
+   },
+   "maxItems": 2048,
+   "type": "array"
+  },
+  "KnowledgeBaseId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "UpdatedAt": {
+   "type": "string"
+  },
+  "VectorIngestionConfiguration": {
+   "$ref": "#/definitions/VectorIngestionConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataSourceId",
+  "/properties/DataSourceStatus",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/FailureReasons"
+ ],
+ "required": [
+  "DataSourceConfiguration",
+  "Name",
+  "KnowledgeBaseId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Bedrock::DataSource"
+}

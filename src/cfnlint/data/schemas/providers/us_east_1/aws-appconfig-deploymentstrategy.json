@@ -5,7 +5,7 @@
   "/properties/ReplicateTo"
  ],
  "definitions": {
-  "Tags": {
+  "Tag": {
    "additionalProperties": false,
    "properties": {
     "Key": {
@@ -35,6 +35,10 @@
    "type": "number"
   },
   "GrowthType": {
+   "enum": [
+    "EXPONENTIAL",
+    "LINEAR"
+   ],
    "type": "string"
   },
   "Id": {
@@ -44,24 +48,37 @@
    "type": "string"
   },
   "ReplicateTo": {
+   "enum": [
+    "NONE",
+    "SSM_DOCUMENT"
+   ],
    "type": "string"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
-    "$ref": "#/definitions/Tags"
+    "$ref": "#/definitions/Tag"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
   "/properties/Id"
  ],
  "required": [
-  "ReplicateTo",
   "DeploymentDurationInMinutes",
   "GrowthFactor",
-  "Name"
+  "Name",
+  "ReplicateTo"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appconfig.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::AppConfig::DeploymentStrategy"
 }

@@ -159,6 +159,30 @@
    },
    "type": "object"
   },
+  "IdentityCenterOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "EnabledAPIAccess": {
+     "type": "boolean"
+    },
+    "IdentityCenterApplicationARN": {
+     "type": "string"
+    },
+    "IdentityCenterInstanceARN": {
+     "type": "string"
+    },
+    "IdentityStoreId": {
+     "type": "string"
+    },
+    "RolesKey": {
+     "$ref": "#/definitions/RolesKeyIdcType"
+    },
+    "SubjectKey": {
+     "$ref": "#/definitions/SubjectKeyIdcType"
+    }
+   },
+   "type": "object"
+  },
   "Idp": {
    "additionalProperties": false,
    "properties": {
@@ -252,6 +276,13 @@
    },
    "type": "object"
   },
+  "RolesKeyIdcType": {
+   "enum": [
+    "GroupName",
+    "GroupId"
+   ],
+   "type": "string"
+  },
   "SAMLOptions": {
    "additionalProperties": false,
    "properties": {
@@ -326,6 +357,14 @@
     }
    },
    "type": "object"
+  },
+  "SubjectKeyIdcType": {
+   "enum": [
+    "UserName",
+    "UserId",
+    "Email"
+   ],
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
@@ -470,6 +509,9 @@
   "Id": {
    "type": "string"
   },
+  "IdentityCenterOptions": {
+   "$ref": "#/definitions/IdentityCenterOptions"
+  },
   "LogPublishingOptions": {
    "additionalProperties": false,
    "patternProperties": {
@@ -516,7 +558,9 @@
   "/properties/DomainEndpointV2",
   "/properties/DomainEndpoints",
   "/properties/ServiceSoftwareOptions",
-  "/properties/AdvancedSecurityOptions/AnonymousAuthDisableDate"
+  "/properties/AdvancedSecurityOptions/AnonymousAuthDisableDate",
+  "/properties/IdentityCenterOptions/IdentityCenterApplicationARN",
+  "/properties/IdentityCenterOptions/IdentityStoreId"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "typeName": "AWS::OpenSearchService::Domain",

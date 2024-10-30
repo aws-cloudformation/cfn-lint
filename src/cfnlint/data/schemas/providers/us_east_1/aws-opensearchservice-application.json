@@ -1,0 +1,146 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AppConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/AppConfigType"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "AppConfigType": {
+   "enum": [
+    "opensearchDashboards.dashboardAdmin.users",
+    "opensearchDashboards.dashboardAdmin.groups"
+   ],
+   "type": "string"
+  },
+  "DataSource": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSourceArn": {
+     "$ref": "#/properties/Arn"
+    },
+    "DataSourceDescription": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DataSourceArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AppConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AppConfig"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "DataSources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataSource"
+   },
+   "type": "array"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "IamIdentityCenterOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "IamIdentityCenterInstanceArn": {
+     "$ref": "#/properties/Arn"
+    },
+    "IamRoleForIdentityCenterApplicationArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Id": {
+   "maxLength": 40,
+   "minLength": 3,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 40,
+   "minLength": 3,
+   "pattern": "[a-z][a-z0-9\\-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::OpenSearchService::Application"
+}

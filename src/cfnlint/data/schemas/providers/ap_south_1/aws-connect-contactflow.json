@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowArn"
+ ],
+ "properties": {
+  "ContactFlowArn": {
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Content": {
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "State": {
+   "enum": [
+    "ACTIVE",
+    "ARCHIVED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "enum": [
+    "CONTACT_FLOW",
+    "CUSTOMER_QUEUE",
+    "CUSTOMER_HOLD",
+    "CUSTOMER_WHISPER",
+    "AGENT_HOLD",
+    "AGENT_WHISPER",
+    "OUTBOUND_WHISPER",
+    "AGENT_TRANSFER",
+    "QUEUE_TRANSFER"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "Content",
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::ContactFlow"
+}
