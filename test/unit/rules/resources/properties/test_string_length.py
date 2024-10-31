@@ -37,6 +37,12 @@ def rule():
         ({"foo": 1, "bar": {"Fn::Sub": "2"}}, 20, {"type": "object"}, 1),
         ({"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}, 10, {"type": "object"}, 0),
         ({"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}, 20, {"type": "object"}, 1),
+        (
+            {"foo": 1, "bar": {"Fn::Sub": ["2", {}]}},
+            20,
+            {"type": ["string", "object"]},
+            1,
+        ),
     ],
 )
 def test_min_length(instance, mL, expected, rule, schema, validator):
@@ -65,6 +71,12 @@ def test_min_length(instance, mL, expected, rule, schema, validator):
         ({"foo": 1, "bar": {"Fn::Sub": "2"}}, 4, {"type": "object"}, 1),
         ({"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}, 20, {"type": "object"}, 0),
         ({"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}, 4, {"type": "object"}, 1),
+        (
+            {"foo": 1, "bar": {"Fn::Sub": ["2", {}]}},
+            4,
+            {"type": ["string", "object"]},
+            1,
+        ),
     ],
 )
 def test_max_length(instance, mL, expected, rule, schema, validator):
