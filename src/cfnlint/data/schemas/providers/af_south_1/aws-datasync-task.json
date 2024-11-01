@@ -1,0 +1,490 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DestinationLocationArn",
+  "/properties/SourceLocationArn",
+  "/properties/TaskMode"
+ ],
+ "definitions": {
+  "DestinationNetworkInterfaceArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:aws[\\-a-z]{0,}:ec2:[a-z\\-0-9]*:[0-9]{12}:network-interface/eni-[0-9a-f]+$",
+    "type": "string"
+   },
+   "maxItems": 128,
+   "type": "array"
+  },
+  "FilterRule": {
+   "additionalProperties": false,
+   "properties": {
+    "FilterType": {
+     "enum": [
+      "SIMPLE_PATTERN"
+     ],
+     "maxLength": 128,
+     "pattern": "^[A-Z0-9_]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 409600,
+     "pattern": "^[^\\x00]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "TRANSFER"
+     ],
+     "type": "string"
+    },
+    "Format": {
+     "enum": [
+      "CSV"
+     ],
+     "type": "string"
+    },
+    "Source": {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/ManifestConfigSourceS3"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Source"
+   ],
+   "type": "object"
+  },
+  "ManifestConfigSourceS3": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "ManifestObjectPath": {
+     "maxLength": 1024,
+     "pattern": "^[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}\\p{C}]*$",
+     "type": "string"
+    },
+    "ManifestObjectVersionId": {
+     "maxLength": 100,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "maxLength": 156,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Options": {
+   "additionalProperties": false,
+   "properties": {
+    "Atime": {
+     "enum": [
+      "NONE",
+      "BEST_EFFORT"
+     ],
+     "type": "string"
+    },
+    "BytesPerSecond": {
+     "format": "int64",
+     "minimum": -1,
+     "type": "integer"
+    },
+    "Gid": {
+     "enum": [
+      "NONE",
+      "INT_VALUE",
+      "NAME",
+      "BOTH"
+     ],
+     "type": "string"
+    },
+    "LogLevel": {
+     "enum": [
+      "OFF",
+      "BASIC",
+      "TRANSFER"
+     ],
+     "type": "string"
+    },
+    "Mtime": {
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "ObjectTags": {
+     "enum": [
+      "PRESERVE",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "OverwriteMode": {
+     "enum": [
+      "ALWAYS",
+      "NEVER"
+     ],
+     "type": "string"
+    },
+    "PosixPermissions": {
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "PreserveDeletedFiles": {
+     "enum": [
+      "PRESERVE",
+      "REMOVE"
+     ],
+     "type": "string"
+    },
+    "PreserveDevices": {
+     "enum": [
+      "NONE",
+      "PRESERVE"
+     ],
+     "type": "string"
+    },
+    "SecurityDescriptorCopyFlags": {
+     "enum": [
+      "NONE",
+      "OWNER_DACL",
+      "OWNER_DACL_SACL"
+     ],
+     "type": "string"
+    },
+    "TaskQueueing": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TransferMode": {
+     "enum": [
+      "CHANGED",
+      "ALL"
+     ],
+     "type": "string"
+    },
+    "Uid": {
+     "enum": [
+      "NONE",
+      "INT_VALUE",
+      "NAME",
+      "BOTH"
+     ],
+     "type": "string"
+    },
+    "VerifyMode": {
+     "enum": [
+      "POINT_IN_TIME_CONSISTENT",
+      "ONLY_FILES_TRANSFERRED",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceNetworkInterfaceArns": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^arn:aws[\\-a-z]{0,}:ec2:[a-z\\-0-9]*:[0-9]{12}:network-interface/eni-[0-9a-f]+$",
+    "type": "string"
+   },
+   "maxItems": 128,
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TaskReportConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/TaskReportConfigDestinationS3"
+      }
+     },
+     "type": "object"
+    },
+    "ObjectVersionIds": {
+     "enum": [
+      "INCLUDE",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "OutputType": {
+     "enum": [
+      "SUMMARY_ONLY",
+      "STANDARD"
+     ],
+     "type": "string"
+    },
+    "Overrides": {
+     "additionalProperties": false,
+     "properties": {
+      "Deleted": {
+       "additionalProperties": false,
+       "properties": {
+        "ReportLevel": {
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Skipped": {
+       "additionalProperties": false,
+       "properties": {
+        "ReportLevel": {
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Transferred": {
+       "additionalProperties": false,
+       "properties": {
+        "ReportLevel": {
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Verified": {
+       "additionalProperties": false,
+       "properties": {
+        "ReportLevel": {
+         "enum": [
+          "ERRORS_ONLY",
+          "SUCCESSES_AND_ERRORS"
+         ],
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "ReportLevel": {
+     "enum": [
+      "ERRORS_ONLY",
+      "SUCCESSES_AND_ERRORS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputType"
+   ],
+   "type": "object"
+  },
+  "TaskReportConfigDestinationS3": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketAccessRoleArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*$",
+     "type": "string"
+    },
+    "S3BucketArn": {
+     "maxLength": 156,
+     "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):(s3|s3-outposts):[a-z\\-0-9]*:[0-9]*:.*$",
+     "type": "string"
+    },
+    "Subdirectory": {
+     "maxLength": 4096,
+     "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TaskSchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "ScheduleExpression": {
+     "maxLength": 256,
+     "pattern": "^[a-zA-Z0-9\\ \\_\\*\\?\\,\\|\\^\\-\\/\\#\\s\\(\\)\\+]*$",
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TaskArn"
+ ],
+ "properties": {
+  "CloudWatchLogGroupArn": {
+   "maxLength": 562,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):logs:[a-z\\-0-9]*:[0-9]{12}:log-group:([^:\\*]*)(:\\*)?$",
+   "type": "string"
+  },
+  "DestinationLocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "DestinationNetworkInterfaceArns": {
+   "$ref": "#/definitions/DestinationNetworkInterfaceArns"
+  },
+  "Excludes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FilterRule"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Includes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FilterRule"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ManifestConfig": {
+   "$ref": "#/definitions/ManifestConfig"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/Options"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/TaskSchedule"
+  },
+  "SourceLocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "SourceNetworkInterfaceArns": {
+   "$ref": "#/definitions/SourceNetworkInterfaceArns"
+  },
+  "Status": {
+   "enum": [
+    "AVAILABLE",
+    "CREATING",
+    "QUEUED",
+    "RUNNING",
+    "UNAVAILABLE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TaskArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]*:[0-9]{12}:task/task-[0-9a-f]{17}$",
+   "type": "string"
+  },
+  "TaskMode": {
+   "enum": [
+    "BASIC",
+    "ENHANCED"
+   ],
+   "type": "string"
+  },
+  "TaskReportConfig": {
+   "$ref": "#/definitions/TaskReportConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TaskArn",
+  "/properties/Status",
+  "/properties/SourceNetworkInterfaceArns",
+  "/properties/DestinationNetworkInterfaceArns"
+ ],
+ "required": [
+  "DestinationLocationArn",
+  "SourceLocationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::Task"
+}

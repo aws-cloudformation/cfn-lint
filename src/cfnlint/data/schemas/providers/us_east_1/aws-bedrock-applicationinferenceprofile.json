@@ -1,0 +1,172 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/InferenceProfileName",
+  "/properties/ModelSource"
+ ],
+ "definitions": {
+  "InferenceProfileModel": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelArn": {
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/[a-z0-9-]{1,63}[.]{1}([a-z0-9-]{1,63}[.]){0,2}[a-z0-9-]{1,63}([:][a-z0-9-]{1,63}){0,2}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceProfileModelSource": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CopyFrom": {
+       "maxLength": 2048,
+       "minLength": 1,
+       "pattern": "^arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|foundation-model)/[a-zA-Z0-9-:.]+$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "CopyFrom"
+     ],
+     "title": "CopyFrom",
+     "type": "object"
+    }
+   ]
+  },
+  "InferenceProfileStatus": {
+   "enum": [
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "InferenceProfileType": {
+   "enum": [
+    "APPLICATION",
+    "SYSTEM_DEFINED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InferenceProfileIdentifier"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z:.][ _-]?)+$",
+   "type": "string"
+  },
+  "InferenceProfileArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{0,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/)?[a-zA-Z0-9-:.]+$",
+   "type": "string"
+  },
+  "InferenceProfileName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^([0-9a-zA-Z][ _-]?)+$",
+   "type": "string"
+  },
+  "ModelSource": {
+   "$ref": "#/definitions/InferenceProfileModelSource"
+  },
+  "Models": {
+   "items": {
+    "$ref": "#/definitions/InferenceProfileModel"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/InferenceProfileStatus"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/InferenceProfileType"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Models",
+  "/properties/InferenceProfileArn",
+  "/properties/InferenceProfileId",
+  "/properties/InferenceProfileIdentifier",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "InferenceProfileName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-application-inference-profile",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::ApplicationInferenceProfile",
+ "writeOnlyProperties": [
+  "/properties/ModelSource"
+ ]
+}

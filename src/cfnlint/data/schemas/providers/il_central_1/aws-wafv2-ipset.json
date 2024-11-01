@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Scope"
+ ],
+ "definitions": {
+  "EntityDescription": {
+   "pattern": "^[a-zA-Z0-9=:#@/\\-,.][a-zA-Z0-9+=:#@/\\-,.\\s]+[a-zA-Z0-9+=:#@/\\-,.]{1,256}$",
+   "type": "string"
+  },
+  "EntityId": {
+   "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "EntityName": {
+   "pattern": "^[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "IPAddress": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IPAddressVersion": {
+   "enum": [
+    "IPV4",
+    "IPV6"
+   ],
+   "type": "string"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "Scope": {
+   "enum": [
+    "CLOUDFRONT",
+    "REGIONAL"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name",
+  "/properties/Id",
+  "/properties/Scope"
+ ],
+ "properties": {
+  "Addresses": {
+   "items": {
+    "$ref": "#/definitions/IPAddress"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "Description": {
+   "$ref": "#/definitions/EntityDescription"
+  },
+  "IPAddressVersion": {
+   "$ref": "#/definitions/IPAddressVersion"
+  },
+  "Id": {
+   "$ref": "#/definitions/EntityId"
+  },
+  "Name": {
+   "$ref": "#/definitions/EntityName"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Addresses",
+  "IPAddressVersion",
+  "Scope"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::WAFv2::IPSet"
+}
