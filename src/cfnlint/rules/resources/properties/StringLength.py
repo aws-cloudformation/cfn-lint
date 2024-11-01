@@ -9,7 +9,7 @@ from typing import Any
 
 import regex as re
 
-from cfnlint.helpers import FUNCTIONS
+from cfnlint.helpers import FUNCTIONS, ensure_list, is_function
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 
@@ -80,8 +80,8 @@ class StringLength(CloudFormationLintRule):
             return
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement
-        if validator.is_type(instance, "object") and len(instance) == 1:
-            key = list(instance.keys())[0]
+        key, value = is_function(instance)
+        if key is not None:
             if key == "Fn::Sub":
                 value = instance[key]
                 if isinstance(value, str):
@@ -93,7 +93,7 @@ class StringLength(CloudFormationLintRule):
                         validator, mL, self._fix_sub_string(value[0]), schema
                     )
                 return
-        if schema.get("type") == "object":
+        if "object" in ensure_list(schema.get("type")):
             yield from self._non_string_max_length(instance, mL)
 
     # pylint: disable=unused-argument, arguments-renamed
@@ -105,8 +105,8 @@ class StringLength(CloudFormationLintRule):
 
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement
-        if validator.is_type(instance, "object") and len(instance) == 1:
-            key = list(instance.keys())[0]
+        key, value = is_function(instance)
+        if key is not None:
             if key == "Fn::Sub":
                 value = instance[key]
                 if isinstance(value, str):
@@ -118,5 +118,6 @@ class StringLength(CloudFormationLintRule):
                         validator, mL, self._fix_sub_string(value[0]), schema
                     )
                 return
-        if schema.get("type") == "object":
+
+        if "object" in ensure_list(schema.get("type")):
             yield from self._non_string_min_length(instance, mL)
