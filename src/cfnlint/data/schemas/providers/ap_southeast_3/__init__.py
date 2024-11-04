@@ -773,6 +773,7 @@ cached: list[str] = [
     "aws-appconfig-application.json",
     "aws-appconfig-configurationprofile.json",
     "aws-appconfig-deployment.json",
+    "aws-appconfig-deploymentstrategy.json",
     "aws-appconfig-environment.json",
     "aws-appconfig-extension.json",
     "aws-appconfig-extensionassociation.json",

@@ -867,7 +867,6 @@ cached: list[str] = [
     "aws-datasync-locationobjectstorage.json",
     "aws-datasync-locations3.json",
     "aws-datasync-locationsmb.json",
-    "aws-datasync-task.json",
     "aws-dlm-lifecyclepolicy.json",
     "aws-dms-datamigration.json",
     "aws-dms-dataprovider.json",
