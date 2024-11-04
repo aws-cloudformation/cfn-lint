@@ -1,3 +1,10 @@
+### v1.18.4
+## What's Changed
+* Fix validating min/maxLength whena property has an array for keyword `type` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3805
+* Update CloudFormation schemas to `2024-11-01` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3803
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.3...v1.18.4
+
 ### v1.18.3
 ## What's Changed
 * Enhanced monitoring can be configured on aurora clusters by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3801
