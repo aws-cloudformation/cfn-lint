@@ -764,7 +764,6 @@ cached: list[str] = [
     "aws-batch-jobdefinition.json",
     "aws-batch-jobqueue.json",
     "aws-batch-schedulingpolicy.json",
-    "aws-cassandra-keyspace.json",
     "aws-cassandra-table.json",
     "aws-certificatemanager-account.json",
     "aws-certificatemanager-certificate.json",

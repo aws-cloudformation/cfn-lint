@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ReplicationSpecification",
+  "/properties/KeyspaceName"
+ ],
+ "definitions": {
+  "RegionList": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "ap-northeast-1",
+     "ap-northeast-2",
+     "ap-south-1",
+     "ap-southeast-1",
+     "ap-southeast-2",
+     "ca-central-1",
+     "eu-central-1",
+     "eu-north-1",
+     "eu-west-1",
+     "eu-west-2",
+     "eu-west-3",
+     "sa-east-1",
+     "us-east-1",
+     "us-east-2",
+     "us-west-1",
+     "us-west-2"
+    ],
+    "type": "string"
+   },
+   "maxItems": 6,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ReplicationSpecification": {
+   "additionalProperties": false,
+   "default": {
+    "properties": {
+     "ReplicationStrategy": {
+      "const": "SINGLE_REGION",
+      "type": "string"
+     }
+    }
+   },
+   "dependencies": {
+    "RegionList": [
+     "ReplicationStrategy"
+    ]
+   },
+   "properties": {
+    "RegionList": {
+     "$ref": "#/definitions/RegionList"
+    },
+    "ReplicationStrategy": {
+     "enum": [
+      "SINGLE_REGION",
+      "MULTI_REGION"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName"
+ ],
+ "properties": {
+  "ClientSideTimestampsEnabled": {
+   "type": "boolean"
+  },
+  "KeyspaceName": {
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+   "type": "string"
+  },
+  "ReplicationSpecification": {
+   "$ref": "#/definitions/ReplicationSpecification"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "required": [],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Cassandra::Keyspace"
+}

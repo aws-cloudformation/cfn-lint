@@ -1303,6 +1303,7 @@ types: list[str] = [
     "AWS::WAFv2::RuleGroup",
     "AWS::WAFv2::WebACL",
     "AWS::WAFv2::WebACLAssociation",
+    "AWS::Wisdom::AIAgent",
     "AWS::Wisdom::AIPrompt",
     "AWS::Wisdom::AIPromptVersion",
     "AWS::Wisdom::Assistant",

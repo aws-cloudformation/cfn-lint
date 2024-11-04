@@ -2477,6 +2477,7 @@ cached: list[str] = [
     "aws-wafv2-rulegroup.json",
     "aws-wafv2-webacl.json",
     "aws-wafv2-webaclassociation.json",
+    "aws-wisdom-aiagent.json",
     "aws-wisdom-aiprompt.json",
     "aws-wisdom-aipromptversion.json",
     "aws-wisdom-assistant.json",
