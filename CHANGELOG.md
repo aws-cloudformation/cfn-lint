@@ -1,7 +1,8 @@
 ### v1.18.4
 ## What's Changed
+* Add `AutoRetryLimit` for `AWS::CodeBuild::Project` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3809
 * Fix validating min/maxLength whena property has an array for keyword `type` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3805
-* Update CloudFormation schemas to `2024-11-01` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3803
+* Update CloudFormation schemas to `2024-11-01` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3807
 
 **Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.3...v1.18.4
 
