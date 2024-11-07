@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import warnings
+from copy import deepcopy
 from typing import Any
 
 import networkx
@@ -308,7 +309,8 @@ class Graph:
     # pylint: disable=import-outside-toplevel,unused-variable
     def to_dot(self, path):
         """Export the graph to a file with DOT format"""
-        view = self.settings.subgraph_view(self.graph)
+        graph = deepcopy(self.graph)
+        view = self.settings.subgraph_view(graph)
         try:
             networkx.drawing.nx_agraph.write_dot(view, path)
         except ImportError:
