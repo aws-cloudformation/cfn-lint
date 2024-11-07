@@ -76,3 +76,31 @@ class TestType(BaseRuleTestCase):
         )
 
         self.assertListEqual(errors, [], errors)
+
+    @patch("cfnlint.template.Template", autospec=True)
+    def test_types_with_conditions_false_and_true(self, cfn):
+        cfn = Mock()
+        cfn.conditions = Mock()
+        cfn.conditions.build_scenerios_on_region.return_value = [True, False]
+        validator = CfnTemplateValidator({}).evolve(cfn=cfn)
+        errors = list(
+            self.rule.validate(
+                validator,
+                "cfnResources",
+                {"Type": "Foo::Bar::Type", "Condition": "IsUsEast1"},
+                {},
+            )
+        )
+
+        self.assertListEqual(
+            errors,
+            [
+                ValidationError(
+                    "Resource type 'Foo::Bar::Type' does not exist in 'us-east-1'",
+                    path=deque(["Type"]),
+                    schema_path=deque([]),
+                    rule=ResourceType(),
+                ),
+            ],
+            errors,
+        )
