@@ -6,75 +6,43 @@
   "/properties/Tags"
  ],
  "definitions": {
-  "AutomaticTerminationMode": {
-   "enum": [
-    "DEACTIVATED",
-    "ACTIVATED"
-   ],
-   "type": "string"
-  },
-  "SessionBackupMode": {
-   "enum": [
-    "AUTOMATIC",
-    "DEACTIVATED"
-   ],
-   "type": "string"
-  },
-  "SessionPersistenceMode": {
-   "enum": [
-    "DEACTIVATED",
-    "ACTIVATED"
-   ],
-   "type": "string"
-  },
   "StreamConfiguration": {
    "additionalProperties": false,
    "properties": {
     "AutomaticTerminationMode": {
-     "$ref": "#/definitions/AutomaticTerminationMode"
+     "type": "string"
     },
     "ClipboardMode": {
-     "$ref": "#/definitions/StreamingClipboardMode"
+     "type": "string"
     },
     "Ec2InstanceTypes": {
      "items": {
-      "$ref": "#/definitions/StreamingInstanceType"
+      "type": "string"
      },
-     "maxItems": 30,
-     "minItems": 1,
-     "type": "array"
+     "type": "array",
+     "uniqueItems": false
     },
     "MaxSessionLengthInMinutes": {
-     "default": 690,
-     "maximum": 43200,
-     "minimum": 1,
      "type": "number"
     },
     "MaxStoppedSessionLengthInMinutes": {
-     "default": 0,
-     "maximum": 5760,
-     "minimum": 0,
      "type": "number"
     },
     "SessionBackup": {
      "$ref": "#/definitions/StreamConfigurationSessionBackup"
     },
     "SessionPersistenceMode": {
-     "$ref": "#/definitions/SessionPersistenceMode"
+     "type": "string"
     },
     "SessionStorage": {
      "$ref": "#/definitions/StreamConfigurationSessionStorage"
     },
     "StreamingImageIds": {
      "items": {
-      "maxLength": 22,
-      "minLength": 0,
-      "pattern": "^[a-zA-Z0-9-_]*$",
       "type": "string"
      },
-     "maxItems": 20,
-     "minItems": 1,
-     "type": "array"
+     "type": "array",
+     "uniqueItems": false
     },
     "VolumeConfiguration": {
      "$ref": "#/definitions/VolumeConfiguration"
@@ -82,8 +50,8 @@
    },
    "required": [
     "ClipboardMode",
-    "Ec2InstanceTypes",
-    "StreamingImageIds"
+    "StreamingImageIds",
+    "Ec2InstanceTypes"
    ],
    "type": "object"
   },
@@ -91,13 +59,10 @@
    "additionalProperties": false,
    "properties": {
     "MaxBackupsToRetain": {
-     "default": 0,
-     "maximum": 10,
-     "minimum": 0,
      "type": "number"
     },
     "Mode": {
-     "$ref": "#/definitions/SessionBackupMode"
+     "type": "string"
     }
    },
    "type": "object"
@@ -107,10 +72,10 @@
    "properties": {
     "Mode": {
      "items": {
-      "$ref": "#/definitions/StreamingSessionStorageMode"
+      "type": "string"
      },
-     "minItems": 1,
-     "type": "array"
+     "type": "array",
+     "uniqueItems": false
     },
     "Root": {
      "$ref": "#/definitions/StreamingSessionStorageRoot"
@@ -121,59 +86,13 @@
    ],
    "type": "object"
   },
-  "StreamingClipboardMode": {
-   "enum": [
-    "ENABLED",
-    "DISABLED"
-   ],
-   "type": "string"
-  },
-  "StreamingInstanceType": {
-   "enum": [
-    "g4dn.xlarge",
-    "g4dn.2xlarge",
-    "g4dn.4xlarge",
-    "g4dn.8xlarge",
-    "g4dn.12xlarge",
-    "g4dn.16xlarge",
-    "g3.4xlarge",
-    "g3s.xlarge",
-    "g5.xlarge",
-    "g5.2xlarge",
-    "g5.4xlarge",
-    "g5.8xlarge",
-    "g5.16xlarge"
-   ],
-   "type": "string"
-  },
-  "StreamingSessionStorageMode": {
-   "enum": [
-    "UPLOAD"
-   ],
-   "type": "string"
-  },
   "StreamingSessionStorageRoot": {
    "additionalProperties": false,
    "properties": {
     "Linux": {
-     "maxLength": 128,
-     "minLength": 1,
-     "pattern": "^(\\$HOME|/)[/]?([A-Za-z0-9-_]+/)*([A-Za-z0-9_-]+)$",
      "type": "string"
     },
     "Windows": {
-     "maxLength": 128,
-     "minLength": 1,
-     "pattern": "^((\\%HOMEPATH\\%)|[a-zA-Z]:)[\\\\/](?:[a-zA-Z0-9_-]+[\\\\/])*[a-zA-Z0-9_-]+$",
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "Tags": {
-   "additionalProperties": false,
-   "patternProperties": {
-    ".+": {
      "type": "string"
     }
    },
@@ -183,21 +102,12 @@
    "additionalProperties": false,
    "properties": {
     "Iops": {
-     "default": 3000,
-     "maximum": 16000,
-     "minimum": 3000,
      "type": "number"
     },
     "Size": {
-     "default": 500,
-     "maximum": 16000,
-     "minimum": 100,
      "type": "number"
     },
     "Throughput": {
-     "default": 125,
-     "maximum": 1000,
-     "minimum": 125,
      "type": "number"
     }
    },
@@ -205,38 +115,30 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/LaunchProfileId",
-  "/properties/StudioId"
+  "/properties/LaunchProfileId"
  ],
  "properties": {
   "Description": {
-   "maxLength": 256,
-   "minLength": 0,
    "type": "string"
   },
   "Ec2SubnetIds": {
    "items": {
     "type": "string"
    },
-   "maxItems": 6,
-   "minItems": 0,
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "LaunchProfileId": {
    "type": "string"
   },
   "LaunchProfileProtocolVersions": {
    "items": {
-    "maxLength": 10,
-    "minLength": 0,
-    "pattern": "^2021\\-03\\-31$",
     "type": "string"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "Name": {
-   "maxLength": 64,
-   "minLength": 1,
    "type": "string"
   },
   "StreamConfiguration": {
@@ -246,28 +148,31 @@
    "items": {
     "type": "string"
    },
-   "maxItems": 100,
-   "minItems": 1,
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "StudioId": {
    "type": "string"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags"
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "readOnlyProperties": [
   "/properties/LaunchProfileId"
  ],
  "required": [
-  "StudioId",
-  "Name",
-  "StudioComponentIds",
   "Ec2SubnetIds",
+  "StudioComponentIds",
   "StreamConfiguration",
-  "LaunchProfileProtocolVersions"
+  "LaunchProfileProtocolVersions",
+  "StudioId",
+  "Name"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
  "typeName": "AWS::NimbleStudio::LaunchProfile"
 }

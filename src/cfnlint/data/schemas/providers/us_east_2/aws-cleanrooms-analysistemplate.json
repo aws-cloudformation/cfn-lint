@@ -1,0 +1,224 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/MembershipIdentifier",
+  "/properties/Source",
+  "/properties/Source/Text",
+  "/properties/Format",
+  "/properties/AnalysisParameters"
+ ],
+ "definitions": {
+  "AnalysisParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "maxLength": 250,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "[0-9a-zA-Z_]+",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SMALLINT",
+      "INTEGER",
+      "BIGINT",
+      "DECIMAL",
+      "REAL",
+      "DOUBLE_PRECISION",
+      "BOOLEAN",
+      "CHAR",
+      "VARCHAR",
+      "DATE",
+      "TIMESTAMP",
+      "TIMESTAMPTZ",
+      "TIME",
+      "TIMETZ",
+      "VARBYTE",
+      "BINARY",
+      "BYTE",
+      "CHARACTER",
+      "DOUBLE",
+      "FLOAT",
+      "INT",
+      "LONG",
+      "NUMERIC",
+      "SHORT",
+      "STRING",
+      "TIMESTAMP_LTZ",
+      "TIMESTAMP_NTZ",
+      "TINYINT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "AnalysisSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "ReferencedTables": {
+     "$ref": "#/definitions/ReferencedTables"
+    }
+   },
+   "required": [
+    "ReferencedTables"
+   ],
+   "type": "object"
+  },
+  "AnalysisSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Text": {
+     "maxLength": 15000,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  },
+  "ReferencedTables": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TableName"
+   },
+   "minItems": 0,
+   "type": "array"
+  },
+  "TableName": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AnalysisTemplateIdentifier",
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "AnalysisParameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AnalysisParameter"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "AnalysisTemplateIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "Format": {
+   "enum": [
+    "SQL"
+   ],
+   "type": "string"
+  },
+  "MembershipArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
+   "type": "string"
+  },
+  "Schema": {
+   "$ref": "#/definitions/AnalysisSchema"
+  },
+  "Source": {
+   "$ref": "#/definitions/AnalysisSource"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CollaborationArn",
+  "/properties/CollaborationIdentifier",
+  "/properties/AnalysisTemplateIdentifier",
+  "/properties/Schema",
+  "/properties/Arn",
+  "/properties/MembershipArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Source",
+  "Format",
+  "Name",
+  "MembershipIdentifier"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::AnalysisTemplate"
+}

@@ -1,0 +1,112 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "LogLevel": {
+   "enum": [
+    "INFO",
+    "ERROR",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WirelessDeviceFrameInfo": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TraceContent": {
+   "additionalProperties": false,
+   "properties": {
+    "LogLevel": {
+     "$ref": "#/definitions/LogLevel"
+    },
+    "WirelessDeviceFrameInfo": {
+     "$ref": "#/definitions/WirelessDeviceFrameInfo"
+    }
+   },
+   "type": "object"
+  },
+  "WirelessDevices": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 250,
+   "type": "array"
+  },
+  "WirelessGateways": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 250,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::NetworkAnalyzerConfiguration"
+}

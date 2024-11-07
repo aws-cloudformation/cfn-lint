@@ -9,33 +9,15 @@
    "additionalProperties": false,
    "properties": {
     "KeyArn": {
-     "minLength": 4,
-     "pattern": "^arn:.*",
      "type": "string"
     },
     "KeyType": {
-     "$ref": "#/definitions/StudioEncryptionConfigurationKeyType"
+     "type": "string"
     }
    },
    "required": [
     "KeyType"
    ],
-   "type": "object"
-  },
-  "StudioEncryptionConfigurationKeyType": {
-   "enum": [
-    "AWS_OWNED_KEY",
-    "CUSTOMER_MANAGED_KEY"
-   ],
-   "type": "string"
-  },
-  "Tags": {
-   "additionalProperties": false,
-   "patternProperties": {
-    ".+": {
-     "type": "string"
-    }
-   },
    "type": "object"
   }
  },
@@ -47,14 +29,9 @@
    "type": "string"
   },
   "DisplayName": {
-   "maxLength": 64,
-   "minLength": 0,
    "type": "string"
   },
   "HomeRegion": {
-   "maxLength": 50,
-   "minLength": 0,
-   "pattern": "[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]",
    "type": "string"
   },
   "SsoClientId": {
@@ -67,33 +44,34 @@
    "type": "string"
   },
   "StudioName": {
-   "maxLength": 64,
-   "minLength": 3,
-   "pattern": "^[a-z0-9]*$",
    "type": "string"
   },
   "StudioUrl": {
    "type": "string"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags"
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "UserRoleArn": {
    "type": "string"
   }
  },
  "readOnlyProperties": [
+  "/properties/StudioId",
   "/properties/HomeRegion",
   "/properties/SsoClientId",
-  "/properties/StudioId",
   "/properties/StudioUrl"
  ],
  "required": [
-  "DisplayName",
   "UserRoleArn",
-  "AdminRoleArn",
-  "StudioName"
+  "DisplayName",
+  "StudioName",
+  "AdminRoleArn"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
  "typeName": "AWS::NimbleStudio::Studio"
 }

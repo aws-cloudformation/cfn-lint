@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProfilingGroupName",
+  "/properties/ComputePlatform"
+ ],
+ "definitions": {
+  "Channel": {
+   "properties": {
+    "channelId": {
+     "$ref": "#/definitions/ChannelId"
+    },
+    "channelUri": {
+     "$ref": "#/definitions/ChannelUri"
+    }
+   },
+   "required": [
+    "channelUri"
+   ],
+   "type": "object"
+  },
+  "ChannelId": {
+   "pattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "type": "string"
+  },
+  "ChannelUri": {
+   "pattern": "^arn:aws([-\\w]*):[a-z-]+:(([a-z]+-)+[0-9]+)?:([0-9]{12}):[^.]+$",
+   "type": "string"
+  },
+  "IamArn": {
+   "pattern": "^arn:aws([-\\w]*):iam::([0-9]{12}):[\\S]+$",
+   "type": "string"
+  },
+  "ProfilingGroupArn": {
+   "pattern": "^arn:aws([-\\w]*):codeguru-profiler:(([a-z]+-)+[0-9]+):([0-9]{12}):profilingGroup/[^.]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProfilingGroupName"
+ ],
+ "properties": {
+  "AgentPermissions": {
+   "additionalProperties": false,
+   "properties": {
+    "Principals": {
+     "items": {
+      "$ref": "#/definitions/IamArn"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Principals"
+   ],
+   "type": "object"
+  },
+  "AnomalyDetectionNotificationConfiguration": {
+   "items": {
+    "$ref": "#/definitions/Channel"
+   },
+   "type": "array"
+  },
+  "Arn": {
+   "$ref": "#/definitions/ProfilingGroupArn",
+   "examples": [
+    "arn:aws:codeguru-profiler:us-east-1:000000000000:profilingGroup/My-example-profiling-group"
+   ]
+  },
+  "ComputePlatform": {
+   "enum": [
+    "Default",
+    "AWSLambda"
+   ],
+   "type": "string"
+  },
+  "ProfilingGroupName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[\\w-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ProfilingGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeguru-profiler",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CodeGuruProfiler::ProfilingGroup"
+}
