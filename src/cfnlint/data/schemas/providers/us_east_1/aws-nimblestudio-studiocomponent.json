@@ -1,8 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/StudioId",
   "/properties/Subtype",
+  "/properties/StudioId",
   "/properties/Tags"
  ],
  "definitions": {
@@ -10,13 +10,9 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
-     "maxLength": 40,
-     "minLength": 1,
      "type": "string"
     },
     "Value": {
-     "maxLength": 64,
-     "minLength": 1,
      "type": "string"
     }
    },
@@ -29,16 +25,13 @@
      "items": {
       "$ref": "#/definitions/ActiveDirectoryComputerAttribute"
      },
-     "maxItems": 50,
-     "minItems": 0,
-     "type": "array"
+     "type": "array",
+     "uniqueItems": false
     },
     "DirectoryId": {
      "type": "string"
     },
     "OrganizationalUnitDistinguishedName": {
-     "maxLength": 2000,
-     "minLength": 1,
      "type": "string"
     }
    },
@@ -56,13 +49,6 @@
    },
    "type": "object"
   },
-  "LaunchProfilePlatform": {
-   "enum": [
-    "LINUX",
-    "WINDOWS"
-   ],
-   "type": "string"
-  },
   "LicenseServiceConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -76,14 +62,9 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
-     "maxLength": 64,
-     "minLength": 1,
-     "pattern": "^[a-zA-Z_][a-zA-Z0-9_]+$",
      "type": "string"
     },
     "Value": {
-     "maxLength": 256,
-     "minLength": 1,
      "type": "string"
     }
    },
@@ -99,130 +80,48 @@
      "type": "string"
     },
     "LinuxMountPoint": {
-     "maxLength": 128,
-     "minLength": 0,
-     "pattern": "^(/?|(\\$HOME)?(/[^/\\n\\s\\\\]+)*)$",
      "type": "string"
     },
     "ShareName": {
      "type": "string"
     },
     "WindowsMountDrive": {
-     "pattern": "^[A-Z]$",
      "type": "string"
     }
    },
    "type": "object"
   },
   "StudioComponentConfiguration": {
-   "oneOf": [
-    {
-     "additionalProperties": false,
-     "properties": {
-      "ActiveDirectoryConfiguration": {
-       "$ref": "#/definitions/ActiveDirectoryConfiguration"
-      }
-     },
-     "required": [
-      "ActiveDirectoryConfiguration"
-     ],
-     "title": "ActiveDirectoryConfiguration",
-     "type": "object"
+   "additionalProperties": false,
+   "properties": {
+    "ActiveDirectoryConfiguration": {
+     "$ref": "#/definitions/ActiveDirectoryConfiguration"
     },
-    {
-     "additionalProperties": false,
-     "properties": {
-      "ComputeFarmConfiguration": {
-       "$ref": "#/definitions/ComputeFarmConfiguration"
-      }
-     },
-     "required": [
-      "ComputeFarmConfiguration"
-     ],
-     "title": "ComputeFarmConfiguration",
-     "type": "object"
+    "ComputeFarmConfiguration": {
+     "$ref": "#/definitions/ComputeFarmConfiguration"
     },
-    {
-     "additionalProperties": false,
-     "properties": {
-      "LicenseServiceConfiguration": {
-       "$ref": "#/definitions/LicenseServiceConfiguration"
-      }
-     },
-     "required": [
-      "LicenseServiceConfiguration"
-     ],
-     "title": "LicenseServiceConfiguration",
-     "type": "object"
+    "LicenseServiceConfiguration": {
+     "$ref": "#/definitions/LicenseServiceConfiguration"
     },
-    {
-     "additionalProperties": false,
-     "properties": {
-      "SharedFileSystemConfiguration": {
-       "$ref": "#/definitions/SharedFileSystemConfiguration"
-      }
-     },
-     "required": [
-      "SharedFileSystemConfiguration"
-     ],
-     "title": "SharedFileSystemConfiguration",
-     "type": "object"
+    "SharedFileSystemConfiguration": {
+     "$ref": "#/definitions/SharedFileSystemConfiguration"
     }
-   ]
+   },
+   "type": "object"
   },
   "StudioComponentInitializationScript": {
    "additionalProperties": false,
    "properties": {
     "LaunchProfileProtocolVersion": {
-     "maxLength": 10,
-     "minLength": 0,
-     "pattern": "^2021\\-03\\-31$",
      "type": "string"
     },
     "Platform": {
-     "$ref": "#/definitions/LaunchProfilePlatform"
+     "type": "string"
     },
     "RunContext": {
-     "$ref": "#/definitions/StudioComponentInitializationScriptRunContext"
+     "type": "string"
     },
     "Script": {
-     "maxLength": 5120,
-     "minLength": 1,
-     "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "StudioComponentInitializationScriptRunContext": {
-   "enum": [
-    "SYSTEM_INITIALIZATION",
-    "USER_INITIALIZATION"
-   ],
-   "type": "string"
-  },
-  "StudioComponentSubtype": {
-   "enum": [
-    "AWS_MANAGED_MICROSOFT_AD",
-    "AMAZON_FSX_FOR_WINDOWS",
-    "AMAZON_FSX_FOR_LUSTRE",
-    "CUSTOM"
-   ],
-   "type": "string"
-  },
-  "StudioComponentType": {
-   "enum": [
-    "ACTIVE_DIRECTORY",
-    "SHARED_FILE_SYSTEM",
-    "COMPUTE_FARM",
-    "LICENSE_SERVICE",
-    "CUSTOM"
-   ],
-   "type": "string"
-  },
-  "Tags": {
-   "additionalProperties": false,
-   "patternProperties": {
-    ".+": {
      "type": "string"
     }
    },
@@ -230,54 +129,38 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/StudioComponentId",
-  "/properties/StudioId"
+  "/properties/StudioComponentId"
  ],
  "properties": {
   "Configuration": {
    "$ref": "#/definitions/StudioComponentConfiguration"
   },
   "Description": {
-   "maxLength": 256,
-   "minLength": 0,
    "type": "string"
   },
   "Ec2SecurityGroupIds": {
    "items": {
     "type": "string"
    },
-   "maxItems": 30,
-   "minItems": 0,
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "InitializationScripts": {
    "items": {
     "$ref": "#/definitions/StudioComponentInitializationScript"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "Name": {
-   "maxLength": 64,
-   "minLength": 0,
-   "type": "string"
-  },
-  "RuntimeRoleArn": {
-   "maxLength": 2048,
-   "minLength": 0,
    "type": "string"
   },
   "ScriptParameters": {
    "items": {
     "$ref": "#/definitions/ScriptParameterKeyValue"
    },
-   "maxItems": 30,
-   "minItems": 0,
-   "type": "array"
-  },
-  "SecureInitializationRoleArn": {
-   "maxLength": 2048,
-   "minLength": 0,
-   "type": "string"
+   "type": "array",
+   "uniqueItems": false
   },
   "StudioComponentId": {
    "type": "string"
@@ -286,23 +169,27 @@
    "type": "string"
   },
   "Subtype": {
-   "$ref": "#/definitions/StudioComponentSubtype"
+   "type": "string"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags"
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "Type": {
-   "$ref": "#/definitions/StudioComponentType"
+   "type": "string"
   }
  },
  "readOnlyProperties": [
   "/properties/StudioComponentId"
  ],
  "required": [
+  "Type",
   "StudioId",
-  "Name",
-  "Type"
+  "Name"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
  "typeName": "AWS::NimbleStudio::StudioComponent"
 }

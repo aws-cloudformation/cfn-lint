@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PortalId"
+ ],
+ "definitions": {
+  "AssetId": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProjectId"
+ ],
+ "properties": {
+  "AssetIds": {
+   "items": {
+    "$ref": "#/definitions/AssetId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PortalId": {
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "ProjectArn": {
+   "type": "string"
+  },
+  "ProjectDescription": {
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "ProjectId": {
+   "type": "string"
+  },
+  "ProjectName": {
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProjectId",
+  "/properties/ProjectArn"
+ ],
+ "required": [
+  "PortalId",
+  "ProjectName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "taggable": true,
+ "typeName": "AWS::IoTSiteWise::Project"
+}

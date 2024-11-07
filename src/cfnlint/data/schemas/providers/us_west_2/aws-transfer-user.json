@@ -1,0 +1,196 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ServerId",
+   "/properties/UserName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerId",
+  "/properties/UserName"
+ ],
+ "definitions": {
+  "HomeDirectoryMapEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Entry": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^/.*$",
+     "type": "string"
+    },
+    "Target": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "pattern": "^/.*$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/MapType"
+    }
+   },
+   "required": [
+    "Entry",
+    "Target"
+   ],
+   "type": "object"
+  },
+  "HomeDirectoryType": {
+   "enum": [
+    "PATH",
+    "LOGICAL"
+   ],
+   "type": "string"
+  },
+  "MapType": {
+   "enum": [
+    "FILE",
+    "DIRECTORY"
+   ],
+   "type": "string"
+  },
+  "PosixProfile": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    },
+    "SecondaryGids": {
+     "insertionOrder": false,
+     "items": {
+      "maximum": 4294967295,
+      "minimum": 0,
+      "type": "number"
+     },
+     "maxItems": 16,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Uid": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Gid",
+    "Uid"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "^arn:\\S+$",
+   "type": "string"
+  },
+  "HomeDirectory": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^(|/.*)$",
+   "type": "string"
+  },
+  "HomeDirectoryMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HomeDirectoryMapEntry"
+   },
+   "maxItems": 50000,
+   "minItems": 1,
+   "type": "array"
+  },
+  "HomeDirectoryType": {
+   "$ref": "#/definitions/HomeDirectoryType"
+  },
+  "Policy": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "type": "string"
+  },
+  "PosixProfile": {
+   "$ref": "#/definitions/PosixProfile"
+  },
+  "Role": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:.*role/\\S+$",
+   "type": "string"
+  },
+  "ServerId": {
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^s-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "SshPublicKeys": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 0,
+    "pattern": "^\\s*(ssh|ecdsa)-[a-z0-9-]+[ \\t]+(([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{1,3})?(={0,3})?)(\\s*|[ \\t]+[\\S \\t]*\\s*)$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
+  "UserName": {
+   "maxLength": 100,
+   "minLength": 3,
+   "pattern": "^[\\w][\\w@.-]{2,99}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Role",
+  "ServerId",
+  "UserName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::User"
+}

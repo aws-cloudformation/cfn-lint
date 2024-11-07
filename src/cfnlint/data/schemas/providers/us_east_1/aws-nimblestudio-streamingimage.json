@@ -1,77 +1,60 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Ec2ImageId",
   "/properties/StudioId",
-  "/properties/Tags"
+  "/properties/Tags",
+  "/properties/Ec2ImageId"
  ],
  "definitions": {
   "StreamingImageEncryptionConfiguration": {
    "additionalProperties": false,
    "properties": {
     "KeyArn": {
-     "minLength": 4,
-     "pattern": "^arn:.*",
      "type": "string"
     },
     "KeyType": {
-     "$ref": "#/definitions/StreamingImageEncryptionConfigurationKeyType"
+     "type": "string"
     }
    },
    "required": [
     "KeyType"
    ],
    "type": "object"
-  },
-  "StreamingImageEncryptionConfigurationKeyType": {
-   "enum": [
-    "CUSTOMER_MANAGED_KEY"
-   ],
-   "type": "string"
-  },
-  "Tags": {
-   "additionalProperties": false,
-   "patternProperties": {
-    ".+": {
-     "type": "string"
-    }
-   },
-   "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/StudioId",
   "/properties/StreamingImageId"
  ],
  "properties": {
   "Description": {
-   "maxLength": 256,
-   "minLength": 0,
    "type": "string"
   },
   "Ec2ImageId": {
-   "pattern": "^ami-[0-9A-z]+$",
    "type": "string"
   },
   "EncryptionConfiguration": {
    "$ref": "#/definitions/StreamingImageEncryptionConfiguration"
   },
+  "EncryptionConfigurationKeyArn": {
+   "type": "string"
+  },
+  "EncryptionConfigurationKeyType": {
+   "type": "string"
+  },
   "EulaIds": {
    "items": {
     "type": "string"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": false
   },
   "Name": {
-   "maxLength": 64,
-   "minLength": 0,
    "type": "string"
   },
   "Owner": {
    "type": "string"
   },
   "Platform": {
-   "pattern": "^[a-zA-Z]*$",
    "type": "string"
   },
   "StreamingImageId": {
@@ -81,21 +64,27 @@
    "type": "string"
   },
   "Tags": {
-   "$ref": "#/definitions/Tags"
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "readOnlyProperties": [
-  "/properties/EncryptionConfiguration",
+  "/properties/Platform",
   "/properties/EulaIds",
   "/properties/Owner",
-  "/properties/Platform",
+  "/properties/EncryptionConfiguration",
+  "/properties/EncryptionConfiguration/KeyArn",
+  "/properties/EncryptionConfiguration/KeyType",
   "/properties/StreamingImageId"
  ],
  "required": [
-  "StudioId",
   "Ec2ImageId",
+  "StudioId",
   "Name"
  ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
  "typeName": "AWS::NimbleStudio::StreamingImage"
 }

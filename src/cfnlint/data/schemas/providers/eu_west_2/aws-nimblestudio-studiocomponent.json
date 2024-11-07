@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Subtype",
+  "/properties/StudioId",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ScriptParameterKeyValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StudioComponentInitializationScript": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchProfileProtocolVersion": {
+     "type": "string"
+    },
+    "Platform": {
+     "type": "string"
+    },
+    "RunContext": {
+     "type": "string"
+    },
+    "Script": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioComponentId"
+ ],
+ "properties": {
+  "Configuration": {
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Ec2SecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "InitializationScripts": {
+   "items": {
+    "$ref": "#/definitions/StudioComponentInitializationScript"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RuntimeRoleArn": {
+   "type": "string"
+  },
+  "ScriptParameters": {
+   "items": {
+    "$ref": "#/definitions/ScriptParameterKeyValue"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecureInitializationRoleArn": {
+   "type": "string"
+  },
+  "StudioComponentId": {
+   "type": "string"
+  },
+  "StudioId": {
+   "type": "string"
+  },
+  "Subtype": {
+   "type": "string"
+  },
+  "Tags": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StudioComponentId"
+ ],
+ "required": [
+  "Type",
+  "StudioId",
+  "Name"
+ ],
+ "typeName": "AWS::NimbleStudio::StudioComponent"
+}

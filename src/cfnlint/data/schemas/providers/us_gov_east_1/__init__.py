@@ -1062,8 +1062,6 @@ cached: list[str] = [
     "aws-licensemanager-grant.json",
     "aws-licensemanager-license.json",
     "aws-logs-accountpolicy.json",
-    "aws-logs-delivery.json",
-    "aws-logs-deliverydestination.json",
     "aws-logs-deliverysource.json",
     "aws-logs-destination.json",
     "aws-logs-loggroup.json",
