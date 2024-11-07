@@ -38,7 +38,7 @@ class ResourceType(CfnLintKeyword):
             if validator.is_type(resource_condition, "string"):
                 if validator.cfn is None:
                     continue
-                if [False] == validator.cfn.conditions.build_scenerios_on_region(
+                if True not in validator.cfn.conditions.build_scenerios_on_region(
                     resource_condition, region
                 ):
                     continue
