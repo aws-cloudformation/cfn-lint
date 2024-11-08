@@ -15,6 +15,7 @@
    "properties": {
     "SubnetIds": {
      "items": {
+      "pattern": "^(subnet-[0-9a-f]{8}|subnet-[0-9a-f]{17})$",
       "type": "string"
      },
      "type": "array",
@@ -22,6 +23,7 @@
     },
     "VpcId": {
      "format": "AWS::EC2::VPC.Id",
+     "pattern": "^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$",
      "type": "string"
     }
    },
@@ -43,6 +45,7 @@
    "type": "boolean"
   },
   "Description": {
+   "pattern": "^([a-zA-Z0-9_])[\\\\a-zA-Z0-9_@#%*+=:?./!\\s-]*$",
    "type": "string"
   },
   "DnsIpAddresses": {
@@ -59,12 +62,15 @@
    "type": "string"
   },
   "Name": {
+   "pattern": "^([a-zA-Z0-9]+[\\\\.-])+([a-zA-Z0-9])+$",
    "type": "string"
   },
   "Password": {
+   "pattern": "(?=^.{8,64}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9\\s])(?=.*[a-z])|(?=.*[^A-Za-z0-9\\s])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9\\s]))^.*",
    "type": "string"
   },
   "ShortName": {
+   "pattern": "^[^\\\\/:*?\"<>|.]+[^\\\\/:*?\"<>|]*$",
    "type": "string"
   },
   "Size": {
