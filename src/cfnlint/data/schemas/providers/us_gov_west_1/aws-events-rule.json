@@ -9,6 +9,10 @@
    "additionalProperties": false,
    "properties": {
     "AssignPublicIp": {
+     "enum": [
+      "DISABLED",
+      "ENABLED"
+     ],
      "type": "string"
     },
     "SecurityGroups": {
@@ -122,6 +126,11 @@
      "type": "string"
     },
     "LaunchType": {
+     "enum": [
+      "EC2",
+      "EXTERNAL",
+      "FARGATE"
+     ],
      "type": "string"
     },
     "NetworkConfiguration": {
@@ -145,6 +154,9 @@
      "type": "string"
     },
     "PropagateTags": {
+     "enum": [
+      "TASK_DEFINITION"
+     ],
      "type": "string"
     },
     "ReferenceId": {
@@ -182,6 +194,7 @@
     },
     "PathParameterValues": {
      "items": {
+      "pattern": "^(?!\\s*$).+",
       "type": "string"
      },
      "type": "array",
@@ -246,6 +259,10 @@
      "type": "string"
     },
     "Type": {
+     "enum": [
+      "distinctInstance",
+      "memberOf"
+     ],
      "type": "string"
     }
    },
@@ -273,6 +290,7 @@
      "type": "string"
     },
     "SecretManagerArn": {
+     "pattern": "(^arn:aws([a-z]|\\-)*:secretsmanager:[a-z0-9-.]+:.*)|(\\$(\\.[\\w_-]+(\\[(\\d+|\\*)\\])*)*)",
      "type": "string"
     },
     "Sql": {
@@ -322,6 +340,7 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*$",
      "type": "string"
     },
     "Values": {
@@ -342,6 +361,7 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
      "type": "string"
     },
     "Value": {
@@ -410,6 +430,7 @@
      "$ref": "#/definitions/HttpParameters"
     },
     "Id": {
+     "pattern": "[\\.\\-_A-Za-z0-9]+",
      "type": "string"
     },
     "Input": {

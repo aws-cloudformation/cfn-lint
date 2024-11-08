@@ -76,6 +76,12 @@
     "AcceleratorManufacturers": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "amazon-web-services",
+       "amd",
+       "nvidia",
+       "xilinx"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -84,6 +90,15 @@
     "AcceleratorNames": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "a100",
+       "k80",
+       "m60",
+       "radeon-pro-v520",
+       "t4",
+       "v100",
+       "vu9p"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -95,6 +110,11 @@
     "AcceleratorTypes": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "fpga",
+       "gpu",
+       "inference"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -103,23 +123,39 @@
     "AllowedInstanceTypes": {
      "insertionOrder": true,
      "items": {
+      "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
       "type": "string"
      },
      "type": "array",
      "uniqueItems": true
     },
     "BareMetal": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
      "type": "string"
     },
     "BaselineEbsBandwidthMbps": {
      "$ref": "#/definitions/BaselineEbsBandwidthMbpsRequest"
     },
     "BurstablePerformance": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
      "type": "string"
     },
     "CpuManufacturers": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "amazon-web-services",
+       "amd",
+       "intel"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -128,6 +164,7 @@
     "ExcludedInstanceTypes": {
      "insertionOrder": true,
      "items": {
+      "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
       "type": "string"
      },
      "type": "array",
@@ -136,17 +173,30 @@
     "InstanceGenerations": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "current",
+       "previous"
+      ],
       "type": "string"
      },
      "type": "array",
      "uniqueItems": true
     },
     "LocalStorage": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
      "type": "string"
     },
     "LocalStorageTypes": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "hdd",
+       "ssd"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -284,12 +334,14 @@
      "type": "integer"
     },
     "LifecycleHookName": {
+     "pattern": "[A-Za-z0-9\\-_\\/]+",
      "type": "string"
     },
     "LifecycleTransition": {
      "type": "string"
     },
     "NotificationMetadata": {
+     "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007e]+",
      "type": "string"
     },
     "NotificationTargetARN": {

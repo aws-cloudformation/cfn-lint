@@ -2,7 +2,7 @@
  {
   "op": "add",
   "path": "/definitions/KMSEncryptionConfig/properties/AWSKMSKeyARN/pattern",
-  "value": "arn:.*"
+  "value": "arn:.*:kms:[a-zA-Z0-9\\-]+:\\d{12}:(key|alias)/[a-zA-Z_0-9+=,.@\\-_/]+"
  },
  {
   "op": "add",
@@ -13,6 +13,28 @@
   "op": "add",
   "path": "/definitions/CloudWatchLoggingOptions/properties/LogStreamName/pattern",
   "value": "[^:*]*"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/ProcessorParameter/properties/ParameterName/enum",
+  "value": [
+   "BufferIntervalInSeconds",
+   "BufferSizeInMBs",
+   "CompressionFormat",
+   "DataMessageExtraction",
+   "Delimiter",
+   "JsonParsingEngine",
+   "LambdaArn",
+   "MetadataExtractionQuery",
+   "NumberOfRetries",
+   "RoleArn",
+   "SubRecordType"
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/ProcessorParameter/properties/ParameterValue/pattern",
+  "value": "^(?!\\s*$).+"
  },
  {
   "op": "add",
@@ -85,8 +107,13 @@
  },
  {
   "op": "add",
+  "path": "/definitions/ExtendedS3DestinationConfiguration/properties/CustomTimeZone/pattern",
+  "value": "^$|[a-zA-Z/_]+"
+ },
+ {
+  "op": "add",
   "path": "/definitions/RedshiftDestinationConfiguration/properties/ClusterJDBCURL/pattern",
-  "value": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.]+):\\d{1,5}/[a-zA-Z0-9_$-]+"
+  "value": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.\\-]+):\\d{1,5}/[a-zA-Z0-9_$-]+"
  },
  {
   "op": "add",
@@ -118,10 +145,30 @@
  },
  {
   "op": "add",
+  "path": "/definitions/HttpEndpointCommonAttribute/properties/AttributeName/pattern",
+  "value": "^(?!\\s*$).+"
+ },
+ {
+  "op": "add",
   "path": "/definitions/HttpEndpointDestinationConfiguration/properties/S3BackupMode/enum",
   "value": [
    "AllData",
    "FailedDataOnly"
   ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/DestinationTableConfiguration/properties/DestinationTableName/pattern",
+  "value": "[a-zA-Z0-9\\.\\_]+"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/DestinationTableConfiguration/properties/DestinationDatabaseName/pattern",
+  "value": "[a-zA-Z0-9\\.\\_]+"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/UniqueKey/pattern",
+  "value": "^\\S+$"
  }
 ]

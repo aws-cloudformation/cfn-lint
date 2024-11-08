@@ -358,11 +358,13 @@
     "DestinationDatabaseName": {
      "maxLength": 512,
      "minLength": 1,
+     "pattern": "[a-zA-Z0-9\\.\\_]+",
      "type": "string"
     },
     "DestinationTableName": {
      "maxLength": 512,
      "minLength": 1,
+     "pattern": "[a-zA-Z0-9\\.\\_]+",
      "type": "string"
     },
     "S3ErrorOutputPrefix": {
@@ -581,6 +583,7 @@
     "CustomTimeZone": {
      "maxLength": 50,
      "minLength": 0,
+     "pattern": "^$|[a-zA-Z/_]+",
      "type": "string"
     },
     "DataFormatConversionConfiguration": {
@@ -658,6 +661,7 @@
     "AttributeName": {
      "maxLength": 256,
      "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
      "type": "string"
     },
     "AttributeValue": {
@@ -833,7 +837,7 @@
    "additionalProperties": false,
    "properties": {
     "AWSKMSKeyARN": {
-     "pattern": "arn:.*",
+     "pattern": "arn:.*:kms:[a-zA-Z0-9\\-]+:\\d{12}:(key|alias)/[a-zA-Z_0-9+=,.@\\-_/]+",
      "relationshipRef": {
       "propertyPath": "/properties/Arn",
       "typeName": "AWS::KMS::Key"
@@ -1069,6 +1073,19 @@
    "additionalProperties": false,
    "properties": {
     "ParameterName": {
+     "enum": [
+      "BufferIntervalInSeconds",
+      "BufferSizeInMBs",
+      "CompressionFormat",
+      "DataMessageExtraction",
+      "Delimiter",
+      "JsonParsingEngine",
+      "LambdaArn",
+      "MetadataExtractionQuery",
+      "NumberOfRetries",
+      "RoleArn",
+      "SubRecordType"
+     ],
      "type": "string"
     },
     "ParameterValue": {
@@ -1092,6 +1109,7 @@
        }
       }
      ],
+     "pattern": "^(?!\\s*$).+",
      "type": "string"
     }
    },
@@ -1110,7 +1128,7 @@
     "ClusterJDBCURL": {
      "maxLength": 512,
      "minLength": 1,
-     "pattern": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.]+):\\d{1,5}/[a-zA-Z0-9_$-]+",
+     "pattern": "jdbc:(redshift|postgresql)://((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+(redshift(-serverless)?)\\.([a-zA-Z0-9\\.\\-]+):\\d{1,5}/[a-zA-Z0-9_$-]+",
      "type": "string"
     },
     "CopyCommand": {
@@ -1595,6 +1613,7 @@
   "UniqueKey": {
    "maxLength": 512,
    "minLength": 1,
+   "pattern": "^\\S+$",
    "type": "string"
   },
   "VpcConfiguration": {

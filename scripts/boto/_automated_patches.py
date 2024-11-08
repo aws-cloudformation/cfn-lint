@@ -35,6 +35,8 @@ skip_property_names = ["State"]
 
 _fields = ["pattern", "enum"]
 
+_visited_paths = []
+
 
 def renamer(name):
     manual_fixes = {
@@ -110,20 +112,19 @@ def _nested_arrays(
 
     array_shap_data = boto_data.get("shapes", {}).get(shape)
 
+    path = f"{start_path}/items"
+    schema_data = schema_data.get("items", {})
+    while True:
+        if "$ref" not in schema_data:
+            break
+        path = schema_data["$ref"][1:]
+        schema_data = resolver.resolve_from_url(schema_data["$ref"])
+
     if array_shap_data.get("type") == "structure":
         return _nested_objects(
-            resolver, schema_data, boto_data, array_shap_data, start_path, source
+            resolver, schema_data, boto_data, array_shap_data, path, source
         )
     else:
-        path = f"{start_path}/items"
-
-        schema_data = schema_data.get("items", {})
-        while True:
-            if "$ref" not in schema_data:
-                break
-            path = schema_data["$ref"][1:]
-            schema_data = resolver.resolve_from_url(schema_data["$ref"])
-
         return {
             path: Patch(
                 source=source,
@@ -146,8 +147,13 @@ def _nested_objects(
             if p_name in skip_property_names:
                 continue
             if p_name.lower() == member.lower():
-
                 path = f"{start_path}/properties/{p_name}"
+
+                global _visited_paths
+                if path in _visited_paths:
+                    continue
+
+                _visited_paths.append(path)
 
                 while True:
                     if "$ref" not in p_data:
@@ -205,6 +211,8 @@ def _per_resource_patch(
             .get("shape")
         )
 
+        global _visited_paths
+        _visited_paths = []
         results.update(
             _nested_objects(
                 resolver,
