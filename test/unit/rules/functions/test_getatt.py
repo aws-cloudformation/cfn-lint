@@ -202,7 +202,7 @@ class _Fail(CfnLintKeyword):
         ),
         (
             "Valid Ref in GetAtt for attribute",
-            {"Fn::GetAtt": ["MyBucket", {"Ref": "MyAttributeParameter"}]},
+            {"Fn::GetAtt": ["MyBucket", {"Fn::Sub": "${MyAttributeParameter}"}]},
             {"type": "string"},
             _template_with_transform,
             {},
