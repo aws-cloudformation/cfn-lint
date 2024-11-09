@@ -1,6 +1,53 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "FleetProxyRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Effect": {
+     "enum": [
+      "ALLOW",
+      "DENY"
+     ],
+     "type": "string"
+    },
+    "Entities": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Type": {
+     "enum": [
+      "DOMAIN",
+      "IP"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProxyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultBehavior": {
+     "enum": [
+      "ALLOW_ALL",
+      "DENY_ALL"
+     ],
+     "type": "string"
+    },
+    "OrderedProxyRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FleetProxyRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "ScalingConfigurationInput": {
    "additionalProperties": false,
    "properties": {
@@ -121,6 +168,9 @@
     "MAC_ARM"
    ],
    "type": "string"
+  },
+  "FleetProxyConfiguration": {
+   "$ref": "#/definitions/ProxyConfiguration"
   },
   "FleetServiceRole": {
    "pattern": "^(?:arn:)[a-zA-Z+-=,._:/@]+$",

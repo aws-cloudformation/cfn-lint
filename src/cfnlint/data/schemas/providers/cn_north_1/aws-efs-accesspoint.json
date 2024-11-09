@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FileSystemId",
+  "/properties/ClientToken",
+  "/properties/PosixUser",
+  "/properties/PosixUser/Uid",
+  "/properties/PosixUser/Gid",
+  "/properties/PosixUser/SecondaryGids",
+  "/properties/RootDirectory",
+  "/properties/RootDirectory/Path",
+  "/properties/RootDirectory/CreationInfo",
+  "/properties/RootDirectory/CreationInfo/OwnerUid",
+  "/properties/RootDirectory/CreationInfo/OwnerGid",
+  "/properties/RootDirectory/CreationInfo/Permissions"
+ ],
+ "definitions": {
+  "AccessPointTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CreationInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "OwnerGid": {
+     "type": "string"
+    },
+    "OwnerUid": {
+     "type": "string"
+    },
+    "Permissions": {
+     "pattern": "^[0-7]{3,4}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OwnerUid",
+    "OwnerGid",
+    "Permissions"
+   ],
+   "type": "object"
+  },
+  "PosixUser": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "type": "string"
+    },
+    "SecondaryGids": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Uid": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Uid",
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "RootDirectory": {
+   "additionalProperties": false,
+   "properties": {
+    "CreationInfo": {
+     "$ref": "#/definitions/CreationInfo"
+    },
+    "Path": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^(\\/|(\\/(?!\\.)+[^$#<>;`|&?{}^*/\\n]+){1,4})$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccessPointId"
+ ],
+ "properties": {
+  "AccessPointId": {
+   "type": "string"
+  },
+  "AccessPointTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AccessPointTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "ClientToken": {
+   "pattern": ".+",
+   "type": "string"
+  },
+  "FileSystemId": {
+   "pattern": "^(arn:aws[-a-z]*:elasticfilesystem:[0-9a-z-:]+:file-system/fs-[0-9a-f]{8,40}|fs-[0-9a-f]{8,40})$",
+   "type": "string"
+  },
+  "PosixUser": {
+   "$ref": "#/definitions/PosixUser"
+  },
+  "RootDirectory": {
+   "$ref": "#/definitions/RootDirectory"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccessPointId",
+  "/properties/Arn"
+ ],
+ "required": [
+  "FileSystemId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/AccessPointTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EFS::AccessPoint"
+}

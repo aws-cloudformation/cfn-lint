@@ -125,6 +125,9 @@ def _nested_arrays(
             resolver, schema_data, boto_data, array_shap_data, path, source
         )
     else:
+        # skip if we already have an enum or pattern
+        if any([schema_data.get(field) for field in _fields]):
+            return {}
         return {
             path: Patch(
                 source=source,

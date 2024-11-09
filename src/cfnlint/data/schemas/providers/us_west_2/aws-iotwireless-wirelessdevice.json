@@ -35,6 +35,45 @@
    ],
    "type": "object"
   },
+  "Application": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationName": {
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9-_]+",
+     "type": "string"
+    },
+    "FPort": {
+     "maximum": 223,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "enum": [
+      "SemtechGeolocation",
+      "SemtechGNSS",
+      "SemtechGNSSNG",
+      "SemtechWiFi"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FPorts": {
+   "additionalProperties": false,
+   "properties": {
+    "Applications": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Application"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "LoRaWANDevice": {
    "additionalProperties": false,
    "oneOf": [
@@ -73,6 +112,9 @@
     "DeviceProfileId": {
      "maxLength": 256,
      "type": "string"
+    },
+    "FPorts": {
+     "$ref": "#/definitions/FPorts"
     },
     "OtaaV10x": {
      "$ref": "#/definitions/OtaaV10x"
@@ -221,6 +263,13 @@
    "maxLength": 256,
    "type": "string"
   },
+  "Positioning": {
+   "enum": [
+    "Enabled",
+    "Disabled"
+   ],
+   "type": "string"
+  },
   "Tags": {
    "insertionOrder": false,
    "items": {
@@ -254,6 +303,12 @@
   "DestinationName"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::IoTWireless::WirelessDevice"
 }
