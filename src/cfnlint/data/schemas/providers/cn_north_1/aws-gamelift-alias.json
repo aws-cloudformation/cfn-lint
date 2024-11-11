@@ -1,0 +1,72 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "RoutingStrategy": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "FleetId"
+     ]
+    },
+    {
+     "required": [
+      "Message"
+     ]
+    }
+   ],
+   "properties": {
+    "FleetId": {
+     "pattern": "^fleet-\\S+",
+     "type": "string"
+    },
+    "Message": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "SIMPLE",
+      "TERMINAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AliasId"
+ ],
+ "properties": {
+  "AliasId": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "RoutingStrategy": {
+   "$ref": "#/definitions/RoutingStrategy"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AliasId"
+ ],
+ "required": [
+  "Name",
+  "RoutingStrategy"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "taggable": true,
+ "typeName": "AWS::GameLift::Alias"
+}
