@@ -14,3 +14,15 @@ Resources:
       TemplateURL: !Sub https://s3_bucket_name.s3.${AWS::Region}.amazonaws.com/template.yaml
       Parameters:
         AuthorizerUri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:FunctionName/invocations
+  Bucket:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:${AWS::Partition}:iam::cloudfront:user/CloudFront Origin Access Identity E15MNIMTCFKK4C
+            Action: s3:GetObject
+            Resource: arn:aws:s3:::bucket/*
