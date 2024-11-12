@@ -125,10 +125,11 @@ class HardCodedArnProperties(CloudFormationLintRule):
             if self.config["accountId"] and not re.match(
                 r"^\$\{\w+}|\$\{AWS::AccountId}|aws|lambda|$", candidate[2]
             ):
-                message = (
-                    "ARN in Resource {0} contains hardcoded AccountId in ARN or"
-                    " incorrectly placed Pseudo Parameters"
-                )
-                matches.append(RuleMatch(path, message.format(path[1])))
+                if candidate[2] not in ["cloudfront"]:
+                    message = (
+                        "ARN in Resource {0} contains hardcoded AccountId in ARN or"
+                        " incorrectly placed Pseudo Parameters"
+                    )
+                    matches.append(RuleMatch(path, message.format(path[1])))
 
         return matches
