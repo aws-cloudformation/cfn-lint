@@ -1,3 +1,14 @@
+### v1.19.0
+## What's Changed
+* Update CloudFormation schemas to `2024-11-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3811
+* Fix [E3006](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3006) when both True and False are returned from `build_scenerios_on_region` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3813
+* Fix an issue when printing the graph overwriting the graph by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3814
+* Update [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1010) lang ext function support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3817
+* Increase logic of boto automation by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3818
+* Allow `cloudfront` to be used in ARNs for account ID by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3821
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.18.4...v1.19.0
+
 ### v1.18.4
 ## What's Changed
 * Add `AutoRetryLimit` for `AWS::CodeBuild::Project` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3809
