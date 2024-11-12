@@ -35,6 +35,8 @@ skip_property_names = ["State"]
 
 _fields = ["pattern", "enum"]
 
+_visited_paths = []
+
 
 def renamer(name):
     manual_fixes = {
@@ -43,6 +45,9 @@ def renamer(name):
         "kafka": "MSK",
         "firehose": "KinesisFirehose",
         "es": "ElasticSearch",
+        "elbv2": "ElasticLoadBalancingV2",
+        "elb": "ElasticLoadBalancing",
+        "ds": "DirectoryService",
     }
     if name in manual_fixes:
         return manual_fixes[name].lower()
@@ -92,6 +97,45 @@ def get_last_date(service_dir: Path) -> str:
     return last_date
 
 
+def _nested_arrays(
+    resolver: RefResolver,
+    schema_data: dict[str, Any],
+    boto_data: dict[str, Any],
+    shape_data: dict[str, Any],
+    start_path: str,
+    source: list[str],
+):
+
+    shape = shape_data.get("member", {}).get("shape")
+    if not shape:
+        return []
+
+    array_shap_data = boto_data.get("shapes", {}).get(shape)
+
+    path = f"{start_path}/items"
+    schema_data = schema_data.get("items", {})
+    while True:
+        if "$ref" not in schema_data:
+            break
+        path = schema_data["$ref"][1:]
+        schema_data = resolver.resolve_from_url(schema_data["$ref"])
+
+    if array_shap_data.get("type") == "structure":
+        return _nested_objects(
+            resolver, schema_data, boto_data, array_shap_data, path, source
+        )
+    else:
+        # skip if we already have an enum or pattern
+        if any([schema_data.get(field) for field in _fields]):
+            return {}
+        return {
+            path: Patch(
+                source=source,
+                shape=shape,
+            )
+        }
+
+
 def _nested_objects(
     resolver: RefResolver,
     schema_data: dict[str, Any],
@@ -106,8 +150,13 @@ def _nested_objects(
             if p_name in skip_property_names:
                 continue
             if p_name.lower() == member.lower():
-
                 path = f"{start_path}/properties/{p_name}"
+
+                global _visited_paths
+                if path in _visited_paths:
+                    continue
+
+                _visited_paths.append(path)
 
                 while True:
                     if "$ref" not in p_data:
@@ -126,6 +175,13 @@ def _nested_objects(
                     if p_data.get("type") == "object":
                         results.update(
                             _nested_objects(
+                                resolver, p_data, boto_data, member_shape, path, source
+                            )
+                        )
+                elif member_shape.get("type") == "list":
+                    if p_data.get("type") == "array":
+                        results.update(
+                            _nested_arrays(
                                 resolver, p_data, boto_data, member_shape, path, source
                             )
                         )
@@ -158,6 +214,8 @@ def _per_resource_patch(
             .get("shape")
         )
 
+        global _visited_paths
+        _visited_paths = []
         results.update(
             _nested_objects(
                 resolver,

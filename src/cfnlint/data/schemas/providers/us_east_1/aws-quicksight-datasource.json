@@ -104,6 +104,14 @@
    ],
    "type": "object"
   },
+  "AuthenticationType": {
+   "enum": [
+    "PASSWORD",
+    "TOKEN",
+    "X509"
+   ],
+   "type": "string"
+  },
   "AwsIotAnalyticsParameters": {
    "additionalProperties": false,
    "properties": {
@@ -415,6 +423,33 @@
    ],
    "type": "object"
   },
+  "OAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "IdentityProviderResourceUri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "IdentityProviderVpcConnectionProperties": {
+     "$ref": "#/definitions/VpcConnectionProperties"
+    },
+    "OAuthScope": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TokenProviderUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "TokenProviderUrl"
+   ],
+   "type": "object"
+  },
   "OracleParameters": {
    "additionalProperties": false,
    "properties": {
@@ -643,15 +678,26 @@
   "SnowflakeParameters": {
    "additionalProperties": false,
    "properties": {
+    "AuthenticationType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
     "Database": {
      "maxLength": 128,
      "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseAccessControlRole": {
+     "maxLength": 128,
+     "minLength": 0,
      "type": "string"
     },
     "Host": {
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
     },
     "Warehouse": {
      "maxLength": 128,
@@ -727,7 +773,15 @@
   "StarburstParameters": {
    "additionalProperties": false,
    "properties": {
+    "AuthenticationType": {
+     "$ref": "#/definitions/AuthenticationType"
+    },
     "Catalog": {
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "DatabaseAccessControlRole": {
      "maxLength": 128,
      "minLength": 0,
      "type": "string"
@@ -736,6 +790,9 @@
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
     },
     "Port": {
      "default": 0,

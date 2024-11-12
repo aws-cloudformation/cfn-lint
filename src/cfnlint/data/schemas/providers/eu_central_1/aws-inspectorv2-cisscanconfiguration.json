@@ -1,0 +1,209 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CisSecurityLevel": {
+   "enum": [
+    "LEVEL_1",
+    "LEVEL_2"
+   ],
+   "type": "string"
+  },
+  "CisTagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{2,127}$": {
+     "pattern": "^.{1,255}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CisTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "items": {
+      "pattern": "^\\d{12}|ALL_ACCOUNTS|SELF$",
+      "type": "string"
+     },
+     "maxItems": 10000,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TargetResourceTags": {
+     "$ref": "#/definitions/TargetResourceTags"
+    }
+   },
+   "required": [
+    "AccountIds",
+    "TargetResourceTags"
+   ]
+  },
+  "DailySchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "StartTime": {
+     "$ref": "#/definitions/Time"
+    }
+   },
+   "required": [
+    "StartTime"
+   ],
+   "type": "object"
+  },
+  "Day": {
+   "enum": [
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT",
+    "SUN"
+   ],
+   "type": "string"
+  },
+  "DaysList": {
+   "items": {
+    "$ref": "#/definitions/Day"
+   },
+   "maxItems": 7,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MonthlySchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "Day": {
+     "$ref": "#/definitions/Day"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/Time"
+    }
+   },
+   "required": [
+    "StartTime",
+    "Day"
+   ],
+   "type": "object"
+  },
+  "OneTimeSchedule": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Schedule": {
+   "properties": {
+    "Daily": {
+     "$ref": "#/definitions/DailySchedule"
+    },
+    "Monthly": {
+     "$ref": "#/definitions/MonthlySchedule"
+    },
+    "OneTime": {
+     "$ref": "#/definitions/OneTimeSchedule"
+    },
+    "Weekly": {
+     "$ref": "#/definitions/WeeklySchedule"
+    }
+   }
+  },
+  "TagValueList": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetResourceTags": {
+   "additionalProperties": false,
+   "maxProperties": 5,
+   "patternProperties": {
+    "^.+$": {
+     "$ref": "#/definitions/TagValueList"
+    }
+   }
+  },
+  "Time": {
+   "additionalProperties": false,
+   "properties": {
+    "TimeOfDay": {
+     "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+     "type": "string"
+    },
+    "TimeZone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimeOfDay",
+    "TimeZone"
+   ],
+   "type": "object"
+  },
+  "WeeklySchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "$ref": "#/definitions/DaysList"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/Time"
+    }
+   },
+   "required": [
+    "StartTime",
+    "Days"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ScanName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "SecurityLevel": {
+   "$ref": "#/definitions/CisSecurityLevel"
+  },
+  "Tags": {
+   "$ref": "#/definitions/CisTagMap"
+  },
+  "Targets": {
+   "$ref": "#/definitions/CisTargets"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ScanName",
+  "SecurityLevel",
+  "Schedule",
+  "Targets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-inspector.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::InspectorV2::CisScanConfiguration"
+}

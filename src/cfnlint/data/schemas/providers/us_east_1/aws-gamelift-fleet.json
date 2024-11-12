@@ -5,7 +5,6 @@
   "/properties/ApplyCapacity",
   "/properties/BuildId",
   "/properties/CertificateConfiguration",
-  "/properties/ContainerGroupsConfiguration",
   "/properties/EC2InstanceType",
   "/properties/FleetType",
   "/properties/InstanceRoleARN",
@@ -47,70 +46,6 @@
    "required": [
     "CertificateType"
    ],
-   "type": "object"
-  },
-  "ConnectionPortRange": {
-   "additionalProperties": false,
-   "properties": {
-    "FromPort": {
-     "maximum": 60000,
-     "minimum": 1,
-     "type": "integer"
-    },
-    "ToPort": {
-     "maximum": 60000,
-     "minimum": 1,
-     "type": "integer"
-    }
-   },
-   "required": [
-    "FromPort",
-    "ToPort"
-   ],
-   "type": "object"
-  },
-  "ContainerGroupsConfiguration": {
-   "additionalProperties": false,
-   "properties": {
-    "ConnectionPortRange": {
-     "$ref": "#/definitions/ConnectionPortRange"
-    },
-    "ContainerGroupDefinitionNames": {
-     "insertionOrder": false,
-     "items": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9\\-]+$",
-      "type": "string"
-     },
-     "maxItems": 2,
-     "minItems": 1,
-     "type": "array"
-    },
-    "ContainerGroupsPerInstance": {
-     "$ref": "#/definitions/ContainerGroupsPerInstance"
-    }
-   },
-   "required": [
-    "ContainerGroupDefinitionNames",
-    "ConnectionPortRange"
-   ],
-   "type": "object"
-  },
-  "ContainerGroupsPerInstance": {
-   "additionalProperties": false,
-   "properties": {
-    "DesiredReplicaContainerGroupsPerInstance": {
-     "maximum": 5000,
-     "minimum": 1,
-     "type": "integer"
-    },
-    "MaxReplicaContainerGroupsPerInstance": {
-     "maximum": 5000,
-     "minimum": 1,
-     "type": "integer"
-    }
-   },
    "type": "object"
   },
   "IpPermission": {
@@ -334,6 +269,7 @@
     "Parameters": {
      "maxLength": 1024,
      "minLength": 1,
+     "pattern": "[A-Za-z0-9_:.+\\/\\\\\\- =@;{},?'\\[\\]\"]+",
      "type": "string"
     }
    },
@@ -385,13 +321,9 @@
   "ComputeType": {
    "enum": [
     "EC2",
-    "ANYWHERE",
-    "CONTAINER"
+    "ANYWHERE"
    ],
    "type": "string"
-  },
-  "ContainerGroupsConfiguration": {
-   "$ref": "#/definitions/ContainerGroupsConfiguration"
   },
   "Description": {
    "maxLength": 1024,
@@ -524,7 +456,6 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/ContainerGroupsConfiguration/ContainerGroupsPerInstance/MaxReplicaContainerGroupsPerInstance",
   "/properties/FleetId"
  ],
  "required": [

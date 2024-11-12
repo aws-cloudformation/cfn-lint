@@ -258,6 +258,12 @@
    "additionalProperties": false,
    "properties": {
     "Condition": {
+     "enum": [
+      "COMPLETE",
+      "HEALTHY",
+      "START",
+      "SUCCESS"
+     ],
      "type": "string"
     },
     "ContainerName": {
@@ -278,6 +284,11 @@
     "Permissions": {
      "insertionOrder": false,
      "items": {
+      "enum": [
+       "mknod",
+       "read",
+       "write"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -314,6 +325,10 @@
      "type": "object"
     },
     "Scope": {
+     "enum": [
+      "shared",
+      "task"
+     ],
      "type": "string"
     }
    },
@@ -351,6 +366,9 @@
    "additionalProperties": false,
    "properties": {
     "Type": {
+     "enum": [
+      "s3"
+     ],
      "type": "string"
     },
     "Value": {
@@ -416,6 +434,10 @@
      "type": "object"
     },
     "Type": {
+     "enum": [
+      "fluentbit",
+      "fluentd"
+     ],
      "type": "string"
     }
    },
@@ -550,6 +572,16 @@
    "additionalProperties": false,
    "properties": {
     "LogDriver": {
+     "enum": [
+      "awsfirelens",
+      "awslogs",
+      "fluentd",
+      "gelf",
+      "journald",
+      "json-file",
+      "splunk",
+      "syslog"
+     ],
      "type": "string"
     },
     "Options": {
@@ -613,6 +645,10 @@
      "type": "string"
     },
     "Protocol": {
+     "enum": [
+      "tcp",
+      "udp"
+     ],
      "type": "string"
     }
    },
@@ -657,6 +693,10 @@
    "additionalProperties": false,
    "properties": {
     "Type": {
+     "enum": [
+      "GPU",
+      "InferenceAccelerator"
+     ],
      "type": "string"
     },
     "Value": {
@@ -746,9 +786,11 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
    },
@@ -761,6 +803,9 @@
      "type": "string"
     },
     "Type": {
+     "enum": [
+      "memberOf"
+     ],
      "type": "string"
     }
    },
@@ -798,6 +843,23 @@
      "type": "integer"
     },
     "Name": {
+     "enum": [
+      "core",
+      "cpu",
+      "data",
+      "fsize",
+      "locks",
+      "memlock",
+      "msgqueue",
+      "nice",
+      "nofile",
+      "nproc",
+      "rss",
+      "rtprio",
+      "rttime",
+      "sigpending",
+      "stack"
+     ],
      "type": "string"
     },
     "SoftLimit": {
@@ -921,6 +983,11 @@
   "RequiresCompatibilities": {
    "insertionOrder": false,
    "items": {
+    "enum": [
+     "EC2",
+     "EXTERNAL",
+     "FARGATE"
+    ],
     "type": "string"
    },
    "type": "array",

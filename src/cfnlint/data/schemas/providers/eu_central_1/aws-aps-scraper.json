@@ -1,0 +1,187 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ScrapeConfiguration",
+  "/properties/Source",
+  "/properties/Destination",
+  "/properties/Alias"
+ ],
+ "definitions": {
+  "Destination": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AmpConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "AmpConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "WorkspaceArn": {
+       "pattern": "^arn:aws[-a-z]*:aps:[-a-z0-9]+:[0-9]{12}:workspace/.+$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "WorkspaceArn"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "ScrapeConfiguration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "ConfigurationBlob"
+     ]
+    }
+   ],
+   "properties": {
+    "ConfigurationBlob": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.GroupId",
+   "pattern": "^sg-[0-9a-z]+$",
+   "type": "string"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "EksConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "EksConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "ClusterArn": {
+       "pattern": "^arn:aws[-a-z]*:eks:[-a-z0-9]+:[0-9]{12}:cluster/.+$",
+       "type": "string"
+      },
+      "SecurityGroupIds": {
+       "format": "AWS::EC2::SecurityGroup.Ids",
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/SecurityGroupId"
+       },
+       "type": "array"
+      },
+      "SubnetIds": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/SubnetId"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "ClusterArn",
+      "SubnetIds"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetId": {
+   "pattern": "^subnet-[0-9a-z]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Alias": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:(af|ap|ca|eu|me|sa|us)-(central|north|(north(?:east|west))|south|south(?:east|west)|east|west)-[0-9]+:[0-9]+:scraper/s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "Destination": {
+   "$ref": "#/definitions/Destination"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::[0-9]{12}:role/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ScrapeConfiguration": {
+   "$ref": "#/definitions/ScrapeConfiguration"
+  },
+  "ScraperId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ScraperId",
+  "/properties/Arn",
+  "/properties/RoleArn"
+ ],
+ "required": [
+  "ScrapeConfiguration",
+  "Source",
+  "Destination"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::APS::Scraper"
+}
