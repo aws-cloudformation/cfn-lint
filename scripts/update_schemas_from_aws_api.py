@@ -17,7 +17,10 @@ LOGGER = logging.getLogger("cfnlint")
 
 session = boto3.session.Session()
 config = Config(retries={"max_attempts": 10})
-client = session.client("rds", region_name="us-east-1", config=config)
+rds_client = session.client("rds", region_name="us-east-1", config=config)
+elasticache_client = session.client(
+    "elasticache", region_name="us-east-1", config=config
+)
 
 
 def configure_logging():
@@ -180,12 +183,65 @@ def write_db_instance(results):
     write_output("aws_rds_dbinstance", "engine_version", schema)
 
 
-def main():
-    """main function"""
-    configure_logging()
+def write_elasticache_engines(results):
+    schema = {"allOf": []}
 
+    engines = [
+        "memcached",
+        "redis",
+        "valkey",
+    ]
+
+    schema["allOf"].append(
+        {
+            "if": {
+                "properties": {
+                    "Engine": {
+                        "type": "string",
+                    }
+                },
+                "required": ["Engine"],
+            },
+            "then": {
+                "properties": {
+                    "Engine": {
+                        "enum": sorted(engines),
+                    }
+                }
+            },
+        }
+    )
+
+    for engine in engines:
+        if not results.get(engine):
+            continue
+
+        engine_versions = sorted(results.get(engine))
+        schema["allOf"].append(
+            {
+                "if": {
+                    "properties": {
+                        "Engine": {
+                            "const": engine,
+                        },
+                        "EngineVersion": {
+                            "type": ["string", "number"],
+                        },
+                    },
+                    "required": ["Engine", "EngineVersion"],
+                },
+                "then": {
+                    "properties": {"EngineVersion": {"enum": sorted(engine_versions)}}
+                },
+            }
+        )
+
+    write_output("aws_elasticache_cachecluster", "engine_version", schema)
+
+
+def rds_api():
     results = {}
-    for page in client.get_paginator("describe_db_engine_versions").paginate():
+    for page in rds_client.get_paginator("describe_db_engine_versions").paginate():
         for version in page.get("DBEngineVersions"):
             engine = version.get("Engine")
             engine_version = version.get("EngineVersion")
@@ -195,6 +251,29 @@ def main():
 
     write_db_cluster(results)
     write_db_instance(results)
+
+
+def elasticache_api():
+    results = {}
+    for page in elasticache_client.get_paginator(
+        "describe_cache_engine_versions"
+    ).paginate():
+        print(page)
+        for version in page.get("CacheEngineVersions"):
+            engine = version.get("Engine")
+            engine_version = version.get("EngineVersion")
+            if engine not in results:
+                results[engine] = []
+            results[engine].append(engine_version)
+
+    write_elasticache_engines(results)
+
+
+def main():
+    """main function"""
+    configure_logging()
+    rds_api()
+    elasticache_api()
 
 
 if __name__ == "__main__":
