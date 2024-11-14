@@ -168,7 +168,7 @@ def context(cfn):
             {"type": "string"},
             [
                 ValidationError(
-                    "['${foo}', {'foo': 'bar'}, {}] is too long (2)",
+                    "expected maximum item count: 2, found: 3",
                     path=deque(["Fn::Sub"]),
                     schema_path=deque(["maxItems"]),
                     validator="fn_sub",

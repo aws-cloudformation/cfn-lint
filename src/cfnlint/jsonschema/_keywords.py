@@ -323,7 +323,9 @@ def maxItems(
     validator: Validator, mI: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:  # pylint: disable=arguments-renamed
     if validator.is_type(instance, "array") and len(instance) > mI:
-        yield ValidationError(f"{instance!r} is too long ({mI})")
+        yield ValidationError(
+            f"expected maximum item count: {mI}, found: {len(instance)}"
+        )
 
 
 def maxLength(
@@ -333,7 +335,7 @@ def maxLength(
         return
 
     if len(instance) > mL:
-        yield ValidationError(f"{instance!r} is longer than {mL}")
+        yield ValidationError(f"expected maximum length: {mL}, found: {len(instance)}")
 
 
 def maxProperties(
@@ -342,7 +344,9 @@ def maxProperties(
     if not validator.is_type(instance, "object"):
         return
     if validator.is_type(instance, "object") and len(instance) > mP:
-        yield ValidationError(f"{instance!r} has too many properties")
+        yield ValidationError(
+            f"expected maximum property count: {mP}, found: {len(instance)}"
+        )
 
 
 def maximum(
@@ -366,7 +370,9 @@ def minItems(
     validator: Validator, mI: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
     if validator.is_type(instance, "array") and len(instance) < mI:
-        yield ValidationError(f"{instance!r} is too short ({mI})")
+        yield ValidationError(
+            f"expected minimum item count: {mI}, found: {len(instance)}"
+        )
 
 
 def minLength(
@@ -376,14 +382,16 @@ def minLength(
         return
 
     if len(instance) < mL:
-        yield ValidationError(f"{instance!r} is shorter than {mL}")
+        yield ValidationError(f"expected minimum length: {mL}, found: {len(instance)}")
 
 
 def minProperties(
     validator: Validator, mP: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
     if validator.is_type(instance, "object") and len(instance) < mP:
-        yield ValidationError(f"{instance!r} does not have enough properties")
+        yield ValidationError(
+            f"expected minimum property count: {mP}, found: {len(instance)}"
+        )
 
 
 def minimum(
@@ -590,14 +598,14 @@ def uniqueItems(
     validator: Validator, uI: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
     if uI and validator.is_type(instance, "array") and not uniq(instance):
-        yield ValidationError(f"{instance!r} has non-unique elements")
+        yield ValidationError("array items are not unique")
 
 
 def uniqueKeys(
     validator: Validator, uKs: Any, instance: Any, schema: dict[str, Any]
 ) -> ValidationResult:
     if uKs and validator.is_type(instance, "array") and not uniq_keys(instance, uKs):
-        yield ValidationError(f"{instance!r} has non-unique elements for keys {uKs!r}")
+        yield ValidationError(f"array items are not unique for keys {uKs!r}")
 
 
 def type(

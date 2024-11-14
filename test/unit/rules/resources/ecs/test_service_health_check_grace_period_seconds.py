@@ -47,7 +47,7 @@ def template():
             {"HealthCheckGracePeriodSeconds": "Foo", "LoadBalancers": []},
             [
                 ValidationError(
-                    "[] is too short (1)",
+                    "expected minimum item count: 1, found: 0",
                     rule=ServiceHealthCheckGracePeriodSeconds(),
                     path=deque(["LoadBalancers"]),
                     validator="minItems",
@@ -80,7 +80,7 @@ def template():
             },
             [
                 ValidationError(
-                    "[] is too short (1)",
+                    "expected minimum item count: 1, found: 0",
                     rule=ServiceHealthCheckGracePeriodSeconds(),
                     path=deque(["LoadBalancers"]),
                     validator="minItems",
