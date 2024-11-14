@@ -1,0 +1,377 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ClusterName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/VpcConfig",
+  "/properties/Orchestrator",
+  "/properties/InstanceGroups/*/OverrideVpcConfig",
+  "/properties/InstanceGroups/*/ExecutionRole",
+  "/properties/InstanceGroups/*/InstanceGroupName",
+  "/properties/InstanceGroups/*/InstanceType",
+  "/properties/InstanceGroups/*/ThreadsPerCore"
+ ],
+ "definitions": {
+  "ClusterEbsVolumeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "VolumeSizeInGB": {
+     "maximum": 16384,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterInstanceGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "CurrentCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ExecutionRole": {
+     "$ref": "#/definitions/ExecutionRole"
+    },
+    "InstanceCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "InstanceGroupName": {
+     "$ref": "#/definitions/InstanceGroupName"
+    },
+    "InstanceStorageConfigs": {
+     "$ref": "#/definitions/ClusterInstanceStorageConfigs"
+    },
+    "InstanceType": {
+     "$ref": "#/definitions/InstanceType"
+    },
+    "LifeCycleConfig": {
+     "$ref": "#/definitions/ClusterLifeCycleConfig"
+    },
+    "OnStartDeepHealthChecks": {
+     "$ref": "#/definitions/OnStartDeepHealthChecks"
+    },
+    "OverrideVpcConfig": {
+     "$ref": "#/definitions/VpcConfig"
+    },
+    "ThreadsPerCore": {
+     "maximum": 2,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ExecutionRole",
+    "InstanceCount",
+    "InstanceGroupName",
+    "InstanceType",
+    "LifeCycleConfig"
+   ],
+   "type": "object"
+  },
+  "ClusterInstanceGroupsList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterInstanceGroup"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "ClusterInstanceStorageConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "EbsVolumeConfig": {
+       "$ref": "#/definitions/ClusterEbsVolumeConfig"
+      }
+     },
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "ClusterInstanceStorageConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ClusterInstanceStorageConfig"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "ClusterLifeCycleConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OnCreate": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\S\\s]+$",
+     "type": "string"
+    },
+    "SourceS3Uri": {
+     "maxLength": 1024,
+     "pattern": "^(https|s3)://([^/]+)/?(.*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OnCreate",
+    "SourceS3Uri"
+   ],
+   "type": "object"
+  },
+  "ClusterOrchestratorEksConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterArn": {
+     "pattern": "^arn:aws[a-z\\-]*:eks:[a-z0-9\\-]*:[0-9]{12}:cluster\\/[0-9A-Za-z][A-Za-z0-9\\-_]{0,99}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterArn"
+   ],
+   "type": "object"
+  },
+  "DeepHealthCheckType": {
+   "enum": [
+    "InstanceStress",
+    "InstanceConnectivity"
+   ],
+   "type": "string"
+  },
+  "ExecutionRole": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "InstanceGroupName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "InstanceType": {
+   "enum": [
+    "ml.c5.12xlarge",
+    "ml.c5.18xlarge",
+    "ml.c5.24xlarge",
+    "ml.c5.2xlarge",
+    "ml.c5.4xlarge",
+    "ml.c5.9xlarge",
+    "ml.c5.large",
+    "ml.c5.xlarge",
+    "ml.c5n.18xlarge",
+    "ml.c5n.2xlarge",
+    "ml.c5n.4xlarge",
+    "ml.c5n.9xlarge",
+    "ml.c5n.large",
+    "ml.g5.12xlarge",
+    "ml.g5.16xlarge",
+    "ml.g5.24xlarge",
+    "ml.g5.2xlarge",
+    "ml.g5.48xlarge",
+    "ml.g5.4xlarge",
+    "ml.g5.8xlarge",
+    "ml.g5.xlarge",
+    "ml.g6.12xlarge",
+    "ml.g6.16xlarge",
+    "ml.g6.24xlarge",
+    "ml.g6.2xlarge",
+    "ml.g6.48xlarge",
+    "ml.g6.4xlarge",
+    "ml.g6.8xlarge",
+    "ml.g6.xlarge",
+    "ml.g6e.12xlarge",
+    "ml.g6e.16xlarge",
+    "ml.g6e.24xlarge",
+    "ml.g6e.2xlarge",
+    "ml.g6e.48xlarge",
+    "ml.g6e.4xlarge",
+    "ml.g6e.8xlarge",
+    "ml.g6e.xlarge",
+    "ml.gr6.4xlarge",
+    "ml.gr6.8xlarge",
+    "ml.m5.12xlarge",
+    "ml.m5.16xlarge",
+    "ml.m5.24xlarge",
+    "ml.m5.2xlarge",
+    "ml.m5.4xlarge",
+    "ml.m5.8xlarge",
+    "ml.m5.large",
+    "ml.m5.xlarge",
+    "ml.p4d.24xlarge",
+    "ml.p4de.24xlarge",
+    "ml.p5.48xlarge",
+    "ml.p5e.48xlarge",
+    "ml.t3.2xlarge",
+    "ml.t3.large",
+    "ml.t3.medium",
+    "ml.t3.xlarge",
+    "ml.trn1.32xlarge",
+    "ml.trn1n.32xlarge"
+   ],
+   "type": "string"
+  },
+  "OnStartDeepHealthChecks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DeepHealthCheckType"
+   },
+   "type": "array"
+  },
+  "Orchestrator": {
+   "additionalProperties": false,
+   "properties": {
+    "Eks": {
+     "$ref": "#/definitions/ClusterOrchestratorEksConfig"
+    }
+   },
+   "required": [
+    "Eks"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "maxLength": 32,
+      "pattern": "[-0-9a-zA-Z]+",
+      "type": "string"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "Subnets"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "maxLength": 256,
+   "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:cluster/[a-z0-9]{12}$",
+   "type": "string"
+  },
+  "ClusterName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "ClusterStatus": {
+   "enum": [
+    "Creating",
+    "Deleting",
+    "Failed",
+    "InService",
+    "RollingBack",
+    "SystemUpdating",
+    "Updating"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "FailureMessage": {
+   "type": "string"
+  },
+  "InstanceGroups": {
+   "$ref": "#/definitions/ClusterInstanceGroupsList"
+  },
+  "NodeRecovery": {
+   "enum": [
+    "Automatic",
+    "None"
+   ],
+   "type": "string"
+  },
+  "Orchestrator": {
+   "$ref": "#/definitions/Orchestrator"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterArn",
+  "/properties/CreationTime",
+  "/properties/ClusterStatus",
+  "/properties/FailureMessage",
+  "/properties/InstanceGroups/*/CurrentCount"
+ ],
+ "required": [
+  "InstanceGroups"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Cluster"
+}

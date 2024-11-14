@@ -1,0 +1,262 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CapacityType",
+  "/properties/NodegroupName",
+  "/properties/RemoteAccess",
+  "/properties/NodeRole",
+  "/properties/ClusterName",
+  "/properties/InstanceTypes",
+  "/properties/DiskSize",
+  "/properties/AmiType",
+  "/properties/Subnets"
+ ],
+ "definitions": {
+  "LaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NodeRepairConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RemoteAccess": {
+   "additionalProperties": false,
+   "properties": {
+    "Ec2SshKey": {
+     "type": "string"
+    },
+    "SourceSecurityGroups": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Ec2SshKey"
+   ],
+   "type": "object"
+  },
+  "ScalingConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxSize": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinSize": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Taint": {
+   "additionalProperties": false,
+   "properties": {
+    "Effect": {
+     "enum": [
+      "NO_EXECUTE",
+      "NO_SCHEDULE",
+      "PREFER_NO_SCHEDULE"
+     ],
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxUnavailable": {
+     "minimum": 1,
+     "type": "number"
+    },
+    "MaxUnavailablePercentage": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmiType": {
+   "enum": [
+    "AL2023_ARM_64_STANDARD",
+    "AL2023_x86_64_NEURON",
+    "AL2023_x86_64_NVIDIA",
+    "AL2023_x86_64_STANDARD",
+    "AL2_ARM_64",
+    "AL2_x86_64",
+    "AL2_x86_64_GPU",
+    "BOTTLEROCKET_ARM_64",
+    "BOTTLEROCKET_ARM_64_NVIDIA",
+    "BOTTLEROCKET_x86_64",
+    "BOTTLEROCKET_x86_64_NVIDIA",
+    "CUSTOM",
+    "WINDOWS_CORE_2019_x86_64",
+    "WINDOWS_CORE_2022_x86_64",
+    "WINDOWS_FULL_2019_x86_64",
+    "WINDOWS_FULL_2022_x86_64"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CapacityType": {
+   "enum": [
+    "CAPACITY_BLOCK",
+    "ON_DEMAND",
+    "SPOT"
+   ],
+   "type": "string"
+  },
+  "ClusterName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "DiskSize": {
+   "type": "integer"
+  },
+  "ForceUpdateEnabled": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceTypes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Labels": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplate": {
+   "$ref": "#/definitions/LaunchTemplateSpecification"
+  },
+  "NodeRepairConfig": {
+   "$ref": "#/definitions/NodeRepairConfig"
+  },
+  "NodeRole": {
+   "type": "string"
+  },
+  "NodegroupName": {
+   "minLength": 1,
+   "type": "string"
+  },
+  "ReleaseVersion": {
+   "type": "string"
+  },
+  "RemoteAccess": {
+   "$ref": "#/definitions/RemoteAccess"
+  },
+  "ScalingConfig": {
+   "$ref": "#/definitions/ScalingConfig"
+  },
+  "Subnets": {
+   "format": "AWS::EC2::Subnet.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::Subnet.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Taints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Taint"
+   },
+   "type": "array"
+  },
+  "UpdateConfig": {
+   "$ref": "#/definitions/UpdateConfig"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "NodeRole",
+  "Subnets"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::Nodegroup",
+ "writeOnlyProperties": [
+  "/properties/ForceUpdateEnabled"
+ ]
+}

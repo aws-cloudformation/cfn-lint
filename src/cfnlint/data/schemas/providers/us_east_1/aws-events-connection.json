@@ -203,7 +203,7 @@
    "type": "string"
   },
   "SecretArn": {
-   "pattern": "^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]|\\d|\\-)*:([0-9]{12})?:secret:[\\/_+=\\.@\\-A-Za-z0-9]+$",
+   "pattern": "^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]|\\d|\\-)*:([0-9]{12})?:secret:([a-z]|\\d|\\-)*(!)*[\\/_+=\\.@\\-A-Za-z0-9]+$",
    "type": "string"
   }
  },
@@ -219,6 +219,12 @@
  },
  "typeName": "AWS::Events::Connection",
  "writeOnlyProperties": [
-  "/properties/AuthParameters"
+  "/properties/AuthParameters/BasicAuthParameters/Password",
+  "/properties/AuthParameters/ApiKeyAuthParameters/ApiKeyValue",
+  "/properties/AuthParameters/OAuthParameters/ClientParameters/ClientSecret",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/HeaderParameters",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/QueryStringParameters",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/BodyParameters",
+  "/properties/AuthParameters/InvocationHttpParameters"
  ]
 }

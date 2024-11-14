@@ -1,0 +1,118 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContainerProvider",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ContainerInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "EksInfo": {
+     "$ref": "#/definitions/EksInfo"
+    }
+   },
+   "required": [
+    "EksInfo"
+   ],
+   "type": "object"
+  },
+  "ContainerProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[0-9A-Za-z][A-Za-z0-9\\-_]*",
+     "type": "string"
+    },
+    "Info": {
+     "$ref": "#/definitions/ContainerInfo"
+    },
+    "Type": {
+     "enum": [
+      "EKS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id",
+    "Info"
+   ],
+   "type": "object"
+  },
+  "EksInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "[a-z0-9]([-a-z0-9]*[a-z0-9])?",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerProvider": {
+   "$ref": "#/definitions/ContainerProvider"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "ContainerProvider"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::EMRContainers::VirtualCluster"
+}

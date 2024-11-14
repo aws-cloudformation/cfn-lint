@@ -566,6 +566,7 @@ types: list[str] = [
     "AWS::FraudDetector::Variable",
     "AWS::GameLift::Alias",
     "AWS::GameLift::Build",
+    "AWS::GameLift::ContainerFleet",
     "AWS::GameLift::ContainerGroupDefinition",
     "AWS::GameLift::Fleet",
     "AWS::GameLift::GameServerGroup",

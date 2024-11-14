@@ -471,6 +471,26 @@
     }
    },
    "type": "object"
+  },
+  "VpcLatticeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PortName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "TargetGroupArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "TargetGroupArn",
+    "PortName"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -478,6 +498,14 @@
   "/properties/Cluster"
  ],
  "properties": {
+  "AvailabilityZoneRebalancing": {
+   "default": "DISABLED",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
   "CapacityProviderStrategy": {
    "items": {
     "$ref": "#/definitions/CapacityProviderStrategyItem"
@@ -587,10 +615,16 @@
     "$ref": "#/definitions/ServiceVolumeConfiguration"
    },
    "type": "array"
+  },
+  "VpcLatticeConfigurations": {
+   "items": {
+    "$ref": "#/definitions/VpcLatticeConfiguration"
+   },
+   "type": "array"
   }
  },
  "propertyTransform": {
-  "/properties/Role": "Role $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/{1}\", Role])"
+  "/properties/Role": "Role $OR $join([\"arn:(aws)[-]{0,1}[a-z]{0,3}[-]{0,1}[a-z]{0,3}:iam::[0-9]{12}[:]role/{1}\", Role])"
  },
  "readOnlyProperties": [
   "/properties/ServiceArn",

@@ -1,0 +1,720 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/TargetArn",
+  "/properties/SignalCatalogArn",
+  "/properties/PostTriggerCollectionDuration",
+  "/properties/DiagnosticsMode",
+  "/properties/SpoolingMode",
+  "/properties/CollectionScheme",
+  "/properties/Priority",
+  "/properties/Compression",
+  "/properties/StartTime",
+  "/properties/ExpiryTime",
+  "/properties/DataPartitions"
+ ],
+ "definitions": {
+  "CampaignStatus": {
+   "enum": [
+    "CREATING",
+    "WAITING_FOR_APPROVAL",
+    "RUNNING",
+    "SUSPENDED"
+   ],
+   "type": "string"
+  },
+  "CollectionScheme": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TimeBasedCollectionScheme": {
+       "$ref": "#/definitions/TimeBasedCollectionScheme"
+      }
+     },
+     "required": [
+      "TimeBasedCollectionScheme"
+     ],
+     "title": "TimeBasedCollectionScheme",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ConditionBasedCollectionScheme": {
+       "$ref": "#/definitions/ConditionBasedCollectionScheme"
+      }
+     },
+     "required": [
+      "ConditionBasedCollectionScheme"
+     ],
+     "title": "ConditionBasedCollectionScheme",
+     "type": "object"
+    }
+   ]
+  },
+  "Compression": {
+   "default": "OFF",
+   "enum": [
+    "OFF",
+    "SNAPPY"
+   ],
+   "type": "string"
+  },
+  "ConditionBasedCollectionScheme": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionLanguageVersion": {
+     "$ref": "#/definitions/LanguageVersion"
+    },
+    "Expression": {
+     "$ref": "#/definitions/EventExpression"
+    },
+    "MinimumTriggerIntervalMs": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TriggerMode": {
+     "$ref": "#/definitions/TriggerMode"
+    }
+   },
+   "required": [
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "ConditionBasedSignalFetchConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionExpression": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TriggerMode": {
+     "$ref": "#/definitions/TriggerMode"
+    }
+   },
+   "required": [
+    "ConditionExpression",
+    "TriggerMode"
+   ],
+   "type": "object"
+  },
+  "DataDestinationConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3Config": {
+       "$ref": "#/definitions/S3Config"
+      }
+     },
+     "required": [
+      "S3Config"
+     ],
+     "title": "S3Config",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TimestreamConfig": {
+       "$ref": "#/definitions/TimestreamConfig"
+      }
+     },
+     "required": [
+      "TimestreamConfig"
+     ],
+     "title": "TimestreamConfig",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "MqttTopicConfig": {
+       "$ref": "#/definitions/MqttTopicConfig"
+      }
+     },
+     "required": [
+      "MqttTopicConfig"
+     ],
+     "title": "MqttTopicConfig",
+     "type": "object"
+    }
+   ]
+  },
+  "DataFormat": {
+   "enum": [
+    "JSON",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
+  "DataPartition": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "$ref": "#/definitions/DataPartitionId"
+    },
+    "StorageOptions": {
+     "$ref": "#/definitions/DataPartitionStorageOptions"
+    },
+    "UploadOptions": {
+     "$ref": "#/definitions/DataPartitionUploadOptions"
+    }
+   },
+   "required": [
+    "Id",
+    "StorageOptions"
+   ],
+   "type": "object"
+  },
+  "DataPartitionId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "DataPartitionStorageOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumSize": {
+     "$ref": "#/definitions/StorageMaximumSize"
+    },
+    "MinimumTimeToLive": {
+     "$ref": "#/definitions/StorageMinimumTimeToLive"
+    },
+    "StorageLocation": {
+     "$ref": "#/definitions/StorageLocation"
+    }
+   },
+   "required": [
+    "MaximumSize",
+    "MinimumTimeToLive",
+    "StorageLocation"
+   ],
+   "type": "object"
+  },
+  "DataPartitionUploadOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ConditionLanguageVersion": {
+     "$ref": "#/definitions/LanguageVersion"
+    },
+    "Expression": {
+     "$ref": "#/definitions/EventExpression"
+    }
+   },
+   "required": [
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "DiagnosticsMode": {
+   "default": "OFF",
+   "enum": [
+    "OFF",
+    "SEND_ACTIVE_DTCS"
+   ],
+   "type": "string"
+  },
+  "EventExpression": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LanguageVersion": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MqttTopicConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):iam::(\\d{12})?:(role((\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F))[\\w+=,.@-]+)$",
+     "type": "string"
+    },
+    "MqttTopicArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ExecutionRoleArn",
+    "MqttTopicArn"
+   ],
+   "type": "object"
+  },
+  "S3Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "maxLength": 100,
+     "minLength": 16,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):s3:::.+$",
+     "type": "string"
+    },
+    "DataFormat": {
+     "$ref": "#/definitions/DataFormat"
+    },
+    "Prefix": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_:./!*'()]+$",
+     "type": "string"
+    },
+    "StorageCompressionFormat": {
+     "$ref": "#/definitions/StorageCompressionFormat"
+    }
+   },
+   "required": [
+    "BucketArn"
+   ],
+   "type": "object"
+  },
+  "SignalFetchConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TimeBased": {
+       "$ref": "#/definitions/TimeBasedSignalFetchConfig"
+      }
+     },
+     "required": [
+      "TimeBased"
+     ],
+     "title": "TimeBased",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ConditionBased": {
+       "$ref": "#/definitions/ConditionBasedSignalFetchConfig"
+      }
+     },
+     "required": [
+      "ConditionBased"
+     ],
+     "title": "ConditionBased",
+     "type": "object"
+    }
+   ]
+  },
+  "SignalFetchInformation": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ConditionLanguageVersion": {
+     "maximum": 1,
+     "minimum": 1,
+     "type": "number"
+    },
+    "FullyQualifiedName": {
+     "maxLength": 150,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.]+$",
+     "type": "string"
+    },
+    "SignalFetchConfig": {
+     "$ref": "#/definitions/SignalFetchConfig"
+    }
+   },
+   "required": [
+    "Actions",
+    "FullyQualifiedName",
+    "SignalFetchConfig"
+   ],
+   "type": "object"
+  },
+  "SignalInformation": {
+   "additionalProperties": false,
+   "properties": {
+    "DataPartitionId": {
+     "$ref": "#/definitions/DataPartitionId"
+    },
+    "MaxSampleCount": {
+     "maximum": 4294967295,
+     "minimum": 1,
+     "type": "number"
+    },
+    "MinimumSamplingIntervalMs": {
+     "maximum": 4294967295,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Name": {
+     "maxLength": 150,
+     "minLength": 1,
+     "pattern": "^[\\w|*|-]+(\\.[\\w|*|-]+)*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SpoolingMode": {
+   "default": "OFF",
+   "enum": [
+    "OFF",
+    "TO_DISK"
+   ],
+   "type": "string"
+  },
+  "StorageCompressionFormat": {
+   "enum": [
+    "NONE",
+    "GZIP"
+   ],
+   "type": "string"
+  },
+  "StorageLocation": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StorageMaximumSize": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/StorageMaximumSizeUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/StorageMaximumSizeValue"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "StorageMaximumSizeUnit": {
+   "enum": [
+    "MB",
+    "GB",
+    "TB"
+   ],
+   "type": "string"
+  },
+  "StorageMaximumSizeValue": {
+   "maximum": 1073741824,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "StorageMinimumTimeToLive": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/StorageMinimumTimeToLiveUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/StorageMinimumTimeToLiveValue"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "StorageMinimumTimeToLiveUnit": {
+   "enum": [
+    "HOURS",
+    "DAYS",
+    "WEEKS"
+   ],
+   "type": "string"
+  },
+  "StorageMinimumTimeToLiveValue": {
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeBasedCollectionScheme": {
+   "additionalProperties": false,
+   "properties": {
+    "PeriodMs": {
+     "maximum": 86400000,
+     "minimum": 10000,
+     "type": "number"
+    }
+   },
+   "required": [
+    "PeriodMs"
+   ],
+   "type": "object"
+  },
+  "TimeBasedSignalFetchConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionFrequencyMs": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ExecutionFrequencyMs"
+   ],
+   "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TimeUnit"
+    },
+    "Value": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeUnit": {
+   "enum": [
+    "MILLISECOND",
+    "SECOND",
+    "MINUTE",
+    "HOUR"
+   ],
+   "type": "string"
+  },
+  "TimestreamConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):iam::(\\d{12})?:(role((\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F))[\\w+=,.@-]+)$",
+     "type": "string"
+    },
+    "TimestreamTableArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):timestream:[a-zA-Z0-9-]+:[0-9]{12}:database\\/[a-zA-Z0-9_.-]+\\/table\\/[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimestreamTableArn",
+    "ExecutionRoleArn"
+   ],
+   "type": "object"
+  },
+  "TriggerMode": {
+   "enum": [
+    "ALWAYS",
+    "RISING_EDGE"
+   ],
+   "type": "string"
+  },
+  "UpdateCampaignAction": {
+   "enum": [
+    "APPROVE",
+    "SUSPEND",
+    "RESUME",
+    "UPDATE"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/UpdateCampaignAction"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CollectionScheme": {
+   "$ref": "#/definitions/CollectionScheme"
+  },
+  "Compression": {
+   "$ref": "#/definitions/Compression"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataDestinationConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataDestinationConfig"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "DataExtraDimensions": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 150,
+    "minLength": 1,
+    "pattern": "[a-zA-Z0-9_.]+",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 0,
+   "type": "array"
+  },
+  "DataPartitions": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/DataPartition"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+   "type": "string"
+  },
+  "DiagnosticsMode": {
+   "$ref": "#/definitions/DiagnosticsMode"
+  },
+  "ExpiryTime": {
+   "default": "253402214400",
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastModificationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z\\d\\-_:]+$",
+   "type": "string"
+  },
+  "PostTriggerCollectionDuration": {
+   "default": 0,
+   "maximum": 4294967295,
+   "minimum": 0,
+   "type": "number"
+  },
+  "Priority": {
+   "default": 0,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SignalCatalogArn": {
+   "type": "string"
+  },
+  "SignalsToCollect": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SignalInformation"
+   },
+   "maxItems": 1000,
+   "minItems": 0,
+   "type": "array"
+  },
+  "SignalsToFetch": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SignalFetchInformation"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array"
+  },
+  "SpoolingMode": {
+   "$ref": "#/definitions/SpoolingMode"
+  },
+  "StartTime": {
+   "default": "0",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/CampaignStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/CreationTime",
+  "/properties/LastModificationTime"
+ ],
+ "required": [
+  "Name",
+  "CollectionScheme",
+  "SignalCatalogArn",
+  "TargetArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTFleetWise::Campaign",
+ "writeOnlyProperties": [
+  "/properties/Action"
+ ]
+}

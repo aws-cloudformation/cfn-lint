@@ -1,0 +1,427 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "BurnRateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LookBackWindowMinutes": {
+     "maximum": 10080,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LookBackWindowMinutes"
+   ],
+   "type": "object"
+  },
+  "BurnRateConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BurnRateConfiguration"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CalendarInterval": {
+   "additionalProperties": false,
+   "properties": {
+    "Duration": {
+     "$ref": "#/definitions/Duration"
+    },
+    "DurationUnit": {
+     "$ref": "#/definitions/DurationUnit"
+    },
+    "StartTime": {
+     "minimum": 946684800,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StartTime",
+    "DurationUnit",
+    "Duration"
+   ],
+   "type": "object"
+  },
+  "Dimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Duration": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "DurationUnit": {
+   "enum": [
+    "DAY",
+    "MONTH"
+   ],
+   "type": "string"
+  },
+  "Goal": {
+   "additionalProperties": false,
+   "properties": {
+    "AttainmentGoal": {
+     "type": "number"
+    },
+    "Interval": {
+     "$ref": "#/definitions/Interval"
+    },
+    "WarningThreshold": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Interval": {
+   "additionalProperties": false,
+   "properties": {
+    "CalendarInterval": {
+     "$ref": "#/definitions/CalendarInterval"
+    },
+    "RollingInterval": {
+     "$ref": "#/definitions/RollingInterval"
+    }
+   },
+   "type": "object"
+  },
+  "KeyAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  },
+  "Metric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Dimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDataQueries": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricDataQuery"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "type": "string"
+    },
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/MetricStat"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "MetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/Metric"
+    },
+    "Period": {
+     "type": "integer"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Period",
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "MonitoredRequestCountMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "BadCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    },
+    "GoodCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    }
+   },
+   "type": "object"
+  },
+  "RequestBasedSli": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GreaterThanOrEqualTo",
+      "LessThanOrEqualTo",
+      "LessThan",
+      "GreaterThan"
+     ],
+     "type": "string"
+    },
+    "MetricThreshold": {
+     "type": "number"
+    },
+    "RequestBasedSliMetric": {
+     "$ref": "#/definitions/RequestBasedSliMetric"
+    }
+   },
+   "required": [
+    "RequestBasedSliMetric"
+   ],
+   "type": "object"
+  },
+  "RequestBasedSliMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyAttributes": {
+     "$ref": "#/definitions/KeyAttributes"
+    },
+    "MetricType": {
+     "enum": [
+      "LATENCY",
+      "AVAILABILITY"
+     ],
+     "type": "string"
+    },
+    "MonitoredRequestCountMetric": {
+     "$ref": "#/definitions/MonitoredRequestCountMetric"
+    },
+    "OperationName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TotalRequestCountMetric": {
+     "$ref": "#/definitions/MetricDataQueries"
+    }
+   },
+   "type": "object"
+  },
+  "RollingInterval": {
+   "additionalProperties": false,
+   "properties": {
+    "Duration": {
+     "$ref": "#/definitions/Duration"
+    },
+    "DurationUnit": {
+     "$ref": "#/definitions/DurationUnit"
+    }
+   },
+   "required": [
+    "DurationUnit",
+    "Duration"
+   ],
+   "type": "object"
+  },
+  "Sli": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GreaterThanOrEqualTo",
+      "LessThanOrEqualTo",
+      "LessThan",
+      "GreaterThan"
+     ],
+     "type": "string"
+    },
+    "MetricThreshold": {
+     "type": "number"
+    },
+    "SliMetric": {
+     "$ref": "#/definitions/SliMetric"
+    }
+   },
+   "required": [
+    "SliMetric",
+    "MetricThreshold",
+    "ComparisonOperator"
+   ],
+   "type": "object"
+  },
+  "SliMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyAttributes": {
+     "$ref": "#/definitions/KeyAttributes"
+    },
+    "MetricDataQueries": {
+     "$ref": "#/definitions/MetricDataQueries"
+    },
+    "MetricType": {
+     "enum": [
+      "LATENCY",
+      "AVAILABILITY"
+     ],
+     "type": "string"
+    },
+    "OperationName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PeriodSeconds": {
+     "maximum": 900,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "Statistic": {
+     "maxLength": 20,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:[^:]*:application-signals:[^:]*:[^:]*:slo\\/[0-9A-Za-z][-._0-9A-Za-z ]{0,126}[0-9A-Za-z]$",
+   "type": "string"
+  },
+  "BurnRateConfigurations": {
+   "$ref": "#/definitions/BurnRateConfigurations"
+  },
+  "CreatedTime": {
+   "minimum": 946684800,
+   "type": "integer"
+  },
+  "Description": {
+   "default": "No description",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EvaluationType": {
+   "enum": [
+    "PeriodBased",
+    "RequestBased"
+   ],
+   "type": "string"
+  },
+  "Goal": {
+   "$ref": "#/definitions/Goal"
+  },
+  "LastUpdatedTime": {
+   "minimum": 946684800,
+   "type": "integer"
+  },
+  "Name": {
+   "pattern": "^[0-9A-Za-z][-._0-9A-Za-z ]{0,126}[0-9A-Za-z]$",
+   "type": "string"
+  },
+  "RequestBasedSli": {
+   "$ref": "#/definitions/RequestBasedSli"
+  },
+  "Sli": {
+   "$ref": "#/definitions/Sli"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime",
+  "/properties/EvaluationType"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationsignals",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ApplicationSignals::ServiceLevelObjective"
+}
