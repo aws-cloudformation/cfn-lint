@@ -112,6 +112,9 @@
     "Projection": {
      "$ref": "#/definitions/Projection"
     },
+    "WarmThroughput": {
+     "$ref": "#/definitions/WarmThroughput"
+    },
     "WriteOnDemandThroughputSettings": {
      "$ref": "#/definitions/WriteOnDemandThroughputSettings"
     },
@@ -505,6 +508,32 @@
    ],
    "type": "object"
   },
+  "WarmThroughput": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "ReadUnitsPerSecond"
+     ]
+    },
+    {
+     "required": [
+      "WriteUnitsPerSecond"
+     ]
+    }
+   ],
+   "properties": {
+    "ReadUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WriteUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "WriteOnDemandThroughputSettings": {
    "additionalProperties": false,
    "properties": {
@@ -594,6 +623,9 @@
   },
   "TimeToLiveSpecification": {
    "$ref": "#/definitions/TimeToLiveSpecification"
+  },
+  "WarmThroughput": {
+   "$ref": "#/definitions/WarmThroughput"
   },
   "WriteOnDemandThroughputSettings": {
    "$ref": "#/definitions/WriteOnDemandThroughputSettings"

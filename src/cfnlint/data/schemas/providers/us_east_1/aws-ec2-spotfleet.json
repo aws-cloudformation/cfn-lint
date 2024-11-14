@@ -58,6 +58,15 @@
    },
    "type": "object"
   },
+  "BaselinePerformanceFactorsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuPerformanceFactorRequest"
+    }
+   },
+   "type": "object"
+  },
   "BlockDeviceMapping": {
    "additionalProperties": false,
    "properties": {
@@ -111,6 +120,19 @@
    "required": [
     "ClassicLoadBalancers"
    ],
+   "type": "object"
+  },
+  "CpuPerformanceFactorRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "References": {
+     "items": {
+      "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
    "type": "object"
   },
   "EbsBlockDevice": {
@@ -343,7 +365,8 @@
       "enum": [
        "intel",
        "amd",
-       "amazon-web-services"
+       "amazon-web-services",
+       "apple"
       ],
       "type": "string"
      },
@@ -523,6 +546,15 @@
     },
     "Min": {
      "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceFactorReferenceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceFamily": {
+     "type": "string"
     }
    },
    "type": "object"

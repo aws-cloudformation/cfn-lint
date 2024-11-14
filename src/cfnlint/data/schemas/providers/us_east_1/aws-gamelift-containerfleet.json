@@ -1,0 +1,477 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceType",
+  "/properties/BillingType",
+  "/properties/Locations"
+ ],
+ "definitions": {
+  "ConnectionPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ToPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FromPort",
+    "ToPort"
+   ],
+   "type": "object"
+  },
+  "DeploymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImpairmentStrategy": {
+     "enum": [
+      "MAINTAIN",
+      "ROLLBACK"
+     ],
+     "type": "string"
+    },
+    "MinimumHealthyPercentage": {
+     "maximum": 75,
+     "minimum": 30,
+     "type": "integer"
+    },
+    "ProtectionStrategy": {
+     "enum": [
+      "WITH_PROTECTION",
+      "IGNORE_PROTECTION"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "DeploymentDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "LatestDeploymentId": {
+     "maxLength": 1024,
+     "pattern": "^[a-zA-Z0-9\\-]+$|^$",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "GameSessionCreationLimitPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "NewGameSessionsPerCreator": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "PolicyPeriodInMinutes": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "IpPermission": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "IpRange": {
+     "pattern": "(^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))$)",
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "TCP",
+      "UDP"
+     ],
+     "type": "string"
+    },
+    "ToPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FromPort",
+    "IpRange",
+    "Protocol",
+    "ToPort"
+   ],
+   "type": "object"
+  },
+  "Location": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9\\-]+",
+   "type": "string"
+  },
+  "LocationCapacity": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredEC2Instances": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxSize": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MinSize": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DesiredEC2Instances",
+    "MinSize",
+    "MaxSize"
+   ],
+   "type": "object"
+  },
+  "LocationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Location": {
+     "$ref": "#/definitions/Location"
+    },
+    "LocationCapacity": {
+     "$ref": "#/definitions/LocationCapacity"
+    },
+    "StoppedActions": {
+     "$ref": "#/definitions/StoppedActions"
+    }
+   },
+   "required": [
+    "Location"
+   ],
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDestination": {
+     "$ref": "#/definitions/LogDestination"
+    },
+    "S3BucketName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LogDestination": {
+   "enum": [
+    "NONE",
+    "CLOUDWATCH",
+    "S3"
+   ],
+   "type": "string"
+  },
+  "ScalingPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "GreaterThanOrEqualToThreshold",
+      "GreaterThanThreshold",
+      "LessThanThreshold",
+      "LessThanOrEqualToThreshold"
+     ],
+     "type": "string"
+    },
+    "EvaluationPeriods": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MetricName": {
+     "enum": [
+      "ActivatingGameSessions",
+      "ActiveGameSessions",
+      "ActiveInstances",
+      "AvailableGameSessions",
+      "AvailablePlayerSessions",
+      "CurrentPlayerSessions",
+      "IdleInstances",
+      "PercentAvailableGameSessions",
+      "PercentIdleInstances",
+      "QueueDepth",
+      "WaitTime",
+      "ConcurrentActivatableGameSessions"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PolicyType": {
+     "enum": [
+      "RuleBased",
+      "TargetBased"
+     ],
+     "type": "string"
+    },
+    "ScalingAdjustment": {
+     "type": "integer"
+    },
+    "ScalingAdjustmentType": {
+     "enum": [
+      "ChangeInCapacity",
+      "ExactCapacity",
+      "PercentChangeInCapacity"
+     ],
+     "type": "string"
+    },
+    "TargetConfiguration": {
+     "$ref": "#/definitions/TargetConfiguration"
+    },
+    "Threshold": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StoppedActions": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "AUTO_SCALING"
+    ],
+    "type": "string"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TargetConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FleetId"
+ ],
+ "properties": {
+  "BillingType": {
+   "enum": [
+    "ON_DEMAND",
+    "SPOT"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "DeploymentConfiguration": {
+   "$ref": "#/definitions/DeploymentConfiguration"
+  },
+  "DeploymentDetails": {
+   "$ref": "#/definitions/DeploymentDetails"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FleetArn": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^arn:.*:[a-z]*fleet\\/[a-z]*fleet-[a-zA-Z0-9\\-]+$",
+   "type": "string"
+  },
+  "FleetId": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-z]*fleet-[a-zA-Z0-9\\-]+",
+   "type": "string"
+  },
+  "FleetRoleArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws(-.*)?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "GameServerContainerGroupDefinitionArn": {
+   "maxLength": 512,
+   "pattern": "^arn:.*:containergroupdefinition\\/[a-zA-Z0-9\\-]+(:[0-9]+)?$|^$",
+   "type": "string"
+  },
+  "GameServerContainerGroupDefinitionName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-]+$|^arn:.*:containergroupdefinition\\/[a-zA-Z0-9\\-]+(:[0-9]+)?$",
+   "type": "string"
+  },
+  "GameServerContainerGroupsPerInstance": {
+   "maximum": 5000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "GameSessionCreationLimitPolicy": {
+   "$ref": "#/definitions/GameSessionCreationLimitPolicy"
+  },
+  "InstanceConnectionPortRange": {
+   "$ref": "#/definitions/ConnectionPortRange"
+  },
+  "InstanceInboundPermissions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpPermission"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "InstanceType": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Locations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocationConfiguration"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "LogConfiguration": {
+   "$ref": "#/definitions/LogConfiguration"
+  },
+  "MaximumGameServerContainerGroupsPerInstance": {
+   "maximum": 5000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MetricGroups": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "NewGameSessionProtectionPolicy": {
+   "enum": [
+    "FullProtection",
+    "NoProtection"
+   ],
+   "type": "string"
+  },
+  "PerInstanceContainerGroupDefinitionArn": {
+   "maxLength": 512,
+   "pattern": "^arn:.*:containergroupdefinition\\/[a-zA-Z0-9\\-]+(:[0-9]+)?$|^$",
+   "type": "string"
+  },
+  "PerInstanceContainerGroupDefinitionName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-]+$|^arn:.*:containergroupdefinition\\/[a-zA-Z0-9\\-]+(:[0-9]+)?$",
+   "type": "string"
+  },
+  "ScalingPolicies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScalingPolicy"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Status": {
+   "enum": [
+    "PENDING",
+    "CREATING",
+    "CREATED",
+    "ACTIVATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/Status",
+  "/properties/FleetId",
+  "/properties/FleetArn",
+  "/properties/DeploymentDetails",
+  "/properties/GameServerContainerGroupDefinitionArn",
+  "/properties/PerInstanceContainerGroupDefinitionArn",
+  "/properties/MaximumGameServerContainerGroupsPerInstance"
+ ],
+ "required": [
+  "FleetRoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::ContainerFleet",
+ "writeOnlyProperties": [
+  "/properties/ScalingPolicies",
+  "/properties/Locations",
+  "/properties/DeploymentConfiguration",
+  "/properties/GameServerContainerGroupsPerInstance",
+  "/properties/GameServerContainerGroupDefinitionName",
+  "/properties/PerInstanceContainerGroupDefinitionName"
+ ]
+}
