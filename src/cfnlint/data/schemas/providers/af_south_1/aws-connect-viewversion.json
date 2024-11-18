@@ -1,0 +1,57 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ViewArn",
+  "/properties/ViewContentSha256"
+ ],
+ "primaryIdentifier": [
+  "/properties/ViewVersionArn"
+ ],
+ "properties": {
+  "Version": {
+   "type": "integer"
+  },
+  "VersionDescription": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{N}_.:\\/=+\\-@,]+[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@,]*)$",
+   "type": "string"
+  },
+  "ViewArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/view/[-:a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "ViewContentSha256": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]{64}$",
+   "type": "string"
+  },
+  "ViewVersionArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/view/[-:a-zA-Z0-9]*$",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/ViewArn": "$join([\"^\", ViewArn, \":[0-9]*$\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/ViewVersionArn",
+  "/properties/Version"
+ ],
+ "required": [
+  "ViewArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::ViewVersion"
+}

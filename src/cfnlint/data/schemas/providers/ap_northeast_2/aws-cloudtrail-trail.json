@@ -1,0 +1,315 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TrailName"
+ ],
+ "definitions": {
+  "AdvancedEventSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldSelectors": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AdvancedFieldSelector"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldSelectors"
+   ],
+   "type": "object"
+  },
+  "AdvancedFieldSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "EndsWith": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Equals": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Field": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "([\\w|\\d|\\.|_]+)",
+     "type": "string"
+    },
+    "NotEndsWith": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotEquals": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotStartsWith": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "StartsWith": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Field"
+   ],
+   "type": "object"
+  },
+  "DataResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "AWS::Lambda::Function",
+      "AWS::S3::Object",
+      "AWS::DynamoDB::Table",
+      "AWS::S3Outposts::Object",
+      "AWS::ManagedBlockchain::Node",
+      "AWS::S3ObjectLambda::AccessPoint",
+      "AWS::EC2::Snapshot",
+      "AWS::S3::AccessPoint",
+      "AWS::DynamoDB::Stream"
+     ],
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "EventSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "DataResources": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DataResource"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ExcludeManagementEventSources": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "IncludeManagementEvents": {
+     "type": "boolean"
+    },
+    "ReadWriteType": {
+     "enum": [
+      "All",
+      "ReadOnly",
+      "WriteOnly"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InsightSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "InsightType": {
+     "enum": [
+      "ApiCallRateInsight",
+      "ApiErrorRateInsight"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrailName"
+ ],
+ "properties": {
+  "AdvancedEventSelectors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AdvancedEventSelector"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CloudWatchLogsLogGroupArn": {
+   "type": "string"
+  },
+  "CloudWatchLogsRoleArn": {
+   "type": "string"
+  },
+  "EnableLogFileValidation": {
+   "type": "boolean"
+  },
+  "EventSelectors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventSelector"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IncludeGlobalServiceEvents": {
+   "type": "boolean"
+  },
+  "InsightSelectors": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InsightSelector"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IsLogging": {
+   "type": "boolean"
+  },
+  "IsMultiRegionTrail": {
+   "type": "boolean"
+  },
+  "IsOrganizationTrail": {
+   "type": "boolean"
+  },
+  "KMSKeyId": {
+   "type": "string"
+  },
+  "S3BucketName": {
+   "type": "string"
+  },
+  "S3KeyPrefix": {
+   "maxLength": 200,
+   "type": "string"
+  },
+  "SnsTopicArn": {
+   "type": "string"
+  },
+  "SnsTopicName": {
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrailName": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "(^[a-zA-Z0-9]$)|(^[a-zA-Z0-9]([a-zA-Z0-9\\._-])*[a-zA-Z0-9]$)",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/KMSKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KMSKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SnsTopicArn"
+ ],
+ "required": [
+  "S3BucketName",
+  "IsLogging"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudTrail::Trail"
+}

@@ -1,0 +1,312 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ArtifactConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Encryption": {
+     "$ref": "#/definitions/S3Encryption"
+    }
+   },
+   "type": "object"
+  },
+  "BaseScreenshot": {
+   "properties": {
+    "IgnoreCoordinates": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ScreenshotName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScreenshotName"
+   ],
+   "type": "object"
+  },
+  "Code": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "S3Bucket",
+      "S3Key"
+     ]
+    },
+    {
+     "required": [
+      "Script"
+     ]
+    }
+   ],
+   "properties": {
+    "Handler": {
+     "pattern": "^([0-9a-zA-Z_-]+\\/)*[0-9A-Za-z_\\\\-]+\\.[A-Za-z_][A-Za-z0-9_]*$",
+     "type": "string"
+    },
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    },
+    "S3ObjectVersion": {
+     "type": "string"
+    },
+    "Script": {
+     "type": "string"
+    },
+    "SourceLocationArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Handler"
+   ],
+   "type": "object"
+  },
+  "ResourceToTag": {
+   "enum": [
+    "lambda-function"
+   ],
+   "type": "string"
+  },
+  "RunConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ActiveTracing": {
+     "type": "boolean"
+    },
+    "EnvironmentVariables": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z][a-zA-Z0-9_]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "MemoryInMB": {
+     "type": "integer"
+    },
+    "TimeoutInSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "S3Encryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionMode": {
+     "enum": [
+      "SSE_KMS",
+      "SSE_S3"
+     ],
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "pattern": "arn:(aws[a-zA-Z-]*)?:kms:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:key/[\\w\\-\\/]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationInSeconds": {
+     "type": "string"
+    },
+    "Expression": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VPCConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetIds",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  },
+  "VisualReference": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseCanaryRunId": {
+     "type": "string"
+    },
+    "BaseScreenshots": {
+     "items": {
+      "$ref": "#/definitions/BaseScreenshot"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "BaseCanaryRunId"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/DeleteLambdaResourcesOnCanaryDeletion"
+ ],
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "ArtifactConfig": {
+   "$ref": "#/definitions/ArtifactConfig"
+  },
+  "ArtifactS3Location": {
+   "pattern": "^(s3|S3)://",
+   "type": "string"
+  },
+  "Code": {
+   "$ref": "#/definitions/Code"
+  },
+  "DeleteLambdaResourcesOnCanaryDeletion": {
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  },
+  "FailureRetentionPeriod": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[0-9a-z_\\-]{1,255}$",
+   "type": "string"
+  },
+  "ProvisionedResourceCleanup": {
+   "enum": [
+    "AUTOMATIC",
+    "OFF"
+   ],
+   "type": "string"
+  },
+  "ResourcesToReplicateTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceToTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RunConfig": {
+   "$ref": "#/definitions/RunConfig"
+  },
+  "RuntimeVersion": {
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "StartCanaryAfterCreation": {
+   "type": "boolean"
+  },
+  "State": {
+   "type": "string"
+  },
+  "SuccessRetentionPeriod": {
+   "type": "integer"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VPCConfig": {
+   "$ref": "#/definitions/VPCConfig"
+  },
+  "VisualReference": {
+   "$ref": "#/definitions/VisualReference"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/State",
+  "/properties/Code/SourceLocationArn"
+ ],
+ "required": [
+  "Name",
+  "Code",
+  "ArtifactS3Location",
+  "ExecutionRoleArn",
+  "Schedule",
+  "RuntimeVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-synthetics",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Synthetics::Canary",
+ "writeOnlyProperties": [
+  "/properties/Code/S3Bucket",
+  "/properties/Code/S3Key",
+  "/properties/Code/S3ObjectVersion",
+  "/properties/Code/Script",
+  "/properties/DeleteLambdaResourcesOnCanaryDeletion",
+  "/properties/StartCanaryAfterCreation",
+  "/properties/ResourcesToReplicateTags",
+  "/properties/RunConfig/EnvironmentVariables",
+  "/properties/VisualReference"
+ ]
+}

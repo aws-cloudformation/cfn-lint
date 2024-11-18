@@ -89,6 +89,49 @@
    },
    "type": "object"
   },
+  "CapacityReservationIds": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CapacityReservationResourceGroupArns": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CapacityReservationSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationPreference": {
+     "type": "string"
+    },
+    "CapacityReservationTarget": {
+     "$ref": "#/definitions/CapacityReservationTarget"
+    }
+   },
+   "required": [
+    "CapacityReservationPreference"
+   ],
+   "type": "object"
+  },
+  "CapacityReservationTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationIds": {
+     "$ref": "#/definitions/CapacityReservationIds"
+    },
+    "CapacityReservationResourceGroupArns": {
+     "$ref": "#/definitions/CapacityReservationResourceGroupArns"
+    }
+   },
+   "type": "object"
+  },
   "CpuPerformanceFactorRequest": {
    "additionalProperties": false,
    "properties": {
@@ -624,6 +667,9 @@
   },
   "CapacityRebalance": {
    "type": "boolean"
+  },
+  "CapacityReservationSpecification": {
+   "$ref": "#/definitions/CapacityReservationSpecification"
   },
   "Context": {
    "type": "string"
