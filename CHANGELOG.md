@@ -1,3 +1,11 @@
+### v1.20.0
+## What's Changed
+* Update CloudFormation schemas to `2024-11-18` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3828
+* Update error messagings from json schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3798
+* Create rule [E3695](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3695) to validate cache cluster engines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3824
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.19.0...v1.20.0
+
 ### v1.19.0
 ## What's Changed
 * Update CloudFormation schemas to `2024-11-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3811
