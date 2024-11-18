@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DataflowEdge": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "type": "string"
+    },
+    "Source": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StreamsKmsKey": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "KmsKeyArn"
+     ]
+    },
+    {
+     "required": [
+      "KmsAliasArn"
+     ]
+    }
+   ],
+   "properties": {
+    "KmsAliasArn": {
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "ContactPostPassDurationSeconds": {
+   "type": "integer"
+  },
+  "ContactPrePassDurationSeconds": {
+   "type": "integer"
+  },
+  "DataflowEdges": {
+   "items": {
+    "$ref": "#/definitions/DataflowEdge"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MinimumViableContactDurationSeconds": {
+   "type": "integer"
+  },
+  "Name": {
+   "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+   "type": "string"
+  },
+  "Region": {
+   "type": "string"
+  },
+  "StreamsKmsKey": {
+   "$ref": "#/definitions/StreamsKmsKey"
+  },
+  "StreamsKmsRole": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TrackingConfigArn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Region"
+ ],
+ "required": [
+  "Name",
+  "MinimumViableContactDurationSeconds",
+  "DataflowEdges",
+  "TrackingConfigArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GroundStation::MissionProfile"
+}

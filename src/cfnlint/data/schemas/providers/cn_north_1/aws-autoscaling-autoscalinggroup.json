@@ -1,0 +1,794 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/LaunchConfigurationName",
+  "/properties/VPCZoneIdentifier",
+  "/properties/LaunchTemplate",
+  "/properties/MixedInstancesPolicy"
+ ],
+ "createOnlyProperties": [
+  "/properties/InstanceId",
+  "/properties/AutoScalingGroupName"
+ ],
+ "definitions": {
+  "AcceleratorCountRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "AcceleratorTotalMemoryMiBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "AvailabilityZoneDistribution": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityDistributionStrategy": {
+     "enum": [
+      "balanced-best-effort",
+      "balanced-only"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AvailabilityZoneImpairmentPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ImpairedZoneHealthCheckBehavior": {
+     "enum": [
+      "IgnoreUnhealthy",
+      "ReplaceUnhealthy"
+     ],
+     "type": "string"
+    },
+    "ZonalShiftEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ImpairedZoneHealthCheckBehavior",
+    "ZonalShiftEnabled"
+   ],
+   "type": "object"
+  },
+  "BaselineEbsBandwidthMbpsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BaselinePerformanceFactorsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuPerformanceFactorRequest"
+    }
+   },
+   "type": "object"
+  },
+  "CpuPerformanceFactorRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "References": {
+     "$ref": "#/definitions/PerformanceFactorReferenceSetRequest"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceMaintenancePolicy": {
+   "additionalProperties": false,
+   "dependencies": {
+    "MaxHealthyPercentage": [
+     "MinHealthyPercentage"
+    ],
+    "MinHealthyPercentage": [
+     "MaxHealthyPercentage"
+    ]
+   },
+   "properties": {
+    "MaxHealthyPercentage": {
+     "type": "integer"
+    },
+    "MinHealthyPercentage": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceRequirements": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceleratorCount": {
+     "$ref": "#/definitions/AcceleratorCountRequest"
+    },
+    "AcceleratorManufacturers": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "amazon-web-services",
+       "amd",
+       "nvidia",
+       "xilinx"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AcceleratorNames": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "a100",
+       "k80",
+       "m60",
+       "radeon-pro-v520",
+       "t4",
+       "v100",
+       "vu9p"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AcceleratorTotalMemoryMiB": {
+     "$ref": "#/definitions/AcceleratorTotalMemoryMiBRequest"
+    },
+    "AcceleratorTypes": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "fpga",
+       "gpu",
+       "inference"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AllowedInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "BareMetal": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
+     "type": "string"
+    },
+    "BaselineEbsBandwidthMbps": {
+     "$ref": "#/definitions/BaselineEbsBandwidthMbpsRequest"
+    },
+    "BaselinePerformanceFactors": {
+     "$ref": "#/definitions/BaselinePerformanceFactorsRequest"
+    },
+    "BurstablePerformance": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
+     "type": "string"
+    },
+    "CpuManufacturers": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "amazon-web-services",
+       "amd",
+       "intel"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ExcludedInstanceTypes": {
+     "insertionOrder": true,
+     "items": {
+      "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "InstanceGenerations": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "current",
+       "previous"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "LocalStorage": {
+     "enum": [
+      "excluded",
+      "included",
+      "required"
+     ],
+     "type": "string"
+    },
+    "LocalStorageTypes": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "hdd",
+       "ssd"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MaxSpotPriceAsPercentageOfOptimalOnDemandPrice": {
+     "type": "integer"
+    },
+    "MemoryGiBPerVCpu": {
+     "$ref": "#/definitions/MemoryGiBPerVCpuRequest"
+    },
+    "MemoryMiB": {
+     "$ref": "#/definitions/MemoryMiBRequest"
+    },
+    "NetworkBandwidthGbps": {
+     "$ref": "#/definitions/NetworkBandwidthGbpsRequest"
+    },
+    "NetworkInterfaceCount": {
+     "$ref": "#/definitions/NetworkInterfaceCountRequest"
+    },
+    "OnDemandMaxPricePercentageOverLowestPrice": {
+     "type": "integer"
+    },
+    "RequireHibernateSupport": {
+     "type": "boolean"
+    },
+    "SpotMaxPricePercentageOverLowestPrice": {
+     "type": "integer"
+    },
+    "TotalLocalStorageGB": {
+     "$ref": "#/definitions/TotalLocalStorageGBRequest"
+    },
+    "VCpuCount": {
+     "$ref": "#/definitions/VCpuCountRequest"
+    }
+   },
+   "required": [
+    "MemoryMiB",
+    "VCpuCount"
+   ],
+   "type": "object"
+  },
+  "InstancesDistribution": {
+   "additionalProperties": false,
+   "properties": {
+    "OnDemandAllocationStrategy": {
+     "type": "string"
+    },
+    "OnDemandBaseCapacity": {
+     "type": "integer"
+    },
+    "OnDemandPercentageAboveBaseCapacity": {
+     "type": "integer"
+    },
+    "SpotAllocationStrategy": {
+     "type": "string"
+    },
+    "SpotInstancePools": {
+     "type": "integer"
+    },
+    "SpotMaxPrice": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplate": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateSpecification": {
+     "$ref": "#/definitions/LaunchTemplateSpecification"
+    },
+    "Overrides": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LaunchTemplateOverrides"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "LaunchTemplateSpecification"
+   ],
+   "type": "object"
+  },
+  "LaunchTemplateOverrides": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceRequirements": {
+     "$ref": "#/definitions/InstanceRequirements"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "LaunchTemplateSpecification": {
+     "$ref": "#/definitions/LaunchTemplateSpecification"
+    },
+    "WeightedCapacity": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "pattern": "[a-zA-Z0-9\\(\\)\\.\\-/_]+",
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "requiredXor": [
+    "LaunchTemplateId",
+    "LaunchTemplateName"
+   ],
+   "type": "object"
+  },
+  "LifecycleHookSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultResult": {
+     "type": "string"
+    },
+    "HeartbeatTimeout": {
+     "type": "integer"
+    },
+    "LifecycleHookName": {
+     "pattern": "[A-Za-z0-9\\-_\\/]+",
+     "type": "string"
+    },
+    "LifecycleTransition": {
+     "type": "string"
+    },
+    "NotificationMetadata": {
+     "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007e]+",
+     "type": "string"
+    },
+    "NotificationTargetARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LifecycleHookName",
+    "LifecycleTransition"
+   ],
+   "type": "object"
+  },
+  "MemoryGiBPerVCpuRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryMiBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "MetricsCollection": {
+   "additionalProperties": false,
+   "properties": {
+    "Granularity": {
+     "type": "string"
+    },
+    "Metrics": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Granularity"
+   ],
+   "type": "object"
+  },
+  "MixedInstancesPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "InstancesDistribution": {
+     "$ref": "#/definitions/InstancesDistribution"
+    },
+    "LaunchTemplate": {
+     "$ref": "#/definitions/LaunchTemplate"
+    }
+   },
+   "required": [
+    "LaunchTemplate"
+   ],
+   "type": "object"
+  },
+  "NetworkBandwidthGbpsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceCountRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "NotificationTypes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TopicARN": {
+     "items": {
+      "type": "string"
+     },
+     "type": [
+      "string",
+      "array"
+     ]
+    }
+   },
+   "required": [
+    "TopicARN"
+   ],
+   "type": "object"
+  },
+  "PerformanceFactorReferenceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceFamily": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceFactorReferenceSetRequest": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TagProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "PropagateAtLaunch": {
+     "type": "boolean"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key",
+    "PropagateAtLaunch"
+   ],
+   "type": "object"
+  },
+  "TotalLocalStorageGBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "TrafficSourceIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Identifier": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "VCpuCountRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/NotificationConfiguration"
+ ],
+ "primaryIdentifier": [
+  "/properties/AutoScalingGroupName"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "AvailabilityZoneDistribution": {
+   "$ref": "#/definitions/AvailabilityZoneDistribution"
+  },
+  "AvailabilityZoneImpairmentPolicy": {
+   "$ref": "#/definitions/AvailabilityZoneImpairmentPolicy"
+  },
+  "AvailabilityZones": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CapacityRebalance": {
+   "type": "boolean"
+  },
+  "Context": {
+   "type": "string"
+  },
+  "Cooldown": {
+   "type": "string"
+  },
+  "DefaultInstanceWarmup": {
+   "type": "integer"
+  },
+  "DesiredCapacity": {
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "DesiredCapacityType": {
+   "type": "string"
+  },
+  "HealthCheckGracePeriod": {
+   "type": "integer"
+  },
+  "HealthCheckType": {
+   "enum": [
+    "EBS",
+    "EC2",
+    "ELB",
+    "VPC_LATTICE"
+   ],
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "InstanceMaintenancePolicy": {
+   "$ref": "#/definitions/InstanceMaintenancePolicy"
+  },
+  "LaunchConfigurationName": {
+   "type": "string"
+  },
+  "LaunchTemplate": {
+   "$ref": "#/definitions/LaunchTemplateSpecification"
+  },
+  "LifecycleHookSpecificationList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/LifecycleHookSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "LoadBalancerNames": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MaxInstanceLifetime": {
+   "type": "integer"
+  },
+  "MaxSize": {
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "MetricsCollection": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricsCollection"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "MinSize": {
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  },
+  "MixedInstancesPolicy": {
+   "$ref": "#/definitions/MixedInstancesPolicy"
+  },
+  "NewInstancesProtectedFromScaleIn": {
+   "type": "boolean"
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
+  "NotificationConfigurations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/NotificationConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlacementGroup": {
+   "type": "string"
+  },
+  "ServiceLinkedRoleARN": {
+   "type": "string"
+  },
+  "SkipZonalShiftValidation": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagProperty"
+   },
+   "type": "array"
+  },
+  "TargetGroupARNs": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TerminationPolicies": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrafficSources": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TrafficSourceIdentifier"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VPCZoneIdentifier": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/LaunchConfigurationName": "InstanceId? AutoScalingGroupName : LaunchConfigurationName"
+ },
+ "required": [
+  "MinSize",
+  "MaxSize"
+ ],
+ "requiredXor": [
+  "InstanceId",
+  "LaunchConfigurationName",
+  "LaunchTemplate",
+  "MixedInstancesPolicy"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AutoScaling::AutoScalingGroup",
+ "writeOnlyProperties": [
+  "/properties/SkipZonalShiftValidation",
+  "/properties/InstanceId"
+ ]
+}

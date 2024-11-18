@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserId",
+  "/properties/UserName",
+  "/properties/Engine"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserId"
+ ],
+ "properties": {
+  "AccessString": {
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationMode": {
+   "additionalProperties": false,
+   "properties": {
+    "Passwords": {
+     "$comment": "List of passwords.",
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Type": {
+     "enum": [
+      "password",
+      "no-password-required",
+      "iam"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Engine": {
+   "enum": [
+    "redis"
+   ],
+   "type": "string"
+  },
+  "NoPasswordRequired": {
+   "type": "boolean"
+  },
+  "Passwords": {
+   "$comment": "List of passwords.",
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UserId": {
+   "pattern": "[a-z][a-z0-9\\\\-]*",
+   "type": "string"
+  },
+  "UserName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Arn"
+ ],
+ "required": [
+  "UserId",
+  "UserName",
+  "Engine"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ElastiCache::User",
+ "writeOnlyProperties": [
+  "/properties/Passwords",
+  "/properties/NoPasswordRequired",
+  "/properties/AccessString",
+  "/properties/AuthenticationMode"
+ ]
+}

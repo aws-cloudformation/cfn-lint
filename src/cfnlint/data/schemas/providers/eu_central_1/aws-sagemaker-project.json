@@ -1,0 +1,186 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectName",
+  "/properties/ProjectDescription",
+  "/properties/ServiceCatalogProvisioningDetails",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "PathId": {
+   "maxLength": 100,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ProductId": {
+   "maxLength": 100,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ProjectArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:project.*",
+   "type": "string"
+  },
+  "ProjectDescription": {
+   "maxLength": 1024,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "ProjectId": {
+   "maxLength": 20,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "ProjectName": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ProvisionedProductStatusMessage": {
+   "type": "string"
+  },
+  "ProvisioningArtifactId": {
+   "maxLength": 100,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "ProvisioningParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 4096,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProjectArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "ProjectArn": {
+   "$ref": "#/definitions/ProjectArn"
+  },
+  "ProjectDescription": {
+   "$ref": "#/definitions/ProjectDescription"
+  },
+  "ProjectId": {
+   "$ref": "#/definitions/ProjectId"
+  },
+  "ProjectName": {
+   "$ref": "#/definitions/ProjectName"
+  },
+  "ProjectStatus": {
+   "enum": [
+    "Pending",
+    "CreateInProgress",
+    "CreateCompleted",
+    "CreateFailed",
+    "DeleteInProgress",
+    "DeleteFailed",
+    "DeleteCompleted"
+   ],
+   "type": "string"
+  },
+  "ServiceCatalogProvisionedProductDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "ProvisionedProductId": {
+     "$ref": "#/definitions/ProvisioningArtifactId"
+    },
+    "ProvisionedProductStatusMessage": {
+     "$ref": "#/definitions/ProvisionedProductStatusMessage"
+    }
+   },
+   "type": "object"
+  },
+  "ServiceCatalogProvisioningDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "PathId": {
+     "$ref": "#/definitions/PathId"
+    },
+    "ProductId": {
+     "$ref": "#/definitions/ProductId"
+    },
+    "ProvisioningArtifactId": {
+     "$ref": "#/definitions/ProvisioningArtifactId"
+    },
+    "ProvisioningParameters": {
+     "items": {
+      "$ref": "#/definitions/ProvisioningParameter"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "ProductId"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 40,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProjectArn",
+  "/properties/CreationTime",
+  "/properties/ProjectId",
+  "/properties/ProjectStatus"
+ ],
+ "required": [
+  "ProjectName",
+  "ServiceCatalogProvisioningDetails"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::Project"
+}

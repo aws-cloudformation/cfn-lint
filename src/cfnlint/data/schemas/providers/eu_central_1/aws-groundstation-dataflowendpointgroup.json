@@ -1,0 +1,237 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AgentStatus": {
+   "enum": [
+    "SUCCESS",
+    "FAILED",
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "AuditResults": {
+   "enum": [
+    "HEALTHY",
+    "UNHEALTHY"
+   ],
+   "type": "string"
+  },
+  "AwsGroundStationAgentEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentStatus": {
+     "$ref": "#/definitions/AgentStatus"
+    },
+    "AuditResults": {
+     "$ref": "#/definitions/AuditResults"
+    },
+    "EgressAddress": {
+     "$ref": "#/definitions/ConnectionDetails"
+    },
+    "IngressAddress": {
+     "$ref": "#/definitions/RangedConnectionDetails"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Mtu": {
+     "type": "integer"
+    },
+    "SocketAddress": {
+     "$ref": "#/definitions/SocketAddress"
+    }
+   },
+   "type": "object"
+  },
+  "DataflowEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "$ref": "#/definitions/SocketAddress"
+    },
+    "Mtu": {
+     "type": "integer"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Endpoint",
+      "SecurityDetails"
+     ]
+    },
+    {
+     "required": [
+      "AwsGroundStationAgentEndpoint"
+     ]
+    }
+   ],
+   "properties": {
+    "AwsGroundStationAgentEndpoint": {
+     "$ref": "#/definitions/AwsGroundStationAgentEndpoint"
+    },
+    "Endpoint": {
+     "$ref": "#/definitions/DataflowEndpoint"
+    },
+    "SecurityDetails": {
+     "$ref": "#/definitions/SecurityDetails"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerRange": {
+   "additionalProperties": false,
+   "properties": {
+    "Maximum": {
+     "type": "integer"
+    },
+    "Minimum": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RangedConnectionDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Mtu": {
+     "type": "integer"
+    },
+    "SocketAddress": {
+     "$ref": "#/definitions/RangedSocketAddress"
+    }
+   },
+   "type": "object"
+  },
+  "RangedSocketAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$",
+     "type": "string"
+    },
+    "PortRange": {
+     "$ref": "#/definitions/IntegerRange"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SocketAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
+   "type": "string"
+  },
+  "ContactPostPassDurationSeconds": {
+   "type": "integer"
+  },
+  "ContactPrePassDurationSeconds": {
+   "type": "integer"
+  },
+  "EndpointDetails": {
+   "items": {
+    "$ref": "#/definitions/EndpointDetails"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "EndpointDetails"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GroundStation::DataflowEndpointGroup"
+}

@@ -1,0 +1,107 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ],
+  [
+   "/properties/ResourceIdentifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:accesslogsubscription/als-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "DestinationArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 21,
+   "minLength": 21,
+   "pattern": "^als-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:((servicenetwork/sn)|(service/svc))-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "ResourceId": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((sn)|(svc))-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^((((sn)|(svc))-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:((servicenetwork/sn)|(service/svc))-[0-9a-z]{17}))$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/ResourceArn",
+  "/properties/ResourceId"
+ ],
+ "required": [
+  "DestinationArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::AccessLogSubscription",
+ "writeOnlyProperties": [
+  "/properties/ResourceIdentifier"
+ ]
+}

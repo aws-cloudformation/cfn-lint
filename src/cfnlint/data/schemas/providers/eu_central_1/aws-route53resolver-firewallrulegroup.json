@@ -1,0 +1,211 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "FirewallRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "enum": [
+      "ALLOW",
+      "BLOCK",
+      "ALERT"
+     ],
+     "type": "string"
+    },
+    "BlockOverrideDnsType": {
+     "enum": [
+      "CNAME"
+     ],
+     "type": "string"
+    },
+    "BlockOverrideDomain": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BlockOverrideTtl": {
+     "maximum": 604800,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "BlockResponse": {
+     "enum": [
+      "NODATA",
+      "NXDOMAIN",
+      "OVERRIDE"
+     ],
+     "type": "string"
+    },
+    "ConfidenceThreshold": {
+     "enum": [
+      "LOW",
+      "MEDIUM",
+      "HIGH"
+     ],
+     "type": "string"
+    },
+    "DnsThreatProtection": {
+     "enum": [
+      "DGA",
+      "DNS_TUNNELING"
+     ],
+     "type": "string"
+    },
+    "FirewallDomainListId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FirewallDomainRedirectionAction": {
+     "enum": [
+      "INSPECT_REDIRECTION_DOMAIN",
+      "TRUST_REDIRECTION_DOMAIN"
+     ],
+     "type": "string"
+    },
+    "FirewallThreatProtectionId": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Priority": {
+     "type": "integer"
+    },
+    "Qtype": {
+     "maxLength": 16,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Priority",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreatorRequestId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FirewallRules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/FirewallRule"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ModificationTime": {
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+   "type": "string"
+  },
+  "OwnerId": {
+   "maxLength": 32,
+   "minLength": 12,
+   "type": "string"
+  },
+  "RuleCount": {
+   "type": "integer"
+  },
+  "ShareStatus": {
+   "enum": [
+    "NOT_SHARED",
+    "SHARED_WITH_ME",
+    "SHARED_BY_ME"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "COMPLETE",
+    "DELETING",
+    "UPDATING",
+    "INACTIVE_OWNER_ACCOUNT_CLOSED"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/RuleCount",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/OwnerId",
+  "/properties/ShareStatus",
+  "/properties/CreatorRequestId",
+  "/properties/CreationTime",
+  "/properties/ModificationTime",
+  "/properties/FirewallRules/*/FirewallThreatProtectionId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::FirewallRuleGroup"
+}
