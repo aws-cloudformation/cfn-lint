@@ -4,6 +4,25 @@
   "/properties/FarmId"
  ],
  "definitions": {
+  "AcceleratorCapabilities": {
+   "additionalProperties": false,
+   "properties": {
+    "Count": {
+     "$ref": "#/definitions/AcceleratorCountRange"
+    },
+    "Selections": {
+     "items": {
+      "$ref": "#/definitions/AcceleratorSelection"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Selections"
+   ],
+   "type": "object"
+  },
   "AcceleratorCountRange": {
    "additionalProperties": false,
    "properties": {
@@ -20,6 +39,29 @@
    },
    "required": [
     "Min"
+   ],
+   "type": "object"
+  },
+  "AcceleratorSelection": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "enum": [
+      "t4",
+      "a10g",
+      "l4",
+      "l40s"
+     ],
+     "type": "string"
+    },
+    "Runtime": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
    ],
    "type": "object"
   },
@@ -320,6 +362,9 @@
   "ServiceManagedEc2InstanceCapabilities": {
    "additionalProperties": false,
    "properties": {
+    "AcceleratorCapabilities": {
+     "$ref": "#/definitions/AcceleratorCapabilities"
+    },
     "AllowedInstanceTypes": {
      "items": {
       "pattern": "^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$",

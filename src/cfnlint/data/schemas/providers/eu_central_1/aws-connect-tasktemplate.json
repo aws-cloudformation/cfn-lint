@@ -1,0 +1,267 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ClientToken": {
+   "pattern": "^$|[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DefaultFieldValue": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "$ref": "#/definitions/FieldValue"
+    },
+    "Id": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "Id",
+    "DefaultValue"
+   ],
+   "type": "object"
+  },
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Id": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "SingleSelectOptions": {
+     "items": {
+      "$ref": "#/definitions/FieldOption"
+     },
+     "maxItems": 50,
+     "type": "array"
+    },
+    "Type": {
+     "$ref": "#/definitions/FieldType"
+    }
+   },
+   "required": [
+    "Id",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FieldIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FieldOption": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9_.,\\s-]*[A-Za-z0-9_.,-])?$",
+   "type": "string"
+  },
+  "FieldType": {
+   "enum": [
+    "NAME",
+    "DESCRIPTION",
+    "SCHEDULED_TIME",
+    "QUICK_CONNECT",
+    "URL",
+    "NUMBER",
+    "TEXT",
+    "TEXT_AREA",
+    "DATE_TIME",
+    "BOOLEAN",
+    "SINGLE_SELECT",
+    "EMAIL",
+    "EXPIRY_DURATION",
+    "SELF_ASSIGN"
+   ],
+   "type": "string"
+  },
+  "FieldValue": {
+   "maxLength": 4096,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InvisibleFieldInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "InvisibleTaskTemplateFields": {
+   "items": {
+    "$ref": "#/definitions/InvisibleFieldInfo"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "ReadOnlyFieldInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "ReadOnlyTaskTemplateFields": {
+   "items": {
+    "$ref": "#/definitions/ReadOnlyFieldInfo"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "RequiredFieldInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "RequiredTaskTemplateFields": {
+   "items": {
+    "$ref": "#/definitions/RequiredFieldInfo"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/task-template/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "ClientToken": {
+   "$ref": "#/definitions/ClientToken"
+  },
+  "Constraints": {
+   "additionalProperties": false,
+   "properties": {
+    "InvisibleFields": {
+     "$ref": "#/definitions/InvisibleTaskTemplateFields"
+    },
+    "ReadOnlyFields": {
+     "$ref": "#/definitions/ReadOnlyTaskTemplateFields"
+    },
+    "RequiredFields": {
+     "$ref": "#/definitions/RequiredTaskTemplateFields"
+    }
+   },
+   "type": "object"
+  },
+  "ContactFlowArn": {
+   "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Defaults": {
+   "items": {
+    "$ref": "#/definitions/DefaultFieldValue"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Fields": {
+   "items": {
+    "$ref": "#/definitions/Field"
+   },
+   "maxItems": 50,
+   "type": "array"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "InstanceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::TaskTemplate"
+}

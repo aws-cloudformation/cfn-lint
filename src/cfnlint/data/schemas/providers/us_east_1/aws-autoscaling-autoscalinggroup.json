@@ -48,6 +48,26 @@
    },
    "type": "object"
   },
+  "AvailabilityZoneImpairmentPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "ImpairedZoneHealthCheckBehavior": {
+     "enum": [
+      "IgnoreUnhealthy",
+      "ReplaceUnhealthy"
+     ],
+     "type": "string"
+    },
+    "ZonalShiftEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ImpairedZoneHealthCheckBehavior",
+    "ZonalShiftEnabled"
+   ],
+   "type": "object"
+  },
   "BaselineEbsBandwidthMbpsRequest": {
    "additionalProperties": false,
    "properties": {
@@ -56,6 +76,74 @@
     },
     "Min": {
      "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BaselinePerformanceFactorsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuPerformanceFactorRequest"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityReservationIds": {
+   "insertionOrder": true,
+   "items": {
+    "pattern": "[A-Za-z0-9\\-_\\/]+",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CapacityReservationResourceGroupArns": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CapacityReservationSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationPreference": {
+     "enum": [
+      "capacity-reservations-first",
+      "capacity-reservations-only",
+      "default",
+      "none"
+     ],
+     "type": "string"
+    },
+    "CapacityReservationTarget": {
+     "$ref": "#/definitions/CapacityReservationTarget"
+    }
+   },
+   "required": [
+    "CapacityReservationPreference"
+   ],
+   "type": "object"
+  },
+  "CapacityReservationTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityReservationIds": {
+     "$ref": "#/definitions/CapacityReservationIds"
+    },
+    "CapacityReservationResourceGroupArns": {
+     "$ref": "#/definitions/CapacityReservationResourceGroupArns"
+    }
+   },
+   "type": "object"
+  },
+  "CpuPerformanceFactorRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "References": {
+     "$ref": "#/definitions/PerformanceFactorReferenceSetRequest"
     }
    },
    "type": "object"
@@ -152,6 +240,9 @@
     },
     "BaselineEbsBandwidthMbps": {
      "$ref": "#/definitions/BaselineEbsBandwidthMbpsRequest"
+    },
+    "BaselinePerformanceFactors": {
+     "$ref": "#/definitions/BaselinePerformanceFactorsRequest"
     },
     "BurstablePerformance": {
      "enum": [
@@ -479,6 +570,23 @@
    ],
    "type": "object"
   },
+  "PerformanceFactorReferenceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceFamily": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceFactorReferenceSetRequest": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "TagProperty": {
    "additionalProperties": false,
    "properties": {
@@ -553,6 +661,9 @@
   "AvailabilityZoneDistribution": {
    "$ref": "#/definitions/AvailabilityZoneDistribution"
   },
+  "AvailabilityZoneImpairmentPolicy": {
+   "$ref": "#/definitions/AvailabilityZoneImpairmentPolicy"
+  },
   "AvailabilityZones": {
    "insertionOrder": false,
    "items": {
@@ -563,6 +674,9 @@
   },
   "CapacityRebalance": {
    "type": "boolean"
+  },
+  "CapacityReservationSpecification": {
+   "$ref": "#/definitions/CapacityReservationSpecification"
   },
   "Context": {
    "type": "string"
@@ -662,6 +776,9 @@
   "ServiceLinkedRoleARN": {
    "type": "string"
   },
+  "SkipZonalShiftValidation": {
+   "type": "boolean"
+  },
   "Tags": {
    "insertionOrder": false,
    "items": {
@@ -724,6 +841,7 @@
  },
  "typeName": "AWS::AutoScaling::AutoScalingGroup",
  "writeOnlyProperties": [
+  "/properties/SkipZonalShiftValidation",
   "/properties/InstanceId"
  ]
 }

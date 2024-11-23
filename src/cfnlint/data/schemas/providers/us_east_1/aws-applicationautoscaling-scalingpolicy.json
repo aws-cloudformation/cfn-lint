@@ -109,6 +109,237 @@
    ],
    "type": "object"
   },
+  "PredictiveScalingCustomizedCapacityMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingCustomizedLoadMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingCustomizedScalingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricDataQueries": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "MetricDataQueries"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PredictiveScalingMetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/PredictiveScalingMetricStat"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PredictiveScalingMetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PredictiveScalingMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedCapacityMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedCapacityMetric"
+    },
+    "CustomizedLoadMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedLoadMetric"
+    },
+    "CustomizedScalingMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingCustomizedScalingMetric"
+    },
+    "PredefinedLoadMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedLoadMetric"
+    },
+    "PredefinedMetricPairSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedMetricPair"
+    },
+    "PredefinedScalingMetricSpecification": {
+     "$ref": "#/definitions/PredictiveScalingPredefinedScalingMetric"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingMetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/PredictiveScalingMetric"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PredictiveScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacityBreachBehavior": {
+     "enum": [
+      "HonorMaxCapacity",
+      "IncreaseMaxCapacity"
+     ],
+     "type": "string"
+    },
+    "MaxCapacityBuffer": {
+     "type": "integer"
+    },
+    "MetricSpecifications": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PredictiveScalingMetricSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Mode": {
+     "enum": [
+      "ForecastAndScale",
+      "ForecastOnly"
+     ],
+     "type": "string"
+    },
+    "SchedulingBufferTime": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MetricSpecifications"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedLoadMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedMetricPair": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "PredictiveScalingPredefinedScalingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
   "StepAdjustment": {
    "additionalProperties": false,
    "properties": {
@@ -279,10 +510,14 @@
   },
   "PolicyType": {
    "enum": [
+    "PredictiveScaling",
     "StepScaling",
     "TargetTrackingScaling"
    ],
    "type": "string"
+  },
+  "PredictiveScalingPolicyConfiguration": {
+   "$ref": "#/definitions/PredictiveScalingPolicyConfiguration"
   },
   "ResourceId": {
    "type": "string"

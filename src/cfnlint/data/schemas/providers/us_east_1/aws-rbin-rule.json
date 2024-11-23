@@ -1,0 +1,185 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Identifier"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceType"
+ ],
+ "definitions": {
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTagKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\S\\s]{1,128}$",
+     "type": "string"
+    },
+    "ResourceTagValue": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\S\\s]{0,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceTagKey",
+    "ResourceTagValue"
+   ],
+   "type": "object"
+  },
+  "RetentionPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "RetentionPeriodUnit": {
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "RetentionPeriodValue": {
+     "maximum": 3650,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RetentionPeriodValue",
+    "RetentionPeriodUnit"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UnlockDelay": {
+   "additionalProperties": false,
+   "properties": {
+    "UnlockDelayUnit": {
+     "enum": [
+      "DAYS"
+     ],
+     "type": "string"
+    },
+    "UnlockDelayValue": {
+     "maximum": 30,
+     "minimum": 7,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "pattern": "^[\\S ]{0,255}$",
+   "type": "string"
+  },
+  "ExcludeResourceTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Identifier": {
+   "pattern": "[0-9a-zA-Z]{11}",
+   "type": "string"
+  },
+  "LockConfiguration": {
+   "$ref": "#/definitions/UnlockDelay"
+  },
+  "LockState": {
+   "pattern": "locked|pending_unlock|unlocked",
+   "type": "string"
+  },
+  "ResourceTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceType": {
+   "enum": [
+    "EBS_SNAPSHOT",
+    "EC2_IMAGE"
+   ],
+   "type": "string"
+  },
+  "RetentionPeriod": {
+   "$ref": "#/definitions/RetentionPeriod"
+  },
+  "Status": {
+   "pattern": "pending|available",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Identifier",
+  "/properties/LockState"
+ ],
+ "required": [
+  "RetentionPeriod",
+  "ResourceType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rbin",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Rbin::Rule",
+ "writeOnlyProperties": [
+  "/properties/LockConfiguration",
+  "/properties/LockConfiguration/UnlockDelayValue",
+  "/properties/LockConfiguration/UnlockDelayUnit"
+ ]
+}
