@@ -1,3 +1,14 @@
+### v1.20.1
+## What's Changed
+* Update CloudFormation schemas to 2024-11-23 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3832
+* Add `nodejs22.x` to `AWS::Lambda::Function` `Runtime` enum by @JamesKyburz in https://github.com/aws-cloudformation/cfn-lint/pull/3841
+* Add `maxItems` for `PathPatternConfig` in `AWS::ElasticLoadBalancingV2::ListenerRule` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3835
+
+## New Contributors
+* @JamesKyburz made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3841
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.0...v1.20.1
+
 ### v1.20.0
 ## What's Changed
 * Update CloudFormation schemas to `2024-11-18` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3828
