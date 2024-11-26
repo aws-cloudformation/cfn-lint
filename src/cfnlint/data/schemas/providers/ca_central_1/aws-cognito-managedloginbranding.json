@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/UserPoolId",
+  "/properties/ClientId"
+ ],
+ "definitions": {
+  "AssetList": {
+   "items": {
+    "$ref": "#/definitions/AssetType"
+   },
+   "type": "array"
+  },
+  "AssetType": {
+   "additionalProperties": false,
+   "properties": {
+    "Bytes": {
+     "$ref": "#/definitions/BytesType"
+    },
+    "Category": {
+     "$ref": "#/definitions/CategoryType"
+    },
+    "ColorMode": {
+     "$ref": "#/definitions/ColorModeType"
+    },
+    "Extension": {
+     "$ref": "#/definitions/ExtensionType"
+    },
+    "ResourceId": {
+     "$ref": "#/definitions/ResourceIdType"
+    }
+   },
+   "required": [
+    "Category",
+    "ColorMode",
+    "Extension"
+   ],
+   "type": "object"
+  },
+  "BytesType": {
+   "maxLength": 1000000,
+   "type": "string"
+  },
+  "CategoryType": {
+   "enum": [
+    "FAVICON_ICO",
+    "FAVICON_SVG",
+    "EMAIL_GRAPHIC",
+    "SMS_GRAPHIC",
+    "AUTH_APP_GRAPHIC",
+    "PASSWORD_GRAPHIC",
+    "PASSKEY_GRAPHIC",
+    "PAGE_HEADER_LOGO",
+    "PAGE_HEADER_BACKGROUND",
+    "PAGE_FOOTER_LOGO",
+    "PAGE_FOOTER_BACKGROUND",
+    "PAGE_BACKGROUND",
+    "FORM_BACKGROUND",
+    "FORM_LOGO",
+    "IDP_BUTTON_ICON"
+   ],
+   "type": "string"
+  },
+  "ColorModeType": {
+   "enum": [
+    "LIGHT",
+    "DARK",
+    "DYNAMIC"
+   ],
+   "type": "string"
+  },
+  "ExtensionType": {
+   "enum": [
+    "ICO",
+    "JPEG",
+    "PNG",
+    "SVG",
+    "WEBP"
+   ],
+   "type": "string"
+  },
+  "ManagedLoginBrandingIdType": {
+   "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+   "type": "string"
+  },
+  "ResourceIdType": {
+   "maxLength": 40,
+   "minLength": 1,
+   "pattern": "^[\\w\\- ]+$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/UserPoolId",
+  "/properties/ManagedLoginBrandingId"
+ ],
+ "properties": {
+  "Assets": {
+   "$ref": "#/definitions/AssetList"
+  },
+  "ClientId": {
+   "type": "string"
+  },
+  "ManagedLoginBrandingId": {
+   "$ref": "#/definitions/ManagedLoginBrandingIdType"
+  },
+  "ReturnMergedResources": {
+   "type": "boolean"
+  },
+  "Settings": {
+   "type": "object"
+  },
+  "UseCognitoProvidedValues": {
+   "type": "boolean"
+  },
+  "UserPoolId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ManagedLoginBrandingId"
+ ],
+ "required": [
+  "UserPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Cognito::ManagedLoginBranding",
+ "writeOnlyProperties": [
+  "/properties/ClientId",
+  "/properties/ReturnMergedResources"
+ ]
+}

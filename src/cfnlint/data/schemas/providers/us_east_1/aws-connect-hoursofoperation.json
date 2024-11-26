@@ -1,6 +1,14 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "EffectiveFrom": {
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
+  "EffectiveTill": {
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
   "HoursOfOperationConfig": {
    "additionalProperties": false,
    "properties": {
@@ -30,7 +38,109 @@
    ],
    "type": "object"
   },
+  "HoursOfOperationOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "EffectiveFrom": {
+     "$ref": "#/definitions/EffectiveFrom"
+    },
+    "EffectiveTill": {
+     "$ref": "#/definitions/EffectiveTill"
+    },
+    "HoursOfOperationOverrideId": {
+     "$ref": "#/definitions/HoursOfOperationOverrideId"
+    },
+    "OverrideConfig": {
+     "$ref": "#/definitions/OverrideConfig"
+    },
+    "OverrideDescription": {
+     "$ref": "#/definitions/OverrideDescription"
+    },
+    "OverrideName": {
+     "$ref": "#/definitions/OverrideName"
+    }
+   },
+   "required": [
+    "OverrideName",
+    "EffectiveFrom",
+    "EffectiveTill",
+    "OverrideConfig"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationOverrideConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Day": {
+     "enum": [
+      "SUNDAY",
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY"
+     ],
+     "type": "string"
+    },
+    "EndTime": {
+     "$ref": "#/definitions/OverrideTimeSlice"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/OverrideTimeSlice"
+    }
+   },
+   "required": [
+    "Day",
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "HoursOfOperationOverrideId": {
+   "pattern": "^[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
   "HoursOfOperationTimeSlice": {
+   "additionalProperties": false,
+   "properties": {
+    "Hours": {
+     "maximum": 23,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Minutes": {
+     "maximum": 59,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Hours",
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "OverrideConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationOverrideConfig"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OverrideDescription": {
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OverrideName": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OverrideTimeSlice": {
    "additionalProperties": false,
    "properties": {
     "Hours": {
@@ -92,6 +202,14 @@
   "HoursOfOperationArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/operating-hours/[-a-zA-Z0-9]*$",
    "type": "string"
+  },
+  "HoursOfOperationOverrides": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/HoursOfOperationOverride"
+   },
+   "maxItems": 50,
+   "type": "array"
   },
   "InstanceArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",

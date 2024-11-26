@@ -1,10 +1,35 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/ThingTypeName",
-  "/properties/ThingTypeProperties"
+  "/properties/ThingTypeName"
  ],
  "definitions": {
+  "PropagatingAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionAttribute": {
+     "enum": [
+      "iot:ClientId",
+      "iot:Thing.ThingName"
+     ],
+     "type": "string"
+    },
+    "ThingAttribute": {
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9_.,@/:#-]+",
+     "type": "string"
+    },
+    "UserPropertyKey": {
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9:$.]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "UserPropertyKey"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -58,6 +83,19 @@
   "ThingTypeProperties": {
    "additionalProperties": false,
    "properties": {
+    "Mqtt5Configuration": {
+     "additionalProperties": false,
+     "properties": {
+      "PropagatingAttributes": {
+       "items": {
+        "$ref": "#/definitions/PropagatingAttribute"
+       },
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
     "SearchableAttributes": {
      "insertionOrder": true,
      "items": {

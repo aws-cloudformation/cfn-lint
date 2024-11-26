@@ -1,0 +1,61 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatabaseName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatabaseName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DatabaseName": {
+   "pattern": "^[a-zA-Z0-9_.-]{3,256}$",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-timestream.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Timestream::Database"
+}

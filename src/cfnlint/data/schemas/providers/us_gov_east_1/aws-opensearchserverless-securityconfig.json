@@ -1,0 +1,91 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "SamlConfigOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupAttribute": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    },
+    "Metadata": {
+     "maxLength": 51200,
+     "minLength": 1,
+     "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+",
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "type": "integer"
+    },
+    "UserAttribute": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Metadata"
+   ],
+   "type": "object"
+  },
+  "SecurityConfigType": {
+   "enum": [
+    "saml"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "SamlOptions": {
+   "$ref": "#/definitions/SamlConfigOptions"
+  },
+  "Type": {
+   "$ref": "#/definitions/SecurityConfigType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::SecurityConfig",
+ "writeOnlyProperties": [
+  "/properties/Name"
+ ]
+}

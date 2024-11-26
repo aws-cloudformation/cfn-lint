@@ -147,6 +147,98 @@
    ],
    "type": "object"
   },
+  "CustomDecodingInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z\\d\\-_:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingNetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDecodingInterface": {
+     "$ref": "#/definitions/CustomDecodingInterface"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CUSTOM_DECODING_INTERFACE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InterfaceId",
+    "Type",
+    "CustomDecodingInterface"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingSignal": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "maxLength": 150,
+     "minLength": 1,
+     "pattern": "^(?!.*\\.\\.)[a-zA-Z0-9_\\-#:.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "CustomDecodingSignalDecoder": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomDecodingSignal": {
+     "$ref": "#/definitions/CustomDecodingSignal"
+    },
+    "FullyQualifiedName": {
+     "maxLength": 150,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InterfaceId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CUSTOM_DECODING_SIGNAL"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FullyQualifiedName",
+    "InterfaceId",
+    "Type",
+    "CustomDecodingSignal"
+   ],
+   "type": "object"
+  },
+  "DefaultForUnmappedSignalsType": {
+   "enum": [
+    "CUSTOM_DECODING"
+   ],
+   "type": "string"
+  },
   "ManifestStatus": {
    "default": "DRAFT",
    "enum": [
@@ -362,6 +454,9 @@
    "format": "date-time",
    "type": "string"
   },
+  "DefaultForUnmappedSignals": {
+   "$ref": "#/definitions/DefaultForUnmappedSignalsType"
+  },
   "Description": {
    "maxLength": 2048,
    "minLength": 1,
@@ -390,6 +485,9 @@
      },
      {
       "$ref": "#/definitions/ObdNetworkInterface"
+     },
+     {
+      "$ref": "#/definitions/CustomDecodingNetworkInterface"
      }
     ]
    },
@@ -406,6 +504,9 @@
      },
      {
       "$ref": "#/definitions/ObdSignalDecoder"
+     },
+     {
+      "$ref": "#/definitions/CustomDecodingSignalDecoder"
      }
     ]
    },
@@ -443,5 +544,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::IoTFleetWise::DecoderManifest"
+ "typeName": "AWS::IoTFleetWise::DecoderManifest",
+ "writeOnlyProperties": [
+  "/properties/DefaultForUnmappedSignals"
+ ]
 }
