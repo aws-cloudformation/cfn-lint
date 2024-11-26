@@ -9,7 +9,7 @@ from typing import Any
 
 from _types import AllPatches, Patch, ResourcePatches
 
-from cfnlint.schema.resolver import RefResolver
+from cfnlint.schema.resolver import RefResolutionError, RefResolver
 
 skip = [
     "account",
@@ -144,7 +144,7 @@ def _nested_objects(
     start_path: str,
     source: list[str],
 ):
-    results = {}
+    results: dict[str, Patch] = {}
     for member, member_data in shape_data.get("members", {}).items():
         for p_name, p_data in schema_data.get("properties", {}).items():
             if p_name in skip_property_names:
@@ -162,7 +162,10 @@ def _nested_objects(
                     if "$ref" not in p_data:
                         break
                     path = p_data["$ref"][1:]
-                    p_data = resolver.resolve_from_url(p_data["$ref"])
+                    try:
+                        p_data = resolver.resolve_from_url(p_data["$ref"])
+                    except RefResolutionError:
+                        return results
 
                 # skip if we already have an enum or pattern
                 if any([p_data.get(field) for field in _fields]):
