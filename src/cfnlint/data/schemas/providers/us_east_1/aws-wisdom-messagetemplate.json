@@ -1,0 +1,625 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KnowledgeBaseArn",
+  "/properties/ChannelSubtype"
+ ],
+ "definitions": {
+  "AgentAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "FirstName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LastName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ChannelSubtype": {
+   "enum": [
+    "EMAIL",
+    "SMS"
+   ],
+   "type": "string"
+  },
+  "Content": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "EmailMessageTemplateContent"
+     ]
+    },
+    {
+     "required": [
+      "SmsMessageTemplateContent"
+     ]
+    }
+   ],
+   "properties": {
+    "EmailMessageTemplateContent": {
+     "$ref": "#/definitions/EmailMessageTemplateContent"
+    },
+    "SmsMessageTemplateContent": {
+     "$ref": "#/definitions/SmsMessageTemplateContent"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9\\s._:/=+@-]*$": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CustomerProfileAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountNumber": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AdditionalInformation": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address1": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address2": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address3": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Address4": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress1": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress2": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress3": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingAddress4": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCity": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCountry": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingCounty": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingPostalCode": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingProvince": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BillingState": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BirthDate": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessEmailAddress": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BusinessPhoneNumber": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "City": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Country": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "County": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Custom": {
+     "$ref": "#/definitions/CustomAttributes"
+    },
+    "EmailAddress": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FirstName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Gender": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "HomePhoneNumber": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "LastName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress1": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress2": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress3": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingAddress4": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCity": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCountry": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingCounty": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingPostalCode": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingProvince": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MailingState": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MiddleName": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "MobilePhoneNumber": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PartyType": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PhoneNumber": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PostalCode": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProfileARN": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ProfileId": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Province": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress1": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress2": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress3": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingAddress4": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCity": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCountry": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingCounty": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingPostalCode": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingProvince": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ShippingState": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "State": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EmailMessageTemplateContent": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "$ref": "#/definitions/EmailMessageTemplateContentBody"
+    },
+    "Headers": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EmailMessageTemplateHeader"
+     },
+     "maxItems": 15,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Subject": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Subject",
+    "Body",
+    "Headers"
+   ],
+   "type": "object"
+  },
+  "EmailMessageTemplateContentBody": {
+   "additionalProperties": false,
+   "properties": {
+    "Html": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider"
+    },
+    "PlainText": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider"
+    }
+   },
+   "type": "object"
+  },
+  "EmailMessageTemplateHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 126,
+     "minLength": 1,
+     "pattern": "^[!-9;-@A-~]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 870,
+     "minLength": 1,
+     "pattern": "[ -~]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GroupingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Criteria": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/GroupingValue"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Criteria",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "GroupingValue": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MessageTemplateAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentAttributes": {
+     "$ref": "#/definitions/AgentAttributes"
+    },
+    "CustomAttributes": {
+     "$ref": "#/definitions/CustomAttributes"
+    },
+    "CustomerProfileAttributes": {
+     "$ref": "#/definitions/CustomerProfileAttributes"
+    },
+    "SystemAttributes": {
+     "$ref": "#/definitions/SystemAttributes"
+    }
+   },
+   "type": "object"
+  },
+  "MessageTemplateBodyContentProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SmsMessageTemplateContent": {
+   "additionalProperties": false,
+   "properties": {
+    "Body": {
+     "$ref": "#/definitions/SmsMessageTemplateContentBody"
+    }
+   },
+   "required": [
+    "Body"
+   ],
+   "type": "object"
+  },
+  "SmsMessageTemplateContentBody": {
+   "additionalProperties": false,
+   "properties": {
+    "PlainText": {
+     "$ref": "#/definitions/MessageTemplateBodyContentProvider"
+    }
+   },
+   "type": "object"
+  },
+  "SystemAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerEndpoint": {
+     "$ref": "#/definitions/SystemEndpointAttributes"
+    },
+    "Name": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SystemEndpoint": {
+     "$ref": "#/definitions/SystemEndpointAttributes"
+    }
+   },
+   "type": "object"
+  },
+  "SystemEndpointAttributes": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "maxLength": 32767,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MessageTemplateArn"
+ ],
+ "properties": {
+  "ChannelSubtype": {
+   "$ref": "#/definitions/ChannelSubtype"
+  },
+  "Content": {
+   "$ref": "#/definitions/Content"
+  },
+  "DefaultAttributes": {
+   "$ref": "#/definitions/MessageTemplateAttributes"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\\\s_.,-]+",
+   "type": "string"
+  },
+  "GroupingConfiguration": {
+   "$ref": "#/definitions/GroupingConfiguration"
+  },
+  "KnowledgeBaseArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "Language": {
+   "maxLength": 5,
+   "minLength": 2,
+   "type": "string"
+  },
+  "MessageTemplateArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "MessageTemplateContentSha256": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MessageTemplateId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\\\s_.,-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MessageTemplateId",
+  "/properties/MessageTemplateArn",
+  "/properties/MessageTemplateContentSha256"
+ ],
+ "replacementStrategy": "create_then_delete",
+ "required": [
+  "KnowledgeBaseArn",
+  "ChannelSubtype",
+  "Name",
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wisdom",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::MessageTemplate"
+}

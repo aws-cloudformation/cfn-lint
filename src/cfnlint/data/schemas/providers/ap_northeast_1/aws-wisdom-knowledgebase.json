@@ -1,0 +1,437 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/KnowledgeBaseArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/KnowledgeBaseType",
+  "/properties/Name",
+  "/properties/ServerSideEncryptionConfiguration",
+  "/properties/SourceConfiguration",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AppIntegrationsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIntegrationArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[a-z-]+?:[a-z-]+?:[a-z0-9-]*?:([0-9]{12})?:[a-zA-Z0-9-:/]+$",
+     "type": "string"
+    },
+    "ObjectFields": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AppIntegrationArn"
+   ],
+   "type": "object"
+  },
+  "BedrockFoundationModelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model\\/anthropic.claude-3-haiku-20240307-v1:0$",
+     "type": "string"
+    },
+    "ParsingPrompt": {
+     "additionalProperties": false,
+     "properties": {
+      "ParsingPromptText": {
+       "maxLength": 10000,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "required": [
+      "ParsingPromptText"
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "FixedSizeChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "number"
+    },
+    "OverlapPercentage": {
+     "maximum": 99,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "MaxTokens",
+    "OverlapPercentage"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LevelConfigurations": {
+     "items": {
+      "$ref": "#/definitions/HierarchicalChunkingLevelConfiguration"
+     },
+     "maxItems": 2,
+     "minItems": 2,
+     "type": "array"
+    },
+    "OverlapTokens": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "LevelConfigurations",
+    "OverlapTokens"
+   ],
+   "type": "object"
+  },
+  "HierarchicalChunkingLevelConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "maximum": 8192,
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "MaxTokens"
+   ],
+   "type": "object"
+  },
+  "KnowledgeBaseType": {
+   "enum": [
+    "EXTERNAL",
+    "CUSTOM",
+    "MESSAGE_TEMPLATES",
+    "MANAGED"
+   ],
+   "type": "string"
+  },
+  "ManagedSourceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "WebCrawlerConfiguration": {
+       "$ref": "#/definitions/WebCrawlerConfiguration"
+      }
+     },
+     "required": [
+      "WebCrawlerConfiguration"
+     ],
+     "type": "object"
+    }
+   ]
+  },
+  "RenderingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TemplateUri": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SeedUrl": {
+   "additionalProperties": false,
+   "properties": {
+    "Url": {
+     "pattern": "^https?://[A-Za-z0-9][^\\s]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SemanticChunkingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BreakpointPercentileThreshold": {
+     "maximum": 99,
+     "minimum": 50,
+     "type": "number"
+    },
+    "BufferSize": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "MaxTokens": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "MaxTokens",
+    "BufferSize",
+    "BreakpointPercentileThreshold"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "AppIntegrations": {
+       "$ref": "#/definitions/AppIntegrationsConfiguration"
+      }
+     },
+     "required": [
+      "AppIntegrations"
+     ],
+     "title": "AppIntegrationsConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ManagedSourceConfiguration": {
+       "$ref": "#/definitions/ManagedSourceConfiguration"
+      }
+     },
+     "required": [
+      "ManagedSourceConfiguration"
+     ],
+     "title": "ManagedSourceConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UrlFilterList": {
+   "items": {
+    "$ref": "#/definitions/UrlFilterPattern"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "UrlFilterPattern": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "VectorIngestionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ChunkingConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "ChunkingStrategy": {
+       "enum": [
+        "FIXED_SIZE",
+        "NONE",
+        "HIERARCHICAL",
+        "SEMANTIC"
+       ],
+       "type": "string"
+      },
+      "FixedSizeChunkingConfiguration": {
+       "$ref": "#/definitions/FixedSizeChunkingConfiguration"
+      },
+      "HierarchicalChunkingConfiguration": {
+       "$ref": "#/definitions/HierarchicalChunkingConfiguration"
+      },
+      "SemanticChunkingConfiguration": {
+       "$ref": "#/definitions/SemanticChunkingConfiguration"
+      }
+     },
+     "required": [
+      "ChunkingStrategy"
+     ],
+     "type": "object"
+    },
+    "ParsingConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "BedrockFoundationModelConfiguration": {
+       "$ref": "#/definitions/BedrockFoundationModelConfiguration"
+      },
+      "ParsingStrategy": {
+       "enum": [
+        "BEDROCK_FOUNDATION_MODEL"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "ParsingStrategy"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "WebCrawlerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrawlerLimits": {
+     "additionalProperties": false,
+     "properties": {
+      "RateLimit": {
+       "maximum": 3000,
+       "minimum": 1,
+       "type": "number"
+      }
+     },
+     "type": "object"
+    },
+    "ExclusionFilters": {
+     "$ref": "#/definitions/UrlFilterList"
+    },
+    "InclusionFilters": {
+     "$ref": "#/definitions/UrlFilterList"
+    },
+    "Scope": {
+     "enum": [
+      "HOST_ONLY",
+      "SUBDOMAINS"
+     ],
+     "type": "string"
+    },
+    "UrlConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "SeedUrls": {
+       "items": {
+        "$ref": "#/definitions/SeedUrl"
+       },
+       "maxItems": 100,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "UrlConfiguration"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KnowledgeBaseId"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "KnowledgeBaseArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "KnowledgeBaseId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "KnowledgeBaseType": {
+   "$ref": "#/definitions/KnowledgeBaseType"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "RenderingConfiguration": {
+   "$ref": "#/definitions/RenderingConfiguration"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "SourceConfiguration": {
+   "$ref": "#/definitions/SourceConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VectorIngestionConfiguration": {
+   "$ref": "#/definitions/VectorIngestionConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/KnowledgeBaseId",
+  "/properties/KnowledgeBaseArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "KnowledgeBaseType",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::KnowledgeBase"
+}

@@ -1,0 +1,71 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainNameArn",
+  "/properties/AccessAssociationSource",
+  "/properties/AccessAssociationSourceType",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainNameAccessAssociationArn"
+ ],
+ "properties": {
+  "AccessAssociationSource": {
+   "type": "string"
+  },
+  "AccessAssociationSourceType": {
+   "enum": [
+    "VPCE"
+   ],
+   "type": "string"
+  },
+  "DomainNameAccessAssociationArn": {
+   "type": "string"
+  },
+  "DomainNameArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DomainNameAccessAssociationArn"
+ ],
+ "required": [
+  "DomainNameArn",
+  "AccessAssociationSource",
+  "AccessAssociationSourceType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::ApiGateway::DomainNameAccessAssociation"
+}

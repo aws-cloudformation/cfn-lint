@@ -1,0 +1,86 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Group",
+  "/properties/TagKey",
+  "/properties/TagValue",
+  "/properties/RoleArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/TaskArn"
+ ],
+ "properties": {
+  "Group": {
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "([a-zA-Z0-9_\\\\.-]{1,150}/[a-z0-9]{26})|(arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\\\.-]{1,150}/[a-z0-9]{26})",
+   "type": "string"
+  },
+  "GroupArn": {
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}",
+   "type": "string"
+  },
+  "GroupName": {
+   "maxLength": 300,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}",
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ACTIVE",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "TagKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  },
+  "TagValue": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+   "type": "string"
+  },
+  "TaskArn": {
+   "maxLength": 1600,
+   "minLength": 12,
+   "pattern": "arn:aws(-[a-z]+)*:resource-groups(-(test|beta|gamma))?:[a-z]{2}(-[a-z]+)+-\\d{1}:[0-9]{12}:group/[a-zA-Z0-9_\\.-]{1,150}/[a-z0-9]{26}/tag-sync-task/[a-z0-9]{26}",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Group": "$split(Group, \"/\")[1] & \"/\" & $split(Group, \"/\")[2] $OR Group"
+ },
+ "readOnlyProperties": [
+  "/properties/TaskArn",
+  "/properties/Status",
+  "/properties/GroupName",
+  "/properties/GroupArn"
+ ],
+ "required": [
+  "Group",
+  "TagKey",
+  "TagValue",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ResourceGroups::TagSyncTask"
+}

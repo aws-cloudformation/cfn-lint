@@ -1,0 +1,656 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectInstanceId"
+ ],
+ "definitions": {
+  "AgentlessConfig": {
+   "additionalProperties": false,
+   "required": [],
+   "type": "object"
+  },
+  "AnswerMachineDetectionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AwaitAnswerMachinePrompt": {
+     "type": "boolean"
+    },
+    "EnableAnswerMachineDetection": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "EnableAnswerMachineDetection"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "maxLength": 500,
+   "minLength": 20,
+   "pattern": "^arn:.*$",
+   "type": "string"
+  },
+  "BandwidthAllocation": {
+   "maximum": 1,
+   "minimum": 0,
+   "type": "number"
+  },
+  "CampaignName": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Capacity": {
+   "maximum": 1,
+   "minimum": 0.01,
+   "type": "number"
+  },
+  "ChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "Telephony"
+     ]
+    },
+    {
+     "required": [
+      "Sms"
+     ]
+    },
+    {
+     "required": [
+      "Email"
+     ]
+    }
+   ],
+   "properties": {
+    "Email": {
+     "$ref": "#/definitions/EmailChannelSubtypeConfig"
+    },
+    "Sms": {
+     "$ref": "#/definitions/SmsChannelSubtypeConfig"
+    },
+    "Telephony": {
+     "$ref": "#/definitions/TelephonyChannelSubtypeConfig"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationLimit": {
+   "additionalProperties": false,
+   "properties": {
+    "Frequency": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxCountPerRecipient": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unit": {
+     "$ref": "#/definitions/CommunicationLimitTimeUnit"
+    }
+   },
+   "required": [
+    "MaxCountPerRecipient",
+    "Frequency",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "CommunicationLimitList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CommunicationLimit"
+   },
+   "type": "array"
+  },
+  "CommunicationLimitTimeUnit": {
+   "enum": [
+    "DAY"
+   ],
+   "type": "string"
+  },
+  "CommunicationLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "CommunicationLimitList": {
+     "$ref": "#/definitions/CommunicationLimitList"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationLimitsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AllChannelsSubtypes": {
+     "$ref": "#/definitions/CommunicationLimits"
+    }
+   },
+   "type": "object"
+  },
+  "CommunicationTimeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Email": {
+     "$ref": "#/definitions/TimeWindow"
+    },
+    "LocalTimeZoneConfig": {
+     "$ref": "#/definitions/LocalTimeZoneConfig"
+    },
+    "Sms": {
+     "$ref": "#/definitions/TimeWindow"
+    },
+    "Telephony": {
+     "$ref": "#/definitions/TimeWindow"
+    }
+   },
+   "required": [
+    "LocalTimeZoneConfig"
+   ],
+   "type": "object"
+  },
+  "ContactFlowId": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "DailyHour": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/DayOfWeek"
+    },
+    "Value": {
+     "$ref": "#/definitions/TimeRangeList"
+    }
+   },
+   "type": "object"
+  },
+  "DailyHours": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DailyHour"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DayOfWeek": {
+   "enum": [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY"
+   ],
+   "type": "string"
+  },
+  "EmailAddress": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[\\w-\\.\\+]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+   "type": "string"
+  },
+  "EmailChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/EmailOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/EmailOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "EmailOutboundConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectSourceEmailAddress": {
+     "$ref": "#/definitions/EmailAddress"
+    },
+    "SourceEmailAddressDisplayName": {
+     "$ref": "#/definitions/SourceEmailAddressDisplayName"
+    },
+    "WisdomTemplateArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ConnectSourceEmailAddress",
+    "WisdomTemplateArn"
+   ],
+   "type": "object"
+  },
+  "EmailOutboundMode": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceId": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-.]*$",
+   "type": "string"
+  },
+  "Iso8601Date": {
+   "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+   "type": "string"
+  },
+  "Iso8601Duration": {
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9.]*$",
+   "type": "string"
+  },
+  "Iso8601Time": {
+   "pattern": "^T\\d{2}:\\d{2}$",
+   "type": "string"
+  },
+  "LocalTimeZoneConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultTimeZone": {
+     "$ref": "#/definitions/TimeZone"
+    },
+    "LocalTimeZoneDetection": {
+     "$ref": "#/definitions/LocalTimeZoneDetection"
+    }
+   },
+   "type": "object"
+  },
+  "LocalTimeZoneDetection": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocalTimeZoneDetectionType"
+   },
+   "type": "array"
+  },
+  "LocalTimeZoneDetectionType": {
+   "enum": [
+    "ZIP_CODE",
+    "AREA_CODE"
+   ],
+   "type": "string"
+  },
+  "OpenHours": {
+   "additionalProperties": false,
+   "properties": {
+    "DailyHours": {
+     "$ref": "#/definitions/DailyHours"
+    }
+   },
+   "required": [
+    "DailyHours"
+   ],
+   "type": "object"
+  },
+  "PredictiveConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    }
+   },
+   "required": [
+    "BandwidthAllocation"
+   ],
+   "type": "object"
+  },
+  "ProgressiveConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BandwidthAllocation": {
+     "$ref": "#/definitions/BandwidthAllocation"
+    }
+   },
+   "required": [
+    "BandwidthAllocation"
+   ],
+   "type": "object"
+  },
+  "QueueId": {
+   "maxLength": 500,
+   "type": "string"
+  },
+  "RestrictedPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "EndDate": {
+     "$ref": "#/definitions/Iso8601Date"
+    },
+    "Name": {
+     "maxLength": 127,
+     "type": "string"
+    },
+    "StartDate": {
+     "$ref": "#/definitions/Iso8601Date"
+    }
+   },
+   "required": [
+    "StartDate",
+    "EndDate"
+   ],
+   "type": "object"
+  },
+  "RestrictedPeriodList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RestrictedPeriod"
+   },
+   "type": "array"
+  },
+  "RestrictedPeriods": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "RestrictedPeriodList"
+     ]
+    }
+   ],
+   "properties": {
+    "RestrictedPeriodList": {
+     "$ref": "#/definitions/RestrictedPeriodList"
+    }
+   },
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "$ref": "#/definitions/TimeStamp"
+    },
+    "RefreshFrequency": {
+     "$ref": "#/definitions/Iso8601Duration"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/TimeStamp"
+    }
+   },
+   "required": [
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "SmsChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/SmsOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/SmsOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "SmsOutboundConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectSourcePhoneNumberArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "WisdomTemplateArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "required": [
+    "ConnectSourcePhoneNumberArn",
+    "WisdomTemplateArn"
+   ],
+   "type": "object"
+  },
+  "SmsOutboundMode": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "CustomerProfilesSegmentArn"
+     ]
+    }
+   ],
+   "properties": {
+    "CustomerProfilesSegmentArn": {
+     "$ref": "#/definitions/Arn"
+    }
+   },
+   "type": "object"
+  },
+  "SourceEmailAddressDisplayName": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SourcePhoneNumber": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TelephonyChannelSubtypeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Capacity": {
+     "$ref": "#/definitions/Capacity"
+    },
+    "ConnectQueueId": {
+     "$ref": "#/definitions/QueueId"
+    },
+    "DefaultOutboundConfig": {
+     "$ref": "#/definitions/TelephonyOutboundConfig"
+    },
+    "OutboundMode": {
+     "$ref": "#/definitions/TelephonyOutboundMode"
+    }
+   },
+   "required": [
+    "OutboundMode",
+    "DefaultOutboundConfig"
+   ],
+   "type": "object"
+  },
+  "TelephonyOutboundConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AnswerMachineDetectionConfig": {
+     "$ref": "#/definitions/AnswerMachineDetectionConfig"
+    },
+    "ConnectContactFlowId": {
+     "$ref": "#/definitions/ContactFlowId"
+    },
+    "ConnectSourcePhoneNumber": {
+     "$ref": "#/definitions/SourcePhoneNumber"
+    }
+   },
+   "required": [
+    "ConnectContactFlowId"
+   ],
+   "type": "object"
+  },
+  "TelephonyOutboundMode": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "ProgressiveConfig"
+     ]
+    },
+    {
+     "required": [
+      "PredictiveConfig"
+     ]
+    },
+    {
+     "required": [
+      "AgentlessConfig"
+     ]
+    }
+   ],
+   "properties": {
+    "AgentlessConfig": {
+     "$ref": "#/definitions/AgentlessConfig"
+    },
+    "PredictiveConfig": {
+     "$ref": "#/definitions/PredictiveConfig"
+    },
+    "ProgressiveConfig": {
+     "$ref": "#/definitions/ProgressiveConfig"
+    }
+   },
+   "type": "object"
+  },
+  "TimeRange": {
+   "additionalProperties": false,
+   "properties": {
+    "EndTime": {
+     "$ref": "#/definitions/Iso8601Time"
+    },
+    "StartTime": {
+     "$ref": "#/definitions/Iso8601Time"
+    }
+   },
+   "required": [
+    "StartTime",
+    "EndTime"
+   ],
+   "type": "object"
+  },
+  "TimeRangeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TimeRange"
+   },
+   "type": "array"
+  },
+  "TimeStamp": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "TimeWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "OpenHours": {
+     "$ref": "#/definitions/OpenHours"
+    },
+    "RestrictedPeriods": {
+     "$ref": "#/definitions/RestrictedPeriods"
+    }
+   },
+   "required": [
+    "OpenHours"
+   ],
+   "type": "object"
+  },
+  "TimeZone": {
+   "pattern": "[a-zA-Z0-9_\\-/]*",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^arn:aws[-a-z0-9]*:connect-campaigns:[-a-z0-9]*:[0-9]{12}:campaign/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "ChannelSubtypeConfig": {
+   "$ref": "#/definitions/ChannelSubtypeConfig"
+  },
+  "CommunicationLimitsOverride": {
+   "$ref": "#/definitions/CommunicationLimitsConfig"
+  },
+  "CommunicationTimeConfig": {
+   "$ref": "#/definitions/CommunicationTimeConfig"
+  },
+  "ConnectCampaignFlowArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ConnectInstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "Name": {
+   "$ref": "#/definitions/CampaignName"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "ConnectInstanceId",
+  "ChannelSubtypeConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect-campaigns",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ConnectCampaignsV2::Campaign"
+}
