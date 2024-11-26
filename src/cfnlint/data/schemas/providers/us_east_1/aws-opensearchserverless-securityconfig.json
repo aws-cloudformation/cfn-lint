@@ -7,9 +7,59 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Type",
-  "/properties/Name"
+  "/properties/Name",
+  "/properties/IamIdentityCenterOptions/InstanceArn"
  ],
  "definitions": {
+  "IamIdentityCenterApplicationArn": {
+   "type": "string"
+  },
+  "IamIdentityCenterConfigOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ApplicationArn": {
+     "$ref": "#/definitions/IamIdentityCenterApplicationArn"
+    },
+    "ApplicationDescription": {
+     "type": "string"
+    },
+    "ApplicationName": {
+     "type": "string"
+    },
+    "GroupAttribute": {
+     "$ref": "#/definitions/IamIdentityCenterGroupAttribute"
+    },
+    "InstanceArn": {
+     "$ref": "#/definitions/IamIdentityCenterInstanceArn"
+    },
+    "UserAttribute": {
+     "$ref": "#/definitions/IamIdentityCenterUserAttribute"
+    }
+   },
+   "required": [
+    "InstanceArn"
+   ],
+   "type": "object"
+  },
+  "IamIdentityCenterGroupAttribute": {
+   "enum": [
+    "GroupId",
+    "GroupName"
+   ],
+   "type": "string"
+  },
+  "IamIdentityCenterInstanceArn": {
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+   "type": "string"
+  },
+  "IamIdentityCenterUserAttribute": {
+   "enum": [
+    "Email",
+    "UserId",
+    "UserName"
+   ],
+   "type": "string"
+  },
   "SamlConfigOptions": {
    "additionalProperties": false,
    "properties": {
@@ -42,7 +92,8 @@
   },
   "SecurityConfigType": {
    "enum": [
-    "saml"
+    "saml",
+    "iamidentitycenter"
    ],
    "type": "string"
   }
@@ -55,6 +106,9 @@
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
+  },
+  "IamIdentityCenterOptions": {
+   "$ref": "#/definitions/IamIdentityCenterConfigOptions"
   },
   "Id": {
    "maxLength": 100,
@@ -75,7 +129,10 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/Id",
+  "/properties/IamIdentityCenterOptions/ApplicationArn",
+  "/properties/IamIdentityCenterOptions/ApplicationName",
+  "/properties/IamIdentityCenterOptions/ApplicationDescription"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
  "tagging": {

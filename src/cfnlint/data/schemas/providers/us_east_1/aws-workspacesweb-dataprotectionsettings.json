@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AdditionalEncryptionContext",
+  "/properties/CustomerManagedKey"
+ ],
+ "definitions": {
+  "CustomPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "KeywordRegex": {
+     "maxLength": 300,
+     "minLength": 0,
+     "pattern": "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$",
+     "type": "string"
+    },
+    "PatternDescription": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[ _\\-\\d\\w]+$",
+     "type": "string"
+    },
+    "PatternName": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[_\\-\\d\\w]+$",
+     "type": "string"
+    },
+    "PatternRegex": {
+     "maxLength": 300,
+     "minLength": 0,
+     "pattern": "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PatternName",
+    "PatternRegex"
+   ],
+   "type": "object"
+  },
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "pattern": "^[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InlineRedactionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GlobalConfidenceLevel": {
+     "maximum": 3,
+     "minimum": 1,
+     "type": "number"
+    },
+    "GlobalEnforcedUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "GlobalExemptUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "InlineRedactionPatterns": {
+     "items": {
+      "$ref": "#/definitions/InlineRedactionPattern"
+     },
+     "maxItems": 150,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "InlineRedactionPatterns"
+   ],
+   "type": "object"
+  },
+  "InlineRedactionPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "BuiltInPatternId": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[_\\-\\d\\w]+$",
+     "type": "string"
+    },
+    "ConfidenceLevel": {
+     "maximum": 3,
+     "minimum": 1,
+     "type": "number"
+    },
+    "CustomPattern": {
+     "$ref": "#/definitions/CustomPattern"
+    },
+    "EnforcedUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "ExemptUrls": {
+     "items": {
+      "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RedactionPlaceHolder": {
+     "$ref": "#/definitions/RedactionPlaceHolder"
+    }
+   },
+   "required": [
+    "RedactionPlaceHolder"
+   ],
+   "type": "object"
+  },
+  "RedactionPlaceHolder": {
+   "additionalProperties": false,
+   "properties": {
+    "RedactionPlaceHolderText": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[*_\\-\\d\\w]+$",
+     "type": "string"
+    },
+    "RedactionPlaceHolderType": {
+     "$ref": "#/definitions/RedactionPlaceHolderType"
+    }
+   },
+   "required": [
+    "RedactionPlaceHolderType"
+   ],
+   "type": "object"
+  },
+  "RedactionPlaceHolderType": {
+   "enum": [
+    "CustomText"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DataProtectionSettingsArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "AssociatedPortalArns": {
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CreationDate": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerManagedKey": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DataProtectionSettingsArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[ _\\-\\d\\w]+$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[ _\\-\\d\\w]+$",
+   "type": "string"
+  },
+  "InlineRedactionConfiguration": {
+   "$ref": "#/definitions/InlineRedactionConfiguration"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssociatedPortalArns",
+  "/properties/CreationDate",
+  "/properties/DataProtectionSettingsArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpacesWeb::DataProtectionSettings"
+}

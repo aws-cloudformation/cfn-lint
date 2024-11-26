@@ -6,6 +6,19 @@
   "/properties/DataRedundancy"
  ],
  "definitions": {
+  "AbortIncompleteMultipartUpload": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterInitiation": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ],
+   "type": "object"
+  },
   "Arn": {
    "type": "string"
   },
@@ -23,6 +36,62 @@
    },
    "required": [
     "ServerSideEncryptionConfiguration"
+   ],
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "ObjectSizeGreaterThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "ObjectSizeLessThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
    ],
    "type": "object"
   },
@@ -101,6 +170,9 @@
     "SingleAvailabilityZone"
    ],
    "type": "string"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
   },
   "LocationName": {
    "type": "string"
