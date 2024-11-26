@@ -27,6 +27,9 @@ SCHEMA_URL = (
 case_insensitive_services = [
     "batch",
 ]
+upper_case_paths = {
+    "ses": ["/definitions/EventDestination/properties/MatchingEventTypes/items"]
+}
 
 
 def configure_logging():
@@ -88,15 +91,9 @@ def build_resource_type_patches(
                         )
                         continue
                 if value:
-                    if (
-                        path
-                        == (
-                            "/definitions/EventDestination/"
-                            "properties/MatchingEventTypes/items"
-                        )
-                        and patch.source[0] == "ses"
-                    ):
-                        value = [v.upper() for v in value]
+                    if patch.source[0] in upper_case_paths:
+                        if path in upper_case_paths[patch.source[0]]:
+                            value = [v.upper() for v in value]
                     if patch.source[0] in case_insensitive_services and field == "enum":
                         field = "enumCaseInsensitive"
                         value = [v.lower() for v in value]
