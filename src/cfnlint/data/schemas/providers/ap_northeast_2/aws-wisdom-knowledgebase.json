@@ -1,0 +1,167 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/KnowledgeBaseArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/KnowledgeBaseType",
+  "/properties/Name",
+  "/properties/ServerSideEncryptionConfiguration",
+  "/properties/SourceConfiguration",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AppIntegrationsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIntegrationArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:[a-z-]+?:[a-z-]+?:[a-z0-9-]*?:([0-9]{12})?:[a-zA-Z0-9-:/]+$",
+     "type": "string"
+    },
+    "ObjectFields": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AppIntegrationArn"
+   ],
+   "type": "object"
+  },
+  "KnowledgeBaseType": {
+   "enum": [
+    "EXTERNAL",
+    "CUSTOM",
+    "MESSAGE_TEMPLATES"
+   ],
+   "type": "string"
+  },
+  "RenderingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TemplateUri": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "maxLength": 4096,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SourceConfiguration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "AppIntegrations"
+     ]
+    }
+   ],
+   "properties": {
+    "AppIntegrations": {
+     "$ref": "#/definitions/AppIntegrationsConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KnowledgeBaseId"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "KnowledgeBaseArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "KnowledgeBaseId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "KnowledgeBaseType": {
+   "$ref": "#/definitions/KnowledgeBaseType"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "RenderingConfiguration": {
+   "$ref": "#/definitions/RenderingConfiguration"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "SourceConfiguration": {
+   "$ref": "#/definitions/SourceConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/KnowledgeBaseId",
+  "/properties/KnowledgeBaseArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "KnowledgeBaseType",
+  "Name"
+ ],
+ "taggable": false,
+ "typeName": "AWS::Wisdom::KnowledgeBase"
+}

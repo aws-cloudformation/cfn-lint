@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GatewayPlatform"
+ ],
+ "definitions": {
+  "CapabilityConfiguration": {
+   "type": "string"
+  },
+  "CapabilityNamespace": {
+   "type": "string"
+  },
+  "GatewayCapabilitySummary": {
+   "additionalProperties": false,
+   "properties": {
+    "CapabilityConfiguration": {
+     "$ref": "#/definitions/CapabilityConfiguration"
+    },
+    "CapabilityNamespace": {
+     "$ref": "#/definitions/CapabilityNamespace"
+    }
+   },
+   "required": [
+    "CapabilityNamespace"
+   ],
+   "type": "object"
+  },
+  "GatewayPlatform": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Greengrass"
+     ]
+    },
+    {
+     "required": [
+      "GreengrassV2"
+     ]
+    },
+    {
+     "required": [
+      "SiemensIE"
+     ]
+    }
+   ],
+   "properties": {
+    "Greengrass": {
+     "$ref": "#/definitions/Greengrass"
+    },
+    "GreengrassV2": {
+     "$ref": "#/definitions/GreengrassV2"
+    },
+    "SiemensIE": {
+     "$ref": "#/definitions/SiemensIE"
+    }
+   },
+   "type": "object"
+  },
+  "Greengrass": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupArn": {
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GroupArn"
+   ],
+   "type": "object"
+  },
+  "GreengrassV2": {
+   "additionalProperties": false,
+   "properties": {
+    "CoreDeviceThingName": {
+     "pattern": "^[a-zA-Z0-9:_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CoreDeviceThingName"
+   ],
+   "type": "object"
+  },
+  "SiemensIE": {
+   "additionalProperties": false,
+   "properties": {
+    "IotCoreThingName": {
+     "pattern": "^[a-zA-Z0-9:_-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IotCoreThingName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GatewayId"
+ ],
+ "properties": {
+  "GatewayCapabilitySummaries": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/GatewayCapabilitySummary"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "GatewayId": {
+   "type": "string"
+  },
+  "GatewayName": {
+   "pattern": "[^\\u0000-\\u001F\\u007F]+",
+   "type": "string"
+  },
+  "GatewayPlatform": {
+   "$ref": "#/definitions/GatewayPlatform"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GatewayId"
+ ],
+ "required": [
+  "GatewayName",
+  "GatewayPlatform"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::Gateway"
+}
