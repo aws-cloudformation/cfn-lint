@@ -252,6 +252,7 @@ types: list[str] = [
     "AWS::Cognito::IdentityPoolPrincipalTag",
     "AWS::Cognito::IdentityPoolRoleAttachment",
     "AWS::Cognito::LogDeliveryConfiguration",
+    "AWS::Cognito::ManagedLoginBranding",
     "AWS::Cognito::UserPool",
     "AWS::Cognito::UserPoolClient",
     "AWS::Cognito::UserPoolDomain",

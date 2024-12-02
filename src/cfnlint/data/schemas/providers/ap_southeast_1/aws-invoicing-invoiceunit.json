@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InvoiceReceiver",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "pattern": "^[\\S\\s]*$",
+   "type": "string"
+  },
+  "InvoiceReceiver": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "InvoiceUnitArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "LastModified": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^(?! )[\\p{L}\\p{N}\\p{Z}-_]*(?<! )$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 200,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ResourceTags": {
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "type": "array"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "LinkedAccounts": {
+     "items": {
+      "maxLength": 12,
+      "minLength": 12,
+      "pattern": "^\\d{12}$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "LinkedAccounts"
+   ],
+   "type": "object"
+  },
+  "TaxInheritanceDisabled": {
+   "type": "boolean"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InvoiceUnitArn"
+ ],
+ "properties": {
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "InvoiceReceiver": {
+   "$ref": "#/definitions/InvoiceReceiver"
+  },
+  "InvoiceUnitArn": {
+   "$ref": "#/definitions/InvoiceUnitArn"
+  },
+  "LastModified": {
+   "$ref": "#/definitions/LastModified"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "ResourceTags": {
+   "$ref": "#/definitions/ResourceTags"
+  },
+  "Rule": {
+   "$ref": "#/definitions/Rule"
+  },
+  "TaxInheritanceDisabled": {
+   "$ref": "#/definitions/TaxInheritanceDisabled"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/InvoiceUnitArn",
+  "/properties/LastModified"
+ ],
+ "required": [
+  "InvoiceReceiver",
+  "Name",
+  "Rule"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/ResourceTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Invoicing::InvoiceUnit"
+}

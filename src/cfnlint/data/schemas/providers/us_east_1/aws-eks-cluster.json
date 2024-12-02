@@ -7,7 +7,8 @@
   "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
   "/properties/Name",
   "/properties/RoleArn",
-  "/properties/BootstrapSelfManagedAddons"
+  "/properties/BootstrapSelfManagedAddons",
+  "/properties/RemoteNetworkConfig"
  ],
  "definitions": {
   "AccessConfig": {
@@ -45,11 +46,39 @@
    },
    "type": "object"
   },
+  "ComputeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "NodePools": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "NodeRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ControlPlanePlacement": {
    "additionalProperties": false,
    "properties": {
     "GroupName": {
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticLoadBalancing": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
     }
    },
    "type": "object"
@@ -80,6 +109,9 @@
   "KubernetesNetworkConfig": {
    "additionalProperties": false,
    "properties": {
+    "ElasticLoadBalancing": {
+     "$ref": "#/definitions/ElasticLoadBalancing"
+    },
     "IpFamily": {
      "enum": [
       "ipv4",
@@ -152,6 +184,21 @@
      "type": "string"
     }
    },
+   "type": "object"
+  },
+  "RemoteNetworkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RemoteNodeNetworks": {
+     "$ref": "#/definitions/RemoteNodeNetworks"
+    },
+    "RemotePodNetworks": {
+     "$ref": "#/definitions/RemotePodNetworks"
+    }
+   },
+   "required": [
+    "RemoteNodeNetworks"
+   ],
    "type": "object"
   },
   "RemoteNodeNetwork": {
@@ -243,6 +290,15 @@
    ],
    "type": "object"
   },
+  "StorageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockStorage": {
+     "$ref": "#/definitions/BlockStorage"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -305,6 +361,9 @@
   "ClusterSecurityGroupId": {
    "type": "string"
   },
+  "ComputeConfig": {
+   "$ref": "#/definitions/ComputeConfig"
+  },
   "EncryptionConfig": {
    "insertionOrder": false,
    "items": {
@@ -340,11 +399,17 @@
   "OutpostConfig": {
    "$ref": "#/definitions/OutpostConfig"
   },
+  "RemoteNetworkConfig": {
+   "$ref": "#/definitions/RemoteNetworkConfig"
+  },
   "ResourcesVpcConfig": {
    "$ref": "#/definitions/ResourcesVpcConfig"
   },
   "RoleArn": {
    "type": "string"
+  },
+  "StorageConfig": {
+   "$ref": "#/definitions/StorageConfig"
   },
   "Tags": {
    "insertionOrder": false,

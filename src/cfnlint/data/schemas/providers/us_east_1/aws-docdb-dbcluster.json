@@ -1,8 +1,8 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/KmsKeyId",
   "/properties/SnapshotIdentifier",
+  "/properties/KmsKeyId",
   "/properties/MasterUsername",
   "/properties/SourceDBClusterIdentifier",
   "/properties/DBClusterIdentifier",
@@ -11,6 +11,22 @@
   "/properties/StorageEncrypted"
  ],
  "definitions": {
+  "ServerlessV2ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "number"
+    },
+    "MinCapacity": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "MinCapacity",
+    "MaxCapacity"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -110,6 +126,9 @@
   },
   "RestoreType": {
    "type": "string"
+  },
+  "ServerlessV2ScalingConfiguration": {
+   "$ref": "#/definitions/ServerlessV2ScalingConfiguration"
   },
   "SnapshotIdentifier": {
    "type": "string"

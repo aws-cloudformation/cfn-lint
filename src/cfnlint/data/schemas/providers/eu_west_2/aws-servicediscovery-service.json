@@ -1,0 +1,155 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HealthCheckCustomConfig",
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/NamespaceId"
+ ],
+ "definitions": {
+  "DnsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsRecords": {
+     "items": {
+      "$ref": "#/definitions/DnsRecord"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NamespaceId": {
+     "type": "string"
+    },
+    "RoutingPolicy": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DnsRecords"
+   ],
+   "type": "object"
+  },
+  "DnsRecord": {
+   "additionalProperties": false,
+   "properties": {
+    "TTL": {
+     "type": "number"
+    },
+    "Type": {
+     "enum": [
+      "A",
+      "AAAA",
+      "CNAME",
+      "SRV"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "TTL"
+   ],
+   "type": "object"
+  },
+  "HealthCheckConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureThreshold": {
+     "type": "number"
+    },
+    "ResourcePath": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "HTTP",
+      "HTTPS",
+      "TCP"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "HealthCheckCustomConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureThreshold": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentExcluded": {
+  "HealthCheckConfig": [
+   "HealthCheckCustomConfig"
+  ],
+  "HealthCheckCustomConfig": [
+   "HealthCheckConfig"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DnsConfig": {
+   "$ref": "#/definitions/DnsConfig"
+  },
+  "HealthCheckConfig": {
+   "$ref": "#/definitions/HealthCheckConfig"
+  },
+  "HealthCheckCustomConfig": {
+   "$ref": "#/definitions/HealthCheckCustomConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "NamespaceId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "typeName": "AWS::ServiceDiscovery::Service"
+}

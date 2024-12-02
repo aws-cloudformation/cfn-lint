@@ -2,12 +2,26 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Vpc",
-  "/properties/Type"
+  "/properties/Type",
+  "/properties/InputNetworkLocation"
  ],
  "definitions": {
   "InputDestinationRequest": {
    "additionalProperties": false,
    "properties": {
+    "Network": {
+     "type": "string"
+    },
+    "NetworkRoutes": {
+     "items": {
+      "$ref": "#/definitions/InputRequestDestinationRoute"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "StaticIpAddress": {
+     "type": "string"
+    },
     "StreamName": {
      "type": "string"
     }
@@ -18,6 +32,18 @@
    "additionalProperties": false,
    "properties": {
     "Id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputRequestDestinationRoute": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "type": "string"
+    },
+    "Gateway": {
      "type": "string"
     }
    },
@@ -64,6 +90,31 @@
    "additionalProperties": false,
    "properties": {
     "FlowArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MulticastSettingsCreateRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Sources": {
+     "items": {
+      "$ref": "#/definitions/MulticastSourceCreateRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "MulticastSourceCreateRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceIp": {
+     "type": "string"
+    },
+    "Url": {
      "type": "string"
     }
    },
@@ -140,6 +191,9 @@
    "type": "array",
    "uniqueItems": false
   },
+  "InputNetworkLocation": {
+   "type": "string"
+  },
   "InputSecurityGroups": {
    "items": {
     "type": "string"
@@ -153,6 +207,9 @@
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "MulticastSettings": {
+   "$ref": "#/definitions/MulticastSettingsCreateRequest"
   },
   "Name": {
    "type": "string"
