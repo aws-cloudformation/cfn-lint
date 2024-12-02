@@ -1,3 +1,11 @@
+### v1.20.2
+## What's Changed
+* Add SES exception for boto `MatchingEventTypes` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3843
+* Allow for major versions for `postgres` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3850
+* Update CloudFormation schemas to `2024-12-02` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3844
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.1...v1.20.2
+
 ### v1.20.1
 ## What's Changed
 * Update CloudFormation schemas to 2024-11-23 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3832
