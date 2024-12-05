@@ -102,6 +102,17 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         k, v = is_function(instance[2])
         if k == "Ref" and v in PSEUDOPARAMS:
             continue
+        if k == "Fn::Sub":
+            sub_string = None
+            if isinstance(v, list) and len(v) == 2:
+                sub_string = v[0]
+            if isinstance(v, str):
+                sub_string = v
+            if sub_string is None:
+                continue
+            sub_parameters = REGEX_SUB_PARAMETERS.findall(sub_string)
+            if any(sub_parameter in PSEUDOPARAMS for sub_parameter in sub_parameters):
+                continue
 
         k, v = is_function(instance[1])
         if k == "Ref" and v in PSEUDOPARAMS:
@@ -201,9 +212,6 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             ):
                 continue
 
-            second_level_fn, _ = is_function(instance[2])
-            if second_level_fn == "Fn::Sub":
-                continue
             for second_level_key, second_v, err in validator.resolve_value(instance[2]):
                 if validator.is_type(second_level_key, "integer"):
                     second_level_key = str(second_level_key)
