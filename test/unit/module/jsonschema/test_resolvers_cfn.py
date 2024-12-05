@@ -481,6 +481,17 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
+            "Valid FindInMap using a Sub",
+            {
+                "Fn::FindInMap": [
+                    "transformSecondKey",
+                    "first",
+                    {"Fn::Sub": "${AWS::AccountId}Extra"},
+                ]
+            },
+            [],
+        ),
+        (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
             [("foo-bar", deque([]), None)],

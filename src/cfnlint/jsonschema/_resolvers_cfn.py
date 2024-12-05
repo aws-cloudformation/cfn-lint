@@ -201,6 +201,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             ):
                 continue
 
+            second_level_fn, _ = is_function(instance[2])
+            if second_level_fn == "Fn::Sub":
+                continue
             for second_level_key, second_v, err in validator.resolve_value(instance[2]):
                 if validator.is_type(second_level_key, "integer"):
                     second_level_key = str(second_level_key)
