@@ -74,11 +74,15 @@ class TestForEachCollection(TestCase):
     def test_valid(self):
         fec = _ForEachCollection({"Ref": "AccountIds"})
         self.assertListEqual(
-            list(fec.values(self.cfn, {})),
+            list(fec.values(self.cfn, {}, {})),
             [
                 {"Fn::Select": [0, {"Ref": "AccountIds"}]},
                 {"Fn::Select": [1, {"Ref": "AccountIds"}]},
             ],
+        )
+        self.assertListEqual(
+            list(fec.values(self.cfn, {}, {"AccountIds": ["A", "B"]})),
+            ["A", "B"],
         )
 
 
