@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context._mappings import Mappings
-from cfnlint.context.context import Context, Parameter
+from cfnlint.context.context import Context, Parameter, Resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -481,6 +481,59 @@ def test_invalid_functions(name, instance, response):
             [],
         ),
         (
+            "Valid FindInMap using a Sub",
+            {
+                "Fn::FindInMap": [
+                    "environments",
+                    "lion",
+                    {"Fn::Sub": "${AWS::AccountId}Extra"},
+                ]
+            },
+            [],
+        ),
+        (
+            ("Valid FindInMap with a Sub with no parameters"),
+            {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "dev"}]},
+            [
+                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+            ],
+        ),
+        (
+            ("Valid FindInMap with sub to a paremter"),
+            {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "${Environment}"}]},
+            [
+                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
+                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+            ],
+        ),
+        (
+            ("Valid FindInMap with sub list value to a paramter"),
+            {
+                "Fn::FindInMap": [
+                    "environments",
+                    "lion",
+                    {"Fn::Sub": ["${Environment}", {}]},
+                ]
+            },
+            [
+                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
+                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+            ],
+        ),
+        (
+            ("Valid FindInMap with an invalid sub"),
+            {
+                "Fn::FindInMap": [
+                    "environments",
+                    "lion",
+                    {"Fn::Sub": {"A": "B", "C": "D"}},
+                ]
+            },
+            [],
+        ),
+        (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
             [("foo-bar", deque([]), None)],
@@ -489,6 +542,16 @@ def test_invalid_functions(name, instance, response):
             "Valid Sub with empty parameters",
             {"Fn::Sub": ["foo", {}]},
             [("foo", deque([]), None)],
+        ),
+        (
+            "Valid Sub with a getatt and list",
+            {"Fn::Sub": ["${MyResource.Arn}", {}]},
+            [],
+        ),
+        (
+            "Valid Sub with a getatt string",
+            {"Fn::Sub": "${MyResource.Arn}"},
+            [],
         ),
     ],
 )
@@ -529,6 +592,16 @@ def test_valid_functions(name, instance, response):
                 },
             }
         ),
+        resources={
+            "MyResource": Resource(
+                {
+                    "Type": "AWS::S3::Bucket",
+                    "Properties": {
+                        "BucketName": "XXX",
+                    },
+                }
+            ),
+        },
     )
     _resolve(name, instance, response, context=context)
 
