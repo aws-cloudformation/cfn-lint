@@ -508,6 +508,32 @@ def test_invalid_functions(name, instance, response):
             ],
         ),
         (
+            ("Valid FindInMap with sub list value to a paramter"),
+            {
+                "Fn::FindInMap": [
+                    "environments",
+                    "lion",
+                    {"Fn::Sub": ["${Environment}", {}]},
+                ]
+            },
+            [
+                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
+                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+            ],
+        ),
+        (
+            ("Valid FindInMap with an invalid sub"),
+            {
+                "Fn::FindInMap": [
+                    "environments",
+                    "lion",
+                    {"Fn::Sub": {"A": "B", "C": "D"}},
+                ]
+            },
+            [],
+        ),
+        (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
             [("foo-bar", deque([]), None)],

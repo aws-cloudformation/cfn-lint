@@ -102,17 +102,6 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
         k, v = is_function(instance[2])
         if k == "Ref" and v in PSEUDOPARAMS:
             continue
-        if k == "Fn::Sub":
-            sub_string = None
-            if isinstance(v, list) and len(v) == 2:
-                sub_string = v[0]
-            if isinstance(v, str):
-                sub_string = v
-            if sub_string is None:
-                continue
-            sub_parameters = REGEX_SUB_PARAMETERS.findall(sub_string)
-            if any(sub_parameter in PSEUDOPARAMS for sub_parameter in sub_parameters):
-                continue
 
         k, v = is_function(instance[1])
         if k == "Ref" and v in PSEUDOPARAMS:
@@ -212,7 +201,10 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
             ):
                 continue
 
-            for second_level_key, second_v, err in validator.resolve_value(instance[2]):
+            top_v = validator.evolve(
+                context=top_v.context.evolve(resolve_pseudo_parameters=False)
+            )
+            for second_level_key, second_v, err in top_v.resolve_value(instance[2]):
                 if validator.is_type(second_level_key, "integer"):
                     second_level_key = str(second_level_key)
                 if not validator.is_type(second_level_key, "string"):
@@ -428,6 +420,15 @@ def sub(validator: Validator, instance: Any) -> ResolutionResult:
             return
         if not validator.is_type(parameters, "object"):
             return
+
+        sub_parameters = REGEX_SUB_PARAMETERS.findall(string)
+        for parameter in sub_parameters:
+            if parameter in parameters:
+                continue
+            if "." in parameter:
+                parameters[parameter] = {"Fn::GetAtt": parameter}
+            else:
+                parameters[parameter] = {"Ref": parameter}
 
         for resolved_parameters in _sub_parameter_expansion(validator, parameters):
             resolved_validator = validator.evolve(
