@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context._mappings import Mappings
-from cfnlint.context.context import Context, Parameter
+from cfnlint.context.context import Context, Parameter, Resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -484,8 +484,8 @@ def test_invalid_functions(name, instance, response):
             "Valid FindInMap using a Sub",
             {
                 "Fn::FindInMap": [
-                    "transformSecondKey",
-                    "first",
+                    "environments",
+                    "lion",
                     {"Fn::Sub": "${AWS::AccountId}Extra"},
                 ]
             },
@@ -543,6 +543,16 @@ def test_invalid_functions(name, instance, response):
             {"Fn::Sub": ["foo", {}]},
             [("foo", deque([]), None)],
         ),
+        (
+            "Valid Sub with a getatt and list",
+            {"Fn::Sub": ["${MyResource.Arn}", {}]},
+            [],
+        ),
+        (
+            "Valid Sub with a getatt string",
+            {"Fn::Sub": "${MyResource.Arn}"},
+            [],
+        ),
     ],
 )
 def test_valid_functions(name, instance, response):
@@ -582,6 +592,16 @@ def test_valid_functions(name, instance, response):
                 },
             }
         ),
+        resources={
+            "MyResource": Resource(
+                {
+                    "Type": "AWS::S3::Bucket",
+                    "Properties": {
+                        "BucketName": "XXX",
+                    },
+                }
+            ),
+        },
     )
     _resolve(name, instance, response, context=context)
 
