@@ -1,0 +1,419 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AIGuardrailArn",
+   "/properties/AssistantArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AssistantId",
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AIGuardrailContentPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FiltersConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailContentFilterConfig"
+     },
+     "maxItems": 6,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FiltersConfig"
+   ],
+   "type": "object"
+  },
+  "AIGuardrailContextualGroundingPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FiltersConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailContextualGroundingFilterConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FiltersConfig"
+   ],
+   "type": "object"
+  },
+  "AIGuardrailSensitiveInformationPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PiiEntitiesConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailPiiEntityConfig"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RegexesConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailRegexConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "AIGuardrailTopicPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicsConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailTopicConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TopicsConfig"
+   ],
+   "type": "object"
+  },
+  "AIGuardrailWordPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ManagedWordListsConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailManagedWordsConfig"
+     },
+     "type": "array"
+    },
+    "WordsConfig": {
+     "items": {
+      "$ref": "#/definitions/GuardrailWordConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "GuardrailContentFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputStrength": {
+     "$ref": "#/definitions/GuardrailFilterStrength"
+    },
+    "OutputStrength": {
+     "$ref": "#/definitions/GuardrailFilterStrength"
+    },
+    "Type": {
+     "$ref": "#/definitions/GuardrailContentFilterType"
+    }
+   },
+   "required": [
+    "InputStrength",
+    "OutputStrength",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "GuardrailContentFilterType": {
+   "enum": [
+    "SEXUAL",
+    "VIOLENCE",
+    "HATE",
+    "INSULTS",
+    "MISCONDUCT",
+    "PROMPT_ATTACK"
+   ],
+   "type": "string"
+  },
+  "GuardrailContextualGroundingFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Threshold": {
+     "default": 0,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Type": {
+     "$ref": "#/definitions/GuardrailContextualGroundingFilterType"
+    }
+   },
+   "required": [
+    "Threshold",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "GuardrailContextualGroundingFilterType": {
+   "enum": [
+    "GROUNDING",
+    "RELEVANCE"
+   ],
+   "type": "string"
+  },
+  "GuardrailFilterStrength": {
+   "enum": [
+    "NONE",
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "type": "string"
+  },
+  "GuardrailManagedWordsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/GuardrailManagedWordsType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "GuardrailManagedWordsType": {
+   "enum": [
+    "PROFANITY"
+   ],
+   "type": "string"
+  },
+  "GuardrailPiiEntityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/GuardrailSensitiveInformationAction"
+    },
+    "Type": {
+     "$ref": "#/definitions/GuardrailPiiEntityType"
+    }
+   },
+   "required": [
+    "Action",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "GuardrailPiiEntityType": {
+   "enum": [
+    "ADDRESS",
+    "AGE",
+    "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY",
+    "CA_HEALTH_NUMBER",
+    "CA_SOCIAL_INSURANCE_NUMBER",
+    "CREDIT_DEBIT_CARD_CVV",
+    "CREDIT_DEBIT_CARD_EXPIRY",
+    "CREDIT_DEBIT_CARD_NUMBER",
+    "DRIVER_ID",
+    "EMAIL",
+    "INTERNATIONAL_BANK_ACCOUNT_NUMBER",
+    "IP_ADDRESS",
+    "LICENSE_PLATE",
+    "MAC_ADDRESS",
+    "NAME",
+    "PASSWORD",
+    "PHONE",
+    "PIN",
+    "SWIFT_CODE",
+    "UK_NATIONAL_HEALTH_SERVICE_NUMBER",
+    "UK_NATIONAL_INSURANCE_NUMBER",
+    "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER",
+    "URL",
+    "USERNAME",
+    "US_BANK_ACCOUNT_NUMBER",
+    "US_BANK_ROUTING_NUMBER",
+    "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER",
+    "US_PASSPORT_NUMBER",
+    "US_SOCIAL_SECURITY_NUMBER",
+    "VEHICLE_IDENTIFICATION_NUMBER"
+   ],
+   "type": "string"
+  },
+  "GuardrailRegexConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/GuardrailSensitiveInformationAction"
+    },
+    "Description": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Pattern": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Name",
+    "Pattern"
+   ],
+   "type": "object"
+  },
+  "GuardrailSensitiveInformationAction": {
+   "enum": [
+    "BLOCK",
+    "ANONYMIZE"
+   ],
+   "type": "string"
+  },
+  "GuardrailTopicConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Examples": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "minItems": 0,
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_ !?.]+$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/GuardrailTopicType"
+    }
+   },
+   "required": [
+    "Definition",
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "GuardrailTopicType": {
+   "enum": [
+    "DENY"
+   ],
+   "type": "string"
+  },
+  "GuardrailWordConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Text": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AIGuardrailId",
+  "/properties/AssistantId"
+ ],
+ "properties": {
+  "AIGuardrailArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AIGuardrailId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}(:[A-Z0-9_$]+){0,1}$",
+   "type": "string"
+  },
+  "AssistantArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AssistantId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "BlockedInputMessaging": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BlockedOutputsMessaging": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ContentPolicyConfig": {
+   "$ref": "#/definitions/AIGuardrailContentPolicyConfig"
+  },
+  "ContextualGroundingPolicyConfig": {
+   "$ref": "#/definitions/AIGuardrailContextualGroundingPolicyConfig"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "SensitiveInformationPolicyConfig": {
+   "$ref": "#/definitions/AIGuardrailSensitiveInformationPolicyConfig"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TopicPolicyConfig": {
+   "$ref": "#/definitions/AIGuardrailTopicPolicyConfig"
+  },
+  "WordPolicyConfig": {
+   "$ref": "#/definitions/AIGuardrailWordPolicyConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AIGuardrailArn",
+  "/properties/AIGuardrailId",
+  "/properties/AssistantArn"
+ ],
+ "required": [
+  "AssistantId",
+  "BlockedInputMessaging",
+  "BlockedOutputsMessaging"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::AIGuardrail"
+}

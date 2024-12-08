@@ -1,0 +1,56 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/StatementId",
+  "/properties/Actions",
+  "/properties/Principal"
+ ],
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/StatementId"
+ ],
+ "properties": {
+  "Actions": {
+   "items": {
+    "pattern": "^qbusiness:[a-zA-Z]+$",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "Principal": {
+   "maxLength": 1284,
+   "minLength": 1,
+   "pattern": "^arn:aws:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "StatementId": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ApplicationId",
+  "StatementId",
+  "Actions",
+  "Principal"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::QBusiness::Permission"
+}

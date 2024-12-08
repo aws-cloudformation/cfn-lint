@@ -233,6 +233,25 @@
    },
    "type": "object"
   },
+  "ImageExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageExtractionStatus": {
+     "$ref": "#/definitions/ImageExtractionStatus"
+    }
+   },
+   "required": [
+    "ImageExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "ImageExtractionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
   "InlineDocumentEnrichmentConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -244,6 +263,15 @@
     },
     "Target": {
      "$ref": "#/definitions/DocumentAttributeTarget"
+    }
+   },
+   "type": "object"
+  },
+  "MediaExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageExtractionConfiguration": {
+     "$ref": "#/definitions/ImageExtractionConfiguration"
     }
    },
    "type": "object"
@@ -324,6 +352,9 @@
    "minLength": 36,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
    "type": "string"
+  },
+  "MediaExtractionConfiguration": {
+   "$ref": "#/definitions/MediaExtractionConfiguration"
   },
   "RoleArn": {
    "maxLength": 1284,

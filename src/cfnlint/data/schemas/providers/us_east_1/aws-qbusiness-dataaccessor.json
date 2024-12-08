@@ -1,0 +1,272 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/Principal"
+ ],
+ "definitions": {
+  "ActionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "pattern": "^qbusiness:[a-zA-Z]+$",
+     "type": "string"
+    },
+    "FilterConfiguration": {
+     "$ref": "#/definitions/ActionFilterConfiguration"
+    }
+   },
+   "required": [
+    "Action"
+   ],
+   "type": "object"
+  },
+  "ActionFilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DocumentAttributeFilter": {
+     "$ref": "#/definitions/AttributeFilter"
+    }
+   },
+   "required": [
+    "DocumentAttributeFilter"
+   ],
+   "type": "object"
+  },
+  "AttributeFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "AndAllFilters": {
+     "items": {
+      "$ref": "#/definitions/AttributeFilter"
+     },
+     "type": "array"
+    },
+    "ContainsAll": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "ContainsAny": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "EqualsTo": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "GreaterThan": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "GreaterThanOrEquals": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "LessThan": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "LessThanOrEquals": {
+     "$ref": "#/definitions/DocumentAttribute"
+    },
+    "NotFilter": {
+     "$ref": "#/definitions/AttributeFilter"
+    },
+    "OrAllFilters": {
+     "items": {
+      "$ref": "#/definitions/AttributeFilter"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "DocumentAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_][a-zA-Z0-9_-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/DocumentAttributeValue"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "DocumentAttributeValue": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringValue": {
+       "maxLength": 2048,
+       "type": "string"
+      }
+     },
+     "required": [
+      "StringValue"
+     ],
+     "title": "StringValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringListValue": {
+       "items": {
+        "maxLength": 2048,
+        "minLength": 1,
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "StringListValue"
+     ],
+     "title": "StringListValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LongValue": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "LongValue"
+     ],
+     "title": "LongValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DateValue": {
+       "format": "date-time",
+       "type": "string"
+      }
+     },
+     "required": [
+      "DateValue"
+     ],
+     "title": "DateValue",
+     "type": "object"
+    }
+   ]
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/DataAccessorId"
+ ],
+ "properties": {
+  "ActionConfigurations": {
+   "items": {
+    "$ref": "#/definitions/ActionConfiguration"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataAccessorArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "DataAccessorId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "IdcApplicationArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
+   "type": "string"
+  },
+  "Principal": {
+   "maxLength": 1284,
+   "minLength": 1,
+   "pattern": "^arn:aws:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DataAccessorArn",
+  "/properties/DataAccessorId",
+  "/properties/IdcApplicationArn",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "ActionConfigurations",
+  "DisplayName",
+  "Principal"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::DataAccessor"
+}

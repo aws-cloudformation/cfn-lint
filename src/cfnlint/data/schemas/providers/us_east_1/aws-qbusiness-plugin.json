@@ -95,6 +95,12 @@
   "OAuth2ClientCredentialConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "AuthorizationUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(https?|ftp|file)://([^\\s]*)$",
+     "type": "string"
+    },
     "RoleArn": {
      "maxLength": 1284,
      "minLength": 0,
@@ -105,6 +111,12 @@
      "maxLength": 1284,
      "minLength": 0,
      "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+     "type": "string"
+    },
+    "TokenUrl": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(https?|ftp|file)://([^\\s]*)$",
      "type": "string"
     }
    },
@@ -182,7 +194,19 @@
     "SALESFORCE",
     "JIRA",
     "ZENDESK",
-    "CUSTOM"
+    "CUSTOM",
+    "QUICKSIGHT",
+    "SERVICENOW_NOW_PLATFORM",
+    "JIRA_CLOUD",
+    "SALESFORCE_CRM",
+    "ZENDESK_SUITE",
+    "ATLASSIAN_CONFLUENCE",
+    "GOOGLE_CALENDAR",
+    "MICROSOFT_TEAMS",
+    "MICROSOFT_EXCHANGE",
+    "PAGERDUTY_ADVANCE",
+    "SMARTSHEET",
+    "ASANA"
    ],
    "type": "string"
   },
@@ -280,7 +304,6 @@
    "$ref": "#/definitions/PluginState"
   },
   "Tags": {
-   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -304,13 +327,16 @@
   "/properties/UpdatedAt"
  ],
  "required": [
-  "ApplicationId",
   "AuthConfiguration",
   "DisplayName",
   "Type"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
  "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
   "taggable": true
  },
  "typeName": "AWS::QBusiness::Plugin"
