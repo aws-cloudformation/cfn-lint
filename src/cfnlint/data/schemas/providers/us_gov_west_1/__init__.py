@@ -1475,6 +1475,7 @@ cached: list[str] = [
     "aws-stepfunctions-activity.json",
     "aws-stepfunctions-statemachine.json",
     "aws-stepfunctions-statemachinealias.json",
+    "aws-stepfunctions-statemachineversion.json",
     "aws-synthetics-canary.json",
     "aws-synthetics-group.json",
     "aws-timestream-database.json",

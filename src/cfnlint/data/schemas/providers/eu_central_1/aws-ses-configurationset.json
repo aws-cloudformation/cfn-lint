@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "DashboardOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "EngagementMetrics": {
+     "pattern": "ENABLED|DISABLED",
+     "type": "string"
+    }
+   },
+   "required": [
+    "EngagementMetrics"
+   ],
+   "type": "object"
+  },
+  "DeliveryOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxDeliverySeconds": {
+     "maximum": 50400,
+     "minimum": 300,
+     "type": "number"
+    },
+    "SendingPoolName": {
+     "type": "string"
+    },
+    "TlsPolicy": {
+     "pattern": "REQUIRE|OPTIONAL",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GuardianOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "OptimizedSharedDelivery": {
+     "pattern": "ENABLED|DISABLED",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OptimizedSharedDelivery"
+   ],
+   "type": "object"
+  },
+  "ReputationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ReputationMetricsEnabled": {
+     "pattern": "true|false",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SendingOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SendingEnabled": {
+     "pattern": "true|false",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SuppressionOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SuppressedReasons": {
+     "insertionOrder": false,
+     "items": {
+      "pattern": "BOUNCE|COMPLAINT",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "TrackingOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomRedirectDomain": {
+     "type": "string"
+    },
+    "HttpsPolicy": {
+     "pattern": "REQUIRE|REQUIRE_OPEN_ONLY|OPTIONAL",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VdmOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "DashboardOptions": {
+     "$ref": "#/definitions/DashboardOptions"
+    },
+    "GuardianOptions": {
+     "$ref": "#/definitions/GuardianOptions"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "DeliveryOptions": {
+   "$ref": "#/definitions/DeliveryOptions"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+   "type": "string"
+  },
+  "ReputationOptions": {
+   "$ref": "#/definitions/ReputationOptions"
+  },
+  "SendingOptions": {
+   "$ref": "#/definitions/SendingOptions"
+  },
+  "SuppressionOptions": {
+   "$ref": "#/definitions/SuppressionOptions"
+  },
+  "TrackingOptions": {
+   "$ref": "#/definitions/TrackingOptions"
+  },
+  "VdmOptions": {
+   "$ref": "#/definitions/VdmOptions"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "taggable": false,
+ "typeName": "AWS::SES::ConfigurationSet"
+}
