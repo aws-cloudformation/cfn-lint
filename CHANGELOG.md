@@ -1,3 +1,13 @@
+### v1.21.0
+## What's Changed
+* Pass parameters to `ForEachCollection` processing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3854
+* Update rule [W8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W8003) to include always false by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3855
+* Skip `Fn::FindInMap` resolution when hitting a `Fn::Sub` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3856
+* Add `Assign` to appropriate state machine options by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3859
+* Update CloudFormation schemas to `2024-12-09` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3853
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.2...v1.21.0
+
 ### v1.20.2
 ## What's Changed
 * Add SES exception for boto `MatchingEventTypes` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3843
