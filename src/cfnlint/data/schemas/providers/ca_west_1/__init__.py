@@ -864,7 +864,6 @@ cached: list[str] = [
     "aws-fms-notificationchannel.json",
     "aws-fms-policy.json",
     "aws-fsx-datarepositoryassociation.json",
-    "aws-fsx-filesystem.json",
     "aws-fsx-snapshot.json",
     "aws-fsx-storagevirtualmachine.json",
     "aws-fsx-volume.json",

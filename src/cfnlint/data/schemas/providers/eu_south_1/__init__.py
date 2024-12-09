@@ -1215,7 +1215,6 @@ cached: list[str] = [
     "aws-fms-policy.json",
     "aws-fms-resourceset.json",
     "aws-fsx-datarepositoryassociation.json",
-    "aws-fsx-filesystem.json",
     "aws-fsx-snapshot.json",
     "aws-fsx-storagevirtualmachine.json",
     "aws-fsx-volume.json",

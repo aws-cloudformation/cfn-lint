@@ -1,0 +1,394 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Edition",
+  "/properties/ServerSideEncryptionConfiguration"
+ ],
+ "definitions": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "CapacityUnitsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryCapacityUnits": {
+     "$ref": "#/definitions/QueryCapacityUnits"
+    },
+    "StorageCapacityUnits": {
+     "$ref": "#/definitions/StorageCapacityUnits"
+    }
+   },
+   "required": [
+    "StorageCapacityUnits",
+    "QueryCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "ClaimRegex": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "DocumentAttributeValueType": {
+   "enum": [
+    "STRING_VALUE",
+    "STRING_LIST_VALUE",
+    "LONG_VALUE",
+    "DATE_VALUE"
+   ],
+   "type": "string"
+  },
+  "DocumentMetadataConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/DocumentMetadataConfigurationName"
+    },
+    "Relevance": {
+     "$ref": "#/definitions/Relevance"
+    },
+    "Search": {
+     "$ref": "#/definitions/Search"
+    },
+    "Type": {
+     "$ref": "#/definitions/DocumentAttributeValueType"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DocumentMetadataConfigurationList": {
+   "items": {
+    "$ref": "#/definitions/DocumentMetadataConfiguration"
+   },
+   "maxItems": 500,
+   "type": "array"
+  },
+  "DocumentMetadataConfigurationName": {
+   "maxLength": 30,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Duration": {
+   "maxLength": 10,
+   "minLength": 1,
+   "pattern": "[0-9]+[s]",
+   "type": "string"
+  },
+  "Edition": {
+   "enum": [
+    "DEVELOPER_EDITION",
+    "ENTERPRISE_EDITION"
+   ],
+   "type": "string"
+  },
+  "Freshness": {
+   "type": "boolean"
+  },
+  "GroupAttributeField": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "type": "string"
+  },
+  "Importance": {
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Issuer": {
+   "maxLength": 65,
+   "minLength": 1,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "JsonTokenTypeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupAttributeField": {
+     "$ref": "#/definitions/GroupAttributeField"
+    },
+    "UserNameAttributeField": {
+     "$ref": "#/definitions/UserNameAttributeField"
+    }
+   },
+   "required": [
+    "UserNameAttributeField",
+    "GroupAttributeField"
+   ],
+   "type": "object"
+  },
+  "JwtTokenTypeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ClaimRegex": {
+     "$ref": "#/definitions/ClaimRegex"
+    },
+    "GroupAttributeField": {
+     "$ref": "#/definitions/GroupAttributeField"
+    },
+    "Issuer": {
+     "$ref": "#/definitions/Issuer"
+    },
+    "KeyLocation": {
+     "$ref": "#/definitions/KeyLocation"
+    },
+    "SecretManagerArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "URL": {
+     "$ref": "#/definitions/Url"
+    },
+    "UserNameAttributeField": {
+     "$ref": "#/definitions/UserNameAttributeField"
+    }
+   },
+   "required": [
+    "KeyLocation"
+   ],
+   "type": "object"
+  },
+  "KeyLocation": {
+   "enum": [
+    "URL",
+    "SECRET_MANAGER"
+   ],
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9_-]*",
+   "type": "string"
+  },
+  "Order": {
+   "enum": [
+    "ASCENDING",
+    "DESCENDING"
+   ],
+   "type": "string"
+  },
+  "QueryCapacityUnits": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Relevance": {
+   "additionalProperties": false,
+   "properties": {
+    "Duration": {
+     "$ref": "#/definitions/Duration"
+    },
+    "Freshness": {
+     "$ref": "#/definitions/Freshness"
+    },
+    "Importance": {
+     "$ref": "#/definitions/Importance"
+    },
+    "RankOrder": {
+     "$ref": "#/definitions/Order"
+    },
+    "ValueImportanceItems": {
+     "$ref": "#/definitions/ValueImportanceItems"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "maxLength": 1284,
+   "minLength": 1,
+   "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
+   "type": "string"
+  },
+  "Search": {
+   "additionalProperties": false,
+   "properties": {
+    "Displayable": {
+     "type": "boolean"
+    },
+    "Facetable": {
+     "type": "boolean"
+    },
+    "Searchable": {
+     "type": "boolean"
+    },
+    "Sortable": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "$ref": "#/definitions/KmsKeyId"
+    }
+   },
+   "type": "object"
+  },
+  "StorageCapacityUnits": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  },
+  "Url": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^(https?|ftp|file):\\/\\/([^\\s]*)",
+   "type": "string"
+  },
+  "UserContextPolicy": {
+   "enum": [
+    "ATTRIBUTE_FILTER",
+    "USER_TOKEN"
+   ],
+   "type": "string"
+  },
+  "UserNameAttributeField": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "UserTokenConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "JsonTokenTypeConfiguration": {
+     "$ref": "#/definitions/JsonTokenTypeConfiguration"
+    },
+    "JwtTokenTypeConfiguration": {
+     "$ref": "#/definitions/JwtTokenTypeConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "UserTokenConfigurationList": {
+   "items": {
+    "$ref": "#/definitions/UserTokenConfiguration"
+   },
+   "maxItems": 1,
+   "type": "array"
+  },
+  "ValueImportanceItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/ValueImportanceItemKey"
+    },
+    "Value": {
+     "$ref": "#/definitions/Importance"
+    }
+   },
+   "type": "object"
+  },
+  "ValueImportanceItemKey": {
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ValueImportanceItems": {
+   "items": {
+    "$ref": "#/definitions/ValueImportanceItem"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CapacityUnits": {
+   "$ref": "#/definitions/CapacityUnitsConfiguration"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DocumentMetadataConfigurations": {
+   "$ref": "#/definitions/DocumentMetadataConfigurationList"
+  },
+  "Edition": {
+   "$ref": "#/definitions/Edition"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList"
+  },
+  "UserContextPolicy": {
+   "$ref": "#/definitions/UserContextPolicy"
+  },
+  "UserTokenConfigurations": {
+   "$ref": "#/definitions/UserTokenConfigurationList"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "RoleArn",
+  "Edition"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/hiw-index.html",
+ "typeName": "AWS::Kendra::Index"
+}
