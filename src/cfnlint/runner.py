@@ -230,7 +230,6 @@ class Runner:
             self.config.templates
         except ValueError as e:
             self._cli_output([Match(str(e), ConfigError(), None)])
-            sys.exit(1)
         # load registry schemas before patching
         if self.config.registry_schemas:
             for path in self.config.registry_schemas:
