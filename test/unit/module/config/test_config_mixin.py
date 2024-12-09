@@ -208,6 +208,20 @@ class TestConfigMixIn(BaseTestCase):
         ]
         config = cfnlint.config.ConfigMixIn([])
 
+        with self.assertRaises(ValueError):
+            self.assertEqual(len(config.templates), 1)
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_expand_paths_nomatch_ignore_bad_template(self, yaml_mock):
+        """Test precedence in"""
+
+        filename = "test/fixtures/templates/nonexistant/*.yaml"
+        yaml_mock.side_effect = [
+            {"templates": [filename], "ignore_bad_template": True},
+            {},
+        ]
+        config = cfnlint.config.ConfigMixIn([])
+
         # test defaults
         self.assertEqual(config.templates, [])
 
