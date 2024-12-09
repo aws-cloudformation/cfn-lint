@@ -796,10 +796,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         for filename in filenames:
             add_filenames = glob.glob(filename, recursive=True)
 
-            if add_filenames:
-                all_filenames.extend(add_filenames)
-            else:
+            if not add_filenames and not self.ignore_bad_template:
                 raise ValueError(f"{filename} could not be processed by glob.glob")
+
+            all_filenames.extend(add_filenames)
 
         return sorted(list(map(str, map(Path, all_filenames))))
 
