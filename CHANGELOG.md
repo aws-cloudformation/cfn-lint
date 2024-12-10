@@ -1,3 +1,12 @@
+### v1.22.0
+## What's Changed
+* Replace parameters when both transforms are used by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3861
+* Fix returning `None` from `Fn::FindInMap` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3866
+* Switch back to raising bad path errors by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3862
+* Update CloudFormation schemas to `2024-12-10` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3863
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.21.0...v1.22.0
+
 ### v1.21.0
 ## What's Changed
 * Pass parameters to `ForEachCollection` processing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3854
