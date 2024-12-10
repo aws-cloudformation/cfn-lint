@@ -77,6 +77,14 @@ Regular Text
                     " [Source](https://github.com/aws-cloudformation/cfn-lint) |"
                     " `base`,`rule` |\n"
                 ),
+                call(
+                    '| [E0003<a name="E0003"></a>]'
+                    "(../src/cfnlint/rules/errors/config.py) | "
+                    "Error with cfn-lint configuration | "
+                    "Error as a result of the cfn-lint configuration |  | "
+                    "[Source](https://github.com/aws-cloudformation/cfn-lint) "
+                    "| `base`,`rule` |\n"
+                ),
                 call("\n\\* experimental rules\n"),
             ]
             mock_builtin_open.return_value.write.assert_has_calls(expected_calls)
