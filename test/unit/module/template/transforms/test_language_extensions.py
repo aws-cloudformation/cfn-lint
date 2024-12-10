@@ -299,6 +299,14 @@ class TestFindInMap(TestCase):
         with self.assertRaises(_ResolveError):
             map.value(self.cfn, None, False, False)
 
+    def test_find_in_map_values_not_found_with_default(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Bucket", "Production", "DNE", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        self.assertEqual(map.value(self.cfn, None, False, False), ["foo", "bar"])
+
     def test_find_in_map_values_without_default(self):
         map = _ForEachValueFnFindInMap("a", ["Bucket", {"Ref": "Foo"}, "Key"])
 
