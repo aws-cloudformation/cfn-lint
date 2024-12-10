@@ -1616,6 +1616,7 @@ cached: list[str] = [
     "aws-ec2-vpcendpointservicepermissions.json",
     "aws-ec2-vpcgatewayattachment.json",
     "aws-ec2-vpcpeeringconnection.json",
+    "aws-ec2-vpnconnection.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-ec2-vpngateway.json",
     "aws-ec2-vpngatewayroutepropagation.json",
