@@ -1741,7 +1741,6 @@ cached: list[str] = [
     "aws-guardduty-master.json",
     "aws-guardduty-member.json",
     "aws-guardduty-threatintelset.json",
-    "aws-healthlake-fhirdatastore.json",
     "aws-iam-accesskey.json",
     "aws-iam-group.json",
     "aws-iam-grouppolicy.json",

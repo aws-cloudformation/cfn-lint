@@ -309,6 +309,7 @@ types: list[str] = [
     "AWS::ElastiCache::ReplicationGroup",
     "AWS::ElastiCache::SecurityGroup",
     "AWS::ElastiCache::SecurityGroupIngress",
+    "AWS::ElastiCache::ServerlessCache",
     "AWS::ElastiCache::SubnetGroup",
     "AWS::ElastiCache::User",
     "AWS::ElastiCache::UserGroup",

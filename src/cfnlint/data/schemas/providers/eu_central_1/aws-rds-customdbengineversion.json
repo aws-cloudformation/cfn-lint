@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Engine",
+  "/properties/EngineVersion",
+  "/properties/DatabaseInstallationFilesS3BucketName",
+  "/properties/DatabaseInstallationFilesS3Prefix",
+  "/properties/ImageId",
+  "/properties/KMSKeyId",
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Engine",
+  "/properties/EngineVersion"
+ ],
+ "properties": {
+  "DBEngineVersionArn": {
+   "type": "string"
+  },
+  "DatabaseInstallationFilesS3BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "type": "string"
+  },
+  "DatabaseInstallationFilesS3Prefix": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engine": {
+   "maxLength": 35,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9-]{1,35}$",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "maxLength": 60,
+   "minLength": 1,
+   "pattern": "^[a-z0-9_.-]{1,60}$",
+   "type": "string"
+  },
+  "ImageId": {
+   "format": "AWS::EC2::Image.Id",
+   "type": "string"
+  },
+  "KMSKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_:\\-\\/]+",
+   "type": "string"
+  },
+  "Manifest": {
+   "maxLength": 51000,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "SourceCustomDbEngineVersionIdentifier": {
+   "type": "string"
+  },
+  "Status": {
+   "default": "available",
+   "enum": [
+    "available",
+    "inactive",
+    "inactive-except-restore"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UseAwsProvidedLatestImage": {
+   "type": "boolean"
+  }
+ },
+ "propertyTransform": {
+  "/properties/Engine": "$lowercase(Engine)",
+  "/properties/EngineVersion": "$lowercase(EngineVersion)",
+  "/properties/KMSKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", KMSKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/DBEngineVersionArn"
+ ],
+ "required": [
+  "Engine",
+  "EngineVersion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::CustomDBEngineVersion",
+ "writeOnlyProperties": [
+  "/properties/Manifest",
+  "/properties/SourceCustomDbEngineVersionIdentifier",
+  "/properties/UseAwsProvidedLatestImage"
+ ]
+}
