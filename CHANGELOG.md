@@ -1,3 +1,12 @@
+### v1.22.1
+## What's Changed
+* Add `pattern` for SNS `TopicName` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3869
+* Don't replace `Default` values in `SAM` when SSM parameter by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3874
+* Update CloudFormation schemas to `2024-12-12` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3868
+* Dont guess at mappings when values are static in language extension transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3875
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.0...v1.22.1
+
 ### v1.22.0
 ## What's Changed
 * Replace parameters when both transforms are used by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3861
