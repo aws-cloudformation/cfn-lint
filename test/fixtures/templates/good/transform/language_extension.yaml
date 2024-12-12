@@ -10,6 +10,9 @@ Parameters:
   AutoPublishAliasParameter:
     Type: String
     Default: TestAliasRef
+  VpcId:
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>"
+    Default: "/network/vpc/primary/id"
 Mappings:
   StackIdMap01:
     teststack1:
@@ -63,3 +66,9 @@ Resources:
         def handler(event, context):
           print("Hello, world!")
       AutoPublishAlias: !Ref AutoPublishAliasParameter
+
+  SecurityGroups:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Example security group
+      VpcId: !Ref VpcId
