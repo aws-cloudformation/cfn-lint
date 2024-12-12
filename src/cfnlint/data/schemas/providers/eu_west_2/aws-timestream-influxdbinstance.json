@@ -1,0 +1,236 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Username",
+  "/properties/Password",
+  "/properties/Organization",
+  "/properties/Bucket",
+  "/properties/VpcSubnetIds",
+  "/properties/VpcSecurityGroupIds",
+  "/properties/PubliclyAccessible",
+  "/properties/DbStorageType",
+  "/properties/AllocatedStorage"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocatedStorage": {
+   "maximum": 16384,
+   "minimum": 20,
+   "type": "integer"
+  },
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "^arn:aws[a-z\\-]*:timestream\\-influxdb:[a-z0-9\\-]+:[0-9]{12}:(db\\-instance)/[a-zA-Z0-9]{3,64}$",
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "Bucket": {
+   "maxLength": 64,
+   "minLength": 2,
+   "pattern": "^[^_][^\"]*$",
+   "type": "string"
+  },
+  "DbInstanceType": {
+   "enum": [
+    "db.influx.medium",
+    "db.influx.large",
+    "db.influx.xlarge",
+    "db.influx.2xlarge",
+    "db.influx.4xlarge",
+    "db.influx.8xlarge",
+    "db.influx.12xlarge",
+    "db.influx.16xlarge"
+   ],
+   "type": "string"
+  },
+  "DbParameterGroupIdentifier": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "DbStorageType": {
+   "enum": [
+    "InfluxIOIncludedT1",
+    "InfluxIOIncludedT2",
+    "InfluxIOIncludedT3"
+   ],
+   "type": "string"
+  },
+  "DeploymentType": {
+   "enum": [
+    "SINGLE_AZ",
+    "WITH_MULTIAZ_STANDBY"
+   ],
+   "type": "string"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "InfluxAuthParametersSecretArn": {
+   "pattern": "^arn:[a-z]*:secretsmanager:[a-z\\-0-9]*:[0-9]*:secret:[a-zA-Z0-9\\-]*",
+   "type": "string"
+  },
+  "LogDeliveryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Configuration": {
+     "additionalProperties": false,
+     "properties": {
+      "BucketName": {
+       "maxLength": 63,
+       "minLength": 3,
+       "pattern": "^[0-9a-z]+[0-9a-z\\.\\-]*[0-9a-z]+$",
+       "type": "string"
+      },
+      "Enabled": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "Enabled",
+      "BucketName"
+     ],
+     "type": "object"
+    }
+   },
+   "required": [
+    "S3Configuration"
+   ],
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 40,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$",
+   "type": "string"
+  },
+  "Organization": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Password": {
+   "maxLength": 64,
+   "minLength": 8,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "Port": {
+   "maximum": 65535,
+   "minimum": 1024,
+   "type": "integer"
+  },
+  "PubliclyAccessible": {
+   "default": false,
+   "type": "boolean"
+  },
+  "SecondaryAvailabilityZone": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "AVAILABLE",
+    "DELETING",
+    "MODIFYING",
+    "UPDATING",
+    "UPDATING_DEPLOYMENT_TYPE",
+    "UPDATING_INSTANCE_TYPE",
+    "DELETED",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Username": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "VpcSecurityGroupIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcSubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/AvailabilityZone",
+  "/properties/Endpoint",
+  "/properties/SecondaryAvailabilityZone",
+  "/properties/InfluxAuthParametersSecretArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-timestream.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Timestream::InfluxDBInstance",
+ "writeOnlyProperties": [
+  "/properties/Username",
+  "/properties/Password",
+  "/properties/Organization",
+  "/properties/Bucket"
+ ]
+}

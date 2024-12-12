@@ -5,6 +5,7 @@
   "/properties/EngineType",
   "/properties/KmsKeyId",
   "/properties/Name",
+  "/properties/NetworkType",
   "/properties/PubliclyAccessible",
   "/properties/SecurityGroupIds",
   "/properties/StorageConfigurations",
@@ -67,6 +68,13 @@
     "DesiredCapacity"
    ],
    "type": "object"
+  },
+  "NetworkType": {
+   "enum": [
+    "ipv4",
+    "dual"
+   ],
+   "type": "string"
   },
   "StorageConfiguration": {
    "oneOf": [
@@ -147,6 +155,9 @@
   "Name": {
    "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
    "type": "string"
+  },
+  "NetworkType": {
+   "$ref": "#/definitions/NetworkType"
   },
   "PreferredMaintenanceWindow": {
    "pattern": "^\\S{1,50}$",
