@@ -163,6 +163,18 @@ def context(cfn):
             [],
         ),
         (
+            "Valid Fn::Sub with a space and escape char",
+            {"Fn::Sub": "${ !Foo }"},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid Fn::Sub with a space and no escape char",
+            {"Fn::Sub": "${ AWS::AccountId }"},
+            {"type": "string"},
+            [],
+        ),
+        (
             "Invalid Fn::Sub with a too to many elements",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
             {"type": "string"},
