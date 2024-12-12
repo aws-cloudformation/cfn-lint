@@ -151,6 +151,10 @@ class Transform:
         if "AWS::LanguageExtensions" in transforms:
             parameters = {}
             for k, v in self._template.get("Parameters", {}).items():
+                p_type = v.get("Type")
+                if isinstance(p_type, str):
+                    if p_type.startswith("AWS::SSM::Parameter::"):
+                        continue
                 if isinstance(v, dict) and v.get("Default"):
                     parameters[k] = v.get("Default")
 
