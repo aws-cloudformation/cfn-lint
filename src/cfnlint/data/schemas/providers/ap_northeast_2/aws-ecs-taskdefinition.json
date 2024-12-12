@@ -1,0 +1,1044 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Family",
+  "/properties/ContainerDefinitions",
+  "/properties/Cpu",
+  "/properties/ExecutionRoleArn",
+  "/properties/InferenceAccelerators",
+  "/properties/Memory",
+  "/properties/NetworkMode",
+  "/properties/PlacementConstraints",
+  "/properties/ProxyConfiguration",
+  "/properties/RequiresCompatibilities",
+  "/properties/RuntimePlatform",
+  "/properties/TaskRoleArn",
+  "/properties/Volumes",
+  "/properties/PidMode",
+  "/properties/IpcMode",
+  "/properties/EphemeralStorage"
+ ],
+ "definitions": {
+  "AuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessPointId": {
+     "type": "string"
+    },
+    "IAM": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Cpu": {
+     "type": "integer"
+    },
+    "CredentialSpecs": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DependsOn": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerDependency"
+     },
+     "type": "array"
+    },
+    "DisableNetworking": {
+     "type": "boolean"
+    },
+    "DnsSearchDomains": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DnsServers": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "DockerLabels": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DockerSecurityOptions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "EntryPoint": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Environment": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array",
+     "uniqueItems": true,
+     "uniqueKeys": [
+      "Name"
+     ]
+    },
+    "EnvironmentFiles": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/EnvironmentFile"
+     },
+     "type": "array"
+    },
+    "Essential": {
+     "type": "boolean"
+    },
+    "ExtraHosts": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/HostEntry"
+     },
+     "type": "array"
+    },
+    "FirelensConfiguration": {
+     "$ref": "#/definitions/FirelensConfiguration"
+    },
+    "HealthCheck": {
+     "$ref": "#/definitions/HealthCheck"
+    },
+    "Hostname": {
+     "type": "string"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "Interactive": {
+     "type": "boolean"
+    },
+    "Links": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "LinuxParameters": {
+     "$ref": "#/definitions/LinuxParameters"
+    },
+    "LogConfiguration": {
+     "$ref": "#/definitions/LogConfiguration"
+    },
+    "Memory": {
+     "type": "integer"
+    },
+    "MemoryReservation": {
+     "type": "integer"
+    },
+    "MountPoints": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/MountPoint"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "PortMappings": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PortMapping"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Privileged": {
+     "type": "boolean"
+    },
+    "PseudoTerminal": {
+     "type": "boolean"
+    },
+    "ReadonlyRootFilesystem": {
+     "type": "boolean"
+    },
+    "RepositoryCredentials": {
+     "$ref": "#/definitions/RepositoryCredentials"
+    },
+    "ResourceRequirements": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ResourceRequirement"
+     },
+     "type": "array"
+    },
+    "RestartPolicy": {
+     "$ref": "#/definitions/RestartPolicy"
+    },
+    "Secrets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array"
+    },
+    "StartTimeout": {
+     "type": "integer"
+    },
+    "StopTimeout": {
+     "type": "integer"
+    },
+    "SystemControls": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SystemControl"
+     },
+     "type": "array"
+    },
+    "Ulimits": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Ulimit"
+     },
+     "type": "array"
+    },
+    "User": {
+     "type": "string"
+    },
+    "VersionConsistency": {
+     "default": "enabled",
+     "enum": [
+      "enabled",
+      "disabled"
+     ],
+     "type": "string"
+    },
+    "VolumesFrom": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/VolumeFrom"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "WorkingDirectory": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Image"
+   ],
+   "type": "object"
+  },
+  "ContainerDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "enum": [
+      "COMPLETE",
+      "HEALTHY",
+      "START",
+      "SUCCESS"
+     ],
+     "type": "string"
+    },
+    "ContainerName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Device": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "HostPath": {
+     "type": "string"
+    },
+    "Permissions": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "mknod",
+       "read",
+       "write"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "DockerVolumeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Autoprovision": {
+     "type": "boolean"
+    },
+    "Driver": {
+     "type": "string"
+    },
+    "DriverOpts": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Labels": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Scope": {
+     "enum": [
+      "shared",
+      "task"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EFSVolumeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/AuthorizationConfig"
+    },
+    "FilesystemId": {
+     "type": "string"
+    },
+    "RootDirectory": {
+     "type": "string"
+    },
+    "TransitEncryption": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TransitEncryptionPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FilesystemId"
+   ],
+   "type": "object"
+  },
+  "EnvironmentFile": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "s3"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EphemeralStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "SizeInGiB": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "FSxAuthorizationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialsParameter": {
+     "type": "string"
+    },
+    "Domain": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CredentialsParameter",
+    "Domain"
+   ],
+   "type": "object"
+  },
+  "FSxWindowsFileServerVolumeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationConfig": {
+     "$ref": "#/definitions/FSxAuthorizationConfig"
+    },
+    "FileSystemId": {
+     "type": "string"
+    },
+    "RootDirectory": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId",
+    "RootDirectory"
+   ],
+   "type": "object"
+  },
+  "FirelensConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Options": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "enum": [
+      "fluentbit",
+      "fluentd"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HealthCheck": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Interval": {
+     "type": "integer"
+    },
+    "Retries": {
+     "type": "integer"
+    },
+    "StartPeriod": {
+     "type": "integer"
+    },
+    "Timeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "HostEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Hostname": {
+     "type": "string"
+    },
+    "IpAddress": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "HostVolumeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "SourcePath": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InferenceAccelerator": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "DeviceType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KernelCapabilities": {
+   "additionalProperties": false,
+   "properties": {
+    "Add": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Drop": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "KeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LinuxParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Capabilities": {
+     "$ref": "#/definitions/KernelCapabilities"
+    },
+    "Devices": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Device"
+     },
+     "type": "array"
+    },
+    "InitProcessEnabled": {
+     "type": "boolean"
+    },
+    "MaxSwap": {
+     "type": "integer"
+    },
+    "SharedMemorySize": {
+     "type": "integer"
+    },
+    "Swappiness": {
+     "type": "integer"
+    },
+    "Tmpfs": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tmpfs"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LogDriver": {
+     "enum": [
+      "awsfirelens",
+      "awslogs",
+      "fluentd",
+      "gelf",
+      "journald",
+      "json-file",
+      "splunk",
+      "syslog"
+     ],
+     "type": "string"
+    },
+    "Options": {
+     "additionalProperties": false,
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SecretOptions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Secret"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "LogDriver"
+   ],
+   "type": "object"
+  },
+  "MountPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "ReadOnly": {
+     "type": "boolean"
+    },
+    "SourceVolume": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PortMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AppProtocol": {
+     "enum": [
+      "http",
+      "http2",
+      "grpc"
+     ],
+     "type": "string"
+    },
+    "ContainerPort": {
+     "type": "integer"
+    },
+    "ContainerPortRange": {
+     "type": "string"
+    },
+    "HostPort": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "tcp",
+      "udp"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProxyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "type": "string"
+    },
+    "ProxyConfigurationProperties": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/KeyValuePair"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Type": {
+     "enum": [
+      "APPMESH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContainerName"
+   ],
+   "type": "object"
+  },
+  "RepositoryCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "CredentialsParameter": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceRequirement": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "GPU",
+      "InferenceAccelerator"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RestartPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "IgnoredExitCodes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "integer"
+     },
+     "type": "array"
+    },
+    "RestartAttemptPeriod": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RuntimePlatform": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuArchitecture": {
+     "enum": [
+      "ARM64",
+      "X86_64"
+     ],
+     "type": "string"
+    },
+    "OperatingSystemFamily": {
+     "enum": [
+      "LINUX",
+      "WINDOWS_SERVER_2004_CORE",
+      "WINDOWS_SERVER_2016_FULL",
+      "WINDOWS_SERVER_2019_CORE",
+      "WINDOWS_SERVER_2019_FULL",
+      "WINDOWS_SERVER_2022_CORE",
+      "WINDOWS_SERVER_2022_FULL",
+      "WINDOWS_SERVER_20H2_CORE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Secret": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "ValueFrom": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "ValueFrom"
+   ],
+   "type": "object"
+  },
+  "SystemControl": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TaskDefinitionPlacementConstraint": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "memberOf"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tmpfs": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPath": {
+     "type": "string"
+    },
+    "MountOptions": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Size": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Size"
+   ],
+   "type": "object"
+  },
+  "Ulimit": {
+   "additionalProperties": false,
+   "properties": {
+    "HardLimit": {
+     "type": "integer"
+    },
+    "Name": {
+     "enum": [
+      "core",
+      "cpu",
+      "data",
+      "fsize",
+      "locks",
+      "memlock",
+      "msgqueue",
+      "nice",
+      "nofile",
+      "nproc",
+      "rss",
+      "rtprio",
+      "rttime",
+      "sigpending",
+      "stack"
+     ],
+     "type": "string"
+    },
+    "SoftLimit": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "HardLimit",
+    "Name",
+    "SoftLimit"
+   ],
+   "type": "object"
+  },
+  "Volume": {
+   "additionalProperties": false,
+   "properties": {
+    "ConfiguredAtLaunch": {
+     "type": "boolean"
+    },
+    "DockerVolumeConfiguration": {
+     "$ref": "#/definitions/DockerVolumeConfiguration"
+    },
+    "EFSVolumeConfiguration": {
+     "$ref": "#/definitions/EFSVolumeConfiguration"
+    },
+    "FSxWindowsFileServerVolumeConfiguration": {
+     "$ref": "#/definitions/FSxWindowsFileServerVolumeConfiguration"
+    },
+    "Host": {
+     "$ref": "#/definitions/HostVolumeProperties"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VolumeFrom": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadOnly": {
+     "type": "boolean"
+    },
+    "SourceContainer": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TaskDefinitionArn"
+ ],
+ "properties": {
+  "ContainerDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Cpu": {
+   "type": "string"
+  },
+  "EphemeralStorage": {
+   "$ref": "#/definitions/EphemeralStorage"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "Family": {
+   "type": "string"
+  },
+  "InferenceAccelerators": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InferenceAccelerator"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IpcMode": {
+   "enum": [
+    "host",
+    "none",
+    "task"
+   ],
+   "type": "string"
+  },
+  "Memory": {
+   "type": "string"
+  },
+  "NetworkMode": {
+   "enum": [
+    "awsvpc",
+    "bridge",
+    "host",
+    "none"
+   ],
+   "type": "string"
+  },
+  "PidMode": {
+   "enum": [
+    "host",
+    "task"
+   ],
+   "type": "string"
+  },
+  "PlacementConstraints": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TaskDefinitionPlacementConstraint"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ProxyConfiguration": {
+   "$ref": "#/definitions/ProxyConfiguration"
+  },
+  "RequiresCompatibilities": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "EC2",
+     "EXTERNAL",
+     "FARGATE"
+    ],
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RuntimePlatform": {
+   "$ref": "#/definitions/RuntimePlatform"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TaskDefinitionArn": {
+   "type": "string"
+  },
+  "TaskRoleArn": {
+   "type": "string"
+  },
+  "Volumes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Volume"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/TaskRoleArn": "TaskRoleArn $OR $split(TaskRoleArn, \"role/\")[-1]"
+ },
+ "readOnlyProperties": [
+  "/properties/TaskDefinitionArn"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ECS::TaskDefinition"
+}

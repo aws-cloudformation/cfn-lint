@@ -12,14 +12,14 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Arn"
  ],
  "properties": {
   "AllowExternalPrincipals": {
@@ -28,54 +28,65 @@
   "Arn": {
    "type": "string"
   },
-  "Id": {
-   "type": "string"
-  },
   "Name": {
    "type": "string"
   },
   "PermissionArns": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "Principals": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "ResourceArns": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "Sources": {
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "array"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
-  "/properties/Id",
   "/properties/Arn"
  ],
  "required": [
   "Name"
  ],
- "typeName": "AWS::RAM::ResourceShare"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ram",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RAM::ResourceShare",
+ "writeOnlyProperties": [
+  "/properties/PermissionArns",
+  "/properties/Principals",
+  "/properties/ResourceArns",
+  "/properties/Sources"
+ ]
 }

@@ -51,6 +51,9 @@
      "type": "array",
      "uniqueItems": false
     },
+    "GrpcConfig": {
+     "$ref": "#/definitions/GrpcConfig"
+    },
     "LambdaFunctionAssociations": {
      "items": {
       "$ref": "#/definitions/LambdaFunctionAssociation"
@@ -288,6 +291,9 @@
      },
      "type": "array",
      "uniqueItems": false
+    },
+    "GrpcConfig": {
+     "$ref": "#/definitions/GrpcConfig"
     },
     "LambdaFunctionAssociations": {
      "items": {
@@ -795,6 +801,18 @@
    ],
    "type": "object"
   },
+  "GrpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
   "LambdaFunctionAssociation": {
    "additionalProperties": false,
    "properties": {
@@ -884,9 +902,6 @@
      "type": "string"
     }
    },
-   "required": [
-    "Bucket"
-   ],
    "type": "object"
   },
   "Origin": {
@@ -969,6 +984,9 @@
     },
     "Members": {
      "$ref": "#/definitions/OriginGroupMembers"
+    },
+    "SelectionCriteria": {
+     "$ref": "#/definitions/OriginGroupSelectionCriteria"
     }
    },
    "required": [
@@ -1021,6 +1039,13 @@
     "Items"
    ],
    "type": "object"
+  },
+  "OriginGroupSelectionCriteria": {
+   "enum": [
+    "default",
+    "media-quality-based"
+   ],
+   "type": "string"
   },
   "OriginGroups": {
    "additionalProperties": false,

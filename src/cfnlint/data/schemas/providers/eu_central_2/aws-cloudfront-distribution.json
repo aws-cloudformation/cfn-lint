@@ -1,0 +1,1202 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "CacheBehavior": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedMethods": {
+     "default": [
+      "GET",
+      "HEAD"
+     ],
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CachePolicyId": {
+     "type": "string"
+    },
+    "CachedMethods": {
+     "default": [
+      "GET",
+      "HEAD"
+     ],
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Compress": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DefaultTTL": {
+     "default": 86400,
+     "type": "number"
+    },
+    "FieldLevelEncryptionId": {
+     "default": "",
+     "type": "string"
+    },
+    "ForwardedValues": {
+     "$ref": "#/definitions/ForwardedValues"
+    },
+    "FunctionAssociations": {
+     "items": {
+      "$ref": "#/definitions/FunctionAssociation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LambdaFunctionAssociations": {
+     "items": {
+      "$ref": "#/definitions/LambdaFunctionAssociation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaxTTL": {
+     "default": 31536000,
+     "type": "number"
+    },
+    "MinTTL": {
+     "default": 0,
+     "type": "number"
+    },
+    "OriginRequestPolicyId": {
+     "type": "string"
+    },
+    "PathPattern": {
+     "type": "string"
+    },
+    "RealtimeLogConfigArn": {
+     "type": "string"
+    },
+    "ResponseHeadersPolicyId": {
+     "type": "string"
+    },
+    "SmoothStreaming": {
+     "default": false,
+     "type": "boolean"
+    },
+    "TargetOriginId": {
+     "type": "string"
+    },
+    "TrustedKeyGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TrustedSigners": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ViewerProtocolPolicy": {
+     "enum": [
+      "allow-all",
+      "https-only",
+      "redirect-to-https"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "PathPattern",
+    "TargetOriginId",
+    "ViewerProtocolPolicy"
+   ],
+   "type": "object"
+  },
+  "Cookies": {
+   "additionalProperties": false,
+   "properties": {
+    "Forward": {
+     "enum": [
+      "all",
+      "none",
+      "whitelist"
+     ],
+     "type": "string"
+    },
+    "WhitelistedNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Forward"
+   ],
+   "type": "object"
+  },
+  "CustomErrorResponse": {
+   "additionalProperties": false,
+   "dependentRequired": {
+    "ResponseCode": [
+     "ResponsePagePath"
+    ]
+   },
+   "properties": {
+    "ErrorCachingMinTTL": {
+     "default": 300,
+     "type": "number"
+    },
+    "ErrorCode": {
+     "enum": [
+      400,
+      403,
+      404,
+      405,
+      414,
+      416,
+      500,
+      501,
+      502,
+      503,
+      504
+     ],
+     "type": "integer"
+    },
+    "ResponseCode": {
+     "enum": [
+      200,
+      400,
+      403,
+      404,
+      405,
+      414,
+      416,
+      500,
+      501,
+      502,
+      503,
+      504
+     ],
+     "type": "integer"
+    },
+    "ResponsePagePath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ErrorCode"
+   ],
+   "type": "object"
+  },
+  "CustomOriginConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "HTTPPort": {
+     "default": 80,
+     "type": "integer"
+    },
+    "HTTPSPort": {
+     "default": 443,
+     "type": "integer"
+    },
+    "OriginKeepaliveTimeout": {
+     "default": 5,
+     "type": "integer"
+    },
+    "OriginProtocolPolicy": {
+     "type": "string"
+    },
+    "OriginReadTimeout": {
+     "default": 30,
+     "type": "integer"
+    },
+    "OriginSSLProtocols": {
+     "default": [
+      "TLSv1",
+      "SSLv3"
+     ],
+     "items": {
+      "enum": [
+       "SSLv3",
+       "TLSv1",
+       "TLSv1.1",
+       "TLSv1.2"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "OriginProtocolPolicy"
+   ],
+   "type": "object"
+  },
+  "DefaultCacheBehavior": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedMethods": {
+     "default": [
+      "GET",
+      "HEAD"
+     ],
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CachePolicyId": {
+     "default": "",
+     "type": "string"
+    },
+    "CachedMethods": {
+     "default": [
+      "GET",
+      "HEAD"
+     ],
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Compress": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DefaultTTL": {
+     "default": 86400,
+     "type": "number"
+    },
+    "FieldLevelEncryptionId": {
+     "default": "",
+     "type": "string"
+    },
+    "ForwardedValues": {
+     "$ref": "#/definitions/ForwardedValues"
+    },
+    "FunctionAssociations": {
+     "items": {
+      "$ref": "#/definitions/FunctionAssociation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LambdaFunctionAssociations": {
+     "items": {
+      "$ref": "#/definitions/LambdaFunctionAssociation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaxTTL": {
+     "default": 31536000,
+     "type": "number"
+    },
+    "MinTTL": {
+     "default": 0,
+     "type": "number"
+    },
+    "OriginRequestPolicyId": {
+     "default": "",
+     "type": "string"
+    },
+    "RealtimeLogConfigArn": {
+     "default": "",
+     "type": "string"
+    },
+    "ResponseHeadersPolicyId": {
+     "default": "",
+     "type": "string"
+    },
+    "SmoothStreaming": {
+     "default": false,
+     "type": "boolean"
+    },
+    "TargetOriginId": {
+     "type": "string"
+    },
+    "TrustedKeyGroups": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "TrustedSigners": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ViewerProtocolPolicy": {
+     "enum": [
+      "allow-all",
+      "https-only",
+      "redirect-to-https"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetOriginId",
+    "ViewerProtocolPolicy"
+   ],
+   "type": "object"
+  },
+  "DistributionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Aliases": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CNAMEs": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CacheBehaviors": {
+     "items": {
+      "$ref": "#/definitions/CacheBehavior"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Comment": {
+     "default": "",
+     "type": "string"
+    },
+    "ContinuousDeploymentPolicyId": {
+     "type": "string"
+    },
+    "CustomErrorResponses": {
+     "items": {
+      "$ref": "#/definitions/CustomErrorResponse"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "CustomOrigin": {
+     "$ref": "#/definitions/LegacyCustomOrigin"
+    },
+    "DefaultCacheBehavior": {
+     "$ref": "#/definitions/DefaultCacheBehavior"
+    },
+    "DefaultRootObject": {
+     "default": "",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "HttpVersion": {
+     "default": "http1.1",
+     "enum": [
+      "http1.1",
+      "http2",
+      "http2and3",
+      "http3"
+     ],
+     "type": "string"
+    },
+    "IPV6Enabled": {
+     "type": "boolean"
+    },
+    "Logging": {
+     "$ref": "#/definitions/Logging"
+    },
+    "OriginGroups": {
+     "$ref": "#/definitions/OriginGroups"
+    },
+    "Origins": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Origin"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "PriceClass": {
+     "default": "PriceClass_All",
+     "enum": [
+      "PriceClass_100",
+      "PriceClass_200",
+      "PriceClass_All"
+     ],
+     "type": "string"
+    },
+    "Restrictions": {
+     "$ref": "#/definitions/Restrictions",
+     "default": {
+      "GeoRestriction": {
+       "RestrictionType": "none"
+      }
+     }
+    },
+    "S3Origin": {
+     "$ref": "#/definitions/LegacyS3Origin"
+    },
+    "Staging": {
+     "type": "boolean"
+    },
+    "ViewerCertificate": {
+     "$ref": "#/definitions/ViewerCertificate",
+     "default": {
+      "CloudFrontDefaultCertificate": true
+     }
+    },
+    "WebACLId": {
+     "default": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled",
+    "DefaultCacheBehavior"
+   ],
+   "type": "object"
+  },
+  "ForwardedValues": {
+   "additionalProperties": false,
+   "properties": {
+    "Cookies": {
+     "$ref": "#/definitions/Cookies",
+     "default": {
+      "Forward": "none"
+     }
+    },
+    "Headers": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "QueryString": {
+     "type": "boolean"
+    },
+    "QueryStringCacheKeys": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "QueryString"
+   ],
+   "type": "object"
+  },
+  "FunctionAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "EventType": {
+     "enum": [
+      "origin-request",
+      "origin-response",
+      "viewer-request",
+      "viewer-response"
+     ],
+     "type": "string"
+    },
+    "FunctionARN": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "GeoRestriction": {
+   "additionalProperties": false,
+   "properties": {
+    "Locations": {
+     "items": {
+      "enum": [
+       "AD",
+       "AE",
+       "AF",
+       "AG",
+       "AI",
+       "AL",
+       "AM",
+       "AO",
+       "AQ",
+       "AR",
+       "AS",
+       "AT",
+       "AU",
+       "AW",
+       "AX",
+       "AZ",
+       "BA",
+       "BB",
+       "BD",
+       "BE",
+       "BF",
+       "BG",
+       "BH",
+       "BI",
+       "BJ",
+       "BL",
+       "BM",
+       "BN",
+       "BO",
+       "BQ",
+       "BR",
+       "BS",
+       "BT",
+       "BV",
+       "BW",
+       "BY",
+       "BZ",
+       "CA",
+       "CC",
+       "CD",
+       "CF",
+       "CG",
+       "CH",
+       "CI",
+       "CK",
+       "CL",
+       "CM",
+       "CN",
+       "CO",
+       "CR",
+       "CU",
+       "CV",
+       "CW",
+       "CX",
+       "CY",
+       "CZ",
+       "DE",
+       "DJ",
+       "DK",
+       "DM",
+       "DO",
+       "DZ",
+       "EC",
+       "EE",
+       "EG",
+       "EH",
+       "ER",
+       "ES",
+       "ET",
+       "FI",
+       "FJ",
+       "FK",
+       "FM",
+       "FO",
+       "FR",
+       "GA",
+       "GB",
+       "GD",
+       "GE",
+       "GF",
+       "GG",
+       "GH",
+       "GI",
+       "GL",
+       "GM",
+       "GN",
+       "GP",
+       "GQ",
+       "GR",
+       "GS",
+       "GT",
+       "GU",
+       "GW",
+       "GY",
+       "HK",
+       "HM",
+       "HN",
+       "HR",
+       "HT",
+       "HU",
+       "ID",
+       "IE",
+       "IL",
+       "IM",
+       "IN",
+       "IO",
+       "IQ",
+       "IR",
+       "IS",
+       "IT",
+       "JE",
+       "JM",
+       "JO",
+       "JP",
+       "KE",
+       "KG",
+       "KH",
+       "KI",
+       "KM",
+       "KN",
+       "KP",
+       "KR",
+       "KW",
+       "KY",
+       "KZ",
+       "LA",
+       "LB",
+       "LC",
+       "LI",
+       "LK",
+       "LR",
+       "LS",
+       "LT",
+       "LU",
+       "LV",
+       "LY",
+       "MA",
+       "MC",
+       "MD",
+       "ME",
+       "MF",
+       "MG",
+       "MH",
+       "MK",
+       "ML",
+       "MM",
+       "MN",
+       "MO",
+       "MP",
+       "MQ",
+       "MR",
+       "MS",
+       "MT",
+       "MU",
+       "MV",
+       "MW",
+       "MX",
+       "MY",
+       "MZ",
+       "NA",
+       "NC",
+       "NE",
+       "NF",
+       "NG",
+       "NI",
+       "NL",
+       "NO",
+       "NP",
+       "NR",
+       "NU",
+       "NZ",
+       "OM",
+       "PA",
+       "PE",
+       "PF",
+       "PG",
+       "PH",
+       "PK",
+       "PL",
+       "PM",
+       "PN",
+       "PR",
+       "PS",
+       "PT",
+       "PW",
+       "PY",
+       "QA",
+       "RE",
+       "RO",
+       "RS",
+       "RU",
+       "RW",
+       "SA",
+       "SB",
+       "SC",
+       "SD",
+       "SE",
+       "SG",
+       "SH",
+       "SI",
+       "SJ",
+       "SK",
+       "SL",
+       "SM",
+       "SN",
+       "SO",
+       "SR",
+       "SS",
+       "ST",
+       "SV",
+       "SX",
+       "SY",
+       "SZ",
+       "TC",
+       "TD",
+       "TF",
+       "TG",
+       "TH",
+       "TJ",
+       "TK",
+       "TL",
+       "TM",
+       "TN",
+       "TO",
+       "TR",
+       "TT",
+       "TV",
+       "TW",
+       "TZ",
+       "UA",
+       "UG",
+       "UM",
+       "US",
+       "UY",
+       "UZ",
+       "VA",
+       "VC",
+       "VE",
+       "VG",
+       "VI",
+       "VN",
+       "VU",
+       "WF",
+       "WS",
+       "YE",
+       "YT",
+       "ZA",
+       "ZM",
+       "ZW"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RestrictionType": {
+     "enum": [
+      "blacklist",
+      "none",
+      "whitelist"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RestrictionType"
+   ],
+   "type": "object"
+  },
+  "LambdaFunctionAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "EventType": {
+     "type": "string"
+    },
+    "IncludeBody": {
+     "type": "boolean"
+    },
+    "LambdaFunctionARN": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LegacyCustomOrigin": {
+   "additionalProperties": false,
+   "properties": {
+    "DNSName": {
+     "type": "string"
+    },
+    "HTTPPort": {
+     "default": 80,
+     "type": "integer"
+    },
+    "HTTPSPort": {
+     "default": 443,
+     "type": "integer"
+    },
+    "OriginProtocolPolicy": {
+     "enum": [
+      "http-only",
+      "https-only",
+      "match-viewer"
+     ],
+     "type": "string"
+    },
+    "OriginSSLProtocols": {
+     "items": {
+      "enum": [
+       "SSLv3",
+       "TLSv1",
+       "TLSv1.1",
+       "TLSv1.2"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "DNSName",
+    "OriginProtocolPolicy",
+    "OriginSSLProtocols"
+   ],
+   "type": "object"
+  },
+  "LegacyS3Origin": {
+   "additionalProperties": false,
+   "properties": {
+    "DNSName": {
+     "type": "string"
+    },
+    "OriginAccessIdentity": {
+     "default": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DNSName"
+   ],
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "IncludeCookies": {
+     "default": false,
+     "type": "boolean"
+    },
+    "Prefix": {
+     "default": "",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "Origin": {
+   "additionalProperties": false,
+   "dependentExcluded": {
+    "CustomOriginConfig": [
+     "S3OriginConfig"
+    ],
+    "S3OriginConfig": [
+     "CustomOriginConfig"
+    ]
+   },
+   "properties": {
+    "ConnectionAttempts": {
+     "type": "integer"
+    },
+    "ConnectionTimeout": {
+     "type": "integer"
+    },
+    "CustomOriginConfig": {
+     "$ref": "#/definitions/CustomOriginConfig"
+    },
+    "DomainName": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "OriginAccessControlId": {
+     "type": "string"
+    },
+    "OriginCustomHeaders": {
+     "items": {
+      "$ref": "#/definitions/OriginCustomHeader"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "OriginPath": {
+     "default": "",
+     "type": "string"
+    },
+    "OriginShield": {
+     "$ref": "#/definitions/OriginShield"
+    },
+    "S3OriginConfig": {
+     "$ref": "#/definitions/S3OriginConfig"
+    }
+   },
+   "required": [
+    "DomainName",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "OriginCustomHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "HeaderName": {
+     "type": "string"
+    },
+    "HeaderValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HeaderValue",
+    "HeaderName"
+   ],
+   "type": "object"
+  },
+  "OriginGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "FailoverCriteria": {
+     "$ref": "#/definitions/OriginGroupFailoverCriteria"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Members": {
+     "$ref": "#/definitions/OriginGroupMembers"
+    }
+   },
+   "required": [
+    "Id",
+    "FailoverCriteria",
+    "Members"
+   ],
+   "type": "object"
+  },
+  "OriginGroupFailoverCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "StatusCodes": {
+     "$ref": "#/definitions/StatusCodes"
+    }
+   },
+   "required": [
+    "StatusCodes"
+   ],
+   "type": "object"
+  },
+  "OriginGroupMember": {
+   "additionalProperties": false,
+   "properties": {
+    "OriginId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "OriginId"
+   ],
+   "type": "object"
+  },
+  "OriginGroupMembers": {
+   "additionalProperties": false,
+   "properties": {
+    "Items": {
+     "items": {
+      "$ref": "#/definitions/OriginGroupMember"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Quantity": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Quantity",
+    "Items"
+   ],
+   "type": "object"
+  },
+  "OriginGroups": {
+   "additionalProperties": false,
+   "properties": {
+    "Items": {
+     "items": {
+      "$ref": "#/definitions/OriginGroup"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Quantity": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Quantity"
+   ],
+   "type": "object"
+  },
+  "OriginShield": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "OriginShieldRegion": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Restrictions": {
+   "additionalProperties": false,
+   "properties": {
+    "GeoRestriction": {
+     "$ref": "#/definitions/GeoRestriction"
+    }
+   },
+   "required": [
+    "GeoRestriction"
+   ],
+   "type": "object"
+  },
+  "S3OriginConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OriginAccessIdentity": {
+     "default": "",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "StatusCodes": {
+   "additionalProperties": false,
+   "properties": {
+    "Items": {
+     "items": {
+      "type": "integer"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Quantity": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Quantity",
+    "Items"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ViewerCertificate": {
+   "additionalProperties": false,
+   "dependentRequired": {
+    "AcmCertificateArn": [
+     "SslSupportMethod"
+    ],
+    "IamCertificateId": [
+     "SslSupportMethod"
+    ]
+   },
+   "properties": {
+    "AcmCertificateArn": {
+     "type": "string"
+    },
+    "CloudFrontDefaultCertificate": {
+     "type": "boolean"
+    },
+    "IamCertificateId": {
+     "type": "string"
+    },
+    "MinimumProtocolVersion": {
+     "enum": [
+      "SSLv3",
+      "TLSv1",
+      "TLSv1.1_2016",
+      "TLSv1.2_2018",
+      "TLSv1.2_2019",
+      "TLSv1.2_2021",
+      "TLSv1_2016"
+     ],
+     "type": "string"
+    },
+    "SslSupportMethod": {
+     "enum": [
+      "sni-only",
+      "static-ip",
+      "vip"
+     ],
+     "type": "string"
+    }
+   },
+   "requiredXor": [
+    "AcmCertificateArn",
+    "CloudFrontDefaultCertificate",
+    "IamCertificateId"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/DistributionConfig/CustomOrigin",
+  "/properties/DistributionConfig/S3Origin"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "DistributionConfig": {
+   "$ref": "#/definitions/DistributionConfig"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/DomainName"
+ ],
+ "required": [
+  "DistributionConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFront::Distribution"
+}

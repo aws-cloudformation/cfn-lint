@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterId"
+ ],
+ "definitions": {
+  "ChannelPlacementGroupState": {
+   "enum": [
+    "UNASSIGNED",
+    "ASSIGNING",
+    "ASSIGNED",
+    "DELETING",
+    "DELETED",
+    "UNASSIGNING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/ClusterId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Channels": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ClusterId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Nodes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "State": {
+   "$ref": "#/definitions/ChannelPlacementGroupState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Channels",
+  "/properties/Id",
+  "/properties/State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::ChannelPlacementGroup"
+}

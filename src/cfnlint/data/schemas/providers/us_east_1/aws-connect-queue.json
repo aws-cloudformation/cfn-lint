@@ -31,6 +31,19 @@
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:phone-number/[-a-zA-Z0-9]*$",
    "type": "string"
   },
+  "OutboundEmailAddressId": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/email-address/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "OutboundEmailConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "OutboundEmailAddressId": {
+     "$ref": "#/definitions/OutboundEmailAddressId"
+    }
+   },
+   "type": "object"
+  },
   "OutboundFlowArn": {
    "maxLength": 500,
    "minLength": 1,
@@ -91,6 +104,9 @@
   },
   "OutboundCallerConfig": {
    "$ref": "#/definitions/OutboundCallerConfig"
+  },
+  "OutboundEmailConfig": {
+   "$ref": "#/definitions/OutboundEmailConfig"
   },
   "QueueArn": {
    "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",

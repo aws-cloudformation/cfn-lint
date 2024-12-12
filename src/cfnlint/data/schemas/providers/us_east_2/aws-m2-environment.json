@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/EngineType",
+  "/properties/KmsKeyId",
+  "/properties/Name",
+  "/properties/PubliclyAccessible",
+  "/properties/SecurityGroupIds",
+  "/properties/StorageConfigurations",
+  "/properties/SubnetIds"
+ ],
+ "definitions": {
+  "EfsStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "pattern": "^\\S{1,200}$",
+     "type": "string"
+    },
+    "MountPoint": {
+     "pattern": "^\\S{1,200}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId",
+    "MountPoint"
+   ],
+   "type": "object"
+  },
+  "EngineType": {
+   "enum": [
+    "microfocus",
+    "bluage"
+   ],
+   "type": "string"
+  },
+  "FsxStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "pattern": "^\\S{1,200}$",
+     "type": "string"
+    },
+    "MountPoint": {
+     "pattern": "^\\S{1,200}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId",
+    "MountPoint"
+   ],
+   "type": "object"
+  },
+  "HighAvailabilityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredCapacity": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DesiredCapacity"
+   ],
+   "type": "object"
+  },
+  "StorageConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Efs": {
+       "$ref": "#/definitions/EfsStorageConfiguration"
+      }
+     },
+     "required": [
+      "Efs"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Fsx": {
+       "$ref": "#/definitions/FsxStorageConfiguration"
+      }
+     },
+     "required": [
+      "Fsx"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "maxProperties": 200,
+   "minProperties": 0,
+   "patternProperties": {
+    "^(?!aws:).+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentArn"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EngineType": {
+   "$ref": "#/definitions/EngineType"
+  },
+  "EngineVersion": {
+   "pattern": "^\\S{1,10}$",
+   "type": "string"
+  },
+  "EnvironmentArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "pattern": "^\\S{1,80}$",
+   "type": "string"
+  },
+  "HighAvailabilityConfig": {
+   "$ref": "#/definitions/HighAvailabilityConfig"
+  },
+  "InstanceType": {
+   "pattern": "^\\S{1,20}$",
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "pattern": "^\\S{1,50}$",
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "pattern": "^\\S{1,50}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "StorageConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StorageConfiguration"
+   },
+   "type": "array"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^\\S{1,50}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentArn",
+  "/properties/EnvironmentId"
+ ],
+ "required": [
+  "EngineType",
+  "InstanceType",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::M2::Environment"
+}

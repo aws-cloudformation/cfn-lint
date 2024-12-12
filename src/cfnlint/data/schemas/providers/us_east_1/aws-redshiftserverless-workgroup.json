@@ -59,6 +59,27 @@
    },
    "type": "object"
   },
+  "PerformanceTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Level": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Status": {
+     "$ref": "#/definitions/PerformanceTargetStatus"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceTargetStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -130,6 +151,9 @@
      "minLength": 3,
      "pattern": "^[a-z0-9-]+$",
      "type": "string"
+    },
+    "PricePerformanceTarget": {
+     "$ref": "#/definitions/PerformanceTarget"
     },
     "PubliclyAccessible": {
      "type": "boolean"
@@ -215,6 +239,10 @@
   },
   "Port": {
    "type": "integer"
+  },
+  "PricePerformanceTarget": {
+   "$ref": "#/definitions/PerformanceTarget",
+   "type": "object"
   },
   "PubliclyAccessible": {
    "default": false,

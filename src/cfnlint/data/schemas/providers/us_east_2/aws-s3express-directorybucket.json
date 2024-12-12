@@ -1,0 +1,196 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName",
+  "/properties/LocationName",
+  "/properties/DataRedundancy"
+ ],
+ "definitions": {
+  "AbortIncompleteMultipartUpload": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterInitiation": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "BucketEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerSideEncryptionConfiguration": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerSideEncryptionRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ServerSideEncryptionConfiguration"
+   ],
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "ObjectSizeGreaterThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "ObjectSizeLessThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionByDefault": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSMasterKeyID": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      }
+     ],
+     "type": "string"
+    },
+    "SSEAlgorithm": {
+     "enum": [
+      "aws:kms",
+      "AES256"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEAlgorithm"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketKeyEnabled": {
+     "type": "boolean"
+    },
+    "ServerSideEncryptionByDefault": {
+     "$ref": "#/definitions/ServerSideEncryptionByDefault"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BucketName"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "examples": [
+    "arn:aws:s3express:us-west-2:123456789123:bucket/DOC-EXAMPLE-BUCKET--usw2-az1--x-s3"
+   ]
+  },
+  "AvailabilityZoneName": {
+   "examples": [
+    "us-east-1f"
+   ],
+   "type": "string"
+  },
+  "BucketEncryption": {
+   "$ref": "#/definitions/BucketEncryption"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",
+   "type": "string"
+  },
+  "DataRedundancy": {
+   "enum": [
+    "SingleAvailabilityZone"
+   ],
+   "type": "string"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "LocationName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/AvailabilityZoneName"
+ ],
+ "required": [
+  "LocationName",
+  "DataRedundancy"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::S3Express::DirectoryBucket"
+}
