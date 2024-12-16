@@ -28,6 +28,10 @@ case_insensitive_services = [
     "batch",
 ]
 
+exceptions = {
+    "ses": ["/definitions/EventDestination/properties/MatchingEventTypes/items"]
+}
+
 
 def configure_logging():
     """Setup Logging"""
@@ -88,6 +92,9 @@ def build_resource_type_patches(
                         )
                         continue
                 if value:
+                    if patch.source[0] in exceptions:
+                        if path in exceptions[patch.source[0]]:
+                            continue
                     if patch.source[0] in case_insensitive_services and field == "enum":
                         field = "enumCaseInsensitive"
                         value = [v.lower() for v in value]

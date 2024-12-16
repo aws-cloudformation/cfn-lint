@@ -253,6 +253,35 @@
    ],
    "type": "object"
   },
+  "AthenaTableReference": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "OutputLocation": {
+     "maxLength": 1024,
+     "minLength": 8,
+     "type": "string"
+    },
+    "TableName": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "WorkGroup": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DatabaseName",
+    "TableName",
+    "WorkGroup"
+   ],
+   "type": "object"
+  },
   "ConfiguredTableAnalysisRulePolicy": {
    "additionalProperties": false,
    "properties": {
@@ -416,18 +445,130 @@
    ],
    "type": "string"
   },
-  "TableReference": {
+  "SnowflakeTableReference": {
    "additionalProperties": false,
    "properties": {
-    "Glue": {
-     "$ref": "#/definitions/GlueTableReference"
+    "AccountIdentifier": {
+     "maxLength": 256,
+     "minLength": 3,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SchemaName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SecretArn": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "TableName": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TableSchema": {
+     "$ref": "#/definitions/SnowflakeTableSchema"
     }
    },
    "required": [
-    "Glue"
+    "AccountIdentifier",
+    "DatabaseName",
+    "SchemaName",
+    "SecretArn",
+    "TableName",
+    "TableSchema"
    ],
-   "title": "Glue",
    "type": "object"
+  },
+  "SnowflakeTableSchema": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "V1": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/SnowflakeTableSchemaV1"
+       },
+       "maxItems": 250,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "required": [
+      "V1"
+     ],
+     "title": "V1",
+     "type": "object"
+    }
+   ]
+  },
+  "SnowflakeTableSchemaV1": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnName": {
+     "maxLength": 128,
+     "type": "string"
+    },
+    "ColumnType": {
+     "maxLength": 255,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ColumnName",
+    "ColumnType"
+   ],
+   "type": "object"
+  },
+  "TableReference": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Glue": {
+       "$ref": "#/definitions/GlueTableReference"
+      }
+     },
+     "required": [
+      "Glue"
+     ],
+     "title": "Glue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Snowflake": {
+       "$ref": "#/definitions/SnowflakeTableReference"
+      }
+     },
+     "required": [
+      "Snowflake"
+     ],
+     "title": "Snowflake",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Athena": {
+       "$ref": "#/definitions/AthenaTableReference"
+      }
+     },
+     "required": [
+      "Athena"
+     ],
+     "title": "Athena",
+     "type": "object"
+    }
+   ]
   },
   "Tag": {
    "additionalProperties": false,

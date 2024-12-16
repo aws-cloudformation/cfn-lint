@@ -4,6 +4,30 @@
   "/properties/Name"
  ],
  "definitions": {
+  "BurnRateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LookBackWindowMinutes": {
+     "maximum": 10080,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "LookBackWindowMinutes"
+   ],
+   "type": "object"
+  },
+  "BurnRateConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/BurnRateConfiguration"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
   "CalendarInterval": {
    "additionalProperties": false,
    "properties": {
@@ -340,6 +364,9 @@
   "Arn": {
    "pattern": "^arn:[^:]*:application-signals:[^:]*:[^:]*:slo\\/[0-9A-Za-z][-._0-9A-Za-z ]{0,126}[0-9A-Za-z]$",
    "type": "string"
+  },
+  "BurnRateConfigurations": {
+   "$ref": "#/definitions/BurnRateConfigurations"
   },
   "CreatedTime": {
    "minimum": 946684800,

@@ -6,9 +6,37 @@
  ],
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/PortalAuthMode"
+  "/properties/PortalAuthMode",
+  "/properties/PortalType"
  ],
  "definitions": {
+  "PortalTools": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "PortalTypeConfiguration": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-z][a-zA-Z0-9_]*$": {
+     "$ref": "#/definitions/PortalTypeEntry"
+    }
+   },
+   "type": "object"
+  },
+  "PortalTypeEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "PortalTools": {
+     "$ref": "#/definitions/PortalTools"
+    }
+   },
+   "required": [
+    "PortalTools"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -34,7 +62,7 @@
    "additionalProperties": false,
    "properties": {
     "AlarmRoleArn": {
-     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.]+$",
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.\\+=,@]+$",
      "type": "string"
     },
     "NotificationLambdaArn": {
@@ -45,7 +73,7 @@
    "type": "object"
   },
   "NotificationSenderEmail": {
-   "pattern": "[^@]+@[^@]+",
+   "pattern": "^[a-zA-Z0-9_\\-\\.\\+]+@[a-zA-Z0-9_\\-\\.\\+]+\\.[a-zA-Z]{2,}$",
    "type": "string"
   },
   "PortalArn": {
@@ -62,7 +90,7 @@
    "type": "string"
   },
   "PortalContactEmail": {
-   "pattern": "[^@]+@[^@]+",
+   "pattern": "^[a-zA-Z0-9_\\-\\.\\+]+@[a-zA-Z0-9_\\-\\.\\+]+\\.[a-zA-Z]{2,}$",
    "type": "string"
   },
   "PortalDescription": {
@@ -79,8 +107,18 @@
   "PortalStartUrl": {
    "type": "string"
   },
+  "PortalType": {
+   "enum": [
+    "SITEWISE_PORTAL_V1",
+    "SITEWISE_PORTAL_V2"
+   ],
+   "type": "string"
+  },
+  "PortalTypeConfiguration": {
+   "$ref": "#/definitions/PortalTypeConfiguration"
+  },
   "RoleArn": {
-   "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.]+$",
+   "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.\\+=,@]+$",
    "type": "string"
   },
   "Tags": {
@@ -104,9 +142,12 @@
   "RoleArn"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotsitewise.git",
- "taggable": true,
- "typeName": "AWS::IoTSiteWise::Portal",
- "writeOnlyProperties": [
-  "/properties/Tags"
- ]
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::Portal"
 }

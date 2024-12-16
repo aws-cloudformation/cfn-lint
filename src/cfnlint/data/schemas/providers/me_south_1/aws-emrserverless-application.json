@@ -1,0 +1,539 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Architecture",
+  "/properties/ReleaseLabel",
+  "/properties/WorkerTypeSpecifications",
+  "/properties/MaximumCapacity",
+  "/properties/InitialCapacity",
+  "/properties/AutoStartConfiguration",
+  "/properties/AutoStopConfiguration",
+  "/properties/NetworkConfiguration",
+  "/properties/ImageConfiguration",
+  "/properties/MonitoringConfiguration",
+  "/properties/RuntimeConfiguration",
+  "/properties/InteractiveConfiguration"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Architecture": {
+   "enum": [
+    "ARM64",
+    "X86_64"
+   ],
+   "type": "string"
+  },
+  "AutoStartConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "type": "boolean"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "AutoStopConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "type": "boolean"
+    },
+    "IdleTimeoutMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Classification": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "CloudWatchLoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": false,
+     "type": "boolean"
+    },
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn"
+    },
+    "LogGroupName": {
+     "$ref": "#/definitions/LogGroupName"
+    },
+    "LogStreamNamePrefix": {
+     "$ref": "#/definitions/LogStreamNamePrefix"
+    },
+    "LogTypeMap": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogTypeMapKeyValuePair"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   }
+  },
+  "ConfigurationList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConfigurationObject"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ConfigurationObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Classification": {
+     "$ref": "#/definitions/Classification"
+    },
+    "Configurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ConfigurationObject"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[a-zA-Z]+[-a-zA-Z0-9_.]*$": {
+       "$ref": "#/definitions/SensitivePropertiesMap"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "Classification"
+   ],
+   "type": "object"
+  },
+  "CpuSize": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(vCPU|vcpu|VCPU)?$",
+   "type": "string"
+  },
+  "DiskSize": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)$",
+   "type": "string"
+  },
+  "DiskType": {
+   "pattern": "^(SHUFFLE_OPTIMIZED|[Ss]huffle_[Oo]ptimized|STANDARD|[Ss]tandard)$",
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):kms:[a-zA-Z0-9\\-]*:(\\d{12})?:key\\/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "ImageConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageUri": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^([a-z0-9]+[a-z0-9-.]*)\\/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*\\/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)(?:\\:([a-zA-Z0-9_][a-zA-Z0-9-._]{0,299})|@(sha256:[0-9a-f]{64}))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InitialCapacityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "WorkerConfiguration": {
+     "$ref": "#/definitions/WorkerConfiguration"
+    },
+    "WorkerCount": {
+     "format": "int64",
+     "maximum": 1000000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "WorkerCount",
+    "WorkerConfiguration"
+   ],
+   "type": "object"
+  },
+  "InitialCapacityConfigKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/InitialCapacityConfig"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "InitialCapacityConfigMap": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/InitialCapacityConfigKeyValuePair"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "InteractiveConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LivyEndpointEnabled": {
+     "default": false,
+     "type": "boolean"
+    },
+    "StudioEnabled": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "LogGroupName": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[\\.\\-_/#A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "LogStreamNamePrefix": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[^:*]*$",
+   "type": "string"
+  },
+  "LogTypeList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LogTypeString"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LogTypeMapKeyValuePair": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/WorkerTypeString"
+    },
+    "Value": {
+     "$ref": "#/definitions/LogTypeList"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "LogTypeString": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+   "type": "string"
+  },
+  "ManagedPersistenceMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": true,
+     "type": "boolean"
+    },
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn"
+    }
+   }
+  },
+  "MaximumAllowedResources": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuSize"
+    },
+    "Disk": {
+     "$ref": "#/definitions/DiskSize"
+    },
+    "Memory": {
+     "$ref": "#/definitions/MemorySize"
+    }
+   },
+   "required": [
+    "Cpu",
+    "Memory"
+   ],
+   "type": "object"
+  },
+  "MemorySize": {
+   "maxLength": 15,
+   "minLength": 1,
+   "pattern": "^[1-9][0-9]*(\\s)?(GB|gb|gB|Gb)?$",
+   "type": "string"
+  },
+  "MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLoggingConfiguration": {
+     "$ref": "#/definitions/CloudWatchLoggingConfiguration"
+    },
+    "ManagedPersistenceMonitoringConfiguration": {
+     "$ref": "#/definitions/ManagedPersistenceMonitoringConfiguration"
+    },
+    "S3MonitoringConfiguration": {
+     "$ref": "#/definitions/S3MonitoringConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SecurityGroupId"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "maxItems": 16,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "S3MonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKeyArn": {
+     "$ref": "#/definitions/EncryptionKeyArn"
+    },
+    "LogUri": {
+     "$ref": "#/definitions/UriString"
+    }
+   }
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.GroupId",
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "[-0-9a-zA-Z]+.*",
+   "type": "string"
+  },
+  "SensitivePropertiesKeyValuePair": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SensitivePropertiesMap": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "SubnetId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "[-0-9a-zA-Z]+.*",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Za-z0-9 /_.:=+@-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[A-Za-z0-9 /_.:=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UriString": {
+   "maxLength": 10280,
+   "minLength": 1,
+   "pattern": "[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\r\\n\\t]*",
+   "type": "string"
+  },
+  "WorkerConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuSize"
+    },
+    "Disk": {
+     "$ref": "#/definitions/DiskSize"
+    },
+    "DiskType": {
+     "$ref": "#/definitions/DiskType"
+    },
+    "Memory": {
+     "$ref": "#/definitions/MemorySize"
+    }
+   },
+   "required": [
+    "Cpu",
+    "Memory"
+   ],
+   "type": "object"
+  },
+  "WorkerTypeSpecificationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageConfiguration": {
+     "$ref": "#/definitions/ImageConfigurationInput"
+    }
+   },
+   "type": "object"
+  },
+  "WorkerTypeSpecificationInputMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z]+[-_]*[a-zA-Z]+$": {
+     "$ref": "#/definitions/WorkerTypeSpecificationInput"
+    }
+   },
+   "type": "object"
+  },
+  "WorkerTypeString": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]+[-_]*[a-zA-Z]+$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Architecture": {
+   "$ref": "#/definitions/Architecture"
+  },
+  "Arn": {
+   "pattern": "^arn:(aws[a-zA-Z0-9-]*):emr-serverless:.+:(\\d{12}):\\/applications\\/[0-9a-zA-Z]+$",
+   "type": "string"
+  },
+  "AutoStartConfiguration": {
+   "$ref": "#/definitions/AutoStartConfiguration"
+  },
+  "AutoStopConfiguration": {
+   "$ref": "#/definitions/AutoStopConfiguration"
+  },
+  "ImageConfiguration": {
+   "$ref": "#/definitions/ImageConfigurationInput"
+  },
+  "InitialCapacity": {
+   "$ref": "#/definitions/InitialCapacityConfigMap"
+  },
+  "InteractiveConfiguration": {
+   "$ref": "#/definitions/InteractiveConfiguration"
+  },
+  "MaximumCapacity": {
+   "$ref": "#/definitions/MaximumAllowedResources"
+  },
+  "MonitoringConfiguration": {
+   "$ref": "#/definitions/MonitoringConfiguration"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9._\\/#-]+$",
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
+  },
+  "ReleaseLabel": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9._/-]+$",
+   "type": "string"
+  },
+  "RuntimeConfiguration": {
+   "$ref": "#/definitions/ConfigurationList"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "type": "string"
+  },
+  "WorkerTypeSpecifications": {
+   "$ref": "#/definitions/WorkerTypeSpecificationInputMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ApplicationId"
+ ],
+ "required": [
+  "ReleaseLabel",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EMRServerless::Application"
+}

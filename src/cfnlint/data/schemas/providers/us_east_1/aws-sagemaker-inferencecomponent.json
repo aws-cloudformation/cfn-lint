@@ -1,6 +1,11 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "BaseInferenceComponentName": {
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
   "ContainerImage": {
    "maxLength": 255,
    "pattern": "[\\S]+",
@@ -115,6 +120,9 @@
   "InferenceComponentSpecification": {
    "additionalProperties": false,
    "properties": {
+    "BaseInferenceComponentName": {
+     "$ref": "#/definitions/BaseInferenceComponentName"
+    },
     "ComputeResourceRequirements": {
      "$ref": "#/definitions/InferenceComponentComputeResourceRequirements"
     },
@@ -128,9 +136,6 @@
      "$ref": "#/definitions/InferenceComponentStartupParameters"
     }
    },
-   "required": [
-    "ComputeResourceRequirements"
-   ],
    "type": "object"
   },
   "InferenceComponentStartupParameters": {
@@ -273,9 +278,7 @@
  ],
  "required": [
   "EndpointName",
-  "VariantName",
-  "Specification",
-  "RuntimeConfig"
+  "Specification"
  ],
  "tagging": {
   "cloudFormationSystemTags": false,

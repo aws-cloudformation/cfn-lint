@@ -161,6 +161,7 @@ class Context:
 
     # is the value a resolved value
     is_resolved_value: bool = field(init=True, default=False)
+    resolve_pseudo_parameters: bool = field(init=True, default=True)
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -180,8 +181,11 @@ class Context:
         return cls(**kwargs)
 
     def ref_value(self, instance: str) -> Iterator[Tuple[str | list[str], "Context"]]:
-        if instance in PSEUDOPARAMS and instance not in self.pseudo_parameters:
-            return
+        if instance in PSEUDOPARAMS:
+            if not self.resolve_pseudo_parameters:
+                return
+            if instance not in self.pseudo_parameters:
+                return
 
         if instance in self.ref_values:
             yield self.ref_values[instance], self

@@ -108,6 +108,24 @@
    "minimum": 2,
    "type": "integer"
   },
+  "MetricsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Metrics": {
+     "items": {
+      "enum": [
+       "EventCount"
+      ],
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "OnFailure": {
    "additionalProperties": false,
    "properties": {
@@ -116,6 +134,22 @@
      "minLength": 12,
      "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProvisionedPollerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumPollers": {
+     "maximum": 2000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinimumPollers": {
+     "maximum": 200,
+     "minimum": 1,
+     "type": "integer"
     }
    },
    "type": "object"
@@ -276,10 +310,16 @@
    "minimum": -1,
    "type": "integer"
   },
+  "MetricsConfig": {
+   "$ref": "#/definitions/MetricsConfig"
+  },
   "ParallelizationFactor": {
    "maximum": 10,
    "minimum": 1,
    "type": "integer"
+  },
+  "ProvisionedPollerConfig": {
+   "$ref": "#/definitions/ProvisionedPollerConfig"
   },
   "Queues": {
    "items": {

@@ -50,8 +50,16 @@ class EqualsIsUseful(CloudFormationLintRule):
                 first = "true" if first else "false"
             if str(first) == str(second):
                 yield ValidationError(
-                    f"{instance!r} will always return {True!r} or {False!r}",
+                    f"{instance!r} will always return {True!r}",
                     rule=self,
                 )
+            if isinstance(instance[0], (str, float, int, bool)) and isinstance(
+                instance[1], (str, float, int, bool)
+            ):
+                if str(first) != str(second):
+                    yield ValidationError(
+                        f"{instance!r} will always return {False!r}",
+                        rule=self,
+                    )
         except:  # noqa: E722
             pass

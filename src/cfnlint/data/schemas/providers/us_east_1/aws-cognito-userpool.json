@@ -201,6 +201,9 @@
    "properties": {
     "PasswordPolicy": {
      "$ref": "#/definitions/PasswordPolicy"
+    },
+    "SignInPolicy": {
+     "$ref": "#/definitions/SignInPolicy"
     }
    },
    "type": "object"
@@ -252,6 +255,18 @@
     },
     "StringAttributeConstraints": {
      "$ref": "#/definitions/StringAttributeConstraints"
+    }
+   },
+   "type": "object"
+  },
+  "SignInPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedFirstAuthFactors": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
     }
    },
    "type": "object"
@@ -471,6 +486,14 @@
    },
    "type": "object"
   },
+  "UserPoolTier": {
+   "enum": [
+    "LITE",
+    "ESSENTIALS",
+    "PLUS"
+   ],
+   "type": "string"
+  },
   "UsernameAttributes": {
    "items": {
     "enum": [
@@ -486,6 +509,16 @@
   },
   "VerificationMessageTemplate": {
    "$ref": "#/definitions/VerificationMessageTemplate"
+  },
+  "WebAuthnRelyingPartyID": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "WebAuthnUserVerification": {
+   "maxLength": 9,
+   "minLength": 1,
+   "type": "string"
   }
  },
  "propertyTransform": {

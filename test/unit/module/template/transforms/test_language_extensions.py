@@ -74,11 +74,15 @@ class TestForEachCollection(TestCase):
     def test_valid(self):
         fec = _ForEachCollection({"Ref": "AccountIds"})
         self.assertListEqual(
-            list(fec.values(self.cfn, {})),
+            list(fec.values(self.cfn, {}, {})),
             [
                 {"Fn::Select": [0, {"Ref": "AccountIds"}]},
                 {"Fn::Select": [1, {"Ref": "AccountIds"}]},
             ],
+        )
+        self.assertListEqual(
+            list(fec.values(self.cfn, {}, {"AccountIds": ["A", "B"]})),
+            ["A", "B"],
         )
 
 
@@ -294,6 +298,21 @@ class TestFindInMap(TestCase):
         self.assertEqual(map.value(self.cfn, None, False, True), "bar")
         with self.assertRaises(_ResolveError):
             map.value(self.cfn, None, False, False)
+
+    def test_find_in_map_values_not_found_with_default(self):
+        map = _ForEachValueFnFindInMap(
+            "a", ["Bucket", "Production", "DNE", {"DefaultValue": "bar"}]
+        )
+
+        self.assertEqual(map.value(self.cfn, None, False, True), "bar")
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, False)
+
+    def test_find_in_map_values_strings_without_default(self):
+        map = _ForEachValueFnFindInMap("a", ["Bucket", "Production", "DNE"])
+
+        with self.assertRaises(_ResolveError):
+            map.value(self.cfn, None, False, True)
 
     def test_find_in_map_values_without_default(self):
         map = _ForEachValueFnFindInMap("a", ["Bucket", {"Ref": "Foo"}, "Key"])

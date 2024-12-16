@@ -172,7 +172,12 @@ def create(
                 for r_value, r_validator, r_errs in self._resolve_fn(key, value):  # type: ignore
                     if not r_errs:
                         try:
-                            for _, region_context in r_validator.context.ref_value(
+                            region_validator = r_validator.evolve(
+                                context=r_validator.context.evolve(
+                                    resolve_pseudo_parameters=True
+                                )
+                            )
+                            for _, region_context in region_validator.context.ref_value(
                                 "AWS::Region"
                             ):
                                 if self.cfn.conditions.satisfiable(

@@ -1,3 +1,58 @@
+### v1.22.1
+## What's Changed
+* Add `pattern` for SNS `TopicName` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3869
+* Don't replace `Default` values in `SAM` when SSM parameter by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3874
+* Update CloudFormation schemas to `2024-12-12` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3868
+* Dont guess at mappings when values are static in language extension transform by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3875
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.0...v1.22.1
+
+### v1.22.0
+## What's Changed
+* Replace parameters when both transforms are used by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3861
+* Fix returning `None` from `Fn::FindInMap` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3866
+* Switch back to raising bad path errors by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3862
+* Update CloudFormation schemas to `2024-12-10` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3863
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.21.0...v1.22.0
+
+### v1.21.0
+## What's Changed
+* Pass parameters to `ForEachCollection` processing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3854
+* Update rule [W8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W8003) to include always false by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3855
+* Skip `Fn::FindInMap` resolution when hitting a `Fn::Sub` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3856
+* Add `Assign` to appropriate state machine options by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3859
+* Update CloudFormation schemas to `2024-12-09` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3853
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.2...v1.21.0
+
+### v1.20.2
+## What's Changed
+* Add SES exception for boto `MatchingEventTypes` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3843
+* Allow for major versions for `postgres` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3850
+* Update CloudFormation schemas to `2024-12-02` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3844
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.1...v1.20.2
+
+### v1.20.1
+## What's Changed
+* Update CloudFormation schemas to 2024-11-23 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3832
+* Add `nodejs22.x` to `AWS::Lambda::Function` `Runtime` enum by @JamesKyburz in https://github.com/aws-cloudformation/cfn-lint/pull/3841
+* Add `maxItems` for `PathPatternConfig` in `AWS::ElasticLoadBalancingV2::ListenerRule` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3835
+
+## New Contributors
+* @JamesKyburz made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/3841
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.20.0...v1.20.1
+
+### v1.20.0
+## What's Changed
+* Update CloudFormation schemas to `2024-11-18` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3828
+* Update error messagings from json schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3798
+* Create rule [E3695](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3695) to validate cache cluster engines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3824
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.19.0...v1.20.0
+
 ### v1.19.0
 ## What's Changed
 * Update CloudFormation schemas to `2024-11-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3811

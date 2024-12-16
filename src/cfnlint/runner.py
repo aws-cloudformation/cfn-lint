@@ -17,7 +17,7 @@ from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.decode.decode import decode
 from cfnlint.helpers import REGIONS
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.errors import ParseError, TransformError
+from cfnlint.rules.errors import ConfigError, ParseError, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
@@ -223,10 +223,13 @@ class Runner:
                 settings for the template scan.
         """
         self.config = config
-        self.config.templates
         self.formatter = get_formatter(self.config)
         self.rules: Rules = Rules()
         self._get_rules()
+        try:
+            self.config.templates
+        except ValueError as e:
+            self._cli_output([Match(str(e), ConfigError(), None)])
         # load registry schemas before patching
         if self.config.registry_schemas:
             for path in self.config.registry_schemas:

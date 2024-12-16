@@ -1,11 +1,33 @@
 {
  "additionalProperties": false,
- "createOnlyProperties": [
-  "/properties/AnalyzerName",
-  "/properties/Type",
+ "conditionalCreateOnlyProperties": [
   "/properties/AnalyzerConfiguration"
  ],
+ "createOnlyProperties": [
+  "/properties/AnalyzerName",
+  "/properties/Type"
+ ],
  "definitions": {
+  "AnalysisRuleCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountIds": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "ResourceTags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tags"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
   "ArchiveRule": {
    "additionalProperties": false,
    "properties": {
@@ -74,21 +96,41 @@
     },
     "Value": {
      "maxLength": 255,
-     "minLength": 1,
+     "minLength": 0,
      "type": "string"
     }
    },
    "required": [
-    "Key",
-    "Value"
+    "Key"
    ],
    "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
   },
   "UnusedAccessConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "AnalysisRule": {
+     "additionalProperties": false,
+     "properties": {
+      "Exclusions": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/AnalysisRuleCriteria"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
     "UnusedAccessAge": {
-     "maximum": 180,
+     "maximum": 365,
      "minimum": 1,
      "type": "integer"
     }

@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "QueryParameter": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "RefreshSchedule": {
+   "additionalProperties": false,
+   "properties": {
+    "Frequency": {
+     "additionalProperties": false,
+     "properties": {
+      "Unit": {
+       "enum": [
+        "HOURS",
+        "DAYS"
+       ],
+       "type": "string"
+      },
+      "Value": {
+       "type": "integer"
+      }
+     },
+     "required": [
+      "Unit",
+      "Value"
+     ],
+     "type": "object"
+    },
+    "Status": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TimeOfDay": {
+     "pattern": "^[0-9]{2}:[0-9]{2}",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "string"
+  },
+  "Widget": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryParameters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/QueryParameter"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "QueryStatement": {
+     "maxLength": 10000,
+     "minLength": 1,
+     "pattern": "(?s).*",
+     "type": "string"
+    },
+    "ViewProperties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[a-zA-Z0-9._-]{3,128}$": {
+       "maxLength": 128,
+       "minLength": 1,
+       "pattern": "^[a-zA-Z0-9._\\- ]+$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "QueryStatement"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DashboardArn"
+ ],
+ "properties": {
+  "CreatedTimestamp": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "DashboardArn": {
+   "pattern": "^[a-zA-Z0-9._/\\-:]+$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[a-zA-Z0-9_\\-]+$",
+   "type": "string"
+  },
+  "RefreshSchedule": {
+   "$ref": "#/definitions/RefreshSchedule"
+  },
+  "Status": {
+   "enum": [
+    "CREATING",
+    "CREATED",
+    "UPDATING",
+    "UPDATED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TerminationProtectionEnabled": {
+   "type": "boolean"
+  },
+  "Type": {
+   "enum": [
+    "MANAGED",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "UpdatedTimestamp": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "Widgets": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Widget"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DashboardArn",
+  "/properties/CreatedTimestamp",
+  "/properties/UpdatedTimestamp",
+  "/properties/Status",
+  "/properties/Type"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudTrail::Dashboard"
+}

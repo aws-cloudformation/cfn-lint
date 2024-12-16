@@ -1,0 +1,64 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyName",
+  "/properties/PolicyType"
+ ],
+ "primaryIdentifier": [
+  "/properties/AccountId",
+  "/properties/PolicyType",
+  "/properties/PolicyName"
+ ],
+ "properties": {
+  "AccountId": {
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "maxLength": 30720,
+   "minLength": 1,
+   "type": "string"
+  },
+  "PolicyName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,256}$",
+   "type": "string"
+  },
+  "PolicyType": {
+   "enum": [
+    "DATA_PROTECTION_POLICY",
+    "SUBSCRIPTION_FILTER_POLICY",
+    "FIELD_INDEX_POLICY",
+    "TRANSFORMER_POLICY"
+   ],
+   "type": "string"
+  },
+  "Scope": {
+   "enum": [
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "SelectionCriteria": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "PolicyName",
+  "PolicyType",
+  "PolicyDocument"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::AccountPolicy"
+}

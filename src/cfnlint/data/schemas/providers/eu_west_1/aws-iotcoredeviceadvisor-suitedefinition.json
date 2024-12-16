@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DevicePermissionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "DeviceUnderTest": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "ThingArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Devices": {
+   "items": {
+    "$ref": "#/definitions/DeviceUnderTest"
+   },
+   "maxItems": 2,
+   "minItems": 0,
+   "type": "array"
+  },
+  "IntendedForQualification": {
+   "type": "boolean"
+  },
+  "RootGroup": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SuiteDefinitionName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SuiteDefinitionId"
+ ],
+ "properties": {
+  "SuiteDefinitionArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "SuiteDefinitionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DevicePermissionRoleArn": {
+     "$ref": "#/definitions/DevicePermissionRoleArn"
+    },
+    "Devices": {
+     "$ref": "#/definitions/Devices"
+    },
+    "IntendedForQualification": {
+     "$ref": "#/definitions/IntendedForQualification"
+    },
+    "RootGroup": {
+     "$ref": "#/definitions/RootGroup"
+    },
+    "SuiteDefinitionName": {
+     "$ref": "#/definitions/SuiteDefinitionName"
+    }
+   },
+   "required": [
+    "DevicePermissionRoleArn",
+    "RootGroup"
+   ],
+   "type": "object"
+  },
+  "SuiteDefinitionId": {
+   "maxLength": 36,
+   "minLength": 12,
+   "type": "string"
+  },
+  "SuiteDefinitionVersion": {
+   "maxLength": 255,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SuiteDefinitionId",
+  "/properties/SuiteDefinitionArn",
+  "/properties/SuiteDefinitionVersion"
+ ],
+ "required": [
+  "SuiteDefinitionConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-device-advisor.git",
+ "typeName": "AWS::IoTCoreDeviceAdvisor::SuiteDefinition"
+}

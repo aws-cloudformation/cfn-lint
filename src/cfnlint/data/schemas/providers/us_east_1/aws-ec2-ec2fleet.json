@@ -48,6 +48,15 @@
    },
    "type": "object"
   },
+  "BaselinePerformanceFactorsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuPerformanceFactorRequest"
+    }
+   },
+   "type": "object"
+  },
   "CapacityRebalance": {
    "additionalProperties": false,
    "properties": {
@@ -72,6 +81,19 @@
       "use-capacity-reservations-first"
      ],
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CpuPerformanceFactorRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "References": {
+     "items": {
+      "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "type": "object"
@@ -419,6 +441,24 @@
       "i4i.large",
       "i4i.metal",
       "i4i.xlarge",
+      "i7ie.12xlarge",
+      "i7ie.18xlarge",
+      "i7ie.24xlarge",
+      "i7ie.2xlarge",
+      "i7ie.3xlarge",
+      "i7ie.48xlarge",
+      "i7ie.6xlarge",
+      "i7ie.large",
+      "i7ie.xlarge",
+      "i8g.12xlarge",
+      "i8g.16xlarge",
+      "i8g.24xlarge",
+      "i8g.2xlarge",
+      "i8g.4xlarge",
+      "i8g.8xlarge",
+      "i8g.large",
+      "i8g.metal-24xl",
+      "i8g.xlarge",
       "im4gn.16xlarge",
       "im4gn.2xlarge",
       "im4gn.4xlarge",
@@ -1100,7 +1140,8 @@
       "enum": [
        "intel",
        "amd",
-       "amazon-web-services"
+       "amazon-web-services",
+       "apple"
       ],
       "type": "string"
      },
@@ -1261,6 +1302,15 @@
     },
     "SingleInstanceType": {
      "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceFactorReferenceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceFamily": {
+     "type": "string"
     }
    },
    "type": "object"

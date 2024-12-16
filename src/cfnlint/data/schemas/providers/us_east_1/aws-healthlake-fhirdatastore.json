@@ -60,6 +60,10 @@
   },
   "IdentityProviderConfiguration": {
    "additionalProperties": false,
+   "default": {
+    "AuthorizationStrategy": "AWS_AUTH",
+    "FineGrainedAuthorizationEnabled": false
+   },
    "properties": {
     "AuthorizationStrategy": {
      "enum": [
@@ -125,6 +129,11 @@
   },
   "SseConfiguration": {
    "additionalProperties": false,
+   "default": {
+    "KmsEncryptionConfig": {
+     "CmkType": "AWS_OWNED_KMS_KEY"
+    }
+   },
    "properties": {
     "KmsEncryptionConfig": {
      "$ref": "#/definitions/KmsEncryptionConfig"
@@ -211,6 +220,12 @@
  "required": [
   "DatastoreTypeVersion"
  ],
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::HealthLake::FHIRDatastore"
 }

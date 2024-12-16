@@ -155,6 +155,12 @@ def write_db_instance(results):
             continue
 
         engine_versions = sorted(results.get(engine))
+        if engine == "postgres":
+            for engine_version in engine_versions.copy():
+                major_engine_version = ".".join(engine_version.split(".")[0:1])
+                if major_engine_version not in engine_versions:
+                    engine_versions.append(major_engine_version)
+            engine_versions = sorted(engine_versions)
         if engine == "aurora-mysql":
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
@@ -258,7 +264,6 @@ def elasticache_api():
     for page in elasticache_client.get_paginator(
         "describe_cache_engine_versions"
     ).paginate():
-        print(page)
         for version in page.get("CacheEngineVersions"):
             engine = version.get("Engine")
             engine_version = version.get("EngineVersion")
