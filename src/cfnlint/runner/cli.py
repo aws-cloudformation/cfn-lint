@@ -17,6 +17,7 @@ from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ConfigError, ParseError
 from cfnlint.runner.template import TemplateRunner
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
+from cfnlint.runner.deployment_files.runner import run_deployment_files
 
 LOGGER = logging.getLogger(__name__)
 
@@ -266,7 +267,7 @@ class Runner:
             yield from self._validate_filenames(self.config.templates)
             return
 
-        yield from self._validate_filenames(self.config.deployment_files)
+        yield from run_deployment_files(self.config)
 
     def cli(self) -> None:
         """
