@@ -1,0 +1,110 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PackageName",
+  "/properties/VersionName"
+ ],
+ "definitions": {
+  "PackageVersionStatus": {
+   "enum": [
+    "DRAFT",
+    "PUBLISHED",
+    "DEPRECATED"
+   ],
+   "type": "string"
+  },
+  "ResourceAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[a-zA-Z0-9:_-]+$": {
+     "minLength": 1,
+     "pattern": "^[^\\p{C}]+$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PackageName",
+  "/properties/VersionName"
+ ],
+ "properties": {
+  "Attributes": {
+   "$ref": "#/definitions/ResourceAttributes"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "^[^\\p{C}]+$",
+   "type": "string"
+  },
+  "ErrorReason": {
+   "type": "string"
+  },
+  "PackageName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.]+$",
+   "type": "string"
+  },
+  "PackageVersionArn": {
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/PackageVersionStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VersionName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_.]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ErrorReason",
+  "/properties/PackageVersionArn",
+  "/properties/Status"
+ ],
+ "required": [
+  "PackageName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::SoftwarePackageVersion"
+}

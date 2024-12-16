@@ -185,6 +185,17 @@
    ],
    "type": "string"
   },
+  "State": {
+   "enum": [
+    "OFFLINE",
+    "ONLINE",
+    "STARTING",
+    "STOPPING",
+    "START_FAILED",
+    "STOP_FAILED"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -343,6 +354,9 @@
    "pattern": "^s-([0-9a-f]{17})$",
    "type": "string"
   },
+  "State": {
+   "$ref": "#/definitions/State"
+  },
   "StructuredLogDestinations": {
    "insertionOrder": false,
    "items": {
@@ -371,7 +385,8 @@
  "readOnlyProperties": [
   "/properties/Arn",
   "/properties/As2ServiceManagedEgressIpAddresses",
-  "/properties/ServerId"
+  "/properties/ServerId",
+  "/properties/State"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
  "tagging": {

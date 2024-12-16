@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentIdentifier"
+ ],
+ "definitions": {
+  "SubscriptionTargetForm": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "type": "string"
+    },
+    "FormName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?![0-9_])\\w+$|^_\\w*[a-zA-Z0-9]\\w*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Content",
+    "FormName"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApplicableAssetTypes": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 256,
+    "minLength": 1,
+    "pattern": "^[^\\.]*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AuthorizedPrincipals": {
+   "insertionOrder": false,
+   "items": {
+    "pattern": "^[a-zA-Z0-9:/_-]*$",
+    "type": "string"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CreatedBy": {
+   "type": "string"
+  },
+  "DomainId": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "EnvironmentIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "ManageAccessRole": {
+   "pattern": "^arn:aws(|-cn|-us-gov):iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectId": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Provider": {
+   "type": "string"
+  },
+  "SubscriptionTargetConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubscriptionTargetForm"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "UpdatedBy": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/CreatedBy",
+  "/properties/DomainId",
+  "/properties/EnvironmentId",
+  "/properties/Id",
+  "/properties/ProjectId",
+  "/properties/UpdatedAt",
+  "/properties/UpdatedBy"
+ ],
+ "required": [
+  "ApplicableAssetTypes",
+  "AuthorizedPrincipals",
+  "DomainIdentifier",
+  "EnvironmentIdentifier",
+  "Name",
+  "SubscriptionTargetConfig",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::SubscriptionTarget",
+ "writeOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/EnvironmentIdentifier"
+ ]
+}
