@@ -1,3 +1,11 @@
+### v1.22.2
+## What's Changed
+* Update regex for FnSub by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3878
+* Update fargate cpu memory schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3880
+* Update CloudFormation schemas to 2024-12-16 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3877
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.1...v1.22.2
+
 ### v1.22.1
 ## What's Changed
 * Add `pattern` for SNS `TopicName` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3869
