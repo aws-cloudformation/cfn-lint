@@ -1,0 +1,92 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainIdentifier",
+  "/properties/ProjectIdentifier",
+  "/properties/Member"
+ ],
+ "definitions": {
+  "Member": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "UserIdentifier": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "UserIdentifier"
+     ],
+     "title": "UserIdentifier",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "GroupIdentifier": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "GroupIdentifier"
+     ],
+     "title": "GroupIdentifier",
+     "type": "object"
+    }
+   ]
+  },
+  "MemberIdentifierType": {
+   "enum": [
+    "USER_IDENTIFIER",
+    "GROUP_IDENTIFIER"
+   ],
+   "type": "string"
+  },
+  "UserDesignation": {
+   "enum": [
+    "PROJECT_OWNER",
+    "PROJECT_CONTRIBUTOR",
+    "PROJECT_CATALOG_VIEWER",
+    "PROJECT_CATALOG_CONSUMER",
+    "PROJECT_CATALOG_STEWARD"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainIdentifier",
+  "/properties/ProjectIdentifier"
+ ],
+ "properties": {
+  "Designation": {
+   "$ref": "#/definitions/UserDesignation"
+  },
+  "DomainIdentifier": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "Member": {
+   "$ref": "#/definitions/Member"
+  },
+  "ProjectIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "Designation",
+  "DomainIdentifier",
+  "ProjectIdentifier",
+  "Member"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DataZone::ProjectMembership",
+ "writeOnlyProperties": [
+  "/properties/Designation",
+  "/properties/Member"
+ ]
+}

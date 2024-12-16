@@ -1,0 +1,87 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyspaceName",
+  "/properties/TypeName",
+  "/properties/Fields"
+ ],
+ "definitions": {
+  "Field": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldName": {
+     "type": "string"
+    },
+    "FieldType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldName",
+    "FieldType"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName",
+  "/properties/TypeName"
+ ],
+ "properties": {
+  "DirectParentTypes": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DirectReferringTables": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Fields": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Field"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "KeyspaceArn": {
+   "type": "string"
+  },
+  "KeyspaceName": {
+   "type": "string"
+  },
+  "LastModifiedTimestamp": {
+   "type": "number"
+  },
+  "MaxNestingDepth": {
+   "type": "integer"
+  },
+  "TypeName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DirectReferringTables",
+  "/properties/DirectParentTypes",
+  "/properties/MaxNestingDepth",
+  "/properties/LastModifiedTimestamp",
+  "/properties/KeyspaceArn"
+ ],
+ "required": [
+  "KeyspaceName",
+  "TypeName",
+  "Fields"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Cassandra::Type"
+}
