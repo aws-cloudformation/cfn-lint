@@ -11,13 +11,13 @@ from typing import Any, Iterator, Sequence
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
-from cfnlint.decode.decode import decode
 from cfnlint.exceptions import CfnLintExitException, UnexpectedRuleException
 from cfnlint.rules import Match, Rules
 from cfnlint.rules.errors import ConfigError, ParseError
-from cfnlint.runner.template import TemplateRunner
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
-from cfnlint.runner.deployment_files.runner import run_deployment_files
+from cfnlint.runner.deployment_file.runner import run_deployment_files
+from cfnlint.runner.template import run_template_by_data, run_template_by_file_path
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -117,7 +117,6 @@ class Runner:
                     self.rules.update(Rules.create_from_directory(rules_path))
                 else:
                     self.rules.update(Rules.create_from_module(rules_path))
-
             self.rules.update(
                 Rules.create_from_custom_rules_file(self.config.custom_rules)
             )
@@ -157,30 +156,20 @@ class Runner:
             ):
                 ignore_bad_template = True
         for filename in filenames:
-            (template, matches) = decode(filename)
-            if matches:
-                if ignore_bad_template or any(
-                    "E0000".startswith(x) for x in self.config.ignore_checks
-                ):
-                    matches = [match for match in matches if match.rule.id != "E0000"]
+            yield from run_template_by_file_path(
+                filename, self.config, self.rules, ignore_bad_template
+            )
 
-                yield from iter(matches)
-                continue
-            yield from self.validate_template(filename, template)  # type: ignore[arg-type] # noqa: E501
-
-    def validate_template(
-        self, filename: str | None, template: dict[str, Any]
-    ) -> Iterator[Match]:
+    def validate_template(self, template: dict[str, Any]) -> Iterator[Match]:
         """
         Validate a single CloudFormation template and yield any matches found.
 
-        This function takes a CloudFormation template as a dictionary and runs the
-        configured rules against it. Any matches found are yielded as an iterator.
+        This function decodes the provided template, validates it against the
+        configured rules, and yields any matches found as an iterator.
 
         Args:
-            filename (str | None): The filename of the CloudFormation template, or
-                `None` if the template is not associated with a file.
-            template (dict[str, Any]): The CloudFormation template as a dictionary.
+            filename (str | None): The filename of the template being validated.
+            template (dict[str, Any]): The CloudFormation template to be validated.
 
         Yields:
             Match: The matches found during the validation process.
@@ -188,8 +177,7 @@ class Runner:
         Raises:
             None: This function does not raise any exceptions.
         """
-        runner = TemplateRunner(filename, template, self.config, self.rules)
-        yield from runner.run()
+        yield from run_template_by_data(template, self.config, self.rules)
 
     def _cli_output(self, matches: list[Match]) -> None:
         formatter = get_formatter(self.config)
@@ -267,7 +255,7 @@ class Runner:
             yield from self._validate_filenames(self.config.templates)
             return
 
-        yield from run_deployment_files(self.config)
+        yield from run_deployment_files(self.config, self.rules)
 
     def cli(self) -> None:
         """
