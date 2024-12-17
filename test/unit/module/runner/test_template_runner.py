@@ -10,7 +10,7 @@ import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint import ConfigMixIn
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
-from cfnlint.runner.template import run_template_by_data
+from cfnlint.runner import run_template_by_data
 
 
 class TestRunner(BaseTestCase):

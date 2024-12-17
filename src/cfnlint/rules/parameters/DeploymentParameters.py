@@ -15,8 +15,14 @@ class DeploymentParameters(CfnLintJsonSchema):
     """Check if Parameters are configured correctly"""
 
     id = "E2900"
-    shortdesc = "Parameters have appropriate properties"
-    description = "Making sure the parameters are properly configured"
+    shortdesc = (
+        "Validate deployment file parameters are valid against template parameters"
+    )
+    description = (
+        "Validates that required properties are provided, allowed values are "
+        "valid, types are correct, and the pattern matches in a deployment file "
+        "for the parameters specified in a template"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html"
     tags = ["parameters"]
 

@@ -12,8 +12,7 @@ from cfnlint.config import ConfigMixIn, ManualArgs
 from cfnlint.decode.decode import decode_str
 from cfnlint.helpers import REGION_PRIMARY, REGIONS
 from cfnlint.rules import Match, RulesCollection
-from cfnlint.runner import Runner
-from cfnlint.runner.template import run_template_by_data
+from cfnlint.runner import Runner, run_template_by_data
 
 Matches = List[Match]
 

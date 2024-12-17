@@ -9,7 +9,7 @@ from typing import Any, Dict
 from cfnlint import ConfigMixIn
 from cfnlint.decode.decode import decode_str
 from cfnlint.rules import CloudFormationLintRule, Match, RuleMatch, Rules
-from cfnlint.runner.template import run_template_by_data
+from cfnlint.runner import run_template_by_data
 
 
 class TestCloudFormationRuleChild(BaseTestCase):
