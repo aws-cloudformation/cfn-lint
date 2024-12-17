@@ -8,7 +8,7 @@ from typing import List
 
 from cfnlint import ConfigMixIn, Rules
 from cfnlint.config import ManualArgs
-from cfnlint.runner import TemplateRunner
+from cfnlint.runner.template.runner import _run_template
 
 
 class BaseRuleTestCase(BaseTestCase):
@@ -29,8 +29,7 @@ class BaseRuleTestCase(BaseTestCase):
         config = config or self.config
         for filename in self.success_templates:
             template = self.load_template(filename)
-            good_runner = TemplateRunner(filename, template, config, self.collection)
-            failures = list(good_runner.run())
+            failures = list(_run_template(filename, template, config, self.collection))
             self.assertEqual(
                 [], failures, "Got failures {} on {}".format(failures, filename)
             )
@@ -39,8 +38,7 @@ class BaseRuleTestCase(BaseTestCase):
         """Success test with template parameter"""
         config = config or self.config
         template = self.load_template(filename)
-        good_runner = TemplateRunner(filename, template, config, self.collection)
-        failures = list(good_runner.run())
+        failures = list(_run_template(filename, template, config, self.collection))
         self.assertEqual(
             [],
             failures,
@@ -51,8 +49,7 @@ class BaseRuleTestCase(BaseTestCase):
         """Failure test"""
         config = config or self.config
         template = self.load_template(filename)
-        bad_runner = TemplateRunner(filename, template, config, self.collection)
-        failures = list(bad_runner.run())
+        failures = list(_run_template(filename, template, config, self.collection))
         self.assertEqual(
             err_count,
             len(failures),
