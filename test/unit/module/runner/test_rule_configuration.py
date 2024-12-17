@@ -7,7 +7,8 @@ import os
 from test.testlib.testcase import BaseTestCase
 
 from cfnlint.config import ConfigMixIn
-from cfnlint.runner import Runner, UnexpectedRuleException
+from cfnlint.runner import Runner
+from cfnlint.runner.exceptions import UnexpectedRuleException
 
 
 class TestGetRules(BaseTestCase):
