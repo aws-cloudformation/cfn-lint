@@ -250,6 +250,17 @@ def comma_separated_arg(string):
     return string.split(",")
 
 
+class key_value(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, dict())
+
+        for value in values:
+            # split it into key and value
+            key, value = value.split("=", 1)
+            # assign into dictionary
+            getattr(namespace, self.dest)[key.strip()] = value.strip()
+
+
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
         setattr(namespace, name, value)
@@ -399,6 +410,16 @@ class CliArgs:
             nargs="+",
             default=[],
             action="extend",
+        )
+        standard.add_argument(
+            "-tp",
+            "--template-parameters",
+            dest="template_parameters",
+            metavar="KEY=VALUE",
+            nargs="+",
+            default={},
+            action=key_value,
+            help="only check rules whose id do not match these values",
         )
         advanced.add_argument(
             "-D", "--debug", help="Enable debug logging", action="store_true"
@@ -617,6 +638,7 @@ class ManualArgs(TypedDict, total=False):
     configure_rules: dict[str, dict[str, Any]]
     include_checks: list[str]
     ignore_checks: list[str]
+    template_parameters: dict[str, Any]
     mandatory_checks: list[str]
     include_experimental: bool
     ignore_bad_template: bool
@@ -675,6 +697,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "ignore_checks": self.ignore_checks,
                 "include_checks": self.include_checks,
                 "mandatory_checks": self.mandatory_checks,
+                "template_parameters": self.template_parameters,
                 "include_experimental": self.include_experimental,
                 "configure_rules": self.configure_rules,
                 "registry_schemas": self.registry_schemas,
@@ -846,6 +869,14 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         return [_DEFAULT_RULESDIR] + self._get_argument_value(
             "append_rules", False, True
         )
+
+    @property
+    def template_parameters(self):
+        return self._get_argument_value("template_parameters", True, True)
+
+    @template_parameters.setter
+    def template_parameters(self, template_parameters: dict[str, Any]):
+        self._manual_args["template_parameters"] = template_parameters
 
     @property
     def override_spec(self):

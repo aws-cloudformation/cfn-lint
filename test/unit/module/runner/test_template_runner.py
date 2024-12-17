@@ -10,7 +10,7 @@ import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint import ConfigMixIn
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
-from cfnlint.runner import TemplateRunner
+from cfnlint.runner.template import run_template_by_data
 
 
 class TestRunner(BaseTestCase):
@@ -68,45 +68,45 @@ class TestRunner(BaseTestCase):
 
     def test_runner(self):
         """Success test"""
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
+        failures = list(
+            run_template_by_data(
+                template=self.template,
+                config=ConfigMixIn(
+                    regions=["us-east-1"],
+                    include_checks=["I"],
+                    include_experimental=True,
+                ),
+                rules=self.rules,
+            )
         )
-        failures = list(runner.run())
         self.assertEqual(len(failures), 4, "Got failures {}".format(failures))
 
     def test_runner_mandatory_rules(self):
         """Success test"""
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                mandatory_checks=["W1020"],
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
+        failures = list(
+            run_template_by_data(
+                template=self.template,
+                config=ConfigMixIn(
+                    mandatory_checks=["W1020"],
+                    regions=["us-east-1"],
+                    include_checks=["I"],
+                    include_experimental=True,
+                ),
+                rules=self.rules,
+            )
         )
-        failures = list(runner.run())
         self.assertEqual(len(failures), 5, "Got failures {}".format(failures))
 
-        runner = TemplateRunner(
-            filename=None,
-            template=self.template,
-            config=ConfigMixIn(
-                mandatory_checks=["W9000"],
-                regions=["us-east-1"],
-                include_checks=["I"],
-                include_experimental=True,
-            ),
-            rules=self.rules,
+        failures = list(
+            run_template_by_data(
+                template=self.template,
+                config=ConfigMixIn(
+                    mandatory_checks=["W9000"],
+                    regions=["us-east-1"],
+                    include_checks=["I"],
+                    include_experimental=True,
+                ),
+                rules=self.rules,
+            )
         )
-        failures = list(runner.run())
         self.assertEqual(len(failures), 4, "Got failures {}".format(failures))

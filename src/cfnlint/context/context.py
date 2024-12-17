@@ -548,4 +548,5 @@ def create_context_for_template(cfn: Template) -> "Context":
         regions=cfn.regions,
         path=Path(),
         functions=["Fn::Transform"],
+        ref_values=cfn.parameters,
     )

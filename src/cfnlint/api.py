@@ -12,7 +12,8 @@ from cfnlint.config import ConfigMixIn, ManualArgs
 from cfnlint.decode.decode import decode_str
 from cfnlint.helpers import REGION_PRIMARY, REGIONS
 from cfnlint.rules import Match, RulesCollection
-from cfnlint.runner import Runner, TemplateRunner
+from cfnlint.runner import Runner
+from cfnlint.runner.template import run_template_by_data
 
 Matches = List[Match]
 
@@ -57,11 +58,16 @@ def lint(
         config_mixin = ConfigMixIn(**config)
 
     if isinstance(rules, RulesCollection):
-        template_runner = TemplateRunner(None, template, config_mixin, rules)  # type: ignore # noqa: E501
-        return list(template_runner.run())
+        return list(
+            run_template_by_data(
+                template,
+                config_mixin,
+                rules,  # type: ignore
+            )
+        )
 
     runner = Runner(config_mixin)
-    return list(runner.validate_template(None, template))
+    return list(runner.validate_template(template))
 
 
 def lint_all(s: str) -> list[Match]:

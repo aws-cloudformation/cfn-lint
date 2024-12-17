@@ -52,6 +52,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         filename: str | None,
         template: dict[str, Any],
         regions: list[str] | None = None,
+        parameters: dict[str, Any] | None = None,
     ):
         """Initialize a Template instance.
 
@@ -64,6 +65,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.regions = [cfnlint.helpers.REGION_PRIMARY]
         else:
             self.regions = regions
+        self.parameters = parameters or {}
         self.filename = filename
         self.template = template
         self.transform_pre: dict[str, Any] = {}

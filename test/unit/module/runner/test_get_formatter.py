@@ -7,7 +7,7 @@ from test.testlib.testcase import BaseTestCase
 
 import cfnlint.formatters
 from cfnlint import ConfigMixIn
-from cfnlint.runner import get_formatter
+from cfnlint.runner.cli import get_formatter
 
 
 class TestGetFormatter(BaseTestCase):
