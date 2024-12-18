@@ -11,7 +11,8 @@ from typing import Sequence
 from cfnlint.config import _DEFAULT_RULESDIR, ConfigMixIn, ManualArgs
 from cfnlint.match import Match
 from cfnlint.rules import RulesCollection
-from cfnlint.runner import TemplateRunner, UnexpectedRuleException
+from cfnlint.runner.exceptions import UnexpectedRuleException
+from cfnlint.runner.template.runner import _run_template
 
 
 def get_rules(
@@ -68,11 +69,11 @@ def run_checks(
         **config,
     )
 
-    runner = TemplateRunner(
-        filename=filename,
-        template=template,
-        rules=rules,  # type: ignore
-        config=config_mixin,
+    return list(
+        _run_template(
+            filename=filename,
+            template=template,
+            rules=rules,  # type: ignore
+            config=config_mixin,
+        )
     )
-
-    return list(runner.run())
