@@ -1,0 +1,260 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Alias"
+ ],
+ "definitions": {
+  "Action": {
+   "enum": [
+    "CREATE",
+    "UPDATE",
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "HookTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "InvocationPoint": {
+     "$ref": "#/definitions/InvocationPoint"
+    },
+    "TargetName": {
+     "$ref": "#/definitions/TargetName"
+    }
+   },
+   "required": [
+    "TargetName",
+    "Action",
+    "InvocationPoint"
+   ],
+   "type": "object"
+  },
+  "InvocationPoint": {
+   "enum": [
+    "PRE_PROVISION"
+   ],
+   "type": "string"
+  },
+  "Role": {
+   "maxLength": 256,
+   "pattern": "arn:.+:iam::[0-9]{12}:role/.+",
+   "type": "string"
+  },
+  "StackName": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z][-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "TargetName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(?!.*\\*\\?).*$",
+   "type": "string"
+  },
+  "TargetOperation": {
+   "enum": [
+    "RESOURCE",
+    "STACK",
+    "CHANGE_SET"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HookArn"
+ ],
+ "properties": {
+  "Alias": {
+   "pattern": "^[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$",
+   "type": "string"
+  },
+  "ExecutionRole": {
+   "$ref": "#/definitions/Role"
+  },
+  "FailureMode": {
+   "enum": [
+    "FAIL",
+    "WARN"
+   ],
+   "type": "string"
+  },
+  "HookArn": {
+   "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$",
+   "type": "string"
+  },
+  "HookStatus": {
+   "default": "ENABLED",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "LambdaFunction": {
+   "maxLength": 170,
+   "minLength": 1,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?",
+   "type": "string"
+  },
+  "StackFilters": {
+   "additionalProperties": false,
+   "properties": {
+    "FilteringCriteria": {
+     "default": "ALL",
+     "enum": [
+      "ALL",
+      "ANY"
+     ],
+     "type": "string"
+    },
+    "StackNames": {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "properties": {
+      "Exclude": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "Include": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/StackName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    "StackRoles": {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "properties": {
+      "Exclude": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/Role"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "Include": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/Role"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "FilteringCriteria"
+   ],
+   "type": "object"
+  },
+  "TargetFilters": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "minProperties": 1,
+     "properties": {
+      "Actions": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/Action"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "InvocationPoints": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/InvocationPoint"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      },
+      "TargetNames": {
+       "insertionOrder": false,
+       "items": {
+        "$ref": "#/definitions/TargetName"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Targets": {
+       "items": {
+        "$ref": "#/definitions/HookTarget"
+       },
+       "maxItems": 50,
+       "minItems": 1,
+       "type": "array",
+       "uniqueItems": true
+      }
+     },
+     "required": [
+      "Targets"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "TargetOperations": {
+   "items": {
+    "$ref": "#/definitions/TargetOperation"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HookArn"
+ ],
+ "required": [
+  "LambdaFunction",
+  "FailureMode",
+  "Alias",
+  "ExecutionRole",
+  "TargetOperations",
+  "HookStatus"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::CloudFormation::LambdaHook"
+}

@@ -1,0 +1,1608 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LaunchTemplateConfigs",
+  "/properties/OnDemandOptions",
+  "/properties/ReplaceUnhealthyInstances",
+  "/properties/SpotOptions",
+  "/properties/TagSpecifications",
+  "/properties/TerminateInstancesWithExpiration",
+  "/properties/Type",
+  "/properties/ValidFrom",
+  "/properties/ValidUntil"
+ ],
+ "definitions": {
+  "AcceleratorCountRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "AcceleratorTotalMemoryMiBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BaselineEbsBandwidthMbpsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BaselinePerformanceFactorsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Cpu": {
+     "$ref": "#/definitions/CpuPerformanceFactorRequest"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityRebalance": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplacementStrategy": {
+     "enum": [
+      "launch",
+      "launch-before-terminate"
+     ],
+     "type": "string"
+    },
+    "TerminationDelay": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CapacityReservationOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "UsageStrategy": {
+     "enum": [
+      "use-capacity-reservations-first"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CpuPerformanceFactorRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "References": {
+     "items": {
+      "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "FleetLaunchTemplateConfigRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateSpecification": {
+     "$ref": "#/definitions/FleetLaunchTemplateSpecificationRequest"
+    },
+    "Overrides": {
+     "items": {
+      "$ref": "#/definitions/FleetLaunchTemplateOverridesRequest"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "FleetLaunchTemplateOverridesRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "InstanceRequirements": {
+     "$ref": "#/definitions/InstanceRequirementsRequest"
+    },
+    "InstanceType": {
+     "enum": [
+      "a1.2xlarge",
+      "a1.4xlarge",
+      "a1.large",
+      "a1.medium",
+      "a1.metal",
+      "a1.xlarge",
+      "c1.medium",
+      "c1.xlarge",
+      "c3.2xlarge",
+      "c3.4xlarge",
+      "c3.8xlarge",
+      "c3.large",
+      "c3.xlarge",
+      "c4.2xlarge",
+      "c4.4xlarge",
+      "c4.8xlarge",
+      "c4.large",
+      "c4.xlarge",
+      "c5.12xlarge",
+      "c5.18xlarge",
+      "c5.24xlarge",
+      "c5.2xlarge",
+      "c5.4xlarge",
+      "c5.9xlarge",
+      "c5.large",
+      "c5.metal",
+      "c5.xlarge",
+      "c5a.12xlarge",
+      "c5a.16xlarge",
+      "c5a.24xlarge",
+      "c5a.2xlarge",
+      "c5a.4xlarge",
+      "c5a.8xlarge",
+      "c5a.large",
+      "c5a.xlarge",
+      "c5ad.12xlarge",
+      "c5ad.16xlarge",
+      "c5ad.24xlarge",
+      "c5ad.2xlarge",
+      "c5ad.4xlarge",
+      "c5ad.8xlarge",
+      "c5ad.large",
+      "c5ad.xlarge",
+      "c5d.12xlarge",
+      "c5d.18xlarge",
+      "c5d.24xlarge",
+      "c5d.2xlarge",
+      "c5d.4xlarge",
+      "c5d.9xlarge",
+      "c5d.large",
+      "c5d.metal",
+      "c5d.xlarge",
+      "c5n.18xlarge",
+      "c5n.2xlarge",
+      "c5n.4xlarge",
+      "c5n.9xlarge",
+      "c5n.large",
+      "c5n.metal",
+      "c5n.xlarge",
+      "c6a.12xlarge",
+      "c6a.16xlarge",
+      "c6a.24xlarge",
+      "c6a.2xlarge",
+      "c6a.32xlarge",
+      "c6a.48xlarge",
+      "c6a.4xlarge",
+      "c6a.8xlarge",
+      "c6a.large",
+      "c6a.metal",
+      "c6a.xlarge",
+      "c6g.12xlarge",
+      "c6g.16xlarge",
+      "c6g.2xlarge",
+      "c6g.4xlarge",
+      "c6g.8xlarge",
+      "c6g.large",
+      "c6g.medium",
+      "c6g.metal",
+      "c6g.xlarge",
+      "c6gd.12xlarge",
+      "c6gd.16xlarge",
+      "c6gd.2xlarge",
+      "c6gd.4xlarge",
+      "c6gd.8xlarge",
+      "c6gd.large",
+      "c6gd.medium",
+      "c6gd.metal",
+      "c6gd.xlarge",
+      "c6gn.12xlarge",
+      "c6gn.16xlarge",
+      "c6gn.2xlarge",
+      "c6gn.4xlarge",
+      "c6gn.8xlarge",
+      "c6gn.large",
+      "c6gn.medium",
+      "c6gn.xlarge",
+      "c6i.12xlarge",
+      "c6i.16xlarge",
+      "c6i.24xlarge",
+      "c6i.2xlarge",
+      "c6i.32xlarge",
+      "c6i.4xlarge",
+      "c6i.8xlarge",
+      "c6i.large",
+      "c6i.metal",
+      "c6i.xlarge",
+      "c6id.12xlarge",
+      "c6id.16xlarge",
+      "c6id.24xlarge",
+      "c6id.2xlarge",
+      "c6id.32xlarge",
+      "c6id.4xlarge",
+      "c6id.8xlarge",
+      "c6id.large",
+      "c6id.metal",
+      "c6id.xlarge",
+      "c6in.12xlarge",
+      "c6in.16xlarge",
+      "c6in.24xlarge",
+      "c6in.2xlarge",
+      "c6in.32xlarge",
+      "c6in.4xlarge",
+      "c6in.8xlarge",
+      "c6in.large",
+      "c6in.metal",
+      "c6in.xlarge",
+      "c7a.12xlarge",
+      "c7a.16xlarge",
+      "c7a.24xlarge",
+      "c7a.2xlarge",
+      "c7a.32xlarge",
+      "c7a.48xlarge",
+      "c7a.4xlarge",
+      "c7a.8xlarge",
+      "c7a.large",
+      "c7a.medium",
+      "c7a.metal-48xl",
+      "c7a.xlarge",
+      "c7g.12xlarge",
+      "c7g.16xlarge",
+      "c7g.2xlarge",
+      "c7g.4xlarge",
+      "c7g.8xlarge",
+      "c7g.large",
+      "c7g.medium",
+      "c7g.metal",
+      "c7g.xlarge",
+      "c7gd.12xlarge",
+      "c7gd.16xlarge",
+      "c7gd.2xlarge",
+      "c7gd.4xlarge",
+      "c7gd.8xlarge",
+      "c7gd.large",
+      "c7gd.medium",
+      "c7gd.metal",
+      "c7gd.xlarge",
+      "c7gn.12xlarge",
+      "c7gn.16xlarge",
+      "c7gn.2xlarge",
+      "c7gn.4xlarge",
+      "c7gn.8xlarge",
+      "c7gn.large",
+      "c7gn.medium",
+      "c7gn.metal",
+      "c7gn.xlarge",
+      "c7i-flex.2xlarge",
+      "c7i-flex.4xlarge",
+      "c7i-flex.8xlarge",
+      "c7i-flex.large",
+      "c7i-flex.xlarge",
+      "c7i.12xlarge",
+      "c7i.16xlarge",
+      "c7i.24xlarge",
+      "c7i.2xlarge",
+      "c7i.48xlarge",
+      "c7i.4xlarge",
+      "c7i.8xlarge",
+      "c7i.large",
+      "c7i.metal-24xl",
+      "c7i.metal-48xl",
+      "c7i.xlarge",
+      "c8g.12xlarge",
+      "c8g.16xlarge",
+      "c8g.24xlarge",
+      "c8g.2xlarge",
+      "c8g.48xlarge",
+      "c8g.4xlarge",
+      "c8g.8xlarge",
+      "c8g.large",
+      "c8g.medium",
+      "c8g.metal-24xl",
+      "c8g.metal-48xl",
+      "c8g.xlarge",
+      "cc1.4xlarge",
+      "cc2.8xlarge",
+      "cg1.4xlarge",
+      "cr1.8xlarge",
+      "d2.2xlarge",
+      "d2.4xlarge",
+      "d2.8xlarge",
+      "d2.xlarge",
+      "d3.2xlarge",
+      "d3.4xlarge",
+      "d3.8xlarge",
+      "d3.xlarge",
+      "d3en.12xlarge",
+      "d3en.2xlarge",
+      "d3en.4xlarge",
+      "d3en.6xlarge",
+      "d3en.8xlarge",
+      "d3en.xlarge",
+      "dl1.24xlarge",
+      "dl2q.24xlarge",
+      "f1.16xlarge",
+      "f1.2xlarge",
+      "f1.4xlarge",
+      "g2.2xlarge",
+      "g2.8xlarge",
+      "g3.16xlarge",
+      "g3.4xlarge",
+      "g3.8xlarge",
+      "g3s.xlarge",
+      "g4ad.16xlarge",
+      "g4ad.2xlarge",
+      "g4ad.4xlarge",
+      "g4ad.8xlarge",
+      "g4ad.xlarge",
+      "g4dn.12xlarge",
+      "g4dn.16xlarge",
+      "g4dn.2xlarge",
+      "g4dn.4xlarge",
+      "g4dn.8xlarge",
+      "g4dn.metal",
+      "g4dn.xlarge",
+      "g5.12xlarge",
+      "g5.16xlarge",
+      "g5.24xlarge",
+      "g5.2xlarge",
+      "g5.48xlarge",
+      "g5.4xlarge",
+      "g5.8xlarge",
+      "g5.xlarge",
+      "g5g.16xlarge",
+      "g5g.2xlarge",
+      "g5g.4xlarge",
+      "g5g.8xlarge",
+      "g5g.metal",
+      "g5g.xlarge",
+      "g6.12xlarge",
+      "g6.16xlarge",
+      "g6.24xlarge",
+      "g6.2xlarge",
+      "g6.48xlarge",
+      "g6.4xlarge",
+      "g6.8xlarge",
+      "g6.xlarge",
+      "g6e.12xlarge",
+      "g6e.16xlarge",
+      "g6e.24xlarge",
+      "g6e.2xlarge",
+      "g6e.48xlarge",
+      "g6e.4xlarge",
+      "g6e.8xlarge",
+      "g6e.xlarge",
+      "gr6.4xlarge",
+      "gr6.8xlarge",
+      "h1.16xlarge",
+      "h1.2xlarge",
+      "h1.4xlarge",
+      "h1.8xlarge",
+      "hi1.4xlarge",
+      "hpc6a.48xlarge",
+      "hpc6id.32xlarge",
+      "hpc7a.12xlarge",
+      "hpc7a.24xlarge",
+      "hpc7a.48xlarge",
+      "hpc7a.96xlarge",
+      "hpc7g.16xlarge",
+      "hpc7g.4xlarge",
+      "hpc7g.8xlarge",
+      "hs1.8xlarge",
+      "i2.2xlarge",
+      "i2.4xlarge",
+      "i2.8xlarge",
+      "i2.xlarge",
+      "i3.16xlarge",
+      "i3.2xlarge",
+      "i3.4xlarge",
+      "i3.8xlarge",
+      "i3.large",
+      "i3.metal",
+      "i3.xlarge",
+      "i3en.12xlarge",
+      "i3en.24xlarge",
+      "i3en.2xlarge",
+      "i3en.3xlarge",
+      "i3en.6xlarge",
+      "i3en.large",
+      "i3en.metal",
+      "i3en.xlarge",
+      "i4g.16xlarge",
+      "i4g.2xlarge",
+      "i4g.4xlarge",
+      "i4g.8xlarge",
+      "i4g.large",
+      "i4g.xlarge",
+      "i4i.12xlarge",
+      "i4i.16xlarge",
+      "i4i.24xlarge",
+      "i4i.2xlarge",
+      "i4i.32xlarge",
+      "i4i.4xlarge",
+      "i4i.8xlarge",
+      "i4i.large",
+      "i4i.metal",
+      "i4i.xlarge",
+      "i7ie.12xlarge",
+      "i7ie.18xlarge",
+      "i7ie.24xlarge",
+      "i7ie.2xlarge",
+      "i7ie.3xlarge",
+      "i7ie.48xlarge",
+      "i7ie.6xlarge",
+      "i7ie.large",
+      "i7ie.xlarge",
+      "i8g.12xlarge",
+      "i8g.16xlarge",
+      "i8g.24xlarge",
+      "i8g.2xlarge",
+      "i8g.4xlarge",
+      "i8g.8xlarge",
+      "i8g.large",
+      "i8g.metal-24xl",
+      "i8g.xlarge",
+      "im4gn.16xlarge",
+      "im4gn.2xlarge",
+      "im4gn.4xlarge",
+      "im4gn.8xlarge",
+      "im4gn.large",
+      "im4gn.xlarge",
+      "inf1.24xlarge",
+      "inf1.2xlarge",
+      "inf1.6xlarge",
+      "inf1.xlarge",
+      "inf2.24xlarge",
+      "inf2.48xlarge",
+      "inf2.8xlarge",
+      "inf2.xlarge",
+      "is4gen.2xlarge",
+      "is4gen.4xlarge",
+      "is4gen.8xlarge",
+      "is4gen.large",
+      "is4gen.medium",
+      "is4gen.xlarge",
+      "m1.large",
+      "m1.medium",
+      "m1.small",
+      "m1.xlarge",
+      "m2.2xlarge",
+      "m2.4xlarge",
+      "m2.xlarge",
+      "m3.2xlarge",
+      "m3.large",
+      "m3.medium",
+      "m3.xlarge",
+      "m4.10xlarge",
+      "m4.16xlarge",
+      "m4.2xlarge",
+      "m4.4xlarge",
+      "m4.large",
+      "m4.xlarge",
+      "m5.12xlarge",
+      "m5.16xlarge",
+      "m5.24xlarge",
+      "m5.2xlarge",
+      "m5.4xlarge",
+      "m5.8xlarge",
+      "m5.large",
+      "m5.metal",
+      "m5.xlarge",
+      "m5a.12xlarge",
+      "m5a.16xlarge",
+      "m5a.24xlarge",
+      "m5a.2xlarge",
+      "m5a.4xlarge",
+      "m5a.8xlarge",
+      "m5a.large",
+      "m5a.xlarge",
+      "m5ad.12xlarge",
+      "m5ad.16xlarge",
+      "m5ad.24xlarge",
+      "m5ad.2xlarge",
+      "m5ad.4xlarge",
+      "m5ad.8xlarge",
+      "m5ad.large",
+      "m5ad.xlarge",
+      "m5d.12xlarge",
+      "m5d.16xlarge",
+      "m5d.24xlarge",
+      "m5d.2xlarge",
+      "m5d.4xlarge",
+      "m5d.8xlarge",
+      "m5d.large",
+      "m5d.metal",
+      "m5d.xlarge",
+      "m5dn.12xlarge",
+      "m5dn.16xlarge",
+      "m5dn.24xlarge",
+      "m5dn.2xlarge",
+      "m5dn.4xlarge",
+      "m5dn.8xlarge",
+      "m5dn.large",
+      "m5dn.metal",
+      "m5dn.xlarge",
+      "m5n.12xlarge",
+      "m5n.16xlarge",
+      "m5n.24xlarge",
+      "m5n.2xlarge",
+      "m5n.4xlarge",
+      "m5n.8xlarge",
+      "m5n.large",
+      "m5n.metal",
+      "m5n.xlarge",
+      "m5zn.12xlarge",
+      "m5zn.2xlarge",
+      "m5zn.3xlarge",
+      "m5zn.6xlarge",
+      "m5zn.large",
+      "m5zn.metal",
+      "m5zn.xlarge",
+      "m6a.12xlarge",
+      "m6a.16xlarge",
+      "m6a.24xlarge",
+      "m6a.2xlarge",
+      "m6a.32xlarge",
+      "m6a.48xlarge",
+      "m6a.4xlarge",
+      "m6a.8xlarge",
+      "m6a.large",
+      "m6a.metal",
+      "m6a.xlarge",
+      "m6g.12xlarge",
+      "m6g.16xlarge",
+      "m6g.2xlarge",
+      "m6g.4xlarge",
+      "m6g.8xlarge",
+      "m6g.large",
+      "m6g.medium",
+      "m6g.metal",
+      "m6g.xlarge",
+      "m6gd.12xlarge",
+      "m6gd.16xlarge",
+      "m6gd.2xlarge",
+      "m6gd.4xlarge",
+      "m6gd.8xlarge",
+      "m6gd.large",
+      "m6gd.medium",
+      "m6gd.metal",
+      "m6gd.xlarge",
+      "m6i.12xlarge",
+      "m6i.16xlarge",
+      "m6i.24xlarge",
+      "m6i.2xlarge",
+      "m6i.32xlarge",
+      "m6i.4xlarge",
+      "m6i.8xlarge",
+      "m6i.large",
+      "m6i.metal",
+      "m6i.xlarge",
+      "m6id.12xlarge",
+      "m6id.16xlarge",
+      "m6id.24xlarge",
+      "m6id.2xlarge",
+      "m6id.32xlarge",
+      "m6id.4xlarge",
+      "m6id.8xlarge",
+      "m6id.large",
+      "m6id.metal",
+      "m6id.xlarge",
+      "m6idn.12xlarge",
+      "m6idn.16xlarge",
+      "m6idn.24xlarge",
+      "m6idn.2xlarge",
+      "m6idn.32xlarge",
+      "m6idn.4xlarge",
+      "m6idn.8xlarge",
+      "m6idn.large",
+      "m6idn.metal",
+      "m6idn.xlarge",
+      "m6in.12xlarge",
+      "m6in.16xlarge",
+      "m6in.24xlarge",
+      "m6in.2xlarge",
+      "m6in.32xlarge",
+      "m6in.4xlarge",
+      "m6in.8xlarge",
+      "m6in.large",
+      "m6in.metal",
+      "m6in.xlarge",
+      "m7a.12xlarge",
+      "m7a.16xlarge",
+      "m7a.24xlarge",
+      "m7a.2xlarge",
+      "m7a.32xlarge",
+      "m7a.48xlarge",
+      "m7a.4xlarge",
+      "m7a.8xlarge",
+      "m7a.large",
+      "m7a.medium",
+      "m7a.metal-48xl",
+      "m7a.xlarge",
+      "m7g.12xlarge",
+      "m7g.16xlarge",
+      "m7g.2xlarge",
+      "m7g.4xlarge",
+      "m7g.8xlarge",
+      "m7g.large",
+      "m7g.medium",
+      "m7g.metal",
+      "m7g.xlarge",
+      "m7gd.12xlarge",
+      "m7gd.16xlarge",
+      "m7gd.2xlarge",
+      "m7gd.4xlarge",
+      "m7gd.8xlarge",
+      "m7gd.large",
+      "m7gd.medium",
+      "m7gd.metal",
+      "m7gd.xlarge",
+      "m7i-flex.2xlarge",
+      "m7i-flex.4xlarge",
+      "m7i-flex.8xlarge",
+      "m7i-flex.large",
+      "m7i-flex.xlarge",
+      "m7i.12xlarge",
+      "m7i.16xlarge",
+      "m7i.24xlarge",
+      "m7i.2xlarge",
+      "m7i.48xlarge",
+      "m7i.4xlarge",
+      "m7i.8xlarge",
+      "m7i.large",
+      "m7i.metal-24xl",
+      "m7i.metal-48xl",
+      "m7i.xlarge",
+      "m8g.12xlarge",
+      "m8g.16xlarge",
+      "m8g.24xlarge",
+      "m8g.2xlarge",
+      "m8g.48xlarge",
+      "m8g.4xlarge",
+      "m8g.8xlarge",
+      "m8g.large",
+      "m8g.medium",
+      "m8g.metal-24xl",
+      "m8g.metal-48xl",
+      "m8g.xlarge",
+      "mac1.metal",
+      "mac2-m1ultra.metal",
+      "mac2-m2.metal",
+      "mac2-m2pro.metal",
+      "mac2.metal",
+      "p2.16xlarge",
+      "p2.8xlarge",
+      "p2.xlarge",
+      "p3.16xlarge",
+      "p3.2xlarge",
+      "p3.8xlarge",
+      "p3dn.24xlarge",
+      "p4d.24xlarge",
+      "p4de.24xlarge",
+      "p5.48xlarge",
+      "r3.2xlarge",
+      "r3.4xlarge",
+      "r3.8xlarge",
+      "r3.large",
+      "r3.xlarge",
+      "r4.16xlarge",
+      "r4.2xlarge",
+      "r4.4xlarge",
+      "r4.8xlarge",
+      "r4.large",
+      "r4.xlarge",
+      "r5.12xlarge",
+      "r5.16xlarge",
+      "r5.24xlarge",
+      "r5.2xlarge",
+      "r5.4xlarge",
+      "r5.8xlarge",
+      "r5.large",
+      "r5.metal",
+      "r5.xlarge",
+      "r5a.12xlarge",
+      "r5a.16xlarge",
+      "r5a.24xlarge",
+      "r5a.2xlarge",
+      "r5a.4xlarge",
+      "r5a.8xlarge",
+      "r5a.large",
+      "r5a.xlarge",
+      "r5ad.12xlarge",
+      "r5ad.16xlarge",
+      "r5ad.24xlarge",
+      "r5ad.2xlarge",
+      "r5ad.4xlarge",
+      "r5ad.8xlarge",
+      "r5ad.large",
+      "r5ad.xlarge",
+      "r5b.12xlarge",
+      "r5b.16xlarge",
+      "r5b.24xlarge",
+      "r5b.2xlarge",
+      "r5b.4xlarge",
+      "r5b.8xlarge",
+      "r5b.large",
+      "r5b.metal",
+      "r5b.xlarge",
+      "r5d.12xlarge",
+      "r5d.16xlarge",
+      "r5d.24xlarge",
+      "r5d.2xlarge",
+      "r5d.4xlarge",
+      "r5d.8xlarge",
+      "r5d.large",
+      "r5d.metal",
+      "r5d.xlarge",
+      "r5dn.12xlarge",
+      "r5dn.16xlarge",
+      "r5dn.24xlarge",
+      "r5dn.2xlarge",
+      "r5dn.4xlarge",
+      "r5dn.8xlarge",
+      "r5dn.large",
+      "r5dn.metal",
+      "r5dn.xlarge",
+      "r5n.12xlarge",
+      "r5n.16xlarge",
+      "r5n.24xlarge",
+      "r5n.2xlarge",
+      "r5n.4xlarge",
+      "r5n.8xlarge",
+      "r5n.large",
+      "r5n.metal",
+      "r5n.xlarge",
+      "r6a.12xlarge",
+      "r6a.16xlarge",
+      "r6a.24xlarge",
+      "r6a.2xlarge",
+      "r6a.32xlarge",
+      "r6a.48xlarge",
+      "r6a.4xlarge",
+      "r6a.8xlarge",
+      "r6a.large",
+      "r6a.metal",
+      "r6a.xlarge",
+      "r6g.12xlarge",
+      "r6g.16xlarge",
+      "r6g.2xlarge",
+      "r6g.4xlarge",
+      "r6g.8xlarge",
+      "r6g.large",
+      "r6g.medium",
+      "r6g.metal",
+      "r6g.xlarge",
+      "r6gd.12xlarge",
+      "r6gd.16xlarge",
+      "r6gd.2xlarge",
+      "r6gd.4xlarge",
+      "r6gd.8xlarge",
+      "r6gd.large",
+      "r6gd.medium",
+      "r6gd.metal",
+      "r6gd.xlarge",
+      "r6i.12xlarge",
+      "r6i.16xlarge",
+      "r6i.24xlarge",
+      "r6i.2xlarge",
+      "r6i.32xlarge",
+      "r6i.4xlarge",
+      "r6i.8xlarge",
+      "r6i.large",
+      "r6i.metal",
+      "r6i.xlarge",
+      "r6id.12xlarge",
+      "r6id.16xlarge",
+      "r6id.24xlarge",
+      "r6id.2xlarge",
+      "r6id.32xlarge",
+      "r6id.4xlarge",
+      "r6id.8xlarge",
+      "r6id.large",
+      "r6id.metal",
+      "r6id.xlarge",
+      "r6idn.12xlarge",
+      "r6idn.16xlarge",
+      "r6idn.24xlarge",
+      "r6idn.2xlarge",
+      "r6idn.32xlarge",
+      "r6idn.4xlarge",
+      "r6idn.8xlarge",
+      "r6idn.large",
+      "r6idn.metal",
+      "r6idn.xlarge",
+      "r6in.12xlarge",
+      "r6in.16xlarge",
+      "r6in.24xlarge",
+      "r6in.2xlarge",
+      "r6in.32xlarge",
+      "r6in.4xlarge",
+      "r6in.8xlarge",
+      "r6in.large",
+      "r6in.metal",
+      "r6in.xlarge",
+      "r7a.12xlarge",
+      "r7a.16xlarge",
+      "r7a.24xlarge",
+      "r7a.2xlarge",
+      "r7a.32xlarge",
+      "r7a.48xlarge",
+      "r7a.4xlarge",
+      "r7a.8xlarge",
+      "r7a.large",
+      "r7a.medium",
+      "r7a.metal-48xl",
+      "r7a.xlarge",
+      "r7g.12xlarge",
+      "r7g.16xlarge",
+      "r7g.2xlarge",
+      "r7g.4xlarge",
+      "r7g.8xlarge",
+      "r7g.large",
+      "r7g.medium",
+      "r7g.metal",
+      "r7g.xlarge",
+      "r7gd.12xlarge",
+      "r7gd.16xlarge",
+      "r7gd.2xlarge",
+      "r7gd.4xlarge",
+      "r7gd.8xlarge",
+      "r7gd.large",
+      "r7gd.medium",
+      "r7gd.metal",
+      "r7gd.xlarge",
+      "r7i.12xlarge",
+      "r7i.16xlarge",
+      "r7i.24xlarge",
+      "r7i.2xlarge",
+      "r7i.48xlarge",
+      "r7i.4xlarge",
+      "r7i.8xlarge",
+      "r7i.large",
+      "r7i.metal-24xl",
+      "r7i.metal-48xl",
+      "r7i.xlarge",
+      "r7iz.12xlarge",
+      "r7iz.16xlarge",
+      "r7iz.2xlarge",
+      "r7iz.32xlarge",
+      "r7iz.4xlarge",
+      "r7iz.8xlarge",
+      "r7iz.large",
+      "r7iz.metal-16xl",
+      "r7iz.metal-32xl",
+      "r7iz.xlarge",
+      "r8g.12xlarge",
+      "r8g.16xlarge",
+      "r8g.24xlarge",
+      "r8g.2xlarge",
+      "r8g.48xlarge",
+      "r8g.4xlarge",
+      "r8g.8xlarge",
+      "r8g.large",
+      "r8g.medium",
+      "r8g.metal-24xl",
+      "r8g.metal-48xl",
+      "r8g.xlarge",
+      "t1.micro",
+      "t2.2xlarge",
+      "t2.large",
+      "t2.medium",
+      "t2.micro",
+      "t2.nano",
+      "t2.small",
+      "t2.xlarge",
+      "t3.2xlarge",
+      "t3.large",
+      "t3.medium",
+      "t3.micro",
+      "t3.nano",
+      "t3.small",
+      "t3.xlarge",
+      "t3a.2xlarge",
+      "t3a.large",
+      "t3a.medium",
+      "t3a.micro",
+      "t3a.nano",
+      "t3a.small",
+      "t3a.xlarge",
+      "t4g.2xlarge",
+      "t4g.large",
+      "t4g.medium",
+      "t4g.micro",
+      "t4g.nano",
+      "t4g.small",
+      "t4g.xlarge",
+      "trn1.2xlarge",
+      "trn1.32xlarge",
+      "trn1n.32xlarge",
+      "u-12tb1.112xlarge",
+      "u-12tb1.metal",
+      "u-18tb1.112xlarge",
+      "u-18tb1.metal",
+      "u-24tb1.112xlarge",
+      "u-24tb1.metal",
+      "u-3tb1.56xlarge",
+      "u-6tb1.112xlarge",
+      "u-6tb1.56xlarge",
+      "u-6tb1.metal",
+      "u-9tb1.112xlarge",
+      "u-9tb1.metal",
+      "u7i-12tb.224xlarge",
+      "u7ib-12tb.224xlarge",
+      "u7in-16tb.224xlarge",
+      "u7in-24tb.224xlarge",
+      "u7in-32tb.224xlarge",
+      "vt1.24xlarge",
+      "vt1.3xlarge",
+      "vt1.6xlarge",
+      "x1.16xlarge",
+      "x1.32xlarge",
+      "x1e.16xlarge",
+      "x1e.2xlarge",
+      "x1e.32xlarge",
+      "x1e.4xlarge",
+      "x1e.8xlarge",
+      "x1e.xlarge",
+      "x2gd.12xlarge",
+      "x2gd.16xlarge",
+      "x2gd.2xlarge",
+      "x2gd.4xlarge",
+      "x2gd.8xlarge",
+      "x2gd.large",
+      "x2gd.medium",
+      "x2gd.metal",
+      "x2gd.xlarge",
+      "x2idn.16xlarge",
+      "x2idn.24xlarge",
+      "x2idn.32xlarge",
+      "x2idn.metal",
+      "x2iedn.16xlarge",
+      "x2iedn.24xlarge",
+      "x2iedn.2xlarge",
+      "x2iedn.32xlarge",
+      "x2iedn.4xlarge",
+      "x2iedn.8xlarge",
+      "x2iedn.metal",
+      "x2iedn.xlarge",
+      "x2iezn.12xlarge",
+      "x2iezn.2xlarge",
+      "x2iezn.4xlarge",
+      "x2iezn.6xlarge",
+      "x2iezn.8xlarge",
+      "x2iezn.metal",
+      "x8g.12xlarge",
+      "x8g.16xlarge",
+      "x8g.24xlarge",
+      "x8g.2xlarge",
+      "x8g.48xlarge",
+      "x8g.4xlarge",
+      "x8g.8xlarge",
+      "x8g.large",
+      "x8g.medium",
+      "x8g.metal-24xl",
+      "x8g.metal-48xl",
+      "x8g.xlarge",
+      "z1d.12xlarge",
+      "z1d.2xlarge",
+      "z1d.3xlarge",
+      "z1d.6xlarge",
+      "z1d.large",
+      "z1d.metal",
+      "z1d.xlarge"
+     ],
+     "type": "string"
+    },
+    "MaxPrice": {
+     "type": "string"
+    },
+    "Placement": {
+     "$ref": "#/definitions/Placement"
+    },
+    "Priority": {
+     "type": "number"
+    },
+    "SubnetId": {
+     "format": "AWS::EC2::Subnet.Id",
+     "type": "string"
+    },
+    "WeightedCapacity": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "FleetLaunchTemplateSpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "maxLength": 128,
+     "minLength": 3,
+     "pattern": "[a-zA-Z0-9\\(\\)\\.\\-/_]+",
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "type": "object"
+  },
+  "InstanceRequirementsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceleratorCount": {
+     "$ref": "#/definitions/AcceleratorCountRequest"
+    },
+    "AcceleratorManufacturers": {
+     "items": {
+      "enum": [
+       "amazon-web-services",
+       "amd",
+       "habana",
+       "nvidia",
+       "xilinx"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AcceleratorNames": {
+     "items": {
+      "enum": [
+       "a10g",
+       "a100",
+       "h100",
+       "inferentia",
+       "k520",
+       "k80",
+       "m60",
+       "radeon-pro-v520",
+       "t4",
+       "t4g",
+       "vu9p",
+       "v100"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AcceleratorTotalMemoryMiB": {
+     "$ref": "#/definitions/AcceleratorTotalMemoryMiBRequest"
+    },
+    "AcceleratorTypes": {
+     "items": {
+      "enum": [
+       "gpu",
+       "fpga",
+       "inference"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AllowedInstanceTypes": {
+     "items": {
+      "maxLength": 30,
+      "minLength": 1,
+      "pattern": "[a-zA-Z0-9\\.\\*]+",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "BareMetal": {
+     "enum": [
+      "included",
+      "required",
+      "excluded"
+     ],
+     "type": "string"
+    },
+    "BaselineEbsBandwidthMbps": {
+     "$ref": "#/definitions/BaselineEbsBandwidthMbpsRequest"
+    },
+    "BurstablePerformance": {
+     "enum": [
+      "included",
+      "required",
+      "excluded"
+     ],
+     "type": "string"
+    },
+    "CpuManufacturers": {
+     "items": {
+      "enum": [
+       "intel",
+       "amd",
+       "amazon-web-services",
+       "apple"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ExcludedInstanceTypes": {
+     "items": {
+      "maxLength": 30,
+      "minLength": 1,
+      "pattern": "[a-zA-Z0-9\\.\\*]+",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "InstanceGenerations": {
+     "items": {
+      "enum": [
+       "current",
+       "previous"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LocalStorage": {
+     "enum": [
+      "included",
+      "required",
+      "excluded"
+     ],
+     "type": "string"
+    },
+    "LocalStorageTypes": {
+     "items": {
+      "enum": [
+       "hdd",
+       "ssd"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaxSpotPriceAsPercentageOfOptimalOnDemandPrice": {
+     "type": "integer"
+    },
+    "MemoryGiBPerVCpu": {
+     "$ref": "#/definitions/MemoryGiBPerVCpuRequest"
+    },
+    "MemoryMiB": {
+     "$ref": "#/definitions/MemoryMiBRequest"
+    },
+    "NetworkBandwidthGbps": {
+     "$ref": "#/definitions/NetworkBandwidthGbpsRequest"
+    },
+    "NetworkInterfaceCount": {
+     "$ref": "#/definitions/NetworkInterfaceCountRequest"
+    },
+    "OnDemandMaxPricePercentageOverLowestPrice": {
+     "type": "integer"
+    },
+    "RequireHibernateSupport": {
+     "type": "boolean"
+    },
+    "SpotMaxPricePercentageOverLowestPrice": {
+     "type": "integer"
+    },
+    "TotalLocalStorageGB": {
+     "$ref": "#/definitions/TotalLocalStorageGBRequest"
+    },
+    "VCpuCount": {
+     "$ref": "#/definitions/VCpuCountRangeRequest"
+    }
+   },
+   "type": "object"
+  },
+  "MaintenanceStrategies": {
+   "additionalProperties": false,
+   "properties": {
+    "CapacityRebalance": {
+     "$ref": "#/definitions/CapacityRebalance"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryGiBPerVCpuRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryMiBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkBandwidthGbpsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceCountRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "OnDemandOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "enum": [
+      "lowest-price",
+      "prioritized"
+     ],
+     "type": "string"
+    },
+    "CapacityReservationOptions": {
+     "$ref": "#/definitions/CapacityReservationOptionsRequest"
+    },
+    "MaxTotalPrice": {
+     "type": "string"
+    },
+    "MinTargetCapacity": {
+     "type": "integer"
+    },
+    "SingleAvailabilityZone": {
+     "type": "boolean"
+    },
+    "SingleInstanceType": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PerformanceFactorReferenceRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "InstanceFamily": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Placement": {
+   "additionalProperties": false,
+   "properties": {
+    "Affinity": {
+     "type": "string"
+    },
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "GroupName": {
+     "type": "string"
+    },
+    "HostId": {
+     "type": "string"
+    },
+    "HostResourceGroupArn": {
+     "type": "string"
+    },
+    "PartitionNumber": {
+     "type": "integer"
+    },
+    "SpreadDomain": {
+     "type": "string"
+    },
+    "Tenancy": {
+     "enum": [
+      "dedicated",
+      "default",
+      "host"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SpotOptionsRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationStrategy": {
+     "enum": [
+      "lowest-price",
+      "lowestPrice",
+      "diversified",
+      "capacityOptimized",
+      "capacity-optimized",
+      "capacityOptimizedPrioritized",
+      "capacity-optimized-prioritized",
+      "priceCapacityOptimized",
+      "price-capacity-optimized"
+     ],
+     "type": "string"
+    },
+    "InstanceInterruptionBehavior": {
+     "enum": [
+      "hibernate",
+      "stop",
+      "terminate"
+     ],
+     "type": "string"
+    },
+    "InstancePoolsToUseCount": {
+     "type": "integer"
+    },
+    "MaintenanceStrategies": {
+     "$ref": "#/definitions/MaintenanceStrategies"
+    },
+    "MaxTotalPrice": {
+     "type": "string"
+    },
+    "MinTargetCapacity": {
+     "type": "integer"
+    },
+    "SingleAvailabilityZone": {
+     "type": "boolean"
+    },
+    "SingleInstanceType": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "enum": [
+      "client-vpn-endpoint",
+      "customer-gateway",
+      "dedicated-host",
+      "dhcp-options",
+      "egress-only-internet-gateway",
+      "elastic-gpu",
+      "elastic-ip",
+      "export-image-task",
+      "export-instance-task",
+      "fleet",
+      "fpga-image",
+      "host-reservation",
+      "image",
+      "import-image-task",
+      "import-snapshot-task",
+      "instance",
+      "internet-gateway",
+      "key-pair",
+      "launch-template",
+      "local-gateway-route-table-vpc-association",
+      "natgateway",
+      "network-acl",
+      "network-insights-analysis",
+      "network-insights-path",
+      "network-interface",
+      "placement-group",
+      "reserved-instances",
+      "route-table",
+      "security-group",
+      "snapshot",
+      "spot-fleet-request",
+      "spot-instances-request",
+      "subnet",
+      "traffic-mirror-filter",
+      "traffic-mirror-session",
+      "traffic-mirror-target",
+      "transit-gateway",
+      "transit-gateway-attachment",
+      "transit-gateway-connect-peer",
+      "transit-gateway-multicast-domain",
+      "transit-gateway-route-table",
+      "volume",
+      "vpc",
+      "vpc-flow-log",
+      "vpc-peering-connection",
+      "vpn-connection",
+      "vpn-gateway"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "TargetCapacitySpecificationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultTargetCapacityType": {
+     "enum": [
+      "on-demand",
+      "spot"
+     ],
+     "type": "string"
+    },
+    "OnDemandTargetCapacity": {
+     "type": "integer"
+    },
+    "SpotTargetCapacity": {
+     "type": "integer"
+    },
+    "TargetCapacityUnitType": {
+     "enum": [
+      "vcpu",
+      "memory-mib",
+      "units"
+     ],
+     "type": "string"
+    },
+    "TotalTargetCapacity": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "TotalTargetCapacity"
+   ],
+   "type": "object"
+  },
+  "TotalLocalStorageGBRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "number"
+    },
+    "Min": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "VCpuCountRangeRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Max": {
+     "type": "integer"
+    },
+    "Min": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FleetId"
+ ],
+ "properties": {
+  "Context": {
+   "type": "string"
+  },
+  "ExcessCapacityTerminationPolicy": {
+   "enum": [
+    "termination",
+    "no-termination"
+   ],
+   "type": "string"
+  },
+  "FleetId": {
+   "type": "string"
+  },
+  "LaunchTemplateConfigs": {
+   "items": {
+    "$ref": "#/definitions/FleetLaunchTemplateConfigRequest"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "OnDemandOptions": {
+   "$ref": "#/definitions/OnDemandOptionsRequest"
+  },
+  "ReplaceUnhealthyInstances": {
+   "type": "boolean"
+  },
+  "SpotOptions": {
+   "$ref": "#/definitions/SpotOptionsRequest"
+  },
+  "TagSpecifications": {
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetCapacitySpecification": {
+   "$ref": "#/definitions/TargetCapacitySpecificationRequest"
+  },
+  "TerminateInstancesWithExpiration": {
+   "type": "boolean"
+  },
+  "Type": {
+   "enum": [
+    "maintain",
+    "request",
+    "instant"
+   ],
+   "type": "string"
+  },
+  "ValidFrom": {
+   "type": "string"
+  },
+  "ValidUntil": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FleetId"
+ ],
+ "required": [
+  "TargetCapacitySpecification",
+  "LaunchTemplateConfigs"
+ ],
+ "typeName": "AWS::EC2::EC2Fleet"
+}
