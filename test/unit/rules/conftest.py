@@ -28,11 +28,19 @@ def regions():
 
 
 @pytest.fixture
-def cfn(template, regions):
+def parameters(request):
+    if hasattr(request, "param"):
+        return request.param
+    return None
+
+
+@pytest.fixture
+def cfn(template, regions, parameters):
     return Template(
         "",
         template,
         regions,
+        parameters,
     )
 
 
