@@ -1,0 +1,406 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/Engine",
+  "/properties/GlobalClusterIdentifier",
+  "/properties/MasterUsername"
+ ],
+ "createOnlyProperties": [
+  "/properties/AvailabilityZones",
+  "/properties/ClusterScalabilityType",
+  "/properties/DBClusterIdentifier",
+  "/properties/DBSubnetGroupName",
+  "/properties/DBSystemId",
+  "/properties/DatabaseName",
+  "/properties/EngineMode",
+  "/properties/KmsKeyId",
+  "/properties/PubliclyAccessible",
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/SourceRegion",
+  "/properties/StorageEncrypted",
+  "/properties/UseLatestRestorableTime"
+ ],
+ "definitions": {
+  "DBClusterRole": {
+   "additionalProperties": false,
+   "properties": {
+    "FeatureName": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MasterUserSecret": {
+   "additionalProperties": false,
+   "properties": {
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ReadEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AutoPause": {
+     "type": "boolean"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    },
+    "SecondsBeforeTimeout": {
+     "type": "integer"
+    },
+    "SecondsUntilAutoPause": {
+     "type": "integer"
+    },
+    "TimeoutAction": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ServerlessV2ScalingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "type": "number"
+    },
+    "MinCapacity": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBClusterIdentifier"
+ ],
+ "properties": {
+  "AllocatedStorage": {
+   "type": "integer"
+  },
+  "AssociatedRoles": {
+   "items": {
+    "$ref": "#/definitions/DBClusterRole"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "AvailabilityZones": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BacktrackWindow": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "BackupRetentionPeriod": {
+   "default": 1,
+   "maximum": 35,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ClusterScalabilityType": {
+   "enum": [
+    "limitless",
+    "standard"
+   ],
+   "type": "string"
+  },
+  "CopyTagsToSnapshot": {
+   "type": "boolean"
+  },
+  "DBClusterArn": {
+   "type": "string"
+  },
+  "DBClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "DBClusterInstanceClass": {
+   "type": "string"
+  },
+  "DBClusterParameterGroupName": {
+   "type": "string"
+  },
+  "DBClusterResourceId": {
+   "type": "string"
+  },
+  "DBInstanceParameterGroupName": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "type": "string"
+  },
+  "DBSystemId": {
+   "type": "string"
+  },
+  "DatabaseName": {
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "DomainIAMRoleName": {
+   "type": "string"
+  },
+  "EnableCloudwatchLogsExports": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EnableGlobalWriteForwarding": {
+   "type": "boolean"
+  },
+  "EnableHttpEndpoint": {
+   "type": "boolean"
+  },
+  "EnableIAMDatabaseAuthentication": {
+   "type": "boolean"
+  },
+  "EnableLocalWriteForwarding": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineLifecycleSupport": {
+   "type": "string"
+  },
+  "EngineMode": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 0,
+   "pattern": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "Iops": {
+   "type": "integer"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "ManageMasterUserPassword": {
+   "type": "boolean"
+  },
+  "MasterUserPassword": {
+   "type": "string"
+  },
+  "MasterUserSecret": {
+   "$ref": "#/definitions/MasterUserSecret"
+  },
+  "MasterUsername": {
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}[a-zA-Z0-9_]*$",
+   "type": "string"
+  },
+  "MonitoringInterval": {
+   "type": "integer"
+  },
+  "MonitoringRoleArn": {
+   "type": "string"
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "PerformanceInsightsEnabled": {
+   "type": "boolean"
+  },
+  "PerformanceInsightsKmsKeyId": {
+   "type": "string"
+  },
+  "PerformanceInsightsRetentionPeriod": {
+   "type": "integer"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredBackupWindow": {
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "ReadEndpoint": {
+   "$ref": "#/definitions/ReadEndpoint"
+  },
+  "ReplicationSourceIdentifier": {
+   "type": "string"
+  },
+  "RestoreToTime": {
+   "type": "string"
+  },
+  "RestoreType": {
+   "type": "string"
+  },
+  "ScalingConfiguration": {
+   "$ref": "#/definitions/ScalingConfiguration"
+  },
+  "ServerlessV2ScalingConfiguration": {
+   "$ref": "#/definitions/ServerlessV2ScalingConfiguration"
+  },
+  "SnapshotIdentifier": {
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "type": "string"
+  },
+  "SourceRegion": {
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "StorageThroughput": {
+   "type": "integer"
+  },
+  "StorageType": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UseLatestRestorableTime": {
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
+  "/properties/EnableHttpEndpoint": "$lowercase($string(EngineMode)) = 'serverless' ? EnableHttpEndpoint : ($lowercase($string(Engine)) in ['aurora-postgresql', 'aurora-mysql'] ? EnableHttpEndpoint : false )",
+  "/properties/Engine": "$lowercase(Engine)",
+  "/properties/EngineVersion": "$join([$string(EngineVersion), \".*\"])",
+  "/properties/KmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", KmsKeyId])",
+  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", MasterUserSecret.KmsKeyId])",
+  "/properties/NetworkType": "$lowercase(NetworkType)",
+  "/properties/PerformanceInsightsKmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", PerformanceInsightsKmsKeyId])",
+  "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)",
+  "/properties/SnapshotIdentifier": "$lowercase(SnapshotIdentifier)",
+  "/properties/SourceDBClusterIdentifier": "$lowercase(SourceDBClusterIdentifier)",
+  "/properties/StorageType": "$lowercase(StorageType)"
+ },
+ "readOnlyProperties": [
+  "/properties/DBClusterArn",
+  "/properties/DBClusterResourceId",
+  "/properties/Endpoint",
+  "/properties/Endpoint/Address",
+  "/properties/Endpoint/Port",
+  "/properties/ReadEndpoint/Address",
+  "/properties/MasterUserSecret/SecretArn",
+  "/properties/StorageThroughput"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::DBCluster",
+ "writeOnlyProperties": [
+  "/properties/ClusterScalabilityType",
+  "/properties/DBInstanceParameterGroupName",
+  "/properties/MasterUserPassword",
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/SourceRegion",
+  "/properties/UseLatestRestorableTime"
+ ]
+}

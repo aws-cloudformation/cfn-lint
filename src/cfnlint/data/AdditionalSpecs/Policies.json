@@ -1168,6 +1168,7 @@
     "GetBackupVaultNotifications",
     "GetBackupVaultSharingPolicy",
     "GetLegalHold",
+    "GetRecoveryPointIndexDetails",
     "GetRecoveryPointRestoreMetadata",
     "GetRestoreJobMetadata",
     "GetRestoreTestingInferredMetadata",
@@ -1184,6 +1185,8 @@
     "ListCopyJobSummaries",
     "ListCopyJobs",
     "ListFrameworks",
+    "ListIndexedRecoveryPoints",
+    "ListIndexedRecoveryPointsForSearch",
     "ListLegalHolds",
     "ListProtectedResources",
     "ListProtectedResourcesByBackupVault",
@@ -1203,6 +1206,7 @@
     "PutBackupVaultNotifications",
     "PutBackupVaultSharingPolicy",
     "PutRestoreValidationResult",
+    "SearchRecoveryPoint",
     "StartBackupJob",
     "StartCopyJob",
     "StartReportJob",
@@ -1213,6 +1217,7 @@
     "UpdateBackupPlan",
     "UpdateFramework",
     "UpdateGlobalSettings",
+    "UpdateRecoveryPointIndexSettings",
     "UpdateRecoveryPointLifecycle",
     "UpdateRegionSettings",
     "UpdateReportPlan",
@@ -1229,6 +1234,7 @@
     "backup:CopyTargetOrgPaths",
     "backup:CopyTargets",
     "backup:FrameworkArns",
+    "backup:Index",
     "backup:MaxRetentionDays",
     "backup:MinRetentionDays"
    ]
@@ -1267,6 +1273,31 @@
    ],
    "HasResource": true,
    "StringPrefix": "backup-gateway",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
+  "AWS Backup Search": {
+   "ARNFormat": "arn:aws:backup-search:${Region}:${Account}:${ResourceType}:${ResourceName}",
+   "ARNRegex": "^arn:aws:backup-search:.+:.+:.+",
+   "Actions": [
+    "GetSearchJob",
+    "GetSearchResultExportJob",
+    "ListSearchJobBackups",
+    "ListSearchJobResults",
+    "ListSearchJobs",
+    "ListSearchResultExportJobs",
+    "ListTagsForResource",
+    "StartSearchJob",
+    "StartSearchResultExportJob",
+    "StopSearchJob",
+    "TagResource",
+    "UntagResource"
+   ],
+   "HasResource": true,
+   "StringPrefix": "backup-search",
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
@@ -1337,6 +1368,7 @@
     "batch:AWSLogsRegion",
     "batch:AWSLogsStreamPrefix",
     "batch:EKSImage",
+    "batch:EKSNamespace",
     "batch:EKSPrivileged",
     "batch:EKSRunAsGroup",
     "batch:EKSRunAsUser",
@@ -1971,6 +2003,7 @@
     "ListChangeSets",
     "ListExports",
     "ListGeneratedTemplates",
+    "ListHookResults",
     "ListImports",
     "ListResourceScanRelatedResources",
     "ListResourceScanResources",
@@ -2014,6 +2047,7 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
     "cloudformation:ChangeSetName",
+    "cloudformation:CreateAction",
     "cloudformation:ImportResourceTypes",
     "cloudformation:ResourceTypes",
     "cloudformation:RoleArn",
@@ -4818,14 +4852,31 @@
    "ARNFormat": "arn:aws:elemental-support-cases::${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:aws:elemental-support-cases::.+:.+",
    "Actions": [
+    "AddCaseComment",
     "CheckCasePermission",
+    "CompleteMultipartUpload",
     "CreateCase",
+    "CreateS3CLIUploadCommand",
+    "CreateS3DownloadUrl",
     "GetCase",
+    "GetCasePermission",
     "GetCases",
-    "UpdateCase"
+    "GetUICache",
+    "ListTagsForCase",
+    "StartMultipartUpload",
+    "TagCase",
+    "UntagCase",
+    "UpdateCase",
+    "UpdateCaseStatus",
+    "UpdateMultipartUpload"
    ],
    "HasResource": true,
-   "StringPrefix": "elemental-support-cases"
+   "StringPrefix": "elemental-support-cases",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS Elemental Support Content": {
    "ARNFormat": "arn:${Partition}:elemental-support-content:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -6665,6 +6716,7 @@
     "GetRegistrationCode",
     "GetRetainedMessage",
     "GetStatistics",
+    "GetThingConnectivityData",
     "GetThingShadow",
     "GetTopicRule",
     "GetTopicRuleDestination",
@@ -14512,6 +14564,7 @@
     "UpdateHoursOfOperationOverride",
     "UpdateInstanceAttribute",
     "UpdateInstanceStorageConfig",
+    "UpdateParticipantAuthentication",
     "UpdateParticipantRoleConfig",
     "UpdatePhoneNumber",
     "UpdatePhoneNumberMetadata",
