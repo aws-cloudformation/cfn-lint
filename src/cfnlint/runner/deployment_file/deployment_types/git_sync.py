@@ -7,16 +7,28 @@ from __future__ import annotations
 
 from typing import Any
 
+import cfnlint.data.schemas.other.deployment_files
+from cfnlint._typing import RuleMatches
+from cfnlint.helpers import load_resource
+from cfnlint.rules.deployment_files.Configuration import Configuration
 from cfnlint.runner.deployment_file.deployment import Deployment
 
 
-def create_deployment_from_git_sync(data: dict[str, Any]) -> Deployment:
+def create_deployment_from_git_sync(
+    data: dict[str, Any]
+) -> tuple[Deployment | None, RuleMatches | None]:
 
-    template_file_path = data.get("template-file-path")
-    if not template_file_path:
-        raise ValueError("template-file-path is required")
-    parameters = data.get("parameters", {})
-    tags = data.get("tags", {})
-    return Deployment(
-        template_file_path=template_file_path, parameters=parameters, tags=tags
+    schema = load_resource(cfnlint.data.schemas.other.deployment_files, "git_sync.json")
+    matches = Configuration().validate_deployment_file(data, schema)
+    if matches:
+        return None, matches
+
+    template_file_path: str = data.get("template-file-path", "")
+    parameters: dict[str, Any] = data.get("parameters", {})
+    tags: dict[str, Any] = data.get("tags", {})
+    return (
+        Deployment(
+            template_file_path=template_file_path, parameters=parameters, tags=tags
+        ),
+        None,
     )
