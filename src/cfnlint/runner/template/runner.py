@@ -71,12 +71,9 @@ def _check_metadata_directives(
                         yield match
 
 
-def _run_template(
-    filename: str | None, template: Any, config: ConfigMixIn, rules: Rules
+def _run_template_per_config(
+    cfn: Template, config: ConfigMixIn, rules: Rules
 ) -> Iterator[Match]:
-
-    config.set_template_args(template)
-    cfn = Template(filename, template, config.regions, config.template_parameters)
 
     LOGGER.info("Run scan of template %s", cfn.filename)
     if not set(config.regions).issubset(set(REGIONS)):
@@ -98,13 +95,27 @@ def _run_template(
     if cfn.template is not None:
         if config.build_graph:
             cfn.build_graph()
-        yield from _dedup(
-            _check_metadata_directives(
-                rules.run(filename=cfn.filename, cfn=cfn, config=config),
-                cfn=cfn,
-                config=config,
-            )
+        yield from _check_metadata_directives(
+            rules.run(filename=cfn.filename, cfn=cfn, config=config),
+            cfn=cfn,
+            config=config,
         )
+
+
+def _run_template(
+    filename: str | None, template: Any, config: ConfigMixIn, rules: Rules
+) -> Iterator[Match]:
+
+    config.set_template_args(template)
+    if config.template_parameters:
+        matches: list[Match] = []
+        for template_parameters in config.template_parameters:
+            cfn = Template(filename, template, config.regions, template_parameters)
+            matches.extend(list(_run_template_per_config(cfn, config, rules)))
+        yield from _dedup(iter(matches))
+    else:
+        cfn = Template(filename, template, config.regions)
+        yield from _dedup(_run_template_per_config(cfn, config, rules))
 
 
 def run_template_by_file_path(

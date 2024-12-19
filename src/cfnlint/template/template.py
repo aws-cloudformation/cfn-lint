@@ -65,7 +65,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.regions = [cfnlint.helpers.REGION_PRIMARY]
         else:
             self.regions = regions
-        self.parameters = parameters or {}
+        self.parameters = (
+            parameters  # None represents no parameters are provided at all
+        )
         self.filename = filename
         self.template = template
         self.transform_pre: dict[str, Any] = {}

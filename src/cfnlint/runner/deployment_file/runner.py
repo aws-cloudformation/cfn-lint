@@ -13,8 +13,8 @@ from typing import Iterator
 import cfnlint.runner.deployment_file.deployment_types
 from cfnlint.config import ConfigMixIn
 from cfnlint.decode import decode
-from cfnlint.rules import Match, Rules
-from cfnlint.runner.exceptions import CfnLintExitException
+from cfnlint.rules import Match, RuleMatch, Rules
+from cfnlint.rules.deployment_files.Configuration import Configuration
 from cfnlint.runner.template import run_template_by_file_path
 
 LOGGER = logging.getLogger(__name__)
@@ -45,26 +45,52 @@ def run_deployment_file(
     if config.ignore_bad_template:
         ignore_bad_template = True
 
+    all_matches: list[RuleMatch] = []
     for plugin in cfnlint.runner.deployment_file.deployment_types.__all__:
-        try:
-            deployment_data = getattr(
-                cfnlint.runner.deployment_file.deployment_types, plugin
-            )(data)
-            template_path = Path(filename).parent / deployment_data.template_file_path
-            template_config = deepcopy(config)
-            template_config.template_parameters = deployment_data.parameters
-
-            yield from run_template_by_file_path(
-                template_path, template_config, rules, ignore_bad_template
-            )
-            return
-        except Exception as e:
-            LOGGER.info(e)
+        deployment_data, deployment_matches = getattr(
+            cfnlint.runner.deployment_file.deployment_types, plugin
+        )(data)
+        if deployment_matches:
+            all_matches.extend(deployment_matches)
             continue
+        try:
+            template_path = (
+                (Path(filename).parent / deployment_data.template_file_path)
+                .resolve()
+                .relative_to(Path.cwd())
+            )
+        except ValueError:
+            LOGGER.debug(
+                (
+                    f"Template file path {deployment_data.template_file_path!r} "
+                    "is not relative to the current working directory"
+                )
+            )
+            template_path = Path(filename).parent / deployment_data.template_file_path
+        template_config = deepcopy(config)
+        template_config.template_parameters = [deployment_data.parameters]
 
-    raise CfnLintExitException(
-        f"Deployment file {filename} didn't meet any supported deployment file format",
-        1,
+        yield from run_template_by_file_path(
+            filename=template_path,
+            config=template_config,
+            rules=rules,
+            ignore_bad_template=ignore_bad_template,
+        )
+        return
+
+    for match in all_matches:
+        LOGGER.debug(
+            f"While tring to process deployment file got error: {match.message}"
+        )
+
+    yield Match(
+        linenumber=1,
+        columnnumber=1,
+        linenumberend=1,
+        columnnumberend=1,
+        filename=filename,
+        message=f"Deployment file {filename!r} is not supported",
+        rule=Configuration(),
     )
 
 

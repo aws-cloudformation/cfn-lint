@@ -11,9 +11,7 @@ from cfnlint.jsonschema import Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema
 
 
-class DeploymentParameters(CfnLintJsonSchema):
-    """Check if Parameters are configured correctly"""
-
+class Parameters(CfnLintJsonSchema):
     id = "E2900"
     shortdesc = (
         "Validate deployment file parameters are valid against template parameters"
@@ -90,7 +88,7 @@ class DeploymentParameters(CfnLintJsonSchema):
         return schema
 
     def validate(self, validator: Validator, _: Any, instance: Any, schema: Any):
-        if not validator.cfn.parameters:
+        if validator.cfn.parameters is None:
             return
 
         cfn_validator = self.extend_validator(
@@ -104,9 +102,4 @@ class DeploymentParameters(CfnLintJsonSchema):
             ),
         )
 
-        for err in super()._iter_errors(cfn_validator, validator.cfn.parameters):
-            # we use enum twice.  Once for the type and once for the property
-            # names.  There are separate error numbers so we do this.
-            if "propertyNames" in err.schema_path and "enum" in err.schema_path:
-                err.rule = self
-            yield err
+        yield from super()._iter_errors(cfn_validator, validator.cfn.parameters)
