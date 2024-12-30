@@ -1,0 +1,210 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceGatewayId",
+  "/properties/ResourceConfigurationType",
+  "/properties/ProtocolType",
+  "/properties/ResourceConfigurationAuthType"
+ ],
+ "definitions": {
+  "ArnResource": {
+   "maxLength": 1224,
+   "pattern": "^arn.*",
+   "type": "string"
+  },
+  "DnsResource": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainName": {
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    },
+    "IpAddressType": {
+     "enum": [
+      "IPV4",
+      "IPV6",
+      "DUALSTACK"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "DomainName",
+    "IpAddressType"
+   ],
+   "type": "object"
+  },
+  "Id": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^rcfg-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "IpResource": {
+   "maxLength": 39,
+   "minLength": 4,
+   "type": "string"
+  },
+  "PortRange": {
+   "maxLength": 11,
+   "minLength": 1,
+   "pattern": "^((\\d{1,5}\\-\\d{1,5})|(\\d+))$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AllowAssociationToSharableServiceNetwork": {
+   "type": "boolean"
+  },
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:[a-z0-9f\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "Name": {
+   "maxLength": 40,
+   "minLength": 3,
+   "pattern": "^(?!rcfg-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "type": "string"
+  },
+  "PortRanges": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PortRange"
+   },
+   "type": "array"
+  },
+  "ProtocolType": {
+   "enum": [
+    "TCP"
+   ],
+   "type": "string"
+  },
+  "ResourceConfigurationAuthType": {
+   "enum": [
+    "NONE",
+    "AWS_IAM"
+   ],
+   "type": "string"
+  },
+  "ResourceConfigurationDefinition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "IpResource": {
+       "$ref": "#/definitions/IpResource"
+      }
+     },
+     "required": [
+      "IpResource"
+     ],
+     "title": "IpResource",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ArnResource": {
+       "$ref": "#/definitions/ArnResource"
+      }
+     },
+     "required": [
+      "ArnResource"
+     ],
+     "title": "ArnResource",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DnsResource": {
+       "$ref": "#/definitions/DnsResource"
+      }
+     },
+     "required": [
+      "DnsResource"
+     ],
+     "title": "DnsResource",
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "ResourceConfigurationGroupId": {
+   "$ref": "#/definitions/Id"
+  },
+  "ResourceConfigurationType": {
+   "enum": [
+    "GROUP",
+    "CHILD",
+    "SINGLE",
+    "ARN"
+   ],
+   "type": "string"
+  },
+  "ResourceGatewayId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::VpcLattice::ResourceConfiguration",
+ "writeOnlyProperties": [
+  "/properties/ResourceConfigurationAuthType",
+  "/properties/ResourceConfigurationGroupId"
+ ]
+}

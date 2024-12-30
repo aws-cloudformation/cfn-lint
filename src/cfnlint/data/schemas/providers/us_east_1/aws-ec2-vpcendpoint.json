@@ -3,8 +3,52 @@
  "createOnlyProperties": [
   "/properties/ServiceName",
   "/properties/VpcEndpointType",
-  "/properties/VpcId"
+  "/properties/VpcId",
+  "/properties/ServiceNetworkArn",
+  "/properties/ResourceConfigurationArn"
  ],
+ "definitions": {
+  "DnsOptionsSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsRecordIpType": {
+     "enum": [
+      "ipv4",
+      "ipv6",
+      "dualstack",
+      "service-defined",
+      "not-specified"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsOnlyForInboundResolverEndpoint": {
+     "enum": [
+      "OnlyInboundResolver",
+      "AllResolvers",
+      "NotSpecified"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -20,7 +64,19 @@
    "type": "array",
    "uniqueItems": false
   },
+  "DnsOptions": {
+   "$ref": "#/definitions/DnsOptionsSpecification"
+  },
   "Id": {
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "ipv4",
+    "ipv6",
+    "dualstack",
+    "not-specified"
+   ],
    "type": "string"
   },
   "NetworkInterfaceIds": {
@@ -39,6 +95,9 @@
   },
   "PrivateDnsEnabled": {
    "type": "boolean"
+  },
+  "ResourceConfigurationArn": {
+   "type": "string"
   },
   "RouteTableIds": {
    "insertionOrder": false,
@@ -85,6 +144,9 @@
   "ServiceName": {
    "type": "string"
   },
+  "ServiceNetworkArn": {
+   "type": "string"
+  },
   "SubnetIds": {
    "insertionOrder": false,
    "items": {
@@ -97,11 +159,21 @@
    "type": "array",
    "uniqueItems": true
   },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
   "VpcEndpointType": {
    "enum": [
     "Interface",
     "Gateway",
-    "GatewayLoadBalancer"
+    "GatewayLoadBalancer",
+    "ServiceNetwork",
+    "Resource"
    ],
    "type": "string"
   },
@@ -117,14 +189,14 @@
   "/properties/Id"
  ],
  "required": [
-  "VpcId",
-  "ServiceName"
+  "VpcId"
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::EC2::VPCEndpoint"
 }

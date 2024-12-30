@@ -1168,6 +1168,7 @@
     "GetBackupVaultNotifications",
     "GetBackupVaultSharingPolicy",
     "GetLegalHold",
+    "GetRecoveryPointIndexDetails",
     "GetRecoveryPointRestoreMetadata",
     "GetRestoreJobMetadata",
     "GetRestoreTestingInferredMetadata",
@@ -1184,6 +1185,8 @@
     "ListCopyJobSummaries",
     "ListCopyJobs",
     "ListFrameworks",
+    "ListIndexedRecoveryPoints",
+    "ListIndexedRecoveryPointsForSearch",
     "ListLegalHolds",
     "ListProtectedResources",
     "ListProtectedResourcesByBackupVault",
@@ -1203,6 +1206,7 @@
     "PutBackupVaultNotifications",
     "PutBackupVaultSharingPolicy",
     "PutRestoreValidationResult",
+    "SearchRecoveryPoint",
     "StartBackupJob",
     "StartCopyJob",
     "StartReportJob",
@@ -1213,6 +1217,7 @@
     "UpdateBackupPlan",
     "UpdateFramework",
     "UpdateGlobalSettings",
+    "UpdateRecoveryPointIndexSettings",
     "UpdateRecoveryPointLifecycle",
     "UpdateRegionSettings",
     "UpdateReportPlan",
@@ -1229,6 +1234,7 @@
     "backup:CopyTargetOrgPaths",
     "backup:CopyTargets",
     "backup:FrameworkArns",
+    "backup:Index",
     "backup:MaxRetentionDays",
     "backup:MinRetentionDays"
    ]
@@ -1267,6 +1273,31 @@
    ],
    "HasResource": true,
    "StringPrefix": "backup-gateway",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
+  "AWS Backup Search": {
+   "ARNFormat": "arn:aws:backup-search:${Region}:${Account}:${ResourceType}:${ResourceName}",
+   "ARNRegex": "^arn:aws:backup-search:.+:.+:.+",
+   "Actions": [
+    "GetSearchJob",
+    "GetSearchResultExportJob",
+    "ListSearchJobBackups",
+    "ListSearchJobResults",
+    "ListSearchJobs",
+    "ListSearchResultExportJobs",
+    "ListTagsForResource",
+    "StartSearchJob",
+    "StartSearchResultExportJob",
+    "StopSearchJob",
+    "TagResource",
+    "UntagResource"
+   ],
+   "HasResource": true,
+   "StringPrefix": "backup-search",
    "conditionKeys": [
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
@@ -1337,6 +1368,7 @@
     "batch:AWSLogsRegion",
     "batch:AWSLogsStreamPrefix",
     "batch:EKSImage",
+    "batch:EKSNamespace",
     "batch:EKSPrivileged",
     "batch:EKSRunAsGroup",
     "batch:EKSRunAsUser",
@@ -1349,23 +1381,41 @@
    ]
   },
   "AWS Billing": {
+   "ARNFormat": "arn:aws:billing::${Account}:${ResourceType}",
+   "ARNRegex": "^arn:aws:billing:.+",
    "Actions": [
+    "CreateBillingView",
+    "DeleteBillingView",
+    "DeleteResourcePolicy",
     "GetBillingData",
     "GetBillingDetails",
     "GetBillingNotifications",
     "GetBillingPreferences",
+    "GetBillingView",
     "GetContractInformation",
     "GetCredits",
     "GetIAMAccessPreference",
+    "GetResourcePolicy",
     "GetSellerOfRecord",
     "ListBillingViews",
+    "ListSourceViewsForBillingView",
+    "ListTagsForResource",
     "PutContractInformation",
+    "PutResourcePolicy",
     "RedeemCredits",
+    "TagResource",
+    "UntagResource",
     "UpdateBillingPreferences",
+    "UpdateBillingView",
     "UpdateIAMAccessPreference"
    ],
-   "HasResource": false,
-   "StringPrefix": "billing"
+   "HasResource": true,
+   "StringPrefix": "billing",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS Billing And Cost Management Data Exports": {
    "ARNFormat": "arn:aws:bcm-data-exports:${Region}:${Account}:${ResourceType}",
@@ -1971,6 +2021,7 @@
     "ListChangeSets",
     "ListExports",
     "ListGeneratedTemplates",
+    "ListHookResults",
     "ListImports",
     "ListResourceScanRelatedResources",
     "ListResourceScanResources",
@@ -2014,6 +2065,7 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
     "cloudformation:ChangeSetName",
+    "cloudformation:CreateAction",
     "cloudformation:ImportResourceTypes",
     "cloudformation:ResourceTypes",
     "cloudformation:RoleArn",
@@ -4818,14 +4870,31 @@
    "ARNFormat": "arn:aws:elemental-support-cases::${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:aws:elemental-support-cases::.+:.+",
    "Actions": [
+    "AddCaseComment",
     "CheckCasePermission",
+    "CompleteMultipartUpload",
     "CreateCase",
+    "CreateS3CLIUploadCommand",
+    "CreateS3DownloadUrl",
     "GetCase",
+    "GetCasePermission",
     "GetCases",
-    "UpdateCase"
+    "GetUICache",
+    "ListTagsForCase",
+    "StartMultipartUpload",
+    "TagCase",
+    "UntagCase",
+    "UpdateCase",
+    "UpdateCaseStatus",
+    "UpdateMultipartUpload"
    ],
    "HasResource": true,
-   "StringPrefix": "elemental-support-cases"
+   "StringPrefix": "elemental-support-cases",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "AWS Elemental Support Content": {
    "ARNFormat": "arn:${Partition}:elemental-support-content:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -6665,6 +6734,7 @@
     "GetRegistrationCode",
     "GetRetainedMessage",
     "GetStatistics",
+    "GetThingConnectivityData",
     "GetThingShadow",
     "GetTopicRule",
     "GetTopicRuleDestination",
@@ -14512,6 +14582,7 @@
     "UpdateHoursOfOperationOverride",
     "UpdateInstanceAttribute",
     "UpdateInstanceStorageConfig",
+    "UpdateParticipantAuthentication",
     "UpdateParticipantRoleConfig",
     "UpdatePhoneNumber",
     "UpdatePhoneNumberMetadata",
@@ -16001,6 +16072,7 @@
     "ec2:KeyPairType",
     "ec2:KmsKeyId",
     "ec2:LaunchTemplate",
+    "ec2:Location",
     "ec2:ManagedResourceOperator",
     "ec2:MetadataHttpEndpoint",
     "ec2:MetadataHttpPutResponseHopLimit",
@@ -16048,6 +16120,7 @@
     "ec2:SnapshotID",
     "ec2:SnapshotLockDuration",
     "ec2:SnapshotTime",
+    "ec2:SourceAvailabilityZone",
     "ec2:SourceCapacityReservationId",
     "ec2:SourceInstanceARN",
     "ec2:SourceOutpostArn",
@@ -16559,6 +16632,7 @@
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
+    "ecr:AccountSetting",
     "ecr:ResourceTag/${TagKey}"
    ]
   },
@@ -16787,6 +16861,7 @@
     "DescribeAddonConfiguration",
     "DescribeAddonVersions",
     "DescribeCluster",
+    "DescribeClusterVersions",
     "DescribeEksAnywhereSubscription",
     "DescribeFargateProfile",
     "DescribeIdentityProviderConfig",
@@ -19635,6 +19710,7 @@
    "ARNFormat": "arn:aws:neptune-graph:${Region}:${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:aws:neptune-graph:.+",
    "Actions": [
+    "CancelExportTask",
     "CancelImportTask",
     "CancelQuery",
     "CreateGraph",
@@ -19646,6 +19722,7 @@
     "DeleteGraphSnapshot",
     "DeletePrivateGraphEndpoint",
     "GetEngineStatus",
+    "GetExportTask",
     "GetGraph",
     "GetGraphSnapshot",
     "GetGraphSummary",
@@ -19653,6 +19730,7 @@
     "GetPrivateGraphEndpoint",
     "GetQueryStatus",
     "GetStatisticsStatus",
+    "ListExportTasks",
     "ListGraphSnapshots",
     "ListGraphs",
     "ListImportTasks",
@@ -19662,6 +19740,7 @@
     "ReadDataViaQuery",
     "ResetGraph",
     "RestoreGraphFromSnapshot",
+    "StartExportTask",
     "StartImportTask",
     "TagResource",
     "UntagResource",
@@ -23154,6 +23233,7 @@
    "ARNFormat": "arn:aws:ses:${Region}:${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:aws:ses:.+:[0-9]+:.+",
    "Actions": [
+    "AllowVendedLogDeliveryForResource",
     "CreateAddonInstance",
     "CreateAddonSubscription",
     "CreateArchive",

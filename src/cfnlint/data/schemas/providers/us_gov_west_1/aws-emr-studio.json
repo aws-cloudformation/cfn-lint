@@ -1,0 +1,174 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthMode",
+  "/properties/EngineSecurityGroupId",
+  "/properties/ServiceRole",
+  "/properties/UserRole",
+  "/properties/VpcId",
+  "/properties/WorkspaceSecurityGroupId",
+  "/properties/TrustedIdentityPropagationEnabled",
+  "/properties/IdcUserAssignment",
+  "/properties/IdcInstanceArn",
+  "/properties/EncryptionKeyArn"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SubnetId": {
+   "pattern": "^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\\Z",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/emr/latest/APIReference/API_CreateStudio.html",
+ "primaryIdentifier": [
+  "/properties/StudioId"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "AuthMode": {
+   "enum": [
+    "SSO",
+    "IAM"
+   ],
+   "type": "string"
+  },
+  "DefaultS3Location": {
+   "maxLength": 10280,
+   "minLength": 6,
+   "pattern": "^s3://.*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EncryptionKeyArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "EngineSecurityGroupId": {
+   "maxLength": 256,
+   "minLength": 4,
+   "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
+   "type": "string"
+  },
+  "IdcInstanceArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "IdcUserAssignment": {
+   "enum": [
+    "REQUIRED",
+    "OPTIONAL"
+   ],
+   "type": "string"
+  },
+  "IdpAuthUrl": {
+   "maxLength": 4096,
+   "pattern": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$",
+   "type": "string"
+  },
+  "IdpRelayStateParameterName": {
+   "maxLength": 256,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_-]+",
+   "type": "string"
+  },
+  "ServiceRole": {
+   "$ref": "#/definitions/Arn"
+  },
+  "StudioId": {
+   "maxLength": 256,
+   "minLength": 4,
+   "pattern": "^es-[0-9A-Z]+",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "$ref": "#/definitions/SubnetId"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TrustedIdentityPropagationEnabled": {
+   "type": "boolean"
+  },
+  "Url": {
+   "maxLength": 4096,
+   "pattern": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$",
+   "type": "string"
+  },
+  "UserRole": {
+   "$ref": "#/definitions/Arn"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "pattern": "^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$",
+   "type": "string"
+  },
+  "WorkspaceSecurityGroupId": {
+   "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StudioId",
+  "/properties/Arn",
+  "/properties/Url"
+ ],
+ "required": [
+  "AuthMode",
+  "EngineSecurityGroupId",
+  "Name",
+  "ServiceRole",
+  "SubnetIds",
+  "VpcId",
+  "WorkspaceSecurityGroupId",
+  "DefaultS3Location"
+ ],
+ "typeName": "AWS::EMR::Studio"
+}

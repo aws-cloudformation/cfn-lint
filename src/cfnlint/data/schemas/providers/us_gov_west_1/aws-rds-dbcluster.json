@@ -7,6 +7,7 @@
  ],
  "createOnlyProperties": [
   "/properties/AvailabilityZones",
+  "/properties/ClusterScalabilityType",
   "/properties/DBClusterIdentifier",
   "/properties/DBSubnetGroupName",
   "/properties/DBSystemId",
@@ -103,6 +104,9 @@
     },
     "MinCapacity": {
      "type": "number"
+    },
+    "SecondsUntilAutoPause": {
+     "type": "integer"
     }
    },
    "type": "object"
@@ -161,6 +165,9 @@
    "minimum": 1,
    "type": "integer"
   },
+  "ClusterScalabilityType": {
+   "type": "string"
+  },
   "CopyTagsToSnapshot": {
    "type": "boolean"
   },
@@ -177,7 +184,6 @@
    "type": "string"
   },
   "DBClusterParameterGroupName": {
-   "default": "default.aurora5.6",
    "type": "string"
   },
   "DBClusterResourceId": {
@@ -265,7 +271,6 @@
    "type": "string"
   },
   "MonitoringInterval": {
-   "default": 0,
    "type": "integer"
   },
   "MonitoringRoleArn": {
@@ -305,7 +310,6 @@
    "type": "string"
   },
   "RestoreType": {
-   "default": "full-copy",
    "type": "string"
   },
   "ScalingConfiguration": {
@@ -356,13 +360,13 @@
   "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
   "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)",
   "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
-  "/properties/EnableHttpEndpoint": "$lowercase($string(EngineMode)) = 'serverless' ? EnableHttpEndpoint : ($lowercase($string(Engine)) = 'aurora-postgresql' ? EnableHttpEndpoint : false )",
+  "/properties/EnableHttpEndpoint": "$lowercase($string(EngineMode)) = 'serverless' ? EnableHttpEndpoint : ($lowercase($string(Engine)) in ['aurora-postgresql', 'aurora-mysql'] ? EnableHttpEndpoint : false )",
   "/properties/Engine": "$lowercase(Engine)",
   "/properties/EngineVersion": "$join([$string(EngineVersion), \".*\"])",
-  "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
-  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", MasterUserSecret.KmsKeyId])",
+  "/properties/KmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", KmsKeyId])",
+  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", MasterUserSecret.KmsKeyId])",
   "/properties/NetworkType": "$lowercase(NetworkType)",
-  "/properties/PerformanceInsightsKmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", PerformanceInsightsKmsKeyId])",
+  "/properties/PerformanceInsightsKmsKeyId": "$join([\"arn:.+?:kms:.+?:.+?:key\\/\", PerformanceInsightsKmsKeyId])",
   "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)",
   "/properties/SnapshotIdentifier": "$lowercase(SnapshotIdentifier)",
   "/properties/SourceDBClusterIdentifier": "$lowercase(SourceDBClusterIdentifier)",
@@ -388,6 +392,7 @@
  },
  "typeName": "AWS::RDS::DBCluster",
  "writeOnlyProperties": [
+  "/properties/ClusterScalabilityType",
   "/properties/DBInstanceParameterGroupName",
   "/properties/MasterUserPassword",
   "/properties/RestoreToTime",

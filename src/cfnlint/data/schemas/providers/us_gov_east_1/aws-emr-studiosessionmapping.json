@@ -1,0 +1,49 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "definitions": {
+  "IamPolicyArn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:iam::([0-9]{12})?:policy\\/[^.]+$",
+   "type": "string"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/cli/latest/reference/emr/create-studio-session-mapping.html",
+ "primaryIdentifier": [
+  "/properties/StudioId",
+  "/properties/IdentityType",
+  "/properties/IdentityName"
+ ],
+ "properties": {
+  "IdentityName": {
+   "type": "string"
+  },
+  "IdentityType": {
+   "enum": [
+    "USER",
+    "GROUP"
+   ],
+   "type": "string"
+  },
+  "SessionPolicyArn": {
+   "$ref": "#/definitions/IamPolicyArn"
+  },
+  "StudioId": {
+   "maxLength": 256,
+   "minLength": 4,
+   "pattern": "^es-[0-9A-Z]+",
+   "type": "string"
+  }
+ },
+ "required": [
+  "StudioId",
+  "IdentityName",
+  "IdentityType",
+  "SessionPolicyArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::EMR::StudioSessionMapping"
+}

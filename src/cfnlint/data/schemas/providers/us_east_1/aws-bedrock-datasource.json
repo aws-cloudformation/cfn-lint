@@ -7,6 +7,15 @@
   "/properties/DataSourceConfiguration/Type"
  ],
  "definitions": {
+  "BedrockDataAutomationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ParsingModality": {
+     "$ref": "#/definitions/ParsingModality"
+    }
+   },
+   "type": "object"
+  },
   "BedrockFoundationModelConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -15,6 +24,9 @@
      "minLength": 1,
      "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2})|(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{1,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)$",
      "type": "string"
+    },
+    "ParsingModality": {
+     "$ref": "#/definitions/ParsingModality"
     },
     "ParsingPrompt": {
      "$ref": "#/definitions/ParsingPrompt"
@@ -163,33 +175,6 @@
   },
   "DataSourceConfiguration": {
    "additionalProperties": false,
-   "oneOf": [
-    {
-     "required": [
-      "S3Configuration"
-     ]
-    },
-    {
-     "required": [
-      "ConfluenceConfiguration"
-     ]
-    },
-    {
-     "required": [
-      "SalesforceConfiguration"
-     ]
-    },
-    {
-     "required": [
-      "SharePointConfiguration"
-     ]
-    },
-    {
-     "required": [
-      "WebConfiguration"
-     ]
-    }
-   ],
    "properties": {
     "ConfluenceConfiguration": {
      "$ref": "#/definitions/ConfluenceDataSourceConfiguration"
@@ -229,7 +214,8 @@
     "CONFLUENCE",
     "SALESFORCE",
     "SHAREPOINT",
-    "WEB"
+    "WEB",
+    "CUSTOM"
    ],
    "type": "string"
   },
@@ -314,6 +300,9 @@
   "ParsingConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "BedrockDataAutomationConfiguration": {
+     "$ref": "#/definitions/BedrockDataAutomationConfiguration"
+    },
     "BedrockFoundationModelConfiguration": {
      "$ref": "#/definitions/BedrockFoundationModelConfiguration"
     },
@@ -325,6 +314,12 @@
     "ParsingStrategy"
    ],
    "type": "object"
+  },
+  "ParsingModality": {
+   "enum": [
+    "MULTIMODAL"
+   ],
+   "type": "string"
   },
   "ParsingPrompt": {
    "additionalProperties": false,
@@ -342,7 +337,8 @@
   },
   "ParsingStrategy": {
    "enum": [
-    "BEDROCK_FOUNDATION_MODEL"
+    "BEDROCK_FOUNDATION_MODEL",
+    "BEDROCK_DATA_AUTOMATION"
    ],
    "type": "string"
   },
