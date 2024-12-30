@@ -66,7 +66,90 @@ def rule():
             ],
         ),
         (
-            "SnapStart not enabled on non java runtime",
+            "SnapStart enabled for python3.12 error",
+            {
+                "Runtime": "python3.12",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart enabled for dotnet",
+            {
+                "Runtime": "dotnet8",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [],
+        ),
+        (
+            "SnapStart enabled for go that isn't supported",
+            {
+                "Runtime": "go1.x",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'go1.x' is not supported for 'SnapStart' enabled functions",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
+            "SnapStart enabled for dotnet version that isn't supported",
+            {
+                "Runtime": "dotnet5.0",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'dotnet5.0' is not supported for 'SnapStart' enabled functions",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
+            "SnapStart enabled for dotnetcore version that isn't supported",
+            {
+                "Runtime": "dotnetcore2.1",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    (
+                        "'dotnetcore2.1' is not supported for "
+                        "'SnapStart' enabled functions"
+                    ),
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
+            "SnapStart not enabled on python non supported runtime",
             {
                 "Runtime": "python3.11",
             },
@@ -76,7 +159,7 @@ def rule():
             [],
         ),
         (
-            "SnapStart not enabled on java runtime in a bad region",
+            "SnapStart not enabled on python runtime in a bad region",
             {
                 "Runtime": "python3.11",
             },
