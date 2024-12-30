@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 from cfnlint.runner.cli import Runner, main
-from cfnlint.runner.deployment_file import run_deployment_file
+from cfnlint.runner.deployment_file import run_deployment_files
 from cfnlint.runner.exceptions import (
     CfnLintExitException,
     InvalidRegionException,

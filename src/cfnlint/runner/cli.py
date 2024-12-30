@@ -306,7 +306,7 @@ class Runner:
 
         if self.config.templates and self.config.deployment_files:
             self.config.parser.print_help()
-            sys.exit(1)
+            sys.exit(32)
 
         try:
             self._cli_output(list(self.run()))
