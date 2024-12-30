@@ -82,6 +82,58 @@ def rule():
                 )
             ],
         ),
+        (
+            "Okay with a list",
+            {"Foo": {"Type": "CommaDelimitedList"}},
+            {"Foo": ["D"]},
+            [],
+        ),
+        (
+            "Not okay with a list and a bad pattern",
+            {"Foo": {"Type": "CommaDelimitedList", "Pattern": "^Bar$"}},
+            {"Foo": ["Bar", "D"]},
+            [
+                ValidationError(
+                    "'D' does not match '^Bar$'",
+                    path=deque(["Foo", 1]),
+                    validator="pattern",
+                    schema_path=deque(["properties", "Foo", "items", "pattern"]),
+                    rule=Parameters(),
+                )
+            ],
+        ),
+        (
+            "Not okay with a list and an enum",
+            {"Foo": {"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}},
+            {"Foo": ["Bar", "D"]},
+            [
+                ValidationError(
+                    "'D' is not one of ['Bar']",
+                    path=deque(["Foo", 1]),
+                    validator="enum",
+                    schema_path=deque(["properties", "Foo", "items", "enum"]),
+                    rule=Parameters(),
+                )
+            ],
+        ),
+        (
+            "Issues when a bad properties type",
+            [{"Foo": {"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}}],
+            {"Foo": "Bar"},
+            [],
+        ),
+        (
+            "Issues when a bad property type",
+            {"Foo": [{"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}]},
+            {"Foo": "Bar"},
+            [],
+        ),
+        (
+            "Issues when a bad type",
+            {"Foo": {"Type": ["String"], "AllowedValues": ["Bar"]}},
+            {"Foo": "Foo"},
+            [],
+        ),
     ],
     indirect=["parameters"],
 )
