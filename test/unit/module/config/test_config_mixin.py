@@ -313,3 +313,56 @@ class TestConfigMixIn(BaseTestCase):
         )
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ["W3001", "E3001"])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn(["--parameters", "Foo=Bar"])
+
+        # test defaults
+        self.assertEqual(config.parameters, [{"Foo": "Bar"}])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters_lists(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn(["--parameters", "A=1", "B=2"])
+
+        # test defaults
+        self.assertEqual(config.parameters, [{"A": "1", "B": "2"}])
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_parameters_lists_bad_value(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+
+        with patch("sys.exit") as exit:
+            cfnlint.config.ConfigMixIn(
+                [
+                    "--parameters",
+                    "A",
+                ]
+            )
+            exit.assert_called_once_with(1)
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_template_files(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn(["--deployment-files", "file1.json"])
+
+        # test defaults
+        self.assertEqual(config.deployment_files, ["file1.json"])
+
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_deployment_files(self, mock_print_help):
+
+        with self.assertRaises(SystemExit) as e:
+            cfnlint.config.ConfigMixIn(
+                [
+                    "--deployment-files",
+                    "test/fixtures/templates/good/generic.yaml",
+                    "--template",
+                    "test/fixtures/templates/good/generic.yaml",
+                ]
+            )
+
+        self.assertEqual(e.exception.code, 32)
+        mock_print_help.assert_called_once()

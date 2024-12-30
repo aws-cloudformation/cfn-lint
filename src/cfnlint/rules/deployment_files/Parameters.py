@@ -32,7 +32,7 @@ class Parameters(CfnLintJsonSchema):
         )
 
     def _is_type_a_list(self, parameter_type: str) -> bool:
-        return "List" in parameter_type and "CommaDelimitedList" not in parameter_type
+        return "List" in parameter_type
 
     def _build_schema(self, instance: Any) -> dict[str, Any]:
         if not isinstance(instance, dict):
@@ -58,6 +58,12 @@ class Parameters(CfnLintJsonSchema):
             if not isinstance(parameter_type, str):
                 continue
 
+            schema_constraints = {}
+            if "AllowedValues" in parameter_object:
+                schema_constraints["enum"] = parameter_object["AllowedValues"]
+            if "Pattern" in parameter_object:
+                schema_constraints["pattern"] = parameter_object["Pattern"]
+
             if self._is_type_a_list(parameter_type):
                 schema["properties"][parameter_name] = {
                     "type": "array",
@@ -65,25 +71,10 @@ class Parameters(CfnLintJsonSchema):
                         "type": singular_types,
                     },
                 }
-                if "AllowedValues" in parameter_object:
-                    schema["properties"][parameter_name]["items"]["enum"] = (
-                        parameter_object["AllowedValues"]
-                    )
-                if "Pattern" in parameter_object:
-                    if self._is_type_a_list(parameter_type):
-                        schema["properties"][parameter_name]["items"]["pattern"] = (
-                            parameter_object["Pattern"]
-                        )
+                schema["properties"][parameter_name]["items"].update(schema_constraints)
             else:
                 schema["properties"][parameter_name]["type"] = singular_types
-                if "AllowedValues" in parameter_object:
-                    schema["properties"][parameter_name]["enum"] = parameter_object[
-                        "AllowedValues"
-                    ]
-                if "Pattern" in parameter_object:
-                    schema["properties"][parameter_name]["pattern"] = parameter_object[
-                        "Pattern"
-                    ]
+                schema["properties"][parameter_name].update(schema_constraints)
 
         return schema
 

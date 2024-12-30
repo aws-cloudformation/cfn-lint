@@ -68,7 +68,7 @@ def run_deployment_file(
             )
             template_path = Path(filename).parent / deployment_data.template_file_path
         template_config = deepcopy(config)
-        template_config.template_parameters = [deployment_data.parameters]
+        template_config.parameters = [deployment_data.parameters]
 
         yield from run_template_by_file_path(
             filename=template_path,

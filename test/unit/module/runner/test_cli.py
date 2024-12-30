@@ -98,3 +98,24 @@ class TestCli(BaseTestCase):
             runner.cli()
 
         self.assertEqual(e.exception.code, 32)
+
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_deployment_files(self, mock_print_help):
+
+        config = ConfigMixIn(
+            [
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+            deployment_files=[
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 32)
+        mock_print_help.assert_called_once()

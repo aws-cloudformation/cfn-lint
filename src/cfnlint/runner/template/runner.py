@@ -107,10 +107,10 @@ def _run_template(
 ) -> Iterator[Match]:
 
     config.set_template_args(template)
-    if config.template_parameters:
+    if config.parameters:
         matches: list[Match] = []
-        for template_parameters in config.template_parameters:
-            cfn = Template(filename, template, config.regions, template_parameters)
+        for parameters in config.parameters:
+            cfn = Template(filename, template, config.regions, parameters)
             matches.extend(list(_run_template_per_config(cfn, config, rules)))
         yield from _dedup(iter(matches))
     else:
