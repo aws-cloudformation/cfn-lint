@@ -250,17 +250,6 @@ def comma_separated_arg(string):
     return string.split(",")
 
 
-class key_value(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, dict())
-
-        for value in values:
-            # split it into key and value
-            key, value = value.split("=", 1)
-            # assign into dictionary
-            getattr(namespace, self.dest)[key.strip()] = value.strip()
-
-
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
         setattr(namespace, name, value)
@@ -366,7 +355,7 @@ class ExtendKeyValuePairs(argparse.Action):
             setattr(namespace, self.dest, result)
         except Exception:  # pylint: disable=W0703
             parser.print_help()
-            parser.exit()
+            parser.exit(1)
 
 
 class ExtendAction(argparse.Action):
@@ -460,9 +449,8 @@ class CliArgs:
             action="extend",
         )
         parameter_group.add_argument(
-            "-tp",
-            "--template-parameters",
-            dest="template_parameters",
+            "--parameters",
+            dest="parameters",
             nargs="+",
             default=[],
             action="extend_key_value",
@@ -693,7 +681,7 @@ class ManualArgs(TypedDict, total=False):
     non_zero_exit_code: str
     output_file: str
     regions: list
-    template_parameters: list[dict[str, Any]]
+    parameters: list[dict[str, Any]]
 
 
 # pylint: disable=too-many-public-methods
@@ -729,7 +717,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "non_zero_exit_code": self.non_zero_exit_code,
                 "override_spec": self.override_spec,
                 "regions": self.regions,
-                "template_parameters": self.template_parameters,
+                "parameters": self.parameters,
                 "templates": self.templates,
             }
         )
@@ -892,12 +880,12 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         )
 
     @property
-    def template_parameters(self):
-        return self._get_argument_value("template_parameters", True, True)
+    def parameters(self):
+        return self._get_argument_value("parameters", True, True)
 
-    @template_parameters.setter
-    def template_parameters(self, template_parameters: list[dict[str, Any]]):
-        self._manual_args["template_parameters"] = template_parameters
+    @parameters.setter
+    def parameters(self, parameters: list[dict[str, Any]]):
+        self._manual_args["parameters"] = parameters
 
     @property
     def override_spec(self):
