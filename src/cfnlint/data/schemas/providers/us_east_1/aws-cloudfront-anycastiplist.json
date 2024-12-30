@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpCount",
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AnycastIpList": {
+   "additionalProperties": false,
+   "properties": {
+    "AnycastIps": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Arn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "IpCount": {
+     "type": "integer"
+    },
+    "LastModifiedTime": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_]{1,64}$",
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AnycastIps",
+    "Arn",
+    "Id",
+    "IpCount",
+    "LastModifiedTime",
+    "Name",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Items": {
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AnycastIpList": {
+   "$ref": "#/definitions/AnycastIpList"
+  },
+  "ETag": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpCount": {
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]{1,64}$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AnycastIpList",
+  "/properties/ETag",
+  "/properties/Id"
+ ],
+ "required": [
+  "IpCount",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::AnycastIpList"
+}

@@ -131,6 +131,9 @@
     },
     "ProvisionedThroughput": {
      "$ref": "#/definitions/ProvisionedThroughput"
+    },
+    "WarmThroughput": {
+     "$ref": "#/definitions/WarmThroughput"
     }
    },
    "required": [
@@ -449,6 +452,32 @@
     "Enabled"
    ],
    "type": "object"
+  },
+  "WarmThroughput": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "ReadUnitsPerSecond"
+     ]
+    },
+    {
+     "required": [
+      "WriteUnitsPerSecond"
+     ]
+    }
+   ],
+   "properties": {
+    "ReadUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WriteUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -549,6 +578,9 @@
   },
   "TimeToLiveSpecification": {
    "$ref": "#/definitions/TimeToLiveSpecification"
+  },
+  "WarmThroughput": {
+   "$ref": "#/definitions/WarmThroughput"
   }
  },
  "propertyTransform": {

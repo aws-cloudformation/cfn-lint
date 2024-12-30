@@ -25,9 +25,28 @@
    },
    "type": "object"
   },
+  "KendraIndexArn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):kendra:[a-z0-9-]{1,20}:([0-9]{12}|):index/([a-zA-Z0-9][a-zA-Z0-9-]{35}|[a-zA-Z0-9][a-zA-Z0-9-]{35}-[a-zA-Z0-9][a-zA-Z0-9-]{35})$",
+   "type": "string"
+  },
+  "KendraKnowledgeBaseConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "KendraIndexArn": {
+     "$ref": "#/definitions/KendraIndexArn"
+    }
+   },
+   "required": [
+    "KendraIndexArn"
+   ],
+   "type": "object"
+  },
   "KnowledgeBaseConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "KendraKnowledgeBaseConfiguration": {
+     "$ref": "#/definitions/KendraKnowledgeBaseConfiguration"
+    },
     "Type": {
      "$ref": "#/definitions/KnowledgeBaseType"
     },
@@ -36,8 +55,7 @@
     }
    },
    "required": [
-    "Type",
-    "VectorKnowledgeBaseConfiguration"
+    "Type"
    ],
    "type": "object"
   },
@@ -63,7 +81,8 @@
   },
   "KnowledgeBaseType": {
    "enum": [
-    "VECTOR"
+    "VECTOR",
+    "KENDRA"
    ],
    "type": "string"
   },
@@ -358,6 +377,21 @@
    ],
    "type": "object"
   },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "URI": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^s3://.{1,128}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "URI"
+   ],
+   "type": "object"
+  },
   "StorageConfiguration": {
    "additionalProperties": false,
    "oneOf": [
@@ -404,6 +438,48 @@
    ],
    "type": "object"
   },
+  "SupplementalDataStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SupplementalDataStorageLocations": {
+     "$ref": "#/definitions/SupplementalDataStorageLocations"
+    }
+   },
+   "required": [
+    "SupplementalDataStorageLocations"
+   ],
+   "type": "object"
+  },
+  "SupplementalDataStorageLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "SupplementalDataStorageLocationType": {
+     "$ref": "#/definitions/SupplementalDataStorageLocationType"
+    }
+   },
+   "required": [
+    "SupplementalDataStorageLocationType"
+   ],
+   "type": "object"
+  },
+  "SupplementalDataStorageLocationType": {
+   "enum": [
+    "S3"
+   ],
+   "type": "string"
+  },
+  "SupplementalDataStorageLocations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SupplementalDataStorageLocation"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
   "TagsMap": {
    "additionalProperties": false,
    "patternProperties": {
@@ -427,6 +503,9 @@
     },
     "EmbeddingModelConfiguration": {
      "$ref": "#/definitions/EmbeddingModelConfiguration"
+    },
+    "SupplementalDataStorageConfiguration": {
+     "$ref": "#/definitions/SupplementalDataStorageConfiguration"
     }
    },
    "required": [
@@ -502,8 +581,7 @@
  "required": [
   "KnowledgeBaseConfiguration",
   "Name",
-  "RoleArn",
-  "StorageConfiguration"
+  "RoleArn"
  ],
  "tagging": {
   "cloudFormationSystemTags": true,

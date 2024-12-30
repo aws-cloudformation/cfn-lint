@@ -76,6 +76,9 @@
    "properties": {
     "EFSFileSystemConfig": {
      "$ref": "#/definitions/EFSFileSystemConfig"
+    },
+    "FSxLustreFileSystemConfig": {
+     "$ref": "#/definitions/FSxLustreFileSystemConfig"
     }
    },
    "type": "object"
@@ -262,6 +265,27 @@
    "type": "object"
   },
   "EFSFileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemId": {
+     "maxLength": 21,
+     "minLength": 11,
+     "pattern": "^(fs-[0-9a-f]{8,})$",
+     "type": "string"
+    },
+    "FileSystemPath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^\\/\\S*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "FileSystemId"
+   ],
+   "type": "object"
+  },
+  "FSxLustreFileSystemConfig": {
    "additionalProperties": false,
    "properties": {
     "FileSystemId": {

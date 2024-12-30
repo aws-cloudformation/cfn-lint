@@ -1,0 +1,124 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SourceArn",
+  "/properties/TargetArn",
+  "/properties/KMSKeyId",
+  "/properties/AdditionalEncryptionContext"
+ ],
+ "definitions": {
+  "EncryptionContextMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[\\s\\S]*$": {
+     "maxLength": 131072,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IntegrationArn"
+ ],
+ "properties": {
+  "AdditionalEncryptionContext": {
+   "$ref": "#/definitions/EncryptionContextMap"
+  },
+  "CreateTime": {
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "type": "string"
+  },
+  "IntegrationName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$",
+   "type": "string"
+  },
+  "KMSKeyId": {
+   "anyOf": [
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::KMS::Key"
+     }
+    },
+    {
+     "relationshipRef": {
+      "propertyPath": "/properties/KeyId",
+      "typeName": "AWS::KMS::Key"
+     }
+    }
+   ],
+   "type": "string"
+  },
+  "SourceArn": {
+   "pattern": "^arn:aws[a-z\\-]*:(s3|dynamodb):.*:.*:[a-zA-Z0-9._\\-\\/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetArn": {
+   "pattern": "^arn:aws[a-z\\-]*:redshift(-serverless)?:[a-z0-9\\-]+:[0-9]{12}:(namespace\\/|namespace:)[a-z0-9\\-]+$",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])"
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationArn",
+  "/properties/CreateTime"
+ ],
+ "required": [
+  "SourceArn",
+  "TargetArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Redshift::Integration"
+}

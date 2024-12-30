@@ -5,6 +5,12 @@
   "/properties/Tags"
  ],
  "definitions": {
+  "BucketOwner": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
   "CsvOptions": {
    "additionalProperties": false,
    "properties": {
@@ -319,6 +325,9 @@
     "Bucket": {
      "type": "string"
     },
+    "BucketOwner": {
+     "$ref": "#/definitions/BucketOwner"
+    },
     "Key": {
      "type": "string"
     }
@@ -376,6 +385,14 @@
   },
   "PathOptions": {
    "$ref": "#/definitions/PathOptions"
+  },
+  "Source": {
+   "enum": [
+    "S3",
+    "DATA-CATALOG",
+    "DATABASE"
+   ],
+   "type": "string"
   },
   "Tags": {
    "insertionOrder": false,

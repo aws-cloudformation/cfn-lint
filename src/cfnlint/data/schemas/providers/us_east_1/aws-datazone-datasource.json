@@ -38,6 +38,16 @@
      },
      "title": "RedshiftRunConfiguration",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SageMakerRunConfiguration": {
+       "$ref": "#/definitions/SageMakerRunConfigurationInput"
+      }
+     },
+     "title": "SageMakerRunConfiguration",
+     "type": "object"
     }
    ]
   },
@@ -284,6 +294,18 @@
    },
    "type": "array"
   },
+  "SageMakerRunConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "TrackingAssets": {
+     "$ref": "#/definitions/TrackingAssets"
+    }
+   },
+   "required": [
+    "TrackingAssets"
+   ],
+   "type": "object"
+  },
   "ScheduleConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -367,6 +389,22 @@
     "UTC"
    ],
    "type": "string"
+  },
+  "TrackingAssets": {
+   "additionalProperties": false,
+   "maxProperties": 1,
+   "patternProperties": {
+    "^.{1,64}$": {
+     "items": {
+      "pattern": "^arn:aws[^:]*:sagemaker:[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]:\\d{12}:[\\w+=,.@-]{1,128}/[\\w+=,.@-]{1,256}$",
+      "type": "string"
+     },
+     "maxItems": 500,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "type": "object"
   },
   "TypeRevision": {
    "maxLength": 64,

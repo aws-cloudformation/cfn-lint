@@ -1,5 +1,23 @@
 {
  "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/ServiceId"
  ],
@@ -33,6 +51,14 @@
   },
   "ServiceId": {
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
   }
  },
  "readOnlyProperties": [
@@ -40,9 +66,10 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::EC2::VPCEndpointService",
  "writeOnlyProperties": [
