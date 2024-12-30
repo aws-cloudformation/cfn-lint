@@ -1,3 +1,10 @@
+### v1.22.3
+## What's Changed
+* `SnapStart` is okay with new python dotnet by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3890
+* Update CloudFormation schemas to `2024-12-30` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3883
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.2...v1.22.3
+
 ### v1.22.2
 ## What's Changed
 * Update regex for FnSub by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3878
