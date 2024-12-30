@@ -92,6 +92,24 @@ def rule():
             [],
         ),
         (
+            "SnapStart enabled for go that isn't supported",
+            {
+                "Runtime": "go1.x",
+                "SnapStart": {
+                    "ApplyOn": "PublishedVersions",
+                },
+            },
+            ["us-east-1"],
+            True,
+            False,
+            [
+                ValidationError(
+                    "'go1.x' is not supported for 'SnapStart' enabled functions",
+                    path=deque(["SnapStart", "ApplyOn"]),
+                )
+            ],
+        ),
+        (
             "SnapStart enabled for dotnet version that isn't supported",
             {
                 "Runtime": "dotnet5.0",
