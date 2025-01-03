@@ -1,0 +1,263 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/DataProviderName"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "DmsSslModeValue": {
+   "enum": [
+    "none",
+    "require",
+    "verify-ca",
+    "verify-full"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DataProviderArn"
+ ],
+ "properties": {
+  "DataProviderArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderCreationTime": {
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderIdentifier": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DataProviderName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engine": {
+   "enum": [
+    "postgres",
+    "mysql",
+    "oracle",
+    "sqlserver",
+    "aurora",
+    "aurora_postgresql"
+   ],
+   "type": "string"
+  },
+  "ExactSettings": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Settings": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "PostgreSqlSettings"
+     ]
+    },
+    {
+     "required": [
+      "MySqlSettings"
+     ]
+    },
+    {
+     "required": [
+      "OracleSettings"
+     ]
+    },
+    {
+     "required": [
+      "MicrosoftSqlServerSettings"
+     ]
+    }
+   ],
+   "properties": {
+    "MicrosoftSqlServerSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "MySqlSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode"
+     ],
+     "type": "object"
+    },
+    "OracleSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "AsmServer": {
+       "type": "string"
+      },
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "SecretsManagerOracleAsmAccessRoleArn": {
+       "type": "string"
+      },
+      "SecretsManagerOracleAsmSecretId": {
+       "type": "string"
+      },
+      "SecretsManagerSecurityDbEncryptionAccessRoleArn": {
+       "type": "string"
+      },
+      "SecretsManagerSecurityDbEncryptionSecretId": {
+       "type": "string"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "PostgreSqlSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DataProviderArn",
+  "/properties/DataProviderCreationTime"
+ ],
+ "required": [
+  "Engine"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DMS::DataProvider",
+ "writeOnlyProperties": [
+  "/properties/DataProviderIdentifier",
+  "/properties/ExactSettings"
+ ]
+}
