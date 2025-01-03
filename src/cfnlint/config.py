@@ -313,7 +313,65 @@ class RuleConfigurationAction(argparse.Action):
             setattr(namespace, self.dest, items)
         except Exception:  # pylint: disable=W0703
             parser.print_help()
-            parser.exit()
+            parser.exit(1)
+
+
+class ExtendKeyValuePairs(argparse.Action):
+    def __init__(
+        self,
+        option_strings,
+        dest,
+        nargs=None,
+        const=None,
+        default=None,
+        type=None,
+        choices=None,
+        required=False,
+        help=None,
+        metavar=None,
+    ):  # pylint: disable=W0622
+        super().__init__(
+            option_strings=option_strings,
+            dest=dest,
+            nargs=nargs,
+            const=const,
+            default=default,
+            type=type,
+            choices=choices,
+            required=required,
+            help=help,
+            metavar=metavar,
+        )
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        try:
+            items = {}
+            for value in values:
+                # split it into key and value
+                key, value = value.split("=", 1)
+                items[key.strip()] = value.strip()
+
+            result = getattr(namespace, self.dest) + [items]
+            setattr(namespace, self.dest, result)
+        except Exception:  # pylint: disable=W0703
+            parser.print_help()
+            parser.exit(1)
+
+
+class ExtendAction(argparse.Action):
+    """Support argument types that are lists and can
+    be specified multiple times.
+    """
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = getattr(namespace, self.dest)
+        items = [] if items is None else items
+        for value in values:
+            if isinstance(value, list):
+                items.extend(value)
+            else:
+                items.append(value)
+        setattr(namespace, self.dest, items)
 
 
 class CliArgs:
@@ -333,21 +391,6 @@ class CliArgs:
                 self.print_help(sys.stderr)
                 self.exit(32, f"{self.prog}: error: {message}\n")
 
-        class ExtendAction(argparse.Action):
-            """Support argument types that are lists and can
-            be specified multiple times.
-            """
-
-            def __call__(self, parser, namespace, values, option_string=None):
-                items = getattr(namespace, self.dest)
-                items = [] if items is None else items
-                for value in values:
-                    if isinstance(value, list):
-                        items.extend(value)
-                    else:
-                        items.append(value)
-                setattr(namespace, self.dest, items)
-
         usage = (
             "\nBasic: cfn-lint test.yaml\n"
             "Ignore a rule: cfn-lint -i E3012 -- test.yaml\n"
@@ -357,9 +400,14 @@ class CliArgs:
 
         parser = ArgumentParser(description="CloudFormation Linter", usage=usage)
         parser.register("action", "extend", ExtendAction)
+        parser.register("action", "rule_configuration", RuleConfigurationAction)
+        parser.register("action", "extend_key_value", ExtendKeyValuePairs)
 
         standard = parser.add_argument_group("Standard")
         advanced = parser.add_argument_group("Advanced / Debugging")
+
+        validation_group = standard.add_mutually_exclusive_group()
+        parameter_group = standard.add_mutually_exclusive_group()
 
         # Allow the template to be passes as an optional or a positional argument
         standard.add_argument(
@@ -368,7 +416,7 @@ class CliArgs:
             nargs="*",
             help="The CloudFormation template to be linted",
         )
-        standard.add_argument(
+        validation_group.add_argument(
             "-t",
             "--template",
             metavar="TEMPLATE",
@@ -391,6 +439,22 @@ class CliArgs:
             nargs="+",
             default=[],
             action="extend",
+        )
+        validation_group.add_argument(
+            "--deployment-files",
+            dest="deployment_files",
+            help="Deployment files",
+            nargs="+",
+            default=[],
+            action="extend",
+        )
+        parameter_group.add_argument(
+            "--parameters",
+            dest="parameters",
+            nargs="+",
+            default=[],
+            action="extend_key_value",
+            help="only check rules whose id do not match these values",
         )
         advanced.add_argument(
             "-D", "--debug", help="Enable debug logging", action="store_true"
@@ -480,7 +544,7 @@ class CliArgs:
             dest="configure_rules",
             nargs="+",
             default={},
-            action=RuleConfigurationAction,
+            action="rule_configuration",
             help=(
                 "Provide configuration for a rule. Format RuleId:key=value. Example:"
                 " E3012:strict=true"
@@ -585,15 +649,15 @@ class TemplateArgs:
 
             if isinstance(configs, dict):
                 for key, value in {
-                    "ignore_checks": (list),
-                    "regions": (list),
                     "append_rules": (list),
-                    "override_spec": (str),
+                    "configure_rules": (dict),
                     "custom_rules": (str),
                     "ignore_bad_template": (bool),
+                    "ignore_checks": (list),
                     "include_checks": (list),
-                    "configure_rules": (dict),
                     "include_experimental": (bool),
+                    "override_spec": (str),
+                    "regions": (list),
                 }.items():
                     if key in configs:
                         if isinstance(configs[key], value):
@@ -606,16 +670,18 @@ class TemplateArgs:
 
 class ManualArgs(TypedDict, total=False):
     configure_rules: dict[str, dict[str, Any]]
-    include_checks: list[str]
-    ignore_checks: list[str]
-    mandatory_checks: list[str]
-    include_experimental: bool
+    deployment_files: list[str]
     ignore_bad_template: bool
+    ignore_checks: list[str]
     ignore_templates: list
+    include_checks: list[str]
+    include_experimental: bool
+    mandatory_checks: list[str]
     merge_configs: bool
     non_zero_exit_code: str
     output_file: str
     regions: list
+    parameters: list[dict[str, Any]]
 
 
 # pylint: disable=too-many-public-methods
@@ -635,23 +701,25 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     def __repr__(self):
         return format_json_string(
             {
+                "append_rules": self.append_rules,
+                "config_file": self.config_file,
+                "configure_rules": self.configure_rules,
+                "custom_rules": self.custom_rules,
+                "debug": self.debug,
+                "deployment_files": self.deployment_files,
+                "format": self.format,
+                "ignore_bad_template": self.ignore_bad_template,
                 "ignore_checks": self.ignore_checks,
                 "include_checks": self.include_checks,
-                "mandatory_checks": self.mandatory_checks,
                 "include_experimental": self.include_experimental,
-                "configure_rules": self.configure_rules,
-                "regions": self.regions,
-                "ignore_bad_template": self.ignore_bad_template,
-                "debug": self.debug,
                 "info": self.info,
-                "format": self.format,
-                "templates": self.templates,
-                "append_rules": self.append_rules,
-                "override_spec": self.override_spec,
-                "custom_rules": self.custom_rules,
-                "config_file": self.config_file,
+                "mandatory_checks": self.mandatory_checks,
                 "merge_configs": self.merge_configs,
                 "non_zero_exit_code": self.non_zero_exit_code,
+                "override_spec": self.override_spec,
+                "regions": self.regions,
+                "parameters": self.parameters,
+                "templates": self.templates,
             }
         )
 
@@ -810,6 +878,14 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         )
 
     @property
+    def parameters(self):
+        return self._get_argument_value("parameters", True, True)
+
+    @parameters.setter
+    def parameters(self, parameters: list[dict[str, Any]]):
+        self._manual_args["parameters"] = parameters
+
+    @property
     def override_spec(self):
         return self._get_argument_value("override_spec", False, True)
 
@@ -841,6 +917,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def configure_rules(self):
         return self._get_argument_value("configure_rules", True, True)
+
+    @property
+    def deployment_files(self):
+        return self._get_argument_value("deployment_files", False, True)
 
     @property
     def config_file(self):
