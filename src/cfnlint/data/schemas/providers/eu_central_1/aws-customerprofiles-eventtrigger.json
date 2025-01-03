@@ -1,0 +1,295 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/EventTriggerName"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "EventExpiration": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "EventTriggerCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "EventTriggerDimensions": {
+     "$ref": "#/definitions/EventTriggerDimensions"
+    },
+    "LogicalOperator": {
+     "$ref": "#/definitions/EventTriggerLogicalOperator"
+    }
+   },
+   "required": [
+    "EventTriggerDimensions",
+    "LogicalOperator"
+   ],
+   "type": "object"
+  },
+  "EventTriggerConditions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventTriggerCondition"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "EventTriggerDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectAttributes": {
+     "$ref": "#/definitions/ObjectAttributes"
+    }
+   },
+   "required": [
+    "ObjectAttributes"
+   ],
+   "type": "object"
+  },
+  "EventTriggerDimensions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventTriggerDimension"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "EventTriggerLimits": {
+   "additionalProperties": false,
+   "properties": {
+    "EventExpiration": {
+     "$ref": "#/definitions/EventExpiration"
+    },
+    "Periods": {
+     "$ref": "#/definitions/Periods"
+    }
+   },
+   "type": "object"
+  },
+  "EventTriggerLogicalOperator": {
+   "enum": [
+    "ANY",
+    "ALL",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "EventTriggerName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "ObjectAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "INCLUSIVE",
+      "EXCLUSIVE",
+      "CONTAINS",
+      "BEGINS_WITH",
+      "ENDS_WITH",
+      "GREATER_THAN",
+      "LESS_THAN",
+      "GREATER_THAN_OR_EQUAL",
+      "LESS_THAN_OR_EQUAL",
+      "EQUAL",
+      "BEFORE",
+      "AFTER",
+      "ON",
+      "BETWEEN",
+      "NOT_BETWEEN"
+     ],
+     "type": "string"
+    },
+    "FieldName": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    },
+    "Source": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ComparisonOperator",
+    "Values"
+   ],
+   "type": "object"
+  },
+  "ObjectAttributes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ObjectAttribute"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array"
+  },
+  "ObjectTypeName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "Period": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxInvocationsPerProfile": {
+     "maximum": 1000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Unit": {
+     "enum": [
+      "HOURS",
+      "DAYS",
+      "WEEKS",
+      "MONTHS"
+     ],
+     "type": "string"
+    },
+    "Unlimited": {
+     "type": "boolean"
+    },
+    "Value": {
+     "maximum": 24,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Periods": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Period"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SegmentFilter": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/EventTriggerName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DomainName": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "EventTriggerConditions": {
+   "$ref": "#/definitions/EventTriggerConditions"
+  },
+  "EventTriggerLimits": {
+   "$ref": "#/definitions/EventTriggerLimits"
+  },
+  "EventTriggerName": {
+   "$ref": "#/definitions/EventTriggerName"
+  },
+  "LastUpdatedAt": {
+   "type": "string"
+  },
+  "ObjectTypeName": {
+   "$ref": "#/definitions/ObjectTypeName"
+  },
+  "SegmentFilter": {
+   "$ref": "#/definitions/SegmentFilter"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt"
+ ],
+ "required": [
+  "DomainName",
+  "EventTriggerName",
+  "ObjectTypeName",
+  "EventTriggerConditions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::EventTrigger"
+}
