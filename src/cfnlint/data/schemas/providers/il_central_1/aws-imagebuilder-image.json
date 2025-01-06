@@ -1,0 +1,195 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ImageRecipeArn",
+  "/properties/ContainerRecipeArn",
+  "/properties/InfrastructureConfigurationArn",
+  "/properties/Workflows",
+  "/properties/DistributionConfigurationArn",
+  "/properties/ImageTestsConfiguration",
+  "/properties/ImageScanningConfiguration",
+  "/properties/EnhancedImageMetadataEnabled",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EcrConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerTags": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RepositoryName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageScanningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EcrConfiguration": {
+     "$ref": "#/definitions/EcrConfiguration"
+    },
+    "ImageScanningEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ImageTestsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageTestsEnabled": {
+     "type": "boolean"
+    },
+    "TimeoutMinutes": {
+     "maximum": 1440,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OnFailure": {
+     "enum": [
+      "CONTINUE",
+      "ABORT"
+     ],
+     "type": "string"
+    },
+    "ParallelGroup": {
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9-_+#]{0,99}$",
+     "type": "string"
+    },
+    "Parameters": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameter"
+     },
+     "type": "array"
+    },
+    "WorkflowArn": {
+     "pattern": "^arn:aws(?:-[a-z]+)*:imagebuilder:[a-z]{2,}(?:-[a-z]+)+-[0-9]+:(?:[0-9]{12}|aws(?:-[a-z-]+)?):workflow/(build|test|distribution)/[a-z0-9-_]+/(?:(?:([0-9]+|x)\\.([0-9]+|x)\\.([0-9]+|x))|(?:[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "[^\\x00]+",
+     "type": "string"
+    },
+    "Value": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/WorkflowParameterValue"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "WorkflowParameterValue": {
+   "pattern": "[^\\x00]*",
+   "type": "string"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "ContainerRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  },
+  {
+   "required": [
+    "ImageRecipeArn",
+    "InfrastructureConfigurationArn"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContainerRecipeArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):container-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
+   "type": "string"
+  },
+  "DistributionConfigurationArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):distribution-configuration/[a-z0-9-_]+$",
+   "type": "string"
+  },
+  "EnhancedImageMetadataEnabled": {
+   "type": "boolean"
+  },
+  "ExecutionRole": {
+   "pattern": "^(?:arn:aws(?:-[a-z]+)*:iam::[0-9]{12}:role/)?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "ImageId": {
+   "format": "AWS::EC2::Image.Id",
+   "type": "string"
+  },
+  "ImageRecipeArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):image-recipe/[a-z0-9-_]+/[0-9]+\\.[0-9]+\\.[0-9]+$",
+   "type": "string"
+  },
+  "ImageScanningConfiguration": {
+   "$ref": "#/definitions/ImageScanningConfiguration"
+  },
+  "ImageTestsConfiguration": {
+   "$ref": "#/definitions/ImageTestsConfiguration"
+  },
+  "ImageUri": {
+   "type": "string"
+  },
+  "InfrastructureConfigurationArn": {
+   "pattern": "^arn:aws[^:]*:imagebuilder:[^:]+:(?:[0-9]{12}|aws):infrastructure-configuration/[a-z0-9-_]+$",
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Workflows": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/WorkflowConfiguration"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Name",
+  "/properties/ImageId",
+  "/properties/ImageUri"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::ImageBuilder::Image"
+}

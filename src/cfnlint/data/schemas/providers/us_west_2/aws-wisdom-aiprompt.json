@@ -1,0 +1,165 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AIPromptArn",
+   "/properties/AssistantArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiFormat",
+  "/properties/AssistantId",
+  "/properties/ModelId",
+  "/properties/Name",
+  "/properties/Tags",
+  "/properties/TemplateType",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AIPromptAPIFormat": {
+   "enum": [
+    "ANTHROPIC_CLAUDE_MESSAGES",
+    "ANTHROPIC_CLAUDE_TEXT_COMPLETIONS"
+   ],
+   "type": "string"
+  },
+  "AIPromptTemplateConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TextFullAIPromptEditTemplateConfiguration": {
+       "$ref": "#/definitions/TextFullAIPromptEditTemplateConfiguration"
+      }
+     },
+     "required": [
+      "TextFullAIPromptEditTemplateConfiguration"
+     ],
+     "title": "TextFullAIPromptEditTemplateConfiguration",
+     "type": "object"
+    }
+   ],
+   "type": "object"
+  },
+  "AIPromptTemplateType": {
+   "enum": [
+    "TEXT"
+   ],
+   "type": "string"
+  },
+  "AIPromptType": {
+   "enum": [
+    "ANSWER_GENERATION",
+    "INTENT_LABELING_GENERATION",
+    "QUERY_REFORMULATION",
+    "SELF_SERVICE_PRE_PROCESSING",
+    "SELF_SERVICE_ANSWER_GENERATION"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextFullAIPromptEditTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Text": {
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AIPromptId",
+  "/properties/AssistantId"
+ ],
+ "properties": {
+  "AIPromptArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AIPromptId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}(:[A-Z0-9_$]+){0,1}$",
+   "type": "string"
+  },
+  "ApiFormat": {
+   "$ref": "#/definitions/AIPromptAPIFormat"
+  },
+  "AssistantArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "AssistantId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$|^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "ModelId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ModifiedTimeSeconds": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s_.,-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "TemplateConfiguration": {
+   "$ref": "#/definitions/AIPromptTemplateConfiguration"
+  },
+  "TemplateType": {
+   "$ref": "#/definitions/AIPromptTemplateType"
+  },
+  "Type": {
+   "$ref": "#/definitions/AIPromptType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AIPromptArn",
+  "/properties/AIPromptId",
+  "/properties/AssistantArn",
+  "/properties/ModifiedTimeSeconds"
+ ],
+ "required": [
+  "ApiFormat",
+  "ModelId",
+  "TemplateConfiguration",
+  "TemplateType",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::AIPrompt"
+}

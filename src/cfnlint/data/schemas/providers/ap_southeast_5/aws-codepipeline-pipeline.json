@@ -132,6 +132,22 @@
    ],
    "type": "object"
   },
+  "BeforeEntryConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Conditions"
+   ],
+   "type": "object"
+  },
   "BlockerDeclaration": {
    "additionalProperties": false,
    "properties": {
@@ -148,6 +164,26 @@
    "required": [
     "Type",
     "Name"
+   ],
+   "type": "object"
+  },
+  "Condition": {
+   "additionalProperties": false,
+   "properties": {
+    "Result": {
+     "type": "string"
+    },
+    "Rules": {
+     "items": {
+      "$ref": "#/definitions/RuleDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules",
+    "Result"
    ],
    "type": "object"
   },
@@ -170,13 +206,17 @@
   "FailureConditions": {
    "additionalProperties": false,
    "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
     "Result": {
      "type": "string"
     }
    },
-   "required": [
-    "Result"
-   ],
    "type": "object"
   },
   "GitBranchFilterCriteria": {
@@ -338,6 +378,62 @@
    ],
    "type": "object"
   },
+  "RuleDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "RuleTypeId": {
+     "$ref": "#/definitions/RuleTypeId"
+    },
+    "TimeoutInMinutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RuleTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "RuleTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Provider"
+   ],
+   "type": "object"
+  },
   "StageDeclaration": {
    "additionalProperties": false,
    "properties": {
@@ -347,6 +443,9 @@
      },
      "type": "array",
      "uniqueItems": true
+    },
+    "BeforeEntry": {
+     "$ref": "#/definitions/BeforeEntryConditions"
     },
     "Blockers": {
      "items": {
@@ -360,6 +459,9 @@
     },
     "OnFailure": {
      "$ref": "#/definitions/FailureConditions"
+    },
+    "OnSuccess": {
+     "$ref": "#/definitions/SuccessConditions"
     }
    },
    "required": [
@@ -381,6 +483,22 @@
    "required": [
     "StageName",
     "Reason"
+   ],
+   "type": "object"
+  },
+  "SuccessConditions": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "items": {
+      "$ref": "#/definitions/Condition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Conditions"
    ],
    "type": "object"
   },

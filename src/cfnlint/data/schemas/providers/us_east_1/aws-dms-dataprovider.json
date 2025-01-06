@@ -15,6 +15,29 @@
    ],
    "type": "string"
   },
+  "MongoDbAuthMechanism": {
+   "enum": [
+    "default",
+    "mongodb_cr",
+    "scram_sha_1"
+   ],
+   "type": "string"
+  },
+  "MongoDbAuthType": {
+   "enum": [
+    "no",
+    "password"
+   ],
+   "type": "string"
+  },
+  "MongoDbSslModeValue": {
+   "enum": [
+    "none",
+    "require",
+    "verify-full"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -67,12 +90,16 @@
   },
   "Engine": {
    "enum": [
-    "postgres",
+    "aurora",
+    "aurora_postgresql",
     "mysql",
     "oracle",
+    "postgres",
     "sqlserver",
-    "aurora",
-    "aurora_postgresql"
+    "redshift",
+    "mariadb",
+    "mongodb",
+    "docdb"
    ],
    "type": "string"
   },
@@ -102,9 +129,80 @@
      "required": [
       "MicrosoftSqlServerSettings"
      ]
+    },
+    {
+     "required": [
+      "RedshiftSettings"
+     ]
+    },
+    {
+     "required": [
+      "DocDbSettings"
+     ]
+    },
+    {
+     "required": [
+      "MariaDbSettings"
+     ]
+    },
+    {
+     "required": [
+      "MongoDbSettings"
+     ]
     }
    ],
    "properties": {
+    "DocDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/MongoDbSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "MariaDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "CertificateArn": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/DmsSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
+      "SslMode"
+     ],
+     "type": "object"
+    },
     "MicrosoftSqlServerSettings": {
      "additionalProperties": false,
      "properties": {
@@ -130,6 +228,43 @@
       "Port",
       "SslMode",
       "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "MongoDbSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "AuthMechanism": {
+       "$ref": "#/definitions/MongoDbAuthMechanism",
+       "type": "object"
+      },
+      "AuthSource": {
+       "type": "string"
+      },
+      "AuthType": {
+       "$ref": "#/definitions/MongoDbAuthType",
+       "type": "object"
+      },
+      "CertificateArn": {
+       "type": "string"
+      },
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      },
+      "SslMode": {
+       "$ref": "#/definitions/MongoDbSslModeValue",
+       "type": "object"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port"
      ],
      "type": "object"
     },
@@ -224,6 +359,26 @@
       "ServerName",
       "Port",
       "SslMode",
+      "DatabaseName"
+     ],
+     "type": "object"
+    },
+    "RedshiftSettings": {
+     "additionalProperties": false,
+     "properties": {
+      "DatabaseName": {
+       "type": "string"
+      },
+      "Port": {
+       "type": "integer"
+      },
+      "ServerName": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "ServerName",
+      "Port",
       "DatabaseName"
      ],
      "type": "object"
