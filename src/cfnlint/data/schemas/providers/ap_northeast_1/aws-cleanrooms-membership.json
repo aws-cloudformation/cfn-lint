@@ -1,0 +1,196 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CollaborationIdentifier"
+ ],
+ "definitions": {
+  "MembershipPaymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryCompute": {
+     "$ref": "#/definitions/MembershipQueryComputePaymentConfig"
+    }
+   },
+   "required": [
+    "QueryCompute"
+   ],
+   "type": "object"
+  },
+  "MembershipProtectedQueryOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/ProtectedQueryS3OutputConfiguration"
+    }
+   },
+   "required": [
+    "S3"
+   ],
+   "type": "object"
+  },
+  "MembershipProtectedQueryResultConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputConfiguration": {
+     "$ref": "#/definitions/MembershipProtectedQueryOutputConfiguration"
+    },
+    "RoleArn": {
+     "maxLength": 512,
+     "minLength": 32,
+     "pattern": "arn:aws:iam::[\\w]+:role/[\\w+=./@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OutputConfiguration"
+   ],
+   "type": "object"
+  },
+  "MembershipQueryComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "MembershipQueryLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "MembershipStatus": {
+   "enum": [
+    "ACTIVE",
+    "REMOVED",
+    "COLLABORATION_DELETED"
+   ],
+   "type": "string"
+  },
+  "ProtectedQueryS3OutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": ".*(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$).*",
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "pattern": "[\\w!.=*/-]*",
+     "type": "string"
+    },
+    "ResultFormat": {
+     "$ref": "#/definitions/ResultFormat"
+    },
+    "SingleFileOutput": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ResultFormat",
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "ResultFormat": {
+   "enum": [
+    "CSV",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationCreatorAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^\\d+$",
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "DefaultResultConfiguration": {
+   "$ref": "#/definitions/MembershipProtectedQueryResultConfiguration"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "PaymentConfiguration": {
+   "$ref": "#/definitions/MembershipPaymentConfiguration"
+  },
+  "QueryLogStatus": {
+   "$ref": "#/definitions/MembershipQueryLogStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CollaborationArn",
+  "/properties/CollaborationCreatorAccountId",
+  "/properties/MembershipIdentifier"
+ ],
+ "required": [
+  "CollaborationIdentifier",
+  "QueryLogStatus"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::Membership"
+}

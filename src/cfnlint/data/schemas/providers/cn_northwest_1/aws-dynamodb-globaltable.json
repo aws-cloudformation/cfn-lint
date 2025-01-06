@@ -1,0 +1,654 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ],
+  [
+   "/properties/StreamArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "LocalSecondaryIndexes"
+    ],
+    "type": "object"
+   },
+   "then": {
+    "properties": {
+     "AttributeDefinitions": {
+      "minItems": 2
+     },
+     "KeySchema": {
+      "minItems": 2
+     }
+    },
+    "type": "object"
+   }
+  }
+ ],
+ "createOnlyProperties": [
+  "/properties/LocalSecondaryIndexes",
+  "/properties/TableName",
+  "/properties/KeySchema"
+ ],
+ "definitions": {
+  "AttributeDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AttributeType": {
+     "enum": [
+      "B",
+      "N",
+      "S"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AttributeName",
+    "AttributeType"
+   ],
+   "type": "object"
+  },
+  "CapacityAutoScalingSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxCapacity": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "SeedCapacity": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "TargetTrackingScalingPolicyConfiguration": {
+     "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration"
+    }
+   },
+   "required": [
+    "MinCapacity",
+    "MaxCapacity",
+    "TargetTrackingScalingPolicyConfiguration"
+   ],
+   "type": "object"
+  },
+  "ContributorInsightsSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "GlobalSecondaryIndex": {
+   "additionalProperties": false,
+   "properties": {
+    "IndexName": {
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    },
+    "KeySchema": {
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 1
+    },
+    "Projection": {
+     "$ref": "#/definitions/Projection"
+    },
+    "WarmThroughput": {
+     "$ref": "#/definitions/WarmThroughput"
+    },
+    "WriteOnDemandThroughputSettings": {
+     "$ref": "#/definitions/WriteOnDemandThroughputSettings"
+    },
+    "WriteProvisionedThroughputSettings": {
+     "$ref": "#/definitions/WriteProvisionedThroughputSettings"
+    }
+   },
+   "required": [
+    "IndexName",
+    "Projection",
+    "KeySchema"
+   ],
+   "type": "object"
+  },
+  "KeySchema": {
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "AttributeName": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "KeyType": {
+      "enum": [
+       "HASH",
+       "RANGE"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "KeyType",
+     "AttributeName"
+    ],
+    "type": "object"
+   },
+   "prefixItems": [
+    {
+     "properties": {
+      "KeyType": {
+       "const": "HASH",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "KeyType": {
+       "const": "RANGE",
+       "type": "string"
+      }
+     },
+     "required": [
+      "KeyType"
+     ],
+     "type": "object"
+    }
+   ],
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
+  },
+  "KinesisStreamSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ApproximateCreationDateTimePrecision": {
+     "enum": [
+      "MICROSECOND",
+      "MILLISECOND"
+     ],
+     "type": "string"
+    },
+    "StreamArn": {
+     "relationshipRef": {
+      "propertyPath": "/properties/Arn",
+      "typeName": "AWS::Kinesis::Stream"
+     },
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamArn"
+   ],
+   "type": "object"
+  },
+  "LocalSecondaryIndex": {
+   "additionalProperties": false,
+   "properties": {
+    "IndexName": {
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    },
+    "KeySchema": {
+     "$ref": "#/definitions/KeySchema",
+     "maxItems": 2,
+     "minItems": 2
+    },
+    "Projection": {
+     "$ref": "#/definitions/Projection"
+    }
+   },
+   "required": [
+    "IndexName",
+    "Projection",
+    "KeySchema"
+   ],
+   "type": "object"
+  },
+  "PointInTimeRecoverySpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PointInTimeRecoveryEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Projection": {
+   "additionalProperties": false,
+   "properties": {
+    "NonKeyAttributes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 20,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ProjectionType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ReadOnDemandThroughputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxReadRequestUnits": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ReadProvisionedThroughputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "ReadCapacityAutoScalingSettings": {
+     "$ref": "#/definitions/CapacityAutoScalingSettings"
+    },
+    "ReadCapacityUnits": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ReplicaGlobalSecondaryIndexSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ContributorInsightsSpecification": {
+     "$ref": "#/definitions/ContributorInsightsSpecification"
+    },
+    "IndexName": {
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    },
+    "ReadOnDemandThroughputSettings": {
+     "$ref": "#/definitions/ReadOnDemandThroughputSettings"
+    },
+    "ReadProvisionedThroughputSettings": {
+     "$ref": "#/definitions/ReadProvisionedThroughputSettings"
+    }
+   },
+   "required": [
+    "IndexName"
+   ],
+   "type": "object"
+  },
+  "ReplicaSSESpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSMasterKeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/AliasName",
+        "typeName": "AWS::KMS::Alias"
+       }
+      }
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "KMSMasterKeyId"
+   ],
+   "type": "object"
+  },
+  "ReplicaSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ContributorInsightsSpecification": {
+     "$ref": "#/definitions/ContributorInsightsSpecification"
+    },
+    "DeletionProtectionEnabled": {
+     "type": "boolean"
+    },
+    "GlobalSecondaryIndexes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ReplicaGlobalSecondaryIndexSpecification"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "KinesisStreamSpecification": {
+     "$ref": "#/definitions/KinesisStreamSpecification"
+    },
+    "PointInTimeRecoverySpecification": {
+     "$ref": "#/definitions/PointInTimeRecoverySpecification"
+    },
+    "ReadOnDemandThroughputSettings": {
+     "$ref": "#/definitions/ReadOnDemandThroughputSettings"
+    },
+    "ReadProvisionedThroughputSettings": {
+     "$ref": "#/definitions/ReadProvisionedThroughputSettings"
+    },
+    "Region": {
+     "type": "string"
+    },
+    "ReplicaStreamSpecification": {
+     "$ref": "#/definitions/ReplicaStreamSpecification"
+    },
+    "ResourcePolicy": {
+     "$ref": "#/definitions/ResourcePolicy"
+    },
+    "SSESpecification": {
+     "$ref": "#/definitions/ReplicaSSESpecification"
+    },
+    "TableClass": {
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Region"
+   ],
+   "type": "object"
+  },
+  "ReplicaStreamSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourcePolicy": {
+     "$ref": "#/definitions/ResourcePolicy"
+    }
+   },
+   "required": [
+    "ResourcePolicy"
+   ],
+   "type": "object"
+  },
+  "ResourcePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "required": [
+    "PolicyDocument"
+   ],
+   "type": "object"
+  },
+  "SSESpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "SSEEnabled": {
+     "type": "boolean"
+    },
+    "SSEType": {
+     "enum": [
+      "AES256",
+      "KMS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEEnabled"
+   ],
+   "type": "object"
+  },
+  "StreamSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamViewType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamViewType"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DisableScaleIn": {
+     "type": "boolean"
+    },
+    "ScaleInCooldown": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ScaleOutCooldown": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "TargetValue": {
+     "format": "double",
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  },
+  "TimeToLiveSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeName": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "WarmThroughput": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "ReadUnitsPerSecond"
+     ]
+    },
+    {
+     "required": [
+      "WriteUnitsPerSecond"
+     ]
+    }
+   ],
+   "properties": {
+    "ReadUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "WriteUnitsPerSecond": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WriteOnDemandThroughputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxWriteRequestUnits": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "WriteProvisionedThroughputSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "WriteCapacityAutoScalingSettings": {
+     "$ref": "#/definitions/CapacityAutoScalingSettings"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TableName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AttributeDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AttributeDefinition"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true,
+   "uniqueKeys": [
+    "AttributeName"
+   ]
+  },
+  "BillingMode": {
+   "type": "string"
+  },
+  "GlobalSecondaryIndexes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/GlobalSecondaryIndex"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "KeySchema": {
+   "$ref": "#/definitions/KeySchema",
+   "maxItems": 2,
+   "minItems": 1
+  },
+  "LocalSecondaryIndexes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LocalSecondaryIndex"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Replicas": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ReplicaSpecification"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SSESpecification": {
+   "$ref": "#/definitions/SSESpecification"
+  },
+  "StreamArn": {
+   "type": "string"
+  },
+  "StreamSpecification": {
+   "$ref": "#/definitions/StreamSpecification"
+  },
+  "TableId": {
+   "type": "string"
+  },
+  "TableName": {
+   "type": "string"
+  },
+  "TimeToLiveSpecification": {
+   "$ref": "#/definitions/TimeToLiveSpecification"
+  },
+  "WarmThroughput": {
+   "$ref": "#/definitions/WarmThroughput"
+  },
+  "WriteOnDemandThroughputSettings": {
+   "$ref": "#/definitions/WriteOnDemandThroughputSettings"
+  },
+  "WriteProvisionedThroughputSettings": {
+   "$ref": "#/definitions/WriteProvisionedThroughputSettings"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/StreamArn",
+  "/properties/TableId"
+ ],
+ "required": [
+  "KeySchema",
+  "AttributeDefinitions",
+  "Replicas"
+ ],
+ "typeName": "AWS::DynamoDB::GlobalTable",
+ "writeOnlyProperties": [
+  "/properties/Replicas/*/ReadProvisionedThroughputSettings/ReadCapacityAutoScalingSettings/SeedCapacity",
+  "/properties/Replicas/*/GlobalSecondaryIndexes/*/ReadProvisionedThroughputSettings/ReadCapacityAutoScalingSettings/SeedCapacity",
+  "/properties/WriteProvisionedThroughputSettings/WriteCapacityAutoScalingSettings/SeedCapacity",
+  "/properties/GlobalSecondaryIndexes/*/WriteProvisionedThroughputSettings/WriteCapacityAutoScalingSettings/SeedCapacity"
+ ]
+}
