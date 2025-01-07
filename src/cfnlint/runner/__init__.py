@@ -8,17 +8,17 @@ __all__ = [
     "Runner",
     "run_template_by_data",
     "run_template_by_file_path",
-    "run_deployment_file",
+    "expand_deployment_files",
     "CfnLintExitException",
     "InvalidRegionException",
     "UnexpectedRuleException",
 ]
 
-from cfnlint.runner.cli import Runner, main
-from cfnlint.runner.deployment_file import run_deployment_files
-from cfnlint.runner.exceptions import (
+from cfnlint.exceptions import (
     CfnLintExitException,
     InvalidRegionException,
     UnexpectedRuleException,
 )
+from cfnlint.runner.cli import Runner, main
+from cfnlint.runner.deployment_file import expand_deployment_files
 from cfnlint.runner.template import run_template_by_data, run_template_by_file_path
