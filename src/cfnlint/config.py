@@ -179,11 +179,7 @@ class ConfigFileArgs:
         LOGGER.debug("Config used: %s", config)
 
         validator = StandardValidator(schema=schema)
-        errs = list(validator.iter_errors(config))
-        if errs:
-            for err in errs:
-                print(f"CFNLINTRC error: {err.message}")
-            sys.exit(32)
+        validator.validate(config)
         LOGGER.debug("CFNLINTRC looks valid!")
 
     def merge_config(self, user_config, project_config):
@@ -317,7 +313,7 @@ class RuleConfigurationAction(argparse.Action):
             setattr(namespace, self.dest, items)
         except Exception:  # pylint: disable=W0703
             parser.print_help()
-            parser.exit()
+            parser.exit(1)
 
 
 class CliArgs:
@@ -335,7 +331,7 @@ class CliArgs:
 
             def error(self, message):
                 self.print_help(sys.stderr)
-                self.exit(32, f"{self.prog}: error: {message}\n")
+                self.exit(1, f"{self.prog}: error: {message}\n")
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can

@@ -8,7 +8,8 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import cfnlint.config  # pylint: disable=E0401
+import cfnlint.config
+from cfnlint.jsonschema import ValidationError
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -70,10 +71,8 @@ class TestConfigFileArgs(BaseTestCase):
 
         yaml_mock.side_effect = [{"regions": True}, {}]
 
-        with self.assertRaises(SystemExit) as err:
+        with self.assertRaises(ValidationError):
             cfnlint.config.ConfigFileArgs()
-
-            self.assertEqual(err.exception.code, 32)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_parser_fail_on_config_rules(self, yaml_mock):
