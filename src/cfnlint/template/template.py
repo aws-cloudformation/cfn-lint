@@ -15,7 +15,7 @@ import regex as re
 import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint._typing import CheckValueFn, Path
-from cfnlint.context import Context, create_context_for_template
+from cfnlint.context import Context, ParameterSet, create_context_for_template
 from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.decode.node import dict_node, list_node
 from cfnlint.graph import Graph
@@ -52,7 +52,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         filename: str | None,
         template: dict[str, Any],
         regions: list[str] | None = None,
-        parameters: dict[str, Any] | None = None,
+        parameter_sets: list[ParameterSet] | None = None,
     ):
         """Initialize a Template instance.
 
@@ -61,13 +61,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             template (dict[str, Any]): The dictionary representing the CloudFormation template.
             regions (list[str] | None): A list of AWS regions associated with the template.
         """
-        if regions is None:
-            self.regions = [cfnlint.helpers.REGION_PRIMARY]
-        else:
-            self.regions = regions
-        self.parameters = (
-            parameters  # None represents no parameters are provided at all
-        )
+
+        self.regions = regions or [cfnlint.helpers.REGION_PRIMARY]
+
         self.filename = filename
         self.template = template
         self.transform_pre: dict[str, Any] = {}
@@ -98,6 +94,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             LOGGER.info("Encountered unknown error while building graph: %s", err)
 
         self.context = create_context_for_template(self)
+        if parameter_sets:
+            self.context = self.context.evolve(parameter_sets=parameter_sets)
         self.search_deep_keys = functools.lru_cache()(self.search_deep_keys)  # type: ignore
 
     def __deepcopy__(self, memo):

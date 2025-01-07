@@ -37,7 +37,7 @@ def _decode(
 ) -> Decode:
     """Decode payload using yaml_f and json_f, using filename for log output."""
     template = None
-    matches = []
+    matches: Matches = []
     try:
         template = yaml_f(payload)
     except IOError as e:
@@ -145,7 +145,10 @@ def _decode(
                 message="Template needs to be an object.",
             )
         ]
-    return (template, matches)
+
+    if matches:
+        return None, matches
+    return template, matches
 
 
 def create_match_yaml_parser_error(parser_error, filename):

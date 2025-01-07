@@ -4,10 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 
 import logging
+from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
 from cfnlint import ConfigMixIn
+from cfnlint.helpers import format_json_string
 from cfnlint.runner import Runner
 
 LOGGER = logging.getLogger("cfnlint")
@@ -36,6 +38,18 @@ class TestCli(BaseTestCase):
     @patch("cfnlint.maintenance.update_resource_specs")
     def test_update_specs(self, mock_maintenance):
         config = ConfigMixIn(["--update-specs"])
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+        mock_maintenance.assert_called_once()
+
+    @patch("cfnlint.maintenance.patch_resource_specs")
+    def test_patch_specs(self, mock_maintenance):
+        config = ConfigMixIn(["--patch-specs"])
 
         runner = Runner(config)
 
@@ -117,5 +131,45 @@ class TestCli(BaseTestCase):
         with self.assertRaises(SystemExit) as e:
             runner.cli()
 
-        self.assertEqual(e.exception.code, 32)
+        self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
+
+    @patch("fileinput.input")
+    @patch("sys.stdin.isatty")
+    def test_templates_with_stdin(self, mock_isatty, mock_fileinput):
+        template = {
+            "Resources": {
+                "Bucket": {
+                    "Type": "AWS::S3::Bucket",
+                }
+            }
+        }
+
+        mock_fileinput.return_value = StringIO(format_json_string(template))
+        mock_isatty.return_value = False
+
+        config = ConfigMixIn()
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 0)
+
+    @patch("fileinput.input")
+    @patch("sys.stdin.isatty")
+    def test_templates_with_stdin_with_bad_syntax(self, mock_isatty, mock_fileinput):
+        template = "{"
+
+        mock_fileinput.return_value = StringIO(template)
+        mock_isatty.return_value = False
+
+        config = ConfigMixIn()
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 2)

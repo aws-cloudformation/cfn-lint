@@ -10,7 +10,7 @@ from typing import Any
 
 
 @dataclass(frozen=True)
-class Deployment:
+class DeploymentFileData:
 
     template_file_path: str = field()
     parameters: dict[str, Any] = field(default_factory=dict)

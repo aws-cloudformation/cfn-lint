@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.deployment_files.Parameters import Parameters
 
@@ -29,9 +30,14 @@ def rule():
         (
             "Parameter provided with no default",
             {"Foo": {"Type": "String"}},
-            {
-                "Foo": "Bar",
-            },
+            [
+                ParameterSet(
+                    source=None,
+                    parameters={
+                        "Foo": "Bar",
+                    },
+                )
+            ],
             [],
         ),
         (
@@ -43,7 +49,7 @@ def rule():
         (
             "Empty with no default should have an error",
             {"Foo": {"Type": "String"}},
-            {},
+            [ParameterSet(source=None, parameters={})],
             [
                 ValidationError(
                     "'Foo' is a required property",
@@ -57,7 +63,7 @@ def rule():
         (
             "Failure on bad enum",
             {"Foo": {"Type": "String", "AllowedValues": ["A", "B", "C"]}},
-            {"Foo": "D"},
+            [ParameterSet(source=None, parameters={"Foo": "D"})],
             [
                 ValidationError(
                     "'D' is not one of ['A', 'B', 'C']",
@@ -71,7 +77,7 @@ def rule():
         (
             "Failure on bad pattern",
             {"Foo": {"Type": "String", "Pattern": "^Bar$"}},
-            {"Foo": "D"},
+            [ParameterSet(source=None, parameters={"Foo": "D"})],
             [
                 ValidationError(
                     "'D' does not match '^Bar$'",
@@ -85,13 +91,13 @@ def rule():
         (
             "Okay with a list",
             {"Foo": {"Type": "CommaDelimitedList"}},
-            {"Foo": ["D"]},
+            [ParameterSet(source=None, parameters={"Foo": ["D"]})],
             [],
         ),
         (
             "Not okay with a list and a bad pattern",
             {"Foo": {"Type": "CommaDelimitedList", "Pattern": "^Bar$"}},
-            {"Foo": ["Bar", "D"]},
+            [ParameterSet(source=None, parameters={"Foo": ["Bar", "D"]})],
             [
                 ValidationError(
                     "'D' does not match '^Bar$'",
@@ -105,7 +111,7 @@ def rule():
         (
             "Not okay with a list and an enum",
             {"Foo": {"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}},
-            {"Foo": ["Bar", "D"]},
+            [ParameterSet(source=None, parameters={"Foo": ["Bar", "D"]})],
             [
                 ValidationError(
                     "'D' is not one of ['Bar']",
@@ -117,21 +123,21 @@ def rule():
             ],
         ),
         (
-            "Issues when a bad properties type",
+            "No issues when a bad property type",
             [{"Foo": {"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}}],
-            {"Foo": "Bar"},
+            [ParameterSet(source=None, parameters={"Foo": "Bar"})],
             [],
         ),
         (
-            "Issues when a bad property type",
+            "No issues when a bad property type",
             {"Foo": [{"Type": "CommaDelimitedList", "AllowedValues": ["Bar"]}]},
-            {"Foo": "Bar"},
+            [ParameterSet(source=None, parameters={"Foo": "Bar"})],
             [],
         ),
         (
-            "Issues when a bad type",
+            "No issues when a bad type",
             {"Foo": {"Type": ["String"], "AllowedValues": ["Bar"]}},
-            {"Foo": "Foo"},
+            [ParameterSet(source=None, parameters={"Foo": "Foo"})],
             [],
         ),
     ],

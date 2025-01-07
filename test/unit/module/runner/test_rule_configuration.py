@@ -10,7 +10,6 @@ from cfnlint.config import ConfigMixIn
 from cfnlint.runner import Runner, UnexpectedRuleException
 
 
-
 class TestGetRules(BaseTestCase):
     """Test Run Checks"""
 

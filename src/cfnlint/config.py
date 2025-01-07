@@ -12,12 +12,14 @@ import json
 import logging
 import os
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, Sequence, TypedDict
 
 from typing_extensions import Unpack
 
 import cfnlint.decode.cfn_yaml
+from cfnlint.context.parameters import ParameterSet
 from cfnlint.helpers import REGIONS, format_json_string
 from cfnlint.jsonschema import StandardValidator
 from cfnlint.version import __version__
@@ -685,6 +687,8 @@ class ManualArgs(TypedDict, total=False):
     registry_schemas: list[str]
     template_parameters: list[dict[str, Any]]
     parameters: list[dict[str, Any]]
+    parameters: list[ParameterSet]
+    templates: list[str]
 
 
 def _merge_configs(
@@ -720,7 +724,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
-        self._templates_to_process = False
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
         TemplateArgs.__init__(self, {})
@@ -753,11 +756,34 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "non_zero_exit_code": self.non_zero_exit_code,
                 "patch_specs": self.patch_specs,
                 "override_spec": self.override_spec,
-                "regions": self.regions,
                 "parameters": self.parameters,
+                "regions": self.regions,
                 "templates": self.templates,
             }
         )
+
+    def __eq__(self, value):
+        if not isinstance(value, ConfigMixIn):
+            return False
+        for key in [
+            "configure_rules",
+            "deployment_files",
+            "ignore_bad_template",
+            "ignore_checks",
+            "include_checks",
+            "include_experimental",
+            "mandatory_checks",
+            "merge_configs",
+            "non_zero_exit_code",
+            "output_file",
+            "regions",
+            "parameters",
+            "templates",
+        ]:
+            if getattr(self, key) != getattr(value, key):
+                return False
+
+        return True
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
         cli_value = getattr(self.cli_args, arg_name)
@@ -846,7 +872,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         file_args = self._get_argument_value("templates", False, True)
         cli_args = self._get_argument_value("templates", False, False)
 
-        if cli_alt_args:
+        if "templates" in self._manual_args:
+            filenames = self._manual_args["templates"]
+        elif cli_alt_args:
             filenames = cli_alt_args
         elif cli_args:
             filenames = cli_args
@@ -858,10 +886,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         else:
             # No filenames found, could be piped in or be using the api.
             return None
-
-        # If we're still haven't returned, we've got templates to lint.
-        # Build up list of templates to lint.
-        self.templates_to_process = True
 
         if isinstance(filenames, str):
             filenames = [filenames]
@@ -913,12 +937,21 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         )
 
     @property
-    def parameters(self):
-        return self._get_argument_value("parameters", True, True)
+    def parameters(self) -> list[ParameterSet]:
+        parameter_sets = self._get_argument_value("parameters", True, True)
+        results: list[ParameterSet] = []
+        for parameter_set in parameter_sets:
+            if isinstance(parameter_set, ParameterSet):
+                results.append(parameter_set)
+            else:
+                results.append(
+                    ParameterSet(
+                        source=None,
+                        parameters=parameter_set,
+                    )
+                )
 
-    @parameters.setter
-    def parameters(self, parameters: list[dict[str, Any]]):
-        self._manual_args["parameters"] = parameters
+        return results
 
     @property
     def override_spec(self):
@@ -985,10 +1018,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     def force(self):
         return self._get_argument_value("force", False, False)
 
-    @property
-    def templates_to_process(self):
-        return self._templates_to_process
+    def evolve(self, **kwargs: Unpack[ManualArgs]) -> "ConfigMixIn":
 
-    @templates_to_process.setter
-    def templates_to_process(self, value: bool):
-        self._templates_to_process = value
+        config = deepcopy(self)
+        config._manual_args.update(kwargs)
+        return config

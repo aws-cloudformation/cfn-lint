@@ -10,10 +10,10 @@ from typing import Any, Iterator
 
 from cfnlint.config import ConfigMixIn
 from cfnlint.decode import decode
+from cfnlint.exceptions import InvalidRegionException
 from cfnlint.helpers import REGIONS
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.errors import TransformError
-from cfnlint.runner.exceptions import InvalidRegionException
+from cfnlint.rules.errors import ParseError, TransformError
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger(__name__)
@@ -107,15 +107,8 @@ def _run_template(
 ) -> Iterator[Match]:
 
     config.set_template_args(template)
-    if config.parameters:
-        matches: list[Match] = []
-        for parameters in config.parameters:
-            cfn = Template(filename, template, config.regions, parameters)
-            matches.extend(list(_run_template_per_config(cfn, config, rules)))
-        yield from _dedup(iter(matches))
-    else:
-        cfn = Template(filename, template, config.regions)
-        yield from _dedup(_run_template_per_config(cfn, config, rules))
+    cfn = Template(filename, template, config.regions, config.parameters)
+    yield from _dedup(_run_template_per_config(cfn, config, rules))
 
 
 def run_template_by_file_path(
@@ -157,3 +150,57 @@ def run_template_by_data(
     """
 
     yield from _run_template(None, template, config, rules)
+
+
+def run_template_by_pipe(config: ConfigMixIn, rules: Rules) -> Iterator[Match]:
+    """
+    Runs a set of rules against a CloudFormation template.
+
+    Attributes:
+        config (ConfigMixIn): The configuration object containing
+        settings for the template scan.
+        cfn (Template): The CloudFormation template object.
+        rules (Rules): The set of rules to be applied to the template.
+    """
+
+    (template, matches) = decode(None)  # type: ignore
+    if matches:
+        yield from iter(matches)
+        return
+    yield from run_template_by_data(template, config, rules)  # type: ignore
+
+
+def run_template_by_file_paths(config: ConfigMixIn, rules: Rules) -> Iterator[Match]:
+    """
+    Validate the specified filenames and yield any matches found.
+
+    This function processes each filename in the provided sequence, decoding the
+    template and validating it against the configured rules. Any matches found
+    are yielded as an iterator.
+
+    Args:
+        filenames (Sequence[str | None]): The sequence of filenames to be validated.
+
+    Yields:
+        Match: The matches found during the validation process.
+
+    Raises:
+        None: This function does not raise any exceptions.
+    """
+    ignore_bad_template: bool = False
+    if config.ignore_bad_template:
+        ignore_bad_template = True
+    else:
+        # There is no collection at this point so we need to handle this
+        # check directly
+        if not ParseError().is_enabled(
+            include_experimental=False,
+            ignore_rules=config.ignore_checks,
+            include_rules=config.include_checks,
+            mandatory_rules=config.mandatory_checks,
+        ):
+            ignore_bad_template = True
+    for filename in config.templates:
+        yield from run_template_by_file_path(
+            filename, config, rules, ignore_bad_template
+        )

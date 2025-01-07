@@ -79,18 +79,23 @@ class Parameters(CfnLintJsonSchema):
         return schema
 
     def validate(self, validator: Validator, _: Any, instance: Any, schema: Any):
-        if validator.cfn.parameters is None:
+        if validator.context.parameter_sets is None:
             return
 
-        cfn_validator = self.extend_validator(
-            validator=validator,
-            schema=self._build_schema(instance),
-            context=validator.context,
-        ).evolve(
-            context=validator.context.evolve(strict_types=False),
-            function_filter=validator.function_filter.evolve(
-                add_cfn_lint_keyword=False,
-            ),
-        )
+        for parameter_set in validator.context.parameter_sets:
 
-        yield from super()._iter_errors(cfn_validator, validator.cfn.parameters)
+            cfn_validator = self.extend_validator(
+                validator=validator,
+                schema=self._build_schema(instance),
+                context=validator.context,
+            ).evolve(
+                context=validator.context.evolve(strict_types=False),
+                function_filter=validator.function_filter.evolve(
+                    add_cfn_lint_keyword=False,
+                ),
+            )
+
+            for err in super()._iter_errors(cfn_validator, parameter_set.parameters):
+                if parameter_set.source:
+                    err.extra_args["filename"] = parameter_set.source
+                yield err

@@ -9,7 +9,8 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import cfnlint.config  # pylint: disable=E0401
+import cfnlint.config
+from cfnlint.context import ParameterSet
 from cfnlint.helpers import REGIONS
 
 LOGGER = logging.getLogger("cfnlint")
@@ -320,7 +321,7 @@ class TestConfigMixIn(BaseTestCase):
         config = cfnlint.config.ConfigMixIn(["--parameters", "Foo=Bar"])
 
         # test defaults
-        self.assertEqual(config.parameters, [{"Foo": "Bar"}])
+        self.assertEqual(getattr(config.cli_args, "parameters"), [{"Foo": "Bar"}])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_parameters_lists(self, yaml_mock):
@@ -328,7 +329,7 @@ class TestConfigMixIn(BaseTestCase):
         config = cfnlint.config.ConfigMixIn(["--parameters", "A=1", "B=2"])
 
         # test defaults
-        self.assertEqual(config.parameters, [{"A": "1", "B": "2"}])
+        self.assertEqual(getattr(config.cli_args, "parameters"), [{"A": "1", "B": "2"}])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_parameters_lists_bad_value(self, yaml_mock):
@@ -364,5 +365,13 @@ class TestConfigMixIn(BaseTestCase):
                 ]
             )
 
-        self.assertEqual(e.exception.code, 32)
+        self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
+
+    def test_conversion_of_template_parameters(self):
+
+        config = cfnlint.ConfigMixIn(["--parameters", "Foo=Bar"])
+
+        self.assertEqual(
+            config.parameters, [ParameterSet(source=None, parameters={"Foo": "Bar"})]
+        )
