@@ -15,7 +15,6 @@ from cfnlint.jsonschema.validators import CfnTemplateValidator
 
 def _resolve(name, instance, expected_results, **kwargs):
     validator = CfnTemplateValidator().evolve(**kwargs)
-
     resolutions = list(validator.resolve_value(instance))
 
     assert len(resolutions) == len(
