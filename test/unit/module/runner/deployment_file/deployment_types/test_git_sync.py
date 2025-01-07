@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 import pytest
 
 from cfnlint.rules import RuleMatch
-from cfnlint.runner.deployment_file.deployment import Deployment
+from cfnlint.runner.deployment_file.deployment import DeploymentFileData
 from cfnlint.runner.deployment_file.deployment_types import (
     create_deployment_from_git_sync,
 )
@@ -27,7 +27,7 @@ from cfnlint.runner.deployment_file.deployment_types import (
                 },
             },
             (
-                Deployment(
+                DeploymentFileData(
                     template_file_path="../a/path",
                     parameters={
                         "Foo": "Bar",
