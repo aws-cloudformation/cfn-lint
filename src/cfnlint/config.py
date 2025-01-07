@@ -179,7 +179,11 @@ class ConfigFileArgs:
         LOGGER.debug("Config used: %s", config)
 
         validator = StandardValidator(schema=schema)
-        validator.validate(config)
+        errs = list(validator.iter_errors(config))
+        if errs:
+            for err in errs:
+                print(f"CFNLINTRC error: {err.message}")
+            sys.exit(32)
         LOGGER.debug("CFNLINTRC looks valid!")
 
     def merge_config(self, user_config, project_config):
@@ -620,7 +624,6 @@ class ManualArgs(TypedDict, total=False):
 
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
-    """Mixin for the Configs"""
 
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
@@ -721,7 +724,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def debug(self):
-        return self._get_argument_value("debug", False, False)
+        return self._get_argument_value("debug", False, True)
 
     @property
     def info(self):
