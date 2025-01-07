@@ -12,10 +12,7 @@ from cfnlint.config import _DEFAULT_RULESDIR, ConfigMixIn, ManualArgs
 from cfnlint.exceptions import UnexpectedRuleException
 from cfnlint.match import Match
 from cfnlint.rules import RulesCollection
-
-from cfnlint.runner.exceptions import UnexpectedRuleException
 from cfnlint.runner.template.runner import _run_template
-
 
 
 def get_rules(
