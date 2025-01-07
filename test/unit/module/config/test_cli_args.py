@@ -126,7 +126,7 @@ class TestArgsParser(BaseTestCase):
         with self.assertRaises(SystemExit) as e:
             cfnlint.config.CliArgs(["-x", "E3012:key;value"])
 
-        self.assertEqual(e.exception.code, 32)
+        self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
 
     def test_exit_code_parameter(self):
