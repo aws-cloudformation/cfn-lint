@@ -1288,6 +1288,7 @@ cached: list[str] = [
     "aws-servicediscovery-privatednsnamespace.json",
     "aws-servicediscovery-publicdnsnamespace.json",
     "aws-servicediscovery-service.json",
+    "aws-ses-configurationset.json",
     "aws-ses-configurationseteventdestination.json",
     "aws-ses-contactlist.json",
     "aws-ses-dedicatedippool.json",
