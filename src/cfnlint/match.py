@@ -118,6 +118,8 @@ class Match:
         if linenumberend is None:
             linenumberend = linenumber
 
+        filename = getattr(rulematch_obj, "filename", filename)
+
         return cls(
             linenumber=linenumber,
             columnnumber=columnnumber,
