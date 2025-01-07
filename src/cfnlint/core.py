@@ -9,9 +9,10 @@ import os
 from typing import Sequence
 
 from cfnlint.config import _DEFAULT_RULESDIR, ConfigMixIn, ManualArgs
+from cfnlint.exceptions import UnexpectedRuleException
 from cfnlint.match import Match
 from cfnlint.rules import RulesCollection
-from cfnlint.runner import TemplateRunner, UnexpectedRuleException
+from cfnlint.runner import TemplateRunner
 
 
 def get_rules(

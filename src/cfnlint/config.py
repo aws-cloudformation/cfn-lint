@@ -313,7 +313,7 @@ class RuleConfigurationAction(argparse.Action):
             setattr(namespace, self.dest, items)
         except Exception:  # pylint: disable=W0703
             parser.print_help()
-            parser.exit()
+            parser.exit(1)
 
 
 class CliArgs:
@@ -331,7 +331,7 @@ class CliArgs:
 
             def error(self, message):
                 self.print_help(sys.stderr)
-                self.exit(32, f"{self.prog}: error: {message}\n")
+                self.exit(1, f"{self.prog}: error: {message}\n")
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can
@@ -620,7 +620,6 @@ class ManualArgs(TypedDict, total=False):
 
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
-    """Mixin for the Configs"""
 
     def __init__(self, cli_args: list[str] | None = None, **kwargs: Unpack[ManualArgs]):
         self._manual_args = kwargs or ManualArgs()
@@ -721,7 +720,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def debug(self):
-        return self._get_argument_value("debug", False, False)
+        return self._get_argument_value("debug", False, True)
 
     @property
     def info(self):
