@@ -8,17 +8,21 @@ from __future__ import annotations
 import logging
 import os
 import sys
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterator
 
 import cfnlint.formatters
 import cfnlint.maintenance
 from cfnlint.config import ConfigMixIn, configure_logging
 from cfnlint.exceptions import CfnLintExitException, UnexpectedRuleException
 from cfnlint.rules import Match, Rules
-from cfnlint.rules.errors import ConfigError, ParseError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
-from cfnlint.runner.deployment_file.runner import run_deployment_files
-from cfnlint.runner.template import run_template_by_data, run_template_by_file_path
+from cfnlint.rules.errors import ConfigError
+from cfnlint.runner.deployment_file.runner import expand_deployment_files
+from cfnlint.runner.template import (
+    run_template_by_data,
+    run_template_by_file_paths,
+    run_template_by_pipe,
+)
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
@@ -127,41 +131,6 @@ class Runner:
                 f"Tried to append rules but got an error: {str(e)}", 1
             ) from e
 
-    def _validate_filenames(self, filenames: Sequence[str | None]) -> Iterator[Match]:
-        """
-        Validate the specified filenames and yield any matches found.
-
-        This function processes each filename in the provided sequence, decoding the
-        template and validating it against the configured rules. Any matches found
-        are yielded as an iterator.
-
-        Args:
-            filenames (Sequence[str | None]): The sequence of filenames to be validated.
-
-        Yields:
-            Match: The matches found during the validation process.
-
-        Raises:
-            None: This function does not raise any exceptions.
-        """
-        ignore_bad_template: bool = False
-        if self.config.ignore_bad_template:
-            ignore_bad_template = True
-        else:
-            # There is no collection at this point so we need to handle this
-            # check directly
-            if not ParseError().is_enabled(
-                include_experimental=False,
-                ignore_rules=self.config.ignore_checks,
-                include_rules=self.config.include_checks,
-                mandatory_rules=self.config.mandatory_checks,
-            ):
-                ignore_bad_template = True
-        for filename in filenames:
-            yield from run_template_by_file_path(
-                filename, self.config, self.rules, ignore_bad_template
-            )
-
     def validate_template(self, template: dict[str, Any]) -> Iterator[Match]:
         """
         Validate a single CloudFormation template and yield any matches found.
@@ -249,15 +218,24 @@ class Runner:
             None: This function does not raise any exceptions.
         """
 
-        if (not sys.stdin.isatty()) and (not self.config.templates_to_process):
-            yield from self._validate_filenames([None])
+        if (
+            not sys.stdin.isatty()
+            and not self.config.templates
+            and not self.config.deployment_files
+        ):
+            yield from run_template_by_pipe(self.config, self.rules)
             return
 
-        if self.config.templates:
-            yield from self._validate_filenames(self.config.templates)
+        if self.config.deployment_files:
+            for template_config, matches in expand_deployment_files(self.config):
+                if not template_config:
+                    yield from matches
+                    continue
+                yield from run_template_by_file_paths(template_config, self.rules)
+
             return
 
-        yield from run_deployment_files(self.config, self.rules)
+        yield from run_template_by_file_paths(self.config, self.rules)
 
     def cli(self) -> None:
         """
@@ -299,14 +277,14 @@ class Runner:
             print(self.rules)
             sys.exit(0)
 
-        if not self.config.templates_to_process and not self.config.deployment_files:
+        if not self.config.templates and not self.config.deployment_files:
             if sys.stdin.isatty():
                 self.config.parser.print_help()
                 sys.exit(1)
 
         if self.config.templates and self.config.deployment_files:
             self.config.parser.print_help()
-            sys.exit(32)
+            sys.exit(1)
 
         try:
             self._cli_output(list(self.run()))

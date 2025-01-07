@@ -10,10 +10,11 @@ from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Deque, Iterator, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Deque, Iterator, Set, Tuple
 
 from cfnlint.context._mappings import Mappings
 from cfnlint.context.conditions._conditions import Conditions
+from cfnlint.context.parameters import ParameterSet
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
@@ -142,12 +143,12 @@ class Context:
     """
 
     # what regions we are processing
-    regions: Sequence[str] = field(
+    regions: list[str] = field(
         init=True, default_factory=lambda: list([REGION_PRIMARY])
     )
 
     # supported functions at this point in the template
-    functions: Sequence[str] = field(init=True, default_factory=list)
+    functions: list[str] = field(init=True, default_factory=list)
 
     path: Path = field(init=True, default_factory=Path)
 
@@ -163,7 +164,7 @@ class Context:
         init=True, default_factory=lambda: set(PSEUDOPARAMS)
     )
 
-    # Combiniation of storing any resolved ref
+    # Combination of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
     ref_values: dict[str, Any] = field(init=True, default_factory=dict)
 
@@ -172,6 +173,9 @@ class Context:
     # is the value a resolved value
     is_resolved_value: bool = field(init=True, default=False)
     resolve_pseudo_parameters: bool = field(init=True, default=True)
+
+    # Deployment parameters
+    parameter_sets: list[ParameterSet] | None = field(init=True, default_factory=list)
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -508,7 +512,9 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
-def create_context_for_template(cfn: Template) -> "Context":
+def create_context_for_template(
+    cfn: Template,
+) -> "Context":
     parameters = {}
     try:
         parameters = _init_parameters(cfn.template.get("Parameters", {}))
@@ -543,5 +549,6 @@ def create_context_for_template(cfn: Template) -> "Context":
         regions=cfn.regions,
         path=Path(),
         functions=["Fn::Transform"],
-        ref_values=cfn.parameters or {},
+        ref_values={},
+        parameter_sets=[],
     )
