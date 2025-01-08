@@ -1,0 +1,99 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Size",
+  "/properties/VpcSettings",
+  "/properties/Name",
+  "/properties/Password",
+  "/properties/ShortName",
+  "/properties/Description",
+  "/properties/CreateAlias"
+ ],
+ "definitions": {
+  "VpcSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "SubnetIds": {
+     "items": {
+      "pattern": "^(subnet-[0-9a-f]{8}|subnet-[0-9a-f]{17})$",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "pattern": "^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcId",
+    "SubnetIds"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Alias": {
+   "type": "string"
+  },
+  "CreateAlias": {
+   "type": "boolean"
+  },
+  "Description": {
+   "pattern": "^([a-zA-Z0-9_])[\\\\a-zA-Z0-9_@#%*+=:?./!\\s-]*$",
+   "type": "string"
+  },
+  "DnsIpAddresses": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableSso": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([a-zA-Z0-9]+[\\\\.-])+([a-zA-Z0-9])+$",
+   "type": "string"
+  },
+  "Password": {
+   "pattern": "(?=^.{8,64}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9\\s])(?=.*[a-z])|(?=.*[^A-Za-z0-9\\s])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9\\s]))^.*",
+   "type": "string"
+  },
+  "ShortName": {
+   "pattern": "^[^\\\\/:*?\"<>|.]+[^\\\\/:*?\"<>|]*$",
+   "type": "string"
+  },
+  "Size": {
+   "enum": [
+    "Large",
+    "Small"
+   ],
+   "type": "string"
+  },
+  "VpcSettings": {
+   "$ref": "#/definitions/VpcSettings"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Alias",
+  "/properties/DnsIpAddresses"
+ ],
+ "required": [
+  "VpcSettings",
+  "Size",
+  "Name",
+  "Password"
+ ],
+ "typeName": "AWS::DirectoryService::SimpleAD"
+}

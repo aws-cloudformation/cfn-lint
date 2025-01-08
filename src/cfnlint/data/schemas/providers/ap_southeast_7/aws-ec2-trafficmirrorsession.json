@@ -1,0 +1,70 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NetworkInterfaceId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NetworkInterfaceId": {
+   "type": "string"
+  },
+  "PacketLength": {
+   "type": "integer"
+  },
+  "SessionNumber": {
+   "type": "integer"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TrafficMirrorFilterId": {
+   "type": "string"
+  },
+  "TrafficMirrorTargetId": {
+   "type": "string"
+  },
+  "VirtualNetworkId": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "TrafficMirrorTargetId",
+  "SessionNumber",
+  "NetworkInterfaceId",
+  "TrafficMirrorFilterId"
+ ],
+ "typeName": "AWS::EC2::TrafficMirrorSession"
+}

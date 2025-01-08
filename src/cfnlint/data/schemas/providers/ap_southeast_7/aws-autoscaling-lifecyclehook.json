@@ -1,0 +1,57 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AutoScalingGroupName",
+  "/properties/LifecycleHookName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AutoScalingGroupName": {
+   "type": "string"
+  },
+  "DefaultResult": {
+   "enum": [
+    "ABANDON",
+    "CONTINUE"
+   ],
+   "type": "string"
+  },
+  "HeartbeatTimeout": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LifecycleHookName": {
+   "pattern": "[A-Za-z0-9\\-_\\/]+",
+   "type": "string"
+  },
+  "LifecycleTransition": {
+   "enum": [
+    "autoscaling:EC2_INSTANCE_LAUNCHING",
+    "autoscaling:EC2_INSTANCE_TERMINATING"
+   ],
+   "type": "string"
+  },
+  "NotificationMetadata": {
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007e]+",
+   "type": "string"
+  },
+  "NotificationTargetARN": {
+   "type": "string"
+  },
+  "RoleARN": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "LifecycleTransition",
+  "AutoScalingGroupName"
+ ],
+ "typeName": "AWS::AutoScaling::LifecycleHook"
+}

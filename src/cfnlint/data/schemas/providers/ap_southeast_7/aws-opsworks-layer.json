@@ -1,0 +1,265 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StackId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AutoScalingThresholds": {
+   "additionalProperties": false,
+   "properties": {
+    "CpuThreshold": {
+     "type": "number"
+    },
+    "IgnoreMetricsTime": {
+     "type": "integer"
+    },
+    "InstanceCount": {
+     "type": "integer"
+    },
+    "LoadThreshold": {
+     "type": "number"
+    },
+    "MemoryThreshold": {
+     "type": "number"
+    },
+    "ThresholdsWaitTime": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "LifecycleEventConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ShutdownEventConfiguration": {
+     "$ref": "#/definitions/ShutdownEventConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "LoadBasedAutoScaling": {
+   "additionalProperties": false,
+   "properties": {
+    "DownScaling": {
+     "$ref": "#/definitions/AutoScalingThresholds"
+    },
+    "Enable": {
+     "type": "boolean"
+    },
+    "UpScaling": {
+     "$ref": "#/definitions/AutoScalingThresholds"
+    }
+   },
+   "type": "object"
+  },
+  "Recipes": {
+   "additionalProperties": false,
+   "properties": {
+    "Configure": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Deploy": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Setup": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Shutdown": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Undeploy": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ShutdownEventConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DelayUntilElbConnectionsDrained": {
+     "type": "boolean"
+    },
+    "ExecutionTimeout": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VolumeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "MountPoint": {
+     "type": "string"
+    },
+    "NumberOfDisks": {
+     "type": "integer"
+    },
+    "RaidLevel": {
+     "type": "integer"
+    },
+    "Size": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "gp2",
+      "gp3",
+      "io1",
+      "io2",
+      "sc1",
+      "st1",
+      "standard"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Attributes": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AutoAssignElasticIps": {
+   "type": "boolean"
+  },
+  "AutoAssignPublicIps": {
+   "type": "boolean"
+  },
+  "CustomInstanceProfileArn": {
+   "type": "string"
+  },
+  "CustomJson": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "CustomRecipes": {
+   "$ref": "#/definitions/Recipes"
+  },
+  "CustomSecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableAutoHealing": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstallUpdatesOnBoot": {
+   "type": "boolean"
+  },
+  "LifecycleEventConfiguration": {
+   "$ref": "#/definitions/LifecycleEventConfiguration"
+  },
+  "LoadBasedAutoScaling": {
+   "$ref": "#/definitions/LoadBasedAutoScaling"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Packages": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Shortname": {
+   "type": "string"
+  },
+  "StackId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "type": "string"
+  },
+  "UseEbsOptimizedInstances": {
+   "type": "boolean"
+  },
+  "VolumeConfigurations": {
+   "items": {
+    "$ref": "#/definitions/VolumeConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "EnableAutoHealing",
+  "Type",
+  "AutoAssignElasticIps",
+  "Shortname",
+  "AutoAssignPublicIps",
+  "Name",
+  "StackId"
+ ],
+ "typeName": "AWS::OpsWorks::Layer"
+}

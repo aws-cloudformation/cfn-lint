@@ -1,0 +1,199 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RamDiskId",
+  "/properties/InstanceType",
+  "/properties/InstanceMonitoring",
+  "/properties/ImageId",
+  "/properties/BlockDeviceMappings",
+  "/properties/SpotPrice",
+  "/properties/ClassicLinkVPCId",
+  "/properties/InstanceId",
+  "/properties/KeyName",
+  "/properties/PlacementTenancy",
+  "/properties/LaunchConfigurationName",
+  "/properties/IamInstanceProfile",
+  "/properties/UserData",
+  "/properties/AssociatePublicIpAddress",
+  "/properties/KernelId",
+  "/properties/EbsOptimized",
+  "/properties/SecurityGroups",
+  "/properties/MetadataOptions",
+  "/properties/ClassicLinkVPCSecurityGroups"
+ ],
+ "definitions": {
+  "BlockDevice": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "Throughput": {
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "enum": [
+      "gp2",
+      "gp3",
+      "io1",
+      "io2",
+      "sc1",
+      "st1",
+      "standard"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BlockDeviceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/BlockDevice"
+    },
+    "NoDevice": {
+     "type": "boolean"
+    },
+    "VirtualName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeviceName"
+   ],
+   "requiredXor": [
+    "VirtualName",
+    "Ebs",
+    "NoDevice"
+   ],
+   "type": "object"
+  },
+  "MetadataOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "HttpEndpoint": {
+     "enum": [
+      "disabled",
+      "enabled"
+     ],
+     "type": "string"
+    },
+    "HttpPutResponseHopLimit": {
+     "type": "integer"
+    },
+    "HttpTokens": {
+     "enum": [
+      "optional",
+      "required"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AssociatePublicIpAddress": {
+   "type": "boolean"
+  },
+  "BlockDeviceMappings": {
+   "items": {
+    "$ref": "#/definitions/BlockDeviceMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ClassicLinkVPCId": {
+   "type": "string"
+  },
+  "ClassicLinkVPCSecurityGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "IamInstanceProfile": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImageId": {
+   "format": "AWS::EC2::Image.Id",
+   "type": "string"
+  },
+  "InstanceId": {
+   "type": "string"
+  },
+  "InstanceMonitoring": {
+   "type": "boolean"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "KernelId": {
+   "type": "string"
+  },
+  "KeyName": {
+   "type": "string"
+  },
+  "LaunchConfigurationName": {
+   "type": "string"
+  },
+  "MetadataOptions": {
+   "$ref": "#/definitions/MetadataOptions"
+  },
+  "PlacementTenancy": {
+   "type": "string"
+  },
+  "RamDiskId": {
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.GroupId",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SpotPrice": {
+   "type": "string"
+  },
+  "UserData": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ImageId",
+  "InstanceType"
+ ],
+ "typeName": "AWS::AutoScaling::LaunchConfiguration"
+}

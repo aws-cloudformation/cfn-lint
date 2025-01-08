@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Bucket",
+  "/properties/BucketAccountId",
+  "/properties/VpcConfiguration"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  },
+  "PublicAccessBlockConfiguration": {
+   "properties": {
+    "BlockPublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "properties": {
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Alias": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "examples": [
+    "arn:aws:s3:us-west-2:123456789012:accesspoint/test"
+   ]
+  },
+  "Bucket": {
+   "maxLength": 255,
+   "minLength": 3,
+   "type": "string"
+  },
+  "BucketAccountId": {
+   "maxLength": 64,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "NetworkOrigin": {
+   "enum": [
+    "Internet",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "Policy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/VpcConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Alias",
+  "/properties/NetworkOrigin",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Bucket"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3::AccessPoint"
+}
