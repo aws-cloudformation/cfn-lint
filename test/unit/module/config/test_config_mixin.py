@@ -248,6 +248,28 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(len(config.templates), 3)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_expand_and_ignore_templates_with_bad_path(self, yaml_mock):
+        """Test ignore templates"""
+
+        yaml_mock.side_effect = [
+            {
+                "templates": ["test/fixtures/templates/bad/resources/iam/*.yaml"],
+                "ignore_templates": [
+                    "dne/fixtures/templates/bad/resources/iam/resource_*.yaml"
+                ],
+            },
+            {},
+        ]
+        config = cfnlint.config.ConfigMixIn([])
+
+        # test defaults
+        self.assertIn(
+            str(Path("test/fixtures/templates/bad/resources/iam/resource_policy.yaml")),
+            config.templates,
+        )
+        self.assertEqual(len(config.templates), 4)
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_merge(self, yaml_mock):
         """Test merging lists"""
 
