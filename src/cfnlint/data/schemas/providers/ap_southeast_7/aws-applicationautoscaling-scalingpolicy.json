@@ -1,0 +1,367 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/PolicyName",
+  "/properties/ServiceNamespace",
+  "/properties/ScalingTargetId"
+ ],
+ "definitions": {
+  "CustomizedMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/MetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Metrics": {
+     "items": {
+      "$ref": "#/definitions/TargetTrackingMetricDataQuery"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "Statistic": {
+     "enum": [
+      "Average",
+      "Maximum",
+      "Minimum",
+      "SampleCount",
+      "Sum"
+     ],
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "PredefinedMetricSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "PredefinedMetricType": {
+     "enum": [
+      "ALBRequestCountPerTarget",
+      "AppStreamAverageCapacityUtilization",
+      "CassandraReadCapacityUtilization",
+      "CassandraWriteCapacityUtilization",
+      "ComprehendInferenceUtilization",
+      "DynamoDBReadCapacityUtilization",
+      "DynamoDBWriteCapacityUtilization",
+      "EC2SpotFleetRequestAverageCPUUtilization",
+      "EC2SpotFleetRequestAverageNetworkIn",
+      "EC2SpotFleetRequestAverageNetworkOut",
+      "ECSServiceAverageCPUUtilization",
+      "ECSServiceAverageMemoryUtilization",
+      "ElastiCacheDatabaseCapacityUsageCountedForEvictPercentage",
+      "ElastiCacheDatabaseMemoryUsageCountedForEvictPercentage",
+      "ElastiCachePrimaryEngineCPUUtilization",
+      "ElastiCacheReplicaEngineCPUUtilization",
+      "KafkaBrokerStorageUtilization",
+      "LambdaProvisionedConcurrencyUtilization",
+      "NeptuneReaderAverageCPUUtilization",
+      "RDSReaderAverageCPUUtilization",
+      "RDSReaderAverageDatabaseConnections",
+      "SageMakerInferenceComponentConcurrentRequestsPerCopyHighResolution",
+      "SageMakerInferenceComponentInvocationsPerCopy",
+      "SageMakerVariantConcurrentRequestsPerModelHighResolution",
+      "SageMakerVariantInvocationsPerInstance",
+      "SageMakerVariantProvisionedConcurrencyUtilization",
+      "WorkSpacesAverageUserSessionsCapacityUtilization"
+     ],
+     "type": "string"
+    },
+    "ResourceLabel": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PredefinedMetricType"
+   ],
+   "type": "object"
+  },
+  "StepAdjustment": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricIntervalLowerBound": {
+     "type": "number"
+    },
+    "MetricIntervalUpperBound": {
+     "type": "number"
+    },
+    "ScalingAdjustment": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ScalingAdjustment"
+   ],
+   "type": "object"
+  },
+  "StepScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdjustmentType": {
+     "enum": [
+      "ChangeInCapacity",
+      "ExactCapacity",
+      "PercentChangeInCapacity"
+     ],
+     "type": "string"
+    },
+    "Cooldown": {
+     "type": "integer"
+    },
+    "MetricAggregationType": {
+     "enum": [
+      "Average",
+      "Maximum",
+      "Minimum"
+     ],
+     "type": "string"
+    },
+    "MinAdjustmentMagnitude": {
+     "type": "integer"
+    },
+    "StepAdjustments": {
+     "items": {
+      "$ref": "#/definitions/StepAdjustment"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "TargetTrackingMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimensions": {
+     "items": {
+      "$ref": "#/definitions/TargetTrackingMetricDimension"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TargetTrackingMetricDataQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Label": {
+     "type": "string"
+    },
+    "MetricStat": {
+     "$ref": "#/definitions/TargetTrackingMetricStat"
+    },
+    "ReturnData": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingMetricDimension": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingMetricStat": {
+   "additionalProperties": false,
+   "properties": {
+    "Metric": {
+     "$ref": "#/definitions/TargetTrackingMetric"
+    },
+    "Stat": {
+     "type": "string"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Stat",
+    "Metric"
+   ],
+   "type": "object"
+  },
+  "TargetTrackingScalingPolicyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomizedMetricSpecification": {
+     "$ref": "#/definitions/CustomizedMetricSpecification"
+    },
+    "DisableScaleIn": {
+     "type": "boolean"
+    },
+    "PredefinedMetricSpecification": {
+     "$ref": "#/definitions/PredefinedMetricSpecification"
+    },
+    "ScaleInCooldown": {
+     "type": "integer"
+    },
+    "ScaleOutCooldown": {
+     "type": "integer"
+    },
+    "TargetValue": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "TargetValue"
+   ],
+   "type": "object"
+  }
+ },
+ "dependentRequired": {
+  "ResourceId": [
+   "ScalableDimension",
+   "ServiceNamespace"
+  ]
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "PolicyName": {
+   "pattern": "\\p{Print}+",
+   "type": "string"
+  },
+  "PolicyType": {
+   "enum": [
+    "PredictiveScaling",
+    "StepScaling",
+    "TargetTrackingScaling"
+   ],
+   "type": "string"
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "enum": [
+    "appstream:fleet:DesiredCapacity",
+    "cassandra:table:ReadCapacityUnits",
+    "cassandra:table:WriteCapacityUnits",
+    "comprehend:document-classifier-endpoint:DesiredInferenceUnits",
+    "comprehend:entity-recognizer-endpoint:DesiredInferenceUnits",
+    "custom-resource:ResourceType:Property",
+    "dynamodb:index:ReadCapacityUnits",
+    "dynamodb:index:WriteCapacityUnits",
+    "dynamodb:table:ReadCapacityUnits",
+    "dynamodb:table:WriteCapacityUnits",
+    "ec2:spot-fleet-request:TargetCapacity",
+    "ecs:service:DesiredCount",
+    "elasticache:replication-group:NodeGroups",
+    "elasticache:replication-group:Replicas",
+    "elasticmapreduce:instancegroup:InstanceCount",
+    "kafka:broker-storage:VolumeSize",
+    "lambda:function:ProvisionedConcurrency",
+    "neptune:cluster:ReadReplicaCount",
+    "rds:cluster:ReadReplicaCount",
+    "sagemaker:inference-component:DesiredCopyCount",
+    "sagemaker:variant:DesiredInstanceCount",
+    "sagemaker:variant:DesiredProvisionedConcurrency",
+    "workspaces:workspacespool:DesiredUserSessions"
+   ],
+   "type": "string"
+  },
+  "ScalingTargetId": {
+   "type": "string"
+  },
+  "ServiceNamespace": {
+   "enum": [
+    "appstream",
+    "cassandra",
+    "comprehend",
+    "custom-resource",
+    "dynamodb",
+    "ec2",
+    "ecs",
+    "elasticache",
+    "elasticmapreduce",
+    "kafka",
+    "lambda",
+    "neptune",
+    "rds",
+    "sagemaker",
+    "workspaces"
+   ],
+   "type": "string"
+  },
+  "StepScalingPolicyConfiguration": {
+   "$ref": "#/definitions/StepScalingPolicyConfiguration"
+  },
+  "TargetTrackingScalingPolicyConfiguration": {
+   "$ref": "#/definitions/TargetTrackingScalingPolicyConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "PolicyType",
+  "PolicyName"
+ ],
+ "requiredXor": [
+  "ScalingTargetId",
+  "ResourceId"
+ ],
+ "typeName": "AWS::ApplicationAutoScaling::ScalingPolicy"
+}

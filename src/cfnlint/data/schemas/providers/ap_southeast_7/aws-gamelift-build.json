@@ -1,0 +1,56 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StorageLocation",
+  "/properties/OperatingSystem"
+ ],
+ "definitions": {
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "ObjectVersion": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "RoleArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "type": "string"
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "typeName": "AWS::GameLift::Build"
+}

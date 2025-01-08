@@ -1,15 +1,15 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/KmsKeyIdentifier",
-  "/properties/DeploymentStrategyId",
-  "/properties/ConfigurationVersion",
   "/properties/ApplicationId",
   "/properties/ConfigurationProfileId",
-  "/properties/Tags",
+  "/properties/DeploymentStrategyId",
   "/properties/EnvironmentId",
   "/properties/Description",
-  "/properties/DynamicExtensionParameters"
+  "/properties/ConfigurationVersion",
+  "/properties/KmsKeyIdentifier",
+  "/properties/DynamicExtensionParameters",
+  "/properties/Tags"
  ],
  "definitions": {
   "DynamicExtensionParameters": {
@@ -27,7 +27,7 @@
    },
    "type": "object"
   },
-  "Tags": {
+  "Tag": {
    "additionalProperties": false,
    "properties": {
     "Key": {
@@ -41,7 +41,9 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/ApplicationId",
+  "/properties/EnvironmentId",
+  "/properties/DeploymentNumber"
  ],
  "properties": {
   "ApplicationId": {
@@ -51,6 +53,9 @@
    "type": "string"
   },
   "ConfigurationVersion": {
+   "type": "string"
+  },
+  "DeploymentNumber": {
    "type": "string"
   },
   "DeploymentStrategyId": {
@@ -69,29 +74,39 @@
   "EnvironmentId": {
    "type": "string"
   },
-  "Id": {
-   "type": "string"
-  },
   "KmsKeyIdentifier": {
+   "pattern": "^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}|alias/[a-zA-Z0-9/_-]{1,250}|arn:aws[a-zA-Z-]*:kms:[a-z]{2}(-gov|-iso(b?))?-[a-z]+-\\d{1}:\\d{12}:(key/[0-9a-f-]{36}|alias/[a-zA-Z0-9/_-]{1,250})$",
    "type": "string"
   },
   "Tags": {
+   "insertionOrder": false,
    "items": {
-    "$ref": "#/definitions/Tags"
+    "$ref": "#/definitions/Tag"
    },
    "type": "array",
-   "uniqueItems": false
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/DeploymentNumber"
  ],
  "required": [
-  "DeploymentStrategyId",
+  "ApplicationId",
   "ConfigurationProfileId",
+  "DeploymentStrategyId",
   "EnvironmentId",
-  "ConfigurationVersion",
-  "ApplicationId"
+  "ConfigurationVersion"
  ],
- "typeName": "AWS::AppConfig::Deployment"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::Deployment",
+ "writeOnlyProperties": [
+  "/properties/DynamicExtensionParameters"
+ ]
 }

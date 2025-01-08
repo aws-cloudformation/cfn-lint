@@ -1244,6 +1244,30 @@
    "minLength": 1,
    "type": "string"
   },
+  "ReplicaRegion": {
+   "maxLength": 25,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Replication": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplicaRegions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ReplicaRegion"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ReplicaRegions"
+   ],
+   "type": "object"
+  },
   "ResponseSpecification": {
    "additionalProperties": false,
    "properties": {
@@ -1920,6 +1944,9 @@
   "Name": {
    "$ref": "#/definitions/Name"
   },
+  "Replication": {
+   "$ref": "#/definitions/Replication"
+  },
   "RoleArn": {
    "$ref": "#/definitions/RoleArn"
   },
@@ -1954,6 +1981,7 @@
   "/properties/BotFileS3Location",
   "/properties/AutoBuildBotLocales",
   "/properties/BotTags",
-  "/properties/TestBotAliasTags"
+  "/properties/TestBotAliasTags",
+  "/properties/Replication"
  ]
 }

@@ -1,0 +1,144 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AttributeMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "CertificateField": {
+     "$ref": "#/definitions/CertificateField"
+    },
+    "MappingRules": {
+     "items": {
+      "$ref": "#/definitions/MappingRule"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "CertificateField",
+    "MappingRules"
+   ],
+   "type": "object"
+  },
+  "CertificateField": {
+   "enum": [
+    "x509Subject",
+    "x509Issuer",
+    "x509SAN"
+   ],
+   "type": "string"
+  },
+  "MappingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Specifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Specifier"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[ a-zA-Z0-9_.:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[ a-zA-Z0-9_.:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProfileId"
+ ],
+ "properties": {
+  "AcceptRoleSessionName": {
+   "type": "boolean"
+  },
+  "AttributeMappings": {
+   "items": {
+    "$ref": "#/definitions/AttributeMapping"
+   },
+   "type": "array"
+  },
+  "DurationSeconds": {
+   "maximum": 43200,
+   "minimum": 900,
+   "type": "number"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "ManagedPolicyArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "pattern": "^[ a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "ProfileArn": {
+   "type": "string"
+  },
+  "ProfileId": {
+   "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
+   "type": "string"
+  },
+  "RequireInstanceProperties": {
+   "type": "boolean"
+  },
+  "RoleArns": {
+   "items": {
+    "maxLength": 1011,
+    "minLength": 1,
+    "pattern": "^arn:aws(-[^:]+)?:iam(:.*){2}(:role.*)$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SessionPolicy": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProfileId",
+  "/properties/ProfileArn"
+ ],
+ "required": [
+  "Name",
+  "RoleArns"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RolesAnywhere::Profile"
+}
