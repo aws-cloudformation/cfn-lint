@@ -8,7 +8,7 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import cfnlint.config  # pylint: disable=E0401
+import cfnlint.config
 from cfnlint.jsonschema import ValidationError
 
 LOGGER = logging.getLogger("cfnlint")
