@@ -1340,6 +1340,7 @@ cached: list[str] = [
     "aws-bedrock-flowversion.json",
     "aws-bedrock-guardrail.json",
     "aws-bedrock-guardrailversion.json",
+    "aws-bedrock-knowledgebase.json",
     "aws-bedrock-prompt.json",
     "aws-bedrock-promptversion.json",
     "aws-budgets-budget.json",
