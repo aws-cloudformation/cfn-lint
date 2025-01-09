@@ -1,3 +1,12 @@
+### v1.22.4
+## What's Changed
+* Add `ap-southeast-7` `Asia Pacific (Thailand)` Region by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3897
+* Allow for debug in `.cfnlintrc` file by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3898
+* Don't fail when ignore templates is empty or not findable by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3900
+* Update CloudFormation schemas to `2025-01-09` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3901
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.3...v1.22.4
+
 ### v1.22.3
 ## What's Changed
 * `SnapStart` is okay with new python dotnet by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3890
