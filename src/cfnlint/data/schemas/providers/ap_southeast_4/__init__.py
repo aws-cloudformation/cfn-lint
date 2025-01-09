@@ -1182,7 +1182,6 @@ cached: list[str] = [
     "aws-resourcegroups-group.json",
     "aws-resourcegroups-tagsynctask.json",
     "aws-rolesanywhere-crl.json",
-    "aws-rolesanywhere-profile.json",
     "aws-rolesanywhere-trustanchor.json",
     "aws-route53-dnssec.json",
     "aws-route53-hostedzone.json",

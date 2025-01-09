@@ -1148,7 +1148,6 @@ cached: list[str] = [
     "aws-backup-backupselection.json",
     "aws-backup-backupvault.json",
     "aws-backup-framework.json",
-    "aws-backup-logicallyairgappedbackupvault.json",
     "aws-backup-reportplan.json",
     "aws-backup-restoretestingplan.json",
     "aws-backup-restoretestingselection.json",
