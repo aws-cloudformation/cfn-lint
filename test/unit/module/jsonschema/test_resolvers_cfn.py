@@ -553,6 +553,20 @@ def test_invalid_functions(name, instance, response):
             {"Fn::Sub": "${MyResource.Arn}"},
             [],
         ),
+        (
+            "Fn::Join uses previous values when doing resolution",
+            {"Fn::Join": ["-", [{"Ref": "Environment"}, {"Ref": "Environment"}]]},
+            [
+                ("dev-dev", deque(), None),
+                ("test-test", deque(), None),
+                ("prod-prod", deque(), None),
+            ],
+        ),
+        (
+            "Fn::Join using a few values with a bad Ref",
+            {"Fn::Join": ["-", [{"Ref": "Environment"}, {"Ref": "DNE"}]]},
+            [],
+        ),
     ],
 )
 def test_valid_functions(name, instance, response):
