@@ -117,6 +117,21 @@ class TestTransform(BaseTestCase):
         template = cfn_yaml.load(filename)
         transformed_template = Transform(filename, template, region)
         results = transformed_template.transform_template()
+        self.assertDictEqual(
+            transformed_template._template.get("Rules"),
+            {
+                "IsAutPublishAliasParameterProd": {
+                    "Assertions": [
+                        {
+                            "Assert": {
+                                "Fn::Not": [{"Fn::Equals": [{"Ref": "DBPolicy"}, ""]}]
+                            }
+                        }
+                    ],
+                    "RuleCondition": {"Fn::Equals": [{"Ref": "Environment"}, "Prod"]},
+                }
+            },
+        )
         self.assertEqual(results, [])
 
     def test_parameter_for_autopublish_code_sha256(self):

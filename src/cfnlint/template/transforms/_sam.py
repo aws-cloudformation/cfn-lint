@@ -158,7 +158,9 @@ class Transform:
                 if isinstance(v, dict) and v.get("Default"):
                     parameters[k] = v.get("Default")
 
-            self._template = self._find_and_replace(self._template, parameters)
+            self._template["Resources"] = self._find_and_replace(
+                self._template.get("Resources", {}), parameters
+            )
 
     def transform_template(self):
         """
