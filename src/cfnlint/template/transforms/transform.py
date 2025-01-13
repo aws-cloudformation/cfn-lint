@@ -49,6 +49,11 @@ class Transform:
                 continue
 
             matches, template = transform(cfn)
+            LOGGER.debug(
+                "Transformed template from %s: \n%s",
+                name,
+                format_json_string(cfn.template),
+            )
             if matches:
                 return matches
             cfn.template = template

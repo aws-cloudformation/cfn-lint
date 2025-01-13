@@ -13,12 +13,21 @@ Parameters:
   VpcId:
     Type: "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>"
     Default: "/network/vpc/primary/id"
+  Environment:
+    Type: String
+    Default: Prod
 Mappings:
   StackIdMap01:
     teststack1:
       DeletionPolicy: Retain
     teststack2:
       DeletionPolicy: Delete
+Rules:
+  IsAutPublishAliasParameterProd:
+    RuleCondition: !Equals [ !Ref Environment, "Prod" ]
+    Assertions:
+      - Assert: !Not
+          - !Equals [ !Ref DBPolicy, "" ]
 Resources:
   WaitHandleRef:
     Type: AWS::CloudFormation::WaitConditionHandle
