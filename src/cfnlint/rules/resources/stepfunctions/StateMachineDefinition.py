@@ -107,9 +107,15 @@ class StateMachineDefinition(CfnLintJsonSchema):
                     err = self._fix_message(err)
 
                 err.path.appendleft(k)
-                if not err.validator.startswith("fn_") and err.validator not in [
-                    "cfnLint"
-                ]:
+                if err.schema in [True, False]:
+                    err.message = (
+                        f"Additional properties are not allowed ({err.path[-1]!r} "
+                        "was unexpected)"
+                    )
+                if not err.validator or (
+                    not err.validator.startswith("fn_")
+                    and err.validator not in ["cfnLint"]
+                ):
                     err.rule = self
 
                 yield self._clean_error(err)

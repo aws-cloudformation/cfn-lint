@@ -2,6 +2,7 @@
  "additionalProperties": false,
  "definitions": {
   "choice": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "definitions": {
     "Assign": {
@@ -197,6 +198,9 @@
     }
    },
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Choices": {
      "items": {
       "$ref": "#/definitions/choice/definitions/Operator"
@@ -224,11 +228,17 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
       "null"
      ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "Type": {
      "enum": [
@@ -243,9 +253,67 @@
    ],
    "type": "object"
   },
+  "common": {
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "QueryLanguage": {
+        "const": "JSONata"
+       }
+      },
+      "required": [
+       "QueryLanguage"
+      ]
+     },
+     "then": {
+      "properties": {
+       "InputPath": false,
+       "OutputPath": false,
+       "Parameters": false,
+       "ResultPath": false,
+       "ResultSelector": false
+      }
+     }
+    },
+    {
+     "if": {
+      "oneOf": [
+       {
+        "properties": {
+         "QueryLanguage": {
+          "const": "JSONPath"
+         }
+        },
+        "required": [
+         "QueryLanguage"
+        ]
+       },
+       {
+        "not": {
+         "required": [
+          "QueryLanguage"
+         ]
+        }
+       }
+      ]
+     },
+     "then": {
+      "properties": {
+       "Arguments": false,
+       "Output": false
+      }
+     }
+    }
+   ]
+  },
   "fail": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Cause": {
      "type": "string"
     },
@@ -267,11 +335,17 @@
       "null"
      ]
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
       "null"
      ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "Type": {
      "enum": [
@@ -286,8 +360,12 @@
    "type": "object"
   },
   "map": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Assign": {
      "type": "object"
     },
@@ -394,6 +472,9 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
@@ -402,6 +483,9 @@
     },
     "Parameters": {
      "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "ResultPath": {
      "type": [
@@ -474,8 +558,12 @@
    "type": "object"
   },
   "parallel": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Assign": {
      "type": "object"
     },
@@ -525,11 +613,17 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
       "null"
      ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "ResultPath": {
      "type": [
@@ -587,8 +681,12 @@
    "type": "object"
   },
   "pass": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Assign": {
      "type": "object"
     },
@@ -610,6 +708,9 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
@@ -618,6 +719,9 @@
     },
     "Parameters": {
      "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "Result": {},
     "ResultPath": {
@@ -638,6 +742,14 @@
     "End"
    ],
    "type": "object"
+  },
+  "queryLanguage": {
+   "default": "JSONPath",
+   "enum": [
+    "JSONPath",
+    "JSONata"
+   ],
+   "type": "string"
   },
   "state": {
    "allOf": [
@@ -804,8 +916,12 @@
    "type": "object"
   },
   "task": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Assign": {
      "type": "object"
     },
@@ -862,6 +978,9 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
@@ -870,6 +989,9 @@
     },
     "Parameters": {
      "type": "object"
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "Resource": {
      "pattern": "^arn:aws:([a-z]|-)+:([a-z]|[0-9]|-)*:[0-9]*:([a-z]|-)+:[a-zA-Z0-9-_.]+(:(\\$LATEST|[a-zA-Z0-9-_\\.]+))?$",
@@ -940,8 +1062,12 @@
    "type": "object"
   },
   "wait": {
+   "$ref": "#/definitions/common",
    "additionalProperties": false,
    "properties": {
+    "Arguments": {
+     "type": "object"
+    },
     "Assign": {
      "type": "object"
     },
@@ -963,11 +1089,17 @@
      "pattern": "^.{1,128}$",
      "type": "string"
     },
+    "Output": {
+     "type": "string"
+    },
     "OutputPath": {
      "type": [
       "string",
       "null"
      ]
+    },
+    "QueryLanguage": {
+     "$ref": "#/definitions/queryLanguage"
     },
     "Seconds": {
      "minimum": 0,
@@ -1008,6 +1140,9 @@
  "properties": {
   "Comment": {
    "type": "string"
+  },
+  "QueryLanguage": {
+   "$ref": "#/definitions/queryLanguage"
   },
   "StartAt": {
    "type": "string"
