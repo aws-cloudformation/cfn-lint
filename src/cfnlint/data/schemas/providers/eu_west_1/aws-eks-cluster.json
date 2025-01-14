@@ -1,0 +1,460 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OutpostConfig",
+  "/properties/EncryptionConfig",
+  "/properties/KubernetesNetworkConfig",
+  "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
+  "/properties/Name",
+  "/properties/RoleArn",
+  "/properties/BootstrapSelfManagedAddons",
+  "/properties/RemoteNetworkConfig"
+ ],
+ "definitions": {
+  "AccessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationMode": {
+     "enum": [
+      "CONFIG_MAP",
+      "API_AND_CONFIG_MAP",
+      "API"
+     ],
+     "type": "string"
+    },
+    "BootstrapClusterCreatorAdminPermissions": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "BlockStorage": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ClusterLogging": {
+   "additionalProperties": false,
+   "properties": {
+    "EnabledTypes": {
+     "$ref": "#/definitions/EnabledTypes"
+    }
+   },
+   "type": "object"
+  },
+  "ComputeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "NodePools": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "NodeRoleArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ControlPlanePlacement": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticLoadBalancing": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EnabledTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LoggingTypeConfig"
+   },
+   "type": "array"
+  },
+  "EncryptionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Provider": {
+     "$ref": "#/definitions/Provider"
+    },
+    "Resources": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "KubernetesNetworkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ElasticLoadBalancing": {
+     "$ref": "#/definitions/ElasticLoadBalancing"
+    },
+    "IpFamily": {
+     "enum": [
+      "ipv4",
+      "ipv6"
+     ],
+     "type": "string"
+    },
+    "ServiceIpv4Cidr": {
+     "type": "string"
+    },
+    "ServiceIpv6Cidr": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Logging": {
+   "additionalProperties": false,
+   "properties": {
+    "ClusterLogging": {
+     "$ref": "#/definitions/ClusterLogging"
+    }
+   },
+   "type": "object"
+  },
+  "LoggingTypeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "api",
+      "audit",
+      "authenticator",
+      "controllerManager",
+      "scheduler"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OutpostConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlPlaneInstanceType": {
+     "type": "string"
+    },
+    "ControlPlanePlacement": {
+     "$ref": "#/definitions/ControlPlanePlacement"
+    },
+    "OutpostArns": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "OutpostArns",
+    "ControlPlaneInstanceType"
+   ],
+   "type": "object"
+  },
+  "Provider": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RemoteNetworkConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RemoteNodeNetworks": {
+     "$ref": "#/definitions/RemoteNodeNetworks"
+    },
+    "RemotePodNetworks": {
+     "$ref": "#/definitions/RemotePodNetworks"
+    }
+   },
+   "required": [
+    "RemoteNodeNetworks"
+   ],
+   "type": "object"
+  },
+  "RemoteNodeNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Cidrs"
+   ],
+   "type": "object"
+  },
+  "RemoteNodeNetworks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RemoteNodeNetwork"
+   },
+   "type": "array"
+  },
+  "RemotePodNetwork": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidrs": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Cidrs"
+   ],
+   "type": "object"
+  },
+  "RemotePodNetworks": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RemotePodNetwork"
+   },
+   "type": "array"
+  },
+  "ResourcesVpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EndpointPrivateAccess": {
+     "type": "boolean"
+    },
+    "EndpointPublicAccess": {
+     "type": "boolean"
+    },
+    "PublicAccessCidrs": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.GroupId",
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "minItems": 1,
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "SubnetIds"
+   ],
+   "type": "object"
+  },
+  "StorageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockStorage": {
+     "$ref": "#/definitions/BlockStorage"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UpgradePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "SupportType": {
+     "enum": [
+      "STANDARD",
+      "EXTENDED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ZonalShiftConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AccessConfig": {
+   "$ref": "#/definitions/AccessConfig"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "BootstrapSelfManagedAddons": {
+   "type": "boolean"
+  },
+  "CertificateAuthorityData": {
+   "type": "string"
+  },
+  "ClusterSecurityGroupId": {
+   "type": "string"
+  },
+  "ComputeConfig": {
+   "$ref": "#/definitions/ComputeConfig"
+  },
+  "EncryptionConfig": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EncryptionConfig",
+    "maxItems": 1
+   },
+   "type": "array"
+  },
+  "EncryptionConfigKeyArn": {
+   "type": "string"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "KubernetesNetworkConfig": {
+   "$ref": "#/definitions/KubernetesNetworkConfig"
+  },
+  "Logging": {
+   "$ref": "#/definitions/Logging"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[0-9A-Za-z][A-Za-z0-9\\-_]*",
+   "type": "string"
+  },
+  "OpenIdConnectIssuerUrl": {
+   "type": "string"
+  },
+  "OutpostConfig": {
+   "$ref": "#/definitions/OutpostConfig"
+  },
+  "RemoteNetworkConfig": {
+   "$ref": "#/definitions/RemoteNetworkConfig"
+  },
+  "ResourcesVpcConfig": {
+   "$ref": "#/definitions/ResourcesVpcConfig"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "StorageConfig": {
+   "$ref": "#/definitions/StorageConfig"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UpgradePolicy": {
+   "$ref": "#/definitions/UpgradePolicy"
+  },
+  "Version": {
+   "pattern": "1\\.\\d\\d",
+   "type": "string"
+  },
+  "ZonalShiftConfig": {
+   "$ref": "#/definitions/ZonalShiftConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Endpoint",
+  "/properties/CertificateAuthorityData",
+  "/properties/ClusterSecurityGroupId",
+  "/properties/EncryptionConfigKeyArn",
+  "/properties/OpenIdConnectIssuerUrl",
+  "/properties/KubernetesNetworkConfig/ServiceIpv6Cidr"
+ ],
+ "required": [
+  "RoleArn",
+  "ResourcesVpcConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EKS::Cluster",
+ "writeOnlyProperties": [
+  "/properties/AccessConfig/BootstrapClusterCreatorAdminPermissions",
+  "/properties/BootstrapSelfManagedAddons"
+ ]
+}

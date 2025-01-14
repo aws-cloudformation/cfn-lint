@@ -311,6 +311,7 @@ types: list[str] = [
     "AWS::CustomerProfiles::CalculatedAttributeDefinition",
     "AWS::CustomerProfiles::Domain",
     "AWS::CustomerProfiles::EventStream",
+    "AWS::CustomerProfiles::EventTrigger",
     "AWS::CustomerProfiles::Integration",
     "AWS::CustomerProfiles::ObjectType",
     "AWS::CustomerProfiles::SegmentDefinition",

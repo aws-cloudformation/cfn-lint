@@ -1,0 +1,96 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBClusterIdentifier",
+  "/properties/DBShardGroupIdentifier",
+  "/properties/PubliclyAccessible"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBShardGroupIdentifier"
+ ],
+ "properties": {
+  "ComputeRedundancy": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DBClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DBShardGroupIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DBShardGroupResourceId": {
+   "type": "string"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "MaxACU": {
+   "type": "number"
+  },
+  "MinACU": {
+   "type": "number"
+  },
+  "PubliclyAccessible": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBShardGroupIdentifier": "$lowercase(DBShardGroupIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/DBShardGroupResourceId",
+  "/properties/Endpoint"
+ ],
+ "required": [
+  "DBClusterIdentifier",
+  "MaxACU"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::DBShardGroup",
+ "writeOnlyProperties": [
+  "/properties/MinACU"
+ ]
+}
