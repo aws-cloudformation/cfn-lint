@@ -1,3 +1,14 @@
+### v1.22.5
+## What's Changed
+* Patch out bad types in DMS DataProvider by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3905
+* Improve join performance by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3906
+* Only replace parameter values in Resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3908
+* Add JSONata to state machine definitions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3909
+* Update scripts to have better region support by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3910
+* Update CloudFormation schemas to 2025-01-14 by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3904
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.4...v1.22.5
+
 ### v1.22.4
 ## What's Changed
 * Add `ap-southeast-7` `Asia Pacific (Thailand)` Region by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3897
