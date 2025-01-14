@@ -96,5 +96,5 @@ class Ref(BaseFn):
                 continue
             if not hasattr(rule, "keywords"):
                 continue
-            if keyword in rule.keywords:
+            if keyword in rule.keywords or "*" in rule.keywords:
                 yield from rule.validate(validator, keyword, instance, schema)

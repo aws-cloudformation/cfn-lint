@@ -578,5 +578,20 @@ class ProviderSchemaManager:
         self.get_resource_schema(region=region, resource_type=resource_type)
         return self._schemas[region][resource_type].get_atts
 
+    @lru_cache(maxsize=None)
+    def get_type_ref(self, resource_type: str, region: str) -> dict[str, Any]:
+        """Get the Ref information for a type in a region
+
+        Args:
+            resource_type: The type of the resource. Example: AWS::S3::Bucket
+            region: The region to load the resource type from
+        Returns:
+            dict(str, Any): Returns a Dict where the keys are the attributes and the
+                value is the CloudFormation schema description of the attribute
+        """
+        resource_type = self._normalize_resource_type(resource_type)
+        self.get_resource_schema(region=region, resource_type=resource_type)
+        return self._schemas[region][resource_type].ref
+
 
 PROVIDER_SCHEMA_MANAGER: ProviderSchemaManager = ProviderSchemaManager()

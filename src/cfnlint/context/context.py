@@ -198,7 +198,7 @@ class Context:
                 yield pseudo_value, self.evolve(ref_values={instance: pseudo_value})
             return
         if instance in self.parameters:
-            for v, path in self.parameters[instance].ref(self):
+            for v, path in self.parameters[instance].ref_value(self):
 
                 # validate that ref is possible with path
                 # need to evaluate if Fn::If would be not true if value is
@@ -278,7 +278,11 @@ class _Ref(ABC):
     """
 
     @abstractmethod
-    def ref(self, context: Context) -> Iterator[Any]:
+    def ref(self, region: str) -> dict[str, Any]:
+        pass
+
+    @abstractmethod
+    def ref_value(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         pass
 
 
@@ -351,7 +355,10 @@ class Parameter(_Ref):
         if parameter.get("NoEcho") in list(BOOLEAN_STRINGS_TRUE) + [True]:
             self.no_echo = True
 
-    def ref(self, context: Context) -> Iterator[Tuple[Any, deque]]:
+    def ref(self, region: str = REGION_PRIMARY) -> dict[str, Any]:
+        return {}
+
+    def ref_value(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         if self.allowed_values:
             for i, allowed_value in enumerate(self.allowed_values):
                 if isinstance(allowed_value, list):
@@ -402,10 +409,13 @@ class Resource(_Ref):
             raise ValueError("Condition must be a string")
         self.condition = c
 
-    def get_atts(self, region: str = "us-east-1") -> AttributeDict:
+    def get_atts(self, region: str = REGION_PRIMARY) -> AttributeDict:
         return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
 
-    def ref(self, context: Context) -> Iterator[Any]:
+    def ref(self, region: str = REGION_PRIMARY) -> dict[str, Any]:
+        return PROVIDER_SCHEMA_MANAGER.get_type_ref(self.type, region)
+
+    def ref_value(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         return
         yield
 

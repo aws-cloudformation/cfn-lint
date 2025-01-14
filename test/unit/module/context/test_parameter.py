@@ -95,8 +95,8 @@ def test_parameter(name, instance, expected_type, expected_ref):
 
     assert expected_type == parameter.type
     assert expected_ref == list(
-        parameter.ref(context)
-    ), f"{name!r} test got {list(parameter.ref(context))}"
+        parameter.ref_value(context)
+    ), f"{name!r} test got {list(parameter.ref_value(context))}"
 
 
 @pytest.mark.parametrize(

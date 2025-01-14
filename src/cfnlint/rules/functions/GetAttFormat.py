@@ -17,7 +17,7 @@ class GetAttFormat(CfnLintKeyword):
         "Validate that if source and destination format exists that they match"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes"
-    tags = ["parameters", "ec2", "imageid"]
+    tags = ["functions", "getatt"]
 
     def __init__(self):
         super().__init__(["*"])
