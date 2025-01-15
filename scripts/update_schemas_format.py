@@ -239,6 +239,16 @@ def main():
                         )
                     )
 
+            for path in _descend(obj, ["LogGroupName"]):
+                if path[-2] == "properties":
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::Logs::LogGroup.Name"},
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                        )
+                    )
+
             for path in _descend(
                 obj,
                 [
