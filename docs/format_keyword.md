@@ -23,3 +23,7 @@ This format validates that the value is a valid Security Group Name, which must 
 ### AWS::EC2::Image.Id
 
 This format validates that the value is a valid Amazon Machine Image (AMI), which is a string of the pattern `ami-[0-9a-f]{8}` or `ami-[0-9a-f]{17}`.  More info in [docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/resource-ids.html)
+
+### AWS::Logs::LogGroup.Name
+
+This format validates that the value is a valid log group name, which is a string of the pattern `^[\.\-_\/#A-Za-z0-9]{1,512}\Z`.  More info in [docs](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_LogGroup.html)

@@ -64,7 +64,20 @@ class GetAttFormat(CfnLintKeyword):
             getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
             getatt_fmt = getatt_schema.get("format")
             if getatt_fmt != fmt:
-                yield ValidationError(
-                    f"{{'Fn::GetAtt': {instance!r}}} that does not match {fmt!r}",
-                    rule=self,
-                )
+                if getatt_fmt is None:
+                    yield ValidationError(
+                        (
+                            f"{{'Fn::GetAtt': {instance!r}}} does not match "
+                            f"destination format of {fmt!r}"
+                        ),
+                        rule=self,
+                    )
+                else:
+                    yield ValidationError(
+                        (
+                            f"{{'Fn::GetAtt': {instance!r}}} with format "
+                            f"{getatt_fmt!r} does not "
+                            f"match destination format of {fmt!r}"
+                        ),
+                        rule=self,
+                    )
