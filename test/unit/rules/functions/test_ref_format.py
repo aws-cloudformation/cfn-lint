@@ -21,13 +21,6 @@ def template():
         "Resources": {
             "MyBucket": {"Type": "AWS::S3::Bucket"},
             "MyVpc": {"Type": "AWS::EC2::VPC"},
-            "MySecurityGroup": {"Type": "AWS::EC2::SecurityGroup"},
-            "MyCustomResource": {"Type": "Custom::CustomResource"},
-            "MySubTemplate": {"Type": "AWS::CloudFormation::Stack"},
-            "MyProvisionedProduct": {
-                "Type": "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
-            },
-            "MySSMParameter": {"Type": "AWS::SSM::Parameter"},
         },
     }
 
@@ -55,6 +48,26 @@ def template():
                     rule=RefFormat(),
                 )
             ],
+        ),
+        (
+            "Invalid Ref with a resource with no format",
+            {"Ref": "MyBucket"},
+            {"format": "AWS::EC2::Image.Id"},
+            [
+                ValidationError(
+                    (
+                        "{'Ref': 'MyBucket'} does not match "
+                        "destination format of 'AWS::EC2::Image.Id'"
+                    ),
+                    rule=RefFormat(),
+                )
+            ],
+        ),
+        (
+            "Invalid Ref to non existent resource",
+            {"Ref": "DNE"},
+            {"format": "AWS::EC2::Image.Id"},
+            [],
         ),
     ],
 )
