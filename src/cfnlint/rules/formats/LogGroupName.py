@@ -27,7 +27,7 @@ class LogGroupName(FormatKeyword):
         if not isinstance(instance, str):
             return True
 
-        if re.match(r"^[.\-_/#A-Za-z0-9]{1,512}\Z", instance):
+        if re.match(r"^[\.\-_\/#A-Za-z0-9]{1,512}\Z", instance):
             return True
 
         return False
