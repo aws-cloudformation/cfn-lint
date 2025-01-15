@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.context._mappings import Mappings
-from cfnlint.context.context import Context, Parameter, Resource
+from cfnlint.context.context import Context, Parameter, Path, Resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 
@@ -24,10 +24,16 @@ def _resolve(name, instance, expected_results, **kwargs):
 
     for i, (instance, v, errors) in enumerate(resolutions):
         assert instance == expected_results[i][0], f"{name!r} got {instance!r}"
-        assert (
-            v.context.path.value_path == expected_results[i][1]
-        ), f"{name!r} got {v.context.path.value_path!r}"
         assert errors == expected_results[i][2], f"{name!r} got {errors!r}"
+        if not errors:
+            expected_context = expected_results[i][1]
+            _, expected_context = list(expected_context.ref_value("AWS::Region"))[0]
+            assert (
+                v.context.path == expected_context.path
+            ), f"{name!r} got {v.context.path!r}"
+            assert (
+                v.context.ref_values == expected_context.ref_values
+            ), f"{name!r} got {v.context.ref_values!r}"
 
 
 @pytest.mark.parametrize(
@@ -203,7 +209,7 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid Join with a list of strings",
             {"Fn::Join": [".", ["a", "b", "c"]]},
-            [("a.b.c", deque([]), None)],
+            [("a.b.c", Context(), None)],
         ),
         (
             "Valid GetAZs with empty string",
@@ -218,7 +224,7 @@ def test_invalid_functions(name, instance, response):
                         "us-east-1e",
                         "us-east-1f",
                     ],
-                    deque([]),
+                    Context(),
                     None,
                 )
             ],
@@ -226,14 +232,32 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with bad keys and a default value",
             {"Fn::FindInMap": ["foo", "bar", "value", {"DefaultValue": "default"}]},
-            [("default", deque([4, "DefaultValue"]), None)],
+            [
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                )
+            ],
         ),
         (
             "Valid FindInMap with valid keys and a default value",
             {"Fn::FindInMap": ["foo", "first", "second", {"DefaultValue": "default"}]},
             [
-                ("default", deque([4, "DefaultValue"]), None),
-                ("bar", deque(["Mappings", "foo", "first", "second"]), None),
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                ),
+                (
+                    "bar",
+                    Context(
+                        path=Path(
+                            value_path=deque(["Mappings", "foo", "first", "second"])
+                        )
+                    ),
+                    None,
+                ),
             ],
         ),
         (
@@ -242,7 +266,7 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         (
                             "'bar' is not one of ['foo', "
@@ -257,7 +281,13 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with a bad mapping and default",
             {"Fn::FindInMap": ["bar", "first", "second", {"DefaultValue": "default"}]},
-            [("default", deque([4, "DefaultValue"]), None)],
+            [
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                )
+            ],
         ),
         (
             "Valid FindInMap with a bad mapping and aws no value",
@@ -277,7 +307,7 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         ("'second' is not one of ['first'] for " "mapping 'foo'"),
                         path=deque(["Fn::FindInMap", 1]),
@@ -288,7 +318,13 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with a bad top key and default",
             {"Fn::FindInMap": ["foo", "second", "first", {"DefaultValue": "default"}]},
-            [("default", deque([4, "DefaultValue"]), None)],
+            [
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                )
+            ],
         ),
         (
             "Valid FindInMap with a map name that is a Ref to pseudo param",
@@ -301,7 +337,13 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     "bar",
-                    deque(["Mappings", "accounts", "123456789012", "dev"]),
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "accounts", "123456789012", "dev"]
+                            )
+                        ),
+                    ),
                     None,
                 )
             ],
@@ -315,7 +357,13 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     "bar",
-                    deque(["Mappings", "accounts", "123456789012", "dev"]),
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "accounts", "123456789012", "dev"]
+                            )
+                        ),
+                    ),
                     None,
                 )
             ],
@@ -326,7 +374,13 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     "foo",
-                    deque(["Mappings", "accounts", "us-east-1", "bar"]),
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "accounts", "us-east-1", "bar"]
+                            )
+                        ),
+                    ),
                     None,
                 )
             ],
@@ -337,7 +391,7 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         (
                             "'bar' is not a second level key "
@@ -355,7 +409,7 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         (
                             "{'Ref': 'AWS::AccountId'} is not a "
@@ -377,7 +431,7 @@ def test_invalid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         (
                             "'third' is not one of ['second'] for "
@@ -391,7 +445,15 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with integer types",
             {"Fn::FindInMap": ["integers", 1, 2]},
-            [("Value", deque(["Mappings", "integers", "1", "2"]), None)],
+            [
+                (
+                    "Value",
+                    Context(
+                        path=Path(value_path=deque(["Mappings", "integers", "1", "2"]))
+                    ),
+                    None,
+                )
+            ],
         ),
         (
             (
@@ -400,8 +462,28 @@ def test_invalid_functions(name, instance, response):
             ),
             {"Fn::FindInMap": ["environments", {"Ref": "Environment"}, "foo"]},
             [
-                ("one", deque(["Mappings", "environments", "dev", "foo"]), None),
-                ("two", deque(["Mappings", "environments", "test", "foo"]), None),
+                (
+                    "one",
+                    Context(
+                        path=Path(
+                            value_path=deque(["Mappings", "environments", "dev", "foo"])
+                        ),
+                        ref_values={"Environment": "dev"},
+                    ),
+                    None,
+                ),
+                (
+                    "two",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "test", "foo"]
+                            ),
+                        ),
+                        ref_values={"Environment": "test"},
+                    ),
+                    None,
+                ),
             ],
         ),
         (
@@ -444,9 +526,42 @@ def test_invalid_functions(name, instance, response):
             ),
             {"Fn::FindInMap": ["environments", "lion", {"Ref": "Environment"}]},
             [
-                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
-                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
-                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+                (
+                    "one",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "dev"]
+                            )
+                        ),
+                        ref_values={"Environment": "dev"},
+                    ),
+                    None,
+                ),
+                (
+                    "two",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "test"]
+                            )
+                        ),
+                        ref_values={"Environment": "test"},
+                    ),
+                    None,
+                ),
+                (
+                    "three",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "prod"]
+                            )
+                        ),
+                        ref_values={"Environment": "prod"},
+                    ),
+                    None,
+                ),
             ],
         ),
         (
@@ -468,7 +583,13 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid FindInMap with a bad second key and default",
             {"Fn::FindInMap": ["foo", "first", "third", {"DefaultValue": "default"}]},
-            [("default", deque([4, "DefaultValue"]), None)],
+            [
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                )
+            ],
         ),
         (
             "Valid FindInMap with a transform on first key",
@@ -495,16 +616,59 @@ def test_invalid_functions(name, instance, response):
             ("Valid FindInMap with a Sub with no parameters"),
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "dev"}]},
             [
-                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
+                (
+                    "one",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "dev"]
+                            )
+                        )
+                    ),
+                    None,
+                ),
             ],
         ),
         (
             ("Valid FindInMap with sub to a paremter"),
             {"Fn::FindInMap": ["environments", "lion", {"Fn::Sub": "${Environment}"}]},
             [
-                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
-                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
-                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+                (
+                    "one",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "dev"]
+                            )
+                        ),
+                        ref_values={"Environment": "dev"},
+                    ),
+                    None,
+                ),
+                (
+                    "two",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "test"]
+                            )
+                        ),
+                        ref_values={"Environment": "test"},
+                    ),
+                    None,
+                ),
+                (
+                    "three",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "prod"]
+                            )
+                        ),
+                        ref_values={"Environment": "prod"},
+                    ),
+                    None,
+                ),
             ],
         ),
         (
@@ -517,9 +681,42 @@ def test_invalid_functions(name, instance, response):
                 ]
             },
             [
-                ("one", deque(["Mappings", "environments", "lion", "dev"]), None),
-                ("two", deque(["Mappings", "environments", "lion", "test"]), None),
-                ("three", deque(["Mappings", "environments", "lion", "prod"]), None),
+                (
+                    "one",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "dev"]
+                            )
+                        ),
+                        ref_values={"Environment": "dev"},
+                    ),
+                    None,
+                ),
+                (
+                    "two",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "test"]
+                            )
+                        ),
+                        ref_values={"Environment": "test"},
+                    ),
+                    None,
+                ),
+                (
+                    "three",
+                    Context(
+                        path=Path(
+                            value_path=deque(
+                                ["Mappings", "environments", "lion", "prod"]
+                            )
+                        ),
+                        ref_values={"Environment": "prod"},
+                    ),
+                    None,
+                ),
             ],
         ),
         (
@@ -536,12 +733,12 @@ def test_invalid_functions(name, instance, response):
         (
             "Valid Sub with a resolvable values",
             {"Fn::Sub": ["${a}-${b}", {"a": "foo", "b": "bar"}]},
-            [("foo-bar", deque([]), None)],
+            [("foo-bar", Context(), None)],
         ),
         (
             "Valid Sub with empty parameters",
             {"Fn::Sub": ["foo", {}]},
-            [("foo", deque([]), None)],
+            [("foo", Context(), None)],
         ),
         (
             "Valid Sub with a getatt and list",
@@ -557,9 +754,9 @@ def test_invalid_functions(name, instance, response):
             "Fn::Join uses previous values when doing resolution",
             {"Fn::Join": ["-", [{"Ref": "Environment"}, {"Ref": "Environment"}]]},
             [
-                ("dev-dev", deque(), None),
-                ("test-test", deque(), None),
-                ("prod-prod", deque(), None),
+                ("dev-dev", Context(ref_values={"Environment": "dev"}), None),
+                ("test-test", Context(ref_values={"Environment": "test"}), None),
+                ("prod-prod", Context(ref_values={"Environment": "prod"}), None),
             ],
         ),
         (
@@ -629,7 +826,7 @@ def test_valid_functions(name, instance, response):
             [
                 (
                     None,
-                    deque([]),
+                    Context(),
                     ValidationError(
                         ("{'Ref': 'MyParameter'} is not one of []"),
                         path=deque(["Fn::FindInMap", 0]),
@@ -640,7 +837,13 @@ def test_valid_functions(name, instance, response):
         (
             "Invalid FindInMap with no mappings and default value",
             {"Fn::FindInMap": ["A", "B", "C", {"DefaultValue": "default"}]},
-            [("default", deque([4, "DefaultValue"]), None)],
+            [
+                (
+                    "default",
+                    Context(path=Path(value_path=deque([4, "DefaultValue"]))),
+                    None,
+                )
+            ],
         ),
     ],
 )

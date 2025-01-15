@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 from collections import deque
+from copy import deepcopy
 from typing import Any, Iterator
 
 import regex as re
@@ -243,9 +244,9 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
                 ):
                     yield (
                         value,
-                        validator.evolve(
-                            context=validator.context.evolve(
-                                path=validator.context.path.evolve(
+                        second_v.evolve(
+                            context=second_v.context.evolve(
+                                path=second_v.context.path.evolve(
                                     value_path=deque(
                                         [
                                             "Mappings",
@@ -282,15 +283,17 @@ def get_azs(validator: Validator, instance: Any) -> ResolutionResult:
                 yield AVAILABILITY_ZONES.get(instance), v, None
 
 
-def _join_expansion(validator: Validator, instances: Any) -> Iterator[Any]:
+def _join_expansion(
+    validator: Validator, instances: Any
+) -> Iterator[tuple[Any, Validator]]:
     if len(instances) == 0:
         return
 
     if len(instances) == 1:
-        for value, _, _ in validator.resolve_value(instances[0]):
+        for value, instance_validator, _ in validator.resolve_value(instances[0]):
             if not isinstance(value, (str, int, float, bool)):
                 raise ValueError(f"Incorrect value type for {value!r}")
-            yield [value]
+            yield [value], instance_validator
         return
 
     for value, instance_validator, errs in validator.resolve_value(instances[0]):
@@ -298,8 +301,10 @@ def _join_expansion(validator: Validator, instances: Any) -> Iterator[Any]:
             continue
         if not isinstance(value, (str, int, float, bool)):
             raise ValueError(f"Incorrect value type for {value!r}")
-        for values in _join_expansion(instance_validator, instances[1:]):
-            yield [value] + values
+        for values, expansion_validator in _join_expansion(
+            instance_validator, instances[1:]
+        ):
+            yield [value] + values, expansion_validator
 
 
 def join(validator: Validator, instance: Any) -> ResolutionResult:
@@ -312,12 +317,21 @@ def join(validator: Validator, instance: Any) -> ResolutionResult:
     for delimiter, delimiter_v, _ in validator.resolve_value(instance[0]):
         if not delimiter_v.is_type(delimiter, "string"):
             continue
-        for values, values_v, _ in validator.resolve_value(instance[1]):
+        for values, values_v, _ in delimiter_v.resolve_value(instance[1]):
             if not values_v.is_type(values, "array"):
                 continue
             try:
-                for value in _join_expansion(values_v, values):
-                    yield delimiter.join([str(v) for v in value]), values_v, None
+                for value, expansion_validator in _join_expansion(values_v, values):
+                    # reset the value path because we could get a Ref value_path
+                    yield delimiter.join(
+                        [str(v) for v in value]
+                    ), expansion_validator.evolve(
+                        context=expansion_validator.context.evolve(
+                            path=expansion_validator.context.path.evolve(
+                                value_path=deque([])
+                            )
+                        )
+                    ), None
             except (ValueError, TypeError):
                 return
 
@@ -417,7 +431,7 @@ def sub(validator: Validator, instance: Any) -> ResolutionResult:
             return
 
         string = instance[0]
-        parameters = instance[1]
+        parameters = deepcopy(instance[1])
         if not validator.is_type(string, "string"):
             return
         if not validator.is_type(parameters, "object"):
@@ -438,7 +452,11 @@ def sub(validator: Validator, instance: Any) -> ResolutionResult:
                     ref_values=resolved_parameters,
                 )
             )
-            yield from _sub_string(resolved_validator, string)
+            for sub_string, sub_validator, _ in _sub_string(resolved_validator, string):
+                for key in instance[1].keys():
+                    sub_validator.context.ref_values.pop(key, None)
+
+                yield sub_string, sub_validator, None
 
         return
 
