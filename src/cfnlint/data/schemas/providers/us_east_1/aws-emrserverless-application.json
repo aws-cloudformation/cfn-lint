@@ -305,6 +305,9 @@
     "ManagedPersistenceMonitoringConfiguration": {
      "$ref": "#/definitions/ManagedPersistenceMonitoringConfiguration"
     },
+    "PrometheusMonitoringConfiguration": {
+     "$ref": "#/definitions/PrometheusMonitoringConfiguration"
+    },
     "S3MonitoringConfiguration": {
      "$ref": "#/definitions/S3MonitoringConfiguration"
     }
@@ -338,6 +341,20 @@
    },
    "required": [],
    "type": "object"
+  },
+  "PrometheusMonitoringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RemoteWriteUrl": {
+     "$ref": "#/definitions/RemoteWriteUrl"
+    }
+   }
+  },
+  "RemoteWriteUrl": {
+   "maxLength": 10280,
+   "minLength": 1,
+   "pattern": "^https://aps-workspaces.([a-z]{2}-[a-z-]{1,20}-[1-9]).amazonaws(.[0-9A-Za-z]{2,4})+/workspaces/[-_.0-9A-Za-z]{1,100}/api/v1/remote_write$",
+   "type": "string"
   },
   "S3MonitoringConfiguration": {
    "additionalProperties": false,

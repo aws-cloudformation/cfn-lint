@@ -2,9 +2,29 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/StorageConfiguration",
-  "/properties/KnowledgeBaseConfiguration"
+  "/properties/KnowledgeBaseConfiguration/Type",
+  "/properties/KnowledgeBaseConfiguration/VectorKnowledgeBaseConfiguration",
+  "/properties/KnowledgeBaseConfiguration/KendraKnowledgeBaseConfiguration",
+  "/properties/KnowledgeBaseConfiguration/SqlKnowledgeBaseConfiguration/Type",
+  "/properties/KnowledgeBaseConfiguration/SqlKnowledgeBaseConfiguration/RedshiftConfiguration/StorageConfigurations",
+  "/properties/KnowledgeBaseConfiguration/SqlKnowledgeBaseConfiguration/RedshiftConfiguration/QueryEngineConfiguration"
  ],
  "definitions": {
+  "AwsDataCatalogTableName": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^.*\\.*$",
+   "type": "string"
+  },
+  "AwsDataCatalogTableNames": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AwsDataCatalogTableName"
+   },
+   "maxItems": 1000,
+   "minItems": 1,
+   "type": "array"
+  },
   "BedrockEmbeddingModelConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -16,6 +36,35 @@
    },
    "type": "object"
   },
+  "CuratedQueries": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CuratedQuery"
+   },
+   "maxItems": 10,
+   "type": "array"
+  },
+  "CuratedQuery": {
+   "additionalProperties": false,
+   "properties": {
+    "NaturalLanguage": {
+     "$ref": "#/definitions/NaturalLanguageString"
+    },
+    "Sql": {
+     "$ref": "#/definitions/SqlString"
+    }
+   },
+   "required": [
+    "NaturalLanguage",
+    "Sql"
+   ],
+   "type": "object"
+  },
+  "DescriptionString": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
   "EmbeddingModelConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -24,6 +73,13 @@
     }
    },
    "type": "object"
+  },
+  "InclusionType": {
+   "enum": [
+    "INCLUDE",
+    "EXCLUDE"
+   ],
+   "type": "string"
   },
   "KendraIndexArn": {
    "pattern": "^arn:aws(|-cn|-us-gov):kendra:[a-z0-9-]{1,20}:([0-9]{12}|):index/([a-zA-Z0-9][a-zA-Z0-9-]{35}|[a-zA-Z0-9][a-zA-Z0-9-]{35}-[a-zA-Z0-9][a-zA-Z0-9-]{35})$",
@@ -46,6 +102,9 @@
    "properties": {
     "KendraKnowledgeBaseConfiguration": {
      "$ref": "#/definitions/KendraKnowledgeBaseConfiguration"
+    },
+    "SqlKnowledgeBaseConfiguration": {
+     "$ref": "#/definitions/SqlKnowledgeBaseConfiguration"
     },
     "Type": {
      "$ref": "#/definitions/KnowledgeBaseType"
@@ -82,7 +141,8 @@
   "KnowledgeBaseType": {
    "enum": [
     "VECTOR",
-    "KENDRA"
+    "KENDRA",
+    "SQL"
    ],
    "type": "string"
   },
@@ -157,6 +217,11 @@
     "TextField"
    ],
    "type": "object"
+  },
+  "NaturalLanguageString": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
   },
   "OpenSearchServerlessConfiguration": {
    "additionalProperties": false,
@@ -255,6 +320,101 @@
     "TextField"
    ],
    "type": "object"
+  },
+  "QueryEngineType": {
+   "enum": [
+    "REDSHIFT"
+   ],
+   "type": "string"
+  },
+  "QueryExecutionTimeoutSeconds": {
+   "maximum": 200,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "QueryGenerationColumn": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "$ref": "#/definitions/DescriptionString"
+    },
+    "Inclusion": {
+     "$ref": "#/definitions/InclusionType"
+    },
+    "Name": {
+     "$ref": "#/definitions/QueryGenerationColumnName"
+    }
+   },
+   "type": "object"
+  },
+  "QueryGenerationColumnName": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueryGenerationColumns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/QueryGenerationColumn"
+   },
+   "type": "array"
+  },
+  "QueryGenerationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionTimeoutSeconds": {
+     "$ref": "#/definitions/QueryExecutionTimeoutSeconds"
+    },
+    "GenerationContext": {
+     "$ref": "#/definitions/QueryGenerationContext"
+    }
+   },
+   "type": "object"
+  },
+  "QueryGenerationContext": {
+   "additionalProperties": false,
+   "properties": {
+    "CuratedQueries": {
+     "$ref": "#/definitions/CuratedQueries"
+    },
+    "Tables": {
+     "$ref": "#/definitions/QueryGenerationTables"
+    }
+   },
+   "type": "object"
+  },
+  "QueryGenerationTable": {
+   "additionalProperties": false,
+   "properties": {
+    "Columns": {
+     "$ref": "#/definitions/QueryGenerationColumns"
+    },
+    "Description": {
+     "$ref": "#/definitions/DescriptionString"
+    },
+    "Inclusion": {
+     "$ref": "#/definitions/InclusionType"
+    },
+    "Name": {
+     "$ref": "#/definitions/QueryGenerationTableName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "QueryGenerationTableName": {
+   "pattern": "^.*\\..*\\..*$",
+   "type": "string"
+  },
+  "QueryGenerationTables": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/QueryGenerationTable"
+   },
+   "maxItems": 50,
+   "type": "array"
   },
   "RdsConfiguration": {
    "additionalProperties": false,
@@ -377,6 +537,198 @@
    ],
    "type": "object"
   },
+  "RedshiftClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RedshiftConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QueryEngineConfiguration": {
+     "$ref": "#/definitions/RedshiftQueryEngineConfiguration"
+    },
+    "QueryGenerationConfiguration": {
+     "$ref": "#/definitions/QueryGenerationConfiguration"
+    },
+    "StorageConfigurations": {
+     "$ref": "#/definitions/RedshiftQueryEngineStorageConfigurations"
+    }
+   },
+   "required": [
+    "StorageConfigurations",
+    "QueryEngineConfiguration"
+   ],
+   "type": "object"
+  },
+  "RedshiftDatabase": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RedshiftProvisionedAuthConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseUser": {
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/RedshiftProvisionedAuthType"
+    },
+    "UsernamePasswordSecretArn": {
+     "$ref": "#/definitions/SecretArn"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RedshiftProvisionedAuthType": {
+   "enum": [
+    "IAM",
+    "USERNAME_PASSWORD",
+    "USERNAME"
+   ],
+   "type": "string"
+  },
+  "RedshiftProvisionedConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthConfiguration": {
+     "$ref": "#/definitions/RedshiftProvisionedAuthConfiguration"
+    },
+    "ClusterIdentifier": {
+     "$ref": "#/definitions/RedshiftClusterIdentifier"
+    }
+   },
+   "required": [
+    "ClusterIdentifier",
+    "AuthConfiguration"
+   ],
+   "type": "object"
+  },
+  "RedshiftQueryEngineAwsDataCatalogStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "TableNames": {
+     "$ref": "#/definitions/AwsDataCatalogTableNames"
+    }
+   },
+   "required": [
+    "TableNames"
+   ],
+   "type": "object"
+  },
+  "RedshiftQueryEngineConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ProvisionedConfiguration": {
+     "$ref": "#/definitions/RedshiftProvisionedConfiguration"
+    },
+    "ServerlessConfiguration": {
+     "$ref": "#/definitions/RedshiftServerlessConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/RedshiftQueryEngineType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RedshiftQueryEngineRedshiftStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DatabaseName": {
+     "$ref": "#/definitions/RedshiftDatabase"
+    }
+   },
+   "required": [
+    "DatabaseName"
+   ],
+   "type": "object"
+  },
+  "RedshiftQueryEngineStorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsDataCatalogConfiguration": {
+     "$ref": "#/definitions/RedshiftQueryEngineAwsDataCatalogStorageConfiguration"
+    },
+    "RedshiftConfiguration": {
+     "$ref": "#/definitions/RedshiftQueryEngineRedshiftStorageConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/RedshiftQueryEngineStorageType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RedshiftQueryEngineStorageConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RedshiftQueryEngineStorageConfiguration"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
+  },
+  "RedshiftQueryEngineStorageType": {
+   "enum": [
+    "REDSHIFT",
+    "AWS_DATA_CATALOG"
+   ],
+   "type": "string"
+  },
+  "RedshiftQueryEngineType": {
+   "enum": [
+    "SERVERLESS",
+    "PROVISIONED"
+   ],
+   "type": "string"
+  },
+  "RedshiftServerlessAuthConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/RedshiftServerlessAuthType"
+    },
+    "UsernamePasswordSecretArn": {
+     "$ref": "#/definitions/SecretArn"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "RedshiftServerlessAuthType": {
+   "enum": [
+    "IAM",
+    "USERNAME_PASSWORD"
+   ],
+   "type": "string"
+  },
+  "RedshiftServerlessConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthConfiguration": {
+     "$ref": "#/definitions/RedshiftServerlessAuthConfiguration"
+    },
+    "WorkgroupArn": {
+     "$ref": "#/definitions/WorkgroupArn"
+    }
+   },
+   "required": [
+    "WorkgroupArn",
+    "AuthConfiguration"
+   ],
+   "type": "object"
+  },
   "S3Location": {
    "additionalProperties": false,
    "properties": {
@@ -391,6 +743,30 @@
     "URI"
    ],
    "type": "object"
+  },
+  "SecretArn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
+   "type": "string"
+  },
+  "SqlKnowledgeBaseConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RedshiftConfiguration": {
+     "$ref": "#/definitions/RedshiftConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/QueryEngineType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SqlString": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
   },
   "StorageConfiguration": {
    "additionalProperties": false,
@@ -512,6 +888,10 @@
     "EmbeddingModelArn"
    ],
    "type": "object"
+  },
+  "WorkgroupArn": {
+   "pattern": "^(arn:(aws(-[a-z]+)*):redshift-serverless:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:workgroup/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+   "type": "string"
   }
  },
  "primaryIdentifier": [

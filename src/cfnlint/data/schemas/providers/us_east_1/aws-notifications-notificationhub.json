@@ -1,0 +1,65 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Region"
+ ],
+ "definitions": {
+  "NotificationHubStatus": {
+   "enum": [
+    "ACTIVE",
+    "REGISTERING",
+    "DEREGISTERING",
+    "INACTIVE"
+   ],
+   "type": "string"
+  },
+  "NotificationHubStatusSummary": {
+   "additionalProperties": false,
+   "properties": {
+    "NotificationHubStatus": {
+     "$ref": "#/definitions/NotificationHubStatus"
+    },
+    "NotificationHubStatusReason": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "NotificationHubStatus",
+    "NotificationHubStatusReason"
+   ],
+   "type": "object"
+  },
+  "Region": {
+   "maxLength": 25,
+   "minLength": 2,
+   "pattern": "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Region"
+ ],
+ "properties": {
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "NotificationHubStatusSummary": {
+   "$ref": "#/definitions/NotificationHubStatusSummary"
+  },
+  "Region": {
+   "$ref": "#/definitions/Region"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/NotificationHubStatusSummary"
+ ],
+ "required": [
+  "Region"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::NotificationHub"
+}
