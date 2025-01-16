@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "BehaviorType": {
+   "enum": [
+    "ROUTE_CURRENT_CHANNEL_ONLY",
+    "ROUTE_ANY_CHANNEL"
+   ],
+   "type": "string"
+  },
+  "Channel": {
+   "enum": [
+    "VOICE",
+    "CHAT",
+    "TASK"
+   ],
+   "type": "string"
+  },
+  "Concurrency": {
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "CrossChannelBehavior": {
+   "additionalProperties": false,
+   "properties": {
+    "BehaviorType": {
+     "$ref": "#/definitions/BehaviorType"
+    }
+   },
+   "required": [
+    "BehaviorType"
+   ],
+   "type": "object"
+  },
+  "Delay": {
+   "maximum": 9999,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MediaConcurrency": {
+   "additionalProperties": false,
+   "properties": {
+    "Channel": {
+     "$ref": "#/definitions/Channel"
+    },
+    "Concurrency": {
+     "$ref": "#/definitions/Concurrency"
+    },
+    "CrossChannelBehavior": {
+     "$ref": "#/definitions/CrossChannelBehavior"
+    }
+   },
+   "required": [
+    "Channel",
+    "Concurrency"
+   ],
+   "type": "object"
+  },
+  "Priority": {
+   "maximum": 99,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "QueueArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "RoutingProfileQueueConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Delay": {
+     "$ref": "#/definitions/Delay"
+    },
+    "Priority": {
+     "$ref": "#/definitions/Priority"
+    },
+    "QueueReference": {
+     "$ref": "#/definitions/RoutingProfileQueueReference"
+    }
+   },
+   "required": [
+    "Delay",
+    "Priority",
+    "QueueReference"
+   ],
+   "type": "object"
+  },
+  "RoutingProfileQueueReference": {
+   "additionalProperties": false,
+   "properties": {
+    "Channel": {
+     "$ref": "#/definitions/Channel"
+    },
+    "QueueArn": {
+     "$ref": "#/definitions/QueueArn"
+    }
+   },
+   "required": [
+    "Channel",
+    "QueueArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RoutingProfileArn"
+ ],
+ "properties": {
+  "AgentAvailabilityTimer": {
+   "enum": [
+    "TIME_SINCE_LAST_ACTIVITY",
+    "TIME_SINCE_LAST_INBOUND"
+   ],
+   "type": "string"
+  },
+  "DefaultOutboundQueueArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 250,
+   "minLength": 1,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "MediaConcurrencies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MediaConcurrency"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "QueueConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/RoutingProfileQueueConfig"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "RoutingProfileArn": {
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/routing-profile/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RoutingProfileArn"
+ ],
+ "required": [
+  "InstanceArn",
+  "Name",
+  "Description",
+  "MediaConcurrencies",
+  "DefaultOutboundQueueArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Connect::RoutingProfile"
+}

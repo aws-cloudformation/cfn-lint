@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AggregationDuration": {
+   "enum": [
+    "LONG",
+    "SHORT",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "NotificationConfigurationStatus": {
+   "enum": [
+    "ACTIVE",
+    "PARTIALLY_ACTIVE",
+    "INACTIVE",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AggregationDuration": {
+   "$ref": "#/definitions/AggregationDuration"
+  },
+  "Arn": {
+   "pattern": "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$",
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 256,
+   "minLength": 0,
+   "pattern": "^[^\\u0001-\\u001F\\u007F-\\u009F]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_\\-]+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/NotificationConfigurationStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreationTime",
+  "/properties/Status",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Description",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Notifications::NotificationConfiguration"
+}

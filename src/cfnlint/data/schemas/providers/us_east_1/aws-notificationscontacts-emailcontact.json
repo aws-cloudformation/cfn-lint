@@ -1,0 +1,139 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/EmailAddress",
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EmailContact": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "maxLength": 254,
+     "minLength": 6,
+     "pattern": "^(.+)@(.+)$",
+     "type": "string"
+    },
+    "Arn": {
+     "pattern": "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$",
+     "type": "string"
+    },
+    "CreationTime": {
+     "format": "date-time",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "[\\w-.~]+",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/EmailContactStatus"
+    },
+    "UpdateTime": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Address",
+    "Arn",
+    "CreationTime",
+    "Name",
+    "Status",
+    "UpdateTime"
+   ],
+   "type": "object"
+  },
+  "EmailContactStatus": {
+   "enum": [
+    "inactive",
+    "active"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$",
+   "type": "string"
+  },
+  "EmailAddress": {
+   "maxLength": 254,
+   "minLength": 6,
+   "pattern": "^(.+)@(.+)$",
+   "type": "string"
+  },
+  "EmailContact": {
+   "$ref": "#/definitions/EmailContact"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[\\w-.~]+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/EmailContact",
+  "/properties/EmailContact/Arn",
+  "/properties/EmailContact/Address",
+  "/properties/EmailContact/Name",
+  "/properties/EmailContact/Status",
+  "/properties/EmailContact/CreationTime",
+  "/properties/EmailContact/UpdateTime"
+ ],
+ "required": [
+  "EmailAddress",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::NotificationsContacts::EmailContact",
+ "writeOnlyProperties": [
+  "/properties/EmailAddress",
+  "/properties/Name"
+ ]
+}

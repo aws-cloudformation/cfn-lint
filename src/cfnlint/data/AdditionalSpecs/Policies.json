@@ -7796,7 +7796,10 @@
     "UpdateTableStorageOptimizer"
    ],
    "HasResource": false,
-   "StringPrefix": "lakeformation"
+   "StringPrefix": "lakeformation",
+   "conditionKeys": [
+    "lakeformation:EnabledOnlyForMetaDataAccess"
+   ]
   },
   "AWS Lambda": {
    "ARNFormat": "arn:aws:lambda:${Region}:${Account}:${ResourceType}:${ResourceId}",
@@ -9082,6 +9085,7 @@
     "ListResourceSnapshotJobs",
     "ListResourceSnapshots",
     "ListSolutions",
+    "ListTagsForResource",
     "PutSellingSystemSettings",
     "RejectEngagementInvitation",
     "StartEngagementByAcceptingInvitationTask",
@@ -9089,11 +9093,16 @@
     "StartResourceSnapshotJob",
     "StopResourceSnapshotJob",
     "SubmitOpportunity",
+    "TagResource",
+    "UntagResource",
     "UpdateOpportunity"
    ],
    "HasResource": true,
    "StringPrefix": "partnercentral",
    "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
     "partnercentral:Catalog",
     "partnercentral:RelatedEntityType"
    ]
@@ -12137,7 +12146,7 @@
    ]
   },
   "Amazon API Gateway": {
-   "ARNFormat": "arn:aws:execute-api:<region>:<account_id>:<api_id>/<stage>/<method>/<api_specific_resource_path>",
+   "ARNFormat": "arn:aws:execute-api:${Region}:${Account}:${ResourcePath}",
    "ARNRegex": "^arn:aws:execute-api:.+",
    "Actions": [
     "InvalidateCache",
@@ -12145,7 +12154,10 @@
     "ManageConnections"
    ],
    "HasResource": true,
-   "StringPrefix": "execute-api"
+   "StringPrefix": "execute-api",
+   "conditionKeys": [
+    "execute-api:viaDomainArn"
+   ]
   },
   "Amazon API Gateway Management": {
    "ARNFormat": "arn:aws:apigateway:${Region}::${ApiGatewayResourcePath}",
