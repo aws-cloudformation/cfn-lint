@@ -1,3 +1,10 @@
+### v1.22.6
+## What's Changed
+* Fix resolver logic for better context logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3915
+* Update CloudFormation schemas to `2025-01-16` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3913
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.5...v1.22.6
+
 ### v1.22.5
 ## What's Changed
 * Patch out bad types in DMS DataProvider by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3905
