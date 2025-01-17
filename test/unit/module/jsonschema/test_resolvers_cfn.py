@@ -849,3 +849,31 @@ def test_valid_functions(name, instance, response):
 )
 def test_no_mapping(name, instance, response):
     _resolve(name, instance, response)
+
+
+@pytest.mark.parametrize(
+    "name,instance,response",
+    [
+        (
+            "Valid FindInMap using transform key (maybe) with fn",
+            {"Fn::FindInMap": [{"Ref": "AWS::Region"}, "B", "C"]},
+            [],
+        ),
+        (
+            "Valid FindInMap using transform key (maybe)",
+            {"Fn::FindInMap": ["A", "B", "C"]},
+            [],
+        ),
+    ],
+)
+def test_find_in_map_with_transform(name, instance, response):
+    context = Context(
+        mappings=Mappings.create_from_dict(
+            {
+                "foo": {"first": {"second": "bar"}},
+                "Fn::Transform": "foobar",
+            }
+        ),
+        resources={},
+    )
+    _resolve(name, instance, response, context=context)
