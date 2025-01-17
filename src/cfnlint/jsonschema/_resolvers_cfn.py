@@ -85,6 +85,10 @@ def find_in_map(validator: Validator, instance: Any) -> ResolutionResult:
 
         if all(not (equal(map_name, each)) for each in mappings):
             if not default_value_found:
+                # Validated again as Fn::Transform can be used along side
+                # other key/values
+                if validator.context.mappings.is_transform:
+                    continue
                 results.append(
                     (
                         None,
