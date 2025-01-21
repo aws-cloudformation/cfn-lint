@@ -89,7 +89,7 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
             path=ref[1:],
         ),
         _create_patch(
-            {"format": "AWS::EC2::SecurityGroup.GroupId"},
+            {"format": "AWS::EC2::SecurityGroup.Id"},
             items_path,
             resolver=resolver,
         ),
@@ -110,7 +110,7 @@ def _create_security_group_id(type_name: str, ref: str, resolver: RefResolver):
 
     return [
         _create_patch(
-            {"format": "AWS::EC2::SecurityGroup.GroupId"},
+            {"format": "AWS::EC2::SecurityGroup.Id"},
             ref,
             resolver=resolver,
         )
@@ -129,7 +129,7 @@ def _create_security_group_name(type_name: str, ref: str, resolver: RefResolver)
 
     return [
         _create_patch(
-            {"format": "AWS::EC2::SecurityGroup.GroupName"},
+            {"format": "AWS::EC2::SecurityGroup.Name"},
             ref,
             resolver=resolver,
         )
@@ -150,27 +150,27 @@ def _create_patch(value: dict[str, str], ref: Sequence[str], resolver: RefResolv
 _manual_patches = {
     "AWS::EC2::SecurityGroup": [
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.GroupId"},
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/properties/GroupId",
         ),
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.GroupName"},
+            values={"format": "AWS::EC2::SecurityGroup.Name"},
             path="/properties/GroupName",
         ),
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.GroupId"},
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/properties/Id",
         ),
     ],
     "AWS::EC2::SecurityGroupIngress": [
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.GroupId"},
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/properties/GroupId",
         ),
     ],
     "AWS::EC2::SecurityGroupEgress": [
         Patch(
-            values={"format": "AWS::EC2::SecurityGroup.GroupId"},
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/properties/GroupId",
         ),
     ],
