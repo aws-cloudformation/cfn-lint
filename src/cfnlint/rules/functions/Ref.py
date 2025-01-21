@@ -63,32 +63,33 @@ class Ref(BaseFn):
         if not validator.is_type(value, "string"):
             return
 
-        if value not in validator.context.parameters:
-            return
-
-        parameter_type = validator.context.parameters[value].type
-        schema_types = self.resolve_type(validator, subschema)
-        if not schema_types:
-            return
-        reprs = ", ".join(repr(type) for type in schema_types)
-
-        if all(
-            st not in ["string", "boolean", "integer", "number"] for st in schema_types
-        ):
-            if parameter_type not in VALID_PARAMETER_TYPES_LIST:
-                yield ValidationError(f"{instance!r} is not of type {reprs}")
+        if value in validator.context.parameters:
+            parameter_type = validator.context.parameters[value].type
+            schema_types = self.resolve_type(validator, subschema)
+            if not schema_types:
                 return
-        elif all(st not in ["array"] for st in schema_types):
-            if parameter_type not in [
-                x for x in VALID_PARAMETER_TYPES if x not in VALID_PARAMETER_TYPES_LIST
-            ]:
-                yield ValidationError(f"{instance!r} is not of type {reprs}")
-                return
+            reprs = ", ".join(repr(type) for type in schema_types)
+
+            if all(
+                st not in ["string", "boolean", "integer", "number"]
+                for st in schema_types
+            ):
+                if parameter_type not in VALID_PARAMETER_TYPES_LIST:
+                    yield ValidationError(f"{instance!r} is not of type {reprs}")
+                    return
+            elif all(st not in ["array"] for st in schema_types):
+                if parameter_type not in [
+                    x
+                    for x in VALID_PARAMETER_TYPES
+                    if x not in VALID_PARAMETER_TYPES_LIST
+                ]:
+                    yield ValidationError(f"{instance!r} is not of type {reprs}")
+                    return
 
         for rule_id in self._all_refs:
             rule = self.child_rules.get(rule_id)
             if rule:
-                yield from rule.validate(validator, {}, instance, schema)
+                yield from rule.validate(validator, {}, value, subschema)
 
         keyword = validator.context.path.cfn_path_string
         for rule in self.child_rules.values():
@@ -97,4 +98,4 @@ class Ref(BaseFn):
             if not hasattr(rule, "keywords"):
                 continue
             if keyword in rule.keywords or "*" in rule.keywords:
-                yield from rule.validate(validator, keyword, instance, schema)
+                yield from rule.validate(validator, keyword, value, subschema)

@@ -40,11 +40,10 @@ class ImageId(CfnLintKeyword):
         if any(fn in validator.context.path.path for fn in FUNCTIONS):
             return
 
-        value = instance.get("Ref")
-        if value not in validator.context.parameters:
+        if instance not in validator.context.parameters:
             return
 
-        parameter_type = validator.context.parameters[value].type
+        parameter_type = validator.context.parameters[instance].type
         for err in validator.descend(
             instance=parameter_type,
             schema={
@@ -55,5 +54,5 @@ class ImageId(CfnLintKeyword):
             },
         ):
             err.rule = self
-            err.path_override = deque(["Parameters", value, "Type"])
+            err.path_override = deque(["Parameters", instance, "Type"])
             yield err

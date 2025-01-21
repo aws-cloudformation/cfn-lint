@@ -30,13 +30,13 @@ def template():
     [
         (
             "Valid Ref with a good format",
-            {"Ref": "MyVpc"},
+            "MyVpc",
             {"format": "AWS::EC2::VPC.Id"},
             [],
         ),
         (
             "Invalid Ref with a bad format",
-            {"Ref": "MyVpc"},
+            "MyVpc",
             {"format": "AWS::EC2::Image.Id"},
             [
                 ValidationError(
@@ -51,7 +51,7 @@ def template():
         ),
         (
             "Invalid Ref with a resource with no format",
-            {"Ref": "MyBucket"},
+            "MyBucket",
             {"format": "AWS::EC2::Image.Id"},
             [
                 ValidationError(
@@ -65,7 +65,7 @@ def template():
         ),
         (
             "Invalid Ref to non existent resource",
-            {"Ref": "DNE"},
+            "DNE",
             {"format": "AWS::EC2::Image.Id"},
             [],
         ),

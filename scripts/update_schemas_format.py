@@ -157,6 +157,10 @@ _manual_patches = {
             values={"format": "AWS::EC2::SecurityGroup.GroupName"},
             path="/properties/GroupName",
         ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.GroupId"},
+            path="/properties/Id",
+        ),
     ],
     "AWS::EC2::SecurityGroupIngress": [
         Patch(

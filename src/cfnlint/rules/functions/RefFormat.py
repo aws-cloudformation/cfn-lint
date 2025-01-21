@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
-from cfnlint.helpers import is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema import CfnLintKeyword
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
@@ -27,14 +26,16 @@ class RefFormat(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
     ) -> ValidationResult:
+        if instance in validator.context.parameters:
+            return
+
         fmt = schema.get("format")
         if not fmt:
             return
-        _, resource = is_function(instance)
 
-        if resource not in validator.context.resources:
+        if instance not in validator.context.resources:
             return
-        t = validator.context.resources[resource].type
+        t = validator.context.resources[instance].type
         for (
             regions,
             resource_schema,
@@ -43,19 +44,22 @@ class RefFormat(CfnLintKeyword):
         ):
             region = regions[0]
 
-            ref_schema = validator.context.resources[resource].ref(region)
+            ref_schema = validator.context.resources[instance].ref(region)
 
             ref_fmt = ref_schema.get("format")
             if ref_fmt != fmt:
                 if ref_fmt is None:
                     yield ValidationError(
-                        f"{instance!r} does not match destination format of {fmt!r}",
+                        (
+                            f"{{'Ref': {instance!r}}} does not match "
+                            f"destination format of {fmt!r}"
+                        ),
                         rule=self,
                     )
                 else:
                     yield ValidationError(
                         (
-                            f"{instance!r} with format {ref_fmt!r} does not "
+                            f"{{'Ref': {instance!r}}} with format {ref_fmt!r} does not "
                             f"match destination format of {fmt!r}"
                         ),
                         rule=self,

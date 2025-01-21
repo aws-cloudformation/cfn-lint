@@ -53,6 +53,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 10,
         },
         {
+            "filename": ("test/fixtures/templates/integration/ref-types.yaml"),
+            "results_filename": ("test/fixtures/results/integration/ref-types.json"),
+            "exit_code": 2,
+        },
+        {
             "filename": (
                 "test/fixtures/templates/integration/aws-ec2-networkinterface.yaml"
             ),
