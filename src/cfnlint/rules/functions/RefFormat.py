@@ -5,7 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any
 
-from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.jsonschema import ValidationResult, Validator
+from cfnlint.jsonschema._utils import Unset
+from cfnlint.rules.formats._schema_comparer import compare_schemas
 from cfnlint.rules.jsonschema import CfnLintKeyword
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
@@ -29,10 +31,6 @@ class RefFormat(CfnLintKeyword):
         if instance in validator.context.parameters:
             return
 
-        fmt = schema.get("format")
-        if not fmt:
-            return
-
         if instance not in validator.context.resources:
             return
         t = validator.context.resources[instance].type
@@ -46,21 +44,21 @@ class RefFormat(CfnLintKeyword):
 
             ref_schema = validator.context.resources[instance].ref(region)
 
-            ref_fmt = ref_schema.get("format")
-            if ref_fmt != fmt:
-                if ref_fmt is None:
-                    yield ValidationError(
-                        (
-                            f"{{'Ref': {instance!r}}} does not match "
-                            f"destination format of {fmt!r}"
-                        ),
-                        rule=self,
+            err = compare_schemas(schema, ref_schema)
+            if err:
+                if err.instance:
+                    err.message = (
+                        f"{{'Ref': {instance!r}}} with formats {err.instance!r} "
+                        "does not match destination format of "
+                        f"{err.schema.get('format')!r}"
                     )
                 else:
-                    yield ValidationError(
-                        (
-                            f"{{'Ref': {instance!r}}} with format {ref_fmt!r} does not "
-                            f"match destination format of {fmt!r}"
-                        ),
-                        rule=self,
+                    err.message = (
+                        f"{{'Ref': {instance!r}}} does not match "
+                        f"destination format of {err.schema.get('format')!r}"
                     )
+
+                err.instance = Unset()
+                err.schema = Unset()
+                err.rule = self
+                yield err

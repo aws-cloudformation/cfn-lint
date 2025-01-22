@@ -41,8 +41,8 @@ def template():
             [
                 ValidationError(
                     (
-                        "{'Ref': 'MyVpc'} with format "
-                        "'AWS::EC2::VPC.Id' does not match "
+                        "{'Ref': 'MyVpc'} with formats "
+                        "['AWS::EC2::VPC.Id'] does not match "
                         "destination format of 'AWS::EC2::Image.Id'"
                     ),
                     rule=RefFormat(),

@@ -43,6 +43,21 @@ Resources:
     Properties:
       CidrBlock: 10.0.2.0/24
       VpcId: !Ref FargateTaskRole  # Wrong type
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG
+      VpcId: !Ref Vpc
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme: internal
+      SecurityGroups:
+        - !Ref SecurityGroup
+      Subnets:
+        - !Ref Subnet1
+        - !Ref Subnet2
   LogGroup:
     Type: AWS::Logs::LogGroup
     DeletionPolicy: Delete
