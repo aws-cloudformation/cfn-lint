@@ -2,6 +2,7 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/AwsAccountId",
+  "/properties/FolderArns",
   "/properties/TopicId"
  ],
  "definitions": {
@@ -390,7 +391,9 @@
     "THOUSANDS",
     "MILLIONS",
     "BILLIONS",
-    "TRILLIONS"
+    "TRILLIONS",
+    "LAKHS",
+    "CRORES"
    ],
    "type": "string"
   },
@@ -684,6 +687,15 @@
    ],
    "type": "object"
   },
+  "TopicConfigOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "QBusinessInsightsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
   "TopicDateRangeFilter": {
    "additionalProperties": false,
    "properties": {
@@ -700,6 +712,9 @@
   "TopicDetails": {
    "additionalProperties": false,
    "properties": {
+    "ConfigOptions": {
+     "$ref": "#/definitions/TopicConfigOptions"
+    },
     "DataSets": {
      "items": {
       "$ref": "#/definitions/DatasetMetadata"
@@ -951,6 +966,9 @@
    "pattern": "^[0-9]{12}$",
    "type": "string"
   },
+  "ConfigOptions": {
+   "$ref": "#/definitions/TopicConfigOptions"
+  },
   "DataSets": {
    "items": {
     "$ref": "#/definitions/DatasetMetadata"
@@ -961,6 +979,14 @@
    "maxLength": 256,
    "minLength": 0,
    "type": "string"
+  },
+  "FolderArns": {
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
   },
   "Name": {
    "maxLength": 128,
@@ -986,5 +1012,8 @@
   "tagUpdatable": false,
   "taggable": false
  },
- "typeName": "AWS::QuickSight::Topic"
+ "typeName": "AWS::QuickSight::Topic",
+ "writeOnlyProperties": [
+  "/properties/FolderArns"
+ ]
 }

@@ -1,0 +1,160 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PolicyReferenceName",
+  "/properties/DeviceOptions",
+  "/properties/DeviceTrustProviderType",
+  "/properties/TrustProviderType",
+  "/properties/UserTrustProviderType"
+ ],
+ "definitions": {
+  "DeviceOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PublicSigningKeyUrl": {
+     "type": "string"
+    },
+    "TenantId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OidcOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationEndpoint": {
+     "type": "string"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "type": "string"
+    },
+    "UserInfoEndpoint": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessTrustProviderId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DeviceOptions": {
+   "$ref": "#/definitions/DeviceOptions"
+  },
+  "DeviceTrustProviderType": {
+   "enum": [
+    "crowdstrike",
+    "jamf",
+    "jumpcloud"
+   ],
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "OidcOptions": {
+   "$ref": "#/definitions/OidcOptions"
+  },
+  "PolicyReferenceName": {
+   "type": "string"
+  },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TrustProviderType": {
+   "enum": [
+    "device",
+    "user"
+   ],
+   "type": "string"
+  },
+  "UserTrustProviderType": {
+   "enum": [
+    "iam-identity-center",
+    "oidc"
+   ],
+   "type": "string"
+  },
+  "VerifiedAccessTrustProviderId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessTrustProviderId",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "TrustProviderType",
+  "PolicyReferenceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccesstrustprovider",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessTrustProvider"
+}

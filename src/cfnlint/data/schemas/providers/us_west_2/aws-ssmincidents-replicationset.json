@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov|iso(-b)?))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "DeletionProtected": {
+   "type": "boolean"
+  },
+  "RegionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SseKmsKeyId": {
+     "maxLength": 2048,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SseKmsKeyId"
+   ],
+   "type": "object"
+  },
+  "RegionList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ReplicationRegion"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegionName": {
+   "maxLength": 20,
+   "type": "string"
+  },
+  "ReplicationRegion": {
+   "additionalProperties": false,
+   "properties": {
+    "RegionConfiguration": {
+     "$ref": "#/definitions/RegionConfiguration"
+    },
+    "RegionName": {
+     "$ref": "#/definitions/RegionName"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "additionalProperties": false
+  },
+  "DeletionProtected": {
+   "$ref": "#/definitions/DeletionProtected",
+   "default": false
+  },
+  "Regions": {
+   "$ref": "#/definitions/RegionList"
+  },
+  "Tags": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Regions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm-incidents.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSMIncidents::ReplicationSet"
+}

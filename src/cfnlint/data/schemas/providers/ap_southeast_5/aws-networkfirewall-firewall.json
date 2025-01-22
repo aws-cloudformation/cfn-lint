@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VpcId",
+  "/properties/FirewallName"
+ ],
+ "definitions": {
+  "EndpointId": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws.*$",
+   "type": "string"
+  },
+  "SubnetMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "IPAddressType": {
+     "enum": [
+      "DUALSTACK",
+      "IPV4",
+      "IPV6"
+     ],
+     "type": "string"
+    },
+    "SubnetId": {
+     "format": "AWS::EC2::Subnet.Id",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FirewallArn"
+ ],
+ "properties": {
+  "DeleteProtection": {
+   "type": "boolean"
+  },
+  "Description": {
+   "maxLength": 512,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "EndpointIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EndpointId"
+   },
+   "type": "array"
+  },
+  "FirewallArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FirewallId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$",
+   "type": "string"
+  },
+  "FirewallName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "FirewallPolicyArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "FirewallPolicyChangeProtection": {
+   "type": "boolean"
+  },
+  "SubnetChangeProtection": {
+   "type": "boolean"
+  },
+  "SubnetMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SubnetMapping"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^vpc-[0-9a-f]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FirewallArn",
+  "/properties/FirewallId",
+  "/properties/EndpointIds"
+ ],
+ "required": [
+  "FirewallName",
+  "FirewallPolicyArn",
+  "VpcId",
+  "SubnetMappings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkFirewall::Firewall"
+}

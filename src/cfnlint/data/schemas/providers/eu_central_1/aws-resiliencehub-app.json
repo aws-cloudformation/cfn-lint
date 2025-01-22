@@ -1,0 +1,218 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EventSubscription": {
+   "additionalProperties": false,
+   "properties": {
+    "EventType": {
+     "enum": [
+      "ScheduledAssessmentFailure",
+      "DriftDetected"
+     ],
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "type": "string"
+    },
+    "SnsTopicArn": {
+     "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+.-]{0,1023}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "EventType"
+   ],
+   "type": "object"
+  },
+  "IamRoleArn": {
+   "pattern": "arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::[0-9]{12}:role\\/(([\\u0021-\\u007E]+\\u002F){1,511})?[A-Za-z0-9+=,.@_/-]{1,64}$",
+   "type": "string"
+  },
+  "PermissionModel": {
+   "additionalProperties": false,
+   "properties": {
+    "CrossAccountRoleArns": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/IamRoleArn"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "InvokerRoleName": {
+     "pattern": "((\\u002F[\\u0021-\\u007E]+\\u002F){1,511})?[A-Za-z0-9+=,.@_/-]{1,64}",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "LegacyIAMUser",
+      "RoleBased"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "PhysicalResourceId": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "AwsRegion": {
+     "pattern": "^[a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]$",
+     "type": "string"
+    },
+    "Identifier": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "pattern": "Arn|Native",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ResourceMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "EksSourceName": {
+     "type": "string"
+    },
+    "LogicalStackName": {
+     "type": "string"
+    },
+    "MappingType": {
+     "pattern": "CfnStack|Resource|Terraform|EKS",
+     "type": "string"
+    },
+    "PhysicalResourceId": {
+     "$ref": "#/definitions/PhysicalResourceId"
+    },
+    "ResourceName": {
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+     "type": "string"
+    },
+    "TerraformSourceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MappingType",
+    "PhysicalResourceId"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,128}": {
+     "$ref": "#/definitions/TagValue"
+    }
+   },
+   "type": "object"
+  },
+  "TagValue": {
+   "maxLength": 256,
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppArn"
+ ],
+ "properties": {
+  "AppArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "AppAssessmentSchedule": {
+   "enum": [
+    "Disabled",
+    "Daily"
+   ],
+   "type": "string"
+  },
+  "AppTemplateBody": {
+   "maxLength": 409600,
+   "minLength": 0,
+   "pattern": "^[\\w\\s:,-\\.'\\/{}\\[\\]:\"]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DriftStatus": {
+   "enum": [
+    "NotChecked",
+    "NotDetected",
+    "Detected"
+   ],
+   "type": "string"
+  },
+  "EventSubscriptions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EventSubscription"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Name": {
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "PermissionModel": {
+   "$ref": "#/definitions/PermissionModel"
+  },
+  "ResiliencyPolicyArn": {
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "ResourceMappings": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceMapping"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppArn",
+  "/properties/DriftStatus"
+ ],
+ "required": [
+  "Name",
+  "AppTemplateBody",
+  "ResourceMappings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-resiliencehub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ResilienceHub::App"
+}
