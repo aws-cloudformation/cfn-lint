@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VerifiedAccessLogs": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "additionalProperties": false,
+     "properties": {
+      "Enabled": {
+       "type": "boolean"
+      },
+      "LogGroup": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "IncludeTrustContext": {
+     "type": "boolean"
+    },
+    "KinesisDataFirehose": {
+     "additionalProperties": false,
+     "properties": {
+      "DeliveryStream": {
+       "type": "string"
+      },
+      "Enabled": {
+       "type": "boolean"
+      }
+     },
+     "type": "object"
+    },
+    "LogVersion": {
+     "type": "string"
+    },
+    "S3": {
+     "additionalProperties": false,
+     "properties": {
+      "BucketName": {
+       "type": "string"
+      },
+      "BucketOwner": {
+       "type": "string"
+      },
+      "Enabled": {
+       "type": "boolean"
+      },
+      "Prefix": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "VerifiedAccessTrustProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "DeviceTrustProviderType": {
+     "type": "string"
+    },
+    "TrustProviderType": {
+     "type": "string"
+    },
+    "UserTrustProviderType": {
+     "type": "string"
+    },
+    "VerifiedAccessTrustProviderId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VerifiedAccessTrustProviderId": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessInstanceId"
+ ],
+ "properties": {
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "FipsEnabled": {
+   "type": "boolean"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "LoggingConfigurations": {
+   "$ref": "#/definitions/VerifiedAccessLogs"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessInstanceId": {
+   "type": "string"
+  },
+  "VerifiedAccessTrustProviderIds": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VerifiedAccessTrustProviderId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessTrustProviders": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/VerifiedAccessTrustProvider"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessInstanceId",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessinstance",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessInstance"
+}

@@ -1,0 +1,43 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ManagedNotificationConfigurationArn",
+  "/properties/ContactIdentifier"
+ ],
+ "definitions": {
+  "ContactIdentifier": {
+   "enum": [
+    "ACCOUNT_PRIMARY",
+    "ACCOUNT_ALTERNATE_SECURITY",
+    "ACCOUNT_ALTERNATE_OPERATIONS",
+    "ACCOUNT_ALTERNATE_BILLING"
+   ],
+   "type": "string"
+  },
+  "ManagedNotificationConfigurationArn": {
+   "pattern": "^arn:[-.a-z0-9]{1,63}:notifications::[0-9]{12}:managed-notification-configuration/category/[a-zA-Z0-9-]{3,64}/sub-category/[a-zA-Z0-9-]{3,64}$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ManagedNotificationConfigurationArn",
+  "/properties/ContactIdentifier"
+ ],
+ "properties": {
+  "ContactIdentifier": {
+   "$ref": "#/definitions/ContactIdentifier"
+  },
+  "ManagedNotificationConfigurationArn": {
+   "$ref": "#/definitions/ManagedNotificationConfigurationArn"
+  }
+ },
+ "required": [
+  "ContactIdentifier",
+  "ManagedNotificationConfigurationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Notifications::ManagedNotificationAccountContactAssociation"
+}

@@ -20,6 +20,36 @@
    },
    "type": "object"
   },
+  "NativeApplicationOidcOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationEndpoint": {
+     "type": "string"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "ClientSecret": {
+     "type": "string"
+    },
+    "Issuer": {
+     "type": "string"
+    },
+    "PublicSigningKeyEndpoint": {
+     "type": "string"
+    },
+    "Scope": {
+     "type": "string"
+    },
+    "TokenEndpoint": {
+     "type": "string"
+    },
+    "UserInfoEndpoint": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "OidcOptions": {
    "additionalProperties": false,
    "properties": {
@@ -95,6 +125,9 @@
   "LastUpdatedTime": {
    "type": "string"
   },
+  "NativeApplicationOidcOptions": {
+   "$ref": "#/definitions/NativeApplicationOidcOptions"
+  },
   "OidcOptions": {
    "$ref": "#/definitions/OidcOptions"
   },
@@ -156,5 +189,8 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::EC2::VerifiedAccessTrustProvider"
+ "typeName": "AWS::EC2::VerifiedAccessTrustProvider",
+ "writeOnlyProperties": [
+  "/properties/NativeApplicationOidcOptions/ClientSecret"
+ ]
 }

@@ -1,0 +1,139 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FsxFilesystemArn",
+  "/properties/SecurityGroupArns",
+  "/properties/Protocol",
+  "/properties/Subdirectory"
+ ],
+ "definitions": {
+  "MountOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Version": {
+     "enum": [
+      "AUTOMATIC",
+      "NFS3",
+      "NFS4_0",
+      "NFS4_1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NFS": {
+   "additionalProperties": false,
+   "properties": {
+    "MountOptions": {
+     "$ref": "#/definitions/MountOptions"
+    }
+   },
+   "required": [
+    "MountOptions"
+   ],
+   "type": "object"
+  },
+  "Protocol": {
+   "additionalProperties": false,
+   "properties": {
+    "NFS": {
+     "$ref": "#/definitions/NFS"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "FsxFilesystemArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]+:[0-9]{12}:file-system/fs-[0-9a-f]+$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw|hdfs|fsxl|fsxz)://[a-zA-Z0-9.:/\\-]+$",
+   "type": "string"
+  },
+  "Protocol": {
+   "$ref": "#/definitions/Protocol"
+  },
+  "SecurityGroupArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "SecurityGroupArns",
+  "Protocol"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationFSxOpenZFS",
+ "writeOnlyProperties": [
+  "/properties/Subdirectory",
+  "/properties/FsxFilesystemArn"
+ ]
+}

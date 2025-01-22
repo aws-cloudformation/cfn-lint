@@ -946,6 +946,8 @@ types: list[str] = [
     "AWS::NimbleStudio::StudioComponent",
     "AWS::Notifications::ChannelAssociation",
     "AWS::Notifications::EventRule",
+    "AWS::Notifications::ManagedNotificationAccountContactAssociation",
+    "AWS::Notifications::ManagedNotificationAdditionalChannelAssociation",
     "AWS::Notifications::NotificationConfiguration",
     "AWS::Notifications::NotificationHub",
     "AWS::NotificationsContacts::EmailContact",

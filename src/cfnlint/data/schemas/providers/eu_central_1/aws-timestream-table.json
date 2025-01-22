@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatabaseName",
+  "/properties/TableName"
+ ],
+ "definitions": {
+  "PartitionKey": {
+   "additionalProperties": false,
+   "properties": {
+    "EnforcementInRecord": {
+     "$ref": "#/definitions/PartitionKeyEnforcementLevel"
+    },
+    "Name": {
+     "$ref": "#/definitions/SchemaName"
+    },
+    "Type": {
+     "$ref": "#/definitions/PartitionKeyType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "PartitionKeyEnforcementLevel": {
+   "enum": [
+    "REQUIRED",
+    "OPTIONAL"
+   ],
+   "type": "string"
+  },
+  "PartitionKeyList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PartitionKey"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "PartitionKeyType": {
+   "enum": [
+    "DIMENSION",
+    "MEASURE"
+   ],
+   "type": "string"
+  },
+  "SchemaName": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatabaseName",
+  "/properties/TableName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DatabaseName": {
+   "pattern": "^[a-zA-Z0-9_.-]{3,256}$",
+   "type": "string"
+  },
+  "MagneticStoreWriteProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableMagneticStoreWrites": {
+     "type": "boolean"
+    },
+    "MagneticStoreRejectedDataLocation": {
+     "additionalProperties": false,
+     "properties": {
+      "S3Configuration": {
+       "additionalProperties": false,
+       "properties": {
+        "BucketName": {
+         "type": "string"
+        },
+        "EncryptionOption": {
+         "type": "string"
+        },
+        "KmsKeyId": {
+         "type": "string"
+        },
+        "ObjectKeyPrefix": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "EncryptionOption",
+        "BucketName"
+       ],
+       "type": "object"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "EnableMagneticStoreWrites"
+   ],
+   "type": "object"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RetentionProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "MagneticStoreRetentionPeriodInDays": {
+     "type": "string"
+    },
+    "MemoryStoreRetentionPeriodInHours": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Schema": {
+   "additionalProperties": false,
+   "properties": {
+    "CompositePartitionKey": {
+     "$ref": "#/definitions/PartitionKeyList"
+    }
+   },
+   "type": "object"
+  },
+  "TableName": {
+   "pattern": "^[a-zA-Z0-9_.-]{3,256}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Name"
+ ],
+ "required": [
+  "DatabaseName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-timestream.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Timestream::Table"
+}
