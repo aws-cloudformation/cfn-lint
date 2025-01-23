@@ -262,6 +262,7 @@ def main():
                     "CustomSecurityGroupIds",
                     "InputSecurityGroups",
                     "SecurityGroupIdList",
+                    "GroupSet",
                 ],
             ):
                 if path[-2] == "properties":

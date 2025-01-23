@@ -35,7 +35,7 @@ class TestCfnJson(BaseTestCase):
             },
             "nat_instance": {
                 "filename": "test/fixtures/templates/quickstart/nat-instance.json",
-                "failures": 5,
+                "failures": 7,
             },
             "vpc_management": {
                 "filename": "test/fixtures/templates/quickstart/vpc-management.json",

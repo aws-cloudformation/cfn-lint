@@ -26,7 +26,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/integration/dynamic-references.yaml",
             "results_filename": (
-                "test/fixtures/results/integration" "/dynamic-references.json"
+                "test/fixtures/results/integration/dynamic-references.json"
             ),
             "exit_code": 2,
         },
@@ -55,6 +55,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": ("test/fixtures/templates/integration/ref-types.yaml"),
             "results_filename": ("test/fixtures/results/integration/ref-types.json"),
+            "exit_code": 2,
+        },
+        {
+            "filename": ("test/fixtures/templates/integration/formats.yaml"),
+            "results_filename": ("test/fixtures/results/integration/formats.json"),
             "exit_code": 2,
         },
         {
