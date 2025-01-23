@@ -76,6 +76,8 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
             ref=resolved["$ref"],
             resolver=resolver,
         )
+    if resolved.get("type") != "array":
+        return []
     items = resolved.get("items")
     if items:
         if "$ref" in items:
@@ -240,14 +242,6 @@ def main():
                         )
                     )
 
-            for path in _descend(obj, ["SecurityGroupIds", "SecurityGroups"]):
-                if path[-2] == "properties":
-                    resource_patches.extend(
-                        _create_security_group_ids_patch(
-                            resource_type, "#/" + "/".join(path), resolver
-                        )
-                    )
-
             for path in _descend(obj, ["LogGroupName"]):
                 if path[-2] == "properties":
                     resource_patches.append(
@@ -261,11 +255,32 @@ def main():
             for path in _descend(
                 obj,
                 [
+                    "SecurityGroupIds",
+                    "SecurityGroups",
+                    "VpcSecurityGroupIds",
+                    "Ec2SecurityGroupIds",
+                    "CustomSecurityGroupIds",
+                    "InputSecurityGroups",
+                    "SecurityGroupIdList",
+                ],
+            ):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_security_group_ids_patch(
+                            resource_type, "#/" + "/".join(path), resolver
+                        )
+                    )
+
+            for path in _descend(
+                obj,
+                [
                     "DefaultSecurityGroup",
+                    "ClusterSecurityGroupId",
                     "SourceSecurityGroupId",
                     "DestinationSecurityGroupId",
                     "SecurityGroup",
                     "SecurityGroupId",
+                    "VpcSecurityGroupId",
                 ],
             ):
                 if path[-2] == "properties":

@@ -18,10 +18,10 @@ class SecurityGroupName(FormatKeyword):
     shortdesc = "Validate security group name"
     description = "Security group names have to valid pattern"
     tags = []
-    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/format_keyword.md#AWS::EC2::SecurityGroup.GroupName"
+    source_url = "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/format_keyword.md#AWS::EC2::SecurityGroup.Name"
 
     def __init__(self):
-        super().__init__(format="AWS::EC2::SecurityGroup.GroupName")
+        super().__init__(format="AWS::EC2::SecurityGroup.Name")
 
     def format(self, validator: Validator, instance: Any) -> bool:
         if not isinstance(instance, str):
