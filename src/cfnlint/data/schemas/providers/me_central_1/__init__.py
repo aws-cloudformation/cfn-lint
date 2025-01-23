@@ -1204,6 +1204,7 @@ cached: list[str] = [
     "aws-logs-resourcepolicy.json",
     "aws-logs-subscriptionfilter.json",
     "aws-logs-transformer.json",
+    "aws-mediaconnect-flow.json",
     "aws-mediaconnect-flowentitlement.json",
     "aws-mediaconnect-flowoutput.json",
     "aws-mediaconnect-flowsource.json",

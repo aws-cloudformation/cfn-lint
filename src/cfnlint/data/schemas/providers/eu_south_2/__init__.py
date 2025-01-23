@@ -1171,7 +1171,6 @@ cached: list[str] = [
     "aws-logs-resourcepolicy.json",
     "aws-logs-subscriptionfilter.json",
     "aws-logs-transformer.json",
-    "aws-m2-application.json",
     "aws-m2-deployment.json",
     "aws-memorydb-acl.json",
     "aws-memorydb-parametergroup.json",

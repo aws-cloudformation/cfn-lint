@@ -1432,7 +1432,6 @@ cached: list[str] = [
     "aws-route53-recordsetgroup.json",
     "aws-route53profiles-profile.json",
     "aws-route53profiles-profileassociation.json",
-    "aws-route53profiles-profileresourceassociation.json",
     "aws-route53resolver-firewalldomainlist.json",
     "aws-route53resolver-firewallrulegroup.json",
     "aws-route53resolver-firewallrulegroupassociation.json",
