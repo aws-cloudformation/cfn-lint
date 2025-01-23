@@ -1,3 +1,11 @@
+### v1.22.7
+## What's Changed
+* Allow `Fn::Transform` alongside keys in mappings by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3920
+* Remove Sagemaker domain patch and run update specs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3922
+* Update CloudFormation schemas to `2025-01-23` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3917
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.6...v1.22.7
+
 ### v1.22.6
 ## What's Changed
 * Fix resolver logic for better context logic by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3915
