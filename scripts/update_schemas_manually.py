@@ -70,7 +70,7 @@ patches.extend(
             resource_type="AWS::AutoScaling::AutoScalingGroup",
             patches=[
                 Patch(
-                    values={"enum": ["EC2", "ELB"]},
+                    values={"enum": ["EBS", "EC2", "ELB", "VPC_LATTICE"]},
                     path="/properties/HealthCheckType",
                 ),
                 Patch(
@@ -837,6 +837,17 @@ patches.extend(
         ResourcePatch(
             resource_type="AWS::EC2::SecurityGroupEgress",
             patches=[
+                Patch(
+                    path="/",
+                    values={
+                        "requiredXor": [
+                            "CidrIp",
+                            "CidrIpv6",
+                            "DestinationPrefixListId",
+                            "DestinationSecurityGroupId",
+                        ],
+                    },
+                ),
                 Patch(
                     path="/properties/FromPort",
                     values={"minimum": -1},
