@@ -15,7 +15,8 @@ import regex as re
 import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint._typing import CheckValueFn, Path
-from cfnlint.context import create_context_for_template
+from cfnlint.context import Context, create_context_for_template
+from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.decode.node import dict_node, list_node
 from cfnlint.graph import Graph
 from cfnlint.match import Match
@@ -430,6 +431,83 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             for pre_result in pre_results:
                 results.append(["Globals"] + pre_result)
         return results
+
+    def get_cfn_path(
+        self, path: list[str], context: Context
+    ) -> Iterator[tuple[Any, Context]]:
+        """
+        Get the value at the specified path in the CloudFormation template.
+
+        Args:
+            path (list[str]): The path to the value in the template.
+            context (Context): The context object containing the template and other data.
+
+        Returns:
+            Any: The value at the specified path in the template.
+        """
+
+        def _filter_condition(
+            template: Any, context: Context
+        ) -> Iterator[tuple[Any, Context]]:
+            k, v = cfnlint.helpers.is_function(template)
+            if k is None:
+                yield template, context
+                return
+
+            if k == "Fn::If":
+                if isinstance(v, list) and len(v) == 3:
+                    condition = v[0]
+                    if not isinstance(condition, str):
+                        return
+
+                    for i in [1, 2]:
+                        b = True if i == 1 else False
+                        try:
+                            item_context = context.evolve(
+                                conditions=context.conditions.evolve({condition: b})
+                            )
+                            yield from _filter_condition(v[i], item_context)
+                        except Unsatisfiable:
+                            continue
+                return
+            if k == "Ref":
+                if v == "AWS::NoValue":
+                    return
+            yield template, context
+
+        def _get_cfn_path(
+            path: list[str], template: Any, context: Context
+        ) -> Iterator[tuple[Any, Context]]:
+            if len(path) == 0:
+                yield from _filter_condition(template, context)
+                return
+            item = path[0]
+            if isinstance(template, dict):
+                if item in template:
+                    for item_template, item_context in _filter_condition(
+                        template[item], context
+                    ):
+                        yield from _get_cfn_path(path[1:], item_template, item_context)
+                return
+            elif isinstance(template, list):
+                if isinstance(template, list):
+                    if item == "*":
+                        for index, _ in enumerate(template):
+                            yield from _get_cfn_path(path[1:], template[index], context)
+                return
+
+        # handle resource and output conditions
+        if len(path) >= 3 and path[0] in ["Resources", "Outputs"]:
+            condition = self.template.get(path[0], {}).get(path[1], {}).get("Condition")
+            if condition:
+                try:
+                    context = context.evolve(
+                        conditions=context.conditions.evolve({condition: True})
+                    )
+                except Unsatisfiable:
+                    return
+
+        yield from _get_cfn_path(path, self.template, context)
 
     def get_condition_values(self, template, path: Path | None) -> list[dict[str, Any]]:
         """

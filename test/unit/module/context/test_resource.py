@@ -5,23 +5,26 @@ SPDX-License-Identifier: MIT-0
 
 import pytest
 
-from cfnlint.context import Context
 from cfnlint.context.context import Resource, _init_resources
 
 
 @pytest.mark.parametrize(
     "name,instance,expected_ref",
     [
-        ("Valid resource", {"Type": "AWS::S3::Bucket"}, []),
+        (
+            "Valid resource",
+            {"Type": "AWS::EC2::VPC"},
+            {"format": "AWS::EC2::VPC.Id", "type": "string"},
+        ),
     ],
 )
 def test_resource(name, instance, expected_ref):
-    context = Context(["us-east-1"])
-    parameter = Resource(instance)
+    region = "us-east-1"
+    resource = Resource(instance)
 
-    assert expected_ref == list(
-        parameter.ref(context)
-    ), f"{name!r} test got {list(parameter.ref(context))}"
+    assert expected_ref == resource.ref(
+        region
+    ), f"{name!r} test got {resource.ref(region)}"
 
 
 @pytest.mark.parametrize(

@@ -22,6 +22,56 @@ Resources:
     Type: AWS::DocDB::DBCluster
     Properties:
       BackupRetentionPeriod: 1
+  TestCluster:
+    Type: AWS::ECS::Cluster
+  TestFargateExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  TestFargateTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+  TestLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+  TestTaskDefinitionWithGetAtt:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Image: nginx:1.27.3-alpine3.20
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !GetAtt 'TestLogGroup.Arn'
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: test-service
+          Name: TestContainerDefinition
+          PortMappings:
+            - ContainerPort: 80
+      Cpu: '256'
+      ExecutionRoleArn: !GetAtt 'TestFargateExecutionRole.Arn'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt 'TestFargateTaskRole.Arn'
 Outputs:
   Value:
     Value: 1 # OK

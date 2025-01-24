@@ -45,19 +45,19 @@ def context(cfn):
     [
         (
             "REFing a parameter without a string",
-            {"Ref": []},
+            [],
             deque([]),
             [],
         ),
         (
             "REFing a resource=",
-            {"Ref": "MyResource"},
+            "MyResource",
             deque([]),
             [],
         ),
         (
             "REFing a parameter",
-            {"Ref": "MyParameter"},
+            "MyParameter",
             deque([]),
             [
                 ValidationError(
@@ -68,7 +68,7 @@ def context(cfn):
         ),
         (
             "REFing a parameter in a sub",
-            {"Ref": "MyParameter"},
+            "MyParameter",
             deque(["Fn::Sub"]),
             [],
         ),

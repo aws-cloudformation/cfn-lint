@@ -49,25 +49,25 @@ def context(cfn):
     [
         (
             "An Invalid Ref",
-            {"Ref": []},
+            [],
             deque(["Metadata"]),
             [],
         ),
         (
             "A ref to something that isn't a parameter",
-            {"Ref": "AWS::Region"},
+            "AWS::Region",
             deque(["Metadata"]),
             [],
         ),
         (
             "Using NoEcho in Resources Properties",
-            {"Ref": "Echo"},
+            "Echo",
             deque(["Resources", "MyResource", "Properties", "Name"]),
             [],
         ),
         (
             "Using NoEcho in Resource Metadata",
-            {"Ref": "Echo"},
+            "Echo",
             deque(["Resources", "MyResource", "Metadata"]),
             [
                 ValidationError(
@@ -79,7 +79,7 @@ def context(cfn):
         ),
         (
             "Using NoEcho in Metadata",
-            {"Ref": "Echo"},
+            "Echo",
             deque(["Metadata"]),
             [
                 ValidationError(
@@ -91,7 +91,7 @@ def context(cfn):
         ),
         (
             "Using NoEcho in Metadata",
-            {"Ref": "EchoTrue"},
+            "EchoTrue",
             deque(["Metadata"]),
             [
                 ValidationError(
@@ -103,25 +103,25 @@ def context(cfn):
         ),
         (
             "Using Non NoEcho in Metadata",
-            {"Ref": "NoEcho"},
+            "NoEcho",
             deque(["Metadata"]),
             [],
         ),
         (
             "Using a parameter in Metadata",
-            {"Ref": "MyParameter"},
+            "MyParameter",
             deque(["Metadata"]),
             [],
         ),
         (
             "Short list for path",
-            {"Ref": "MyParameter"},
+            "MyParameter",
             deque([]),
             [],
         ),
         (
             "Using NoEcho in Outputs",
-            {"Ref": "Echo"},
+            "Echo",
             deque(["Outputs", "Name", "Value"]),
             [
                 ValidationError(

@@ -17,7 +17,7 @@ class GetAttFormat(CfnLintKeyword):
         "Validate that if source and destination format exists that they match"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes"
-    tags = ["parameters", "ec2", "imageid"]
+    tags = ["functions", "getatt"]
 
     def __init__(self):
         super().__init__(["*"])
@@ -64,7 +64,20 @@ class GetAttFormat(CfnLintKeyword):
             getatt_schema = resource_schema.resolver.resolve_cfn_pointer(getatt_ptr)
             getatt_fmt = getatt_schema.get("format")
             if getatt_fmt != fmt:
-                yield ValidationError(
-                    f"{{'Fn::GetAtt': {instance!r}}} that does not match {fmt!r}",
-                    rule=self,
-                )
+                if getatt_fmt is None:
+                    yield ValidationError(
+                        (
+                            f"{{'Fn::GetAtt': {instance!r}}} does not match "
+                            f"destination format of {fmt!r}"
+                        ),
+                        rule=self,
+                    )
+                else:
+                    yield ValidationError(
+                        (
+                            f"{{'Fn::GetAtt': {instance!r}}} with format "
+                            f"{getatt_fmt!r} does not "
+                            f"match destination format of {fmt!r}"
+                        ),
+                        rule=self,
+                    )

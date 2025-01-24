@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  AString:
+    Type: String
+    Default: default
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+  FargateExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  FargateTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId: !Ref Vpc
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      VpcId: !Ref FargateTaskRole  # Wrong type
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG
+      VpcId: !Ref Vpc
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme: internal
+      SecurityGroups:
+        - !Ref SecurityGroup
+      Subnets:
+        - !Ref Subnet1
+        - !Ref Subnet2
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+  TaskDefinitionWithRefToResource:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Image: nginx:1.27.3-alpine3.20
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: test-service
+          Name: TestContainerDefinition
+          PortMappings:
+            - ContainerPort: 80
+      Cpu: '256'
+      ExecutionRoleArn: !GetAtt 'FargateExecutionRole.Arn'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt 'FargateTaskRole.Arn'
+  TaskDefinitionWithRefToParameter:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Image: nginx:1.27.3-alpine3.20
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref AString
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: test-service
+          Name: TestContainerDefinition
+          PortMappings:
+            - ContainerPort: 80
+      Cpu: '256'
+      ExecutionRoleArn: !GetAtt 'FargateExecutionRole.Arn'
+      Memory: '512'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt 'FargateTaskRole.Arn'

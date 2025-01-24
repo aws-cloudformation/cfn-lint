@@ -1,0 +1,66 @@
+[
+    {
+        "Filename": "test/fixtures/templates/integration/formats.yaml",
+        "Id": "0030de3f-c28c-0148-a503-13e3a6130c1e",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 40
+            },
+            "Path": [
+                "Resources",
+                "Instance1",
+                "Properties",
+                "NetworkInterfaces",
+                1,
+                "GroupSet",
+                3
+            ],
+            "Start": {
+                "ColumnNumber": 13,
+                "LineNumber": 40
+            }
+        },
+        "Message": "'sg-dne' is not a 'AWS::EC2::SecurityGroup.Id' with pattern '^sg-([a-fA-F0-9]{8}|[a-fA-F0-9]{17})$'",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Security groups have to ref/gettatt to a security group or has the valid pattern",
+            "Id": "E1150",
+            "ShortDescription": "Validate security group format",
+            "Source": "https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/format_keyword.md#AWS::EC2::SecurityGroup.Id"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/integration/formats.yaml",
+        "Id": "f76fa81f-837e-7502-0be7-3d8ff34024e1",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 44,
+                "LineNumber": 44
+            },
+            "Path": [
+                "Resources",
+                "Instance1",
+                "Properties",
+                "NetworkInterfaces",
+                2,
+                "GroupSet",
+                0
+            ],
+            "Start": {
+                "ColumnNumber": 13,
+                "LineNumber": 44
+            }
+        },
+        "Message": "{'Fn::GetAtt': ['SecurityGroup', 'GroupName']} with format 'AWS::EC2::SecurityGroup.Name' does not match destination format of 'AWS::EC2::SecurityGroup.Id'",
+        "ParentId": null,
+        "Rule": {
+            "Description": "Validate that if source and destination format exists that they match",
+            "Id": "E1040",
+            "ShortDescription": "Check if GetAtt matches destination format",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes"
+        }
+    }
+]

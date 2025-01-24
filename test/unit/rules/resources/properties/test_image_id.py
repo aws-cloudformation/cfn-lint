@@ -37,17 +37,17 @@ def template():
     [
         (
             "Valid Ref to a paraemter",
-            {"Ref": "MyImageId"},
+            "MyImageId",
             [],
         ),
         (
             "Valid Ref to a Pseudo-Parameter",
-            {"Ref": "AWS::Region"},
+            "AWS::Region",
             [],
         ),
         (
             "Invalid Ref to a parameter of the wrong type",
-            {"Ref": "MyString"},
+            "MyString",
             [
                 ValidationError(
                     (

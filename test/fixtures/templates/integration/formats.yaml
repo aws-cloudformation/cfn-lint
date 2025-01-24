@@ -1,0 +1,44 @@
+Parameters:
+  SecurityGroupsIds:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+  SecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      CidrBlock: 10.0.0.0/24
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref Vpc
+      GroupDescription: Some security group
+
+  Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-abcdef12
+      InstanceType: t2.micro
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          SubnetId: !Ref Subnet
+          GroupSet: !Ref SecurityGroupsIds
+        - DeviceIndex: 1
+          SubnetId: !Ref Subnet
+          GroupSet:
+          - !Ref SecurityGroupId
+          - !Ref SecurityGroup
+          - !GetAtt Vpc.DefaultSecurityGroup
+          - sg-dne
+        - DeviceIndex: 2
+          SubnetId: !Ref Subnet
+          GroupSet:
+          - !GetAtt SecurityGroup.GroupName

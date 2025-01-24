@@ -48,12 +48,11 @@ class DynamicReferenceSecret(CfnLintKeyword):
         functions = set(FUNCTIONS) - set(["Fn::If"])
         if any(p in functions for p in validator.context.path.path):
             return
-        value = instance.get("Ref")
 
-        if not validator.is_type(value, "string"):
+        if not validator.is_type(instance, "string"):
             return
 
-        if value in validator.context.parameters:
+        if instance in validator.context.parameters:
             yield ValidationError(
                 "Use dynamic references over parameters for secrets", rule=self
             )
