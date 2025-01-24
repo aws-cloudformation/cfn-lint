@@ -3,6 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from __future__ import annotations
+
+from copy import deepcopy
 from typing import Any
 
 from cfnlint.jsonschema import ValidationResult, Validator
@@ -25,6 +28,31 @@ class RefFormat(CfnLintKeyword):
         super().__init__(["*"])
         self.parent_rules = ["E1020"]
 
+    def _filter_schema(
+        self, validator: Validator, type_name: str, id: str, schema: dict[str, Any]
+    ) -> dict[str, Any]:
+        if type_name != "AWS::EC2::SecurityGroup":
+            return schema
+
+        items = list(
+            validator.cfn.get_cfn_path(
+                ["Resources", id, "Properties", "VpcId"], validator.context
+            )
+        )
+        if items:
+            # VpcId is specified and will have a value which means the returned value is
+            # "AWS::EC2::SecurityGroup.Id"
+            schema = deepcopy(schema)
+            schema.pop("anyOf")
+            schema["format"] = "AWS::EC2::SecurityGroup.Id"
+            return schema
+
+        # VpcId being None means it wasn't specified and the value is a Name
+        schema = deepcopy(schema)
+        schema.pop("anyOf")
+        schema["format"] = "AWS::EC2::SecurityGroup.Name"
+        return schema
+
     def validate(
         self, validator: Validator, _, instance: Any, schema: Any
     ) -> ValidationResult:
@@ -43,6 +71,8 @@ class RefFormat(CfnLintKeyword):
             region = regions[0]
 
             ref_schema = validator.context.resources[instance].ref(region)
+
+            ref_schema = self._filter_schema(validator, t, instance, ref_schema)
 
             err = compare_schemas(schema, ref_schema)
             if err:

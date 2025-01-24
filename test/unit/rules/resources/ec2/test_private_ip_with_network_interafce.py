@@ -190,11 +190,6 @@ def rule():
 def test_validate(name, instance, expected, rule, validator):
     errs = list(rule.validate(validator, "", instance, {}))
 
-    for err in errs:
-        print(err.validator)
-        print(err.path)
-        print(err.schema_path)
-
     assert (
         errs == expected
     ), f"Expected test {name!r} to have {expected!r} but got {errs!r}"

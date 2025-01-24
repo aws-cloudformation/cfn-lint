@@ -255,14 +255,15 @@ def main():
             for path in _descend(
                 obj,
                 [
+                    "CustomSecurityGroupIds",
+                    "DBSecurityGroups",
+                    "Ec2SecurityGroupIds",
+                    "GroupSet",
+                    "InputSecurityGroups",
+                    "SecurityGroupIdList",
                     "SecurityGroupIds",
                     "SecurityGroups",
                     "VpcSecurityGroupIds",
-                    "Ec2SecurityGroupIds",
-                    "CustomSecurityGroupIds",
-                    "InputSecurityGroups",
-                    "SecurityGroupIdList",
-                    "GroupSet",
                 ],
             ):
                 if path[-2] == "properties":
@@ -275,12 +276,13 @@ def main():
             for path in _descend(
                 obj,
                 [
-                    "DefaultSecurityGroup",
                     "ClusterSecurityGroupId",
-                    "SourceSecurityGroupId",
+                    "DefaultSecurityGroup",
                     "DestinationSecurityGroupId",
+                    "EC2SecurityGroupId",
                     "SecurityGroup",
                     "SecurityGroupId",
+                    "SecurityGroupIngress" "SourceSecurityGroupId",
                     "VpcSecurityGroupId",
                 ],
             ):
@@ -294,7 +296,11 @@ def main():
             for path in _descend(
                 obj,
                 [
-                    "SourceSecurityGroupName",
+                    "CacheSecurityGroupName",
+                    "ClusterSecurityGroupName",
+                    "DBSecurityGroupName",
+                    "EC2SecurityGroupName",
+                    "SourceSecurityGroupName" "SourceSecurityGroupName",
                 ],
             ):
                 if path[-2] == "properties":
