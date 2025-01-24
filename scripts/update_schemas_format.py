@@ -66,7 +66,11 @@ def _create_subnet_ids_patch(type_name: str, ref: str, resolver: RefResolver):
 
 
 def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefResolver):
-    if type_name in ["AWS::Pipes::Pipe", "AWS::EC2::NetworkInsightsAnalysis"]:
+    if type_name in [
+        "AWS::Pipes::Pipe",
+        "AWS::EC2::NetworkInsightsAnalysis",
+        "AWS::AutoScaling::LaunchConfiguration",
+    ]:
         return []
 
     _, resolved = resolver.resolve(ref)
@@ -181,6 +185,26 @@ _manual_patches = {
             path="/properties/GroupId",
         ),
     ],
+    "AWS::AutoScaling::LaunchConfiguration": [
+        Patch(
+            values={
+                "anyOf": [
+                    {"format": "AWS::EC2::SecurityGroup.Ids"},
+                    {"format": "AWS::EC2::SecurityGroup.Names"},
+                ]
+            },
+            path="/properties/SecurityGroups",
+        ),
+        Patch(
+            values={
+                "anyOf": [
+                    {"format": "AWS::EC2::SecurityGroup.Id"},
+                    {"format": "AWS::EC2::SecurityGroup.Name"},
+                ]
+            },
+            path="/properties/SecurityGroups/items",
+        ),
+    ],
 }
 
 
@@ -256,7 +280,6 @@ def main():
                 obj,
                 [
                     "CustomSecurityGroupIds",
-                    "DBSecurityGroups",
                     "Ec2SecurityGroupIds",
                     "GroupSet",
                     "InputSecurityGroups",
@@ -282,7 +305,7 @@ def main():
                     "EC2SecurityGroupId",
                     "SecurityGroup",
                     "SecurityGroupId",
-                    "SecurityGroupIngress" "SourceSecurityGroupId",
+                    "SourceSecurityGroupId",
                     "VpcSecurityGroupId",
                 ],
             ):
@@ -298,9 +321,8 @@ def main():
                 [
                     "CacheSecurityGroupName",
                     "ClusterSecurityGroupName",
-                    "DBSecurityGroupName",
                     "EC2SecurityGroupName",
-                    "SourceSecurityGroupName" "SourceSecurityGroupName",
+                    "SourceSecurityGroupName",
                 ],
             ):
                 if path[-2] == "properties":

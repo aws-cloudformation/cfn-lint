@@ -6,13 +6,12 @@
   "/properties/Password",
   "/properties/Organization",
   "/properties/Bucket",
-  "/properties/DbInstanceType",
   "/properties/VpcSubnetIds",
   "/properties/VpcSecurityGroupIds",
   "/properties/PubliclyAccessible",
   "/properties/DbStorageType",
   "/properties/AllocatedStorage",
-  "/properties/DeploymentType"
+  "/properties/NetworkType"
  ],
  "definitions": {
   "Tag": {
@@ -137,7 +136,14 @@
   "Name": {
    "maxLength": 40,
    "minLength": 3,
-   "pattern": "^[a-zA-z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$",
+   "pattern": "^[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$",
+   "type": "string"
+  },
+  "NetworkType": {
+   "enum": [
+    "IPV4",
+    "DUAL"
+   ],
    "type": "string"
   },
   "Organization": {
@@ -150,6 +156,11 @@
    "minLength": 8,
    "pattern": "^[a-zA-Z0-9]+$",
    "type": "string"
+  },
+  "Port": {
+   "maximum": 65535,
+   "minimum": 1024,
+   "type": "integer"
   },
   "PubliclyAccessible": {
    "default": false,
@@ -165,6 +176,8 @@
     "DELETING",
     "MODIFYING",
     "UPDATING",
+    "UPDATING_DEPLOYMENT_TYPE",
+    "UPDATING_INSTANCE_TYPE",
     "DELETED",
     "FAILED"
    ],

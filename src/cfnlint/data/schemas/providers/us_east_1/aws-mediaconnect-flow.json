@@ -6,6 +6,31 @@
   "/properties/Source/Name"
  ],
  "definitions": {
+  "AudioMonitoringSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "SilentAudio": {
+     "$ref": "#/definitions/SilentAudio"
+    }
+   },
+   "type": "object"
+  },
+  "BlackFrames": {
+   "additionalProperties": false,
+   "properties": {
+    "State": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "Encryption": {
    "additionalProperties": false,
    "properties": {
@@ -141,6 +166,22 @@
       "DENSITY"
      ],
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FrozenFrames": {
+   "additionalProperties": false,
+   "properties": {
+    "State": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "type": "integer"
     }
    },
    "type": "object"
@@ -300,6 +341,22 @@
    ],
    "type": "object"
   },
+  "SilentAudio": {
+   "additionalProperties": false,
+   "properties": {
+    "State": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ThresholdSeconds": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "Source": {
    "additionalProperties": false,
    "properties": {
@@ -389,17 +446,45 @@
   "SourceMonitoringConfig": {
    "additionalProperties": false,
    "properties": {
+    "AudioMonitoringSettings": {
+     "items": {
+      "$ref": "#/definitions/AudioMonitoringSetting"
+     },
+     "type": "array"
+    },
+    "ContentQualityAnalysisState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
     "ThumbnailState": {
      "enum": [
       "ENABLED",
       "DISABLED"
      ],
      "type": "string"
+    },
+    "VideoMonitoringSettings": {
+     "items": {
+      "$ref": "#/definitions/VideoMonitoringSetting"
+     },
+     "type": "array"
     }
    },
-   "required": [
-    "ThumbnailState"
-   ],
+   "type": "object"
+  },
+  "VideoMonitoringSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "BlackFrames": {
+     "$ref": "#/definitions/BlackFrames"
+    },
+    "FrozenFrames": {
+     "$ref": "#/definitions/FrozenFrames"
+    }
+   },
    "type": "object"
   },
   "VpcInterface": {

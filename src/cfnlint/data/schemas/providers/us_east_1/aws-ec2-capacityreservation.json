@@ -9,7 +9,8 @@
   "/properties/OutPostArn",
   "/properties/EphemeralStorage",
   "/properties/EbsOptimized",
-  "/properties/PlacementGroupArn"
+  "/properties/PlacementGroupArn",
+  "/properties/AvailabilityZoneId"
  ],
  "definitions": {
   "Tag": {
@@ -144,6 +145,9 @@
   "AvailabilityZone": {
    "type": "string"
   },
+  "AvailabilityZoneId": {
+   "type": "string"
+  },
   "AvailableInstanceCount": {
    "type": "integer"
   },
@@ -239,10 +243,16 @@
  ],
  "required": [
   "InstanceCount",
-  "AvailabilityZone",
   "InstancePlatform",
   "InstanceType"
  ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/TagSpecifications",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::EC2::CapacityReservation",
  "writeOnlyProperties": [
   "/properties/UnusedReservationBillingOwnerId"

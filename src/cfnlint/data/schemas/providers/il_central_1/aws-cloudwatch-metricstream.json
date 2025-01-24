@@ -1,0 +1,228 @@
+{
+ "additionalProperties": false,
+ "allOf": [
+  {
+   "required": [
+    "FirehoseArn",
+    "RoleArn",
+    "OutputFormat"
+   ]
+  },
+  {
+   "oneOf": [
+    {},
+    {
+     "required": [
+      "IncludeFilters",
+      "ExcludeFilters"
+     ]
+    }
+   ]
+  }
+ ],
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "MetricStreamFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricNames": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 999,
+     "type": "array"
+    },
+    "Namespace": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[^:].*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "MetricStreamStatisticsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalStatistics": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 20,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "IncludeMetrics": {
+     "items": {
+      "$ref": "#/definitions/MetricStreamStatisticsMetric"
+     },
+     "maxItems": 100,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "AdditionalStatistics",
+    "IncludeMetrics"
+   ],
+   "type": "object"
+  },
+  "MetricStreamStatisticsMetric": {
+   "additionalProperties": false,
+   "properties": {
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Namespace": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[^:].*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreationDate": {
+   "anyOf": [
+    {
+     "format": "date-time"
+    },
+    {
+     "format": "timestamp"
+    }
+   ],
+   "type": "string"
+  },
+  "ExcludeFilters": {
+   "items": {
+    "$ref": "#/definitions/MetricStreamFilter"
+   },
+   "maxItems": 1000,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "FirehoseArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "IncludeFilters": {
+   "items": {
+    "$ref": "#/definitions/MetricStreamFilter"
+   },
+   "maxItems": 1000,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IncludeLinkedAccountsMetrics": {
+   "type": "boolean"
+  },
+  "LastUpdateDate": {
+   "anyOf": [
+    {
+     "format": "date-time"
+    },
+    {
+     "format": "timestamp"
+    }
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OutputFormat": {
+   "enum": [
+    "json",
+    "opentelemetry0.7",
+    "opentelemetry1.0"
+   ],
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "State": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "StatisticsConfigurations": {
+   "items": {
+    "$ref": "#/definitions/MetricStreamStatisticsConfiguration"
+   },
+   "maxItems": 100,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDate",
+  "/properties/LastUpdateDate",
+  "/properties/State"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "taggable": true,
+ "typeName": "AWS::CloudWatch::MetricStream",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

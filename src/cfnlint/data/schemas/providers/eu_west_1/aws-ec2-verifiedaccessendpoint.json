@@ -1,0 +1,324 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationDomain",
+  "/properties/AttachmentType",
+  "/properties/DomainCertificateArn",
+  "/properties/EndpointDomainPrefix",
+  "/properties/EndpointType",
+  "/properties/SecurityGroupIds",
+  "/properties/NetworkInterfaceOptions/NetworkInterfaceId",
+  "/properties/LoadBalancerOptions/LoadBalancerArn",
+  "/properties/RdsOptions/Protocol",
+  "/properties/RdsOptions/RdsDbInstanceArn",
+  "/properties/RdsOptions/RdsDbClusterArn",
+  "/properties/RdsOptions/RdsDbProxyArn",
+  "/properties/CidrOptions/Cidr",
+  "/properties/CidrOptions/Protocol",
+  "/properties/CidrOptions/SubnetIds"
+ ],
+ "definitions": {
+  "CidrOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "type": "string"
+    },
+    "PortRanges": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "LoadBalancerOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "LoadBalancerArn": {
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "PortRanges": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Protocol": {
+     "enum": [
+      "http",
+      "https",
+      "tcp"
+     ],
+     "type": "string"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "PortRanges": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Protocol": {
+     "enum": [
+      "http",
+      "https",
+      "tcp"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ToPort": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RdsOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "RdsDbClusterArn": {
+     "type": "string"
+    },
+    "RdsDbInstanceArn": {
+     "type": "string"
+    },
+    "RdsDbProxyArn": {
+     "type": "string"
+    },
+    "RdsEndpoint": {
+     "type": "string"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "format": "AWS::EC2::SecurityGroup.Id",
+   "type": "string"
+  },
+  "SseSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedKeyEnabled": {
+     "type": "boolean"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessEndpointId"
+ ],
+ "properties": {
+  "ApplicationDomain": {
+   "type": "string"
+  },
+  "AttachmentType": {
+   "enum": [
+    "vpc"
+   ],
+   "type": "string"
+  },
+  "CidrOptions": {
+   "$ref": "#/definitions/CidrOptions"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DeviceValidationDomain": {
+   "type": "string"
+  },
+  "DomainCertificateArn": {
+   "type": "string"
+  },
+  "EndpointDomain": {
+   "type": "string"
+  },
+  "EndpointDomainPrefix": {
+   "type": "string"
+  },
+  "EndpointType": {
+   "enum": [
+    "cidr",
+    "load-balancer",
+    "network-interface",
+    "rds"
+   ],
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "type": "string"
+  },
+  "LoadBalancerOptions": {
+   "$ref": "#/definitions/LoadBalancerOptions"
+  },
+  "NetworkInterfaceOptions": {
+   "$ref": "#/definitions/NetworkInterfaceOptions"
+  },
+  "PolicyDocument": {
+   "type": "string"
+  },
+  "PolicyEnabled": {
+   "type": "boolean"
+  },
+  "RdsOptions": {
+   "$ref": "#/definitions/RdsOptions"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SseSpecification": {
+   "$ref": "#/definitions/SseSpecification"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessEndpointId": {
+   "type": "string"
+  },
+  "VerifiedAccessGroupId": {
+   "type": "string"
+  },
+  "VerifiedAccessInstanceId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessEndpointId",
+  "/properties/EndpointDomain",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Status",
+  "/properties/DeviceValidationDomain",
+  "/properties/VerifiedAccessInstanceId"
+ ],
+ "required": [
+  "AttachmentType",
+  "EndpointType",
+  "VerifiedAccessGroupId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessendpoint",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessEndpoint"
+}

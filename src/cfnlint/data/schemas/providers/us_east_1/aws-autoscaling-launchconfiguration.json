@@ -173,24 +173,24 @@
    "type": "string"
   },
   "SecurityGroups": {
-   "format": "AWS::EC2::SecurityGroup.Ids",
+   "anyOf": [
+    {
+     "format": "AWS::EC2::SecurityGroup.Id"
+    },
+    {
+     "format": "AWS::EC2::SecurityGroup.Name"
+    }
+   ],
    "insertionOrder": false,
    "items": {
     "anyOf": [
      {
-      "relationshipRef": {
-       "propertyPath": "/properties/GroupId",
-       "typeName": "AWS::EC2::SecurityGroup"
-      }
+      "format": "AWS::EC2::SecurityGroup.Id"
      },
      {
-      "relationshipRef": {
-       "propertyPath": "/properties/Id",
-       "typeName": "AWS::EC2::SecurityGroup"
-      }
+      "format": "AWS::EC2::SecurityGroup.Name"
      }
     ],
-    "format": "AWS::EC2::SecurityGroup.Id",
     "type": "string"
    },
    "type": "array"

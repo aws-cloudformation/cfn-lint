@@ -1,0 +1,242 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Description",
+  "/properties/ManifestPayload",
+  "/properties/ManifestOverridesPayload",
+  "/properties/RuntimeRoleArn",
+  "/properties/DefaultRuntimeContextDevice",
+  "/properties/ApplicationInstanceIdToReplace"
+ ],
+ "definitions": {
+  "ApplicationInstanceArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ApplicationInstanceHealthStatus": {
+   "enum": [
+    "RUNNING",
+    "ERROR",
+    "NOT_AVAILABLE"
+   ],
+   "type": "string"
+  },
+  "ApplicationInstanceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "ApplicationInstanceStatus": {
+   "enum": [
+    "DEPLOYMENT_PENDING",
+    "DEPLOYMENT_REQUESTED",
+    "DEPLOYMENT_IN_PROGRESS",
+    "DEPLOYMENT_ERROR",
+    "DEPLOYMENT_SUCCEEDED",
+    "REMOVAL_PENDING",
+    "REMOVAL_REQUESTED",
+    "REMOVAL_IN_PROGRESS",
+    "REMOVAL_FAILED",
+    "REMOVAL_SUCCEEDED"
+   ],
+   "type": "string"
+  },
+  "ApplicationInstanceStatusDescription": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DefaultRuntimeContextDevice": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 0,
+   "pattern": "^.*$",
+   "type": "string"
+  },
+  "DeviceId": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "DeviceName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "ManifestOverridesPayload": {
+   "additionalProperties": false,
+   "properties": {
+    "PayloadData": {
+     "$ref": "#/definitions/ManifestOverridesPayloadData"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestOverridesPayloadData": {
+   "maxLength": 51200,
+   "minLength": 0,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "ManifestPayload": {
+   "additionalProperties": false,
+   "properties": {
+    "PayloadData": {
+     "$ref": "#/definitions/ManifestPayloadData"
+    }
+   },
+   "type": "object"
+  },
+  "ManifestPayloadData": {
+   "maxLength": 51200,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\-\\_]+$",
+   "type": "string"
+  },
+  "RuntimeRoleArn": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^arn:[a-z0-9][-.a-z0-9]{0,62}:iam::[0-9]{12}:role/.+$",
+   "type": "string"
+  },
+  "StatusFilter": {
+   "enum": [
+    "DEPLOYMENT_SUCCEEDED",
+    "DEPLOYMENT_ERROR",
+    "REMOVAL_SUCCEEDED",
+    "REMOVAL_FAILED",
+    "PROCESSING_DEPLOYMENT",
+    "PROCESSING_REMOVAL"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Timestamp": {
+   "type": "integer"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationInstanceId"
+ ],
+ "properties": {
+  "ApplicationInstanceId": {
+   "$ref": "#/definitions/ApplicationInstanceId"
+  },
+  "ApplicationInstanceIdToReplace": {
+   "$ref": "#/definitions/ApplicationInstanceId"
+  },
+  "Arn": {
+   "$ref": "#/definitions/ApplicationInstanceArn"
+  },
+  "CreatedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "DefaultRuntimeContextDevice": {
+   "$ref": "#/definitions/DefaultRuntimeContextDevice"
+  },
+  "DefaultRuntimeContextDeviceName": {
+   "$ref": "#/definitions/DeviceName"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "HealthStatus": {
+   "$ref": "#/definitions/ApplicationInstanceHealthStatus"
+  },
+  "LastUpdatedTime": {
+   "$ref": "#/definitions/Timestamp"
+  },
+  "ManifestOverridesPayload": {
+   "$ref": "#/definitions/ManifestOverridesPayload"
+  },
+  "ManifestPayload": {
+   "$ref": "#/definitions/ManifestPayload"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "RuntimeRoleArn": {
+   "$ref": "#/definitions/RuntimeRoleArn"
+  },
+  "Status": {
+   "$ref": "#/definitions/ApplicationInstanceStatus"
+  },
+  "StatusDescription": {
+   "$ref": "#/definitions/ApplicationInstanceStatusDescription"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationInstanceId",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/HealthStatus",
+  "/properties/StatusDescription",
+  "/properties/DefaultRuntimeContextDeviceName",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "ManifestPayload",
+  "DefaultRuntimeContextDevice"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Panorama::ApplicationInstance",
+ "writeOnlyProperties": [
+  "/properties/ApplicationInstanceIdToReplace"
+ ]
+}
