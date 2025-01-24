@@ -1042,6 +1042,7 @@ cached: list[str] = [
     "alexa-ask-skill.json",
     "aws-accessanalyzer-analyzer.json",
     "aws-acmpca-certificate.json",
+    "aws-acmpca-certificateauthority.json",
     "aws-acmpca-certificateauthorityactivation.json",
     "aws-acmpca-permission.json",
     "aws-amazonmq-broker.json",
