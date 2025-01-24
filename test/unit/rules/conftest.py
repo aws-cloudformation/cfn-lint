@@ -28,11 +28,19 @@ def regions():
 
 
 @pytest.fixture
-def cfn(template, regions):
+def parameters(request):
+    if hasattr(request, "param"):
+        return request.param
+    return []
+
+
+@pytest.fixture
+def cfn(template, regions, parameters):
     return Template(
         "",
         template,
         regions,
+        parameters,
     )
 
 
@@ -67,11 +75,12 @@ def strict_types(strict_types=True):
 
 
 @pytest.fixture
-def context(cfn, path, functions, strict_types):
+def context(cfn, path, functions, strict_types, parameters):
     return create_context_for_template(cfn).evolve(
         path=path,
         functions=functions,
         strict_types=strict_types,
+        parameter_sets=parameters,
     )
 
 
