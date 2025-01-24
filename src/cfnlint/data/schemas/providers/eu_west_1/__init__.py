@@ -1693,6 +1693,7 @@ cached: list[str] = [
     "aws-ec2-transitgatewayroutetableassociation.json",
     "aws-ec2-transitgatewayroutetablepropagation.json",
     "aws-ec2-transitgatewayvpcattachment.json",
+    "aws-ec2-verifiedaccessendpoint.json",
     "aws-ec2-verifiedaccessgroup.json",
     "aws-ec2-verifiedaccessinstance.json",
     "aws-ec2-verifiedaccesstrustprovider.json",

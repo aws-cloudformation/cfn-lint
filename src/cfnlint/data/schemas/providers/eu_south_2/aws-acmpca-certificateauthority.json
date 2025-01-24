@@ -1,0 +1,424 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/KeyAlgorithm",
+  "/properties/SigningAlgorithm",
+  "/properties/Subject",
+  "/properties/CsrExtensions",
+  "/properties/KeyStorageSecurityStandard",
+  "/properties/UsageMode"
+ ],
+ "definitions": {
+  "AccessDescription": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessLocation": {
+     "$ref": "#/definitions/GeneralName"
+    },
+    "AccessMethod": {
+     "$ref": "#/definitions/AccessMethod"
+    }
+   },
+   "required": [
+    "AccessMethod",
+    "AccessLocation"
+   ],
+   "type": "object"
+  },
+  "AccessMethod": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessMethodType": {
+     "$ref": "#/definitions/AccessMethodType"
+    },
+    "CustomObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "AccessMethodType": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CrlConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrlDistributionPointExtensionConfiguration": {
+     "$ref": "#/definitions/CrlDistributionPointExtensionConfiguration"
+    },
+    "CustomCname": {
+     "pattern": "[-a-zA-Z0-9;/?:@&=+$,%_.!~*()']*",
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "S3BucketName": {
+     "pattern": "[-a-zA-Z0-9._/]+",
+     "type": "string"
+    },
+    "S3ObjectAcl": {
+     "enum": [
+      "BUCKET_OWNER_FULL_CONTROL",
+      "PUBLIC_READ"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "CrlDistributionPointExtensionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OmitExtension": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "OmitExtension"
+   ],
+   "type": "object"
+  },
+  "CsrExtensions": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    },
+    "SubjectInformationAccess": {
+     "$ref": "#/definitions/SubjectInformationAccess"
+    }
+   },
+   "type": "object"
+  },
+  "CustomAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectIdentifier",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CustomAttributeList": {
+   "items": {
+    "$ref": "#/definitions/CustomAttribute"
+   },
+   "type": "array"
+  },
+  "CustomObjectIdentifier": {
+   "type": "string"
+  },
+  "DnsName": {
+   "type": "string"
+  },
+  "EdiPartyName": {
+   "additionalProperties": false,
+   "properties": {
+    "NameAssigner": {
+     "type": "string"
+    },
+    "PartyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PartyName"
+   ],
+   "type": "object"
+  },
+  "GeneralName": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryName": {
+     "$ref": "#/definitions/Subject"
+    },
+    "DnsName": {
+     "$ref": "#/definitions/DnsName"
+    },
+    "EdiPartyName": {
+     "$ref": "#/definitions/EdiPartyName"
+    },
+    "IpAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "OtherName": {
+     "$ref": "#/definitions/OtherName"
+    },
+    "RegisteredId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Rfc822Name": {
+     "$ref": "#/definitions/Rfc822Name"
+    },
+    "UniformResourceIdentifier": {
+     "$ref": "#/definitions/UniformResourceIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "IpAddress": {
+   "type": "string"
+  },
+  "KeyUsage": {
+   "additionalProperties": false,
+   "properties": {
+    "CRLSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DataEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DecipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DigitalSignature": {
+     "default": false,
+     "type": "boolean"
+    },
+    "EncipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyAgreement": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyCertSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "NonRepudiation": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "OcspConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "OcspCustomCname": {
+     "pattern": "[-a-zA-Z0-9;/?:@&=+$,%_.!~*()']*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Enabled"
+   ],
+   "type": "object"
+  },
+  "OtherName": {
+   "additionalProperties": false,
+   "properties": {
+    "TypeId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TypeId",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "RevocationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CrlConfiguration": {
+     "$ref": "#/definitions/CrlConfiguration"
+    },
+    "OcspConfiguration": {
+     "$ref": "#/definitions/OcspConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Rfc822Name": {
+   "type": "string"
+  },
+  "Subject": {
+   "additionalProperties": false,
+   "properties": {
+    "CommonName": {
+     "type": "string"
+    },
+    "Country": {
+     "type": "string"
+    },
+    "CustomAttributes": {
+     "$ref": "#/definitions/CustomAttributeList"
+    },
+    "DistinguishedNameQualifier": {
+     "type": "string"
+    },
+    "GenerationQualifier": {
+     "type": "string"
+    },
+    "GivenName": {
+     "type": "string"
+    },
+    "Initials": {
+     "type": "string"
+    },
+    "Locality": {
+     "type": "string"
+    },
+    "Organization": {
+     "type": "string"
+    },
+    "OrganizationalUnit": {
+     "type": "string"
+    },
+    "Pseudonym": {
+     "type": "string"
+    },
+    "SerialNumber": {
+     "type": "string"
+    },
+    "State": {
+     "type": "string"
+    },
+    "Surname": {
+     "type": "string"
+    },
+    "Title": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubjectInformationAccess": {
+   "items": {
+    "$ref": "#/definitions/AccessDescription"
+   },
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UniformResourceIdentifier": {
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CertificateSigningRequest": {
+   "type": "string"
+  },
+  "CsrExtensions": {
+   "$ref": "#/definitions/CsrExtensions"
+  },
+  "KeyAlgorithm": {
+   "type": "string"
+  },
+  "KeyStorageSecurityStandard": {
+   "enum": [
+    "CCPC_LEVEL_1_OR_HIGHER",
+    "FIPS_140_2_LEVEL_2_OR_HIGHER",
+    "FIPS_140_2_LEVEL_3_OR_HIGHER"
+   ],
+   "type": "string"
+  },
+  "RevocationConfiguration": {
+   "$ref": "#/definitions/RevocationConfiguration"
+  },
+  "SigningAlgorithm": {
+   "type": "string"
+  },
+  "Subject": {
+   "$ref": "#/definitions/Subject"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "UsageMode": {
+   "enum": [
+    "GENERAL_PURPOSE",
+    "SHORT_LIVED_CERTIFICATE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CertificateSigningRequest"
+ ],
+ "required": [
+  "Type",
+  "KeyAlgorithm",
+  "SigningAlgorithm",
+  "Subject"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::ACMPCA::CertificateAuthority",
+ "writeOnlyProperties": [
+  "/properties/Subject",
+  "/properties/Subject",
+  "/properties/CsrExtensions",
+  "/properties/Tags",
+  "/properties/RevocationConfiguration",
+  "/properties/KeyStorageSecurityStandard"
+ ]
+}

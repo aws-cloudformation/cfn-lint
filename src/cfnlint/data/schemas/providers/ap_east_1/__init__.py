@@ -1007,7 +1007,6 @@ cached: list[str] = [
     "aws-cloudwatch-compositealarm.json",
     "aws-cloudwatch-dashboard.json",
     "aws-cloudwatch-insightrule.json",
-    "aws-cloudwatch-metricstream.json",
     "aws-codebuild-project.json",
     "aws-codebuild-reportgroup.json",
     "aws-codebuild-sourcecredential.json",
