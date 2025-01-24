@@ -1,0 +1,416 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^([0-9]*)$",
+   "type": "string"
+  },
+  "Base62Id": {
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^[a-z0-9A-Z]{22}$",
+   "type": "string"
+  },
+  "FirewallDeploymentModel": {
+   "enum": [
+    "DISTRIBUTED",
+    "CENTRALIZED"
+   ],
+   "type": "string"
+  },
+  "IEMap": {
+   "additionalProperties": false,
+   "properties": {
+    "ACCOUNT": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AccountId"
+     },
+     "type": "array"
+    },
+    "ORGUNIT": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OrganizationalUnitId"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedServiceData": {
+   "maxLength": 30000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkAclCommonPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "NetworkAclEntrySet": {
+     "$ref": "#/definitions/NetworkAclEntrySet"
+    }
+   },
+   "required": [
+    "NetworkAclEntrySet"
+   ],
+   "type": "object"
+  },
+  "NetworkAclEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "CidrBlock": {
+     "pattern": "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\/([0-9]|[1-2][0-9]|3[0-2]))$",
+     "type": "string"
+    },
+    "Egress": {
+     "type": "boolean"
+    },
+    "IcmpTypeCode": {
+     "additionalProperties": false,
+     "properties": {
+      "Code": {
+       "maximum": 255,
+       "minimum": 0,
+       "type": "integer"
+      },
+      "Type": {
+       "maximum": 255,
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "Code",
+      "Type"
+     ],
+     "type": "object"
+    },
+    "Ipv6CidrBlock": {
+     "pattern": "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(/(1[0-2]|[0-9]))?$",
+     "type": "string"
+    },
+    "PortRange": {
+     "additionalProperties": false,
+     "properties": {
+      "From": {
+       "maximum": 65535,
+       "minimum": 0,
+       "type": "integer"
+      },
+      "To": {
+       "maximum": 65535,
+       "minimum": 0,
+       "type": "integer"
+      }
+     },
+     "required": [
+      "From",
+      "To"
+     ],
+     "type": "object"
+    },
+    "Protocol": {
+     "pattern": "^(tcp|udp|icmp|-1|([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))$",
+     "type": "string"
+    },
+    "RuleAction": {
+     "enum": [
+      "allow",
+      "deny"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Egress",
+    "Protocol",
+    "RuleAction"
+   ],
+   "type": "object"
+  },
+  "NetworkAclEntryList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/NetworkAclEntry"
+   },
+   "type": "array"
+  },
+  "NetworkAclEntrySet": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "FirstEntries"
+     ]
+    },
+    {
+     "required": [
+      "LastEntries"
+     ]
+    }
+   ],
+   "properties": {
+    "FirstEntries": {
+     "$ref": "#/definitions/NetworkAclEntryList"
+    },
+    "ForceRemediateForFirstEntries": {
+     "type": "boolean"
+    },
+    "ForceRemediateForLastEntries": {
+     "type": "boolean"
+    },
+    "LastEntries": {
+     "$ref": "#/definitions/NetworkAclEntryList"
+    }
+   },
+   "required": [
+    "ForceRemediateForFirstEntries",
+    "ForceRemediateForLastEntries"
+   ],
+   "type": "object"
+  },
+  "NetworkFirewallPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "FirewallDeploymentModel": {
+     "$ref": "#/definitions/FirewallDeploymentModel"
+    }
+   },
+   "required": [
+    "FirewallDeploymentModel"
+   ],
+   "type": "object"
+  },
+  "OrganizationalUnitId": {
+   "maxLength": 68,
+   "minLength": 16,
+   "pattern": "^(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+   "type": "string"
+  },
+  "PolicyOption": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "NetworkFirewallPolicy"
+     ]
+    },
+    {
+     "required": [
+      "ThirdPartyFirewallPolicy"
+     ]
+    },
+    {
+     "required": [
+      "NetworkAclCommonPolicy"
+     ]
+    }
+   ],
+   "properties": {
+    "NetworkAclCommonPolicy": {
+     "$ref": "#/definitions/NetworkAclCommonPolicy"
+    },
+    "NetworkFirewallPolicy": {
+     "$ref": "#/definitions/NetworkFirewallPolicy"
+    },
+    "ThirdPartyFirewallPolicy": {
+     "$ref": "#/definitions/ThirdPartyFirewallPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "PolicyTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PolicyType": {
+   "enum": [
+    "WAF",
+    "WAFV2",
+    "SHIELD_ADVANCED",
+    "SECURITY_GROUPS_COMMON",
+    "SECURITY_GROUPS_CONTENT_AUDIT",
+    "SECURITY_GROUPS_USAGE_AUDIT",
+    "NETWORK_FIREWALL",
+    "THIRD_PARTY_FIREWALL",
+    "DNS_FIREWALL",
+    "IMPORT_NETWORK_FIREWALL",
+    "NETWORK_ACL_COMMON"
+   ],
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ResourceType": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "SecurityServicePolicyData": {
+   "additionalProperties": false,
+   "properties": {
+    "ManagedServiceData": {
+     "$ref": "#/definitions/ManagedServiceData"
+    },
+    "PolicyOption": {
+     "$ref": "#/definitions/PolicyOption"
+    },
+    "Type": {
+     "$ref": "#/definitions/PolicyType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ThirdPartyFirewallPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "FirewallDeploymentModel": {
+     "$ref": "#/definitions/FirewallDeploymentModel"
+    }
+   },
+   "required": [
+    "FirewallDeploymentModel"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "DeleteAllPolicyResources": {
+   "type": "boolean"
+  },
+  "ExcludeMap": {
+   "$ref": "#/definitions/IEMap"
+  },
+  "ExcludeResourceTags": {
+   "type": "boolean"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-z0-9A-Z-]{36}$",
+   "type": "string"
+  },
+  "IncludeMap": {
+   "$ref": "#/definitions/IEMap"
+  },
+  "PolicyDescription": {
+   "maxLength": 256,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]+)$",
+   "type": "string"
+  },
+  "PolicyName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]+)$",
+   "type": "string"
+  },
+  "RemediationEnabled": {
+   "type": "boolean"
+  },
+  "ResourceSetIds": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Base62Id"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceTags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 8,
+   "type": "array"
+  },
+  "ResourceType": {
+   "$ref": "#/definitions/ResourceType"
+  },
+  "ResourceTypeList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceType"
+   },
+   "type": "array"
+  },
+  "ResourcesCleanUp": {
+   "type": "boolean"
+  },
+  "SecurityServicePolicyData": {
+   "$ref": "#/definitions/SecurityServicePolicyData"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PolicyTag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "ExcludeResourceTags",
+  "PolicyName",
+  "RemediationEnabled",
+  "SecurityServicePolicyData"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
+ "typeName": "AWS::FMS::Policy",
+ "writeOnlyProperties": [
+  "/properties/DeleteAllPolicyResources"
+ ]
+}

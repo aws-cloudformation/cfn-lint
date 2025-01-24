@@ -14,15 +14,19 @@ This format ensures that the value is a valid VPC ID, which is a string of the p
 
 ### AWS::EC2::SecurityGroup.Id
 
-This format validates that the value is a valid Security Group ID, which is a string of the pattern `sg-[0-9a-f]{8}` or `sg-[0-9a-f]{17}`.
+This format validates that the value is a valid security group ID, which is a string of the pattern `sg-[0-9a-f]{8}` or `sg-[0-9a-f]{17}`.
 
 ### AWS::EC2::SecurityGroup.Ids
 
-This format validates that the value is a valid list of Security Group IDs, which is a string of the pattern `sg-[0-9a-f]{8}` or `sg-[0-9a-f]{17}`.
+This format validates that the value is a valid list of security group IDs, which is a string of the pattern `sg-[0-9a-f]{8}` or `sg-[0-9a-f]{17}`.
 
 ### AWS::EC2::SecurityGroup.Name
 
-This format validates that the value is a valid Security Group Name, which must be a string of 1 to 255 characters, starting with a letter, and containing only letters, numbers, and certain special characters.
+This format validates that the value is a valid security group name, which must be a string of 1 to 255 characters, starting with a letter, and containing only letters, numbers, and certain special characters.
+
+### AWS::EC2::SecurityGroup.Names
+
+This format validates that the value is a valid list of security group names, which must be a string of 1 to 255 characters, starting with a letter, and containing only letters, numbers, and certain special characters.
 
 ### AWS::EC2::Image.Id
 

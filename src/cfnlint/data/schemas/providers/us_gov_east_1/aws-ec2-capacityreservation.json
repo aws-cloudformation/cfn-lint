@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tenancy",
+  "/properties/InstancePlatform",
+  "/properties/InstanceType",
+  "/properties/AvailabilityZone",
+  "/properties/TagSpecifications",
+  "/properties/OutPostArn",
+  "/properties/EphemeralStorage",
+  "/properties/EbsOptimized",
+  "/properties/PlacementGroupArn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceType": {
+     "enum": [
+      "capacity-reservation",
+      "capacity-reservation-fleet",
+      "carrier-gateway",
+      "client-vpn-endpoint",
+      "coip-pool",
+      "customer-gateway",
+      "declarative-policies-report",
+      "dedicated-host",
+      "dhcp-options",
+      "egress-only-internet-gateway",
+      "elastic-gpu",
+      "elastic-ip",
+      "export-image-task",
+      "export-instance-task",
+      "fleet",
+      "fpga-image",
+      "host-reservation",
+      "image",
+      "import-image-task",
+      "import-snapshot-task",
+      "instance",
+      "instance-connect-endpoint",
+      "instance-event-window",
+      "internet-gateway",
+      "ipam",
+      "ipam-external-resource-verification-token",
+      "ipam-pool",
+      "ipam-resource-discovery",
+      "ipam-resource-discovery-association",
+      "ipam-scope",
+      "ipv4pool-ec2",
+      "ipv6pool-ec2",
+      "key-pair",
+      "launch-template",
+      "local-gateway",
+      "local-gateway-route-table",
+      "local-gateway-route-table-virtual-interface-group-association",
+      "local-gateway-route-table-vpc-association",
+      "local-gateway-virtual-interface",
+      "local-gateway-virtual-interface-group",
+      "natgateway",
+      "network-acl",
+      "network-insights-access-scope",
+      "network-insights-access-scope-analysis",
+      "network-insights-analysis",
+      "network-insights-path",
+      "network-interface",
+      "placement-group",
+      "prefix-list",
+      "replace-root-volume-task",
+      "reserved-instances",
+      "route-table",
+      "security-group",
+      "security-group-rule",
+      "snapshot",
+      "spot-fleet-request",
+      "spot-instances-request",
+      "subnet",
+      "subnet-cidr-reservation",
+      "traffic-mirror-filter",
+      "traffic-mirror-filter-rule",
+      "traffic-mirror-session",
+      "traffic-mirror-target",
+      "transit-gateway",
+      "transit-gateway-attachment",
+      "transit-gateway-connect-peer",
+      "transit-gateway-multicast-domain",
+      "transit-gateway-policy-table",
+      "transit-gateway-route-table",
+      "transit-gateway-route-table-announcement",
+      "verified-access-endpoint",
+      "verified-access-endpoint-target",
+      "verified-access-group",
+      "verified-access-instance",
+      "verified-access-policy",
+      "verified-access-trust-provider",
+      "volume",
+      "vpc",
+      "vpc-block-public-access-exclusion",
+      "vpc-endpoint",
+      "vpc-endpoint-connection",
+      "vpc-endpoint-connection-device-type",
+      "vpc-endpoint-service",
+      "vpc-endpoint-service-permission",
+      "vpc-flow-log",
+      "vpc-peering-connection",
+      "vpn-connection",
+      "vpn-connection-device-type",
+      "vpn-gateway"
+     ],
+     "type": "string"
+    },
+    "Tags": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "AvailableInstanceCount": {
+   "type": "integer"
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "EndDate": {
+   "type": "string"
+  },
+  "EndDateType": {
+   "enum": [
+    "limited",
+    "unlimited"
+   ],
+   "type": "string"
+  },
+  "EphemeralStorage": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceCount": {
+   "type": "integer"
+  },
+  "InstanceMatchCriteria": {
+   "enum": [
+    "open",
+    "targeted"
+   ],
+   "type": "string"
+  },
+  "InstancePlatform": {
+   "enum": [
+    "Linux with SQL Server Enterprise",
+    "Linux with SQL Server Standard",
+    "Linux with SQL Server Web",
+    "Linux/UNIX",
+    "RHEL with HA",
+    "RHEL with HA and SQL Server Enterprise",
+    "RHEL with HA and SQL Server Standard",
+    "RHEL with SQL Server Enterprise",
+    "RHEL with SQL Server Standard",
+    "RHEL with SQL Server Web",
+    "Red Hat Enterprise Linux",
+    "SUSE Linux",
+    "Ubuntu Pro",
+    "Windows",
+    "Windows with SQL Server",
+    "Windows with SQL Server Enterprise",
+    "Windows with SQL Server Standard",
+    "Windows with SQL Server Web"
+   ],
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "OutPostArn": {
+   "pattern": "^arn:aws([a-z-]+)?:outposts:[a-z\\d-]+:\\d{12}:outpost/op-[a-f0-9]{17}$",
+   "type": "string"
+  },
+  "PlacementGroupArn": {
+   "pattern": "^arn:aws([a-z-]+)?:ec2:[a-z\\d-]+:\\d{12}:placement-group/^.{1,255}$",
+   "type": "string"
+  },
+  "TagSpecifications": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagSpecification"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tenancy": {
+   "enum": [
+    "dedicated",
+    "default"
+   ],
+   "type": "string"
+  },
+  "TotalInstanceCount": {
+   "type": "integer"
+  },
+  "UnusedReservationBillingOwnerId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/AvailableInstanceCount",
+  "/properties/TotalInstanceCount"
+ ],
+ "required": [
+  "InstanceCount",
+  "AvailabilityZone",
+  "InstancePlatform",
+  "InstanceType"
+ ],
+ "typeName": "AWS::EC2::CapacityReservation",
+ "writeOnlyProperties": [
+  "/properties/UnusedReservationBillingOwnerId"
+ ]
+}

@@ -4,6 +4,32 @@
   "/properties/ApplicationId"
  ],
  "definitions": {
+  "BrowserExtension": {
+   "enum": [
+    "FIREFOX",
+    "CHROME"
+   ],
+   "type": "string"
+  },
+  "BrowserExtensionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnabledBrowserExtensions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/BrowserExtension"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "EnabledBrowserExtensions"
+   ],
+   "type": "object"
+  },
   "CustomizationConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -155,6 +181,9 @@
    "minLength": 36,
    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
    "type": "string"
+  },
+  "BrowserExtensionConfiguration": {
+   "$ref": "#/definitions/BrowserExtensionConfiguration"
   },
   "CreatedAt": {
    "format": "date-time",

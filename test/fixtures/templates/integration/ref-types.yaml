@@ -43,18 +43,22 @@ Resources:
     Properties:
       CidrBlock: 10.0.2.0/24
       VpcId: !Ref FargateTaskRole  # Wrong type
-  SecurityGroup:
+  SecurityGroup1:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: SG
       VpcId: !Ref Vpc
+  SecurityGroup2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SG
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Type: application
       Scheme: internal
       SecurityGroups:
-        - !Ref SecurityGroup
+        - !Ref SecurityGroup1
       Subnets:
         - !Ref Subnet1
         - !Ref Subnet2
@@ -104,3 +108,12 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       TaskRoleArn: !GetAtt 'FargateTaskRole.Arn'
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-abcdef12
+      InstanceType: t3.micro
+      AssociatePublicIpAddress: false
+      SecurityGroups:
+        - !Ref SecurityGroup1
+        - !Ref SecurityGroup2
