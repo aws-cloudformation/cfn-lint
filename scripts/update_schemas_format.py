@@ -104,7 +104,12 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
 
 
 def _create_security_group_id(type_name: str, ref: str, resolver: RefResolver):
-    if type_name in ["AWS::Pipes::Pipe", "AWS::EC2::NetworkInsightsAnalysis"]:
+    if type_name in [
+        "AWS::Pipes::Pipe",
+        "AWS::EC2::NetworkInsightsAnalysis",
+        "AWS::AutoScaling::LaunchConfiguration",
+        "AWS::EC2::Instance",
+    ]:
         return []
 
     _, resolved = resolver.resolve(ref)

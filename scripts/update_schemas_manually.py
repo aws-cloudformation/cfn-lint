@@ -1696,7 +1696,7 @@ def build_resource_type_patches(resource_patches: ResourcePatch, filename: str):
 
     d = []
     with open(output_file, "w+") as fh:
-        for patch in resource_patches.patches:
+        for patch in sorted(resource_patches.patches, key=lambda x: x.path):
             for k, v in patch.values.items():
                 d.append(
                     {
