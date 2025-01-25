@@ -24,8 +24,8 @@ class GetAttFormat(CfnLintKeyword):
         self.parent_rules = ["E1010"]
         self._exceptions = [
             # Need to measure for completeness of automation
-            "AWS::EC2::SecurityGroup.GroupId",
-            "AWS::EC2::SecurityGroup.GroupIds",
+            # "AWS::EC2::SecurityGroup.GroupId",
+            # "AWS::EC2::SecurityGroup.GroupIds",
         ]
         self._resource_type_exceptions = [
             "AWS::CloudFormation::CustomResource",

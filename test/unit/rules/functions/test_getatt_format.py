@@ -12,6 +12,7 @@ from cfnlint.rules.functions.GetAttFormat import GetAttFormat
 @pytest.fixture(scope="module")
 def rule():
     rule = GetAttFormat()
+    rule._exceptions = ["AWS::EC2::SecurityGroup.Id"]
     yield rule
 
 
@@ -62,7 +63,7 @@ def template():
         (
             "Valid GetAtt because of exception",
             ["MyBucket", "Arn"],
-            {"format": "AWS::EC2::SecurityGroup.GroupId"},
+            {"format": "AWS::EC2::SecurityGroup.Id"},
             [],
         ),
         (
