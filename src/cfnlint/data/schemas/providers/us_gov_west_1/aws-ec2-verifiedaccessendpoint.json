@@ -8,49 +8,9 @@
   "/properties/EndpointType",
   "/properties/SecurityGroupIds",
   "/properties/NetworkInterfaceOptions/NetworkInterfaceId",
-  "/properties/LoadBalancerOptions/LoadBalancerArn",
-  "/properties/RdsOptions/Protocol",
-  "/properties/RdsOptions/RdsDbInstanceArn",
-  "/properties/RdsOptions/RdsDbClusterArn",
-  "/properties/RdsOptions/RdsDbProxyArn",
-  "/properties/CidrOptions/Cidr",
-  "/properties/CidrOptions/Protocol",
-  "/properties/CidrOptions/SubnetIds"
+  "/properties/LoadBalancerOptions/LoadBalancerArn"
  ],
  "definitions": {
-  "CidrOptions": {
-   "additionalProperties": false,
-   "properties": {
-    "Cidr": {
-     "type": "string"
-    },
-    "PortRanges": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/PortRange"
-     },
-     "type": "array",
-     "uniqueItems": true
-    },
-    "Protocol": {
-     "enum": [
-      "http",
-      "https",
-      "tcp"
-     ],
-     "type": "string"
-    },
-    "SubnetIds": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/SubnetId"
-     },
-     "type": "array",
-     "uniqueItems": true
-    }
-   },
-   "type": "object"
-  },
   "LoadBalancerOptions": {
    "additionalProperties": false,
    "properties": {
@@ -61,14 +21,6 @@
      "maximum": 65535,
      "minimum": 1,
      "type": "integer"
-    },
-    "PortRanges": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/PortRange"
-     },
-     "type": "array",
-     "uniqueItems": true
     },
     "Protocol": {
      "enum": [
@@ -100,14 +52,6 @@
      "minimum": 1,
      "type": "integer"
     },
-    "PortRanges": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/PortRange"
-     },
-     "type": "array",
-     "uniqueItems": true
-    },
     "Protocol": {
      "enum": [
       "http",
@@ -115,61 +59,6 @@
       "tcp"
      ],
      "type": "string"
-    }
-   },
-   "type": "object"
-  },
-  "PortRange": {
-   "additionalProperties": false,
-   "properties": {
-    "FromPort": {
-     "maximum": 65535,
-     "minimum": 1,
-     "type": "integer"
-    },
-    "ToPort": {
-     "maximum": 65535,
-     "minimum": 1,
-     "type": "integer"
-    }
-   },
-   "type": "object"
-  },
-  "RdsOptions": {
-   "additionalProperties": false,
-   "properties": {
-    "Port": {
-     "maximum": 65535,
-     "minimum": 1,
-     "type": "integer"
-    },
-    "Protocol": {
-     "enum": [
-      "http",
-      "https",
-      "tcp"
-     ],
-     "type": "string"
-    },
-    "RdsDbClusterArn": {
-     "type": "string"
-    },
-    "RdsDbInstanceArn": {
-     "type": "string"
-    },
-    "RdsDbProxyArn": {
-     "type": "string"
-    },
-    "RdsEndpoint": {
-     "type": "string"
-    },
-    "SubnetIds": {
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/SubnetId"
-     },
-     "type": "array",
-     "uniqueItems": true
     }
    },
    "type": "object"
@@ -227,9 +116,6 @@
    ],
    "type": "string"
   },
-  "CidrOptions": {
-   "$ref": "#/definitions/CidrOptions"
-  },
   "CreationTime": {
    "type": "string"
   },
@@ -271,9 +157,6 @@
   },
   "PolicyEnabled": {
    "type": "boolean"
-  },
-  "RdsOptions": {
-   "$ref": "#/definitions/RdsOptions"
   },
   "SecurityGroupIds": {
    "format": "AWS::EC2::SecurityGroup.Ids",
@@ -318,9 +201,12 @@
   "/properties/VerifiedAccessInstanceId"
  ],
  "required": [
+  "ApplicationDomain",
   "AttachmentType",
+  "DomainCertificateArn",
   "EndpointType",
-  "VerifiedAccessGroupId"
+  "VerifiedAccessGroupId",
+  "EndpointDomainPrefix"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessendpoint",
  "tagging": {

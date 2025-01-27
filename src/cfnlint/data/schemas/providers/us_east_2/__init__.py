@@ -2316,6 +2316,7 @@ cached: list[str] = [
     "aws-synthetics-group.json",
     "aws-systemsmanagersap-application.json",
     "aws-timestream-database.json",
+    "aws-timestream-influxdbinstance.json",
     "aws-timestream-scheduledquery.json",
     "aws-timestream-table.json",
     "aws-transfer-agreement.json",
