@@ -70,6 +70,7 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
         "AWS::Pipes::Pipe",
         "AWS::EC2::NetworkInsightsAnalysis",
         "AWS::AutoScaling::LaunchConfiguration",
+        "AWS::EC2::Instance",
     ]:
         return []
 
@@ -103,7 +104,12 @@ def _create_security_group_ids_patch(type_name: str, ref: str, resolver: RefReso
 
 
 def _create_security_group_id(type_name: str, ref: str, resolver: RefResolver):
-    if type_name in ["AWS::Pipes::Pipe", "AWS::EC2::NetworkInsightsAnalysis"]:
+    if type_name in [
+        "AWS::Pipes::Pipe",
+        "AWS::EC2::NetworkInsightsAnalysis",
+        "AWS::AutoScaling::LaunchConfiguration",
+        "AWS::EC2::Instance",
+    ]:
         return []
 
     _, resolved = resolver.resolve(ref)
@@ -203,6 +209,24 @@ _manual_patches = {
                 ]
             },
             path="/properties/SecurityGroups/items",
+        ),
+    ],
+    "AWS::EC2::Instance": [
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Names"},
+            path="/properties/SecurityGroups",
+        ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Name"},
+            path="/properties/SecurityGroups/items",
+        ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Ids"},
+            path="/properties/SecurityGroupIds",
+        ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
+            path="/properties/SecurityGroupIds/items",
         ),
     ],
 }
