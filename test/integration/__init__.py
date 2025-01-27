@@ -116,9 +116,17 @@ class BaseCliTestCase(unittest.TestCase):
             with patch("sys.exit") as exit:
                 with patch("sys.stdout", new=StringIO()) as out:
                     runner.cli()
-                    exit.assert_called_once_with(scenario.get("exit_code", 0))
-
                     output = json.loads(out.getvalue())
+                    try:
+                        exit.assert_called_once_with(scenario.get("exit_code", 0))
+                    except AssertionError:
+                        raise AssertionError(
+                            (
+                                f"Expected exit code {scenario.get('exit_code', 0)!r} "
+                                f"for {filename}: {output}"
+                            )
+                        )
+
                     self.assertEqual(
                         expected_results,
                         output,

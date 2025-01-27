@@ -228,6 +228,14 @@ _manual_patches = {
             values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/properties/SecurityGroupIds/items",
         ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Ids"},
+            path="/definitions/NetworkInterface/properties/GroupSet",
+        ),
+        Patch(
+            values={"format": "AWS::EC2::SecurityGroup.Id"},
+            path="/definitions/NetworkInterface/properties/GroupSet/items",
+        ),
     ],
 }
 
