@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcOriginEndpointConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "HTTPPort": {
+     "default": 80,
+     "type": "integer"
+    },
+    "HTTPSPort": {
+     "default": 443,
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "OriginProtocolPolicy": {
+     "default": "match-viewer",
+     "enum": [
+      "http-only",
+      "https-only",
+      "match-viewer"
+     ],
+     "type": "string"
+    },
+    "OriginSSLProtocols": {
+     "default": [
+      "TLSv1",
+      "SSLv3"
+     ],
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Name",
+    "Arn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcOriginEndpointConfig": {
+   "$ref": "#/definitions/VpcOriginEndpointConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status",
+  "/properties/CreatedTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "VpcOriginEndpointConfig"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFront::VpcOrigin"
+}

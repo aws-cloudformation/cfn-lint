@@ -1007,6 +1007,7 @@ cached: list[str] = [
     "aws-events-eventbuspolicy.json",
     "aws-events-rule.json",
     "aws-fms-notificationchannel.json",
+    "aws-fms-policy.json",
     "aws-fms-resourceset.json",
     "aws-fsx-datarepositoryassociation.json",
     "aws-fsx-snapshot.json",

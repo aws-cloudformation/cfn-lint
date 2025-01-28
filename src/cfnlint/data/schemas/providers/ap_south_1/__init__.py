@@ -1827,7 +1827,6 @@ cached: list[str] = [
     "aws-iotfleetwise-fleet.json",
     "aws-iotfleetwise-modelmanifest.json",
     "aws-iotfleetwise-signalcatalog.json",
-    "aws-iotfleetwise-statetemplate.json",
     "aws-iotfleetwise-vehicle.json",
     "aws-iotsitewise-accesspolicy.json",
     "aws-iotsitewise-asset.json",
