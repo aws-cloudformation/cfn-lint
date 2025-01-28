@@ -375,3 +375,16 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(
             config.parameters, [ParameterSet(source=None, parameters={"Foo": "Bar"})]
         )
+
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_compares(self, yaml_mock):
+        yaml_mock.side_effect = [{}, {}, {}, {}]
+        config1 = cfnlint.config.ConfigMixIn(
+            ["--template", "test/fixtures/templates/good/generic.yaml"]
+        )
+        config2 = cfnlint.config.ConfigMixIn(
+            ["--template", "test/fixtures/templates/bad/generic.yaml"]
+        )
+
+        self.assertNotEqual(config1, 1)
+        self.assertNotEqual(config1, config2)
