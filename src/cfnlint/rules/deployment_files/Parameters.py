@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from cfnlint.jsonschema import Validator
@@ -97,5 +98,5 @@ class Parameters(CfnLintJsonSchema):
 
             for err in super()._iter_errors(cfn_validator, parameter_set.parameters):
                 if parameter_set.source:
-                    err.extra_args["filename"] = parameter_set.source
+                    err.extra_args["filename"] = str(Path(parameter_set.source))
                 yield err
