@@ -140,7 +140,7 @@ class Default(CloudFormationLintRule):
             default_value = paramvalue.get("Default")
             if default_value is not None and self.is_list(paramvalue):
                 comma_delimited_default_values = [
-                    x.strip() for x in default_value.split(",")
+                    x.strip() for x in str(default_value).split(",")
                 ]
                 for value in comma_delimited_default_values:
                     param_cdl_matches.extend(
