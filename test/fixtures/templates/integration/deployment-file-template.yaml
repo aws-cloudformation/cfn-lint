@@ -6,6 +6,17 @@ Parameters:
   ImageId:
     Type: AWS::EC2::Image::Id
     Description: The AMI to use for the instance
+  Tenancy:
+    Type: String
+    Default: default
+    AllowedValues:
+    - default
+    - dedicated
+    Description: The tenancy for the instance
+  Affinity:
+    Type: String
+    Default: default
+    Description: The Affinity for the instance, if applicable
 Resources:
   Vpc:
     Type: AWS::EC2::VPC
@@ -20,6 +31,8 @@ Resources:
   MyInstance:
     Type: AWS::EC2::Instance
     Properties:
+      Affinity: !Ref Affinity
       ImageId: !Ref ImageId
       InstanceType: t2.micro
       SubnetId: !GetAtt Subnet1.SubnetId
+      Tenancy: !Ref Tenancy

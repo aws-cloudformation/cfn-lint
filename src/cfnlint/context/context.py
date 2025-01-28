@@ -214,19 +214,6 @@ class Context:
             if pseudo_value is not None:
                 yield pseudo_value, self.evolve(ref_values={instance: pseudo_value})
             return
-        if instance in self.parameters:
-            for v, path in self.parameters[instance].ref_value(self):
-
-                # validate that ref is possible with path
-                # need to evaluate if Fn::If would be not true if value is
-                # what it is
-                yield v, self.evolve(
-                    path=self.path.evolve(
-                        value_path=deque(["Parameters", instance]) + path
-                    ),
-                    ref_values={instance: v},
-                )
-            return
 
         # Regionalized values second
         if instance in PSEUDOPARAMS and instance in self.pseudo_parameters:
@@ -241,6 +228,30 @@ class Context:
                         if p not in _PSEUDOPARAMS_NON_REGION
                     },
                 )
+
+        if instance in self.parameters:
+            # if parameter sets are configured we use those first
+            # we default to the parameter values if the parameter isn't in that set
+            if self.parameter_sets is not None:
+                for parameter_set in self.parameter_sets:
+                    if instance in parameter_set.parameters:
+                        yield parameter_set.parameters[instance], self.evolve(
+                            ref_values=parameter_set.parameters,
+                        )
+                        return
+
+            for v, path in self.parameters[instance].ref_value(self):
+
+                # validate that ref is possible with path
+                # need to evaluate if Fn::If would be not true if value is
+                # what it is
+                yield v, self.evolve(
+                    path=self.path.evolve(
+                        value_path=deque(["Parameters", instance]) + path
+                    ),
+                    ref_values={instance: v},
+                )
+            return
 
     @property
     def refs(self):
