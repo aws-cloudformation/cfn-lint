@@ -9,10 +9,11 @@ from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from functools import lru_cache
-from typing import Any, Deque, Iterator, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Deque, Iterator, Set, Tuple
 
 from cfnlint.context._mappings import Mappings
 from cfnlint.context.conditions._conditions import Conditions
+from cfnlint.context.parameters import ParameterSet
 from cfnlint.helpers import (
     BOOLEAN_STRINGS_TRUE,
     FUNCTIONS,
@@ -21,6 +22,9 @@ from cfnlint.helpers import (
     TRANSFORM_SAM,
 )
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
+
+if TYPE_CHECKING:
+    from cfnlint.template import Template
 
 _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
 
@@ -132,12 +136,12 @@ class Context:
     """
 
     # what regions we are processing
-    regions: Sequence[str] = field(
+    regions: list[str] = field(
         init=True, default_factory=lambda: list([REGION_PRIMARY])
     )
 
     # supported functions at this point in the template
-    functions: Sequence[str] = field(init=True, default_factory=list)
+    functions: list[str] = field(init=True, default_factory=list)
 
     path: Path = field(init=True, default_factory=Path)
 
@@ -153,7 +157,7 @@ class Context:
         init=True, default_factory=lambda: set(PSEUDOPARAMS)
     )
 
-    # Combiniation of storing any resolved ref
+    # Combination of storing any resolved ref
     # and adds in any Refs available from things like Fn::Sub
     ref_values: dict[str, Any] = field(init=True, default_factory=dict)
 
@@ -162,6 +166,9 @@ class Context:
     # is the value a resolved value
     is_resolved_value: bool = field(init=True, default=False)
     resolve_pseudo_parameters: bool = field(init=True, default=True)
+
+    # Deployment parameters
+    parameter_sets: list[ParameterSet] | None = field(init=True, default_factory=list)
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -197,19 +204,6 @@ class Context:
             if pseudo_value is not None:
                 yield pseudo_value, self.evolve(ref_values={instance: pseudo_value})
             return
-        if instance in self.parameters:
-            for v, path in self.parameters[instance].ref_value(self):
-
-                # validate that ref is possible with path
-                # need to evaluate if Fn::If would be not true if value is
-                # what it is
-                yield v, self.evolve(
-                    path=self.path.evolve(
-                        value_path=deque(["Parameters", instance]) + path
-                    ),
-                    ref_values={instance: v},
-                )
-            return
 
         # Regionalized values second
         if instance in PSEUDOPARAMS and instance in self.pseudo_parameters:
@@ -224,6 +218,30 @@ class Context:
                         if p not in _PSEUDOPARAMS_NON_REGION
                     },
                 )
+
+        if instance in self.parameters:
+            # if parameter sets are configured we use those first
+            # we default to the parameter values if the parameter isn't in that set
+            if self.parameter_sets is not None:
+                for parameter_set in self.parameter_sets:
+                    if instance in parameter_set.parameters:
+                        yield parameter_set.parameters[instance], self.evolve(
+                            ref_values=parameter_set.parameters,
+                        )
+                        return
+
+            for v, path in self.parameters[instance].ref_value(self):
+
+                # validate that ref is possible with path
+                # need to evaluate if Fn::If would be not true if value is
+                # what it is
+                yield v, self.evolve(
+                    path=self.path.evolve(
+                        value_path=deque(["Parameters", instance]) + path
+                    ),
+                    ref_values={instance: v},
+                )
+            return
 
     @property
     def refs(self):
@@ -451,7 +469,9 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
-def create_context_for_template(cfn):
+def create_context_for_template(
+    cfn: Template,
+) -> "Context":
     parameters = {}
     try:
         parameters = _init_parameters(cfn.template.get("Parameters", {}))
@@ -486,4 +506,6 @@ def create_context_for_template(cfn):
         regions=cfn.regions,
         path=Path(),
         functions=["Fn::Transform"],
+        ref_values={},
+        parameter_sets=[],
     )
