@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from pathlib import Path
+
 import pytest
 
 from cfnlint.config import ConfigMixIn
@@ -27,7 +29,7 @@ from cfnlint.runner import Runner
                 Match(
                     message="'ImageId' is a required property",
                     rule=Parameters(),
-                    filename="test/fixtures/deployment_files/dev.yaml",
+                    filename=str(Path("test/fixtures/deployment_files/dev.yaml")),
                     linenumber=1,
                     linenumberend=1,
                     columnnumber=1,
@@ -39,7 +41,7 @@ from cfnlint.runner import Runner
                         "('Environment' was unexpected)"
                     ),
                     rule=Parameters(),
-                    filename="test/fixtures/deployment_files/dev.yaml",
+                    filename=str(Path("test/fixtures/deployment_files/dev.yaml")),
                     linenumber=3,
                     linenumberend=3,
                     columnnumber=3,
@@ -59,7 +61,7 @@ from cfnlint.runner import Runner
                 Match(
                     message="'ImageId' is a required property",
                     rule=Parameters(),
-                    filename="test/fixtures/deployment_files/dev.yaml",
+                    filename=str(Path("test/fixtures/deployment_files/dev.yaml")),
                     linenumber=1,
                     linenumberend=1,
                     columnnumber=1,
@@ -71,7 +73,7 @@ from cfnlint.runner import Runner
                         "('Environment' was unexpected)"
                     ),
                     rule=Parameters(),
-                    filename="test/fixtures/deployment_files/dev.yaml",
+                    filename=str(Path("test/fixtures/deployment_files/dev.yaml")),
                     linenumber=3,
                     linenumberend=3,
                     columnnumber=3,
@@ -80,7 +82,7 @@ from cfnlint.runner import Runner
                 Match(
                     message="'host' is not one of ['default', 'dedicated']",
                     rule=Parameters(),
-                    filename="test/fixtures/deployment_files/stage.yaml",
+                    filename=str(Path("test/fixtures/deployment_files/stage.yaml")),
                     linenumber=5,
                     linenumberend=5,
                     columnnumber=3,
@@ -89,10 +91,16 @@ from cfnlint.runner import Runner
                 Match(
                     message=(
                         "{'Ref': 'Affinity'} is not one of ['default', 'host'] "
-                        "when 'Ref' is resolved"
+                        "when 'Ref' is resolved to 'dne' from "
+                        "['test/fixtures/deployment_files/test.yaml', "
+                        "'test/fixtures/deployment_files/stage.yaml']"
                     ),
                     rule=RefResolved(),
-                    filename="test/fixtures/templates/integration/deployment-file-template.yaml",
+                    filename=str(
+                        Path(
+                            "test/fixtures/templates/integration/deployment-file-template.yaml"
+                        )
+                    ),
                     linenumber=34,
                     linenumberend=34,
                     columnnumber=7,
@@ -102,10 +110,16 @@ from cfnlint.runner import Runner
                     message=(
                         "{'Ref': 'ImageId'} is not a 'AWS::EC2::Image.Id' with "
                         "pattern '^ami-([0-9a-z]{8}|[0-9a-z]{17})$' when 'Ref' "
-                        "is resolved"
+                        "is resolved to 'ami-zxyzabc123' from "
+                        "['test/fixtures/deployment_files/test.yaml', "
+                        "'test/fixtures/deployment_files/stage.yaml']"
                     ),
                     rule=RefResolved(),
-                    filename="test/fixtures/templates/integration/deployment-file-template.yaml",
+                    filename=str(
+                        Path(
+                            "test/fixtures/templates/integration/deployment-file-template.yaml"
+                        )
+                    ),
                     linenumber=35,
                     linenumberend=35,
                     columnnumber=7,
@@ -128,13 +142,5 @@ def test_deployment_files(
 
     runner = Runner(config)
     results = list(runner.run())
-
-    # for result in results:
-    #    print(result.message)
-    #    print(result.rule)
-    #    print(result.linenumber)
-    #    print(result.linenumberend)
-    #    print(result.columnnumber)
-    #    print(result.columnnumberend)
 
     assert results == expected, f"{name}: {results} != {expected}"
