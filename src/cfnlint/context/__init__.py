@@ -1,3 +1,8 @@
-__all__ = ["Context", "create_context_for_template"]
+__all__ = ["Context", "create_context_for_template", "ParameterSet"]
 
-from cfnlint.context.context import Context, Path, create_context_for_template
+from cfnlint.context.context import (
+    Context,
+    ParameterSet,
+    Path,
+    create_context_for_template,
+)

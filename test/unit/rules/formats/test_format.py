@@ -101,7 +101,7 @@ class _NoRuleId(FormatKeyword):
             },
             [
                 ValidationError(
-                    "'10.10.10.10' is not a 'test' with pattern ''",
+                    "'10.10.10.10' is not a valid 'test'",
                     rule=_Fail(),
                 )
             ],
@@ -116,7 +116,7 @@ class _NoRuleId(FormatKeyword):
             },
             [
                 ValidationError(
-                    "'10.10.10.10' is not a 'test' with pattern ''",
+                    "'10.10.10.10' is not a valid 'test'",
                     rule=_Fail(),
                 )
             ],
