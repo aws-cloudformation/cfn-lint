@@ -1,0 +1,208 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "AttributeType": {
+   "enum": [
+    "STRING",
+    "STRING_LIST",
+    "NUMBER",
+    "DATE"
+   ],
+   "type": "string"
+  },
+  "DocumentAttributeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 30,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_][a-zA-Z0-9_-]*$",
+     "type": "string"
+    },
+    "Search": {
+     "$ref": "#/definitions/Status"
+    },
+    "Type": {
+     "$ref": "#/definitions/AttributeType"
+    }
+   },
+   "type": "object"
+  },
+  "IndexCapacityConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Units": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "IndexStatistics": {
+   "additionalProperties": false,
+   "properties": {
+    "TextDocumentStatistics": {
+     "$ref": "#/definitions/TextDocumentStatistics"
+    }
+   },
+   "type": "object"
+  },
+  "IndexStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "FAILED",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "IndexType": {
+   "enum": [
+    "ENTERPRISE",
+    "STARTER"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TextDocumentStatistics": {
+   "additionalProperties": false,
+   "properties": {
+    "IndexedTextBytes": {
+     "minimum": 0,
+     "type": "number"
+    },
+    "IndexedTextDocumentCount": {
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/IndexId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "CapacityConfiguration": {
+   "$ref": "#/definitions/IndexCapacityConfiguration"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "DocumentAttributeConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DocumentAttributeConfiguration"
+   },
+   "maxItems": 500,
+   "minItems": 1,
+   "type": "array"
+  },
+  "IndexArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "IndexId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "IndexStatistics": {
+   "$ref": "#/definitions/IndexStatistics"
+  },
+  "Status": {
+   "$ref": "#/definitions/IndexStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "$ref": "#/definitions/IndexType"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/IndexArn",
+  "/properties/IndexId",
+  "/properties/IndexStatistics",
+  "/properties/Status",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "ApplicationId",
+  "DisplayName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::Index"
+}
