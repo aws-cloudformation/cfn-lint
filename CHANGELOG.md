@@ -4,7 +4,7 @@
 * Update rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2015) to have the `Default` value be a `str` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3931
 * Update CloudFormation schemas to `2025-01-29` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3929
 
-**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.7...v1.22.8
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.22.7...v1.23.0
 
 ### v1.22.7
 ## What's Changed
