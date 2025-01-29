@@ -1041,7 +1041,6 @@ cached: list[str] = [
     "aws-gamelift-matchmakingruleset.json",
     "aws-gamelift-script.json",
     "aws-glue-classifier.json",
-    "aws-glue-connection.json",
     "aws-glue-crawler.json",
     "aws-glue-customentitytype.json",
     "aws-glue-database.json",

@@ -7,20 +7,68 @@
   "/properties/CatalogId"
  ],
  "definitions": {
+  "IcebergConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Location": {
+     "type": "string"
+    },
+    "OrphanFileRetentionPeriodInDays": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "OrphanFileDeletionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IcebergConfiguration": {
+     "$ref": "#/definitions/IcebergConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "RetentionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IcebergConfiguration": {
+     "$ref": "#/definitions/IcebergConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "TableOptimizerConfiguration": {
    "additionalProperties": false,
    "properties": {
     "Enabled": {
      "type": "boolean"
     },
+    "OrphanFileDeletionConfiguration": {
+     "$ref": "#/definitions/OrphanFileDeletionConfiguration"
+    },
+    "RetentionConfiguration": {
+     "$ref": "#/definitions/RetentionConfiguration"
+    },
     "RoleArn": {
      "type": "string"
+    },
+    "VpcConfiguration": {
+     "$ref": "#/definitions/VpcConfiguration"
     }
    },
    "required": [
     "Enabled",
     "RoleArn"
    ],
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GlueConnectionName": {
+     "type": "string"
+    }
+   },
    "type": "object"
   }
  },
