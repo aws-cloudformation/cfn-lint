@@ -1,6 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
+  "/properties/ConnectionIdentifier",
   "/properties/EnvironmentIdentifier",
   "/properties/DomainIdentifier",
   "/properties/ProjectIdentifier",
@@ -133,6 +134,11 @@
     "AutoImportDataQualityResult": {
      "type": "boolean"
     },
+    "CatalogName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
     "DataAccessRole": {
      "$ref": "#/definitions/DataAccessRole"
     },
@@ -204,8 +210,6 @@
     }
    },
    "required": [
-    "RedshiftCredentialConfiguration",
-    "RedshiftStorage",
     "RelationalFilterConfigurations"
    ],
    "type": "object"
@@ -430,6 +434,13 @@
   "Configuration": {
    "$ref": "#/definitions/DataSourceConfigurationInput"
   },
+  "ConnectionId": {
+   "type": "string"
+  },
+  "ConnectionIdentifier": {
+   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
   "CreatedAt": {
    "format": "date-time",
    "type": "string"
@@ -450,7 +461,6 @@
    "$ref": "#/definitions/EnableSetting"
   },
   "EnvironmentId": {
-   "pattern": "^[a-zA-Z0-9_-]{1,36}$",
    "type": "string"
   },
   "EnvironmentIdentifier": {
@@ -506,6 +516,7 @@
   }
  },
  "readOnlyProperties": [
+  "/properties/ConnectionId",
   "/properties/CreatedAt",
   "/properties/DomainId",
   "/properties/EnvironmentId",
@@ -521,7 +532,6 @@
   "Name",
   "DomainIdentifier",
   "ProjectIdentifier",
-  "EnvironmentIdentifier",
   "Type"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
@@ -534,6 +544,7 @@
  "typeName": "AWS::DataZone::DataSource",
  "writeOnlyProperties": [
   "/properties/AssetFormsInput",
+  "/properties/ConnectionIdentifier",
   "/properties/EnvironmentIdentifier",
   "/properties/DomainIdentifier",
   "/properties/Configuration",

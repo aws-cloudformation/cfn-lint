@@ -217,6 +217,7 @@ types: list[str] = [
     "AWS::CloudFront::RealtimeLogConfig",
     "AWS::CloudFront::ResponseHeadersPolicy",
     "AWS::CloudFront::StreamingDistribution",
+    "AWS::CloudFront::VpcOrigin",
     "AWS::CloudTrail::Channel",
     "AWS::CloudTrail::Dashboard",
     "AWS::CloudTrail::EventDataStore",

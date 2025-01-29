@@ -4,9 +4,66 @@
   "/properties/CatalogId"
  ],
  "definitions": {
+  "AuthenticationConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationType": {
+     "type": "string"
+    },
+    "BasicAuthenticationCredentials": {
+     "$ref": "#/definitions/BasicAuthenticationCredentials"
+    },
+    "CustomAuthenticationCredentials": {
+     "type": "object"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    },
+    "OAuth2Properties": {
+     "$ref": "#/definitions/OAuth2PropertiesInput"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "AuthorizationCodeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationCode": {
+     "type": "string"
+    },
+    "RedirectUri": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "BasicAuthenticationCredentials": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "ConnectionInput": {
    "additionalProperties": false,
    "properties": {
+    "AthenaProperties": {
+     "type": "object"
+    },
+    "AuthenticationConfiguration": {
+     "$ref": "#/definitions/AuthenticationConfigurationInput"
+    },
     "ConnectionProperties": {
      "format": "json",
      "type": [
@@ -63,11 +120,81 @@
     },
     "PhysicalConnectionRequirements": {
      "$ref": "#/definitions/PhysicalConnectionRequirements"
+    },
+    "PythonProperties": {
+     "type": "object"
+    },
+    "SparkProperties": {
+     "type": "object"
+    },
+    "ValidateCredentials": {
+     "type": "boolean"
+    },
+    "ValidateForComputeEnvironments": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
     }
    },
    "required": [
     "ConnectionType"
    ],
+   "type": "object"
+  },
+  "OAuth2ClientApplication": {
+   "additionalProperties": false,
+   "properties": {
+    "AWSManagedClientApplicationReference": {
+     "type": "string"
+    },
+    "UserManagedClientApplicationClientId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OAuth2Credentials": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessToken": {
+     "type": "string"
+    },
+    "JwtToken": {
+     "type": "string"
+    },
+    "RefreshToken": {
+     "type": "string"
+    },
+    "UserManagedClientApplicationClientSecret": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OAuth2PropertiesInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationCodeProperties": {
+     "$ref": "#/definitions/AuthorizationCodeProperties"
+    },
+    "OAuth2ClientApplication": {
+     "$ref": "#/definitions/OAuth2ClientApplication"
+    },
+    "OAuth2Credentials": {
+     "$ref": "#/definitions/OAuth2Credentials"
+    },
+    "OAuth2GrantType": {
+     "type": "string"
+    },
+    "TokenUrl": {
+     "type": "string"
+    },
+    "TokenUrlParametersMap": {
+     "type": "object"
+    }
+   },
    "type": "object"
   },
   "PhysicalConnectionRequirements": {
