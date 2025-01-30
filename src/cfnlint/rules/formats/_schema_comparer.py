@@ -7,11 +7,14 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Callable
 
 from cfnlint.jsonschema.exceptions import ValidationError
 
 _keyword = "format"
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _any_of(
@@ -47,6 +50,9 @@ _schema_composition: dict[str, Callable] = {
 
 def _backwards_compatibility(format: Any) -> Any:
     if format == "AWS::EC2::SecurityGroup.GroupId":
+        LOGGER.warning(
+            f"{format!r} is deprecated. Use 'AWS::EC2::SecurityGroup.Id' instead"
+        )
         return "AWS::EC2::SecurityGroup.Id"
     return format
 
