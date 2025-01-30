@@ -2267,7 +2267,6 @@ cached: list[str] = [
     "aws-quicksight-theme.json",
     "aws-quicksight-topic.json",
     "aws-quicksight-vpcconnection.json",
-    "aws-ram-permission.json",
     "aws-ram-resourceshare.json",
     "aws-rbin-rule.json",
     "aws-rds-customdbengineversion.json",

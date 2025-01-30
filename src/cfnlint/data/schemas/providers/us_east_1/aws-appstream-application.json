@@ -29,10 +29,14 @@
    "additionalProperties": false,
    "properties": {
     "S3Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
      "pattern": "^[0-9a-z\\.\\-]*(?<!\\.)$",
      "type": "string"
     },
     "S3Key": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -105,9 +109,11 @@
    "type": "string"
   },
   "Description": {
+   "maxLength": 256,
    "type": "string"
   },
   "DisplayName": {
+   "maxLength": 100,
    "type": "string"
   },
   "IconS3Location": {
@@ -116,15 +122,18 @@
   "InstanceFamilies": {
    "insertionOrder": false,
    "items": {
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
    "uniqueItems": true
   },
   "LaunchParameters": {
+   "minLength": 1,
    "type": "string"
   },
   "LaunchPath": {
+   "minLength": 1,
    "type": "string"
   },
   "Name": {
@@ -136,6 +145,7 @@
    "items": {
     "$ref": "#/definitions/PlatformType"
    },
+   "maxItems": 4,
    "type": "array",
    "uniqueItems": true
   },
@@ -148,6 +158,7 @@
    "uniqueItems": true
   },
   "WorkingDirectory": {
+   "minLength": 1,
    "type": "string"
   }
  },

@@ -8,6 +8,8 @@
    "additionalProperties": false,
    "properties": {
     "AlarmName": {
+     "maxLength": 255,
+     "minLength": 1,
      "pattern": "^(?!\\s*$).+",
      "type": "string"
     }
@@ -24,6 +26,8 @@
      "items": {
       "$ref": "#/definitions/Alarm"
      },
+     "maxItems": 10,
+     "minItems": 1,
      "type": "array",
      "uniqueItems": false
     }
@@ -37,9 +41,12 @@
    "additionalProperties": false,
    "properties": {
     "MaximumExecutionTimeoutInSeconds": {
+     "maximum": 28800,
+     "minimum": 600,
      "type": "integer"
     },
     "TerminationWaitInSeconds": {
+     "maximum": 3600,
      "type": "integer"
     },
     "TrafficRoutingConfiguration": {
@@ -62,6 +69,7 @@
      "type": "string"
     },
     "Value": {
+     "minimum": 1,
      "type": "integer"
     }
    },
@@ -93,12 +101,15 @@
      "$ref": "#/definitions/CapacitySize"
     },
     "MaximumExecutionTimeoutInSeconds": {
+     "maximum": 28800,
+     "minimum": 600,
      "type": "integer"
     },
     "RollbackMaximumBatchSize": {
      "$ref": "#/definitions/CapacitySize"
     },
     "WaitIntervalInSeconds": {
+     "maximum": 3600,
      "type": "integer"
     }
    },
@@ -112,10 +123,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
@@ -144,6 +158,7 @@
      "type": "string"
     },
     "WaitIntervalInSeconds": {
+     "maximum": 3600,
      "type": "integer"
     }
    },
@@ -170,10 +185,12 @@
    "$ref": "#/definitions/DeploymentConfig"
   },
   "EndpointConfigName": {
+   "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
   "EndpointName": {
+   "maxLength": 63,
    "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
    "type": "string"
   },
@@ -197,6 +214,7 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
    "type": "array",
    "uniqueItems": false
   }

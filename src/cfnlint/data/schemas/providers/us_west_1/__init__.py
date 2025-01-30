@@ -1328,6 +1328,7 @@ cached: list[str] = [
     "aws-ecs-cluster.json",
     "aws-ecs-clustercapacityproviderassociations.json",
     "aws-ecs-primarytaskset.json",
+    "aws-ecs-service.json",
     "aws-ecs-taskdefinition.json",
     "aws-ecs-taskset.json",
     "aws-efs-accesspoint.json",

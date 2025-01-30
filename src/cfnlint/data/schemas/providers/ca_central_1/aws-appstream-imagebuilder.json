@@ -11,6 +11,7 @@
      "type": "string"
     },
     "VpceId": {
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -27,6 +28,7 @@
      "type": "string"
     },
     "OrganizationalUnitDistinguishedName": {
+     "maxLength": 2000,
      "type": "string"
     }
    },
@@ -55,13 +57,16 @@
      "format": "AWS::EC2::SecurityGroup.Ids",
      "items": {
       "format": "AWS::EC2::SecurityGroup.Id",
+      "minLength": 1,
       "type": "string"
      },
+     "maxItems": 5,
      "type": "array",
      "uniqueItems": false
     },
     "SubnetIds": {
      "items": {
+      "minLength": 1,
       "type": "string"
      },
      "type": "array",
@@ -79,16 +84,22 @@
    "items": {
     "$ref": "#/definitions/AccessEndpoint"
    },
+   "maxItems": 4,
+   "minItems": 1,
    "type": "array",
    "uniqueItems": false
   },
   "AppstreamAgentVersion": {
+   "maxLength": 100,
+   "minLength": 1,
    "type": "string"
   },
   "Description": {
+   "maxLength": 256,
    "type": "string"
   },
   "DisplayName": {
+   "maxLength": 100,
    "type": "string"
   },
   "DomainJoinInfo": {
@@ -109,13 +120,15 @@
    "type": "string"
   },
   "ImageName": {
+   "minLength": 1,
    "type": "string"
   },
   "InstanceType": {
+   "minLength": 1,
    "type": "string"
   },
   "Name": {
-   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}$",
+   "minLength": 1,
    "type": "string"
   },
   "StreamingUrl": {

@@ -46,6 +46,8 @@
      "type": "boolean"
     },
     "IdleTimeoutMinutes": {
+     "maximum": 10080,
+     "minimum": 1,
      "type": "integer"
     }
    },
@@ -89,6 +91,7 @@
    "items": {
     "$ref": "#/definitions/ConfigurationObject"
    },
+   "maxItems": 100,
    "type": "array",
    "uniqueItems": true
   },
@@ -103,6 +106,7 @@
      "items": {
       "$ref": "#/definitions/ConfigurationObject"
      },
+     "maxItems": 100,
      "type": "array",
      "uniqueItems": true
     },
@@ -384,7 +388,7 @@
    "format": "AWS::EC2::SecurityGroup.Id",
    "maxLength": 32,
    "minLength": 1,
-   "pattern": "[-0-9a-zA-Z]+.*",
+   "pattern": "^[-0-9a-zA-Z]+",
    "type": "string"
   },
   "SensitivePropertiesKeyValuePair": {
@@ -402,7 +406,7 @@
   "SubnetId": {
    "maxLength": 32,
    "minLength": 1,
-   "pattern": "[-0-9a-zA-Z]+.*",
+   "pattern": "^[-0-9a-zA-Z]+",
    "type": "string"
   },
   "Tag": {
@@ -547,6 +551,8 @@
    "uniqueItems": true
   },
   "Type": {
+   "maxLength": 64,
+   "minLength": 1,
    "type": "string"
   },
   "WorkerTypeSpecifications": {

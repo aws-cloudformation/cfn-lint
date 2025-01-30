@@ -63,12 +63,16 @@
      "type": "string"
     },
     "ManifestWindowSeconds": {
+     "minimum": 30,
      "type": "integer"
     },
     "MinBufferTimeSeconds": {
+     "maximum": 3600,
      "type": "integer"
     },
     "MinUpdatePeriodSeconds": {
+     "maximum": 3600,
+     "minimum": 1,
      "type": "integer"
     },
     "PeriodTriggers": {
@@ -86,6 +90,7 @@
      "$ref": "#/definitions/DashSegmentTemplateFormat"
     },
     "SuggestedPresentationDelaySeconds": {
+     "maximum": 3600,
      "type": "integer"
     },
     "UtcTiming": {
@@ -101,9 +106,9 @@
    "enum": [
     "AVAILS",
     "DRM_KEY_ROTATION",
-    "NONE",
     "SOURCE_CHANGES",
-    "SOURCE_DISRUPTIONS"
+    "SOURCE_DISRUPTIONS",
+    "NONE"
    ],
    "type": "string"
   },
@@ -140,9 +145,9 @@
    "enum": [
     "CLEAR_KEY_AES_128",
     "FAIRPLAY",
-    "IRDETO",
     "PLAYREADY",
-    "WIDEVINE"
+    "WIDEVINE",
+    "IRDETO"
    ],
    "type": "string"
   },
@@ -203,10 +208,10 @@
   },
   "EndpointErrorCondition": {
    "enum": [
+    "STALE_MANIFEST",
     "INCOMPLETE_MANIFEST",
     "MISSING_DRM_KEY",
-    "SLATE_INPUT",
-    "STALE_MANIFEST"
+    "SLATE_INPUT"
    ],
    "type": "string"
   },
@@ -269,9 +274,12 @@
      "type": "string"
     },
     "ManifestWindowSeconds": {
+     "minimum": 30,
      "type": "integer"
     },
     "ProgramDateTimeIntervalSeconds": {
+     "maximum": 1209600,
+     "minimum": 1,
      "type": "integer"
     },
     "ScteHls": {
@@ -308,9 +316,12 @@
      "type": "string"
     },
     "ManifestWindowSeconds": {
+     "minimum": 30,
      "type": "integer"
     },
     "ProgramDateTimeIntervalSeconds": {
+     "maximum": 1209600,
+     "minimum": 1,
      "type": "integer"
     },
     "ScteHls": {
@@ -378,15 +389,15 @@
   },
   "ScteFilter": {
    "enum": [
+    "SPLICE_INSERT",
     "BREAK",
-    "DISTRIBUTOR_ADVERTISEMENT",
-    "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY",
-    "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
-    "PROGRAM",
     "PROVIDER_ADVERTISEMENT",
-    "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_ADVERTISEMENT",
     "PROVIDER_PLACEMENT_OPPORTUNITY",
-    "SPLICE_INSERT"
+    "DISTRIBUTOR_PLACEMENT_OPPORTUNITY",
+    "PROVIDER_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "DISTRIBUTOR_OVERLAY_PLACEMENT_OPPORTUNITY",
+    "PROGRAM"
    ],
    "type": "string"
   },

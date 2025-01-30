@@ -1271,6 +1271,7 @@ cached: list[str] = [
     "aws-kinesisanalytics-applicationoutput.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-kinesisanalyticsv2-applicationoutput.json",
+    "aws-kinesisfirehose-deliverystream.json",
     "aws-kinesisvideo-signalingchannel.json",
     "aws-kinesisvideo-stream.json",
     "aws-kms-alias.json",

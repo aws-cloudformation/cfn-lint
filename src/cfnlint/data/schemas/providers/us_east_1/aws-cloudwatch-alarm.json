@@ -8,9 +8,13 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -28,13 +32,18 @@
      "items": {
       "$ref": "#/definitions/Dimension"
      },
+     "maxItems": 30,
      "type": "array",
      "uniqueItems": false
     },
     "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "Namespace": {
+     "maxLength": 255,
+     "minLength": 1,
      "pattern": "[^:].*",
      "type": "string"
     }
@@ -45,12 +54,18 @@
    "additionalProperties": false,
    "properties": {
     "AccountId": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "Expression": {
+     "maxLength": 2048,
+     "minLength": 1,
      "type": "string"
     },
     "Id": {
+     "maxLength": 255,
+     "minLength": 1,
      "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
      "type": "string"
     },
@@ -61,6 +76,7 @@
      "$ref": "#/definitions/MetricStat"
     },
     "Period": {
+     "minimum": 1,
      "type": "integer"
     },
     "ReturnData": {
@@ -79,6 +95,7 @@
      "$ref": "#/definitions/Metric"
     },
     "Period": {
+     "minimum": 1,
      "type": "integer"
     },
     "Stat": {
@@ -178,7 +195,9 @@
   },
   "AlarmActions": {
    "items": {
+    "maxLength": 1024,
     "maximum": 1024,
+    "minLength": 1,
     "minimum": 1,
     "type": "string"
    },
@@ -188,9 +207,12 @@
    "uniqueItems": false
   },
   "AlarmDescription": {
+   "maxLength": 1024,
    "type": "string"
   },
   "AlarmName": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "Arn": {
@@ -209,6 +231,7 @@
    "type": "string"
   },
   "DatapointsToAlarm": {
+   "minimum": 1,
    "type": "integer"
   },
   "Dimensions": {
@@ -216,13 +239,17 @@
    "items": {
     "$ref": "#/definitions/Dimension"
    },
+   "maxItems": 30,
    "type": "array",
    "uniqueItems": false
   },
   "EvaluateLowSampleCountPercentile": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "EvaluationPeriods": {
+   "minimum": 1,
    "type": "integer"
   },
   "ExtendedStatistic": {
@@ -230,12 +257,17 @@
   },
   "InsufficientDataActions": {
    "items": {
+    "maxLength": 1024,
+    "minLength": 1,
     "type": "string"
    },
+   "maxItems": 5,
    "type": "array",
    "uniqueItems": false
   },
   "MetricName": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "Metrics": {
@@ -246,17 +278,23 @@
    "uniqueItems": true
   },
   "Namespace": {
+   "maxLength": 255,
+   "minLength": 1,
    "pattern": "[^:].*",
    "type": "string"
   },
   "OKActions": {
    "items": {
+    "maxLength": 1024,
+    "minLength": 1,
     "type": "string"
    },
+   "maxItems": 5,
    "type": "array",
    "uniqueItems": false
   },
   "Period": {
+   "minimum": 1,
    "type": "integer"
   },
   "Statistic": {
@@ -281,6 +319,8 @@
    "type": "number"
   },
   "ThresholdMetricId": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "TreatMissingData": {
@@ -290,6 +330,8 @@
     "missing",
     "notBreaching"
    ],
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "Unit": {

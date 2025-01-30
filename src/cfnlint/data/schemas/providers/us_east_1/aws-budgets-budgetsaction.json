@@ -45,6 +45,8 @@
    "properties": {
     "Groups": {
      "items": {
+      "maxLength": 640,
+      "minLength": 1,
       "pattern": "^([\\u0021-\\u007F]+\\u002F)?[\\w+=,.@-]+$",
       "type": "string"
      },
@@ -53,11 +55,15 @@
      "type": "array"
     },
     "PolicyArn": {
+     "maxLength": 684,
+     "minLength": 25,
      "pattern": "^arn:aws(-cn|-us-gov|-iso|-iso-[a-z]{1})?:iam::(\\d{12}|aws):policy(\\u002F[\\u0021-\\u007F]+\\u002F|\\u002F)[\\w+=,.@-]+$",
      "type": "string"
     },
     "Roles": {
      "items": {
+      "maxLength": 576,
+      "minLength": 1,
       "pattern": "^([\\u0021-\\u007F]+\\u002F)?[\\w+=,.@-]+$",
       "type": "string"
      },
@@ -67,6 +73,8 @@
     },
     "Users": {
      "items": {
+      "maxLength": 576,
+      "minLength": 1,
       "pattern": "^([\\u0021-\\u007F]+\\u002F)?[\\w+=,.@-]+$",
       "type": "string"
      },
@@ -84,9 +92,12 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "type": "string"
     }
    },
@@ -100,11 +111,15 @@
    "additionalProperties": false,
    "properties": {
     "PolicyId": {
+     "maxLength": 130,
+     "minLength": 10,
      "pattern": "^p-[0-9a-zA-Z_]{8,128}$",
      "type": "string"
     },
     "TargetIds": {
      "items": {
+      "maxLength": 68,
+      "minLength": 12,
       "pattern": "^(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}$)|(\\d{12})",
       "type": "string"
      },
@@ -124,6 +139,8 @@
    "properties": {
     "InstanceIds": {
      "items": {
+      "maxLength": 63,
+      "minLength": 1,
       "pattern": "^i-(\\w{8}|\\w{17})$|^[a-zA-Z]([\\w-]{0,61}\\w)?$",
       "type": "string"
      },
@@ -132,6 +149,8 @@
      "type": "array"
     },
     "Region": {
+     "maxLength": 20,
+     "minLength": 9,
      "pattern": "^\\w{2}-\\w+(-\\w+)?-\\d$",
      "type": "string"
     },
@@ -154,6 +173,8 @@
    "additionalProperties": false,
    "properties": {
     "Address": {
+     "maxLength": 2147483647,
+     "minLength": 1,
      "pattern": "(.*[\\n\\r\\t\\f\\ ]?)*",
      "type": "string"
     },
@@ -199,6 +220,8 @@
    "type": "string"
   },
   "BudgetName": {
+   "maxLength": 100,
+   "minLength": 1,
    "pattern": "^(?![^:\\\\]*/action/|(?i).*<script>.*</script>.*)[^:\\\\]+$",
    "type": "string"
   },
@@ -206,6 +229,8 @@
    "$ref": "#/definitions/Definition"
   },
   "ExecutionRoleArn": {
+   "maxLength": 618,
+   "minLength": 32,
    "pattern": "^arn:aws(-cn|-us-gov|-iso|-iso-[a-z]{1})?:iam::\\d{12}:role(\\u002F[\\u0021-\\u007F]+\\u002F|\\u002F)[\\w+=,.@-]+$",
    "type": "string"
   },
@@ -220,6 +245,7 @@
    "items": {
     "$ref": "#/definitions/ResourceTag"
    },
+   "maxItems": 200,
    "type": "array"
   },
   "Subscribers": {

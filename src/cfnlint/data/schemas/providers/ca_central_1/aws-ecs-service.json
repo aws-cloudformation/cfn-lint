@@ -42,12 +42,14 @@
    "additionalProperties": false,
    "properties": {
     "Base": {
+     "maximum": 100000,
      "type": "integer"
     },
     "CapacityProvider": {
      "type": "string"
     },
     "Weight": {
+     "maximum": 1000,
      "type": "integer"
     }
    },
@@ -144,6 +146,7 @@
      "items": {
       "$ref": "#/definitions/Tag"
      },
+     "maxItems": 50,
      "type": "array"
     }
    },
@@ -266,6 +269,7 @@
      "type": "string"
     },
     "Port": {
+     "maximum": 65535,
      "type": "integer"
     }
    },
@@ -311,6 +315,7 @@
      "type": "string"
     },
     "IngressPortOverride": {
+     "maximum": 65535,
      "type": "integer"
     },
     "PortName": {
@@ -443,10 +448,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
@@ -457,9 +465,11 @@
    "additionalProperties": false,
    "properties": {
     "IdleTimeoutSeconds": {
+     "maximum": 2147483647,
      "type": "integer"
     },
     "PerRequestTimeoutSeconds": {
+     "maximum": 2147483647,
      "type": "integer"
     }
    },
@@ -598,6 +608,7 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
    "type": "array"
   },
   "TaskDefinition": {

@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyArn",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "HypervisorState": {
+   "enum": [
+    "PENDING",
+    "ONLINE",
+    "OFFLINE",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "SyncMetadataStatus": {
+   "enum": [
+    "PENDING",
+    "IN_PROGRESS",
+    "FAILED",
+    "SUCCEEDED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[^\\x00]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HypervisorArn"
+ ],
+ "properties": {
+  "Host": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "HypervisorArn": {
+   "maxLength": 500,
+   "minLength": 50,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov):backup-gateway(:[a-zA-Z-0-9]+){3}\\/[a-zA-Z-0-9]+$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 500,
+   "minLength": 50,
+   "pattern": "^(^arn:(aws|aws-cn|aws-us-gov):kms:([a-zA-Z0-9-]+):([0-9]+):(key|alias)/(\\S+)$)|(^alias/(\\S+)$)$",
+   "type": "string"
+  },
+  "LogGroupArn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^$|^arn:(aws|aws-cn|aws-us-gov):logs:([a-zA-Z0-9-]+):([0-9]+):log-group:[a-zA-Z0-9_\\-\\/\\.]+:\\*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "Password": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[ -~]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Username": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[ -\\.0-\\[\\]-~]*[!-\\.0-\\[\\]-~][ -\\.0-\\[\\]-~]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HypervisorArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::BackupGateway::Hypervisor",
+ "writeOnlyProperties": [
+  "/properties/KmsKeyArn",
+  "/properties/LogGroupArn",
+  "/properties/Name",
+  "/properties/Password",
+  "/properties/Username"
+ ]
+}
