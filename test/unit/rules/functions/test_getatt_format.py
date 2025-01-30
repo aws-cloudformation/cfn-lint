@@ -94,7 +94,7 @@ def template():
                 ValidationError(
                     (
                         "{'Fn::GetAtt': ['MyBucket', 'WebsiteURL']} "
-                        "with format 'uri' does not match "
+                        "with formats ['uri'] does not match "
                         "destination format of 'AWS::EC2::VPC.Id'"
                     ),
                     rule=GetAttFormat(),

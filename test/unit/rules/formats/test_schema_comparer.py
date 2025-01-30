@@ -35,6 +35,12 @@ from cfnlint.rules.formats._schema_comparer import compare_schemas
             ),
         ),
         (
+            "backwards compatibility",
+            {"format": "AWS::EC2::SecurityGroup.GroupId"},
+            {"format": "AWS::EC2::SecurityGroup.Id"},
+            None,
+        ),
+        (
             "basic valid with anyOf source",
             {"anyOf": [{"format": "foo"}, {"format": "bar"}]},
             {"format": "foo"},

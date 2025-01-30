@@ -7,11 +7,14 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import logging
 from typing import Any, Callable
 
 from cfnlint.jsonschema.exceptions import ValidationError
 
 _keyword = "format"
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _any_of(
@@ -45,6 +48,15 @@ _schema_composition: dict[str, Callable] = {
 }
 
 
+def _backwards_compatibility(format: Any) -> Any:
+    if format == "AWS::EC2::SecurityGroup.GroupId":
+        LOGGER.warning(
+            f"{format!r} is deprecated. Use 'AWS::EC2::SecurityGroup.Id' instead"
+        )
+        return "AWS::EC2::SecurityGroup.Id"
+    return format
+
+
 def _compare_schemas(
     source: str,
     destination: dict[str, Any],
@@ -59,7 +71,7 @@ def _compare_schemas(
         tuple[bool, list[str]]: True/False if the format keyword matches
     """
 
-    dest_f = destination.get(_keyword)
+    dest_f = _backwards_compatibility(destination.get(_keyword))
     if dest_f == source:
         return True, [dest_f]  # Nothing else matters to be on the safe side
 
@@ -90,7 +102,8 @@ def compare_schemas(
         ValidationError: A ValidationError if the schemas don't match, otherwise None.
     """
 
-    f = source.get(_keyword)
+    f = _backwards_compatibility(source.get(_keyword))
+
     if f is None:
         return None
 
