@@ -1,3 +1,11 @@
+### v1.23.1
+## What's Changed
+* Put in fixes for ECS `LogDriver` configs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3937
+* Update CloudFormation schemas to `2025-01-30` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3936
+* Backwards compatibility `format` comparing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3940
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.23.0...v1.23.1
+
 ### v1.23.0
 ## What's Changed
 * Add rule [E1041](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1041) to validate `Ref` format by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3914
