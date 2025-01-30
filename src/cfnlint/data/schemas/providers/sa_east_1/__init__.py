@@ -1131,7 +1131,6 @@ cached: list[str] = [
     "aws-appsync-sourceapiassociation.json",
     "aws-apptest-testcase.json",
     "aws-aps-rulegroupsnamespace.json",
-    "aws-aps-scraper.json",
     "aws-aps-workspace.json",
     "aws-arczonalshift-autoshiftobservernotificationstatus.json",
     "aws-arczonalshift-zonalautoshiftconfiguration.json",

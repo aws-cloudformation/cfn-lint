@@ -1,0 +1,221 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AdvancedBackupSettingResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "BackupOptions": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "ResourceType": {
+     "pattern": "^[a-zA-Z0-9\\-\\_\\.]{1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BackupOptions",
+    "ResourceType"
+   ],
+   "type": "object"
+  },
+  "BackupPlanResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "AdvancedBackupSettings": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AdvancedBackupSettingResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "BackupPlanName": {
+     "type": "string"
+    },
+    "BackupPlanRule": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/BackupRuleResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "BackupPlanName",
+    "BackupPlanRule"
+   ],
+   "type": "object"
+  },
+  "BackupRuleResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "CompletionWindowMinutes": {
+     "type": "number"
+    },
+    "CopyActions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CopyActionResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "EnableContinuousBackup": {
+     "type": "boolean"
+    },
+    "IndexActions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/IndexActionsResourceType"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Lifecycle": {
+     "$ref": "#/definitions/LifecycleResourceType"
+    },
+    "RecoveryPointTags": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^.{1,128}$": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "RuleName": {
+     "type": "string"
+    },
+    "ScheduleExpression": {
+     "type": "string"
+    },
+    "ScheduleExpressionTimezone": {
+     "type": "string"
+    },
+    "StartWindowMinutes": {
+     "type": "number"
+    },
+    "TargetBackupVault": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TargetBackupVault",
+    "RuleName"
+   ],
+   "type": "object"
+  },
+  "CopyActionResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationBackupVaultArn": {
+     "type": "string"
+    },
+    "Lifecycle": {
+     "$ref": "#/definitions/LifecycleResourceType"
+    }
+   },
+   "required": [
+    "DestinationBackupVaultArn"
+   ],
+   "type": "object"
+  },
+  "IndexActionsResourceType": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceTypes": {
+     "$ref": "#/definitions/ResourceTypes"
+    }
+   },
+   "type": "object"
+  },
+  "LifecycleResourceType": {
+   "additionalProperties": false,
+   "if": {
+    "properties": {
+     "DeleteAfterDays": {
+      "type": "number"
+     },
+     "MoveToColdStorageAfterDays": {
+      "type": "number"
+     }
+    },
+    "required": [
+     "DeleteAfterDays",
+     "MoveToColdStorageAfterDays"
+    ]
+   },
+   "properties": {
+    "DeleteAfterDays": {
+     "type": "number"
+    },
+    "MoveToColdStorageAfterDays": {
+     "type": "number"
+    },
+    "OptInToArchiveForSupportedResources": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceType": {
+   "type": "string"
+  },
+  "ResourceTypes": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceType"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BackupPlanId"
+ ],
+ "properties": {
+  "BackupPlan": {
+   "$ref": "#/definitions/BackupPlanResourceType"
+  },
+  "BackupPlanArn": {
+   "type": "string"
+  },
+  "BackupPlanId": {
+   "type": "string"
+  },
+  "BackupPlanTags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.{1,128}$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VersionId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BackupPlanId",
+  "/properties/VersionId",
+  "/properties/BackupPlanArn"
+ ],
+ "required": [
+  "BackupPlan"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/BackupPlanTags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::BackupPlan"
+}
