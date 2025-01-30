@@ -4,6 +4,70 @@
   "/properties/Name"
  ],
  "definitions": {
+  "OnChangeStateTemplateUpdateStrategy": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "PeriodicStateTemplateUpdateStrategy": {
+   "additionalProperties": false,
+   "properties": {
+    "StateTemplateUpdateRate": {
+     "$ref": "#/definitions/TimePeriod"
+    }
+   },
+   "required": [
+    "StateTemplateUpdateRate"
+   ],
+   "type": "object"
+  },
+  "StateTemplateAssociation": {
+   "additionalProperties": false,
+   "minProperties": 0,
+   "properties": {
+    "Identifier": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "[a-zA-Z\\d\\-_:]+",
+     "type": "string"
+    },
+    "StateTemplateUpdateStrategy": {
+     "$ref": "#/definitions/StateTemplateUpdateStrategy"
+    }
+   },
+   "required": [
+    "Identifier",
+    "StateTemplateUpdateStrategy"
+   ],
+   "type": "object"
+  },
+  "StateTemplateUpdateStrategy": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Periodic": {
+       "$ref": "#/definitions/PeriodicStateTemplateUpdateStrategy"
+      }
+     },
+     "required": [
+      "Periodic"
+     ],
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "OnChange": {
+       "$ref": "#/definitions/OnChangeStateTemplateUpdateStrategy"
+      }
+     },
+     "required": [
+      "OnChange"
+     ],
+     "type": "object"
+    }
+   ]
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -23,6 +87,32 @@
     "Value"
    ],
    "type": "object"
+  },
+  "TimePeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/TimeUnit"
+    },
+    "Value": {
+     "minimum": 1,
+     "type": "number"
+    }
+   },
+   "required": [
+    "Unit",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TimeUnit": {
+   "enum": [
+    "MILLISECOND",
+    "SECOND",
+    "MINUTE",
+    "HOUR"
+   ],
+   "type": "string"
   },
   "VehicleAssociationBehavior": {
    "enum": [
@@ -74,6 +164,16 @@
    "minLength": 1,
    "pattern": "^[a-zA-Z\\d\\-_:]+$",
    "type": "string"
+  },
+  "StateTemplates": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StateTemplateAssociation"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
   },
   "Tags": {
    "insertionOrder": false,

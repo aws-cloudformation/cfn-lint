@@ -8,6 +8,7 @@
   "/properties/AmazonOpenSearchServerlessDestinationConfiguration/VpcConfiguration",
   "/properties/DatabaseSourceConfiguration",
   "/properties/KinesisStreamSourceConfiguration",
+  "/properties/DirectPutSourceConfiguration",
   "/properties/MSKSourceConfiguration",
   "/properties/IcebergDestinationConfiguration",
   "/properties/SnowflakeDestinationConfiguration/SnowflakeVpcConfiguration"
@@ -570,6 +571,17 @@
    },
    "type": "array"
   },
+  "DirectPutSourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ThroughputHintInMBs": {
+     "maximum": 100,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "DocumentIdOptions": {
    "additionalProperties": false,
    "properties": {
@@ -956,6 +968,9 @@
   "IcebergDestinationConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "AppendOnly": {
+     "type": "boolean"
+    },
     "BufferingHints": {
      "$ref": "#/definitions/BufferingHints"
     },
@@ -1889,6 +1904,9 @@
     "MSKAsSource"
    ],
    "type": "string"
+  },
+  "DirectPutSourceConfiguration": {
+   "$ref": "#/definitions/DirectPutSourceConfiguration"
   },
   "ElasticsearchDestinationConfiguration": {
    "$ref": "#/definitions/ElasticsearchDestinationConfiguration"
