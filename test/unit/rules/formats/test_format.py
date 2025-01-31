@@ -36,6 +36,16 @@ class _Fail(FormatKeyword):
         return False
 
 
+class _FailWithPattern(FormatKeyword):
+    id = "BBBBB"
+
+    def __init__(self):
+        super().__init__(format="test", pattern=r"^.*$")
+
+    def format(self, validator, instance):
+        return False
+
+
 class _NoRuleId(FormatKeyword):
     def __init__(self):
         super().__init__(format="test")
@@ -101,7 +111,7 @@ class _NoRuleId(FormatKeyword):
             },
             [
                 ValidationError(
-                    "'10.10.10.10' is not a 'test' with pattern ''",
+                    "'10.10.10.10' is not a valid 'test'",
                     rule=_Fail(),
                 )
             ],
@@ -116,8 +126,22 @@ class _NoRuleId(FormatKeyword):
             },
             [
                 ValidationError(
-                    "'10.10.10.10' is not a 'test' with pattern ''",
+                    "'10.10.10.10' is not a valid 'test'",
                     rule=_Fail(),
+                )
+            ],
+        ),
+        (
+            "Fail with pattern",
+            "test",
+            "10.10.10.10",
+            {
+                "AAAAA": _FailWithPattern(),
+            },
+            [
+                ValidationError(
+                    "'10.10.10.10' is not a 'test' with pattern '^.*$'",
+                    rule=_FailWithPattern(),
                 )
             ],
         ),
