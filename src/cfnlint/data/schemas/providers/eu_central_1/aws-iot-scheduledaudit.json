@@ -1,0 +1,104 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ScheduledAuditName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ScheduledAuditName"
+ ],
+ "properties": {
+  "DayOfMonth": {
+   "pattern": "^([1-9]|[12][0-9]|3[01])$|^LAST$|^UNSET_VALUE$",
+   "type": "string"
+  },
+  "DayOfWeek": {
+   "enum": [
+    "SUN",
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT",
+    "UNSET_VALUE"
+   ],
+   "type": "string"
+  },
+  "Frequency": {
+   "enum": [
+    "DAILY",
+    "WEEKLY",
+    "BIWEEKLY",
+    "MONTHLY"
+   ],
+   "type": "string"
+  },
+  "ScheduledAuditArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "ScheduledAuditName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TargetCheckNames": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ScheduledAuditArn"
+ ],
+ "required": [
+  "Frequency",
+  "TargetCheckNames"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ScheduledAudit"
+}

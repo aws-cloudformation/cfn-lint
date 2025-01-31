@@ -1230,7 +1230,6 @@ cached: list[str] = [
     "aws-quicksight-template.json",
     "aws-quicksight-theme.json",
     "aws-quicksight-vpcconnection.json",
-    "aws-ram-permission.json",
     "aws-ram-resourceshare.json",
     "aws-rbin-rule.json",
     "aws-rds-dbclusterparametergroup.json",

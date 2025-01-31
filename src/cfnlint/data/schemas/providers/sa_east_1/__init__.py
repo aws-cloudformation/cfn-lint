@@ -1206,7 +1206,6 @@ cached: list[str] = [
     "aws-cloudfront-cachepolicy.json",
     "aws-cloudfront-cloudfrontoriginaccessidentity.json",
     "aws-cloudfront-continuousdeploymentpolicy.json",
-    "aws-cloudfront-distribution.json",
     "aws-cloudfront-function.json",
     "aws-cloudfront-keygroup.json",
     "aws-cloudfront-keyvaluestore.json",
