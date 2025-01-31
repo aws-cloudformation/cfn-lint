@@ -34,7 +34,7 @@ class Format(CloudFormationLintRule):
 
             if format == rule.format_keyword:  # type: ignore
                 if not rule.format(validator, instance):  # type: ignore
-                    if hasattr(rule, "pattern"):
+                    if hasattr(rule, "pattern") and rule.pattern:
                         yield ValidationError(
                             (
                                 f"{instance!r} is not a {format!r} with "
