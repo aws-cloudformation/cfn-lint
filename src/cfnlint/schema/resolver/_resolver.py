@@ -83,7 +83,7 @@ class RefResolver:
             )
 
     @classmethod
-    def from_schema(cls, schema, **kwargs):
+    def from_schema(cls, schema, **kwargs) -> "RefResolver":
         """
         Construct a resolver from a JSON schema object.
 

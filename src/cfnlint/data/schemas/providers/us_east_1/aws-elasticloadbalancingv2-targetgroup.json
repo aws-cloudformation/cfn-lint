@@ -26,10 +26,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     }
@@ -50,6 +53,8 @@
      "type": "string"
     },
     "Port": {
+     "maximum": 65535,
+     "minimum": 1,
      "type": "integer"
     }
    },
@@ -84,6 +89,8 @@
    "type": "integer"
   },
   "HealthCheckPath": {
+   "maxLength": 1024,
+   "minLength": 1,
    "type": "string"
   },
   "HealthCheckPort": {
@@ -102,9 +109,13 @@
    "type": "string"
   },
   "HealthCheckTimeoutSeconds": {
+   "maximum": 120,
+   "minimum": 2,
    "type": "integer"
   },
   "HealthyThresholdCount": {
+   "maximum": 10,
+   "minimum": 2,
    "type": "integer"
   },
   "IpAddressType": {
@@ -129,6 +140,8 @@
    "type": "string"
   },
   "Port": {
+   "maximum": 65535,
+   "minimum": 1,
    "type": "integer"
   },
   "Protocol": {
@@ -151,6 +164,7 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "minItems": 1,
    "type": "array",
    "uniqueItems": false
   },

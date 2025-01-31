@@ -38,12 +38,17 @@
    "additionalProperties": false,
    "properties": {
     "InstanceWarmupPeriod": {
+     "maximum": 10000,
      "type": "integer"
     },
     "MaximumScalingStepSize": {
+     "maximum": 10000,
+     "minimum": 1,
      "type": "integer"
     },
     "MinimumScalingStepSize": {
+     "maximum": 10000,
+     "minimum": 1,
      "type": "integer"
     },
     "Status": {
@@ -54,6 +59,8 @@
      "type": "string"
     },
     "TargetCapacity": {
+     "maximum": 100,
+     "minimum": 1,
      "type": "integer"
     }
    },
@@ -63,11 +70,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
      "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "minLength": 1,
      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
      "type": "string"
@@ -90,6 +99,7 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
    "type": "array"
   }
  },

@@ -47,13 +47,19 @@
    ],
    "properties": {
     "Handler": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "^([0-9a-zA-Z_-]+\\/)*[0-9A-Za-z_\\\\-]+\\.[A-Za-z_][A-Za-z0-9_]*$",
      "type": "string"
     },
     "S3Bucket": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     },
     "S3Key": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     },
     "S3ObjectVersion": {
@@ -93,9 +99,13 @@
      "type": "object"
     },
     "MemoryInMB": {
+     "maximum": 3008,
+     "minimum": 960,
      "type": "integer"
     },
     "TimeoutInSeconds": {
+     "maximum": 840,
+     "minimum": 3,
      "type": "integer"
     }
    },
@@ -112,6 +122,8 @@
      "type": "string"
     },
     "KmsKeyArn": {
+     "maxLength": 2048,
+     "minLength": 1,
      "pattern": "arn:(aws[a-zA-Z-]*)?:kms:[a-z]{2,4}(-[a-z]{2,4})?-[a-z]+-\\d{1}:\\d{12}:key/[\\w\\-\\/]+",
      "type": "string"
     }
@@ -125,6 +137,8 @@
      "type": "string"
     },
     "Expression": {
+     "maxLength": 1024,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -165,12 +179,14 @@
       "format": "AWS::EC2::SecurityGroup.Id",
       "type": "string"
      },
+     "maxItems": 5,
      "type": "array"
     },
     "SubnetIds": {
      "items": {
       "type": "string"
      },
+     "maxItems": 16,
      "type": "array"
     },
     "VpcId": {
@@ -214,6 +230,8 @@
    "$ref": "#/definitions/ArtifactConfig"
   },
   "ArtifactS3Location": {
+   "maxLength": 1024,
+   "minLength": 1,
    "pattern": "^(s3|S3)://",
    "type": "string"
   },
@@ -224,6 +242,8 @@
    "type": "boolean"
   },
   "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 1,
    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
    "type": "string"
   },
@@ -248,6 +268,8 @@
    "items": {
     "$ref": "#/definitions/ResourceToTag"
    },
+   "maxItems": 1,
+   "minItems": 1,
    "type": "array",
    "uniqueItems": true
   },
@@ -255,6 +277,8 @@
    "$ref": "#/definitions/RunConfig"
   },
   "RuntimeVersion": {
+   "maxLength": 1024,
+   "minLength": 1,
    "type": "string"
   },
   "Schedule": {

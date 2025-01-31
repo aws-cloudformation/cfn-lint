@@ -4,12 +4,16 @@ SPDX-License-Identifier: MIT-0
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
+from _helpers import load_schema_file
 from _types import AllPatches, Patch, ResourcePatches
 
 from cfnlint.schema.resolver import RefResolutionError, RefResolver
+
+LOGGER = logging.getLogger("cfnlint")
 
 skip = [
     "account",
@@ -32,8 +36,6 @@ skip = [
 ]
 
 skip_property_names = ["State"]
-
-_fields = ["pattern", "enum"]
 
 _visited_paths = []
 
@@ -125,9 +127,6 @@ def _nested_arrays(
             resolver, schema_data, boto_data, array_shap_data, path, source
         )
     else:
-        # skip if we already have an enum or pattern
-        if any([schema_data.get(field) for field in _fields]):
-            return {}
         return {
             path: Patch(
                 source=source,
@@ -167,10 +166,6 @@ def _nested_objects(
                     except RefResolutionError:
                         return results
 
-                # skip if we already have an enum or pattern
-                if any([p_data.get(field) for field in _fields]):
-                    continue
-
                 member_shape_name = member_data.get("shape")
                 member_shape = boto_data.get("shapes", {}).get(member_shape_name, {})
 
@@ -189,9 +184,6 @@ def _nested_objects(
                             )
                         )
 
-                if not any([member_shape.get(field) for field in _fields]):
-                    continue
-
                 results[path] = Patch(
                     source=source,
                     shape=member_shape_name,
@@ -201,13 +193,13 @@ def _nested_objects(
 
 
 def _per_resource_patch(
-    schema_data: dict[str, Any], boto_data: dict[str, Any], source: list[str]
+    resolver: RefResolver, boto_data: dict[str, Any], source: list[str]
 ) -> ResourcePatches:
     results: ResourcePatches = {}
+    _, schema_data = resolver.resolve("/")
     create_operations = get_schema_create_operations(schema_data)
     shapes = {}
 
-    resolver = RefResolver.from_schema(schema_data)
     for create_operation in create_operations:
         shapes.update(get_shapes(boto_data, create_operation))
         create_shape = (
@@ -252,21 +244,19 @@ def get_resource_patches(
 
     resources = list(schema_path.glob(f"aws-{service_name}-*.json"))
     if not resources:
-        print(f"No resource files found for {service_name}")
+        LOGGER.warning(f"No resource files found for {service_name}")
 
     for resource in resources:
-        with open(resource, "r") as f:
-            schema_data = json.load(f)
+        ref_resolver = load_schema_file(resource)
+        _, schema_data = ref_resolver.resolve("/")
 
-            resource_type = schema_data.get("typeName", "")
-            if resource_type not in results:
-                results[resource_type] = {}
+        resource_type = schema_data.get("typeName", "")
+        if resource_type not in results:
+            results[resource_type] = {}
 
-            results[resource_type].update(
-                _per_resource_patch(
-                    schema_data, boto_data, [service_dir.name, last_date]
-                )
-            )
+        results[resource_type].update(
+            _per_resource_patch(ref_resolver, boto_data, [service_dir.name, last_date])
+        )
 
     return results
 

@@ -51,6 +51,7 @@
      "$ref": "#/definitions/CrlDistributionPointExtensionConfiguration"
     },
     "CustomCname": {
+     "maxLength": 253,
      "pattern": "[-a-zA-Z0-9;/?:@&=+$,%_.!~*()']*",
      "type": "string"
     },
@@ -58,9 +59,13 @@
      "type": "boolean"
     },
     "ExpirationInDays": {
+     "maximum": 5000,
+     "minimum": 1,
      "type": "integer"
     },
     "S3BucketName": {
+     "maxLength": 255,
+     "minLength": 3,
      "pattern": "[-a-zA-Z0-9._/]+",
      "type": "string"
     },
@@ -226,6 +231,7 @@
      "type": "boolean"
     },
     "OcspCustomCname": {
+     "maxLength": 253,
      "pattern": "[-a-zA-Z0-9;/?:@&=+$,%_.!~*()']*",
      "type": "string"
     }
@@ -327,10 +333,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "pattern": "([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)",
      "type": "string"
     }
@@ -381,6 +390,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
+   "minItems": 1,
    "type": "array"
   },
   "Type": {

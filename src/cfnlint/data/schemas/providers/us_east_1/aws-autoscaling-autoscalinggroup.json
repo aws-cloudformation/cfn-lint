@@ -92,6 +92,8 @@
   "CapacityReservationIds": {
    "insertionOrder": true,
    "items": {
+    "maxLength": 255,
+    "minLength": 1,
     "pattern": "[A-Za-z0-9\\-_\\/]+",
     "type": "string"
    },
@@ -101,6 +103,8 @@
   "CapacityReservationResourceGroupArns": {
    "insertionOrder": true,
    "items": {
+    "maxLength": 1600,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
@@ -160,9 +164,13 @@
    },
    "properties": {
     "MaxHealthyPercentage": {
+     "maximum": 200,
+     "minimum": -1,
      "type": "integer"
     },
     "MinHealthyPercentage": {
+     "maximum": 100,
+     "minimum": -1,
      "type": "integer"
     }
    },
@@ -224,9 +232,12 @@
     "AllowedInstanceTypes": {
      "insertionOrder": true,
      "items": {
+      "maxLength": 30,
+      "minLength": 1,
       "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
       "type": "string"
      },
+     "maxItems": 400,
      "type": "array",
      "uniqueItems": true
     },
@@ -268,9 +279,12 @@
     "ExcludedInstanceTypes": {
      "insertionOrder": true,
      "items": {
+      "maxLength": 30,
+      "minLength": 1,
       "pattern": "[a-zA-Z0-9\\.\\*\\-]+",
       "type": "string"
      },
+     "maxItems": 400,
      "type": "array",
      "uniqueItems": true
     },
@@ -362,6 +376,7 @@
      "type": "integer"
     },
     "SpotMaxPrice": {
+     "maxLength": 255,
      "type": "string"
     }
    },
@@ -394,12 +409,16 @@
      "$ref": "#/definitions/InstanceRequirements"
     },
     "InstanceType": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "LaunchTemplateSpecification": {
      "$ref": "#/definitions/LaunchTemplateSpecification"
     },
     "WeightedCapacity": {
+     "maxLength": 32,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -409,13 +428,19 @@
    "additionalProperties": false,
    "properties": {
     "LaunchTemplateId": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "LaunchTemplateName": {
+     "maxLength": 128,
+     "minLength": 3,
      "pattern": "[a-zA-Z0-9\\(\\)\\.\\-/_]+",
      "type": "string"
     },
     "Version": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -438,6 +463,8 @@
      "type": "integer"
     },
     "LifecycleHookName": {
+     "maxLength": 255,
+     "minLength": 1,
      "pattern": "[A-Za-z0-9\\-_\\/]+",
      "type": "string"
     },
@@ -445,13 +472,18 @@
      "type": "string"
     },
     "NotificationMetadata": {
+     "maxLength": 4000,
+     "minLength": 1,
      "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007e]+",
      "type": "string"
     },
     "NotificationTargetARN": {
+     "maxLength": 255,
      "type": "string"
     },
     "RoleARN": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -591,12 +623,15 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "PropagateAtLaunch": {
      "type": "boolean"
     },
     "Value": {
+     "maxLength": 256,
      "type": "string"
     }
    },
@@ -623,9 +658,13 @@
    "additionalProperties": false,
    "properties": {
     "Identifier": {
+     "maxLength": 511,
+     "minLength": 1,
      "type": "string"
     },
     "Type": {
+     "maxLength": 511,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -656,6 +695,8 @@
  ],
  "properties": {
   "AutoScalingGroupName": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "AvailabilityZoneDistribution": {
@@ -667,6 +708,8 @@
   "AvailabilityZones": {
    "insertionOrder": false,
    "items": {
+    "maxLength": 255,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
@@ -692,6 +735,8 @@
    "type": "string"
   },
   "DesiredCapacityType": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "HealthCheckGracePeriod": {
@@ -704,15 +749,21 @@
     "ELB",
     "VPC_LATTICE"
    ],
+   "maxLength": 32,
+   "minLength": 1,
    "type": "string"
   },
   "InstanceId": {
+   "maxLength": 19,
+   "minLength": 1,
    "type": "string"
   },
   "InstanceMaintenancePolicy": {
    "$ref": "#/definitions/InstanceMaintenancePolicy"
   },
   "LaunchConfigurationName": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "LaunchTemplate": {
@@ -729,6 +780,8 @@
   "LoadBalancerNames": {
    "insertionOrder": true,
    "items": {
+    "maxLength": 255,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
@@ -771,9 +824,13 @@
    "uniqueItems": false
   },
   "PlacementGroup": {
+   "maxLength": 255,
+   "minLength": 1,
    "type": "string"
   },
   "ServiceLinkedRoleARN": {
+   "maxLength": 1600,
+   "minLength": 1,
    "type": "string"
   },
   "SkipZonalShiftValidation": {
@@ -789,6 +846,8 @@
   "TargetGroupARNs": {
    "insertionOrder": false,
    "items": {
+    "maxLength": 511,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
@@ -797,6 +856,8 @@
   "TerminationPolicies": {
    "insertionOrder": true,
    "items": {
+    "maxLength": 1600,
+    "minLength": 1,
     "type": "string"
    },
    "type": "array",
@@ -815,6 +876,8 @@
    "items": {
     "type": "string"
    },
+   "maxLength": 5000,
+   "minLength": 1,
    "type": "array",
    "uniqueItems": false
   }

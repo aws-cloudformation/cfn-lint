@@ -14,6 +14,7 @@ from pathlib import Path
 import regex as re
 import requests
 from _automated_patches import build_automated_patches
+from _helpers import load_schema_file
 from _manual_patches import patches
 from _types import AllPatches, ResourcePatches
 
@@ -39,7 +40,7 @@ def configure_logging():
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
 
-    LOGGER.setLevel(logging.INFO)
+    LOGGER.setLevel(logging.WARNING)
     log_formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
@@ -52,10 +53,16 @@ def configure_logging():
 
 
 def build_resource_type_patches(
-    dir: str, resource_name: str, resource_patches: ResourcePatches
+    boto_path: Path,
+    schema_path: Path,
+    resource_name: str,
+    resource_patches: ResourcePatches,
 ):
     LOGGER.info(f"Applying patches for {resource_name}")
 
+    resolver = load_schema_file(
+        schema_path / f"{resource_name.lower().replace('::', '-')}.json"
+    )
     resource_name = resource_name.lower().replace("::", "_")
     output_path = Path("src/cfnlint/data/schemas/patches/extensions/all/")
     resource_path = output_path / resource_name
@@ -71,13 +78,38 @@ def build_resource_type_patches(
         service_path = (
             ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
         )
-        with open(os.path.join(dir, *service_path), "r") as f:
+        _, schema_data = resolver.resolve(f"#{path}")
+        with open(os.path.join(boto_path, *service_path), "r") as f:
             boto_d = json.load(f)
-
-            for field in ["enum", "pattern"]:
+            shape_type = boto_d.get("shapes", {}).get(patch.shape, {}).get("type")
+            for field in ["enum", "pattern", "max", "min"]:
                 value = boto_d.get("shapes", {}).get(patch.shape, {}).get(field)
                 if not value:
                     continue
+                if field in ["enum", "pattern"]:
+                    if any(f in schema_data for f in ["enum", "pattern"]):
+                        continue
+                elif field == "max":
+                    if any(
+                        f in schema_data for f in ["maxLength", "maxItems", "maximum"]
+                    ):
+                        continue
+                    if "pattern" in schema_data:
+                        if re.match(
+                            r"^.*\{[0-9]+,[0-9]+\}\$?$", schema_data["pattern"]
+                        ):
+                            continue
+
+                elif field == "min":
+                    if any(
+                        f in schema_data for f in ["minLength", "minItems", "minimum"]
+                    ):
+                        continue
+                    if "pattern" in schema_data:
+                        if re.match(
+                            r"^.*\{[0-9]+,[0-9]+\}\$?$", schema_data["pattern"]
+                        ):
+                            continue
                 if field == "pattern":
                     if value in [".*", "^.*$"]:
                         continue
@@ -91,6 +123,15 @@ def build_resource_type_patches(
                                 f"{resource_name!r}"
                             )
                         )
+                        continue
+                if field in ["max", "min"]:
+                    if shape_type == "string":
+                        field = "maxLength" if field == "max" else "minLength"
+                    elif shape_type == "list":
+                        field = "maxItems" if field == "max" else "minItems"
+                    elif shape_type in ["integer", "number"]:
+                        field = "maximum" if field == "max" else "minimum"
+                    else:
                         continue
                 if value:
                     if patch.source[0] in exceptions:
@@ -123,12 +164,13 @@ def build_resource_type_patches(
 
 
 def build_patches(
-    dir: str,
+    boto_path: Path,
+    schema_path: Path,
     patches: AllPatches,
 ):
     for resource_name, patch in patches.items():
         build_resource_type_patches(
-            dir, resource_name=resource_name, resource_patches=patch
+            boto_path, schema_path, resource_name=resource_name, resource_patches=patch
         )
 
 
@@ -159,7 +201,7 @@ def main():
                     else:
                         _patches[k][path] = patch
 
-        build_patches(boto_path, _patches)
+        build_patches(boto_path, schema_path, _patches)
 
 
 if __name__ == "__main__":

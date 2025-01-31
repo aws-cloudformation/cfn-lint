@@ -3,6 +3,8 @@
  "definitions": {
   "DataflowEdge": {
    "additionalProperties": false,
+   "maxItems": 2,
+   "minItems": 2,
    "properties": {
     "Destination": {
      "type": "string"
@@ -29,6 +31,8 @@
    ],
    "properties": {
     "KmsAliasArn": {
+     "maxLength": 512,
+     "minLength": 1,
      "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
      "type": "string"
     },
@@ -68,15 +72,18 @@
    "type": "string"
   },
   "ContactPostPassDurationSeconds": {
+   "maximum": 21600,
    "type": "integer"
   },
   "ContactPrePassDurationSeconds": {
+   "maximum": 21600,
    "type": "integer"
   },
   "DataflowEdges": {
    "items": {
     "$ref": "#/definitions/DataflowEdge"
    },
+   "maxItems": 500,
    "minItems": 1,
    "type": "array"
   },
@@ -84,6 +91,8 @@
    "type": "string"
   },
   "MinimumViableContactDurationSeconds": {
+   "maximum": 21600,
+   "minimum": 1,
    "type": "integer"
   },
   "Name": {

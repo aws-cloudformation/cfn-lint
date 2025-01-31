@@ -11,6 +11,8 @@
    "additionalProperties": false,
    "properties": {
     "GraphQLOperation": {
+     "maxLength": 1048576,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -99,12 +101,16 @@
    "additionalProperties": false,
    "properties": {
     "Base": {
+     "maximum": 100000,
      "type": "integer"
     },
     "CapacityProvider": {
+     "maxLength": 255,
+     "minLength": 1,
      "type": "string"
     },
     "Weight": {
+     "maximum": 1000,
      "type": "integer"
     }
    },
@@ -117,6 +123,8 @@
    "additionalProperties": false,
    "properties": {
     "Arn": {
+     "maxLength": 1600,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -130,6 +138,7 @@
      "items": {
       "$ref": "#/definitions/CapacityProviderStrategyItem"
      },
+     "maxItems": 6,
      "type": "array",
      "uniqueItems": true
     },
@@ -158,6 +167,7 @@
      "items": {
       "$ref": "#/definitions/PlacementConstraint"
      },
+     "maxItems": 10,
      "type": "array",
      "uniqueItems": true
     },
@@ -179,6 +189,7 @@
      "type": "string"
     },
     "ReferenceId": {
+     "maxLength": 1024,
      "type": "string"
     },
     "TagList": {
@@ -190,9 +201,12 @@
      "uniqueItems": true
     },
     "TaskCount": {
+     "minimum": 1,
      "type": "integer"
     },
     "TaskDefinitionArn": {
+     "maxLength": 1600,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -247,6 +261,8 @@
      "type": "object"
     },
     "InputTemplate": {
+     "maxLength": 8192,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -259,6 +275,7 @@
    "additionalProperties": false,
    "properties": {
     "PartitionKeyPath": {
+     "maxLength": 256,
      "type": "string"
     }
    },
@@ -280,6 +297,7 @@
    "additionalProperties": false,
    "properties": {
     "Expression": {
+     "maxLength": 2000,
      "type": "string"
     },
     "Type": {
@@ -308,27 +326,40 @@
    "additionalProperties": false,
    "properties": {
     "Database": {
+     "maxLength": 64,
+     "minLength": 1,
      "type": "string"
     },
     "DbUser": {
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     },
     "SecretManagerArn": {
+     "maxLength": 1600,
+     "minLength": 1,
      "pattern": "(^arn:aws([a-z]|\\-)*:secretsmanager:[a-z0-9-.]+:.*)|(\\$(\\.[\\w_-]+(\\[(\\d+|\\*)\\])*)*)",
      "type": "string"
     },
     "Sql": {
+     "maxLength": 100000,
+     "minLength": 1,
      "type": "string"
     },
     "Sqls": {
      "insertionOrder": true,
      "items": {
+      "maxLength": 100000,
+      "minLength": 1,
       "type": "string"
      },
+     "maxItems": 40,
      "type": "array",
      "uniqueItems": false
     },
     "StatementName": {
+     "maxLength": 500,
+     "minLength": 1,
      "type": "string"
     },
     "WithEvent": {
@@ -344,9 +375,12 @@
    "additionalProperties": false,
    "properties": {
     "MaximumEventAgeInSeconds": {
+     "maximum": 86400,
+     "minimum": 60,
      "type": "integer"
     },
     "MaximumRetryAttempts": {
+     "maximum": 185,
      "type": "integer"
     }
    },
@@ -360,6 +394,8 @@
      "items": {
       "$ref": "#/definitions/RunCommandTarget"
      },
+     "maxItems": 5,
+     "minItems": 1,
      "type": "array",
      "uniqueItems": true
     }
@@ -373,14 +409,20 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "^[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*$",
      "type": "string"
     },
     "Values": {
      "insertionOrder": true,
      "items": {
+      "maxLength": 256,
+      "minLength": 1,
       "type": "string"
      },
+     "maxItems": 50,
+     "minItems": 1,
      "type": "array",
      "uniqueItems": true
     }
@@ -395,10 +437,13 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "maxLength": 256,
+     "minLength": 1,
      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
      "type": "string"
     },
     "Value": {
+     "maxLength": 1024,
      "type": "string"
     }
    },
@@ -416,6 +461,7 @@
      "items": {
       "$ref": "#/definitions/SageMakerPipelineParameter"
      },
+     "maxItems": 200,
      "type": "array",
      "uniqueItems": true
     }
@@ -426,6 +472,7 @@
    "additionalProperties": false,
    "properties": {
     "MessageGroupId": {
+     "maxLength": 100,
      "type": "string"
     }
    },
@@ -453,6 +500,8 @@
      "$ref": "#/definitions/AppSyncParameters"
     },
     "Arn": {
+     "maxLength": 1600,
+     "minLength": 1,
      "type": "string"
     },
     "BatchParameters": {
@@ -468,13 +517,17 @@
      "$ref": "#/definitions/HttpParameters"
     },
     "Id": {
+     "maxLength": 64,
+     "minLength": 1,
      "pattern": "[\\.\\-_A-Za-z0-9]+",
      "type": "string"
     },
     "Input": {
+     "maxLength": 8192,
      "type": "string"
     },
     "InputPath": {
+     "maxLength": 256,
      "type": "string"
     },
     "InputTransformer": {
@@ -490,6 +543,8 @@
      "$ref": "#/definitions/RetryPolicy"
     },
     "RoleArn": {
+     "maxLength": 1600,
+     "minLength": 1,
      "type": "string"
     },
     "RunCommandParameters": {
@@ -517,26 +572,35 @@
    "type": "string"
   },
   "Description": {
+   "maxLength": 512,
    "type": "string"
   },
   "EventBusName": {
+   "maxLength": 1600,
+   "minLength": 1,
    "pattern": "(arn:aws[\\w-]*:events:[a-z]{2}-[a-z]+-[\\w-]+:[0-9]{12}:event-bus\\/)?[/\\.\\-_A-Za-z0-9]+",
    "type": "string"
   },
   "EventPattern": {
+   "maxLength": 4096,
    "type": [
     "string",
     "object"
    ]
   },
   "Name": {
+   "maxLength": 64,
+   "minLength": 1,
    "pattern": "[\\.\\-_A-Za-z0-9]+",
    "type": "string"
   },
   "RoleArn": {
+   "maxLength": 1600,
+   "minLength": 1,
    "type": "string"
   },
   "ScheduleExpression": {
+   "maxLength": 256,
    "type": "string"
   },
   "State": {
@@ -553,6 +617,7 @@
     "$ref": "#/definitions/Target"
    },
    "maxItems": 5,
+   "minItems": 1,
    "type": "array",
    "uniqueItems": true
   }

@@ -29,10 +29,13 @@
    "additionalProperties": false,
    "properties": {
     "Key": {
+     "maxLength": 128,
+     "minLength": 1,
      "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+",
      "type": "string"
     },
     "Value": {
+     "maxLength": 256,
      "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*",
      "type": "string"
     }
@@ -53,6 +56,7 @@
   },
   "AssumeRolePolicyDocument": {
    "maxLength": 2048,
+   "minLength": 1,
    "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
    "type": [
     "object",
@@ -60,6 +64,7 @@
    ]
   },
   "Description": {
+   "maxLength": 1000,
    "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*",
    "type": "string"
   },
@@ -81,10 +86,14 @@
   },
   "Path": {
    "default": "/",
+   "maxLength": 512,
+   "minLength": 1,
    "pattern": "^/(.+/)*$",
    "type": "string"
   },
   "PermissionsBoundary": {
+   "maxLength": 2048,
+   "minLength": 20,
    "type": "string"
   },
   "Policies": {
@@ -109,6 +118,7 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
+   "maxItems": 50,
    "type": "array",
    "uniqueItems": false
   }

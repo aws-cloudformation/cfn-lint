@@ -9,6 +9,7 @@
    "additionalProperties": false,
    "properties": {
     "AttachmentArn": {
+     "maxLength": 255,
      "type": "string"
     },
     "ClientIPPreservationEnabled": {
@@ -16,6 +17,7 @@
      "type": "boolean"
     },
     "EndpointId": {
+     "maxLength": 255,
      "type": "string"
     },
     "Weight": {
@@ -60,20 +62,25 @@
    "items": {
     "$ref": "#/definitions/EndpointConfiguration"
    },
+   "maxItems": 10,
    "type": "array"
   },
   "EndpointGroupArn": {
    "type": "string"
   },
   "EndpointGroupRegion": {
+   "maxLength": 255,
    "type": "string"
   },
   "HealthCheckIntervalSeconds": {
    "default": 30,
+   "maximum": 30,
+   "minimum": 10,
    "type": "integer"
   },
   "HealthCheckPath": {
    "default": "/",
+   "maxLength": 255,
    "pattern": "^/[-a-zA-Z0-9@:%_\\\\+.~#?&/=]*$",
    "type": "string"
   },
@@ -93,16 +100,20 @@
    "type": "string"
   },
   "ListenerArn": {
+   "maxLength": 255,
    "type": "string"
   },
   "PortOverrides": {
    "items": {
     "$ref": "#/definitions/PortOverride"
    },
+   "maxItems": 10,
    "type": "array"
   },
   "ThresholdCount": {
    "default": 3,
+   "maximum": 10,
+   "minimum": 1,
    "type": "integer"
   },
   "TrafficDialPercentage": {

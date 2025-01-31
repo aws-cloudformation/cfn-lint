@@ -8,6 +8,7 @@
    "items": {
     "$ref": "#/definitions/ConfigurationItem"
    },
+   "maxItems": 2,
    "type": "array"
   },
   "ConfigurationItem": {
@@ -20,6 +21,7 @@
      "type": "array"
     },
     "Type": {
+     "maxLength": 40,
      "pattern": "AWS::[a-zA-Z0-9]+::[a-zA-Z0-9]+",
      "type": "string"
     }
@@ -30,11 +32,15 @@
    "additionalProperties": false,
    "properties": {
     "Name": {
+     "maxLength": 80,
+     "minLength": 1,
      "pattern": "[a-z-]+",
      "type": "string"
     },
     "Values": {
      "items": {
+      "maxLength": 256,
+      "minLength": 1,
       "pattern": "[a-zA-Z0-9:\\/\\._-]+",
       "type": "string"
      },
@@ -45,6 +51,7 @@
   },
   "Query": {
    "additionalProperties": false,
+   "maxLength": 4096,
    "pattern": "[\\s\\S]*",
    "properties": {
     "ResourceTypeFilters": {
@@ -76,6 +83,8 @@
       "TAG_FILTERS_1_0",
       "CLOUDFORMATION_STACK_1_0"
      ],
+     "maxLength": 128,
+     "minLength": 1,
      "type": "string"
     }
    },
@@ -127,6 +136,7 @@
   },
   "Name": {
    "maxLength": 128,
+   "minLength": 1,
    "pattern": "[a-zA-Z0-9_\\.-]+",
    "type": "string"
   },

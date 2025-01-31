@@ -15,6 +15,7 @@
   },
   "AirflowVersion": {
    "maxLength": 32,
+   "minLength": 1,
    "pattern": "^[0-9a-z.]+$",
    "type": "string"
   },
@@ -93,11 +94,13 @@
   },
   "ExecutionRoleArn": {
    "maxLength": 1224,
+   "minLength": 1,
    "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
    "type": "string"
   },
   "KmsKey": {
    "maxLength": 1224,
+   "minLength": 1,
    "pattern": "^(((arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b)(-[a-z]+)?:kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?key\\/)?[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|(arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):kms:[a-z]{2}-[a-z]+-\\d:\\d+:)?alias/.+)$",
    "type": "string"
   },
@@ -241,6 +244,7 @@
   },
   "RelativePath": {
    "maxLength": 1024,
+   "minLength": 1,
    "pattern": ".*",
    "type": "string"
   },
@@ -252,9 +256,11 @@
   },
   "S3ObjectVersion": {
    "maxLength": 1024,
+   "minLength": 1,
    "type": "string"
   },
   "Schedulers": {
+   "maximum": 5,
    "minimum": 1,
    "type": "integer"
   },
@@ -262,7 +268,7 @@
    "format": "AWS::EC2::SecurityGroup.Id",
    "maxLength": 1024,
    "minLength": 1,
-   "pattern": "sg-[a-zA-Z0-9\\-._]+",
+   "pattern": "^sg-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   },
   "ServiceRoleArn": {
@@ -272,7 +278,8 @@
   },
   "SubnetId": {
    "maxLength": 1024,
-   "pattern": "subnet-[a-zA-Z0-9\\-._]+",
+   "minLength": 1,
+   "pattern": "^subnet-[a-zA-Z0-9\\-._]+$",
    "type": "string"
   },
   "UpdateCreatedAt": {
@@ -317,6 +324,7 @@
   },
   "WeeklyMaintenanceWindowStart": {
    "maxLength": 9,
+   "minLength": 1,
    "pattern": "(MON|TUE|WED|THU|FRI|SAT|SUN):([01]\\d|2[0-3]):(00|30)",
    "type": "string"
   }
