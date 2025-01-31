@@ -1,0 +1,1515 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName"
+ ],
+ "definitions": {
+  "AbortIncompleteMultipartUpload": {
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterInitiation": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ],
+   "type": "object"
+  },
+  "AccelerateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccelerationStatus": {
+     "enum": [
+      "Enabled",
+      "Suspended"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccelerationStatus"
+   ],
+   "type": "object"
+  },
+  "AccessControlTranslation": {
+   "additionalProperties": false,
+   "properties": {
+    "Owner": {
+     "const": "Destination",
+     "enum": [
+      "Destination"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "AnalyticsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "StorageClassAnalysis": {
+     "$ref": "#/definitions/StorageClassAnalysis"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "StorageClassAnalysis",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "BucketEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "ServerSideEncryptionConfiguration": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ServerSideEncryptionRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ServerSideEncryptionConfiguration"
+   ],
+   "type": "object"
+  },
+  "CorsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CorsRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/CorsRule",
+      "maxLength": 100
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "CorsRules"
+   ],
+   "type": "object"
+  },
+  "CorsRule": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedHeaders": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AllowedMethods": {
+     "insertionOrder": true,
+     "items": {
+      "enum": [
+       "GET",
+       "PUT",
+       "HEAD",
+       "POST",
+       "DELETE"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AllowedOrigins": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ExposedHeaders": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "MaxAge": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AllowedMethods",
+    "AllowedOrigins"
+   ],
+   "type": "object"
+  },
+  "DataExport": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "OutputSchemaVersion": {
+     "const": "V_1",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputSchemaVersion"
+   ],
+   "type": "object"
+  },
+  "DefaultRetention": {
+   "additionalProperties": false,
+   "properties": {
+    "Days": {
+     "type": "integer"
+    },
+    "Mode": {
+     "enum": [
+      "COMPLIANCE",
+      "GOVERNANCE"
+     ],
+     "type": "string"
+    },
+    "Years": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "DeleteMarkerReplication": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketAccountId": {
+     "type": "string"
+    },
+    "BucketArn": {
+     "type": "string"
+    },
+    "Format": {
+     "enum": [
+      "CSV",
+      "ORC",
+      "Parquet"
+     ],
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketArn",
+    "Format"
+   ],
+   "type": "object"
+  },
+  "EncryptionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplicaKmsKeyID": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReplicaKmsKeyID"
+   ],
+   "type": "object"
+  },
+  "EventBridgeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBridgeEnabled": {
+     "default": "true",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "EventBridgeEnabled"
+   ],
+   "type": "object"
+  },
+  "FilterRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "IntelligentTieringConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Tierings": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Tiering"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Id",
+    "Status",
+    "Tierings"
+   ],
+   "type": "object"
+  },
+  "InventoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "IncludedObjectVersions": {
+     "enum": [
+      "All",
+      "Current"
+     ],
+     "type": "string"
+    },
+    "OptionalFields": {
+     "insertionOrder": true,
+     "items": {
+      "enum": [
+       "Size",
+       "LastModifiedDate",
+       "StorageClass",
+       "ETag",
+       "IsMultipartUploaded",
+       "ReplicationStatus",
+       "EncryptionStatus",
+       "ObjectLockRetainUntilDate",
+       "ObjectLockMode",
+       "ObjectLockLegalHoldStatus",
+       "IntelligentTieringAccessTier",
+       "BucketKeyStatus",
+       "ChecksumAlgorithm",
+       "ObjectAccessControlList",
+       "ObjectOwner"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "ScheduleFrequency": {
+     "enum": [
+      "Daily",
+      "Weekly"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "Enabled",
+    "Id",
+    "IncludedObjectVersions",
+    "ScheduleFrequency"
+   ],
+   "type": "object"
+  },
+  "LambdaConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Event": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    },
+    "Function": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Function",
+    "Event"
+   ],
+   "type": "object"
+  },
+  "LifecycleConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TransitionDefaultMinimumObjectSize": {
+     "enum": [
+      "varies_by_storage_class",
+      "all_storage_classes_128K"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "LoggingConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationBucketName": {
+     "type": "string"
+    },
+    "LogFilePrefix": {
+     "type": "string"
+    },
+    "TargetObjectKeyFormat": {
+     "$ref": "#/definitions/TargetObjectKeyFormat"
+    }
+   },
+   "type": "object"
+  },
+  "MetadataTableConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3TablesDestination": {
+     "$ref": "#/definitions/S3TablesDestination"
+    }
+   },
+   "required": [
+    "S3TablesDestination"
+   ],
+   "type": "object"
+  },
+  "Metrics": {
+   "additionalProperties": false,
+   "properties": {
+    "EventThreshold": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    },
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "MetricsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessPointArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Id"
+   ],
+   "type": "object"
+  },
+  "NoncurrentVersionExpiration": {
+   "additionalProperties": false,
+   "properties": {
+    "NewerNoncurrentVersions": {
+     "type": "integer"
+    },
+    "NoncurrentDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "NoncurrentDays"
+   ],
+   "type": "object"
+  },
+  "NoncurrentVersionTransition": {
+   "additionalProperties": false,
+   "properties": {
+    "NewerNoncurrentVersions": {
+     "type": "integer"
+    },
+    "StorageClass": {
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "Glacier",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    },
+    "TransitionInDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StorageClass",
+    "TransitionInDays"
+   ],
+   "type": "object"
+  },
+  "NotificationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EventBridgeConfiguration": {
+     "$ref": "#/definitions/EventBridgeConfiguration"
+    },
+    "LambdaConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/LambdaConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "QueueConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/QueueConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TopicConfigurations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TopicConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NotificationFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Key": {
+     "$ref": "#/definitions/S3KeyFilter"
+    }
+   },
+   "required": [
+    "S3Key"
+   ],
+   "type": "object"
+  },
+  "ObjectLockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectLockEnabled": {
+     "const": "Enabled",
+     "enum": [
+      "Enabled"
+     ],
+     "type": "string"
+    },
+    "Rule": {
+     "$ref": "#/definitions/ObjectLockRule"
+    }
+   },
+   "type": "object"
+  },
+  "ObjectLockRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultRetention": {
+     "$ref": "#/definitions/DefaultRetention"
+    }
+   },
+   "type": "object"
+  },
+  "OwnershipControls": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OwnershipControlsRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "OwnershipControlsRule": {
+   "additionalProperties": false,
+   "properties": {
+    "ObjectOwnership": {
+     "enum": [
+      "ObjectWriter",
+      "BucketOwnerPreferred",
+      "BucketOwnerEnforced"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PartitionedPrefix": {
+   "additionalProperties": false,
+   "properties": {
+    "PartitionDateSource": {
+     "enum": [
+      "EventTime",
+      "DeliveryTime"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PublicAccessBlockConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BlockPublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "QueueConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Event": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    },
+    "Queue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Event",
+    "Queue"
+   ],
+   "type": "object"
+  },
+  "RedirectAllRequestsTo": {
+   "additionalProperties": false,
+   "dependentExcluded": {
+    "RedirectAllRequestsTo": [
+     "ErrorDocument",
+     "IndexDocument",
+     "RoutingRules"
+    ]
+   },
+   "properties": {
+    "HostName": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "http",
+      "https"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostName"
+   ],
+   "type": "object"
+  },
+  "RedirectRule": {
+   "additionalProperties": false,
+   "properties": {
+    "HostName": {
+     "type": "string"
+    },
+    "HttpRedirectCode": {
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "http",
+      "https"
+     ],
+     "type": "string"
+    },
+    "ReplaceKeyPrefixWith": {
+     "type": "string"
+    },
+    "ReplaceKeyWith": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ReplicaModifications": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Role": {
+     "type": "string"
+    },
+    "Rules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ReplicationRule",
+      "maxLength": 1000,
+      "minLength": 1
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Role",
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "ReplicationDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessControlTranslation": {
+     "$ref": "#/definitions/AccessControlTranslation"
+    },
+    "Account": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    },
+    "Metrics": {
+     "$ref": "#/definitions/Metrics"
+    },
+    "ReplicationTime": {
+     "$ref": "#/definitions/ReplicationTime"
+    },
+    "StorageClass": {
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "REDUCED_REDUNDANCY",
+      "STANDARD",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "ReplicationRule": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteMarkerReplication": {
+     "$ref": "#/definitions/DeleteMarkerReplication"
+    },
+    "Destination": {
+     "$ref": "#/definitions/ReplicationDestination"
+    },
+    "Filter": {
+     "$ref": "#/definitions/ReplicationRuleFilter"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 1024,
+     "type": "string"
+    },
+    "Priority": {
+     "type": "integer"
+    },
+    "SourceSelectionCriteria": {
+     "$ref": "#/definitions/SourceSelectionCriteria"
+    },
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ReplicationRuleAndOperator": {
+   "additionalProperties": false,
+   "properties": {
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ReplicationRuleFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "And": {
+     "$ref": "#/definitions/ReplicationRuleAndOperator"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "TagFilter": {
+     "$ref": "#/definitions/TagFilter"
+    }
+   },
+   "type": "object"
+  },
+  "ReplicationTime": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    },
+    "Time": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    }
+   },
+   "required": [
+    "Status",
+    "Time"
+   ],
+   "type": "object"
+  },
+  "ReplicationTimeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Minutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Minutes"
+   ],
+   "type": "object"
+  },
+  "RoutingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "RedirectRule": {
+     "$ref": "#/definitions/RedirectRule"
+    },
+    "RoutingRuleCondition": {
+     "$ref": "#/definitions/RoutingRuleCondition"
+    }
+   },
+   "required": [
+    "RedirectRule"
+   ],
+   "type": "object"
+  },
+  "RoutingRuleCondition": {
+   "additionalProperties": false,
+   "anyOf": [
+    {
+     "required": [
+      "HttpErrorCodeReturnedEquals"
+     ]
+    },
+    {
+     "required": [
+      "KeyPrefixEquals"
+     ]
+    }
+   ],
+   "properties": {
+    "HttpErrorCodeReturnedEquals": {
+     "type": "string"
+    },
+    "KeyPrefixEquals": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "dependentExcluded": {
+    "ObjectSizeGreaterThan": [
+     "AbortIncompleteMultipartUpload"
+    ],
+    "ObjectSizeLessThan": [
+     "AbortIncompleteMultipartUpload"
+    ]
+   },
+   "properties": {
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    },
+    "ExpirationDate": {
+     "$ref": "#/definitions/iso8601UTC"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "ExpiredObjectDeleteMarker": {
+     "type": "boolean"
+    },
+    "Id": {
+     "maxLength": 255,
+     "type": "string"
+    },
+    "NoncurrentVersionExpiration": {
+     "$ref": "#/definitions/NoncurrentVersionExpiration"
+    },
+    "NoncurrentVersionExpirationInDays": {
+     "type": "integer"
+    },
+    "NoncurrentVersionTransition": {
+     "$ref": "#/definitions/NoncurrentVersionTransition"
+    },
+    "NoncurrentVersionTransitions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/NoncurrentVersionTransition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ObjectSizeGreaterThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "ObjectSizeLessThan": {
+     "maxLength": 20,
+     "pattern": "[0-9]+",
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "Enabled",
+      "Disabled"
+     ],
+     "type": "string"
+    },
+    "TagFilters": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Transition": {
+     "$ref": "#/definitions/Transition"
+    },
+    "Transitions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Transition"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "S3KeyFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/FilterRule"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "S3TablesDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TableArn": {
+     "type": "string"
+    },
+    "TableBucketArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    },
+    "TableNamespace": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableBucketArn",
+    "TableName"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionByDefault": {
+   "additionalProperties": false,
+   "properties": {
+    "KMSMasterKeyID": {
+     "type": "string"
+    },
+    "SSEAlgorithm": {
+     "enum": [
+      "aws:kms",
+      "AES256",
+      "aws:kms:dsse"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEAlgorithm"
+   ],
+   "type": "object"
+  },
+  "ServerSideEncryptionRule": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketKeyEnabled": {
+     "type": "boolean"
+    },
+    "ServerSideEncryptionByDefault": {
+     "$ref": "#/definitions/ServerSideEncryptionByDefault"
+    }
+   },
+   "type": "object"
+  },
+  "SourceSelectionCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "ReplicaModifications": {
+     "$ref": "#/definitions/ReplicaModifications"
+    },
+    "SseKmsEncryptedObjects": {
+     "$ref": "#/definitions/SseKmsEncryptedObjects"
+    }
+   },
+   "type": "object"
+  },
+  "SseKmsEncryptedObjects": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "enum": [
+      "Disabled",
+      "Enabled"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "StorageClassAnalysis": {
+   "additionalProperties": false,
+   "properties": {
+    "DataExport": {
+     "$ref": "#/definitions/DataExport"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetObjectKeyFormat": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "SimplePrefix": {
+       "additionalProperties": false,
+       "type": "object"
+      }
+     },
+     "required": [
+      "SimplePrefix"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PartitionedPrefix": {
+       "$ref": "#/definitions/PartitionedPrefix"
+      }
+     },
+     "required": [
+      "PartitionedPrefix"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "Tiering": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessTier": {
+     "enum": [
+      "ARCHIVE_ACCESS",
+      "DEEP_ARCHIVE_ACCESS"
+     ],
+     "type": "string"
+    },
+    "Days": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AccessTier",
+    "Days"
+   ],
+   "type": "object"
+  },
+  "TopicConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Event": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    },
+    "Topic": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Event",
+    "Topic"
+   ],
+   "type": "object"
+  },
+  "Transition": {
+   "additionalProperties": false,
+   "properties": {
+    "StorageClass": {
+     "enum": [
+      "DEEP_ARCHIVE",
+      "GLACIER",
+      "Glacier",
+      "GLACIER_IR",
+      "INTELLIGENT_TIERING",
+      "ONEZONE_IA",
+      "STANDARD_IA"
+     ],
+     "type": "string"
+    },
+    "TransitionDate": {
+     "$ref": "#/definitions/iso8601UTC"
+    },
+    "TransitionInDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StorageClass"
+   ],
+   "type": "object"
+  },
+  "VersioningConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "default": "Suspended",
+     "enum": [
+      "Enabled",
+      "Suspended"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "WebsiteConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ErrorDocument": {
+     "type": "string"
+    },
+    "IndexDocument": {
+     "type": "string"
+    },
+    "RedirectAllRequestsTo": {
+     "$ref": "#/definitions/RedirectAllRequestsTo"
+    },
+    "RoutingRules": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/RoutingRule"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BucketName"
+ ],
+ "properties": {
+  "AccelerateConfiguration": {
+   "$ref": "#/definitions/AccelerateConfiguration"
+  },
+  "AccessControl": {
+   "enum": [
+    "AuthenticatedRead",
+    "AwsExecRead",
+    "BucketOwnerFullControl",
+    "BucketOwnerRead",
+    "LogDeliveryWrite",
+    "Private",
+    "PublicRead",
+    "PublicReadWrite"
+   ],
+   "type": "string"
+  },
+  "AnalyticsConfigurations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AnalyticsConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "examples": [
+    "arn:aws:s3:::mybucket"
+   ]
+  },
+  "BucketEncryption": {
+   "$ref": "#/definitions/BucketEncryption"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$",
+   "type": "string"
+  },
+  "CorsConfiguration": {
+   "$ref": "#/definitions/CorsConfiguration"
+  },
+  "DomainName": {
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "DualStackDomainName": {
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.dualstack.us-east-2.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "IntelligentTieringConfigurations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/IntelligentTieringConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "InventoryConfigurations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/InventoryConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "MetadataTableConfiguration": {
+   "$ref": "#/definitions/MetadataTableConfiguration"
+  },
+  "MetricsConfigurations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricsConfiguration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
+  "ObjectLockConfiguration": {
+   "$ref": "#/definitions/ObjectLockConfiguration"
+  },
+  "ObjectLockEnabled": {
+   "type": "boolean"
+  },
+  "OwnershipControls": {
+   "$ref": "#/definitions/OwnershipControls"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "RegionalDomainName": {
+   "examples": [
+    "mystack-mybucket-kdwwxmddtr2g.s3.us-east-2.amazonaws.com"
+   ],
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "VersioningConfiguration": {
+   "$ref": "#/definitions/VersioningConfiguration"
+  },
+  "WebsiteConfiguration": {
+   "$ref": "#/definitions/WebsiteConfiguration"
+  },
+  "WebsiteURL": {
+   "examples": [
+    "Example (IPv4): http://mystack-mybucket-kdwwxmddtr2g.s3-website-us-east-2.amazonaws.com/",
+    "Example (IPv6): http://mystack-mybucket-kdwwxmddtr2g.s3.dualstack.us-east-2.amazonaws.com/"
+   ],
+   "format": "uri",
+   "type": "string"
+  }
+ },
+ "propertyTransform": {
+  "/properties/NotificationConfiguration/LambdaConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")",
+  "/properties/NotificationConfiguration/QueueConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")",
+  "/properties/NotificationConfiguration/TopicConfigurations/*/Filter/S3Key/Rules/*/Name": "$replace(Name, \"prefix\", \"Prefix\") $OR $replace(Name, \"suffix\", \"Suffix\")"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainName",
+  "/properties/DualStackDomainName",
+  "/properties/RegionalDomainName",
+  "/properties/MetadataTableConfiguration/S3TablesDestination/TableNamespace",
+  "/properties/MetadataTableConfiguration/S3TablesDestination/TableArn",
+  "/properties/WebsiteURL"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::S3::Bucket",
+ "writeOnlyProperties": [
+  "/properties/AccessControl",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionExpirationInDays",
+  "/properties/LifecycleConfiguration/Rules/*/NoncurrentVersionTransition",
+  "/properties/LifecycleConfiguration/Rules/*/Transition",
+  "/properties/ReplicationConfiguration/Rules/*/Prefix",
+  "/properties/LifecycleConfiguration/Rules/*/ExpiredObjectDeleteMarker"
+ ]
+}

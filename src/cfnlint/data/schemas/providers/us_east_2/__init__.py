@@ -1330,6 +1330,7 @@ cached: list[str] = [
     "aws-backup-restoretestingselection.json",
     "aws-backupgateway-hypervisor.json",
     "aws-batch-computeenvironment.json",
+    "aws-batch-jobdefinition.json",
     "aws-batch-jobqueue.json",
     "aws-batch-schedulingpolicy.json",
     "aws-bedrock-agent.json",
