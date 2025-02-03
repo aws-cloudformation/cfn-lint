@@ -1,6 +1,31 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "MultitrackInputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "default": false,
+     "type": "boolean"
+    },
+    "MaximumResolution": {
+     "enum": [
+      "SD",
+      "HD",
+      "FULL_HD"
+     ],
+     "type": "string"
+    },
+    "Policy": {
+     "enum": [
+      "ALLOW",
+      "REQUIRE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -11,7 +36,7 @@
     },
     "Value": {
      "maxLength": 256,
-     "minLength": 1,
+     "minLength": 0,
      "type": "string"
     }
    },
@@ -36,6 +61,14 @@
    "default": false,
    "type": "boolean"
   },
+  "ContainerFormat": {
+   "default": "TS",
+   "enum": [
+    "TS",
+    "FRAGMENTED_MP4"
+   ],
+   "type": "string"
+  },
   "IngestEndpoint": {
    "type": "string"
   },
@@ -50,6 +83,9 @@
     "LOW"
    ],
    "type": "string"
+  },
+  "MultitrackInputConfiguration": {
+   "$ref": "#/definitions/MultitrackInputConfiguration"
   },
   "Name": {
    "default": "-",

@@ -1,0 +1,206 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DestinationConfiguration",
+  "/properties/DestinationConfiguration/S3",
+  "/properties/DestinationConfiguration/S3/BucketName",
+  "/properties/RecordingReconnectWindowSeconds",
+  "/properties/ThumbnailConfiguration",
+  "/properties/ThumbnailConfiguration/RecordingMode",
+  "/properties/ThumbnailConfiguration/TargetIntervalSeconds",
+  "/properties/ThumbnailConfiguration/Storage",
+  "/properties/ThumbnailConfiguration/Resolution",
+  "/properties/RenditionConfiguration",
+  "/properties/RenditionConfiguration/RenditionSelection",
+  "/properties/RenditionConfiguration/Renditions"
+ ],
+ "definitions": {
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/S3DestinationConfiguration"
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "RenditionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RenditionSelection": {
+     "default": "ALL",
+     "enum": [
+      "ALL",
+      "NONE",
+      "CUSTOM"
+     ],
+     "type": "string"
+    },
+    "Renditions": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "FULL_HD",
+       "HD",
+       "SD",
+       "LOWEST_RESOLUTION"
+      ],
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [],
+   "type": "object"
+  },
+  "S3DestinationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThumbnailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RecordingMode": {
+     "default": "INTERVAL",
+     "enum": [
+      "INTERVAL",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "Resolution": {
+     "enum": [
+      "FULL_HD",
+      "HD",
+      "SD",
+      "LOWEST_RESOLUTION"
+     ],
+     "type": "string"
+    },
+    "Storage": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "SEQUENTIAL",
+       "LATEST"
+      ],
+      "type": "string"
+     },
+     "maxItems": 2,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TargetIntervalSeconds": {
+     "default": 60,
+     "maximum": 60,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DestinationConfiguration": {
+   "$ref": "#/definitions/DestinationConfiguration"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "RecordingReconnectWindowSeconds": {
+   "default": 0,
+   "maximum": 300,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "RenditionConfiguration": {
+   "$ref": "#/definitions/RenditionConfiguration"
+  },
+  "State": {
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThumbnailConfiguration": {
+   "$ref": "#/definitions/ThumbnailConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/State"
+ ],
+ "required": [
+  "DestinationConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVS::RecordingConfiguration"
+}

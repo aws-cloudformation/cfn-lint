@@ -76,7 +76,10 @@ class _Fail(CfnLintKeyword):
                 ValidationError(
                     (
                         "'foo' is not one of ['Arn', 'DomainName', "
-                        "'DualStackDomainName', 'RegionalDomainName', 'WebsiteURL'] "
+                        "'DualStackDomainName', 'RegionalDomainName', "
+                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                        " 'WebsiteURL'] "
                         "in ['us-east-1']"
                     ),
                     path=deque(["Fn::GetAtt", 1]),
@@ -219,7 +222,9 @@ class _Fail(CfnLintKeyword):
                     (
                         "'MyBucket' is not one of ['Arn', 'DomainName', "
                         "'DualStackDomainName', 'RegionalDomainName', "
-                        "'WebsiteURL'] in ['us-east-1'] when "
+                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                        " 'WebsiteURL'] in ['us-east-1'] when "
                         "{'Ref': 'MyResourceParameter'} is resolved"
                     ),
                     path=deque(["Fn::GetAtt", 1]),

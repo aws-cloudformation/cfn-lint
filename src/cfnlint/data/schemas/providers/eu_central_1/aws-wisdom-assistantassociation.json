@@ -1,0 +1,113 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/AssistantAssociationArn",
+   "/properties/AssistantArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Association",
+  "/properties/AssociationType",
+  "/properties/AssistantId",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AssociationData": {
+   "additionalProperties": false,
+   "properties": {
+    "KnowledgeBaseId": {
+     "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KnowledgeBaseId"
+   ],
+   "type": "object"
+  },
+  "AssociationType": {
+   "enum": [
+    "KNOWLEDGE_BASE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AssistantAssociationId",
+  "/properties/AssistantId"
+ ],
+ "properties": {
+  "AssistantArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "AssistantAssociationArn": {
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
+   "type": "string"
+  },
+  "AssistantAssociationId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "AssistantId": {
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+   "type": "string"
+  },
+  "Association": {
+   "$ref": "#/definitions/AssociationData"
+  },
+  "AssociationType": {
+   "$ref": "#/definitions/AssociationType"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AssistantAssociationId",
+  "/properties/AssistantAssociationArn",
+  "/properties/AssistantArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Association",
+  "AssociationType",
+  "AssistantId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Wisdom::AssistantAssociation"
+}

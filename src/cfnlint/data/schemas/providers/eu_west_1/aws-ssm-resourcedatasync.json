@@ -1,0 +1,160 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KMSKeyArn",
+  "/properties/SyncFormat",
+  "/properties/BucketPrefix",
+  "/properties/SyncName",
+  "/properties/BucketRegion",
+  "/properties/BucketName",
+  "/properties/S3Destination",
+  "/properties/SyncType"
+ ],
+ "definitions": {
+  "AwsOrganizationsSource": {
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationSourceType": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "OrganizationalUnits": {
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1000,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "OrganizationSourceType"
+   ],
+   "type": "object"
+  },
+  "S3Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BucketPrefix": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BucketRegion": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "KMSKeyArn": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SyncFormat": {
+     "enum": [
+      "JsonSerDe"
+     ],
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "BucketRegion",
+    "SyncFormat"
+   ],
+   "type": "object"
+  },
+  "SyncSource": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsOrganizationsSource": {
+     "$ref": "#/definitions/AwsOrganizationsSource"
+    },
+    "IncludeFutureRegions": {
+     "type": "boolean"
+    },
+    "SourceRegions": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceType": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceType",
+    "SourceRegions"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SyncName"
+ ],
+ "properties": {
+  "BucketName": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BucketPrefix": {
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "BucketRegion": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "KMSKeyArn": {
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "S3Destination": {
+   "$ref": "#/definitions/S3Destination"
+  },
+  "SyncFormat": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "SyncName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SyncSource": {
+   "$ref": "#/definitions/SyncSource"
+  },
+  "SyncType": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "required": [
+  "SyncName"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SSM::ResourceDataSync"
+}
