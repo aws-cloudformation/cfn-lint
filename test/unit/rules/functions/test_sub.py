@@ -261,7 +261,9 @@ def context(cfn):
                         "'DomainName', "
                         "'DualStackDomainName', "
                         "'RegionalDomainName', "
-                        "'WebsiteURL'] in ['us-east-1']"
+                        "'MetadataTableConfiguration.S3TablesDestination.TableNamespace',"
+                        " 'MetadataTableConfiguration.S3TablesDestination.TableArn',"
+                        " 'WebsiteURL'] in ['us-east-1']"
                     ),
                     path=deque(["Fn::Sub"]),
                     schema_path=deque([]),
