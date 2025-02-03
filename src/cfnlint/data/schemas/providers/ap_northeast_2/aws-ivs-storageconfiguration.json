@@ -1,0 +1,89 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/S3",
+  "/properties/S3/BucketName"
+ ],
+ "definitions": {
+  "S3StorageConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:storage-configuration/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "S3": {
+   "$ref": "#/definitions/S3StorageConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "S3"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IVS::StorageConfiguration"
+}

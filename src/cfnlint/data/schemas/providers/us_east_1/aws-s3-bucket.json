@@ -451,6 +451,18 @@
    },
    "type": "object"
   },
+  "MetadataTableConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3TablesDestination": {
+     "$ref": "#/definitions/S3TablesDestination"
+    }
+   },
+   "required": [
+    "S3TablesDestination"
+   ],
+   "type": "object"
+  },
   "Metrics": {
    "additionalProperties": false,
    "properties": {
@@ -1069,6 +1081,28 @@
    ],
    "type": "object"
   },
+  "S3TablesDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "TableArn": {
+     "type": "string"
+    },
+    "TableBucketArn": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    },
+    "TableNamespace": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TableBucketArn",
+    "TableName"
+   ],
+   "type": "object"
+  },
   "ServerSideEncryptionByDefault": {
    "additionalProperties": false,
    "properties": {
@@ -1391,6 +1425,9 @@
   "LoggingConfiguration": {
    "$ref": "#/definitions/LoggingConfiguration"
   },
+  "MetadataTableConfiguration": {
+   "$ref": "#/definitions/MetadataTableConfiguration"
+  },
   "MetricsConfigurations": {
    "insertionOrder": true,
    "items": {
@@ -1455,6 +1492,8 @@
   "/properties/DomainName",
   "/properties/DualStackDomainName",
   "/properties/RegionalDomainName",
+  "/properties/MetadataTableConfiguration/S3TablesDestination/TableNamespace",
+  "/properties/MetadataTableConfiguration/S3TablesDestination/TableArn",
   "/properties/WebsiteURL"
  ],
  "tagging": {
