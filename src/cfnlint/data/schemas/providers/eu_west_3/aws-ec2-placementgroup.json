@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Strategy",
+  "/properties/SpreadLevel",
+  "/properties/PartitionCount"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupName"
+ ],
+ "properties": {
+  "GroupName": {
+   "type": "string"
+  },
+  "PartitionCount": {
+   "type": "integer"
+  },
+  "SpreadLevel": {
+   "enum": [
+    "host",
+    "rack"
+   ],
+   "type": "string"
+  },
+  "Strategy": {
+   "enum": [
+    "cluster",
+    "partition",
+    "spread"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::PlacementGroup"
+}

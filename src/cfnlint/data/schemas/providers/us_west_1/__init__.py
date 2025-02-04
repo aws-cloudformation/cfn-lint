@@ -1268,7 +1268,6 @@ cached: list[str] = [
     "aws-ec2-networkinterfaceattachment.json",
     "aws-ec2-networkinterfacepermission.json",
     "aws-ec2-networkperformancemetricsubscription.json",
-    "aws-ec2-placementgroup.json",
     "aws-ec2-prefixlist.json",
     "aws-ec2-route.json",
     "aws-ec2-routetable.json",

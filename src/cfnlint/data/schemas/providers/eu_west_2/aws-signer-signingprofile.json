@@ -1,0 +1,120 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/ProfileName"
+  ],
+  [
+   "/properties/ProfileVersionArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProfileName",
+  "/properties/PlatformId",
+  "/properties/SignatureValidityPeriod"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "PlatformId": {
+   "enum": [
+    "AWSLambda-SHA384-ECDSA",
+    "Notation-OCI-SHA384-ECDSA"
+   ],
+   "type": "string"
+  },
+  "ProfileName": {
+   "maxLength": 64,
+   "minLength": 2,
+   "pattern": "^[0-9a-zA-Z_]{2,64}$",
+   "type": "string"
+  },
+  "ProfileVersion": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "SignatureValidityPeriod": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "enum": [
+      "DAYS",
+      "MONTHS",
+      "YEARS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "PlatformId": {
+   "$ref": "#/definitions/PlatformId"
+  },
+  "ProfileName": {
+   "$ref": "#/definitions/ProfileName"
+  },
+  "ProfileVersion": {
+   "$ref": "#/definitions/ProfileVersion"
+  },
+  "ProfileVersionArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "SignatureValidityPeriod": {
+   "$ref": "#/definitions/SignatureValidityPeriod"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProfileName",
+  "/properties/ProfileVersion",
+  "/properties/Arn",
+  "/properties/ProfileVersionArn"
+ ],
+ "required": [
+  "PlatformId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Signer::SigningProfile"
+}

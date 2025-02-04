@@ -2402,8 +2402,6 @@ cached: list[str] = [
     "aws-shield-proactiveengagement.json",
     "aws-shield-protection.json",
     "aws-shield-protectiongroup.json",
-    "aws-signer-profilepermission.json",
-    "aws-signer-signingprofile.json",
     "aws-simspaceweaver-simulation.json",
     "aws-sns-subscription.json",
     "aws-sns-topic.json",
