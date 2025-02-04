@@ -1,0 +1,233 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatastoreName",
+  "/properties/DatastoreTypeVersion",
+  "/properties/PreloadDataConfig",
+  "/properties/SseConfiguration",
+  "/properties/IdentityProviderConfiguration"
+ ],
+ "definitions": {
+  "CreatedAt": {
+   "additionalProperties": false,
+   "properties": {
+    "Nanos": {
+     "type": "integer"
+    },
+    "Seconds": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Seconds",
+    "Nanos"
+   ],
+   "type": "object"
+  },
+  "DatastoreArn": {
+   "pattern": "^arn:aws((-us-gov)|(-iso)|(-iso-b)|(-cn))?:healthlake:[a-zA-Z0-9-]+:[0-9]{12}:datastore/.+?",
+   "type": "string"
+  },
+  "DatastoreEndpoint": {
+   "maxLength": 10000,
+   "type": "string"
+  },
+  "DatastoreId": {
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatastoreName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-%@]*)$",
+   "type": "string"
+  },
+  "DatastoreStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "DatastoreTypeVersion": {
+   "enum": [
+    "R4"
+   ],
+   "type": "string"
+  },
+  "IdentityProviderConfiguration": {
+   "additionalProperties": false,
+   "default": {
+    "AuthorizationStrategy": "AWS_AUTH",
+    "FineGrainedAuthorizationEnabled": false
+   },
+   "properties": {
+    "AuthorizationStrategy": {
+     "enum": [
+      "SMART_ON_FHIR_V1",
+      "AWS_AUTH",
+      "SMART_ON_FHIR"
+     ],
+     "type": "string"
+    },
+    "FineGrainedAuthorizationEnabled": {
+     "type": "boolean"
+    },
+    "IdpLambdaArn": {
+     "maxLength": 256,
+     "minLength": 49,
+     "pattern": "arn:aws[-a-z]*:lambda:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9\\-_\\.]+(:(\\$LATEST|[a-zA-Z0-9\\-_]+))?",
+     "type": "string"
+    },
+    "Metadata": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AuthorizationStrategy"
+   ],
+   "type": "object"
+  },
+  "KmsEncryptionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CmkType": {
+     "enum": [
+      "CUSTOMER_MANAGED_KMS_KEY",
+      "AWS_OWNED_KMS_KEY"
+     ],
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "maxLength": 400,
+     "minLength": 1,
+     "pattern": "(arn:aws((-us-gov)|(-iso)|(-iso-b)|(-cn))?:kms:)?([a-z]{2}-[a-z]+(-[a-z]+)?-\\d:)?(\\d{12}:)?(((key/)?[a-zA-Z0-9-_]+)|(alias/[a-zA-Z0-9:/_-]+))",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CmkType"
+   ],
+   "type": "object"
+  },
+  "PreloadDataConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PreloadDataType": {
+     "enum": [
+      "SYNTHEA"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "PreloadDataType"
+   ],
+   "type": "object"
+  },
+  "SseConfiguration": {
+   "additionalProperties": false,
+   "default": {
+    "KmsEncryptionConfig": {
+     "CmkType": "AWS_OWNED_KMS_KEY"
+    }
+   },
+   "properties": {
+    "KmsEncryptionConfig": {
+     "$ref": "#/definitions/KmsEncryptionConfig"
+    }
+   },
+   "required": [
+    "KmsEncryptionConfig"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/healthlake/latest/devguide/working-with-FHIR-healthlake.html",
+ "primaryIdentifier": [
+  "/properties/DatastoreId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DatastoreArn": {
+   "$ref": "#/definitions/DatastoreArn"
+  },
+  "DatastoreEndpoint": {
+   "$ref": "#/definitions/DatastoreEndpoint"
+  },
+  "DatastoreId": {
+   "$ref": "#/definitions/DatastoreId"
+  },
+  "DatastoreName": {
+   "$ref": "#/definitions/DatastoreName"
+  },
+  "DatastoreStatus": {
+   "$ref": "#/definitions/DatastoreStatus"
+  },
+  "DatastoreTypeVersion": {
+   "$ref": "#/definitions/DatastoreTypeVersion"
+  },
+  "IdentityProviderConfiguration": {
+   "$ref": "#/definitions/IdentityProviderConfiguration"
+  },
+  "PreloadDataConfig": {
+   "$ref": "#/definitions/PreloadDataConfig"
+  },
+  "SseConfiguration": {
+   "$ref": "#/definitions/SseConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DatastoreArn",
+  "/properties/DatastoreEndpoint",
+  "/properties/DatastoreId",
+  "/properties/DatastoreStatus"
+ ],
+ "required": [
+  "DatastoreTypeVersion"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::HealthLake::FHIRDatastore"
+}

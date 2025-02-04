@@ -1518,7 +1518,6 @@ cached: list[str] = [
     "aws-securityhub-configurationpolicy.json",
     "aws-securityhub-delegatedadmin.json",
     "aws-securityhub-findingaggregator.json",
-    "aws-securityhub-hub.json",
     "aws-securityhub-insight.json",
     "aws-securityhub-organizationconfiguration.json",
     "aws-securityhub-policyassociation.json",

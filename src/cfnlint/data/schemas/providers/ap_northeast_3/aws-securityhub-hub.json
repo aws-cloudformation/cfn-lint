@@ -1,0 +1,57 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ARN"
+ ],
+ "properties": {
+  "ARN": {
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "AutoEnableControls": {
+   "type": "boolean"
+  },
+  "ControlFindingGenerator": {
+   "pattern": "^(SECURITY_CONTROL|STANDARD_CONTROL)$",
+   "type": "string"
+  },
+  "EnableDefaultStandards": {
+   "type": "boolean"
+  },
+  "SubscribedAt": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ARN",
+  "/properties/SubscribedAt"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SecurityHub::Hub",
+ "writeOnlyProperties": [
+  "/properties/EnableDefaultStandards"
+ ]
+}

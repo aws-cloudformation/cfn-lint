@@ -2293,7 +2293,6 @@ cached: list[str] = [
     "aws-ssm-maintenancewindowtask.json",
     "aws-ssm-parameter.json",
     "aws-ssm-patchbaseline.json",
-    "aws-ssm-resourcedatasync.json",
     "aws-ssm-resourcepolicy.json",
     "aws-ssmcontacts-contact.json",
     "aws-ssmcontacts-contactchannel.json",
