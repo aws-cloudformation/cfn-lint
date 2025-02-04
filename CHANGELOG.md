@@ -1,3 +1,11 @@
+### v1.24.0
+## What's Changed
+* Cleanup boto patching and include min/max by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3939
+* Fix `format` error messaging when no pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3943
+* Update CloudFormation schemas to `2025-02-04` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3945
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.23.1...v1.24.0
+
 ### v1.23.1
 ## What's Changed
 * Put in fixes for ECS `LogDriver` configs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3937
