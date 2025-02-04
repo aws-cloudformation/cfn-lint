@@ -75,9 +75,19 @@ class StringLength(CloudFormationLintRule):
     # pylint: disable=unused-argument, arguments-renamed
     def maxLength(self, validator, mL, instance, schema):
         if validator.is_type(instance, "string"):
-            if len(instance) > mL:
-                yield ValidationError(f"{instance!r} is longer than {mL}")
-            return
+            if schema.get("format") == "json":
+                try:
+                    instance = json.loads(instance)
+                except:  # noqa: E722
+                    pass
+                    return
+                yield from self._non_string_max_length(instance, mL)
+                return
+            else:
+                if len(instance) > mL:
+                    yield ValidationError(f"{instance!r} is longer than {mL}")
+                return
+
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement
         key, value = is_function(instance)
@@ -93,15 +103,25 @@ class StringLength(CloudFormationLintRule):
                         validator, mL, self._fix_sub_string(value[0]), schema
                     )
                 return
+
         if "object" in ensure_list(schema.get("type")):
             yield from self._non_string_max_length(instance, mL)
 
     # pylint: disable=unused-argument, arguments-renamed
     def minLength(self, validator, mL, instance, schema):
         if validator.is_type(instance, "string"):
-            if len(instance) < mL:
-                yield ValidationError(f"{instance!r} is shorter than {mL}")
-            return
+            if schema.get("format") == "json":
+                try:
+                    instance = json.loads(instance)
+                except:  # noqa: E722
+                    pass
+                    return
+                yield from self._non_string_min_length(instance, mL)
+                return
+            else:
+                if len(instance) < mL:
+                    yield ValidationError(f"{instance!r} is shorter than {mL}")
+                return
 
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement

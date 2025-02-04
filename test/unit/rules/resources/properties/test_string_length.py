@@ -43,6 +43,18 @@ def rule():
             {"type": ["string", "object"]},
             1,
         ),
+        (
+            '{"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}',
+            20,
+            {"type": ["string", "object"], "format": "json"},
+            1,
+        ),
+        (
+            '{"foo: 1, "bar": {"Fn::Sub": ["2", {}]}}',
+            20,
+            {"type": ["string", "object"], "format": "json"},
+            0,
+        ),
     ],
 )
 def test_min_length(instance, mL, expected, rule, schema, validator):
@@ -76,6 +88,18 @@ def test_min_length(instance, mL, expected, rule, schema, validator):
             4,
             {"type": ["string", "object"]},
             1,
+        ),
+        (
+            '{"foo": 1, "bar": {"Fn::Sub": ["2", {}]}}',
+            4,
+            {"type": ["string", "object"], "format": "json"},
+            1,
+        ),
+        (
+            '{"foo: 1, "bar": {"Fn::Sub": ["2", {}]}}',
+            4,
+            {"type": ["string", "object"], "format": "json"},
+            0,
         ),
     ],
 )
