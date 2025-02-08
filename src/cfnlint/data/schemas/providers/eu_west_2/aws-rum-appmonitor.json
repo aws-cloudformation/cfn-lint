@@ -1,0 +1,275 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AppMonitorConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowCookies": {
+     "type": "boolean"
+    },
+    "EnableXRay": {
+     "type": "boolean"
+    },
+    "ExcludedPages": {
+     "$ref": "#/definitions/Pages"
+    },
+    "FavoritePages": {
+     "$ref": "#/definitions/FavoritePages"
+    },
+    "GuestRoleArn": {
+     "$ref": "#/definitions/Arn"
+    },
+    "IdentityPoolId": {
+     "maxLength": 55,
+     "minLength": 1,
+     "pattern": "[\\w-]+:[0-9a-f-]+",
+     "type": "string"
+    },
+    "IncludedPages": {
+     "$ref": "#/definitions/Pages"
+    },
+    "MetricDestinations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MetricDestination"
+     },
+     "maxItems": 20,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SessionSampleRate": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "Telemetries": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Telemetry"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:.*",
+   "type": "string"
+  },
+  "CustomEvents": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "$ref": "#/definitions/CustomEventsStatus"
+    }
+   },
+   "type": "object"
+  },
+  "CustomEventsStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "FavoritePages": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "MetricDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "DimensionKeys": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^(?!:).*[^\\s].*": {
+       "maxLength": 255,
+       "minLength": 1,
+       "pattern": ".*[^\\s].*",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "EventPattern": {
+     "maxLength": 4000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Namespace": {
+     "maxLength": 237,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-._/#:]+$",
+     "type": "string"
+    },
+    "UnitLabel": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ValueKey": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MetricDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "enum": [
+      "CloudWatch",
+      "Evidently"
+     ],
+     "type": "string"
+    },
+    "DestinationArn": {
+     "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:.*",
+     "type": "string"
+    },
+    "IamRoleArn": {
+     "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:.*",
+     "type": "string"
+    },
+    "MetricDefinitions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/MetricDefinition"
+     },
+     "maxItems": 2000,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Destination"
+   ],
+   "type": "object"
+  },
+  "Pages": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Url"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TagDef": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Telemetry": {
+   "enum": [
+    "errors",
+    "performance",
+    "http"
+   ],
+   "type": "string"
+  },
+  "Url": {
+   "maxLength": 1260,
+   "minLength": 1,
+   "pattern": "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "AppMonitorConfiguration": {
+   "$ref": "#/definitions/AppMonitorConfiguration"
+  },
+  "CustomEvents": {
+   "$ref": "#/definitions/CustomEvents"
+  },
+  "CwLogEnabled": {
+   "type": "boolean"
+  },
+  "Domain": {
+   "maxLength": 253,
+   "minLength": 1,
+   "pattern": "^(localhost)|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))|^(\\*\\.)(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "[\\.\\-_/#A-Za-z0-9]+",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagDef"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "Domain"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::RUM::AppMonitor"
+}

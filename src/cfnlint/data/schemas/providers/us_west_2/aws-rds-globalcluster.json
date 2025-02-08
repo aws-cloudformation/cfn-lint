@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalClusterIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/StorageEncrypted",
+  "/properties/Engine"
+ ],
+ "definitions": {
+  "GlobalEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "SourceDBClusterIdentifier"
+   ]
+  },
+  {
+   "required": [
+    "Engine"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/GlobalClusterIdentifier"
+ ],
+ "properties": {
+  "DeletionProtection": {
+   "type": "boolean"
+  },
+  "Engine": {
+   "enum": [
+    "aurora",
+    "aurora-mysql",
+    "aurora-postgresql"
+   ],
+   "type": "string"
+  },
+  "EngineLifecycleSupport": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "GlobalClusterIdentifier": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "GlobalEndpoint": {
+   "$ref": "#/definitions/GlobalEndpoint"
+  },
+  "SourceDBClusterIdentifier": {
+   "oneOf": [
+    {
+     "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
+    },
+    {
+     "pattern": "^(?=.{40,128}$)arn.*"
+    }
+   ],
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/GlobalClusterIdentifier": "$lowercase(GlobalClusterIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/GlobalEndpoint"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RDS::GlobalCluster"
+}
