@@ -35,6 +35,8 @@ skip = [
     "workdocs",
 ]
 
+skip_resource_types = ["AWS::CloudFormation::Stack"]
+
 skip_property_names = ["State"]
 
 _visited_paths = []
@@ -251,6 +253,8 @@ def get_resource_patches(
         _, schema_data = ref_resolver.resolve("/")
 
         resource_type = schema_data.get("typeName", "")
+        if resource_type in skip_resource_types:
+            continue
         if resource_type not in results:
             results[resource_type] = {}
 
