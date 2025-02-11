@@ -1,0 +1,165 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "MountOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Version": {
+     "enum": [
+      "AUTOMATIC",
+      "SMB1",
+      "SMB2_0",
+      "SMB2",
+      "SMB3"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AgentArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "NTLM",
+    "KERBEROS"
+   ],
+   "type": "string"
+  },
+  "DnsIpAddresses": {
+   "default": null,
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 15,
+    "minLength": 7,
+    "pattern": "\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z",
+    "type": "string"
+   },
+   "maxItems": 2,
+   "type": "array"
+  },
+  "Domain": {
+   "maxLength": 253,
+   "pattern": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$",
+   "type": "string"
+  },
+  "KerberosKeytab": {
+   "maxLength": 87384,
+   "type": "string"
+  },
+  "KerberosKrb5Conf": {
+   "maxLength": 174764,
+   "type": "string"
+  },
+  "KerberosPrincipal": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "MountOptions": {
+   "$ref": "#/definitions/MountOptions",
+   "default": {
+    "Version": "AUTOMATIC"
+   }
+  },
+  "Password": {
+   "maxLength": 104,
+   "pattern": "^.{0,104}$",
+   "type": "string"
+  },
+  "ServerHostname": {
+   "maxLength": 255,
+   "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+   "type": "string"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "User": {
+   "maxLength": 104,
+   "pattern": "^[^\\x5B\\x5D\\\\/:;|=,+*?]{1,104}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationSMB",
+ "writeOnlyProperties": [
+  "/properties/Password",
+  "/properties/Subdirectory",
+  "/properties/ServerHostname",
+  "/properties/KerberosKeytab",
+  "/properties/KerberosKrb5Conf"
+ ]
+}
