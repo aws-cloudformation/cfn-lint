@@ -6,6 +6,9 @@
   "/properties/Tags"
  ],
  "definitions": {
+  "AdditionalModelRequestFields": {
+   "type": "object"
+  },
   "AnyToolChoice": {
    "additionalProperties": false,
    "type": "object"
@@ -13,6 +16,24 @@
   "AutoToolChoice": {
    "additionalProperties": false,
    "type": "object"
+  },
+  "CachePointBlock": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/CachePointType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "CachePointType": {
+   "enum": [
+    "default"
+   ],
+   "type": "string"
   },
   "ChatPromptTemplateConfiguration": {
    "additionalProperties": false,
@@ -65,6 +86,19 @@
       "Text"
      ],
      "title": "Text",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
      "type": "object"
     }
    ]
@@ -225,6 +259,9 @@
   "PromptVariant": {
    "additionalProperties": false,
    "properties": {
+    "AdditionalModelRequestFields": {
+     "$ref": "#/definitions/AdditionalModelRequestFields"
+    },
     "GenAiResource": {
      "$ref": "#/definitions/PromptGenAiResource"
     },
@@ -285,6 +322,19 @@
      ],
      "title": "Text",
      "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
+     "type": "object"
     }
    ]
   },
@@ -303,6 +353,9 @@
   "TextPromptTemplateConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "CachePoint": {
+     "$ref": "#/definitions/CachePointBlock"
+    },
     "InputVariables": {
      "insertionOrder": true,
      "items": {
@@ -336,6 +389,19 @@
       "ToolSpec"
      ],
      "title": "ToolSpec",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "CachePoint": {
+       "$ref": "#/definitions/CachePointBlock"
+      }
+     },
+     "required": [
+      "CachePoint"
+     ],
+     "title": "CachePoint",
      "type": "object"
     }
    ]
