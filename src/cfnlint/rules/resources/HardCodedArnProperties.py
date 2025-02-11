@@ -101,7 +101,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
             # !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
             # is valid even with aws as the account #.  This handles empty string
             if self.config["partition"] and not re.match(
-                r"^\$\{\w+}|\$\{AWS::Partition}|$", candidate[0]
+                r"^\$\{\w+}|\$\{AWS::Partition}|\*|$", candidate[0]
             ):
                 # or not re.match(r'^(\$\{\w+}|\$\{AWS::Region}|)$',candidate[1])
                 # or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
@@ -111,7 +111,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
                 )
                 matches.append(RuleMatch(path, message.format(path[1])))
             if self.config["region"] and not re.match(
-                r"^(\$\{\w+}|\$\{AWS::Region}|)$", candidate[1]
+                r"^(\$\{\w+}|\$\{AWS::Region}|\*|)$", candidate[1]
             ):
                 # or  or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
                 message = (
@@ -123,7 +123,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
             # Lambda is added for authorizer's Uniform Resource Identifier (URI)
             # https://github.com/aws-cloudformation/cfn-lint/issues/3716
             if self.config["accountId"] and not re.match(
-                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|lambda|$", candidate[2]
+                r"^\$\{\w+}|\$\{AWS::AccountId}|aws|lambda|\*|$", candidate[2]
             ):
                 if candidate[2] not in ["cloudfront"]:
                     message = (

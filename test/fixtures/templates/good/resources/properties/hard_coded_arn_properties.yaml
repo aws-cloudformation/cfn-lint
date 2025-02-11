@@ -26,3 +26,15 @@ Resources:
               AWS: !Sub arn:${AWS::Partition}:iam::cloudfront:user/CloudFront Origin Access Identity E15MNIMTCFKK4C
             Action: s3:GetObject
             Resource: arn:aws:s3:::bucket/*
+  Policy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Action: "*"
+          Resource:
+          - !Sub "arn:*:quicksight:${AWS::Region}:${AWS::AccountId}:dataset/*"
+          - !Sub "arn:${AWS::Partition}:quicksight:*:${AWS::AccountId}:dataset/*"
+          - !Sub "arn:${AWS::Partition}:quicksight:${AWS::Region}:*:dataset/*"
