@@ -1,0 +1,38 @@
+Parameters:
+  AvailabilityZone:
+    Type: String
+    Default: us-east-1a
+    Description: The availability zone in which to deploy
+  ImageId:
+    Type: AWS::EC2::Image::Id
+    Description: The AMI to use for the instance
+  Tenancy:
+    Type: String
+    Default: default
+    AllowedValues:
+    - default
+    - dedicated
+    Description: The tenancy for the instance
+  Affinity:
+    Type: String
+    Default: default
+    Description: The Affinity for the instance, if applicable
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone
+      CidrBlock: "10.0.0.0/16"
+      VpcId: !Ref Vpc
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      Affinity: !Ref Affinity
+      ImageId: !Ref ImageId
+      InstanceType: t2.micro
+      SubnetId: !GetAtt Subnet1.SubnetId
+      Tenancy: !Ref Tenancy
