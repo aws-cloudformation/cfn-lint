@@ -353,8 +353,8 @@ VALID_PARAMETER_TYPES = list(VALID_PARAMETER_TYPES_SINGLE) + list(
     VALID_PARAMETER_TYPES_LIST
 )
 
-BOOLEAN_STRINGS_TRUE = frozenset(["true", "True"])
-BOOLEAN_STRINGS_FALSE = frozenset(["false", "False"])
+BOOLEAN_STRINGS_TRUE = frozenset(["true", "True", "TRUE"])
+BOOLEAN_STRINGS_FALSE = frozenset(["false", "False", "FALSE"])
 BOOLEAN_STRINGS = frozenset(list(BOOLEAN_STRINGS_TRUE) + list(BOOLEAN_STRINGS_FALSE))
 
 TRANSFORM_SAM = "AWS::Serverless-2016-10-31"
