@@ -1,3 +1,14 @@
+### v1.25.0
+## What's Changed
+* Don't do boto work on the `AWS::CloudFormation::Stack` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3951
+* Add rule [E3501](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3501) to validate AWS::SQS::Queue properties based on the queue type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3952
+* Add rule [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3502) to validate AWS::SQS::Queue DLQ types match by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3952
+* Add `TRUE` to list of strings that can be boolean true by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3953
+* Allow asterisks for rule [I3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3042) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3954
+* Update CloudFormation schemas to `2025-02-11` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3948
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.24.0...v1.25.0
+
 ### v1.24.0
 ## What's Changed
 * Cleanup boto patching and include min/max by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3939
