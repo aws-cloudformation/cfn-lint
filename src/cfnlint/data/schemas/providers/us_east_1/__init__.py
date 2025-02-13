@@ -282,6 +282,7 @@ types: list[str] = [
     "AWS::Connect::ApprovedOrigin",
     "AWS::Connect::ContactFlow",
     "AWS::Connect::ContactFlowModule",
+    "AWS::Connect::ContactFlowVersion",
     "AWS::Connect::EmailAddress",
     "AWS::Connect::EvaluationForm",
     "AWS::Connect::HoursOfOperation",

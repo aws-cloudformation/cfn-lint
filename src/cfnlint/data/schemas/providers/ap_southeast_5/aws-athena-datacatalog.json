@@ -1,0 +1,78 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "maxLength": 51200,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Type": {
+   "enum": [
+    "LAMBDA",
+    "GLUE",
+    "HIVE"
+   ],
+   "type": "string"
+  }
+ },
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+ "taggable": true,
+ "typeName": "AWS::Athena::DataCatalog"
+}
