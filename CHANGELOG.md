@@ -1,3 +1,10 @@
+### v1.25.1
+## What's Changed
+* No maximum number of `Conditions` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3958
+* Update CloudFormation schemas to `2025-02-13` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3956
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.25.0...v1.25.1
+
 ### v1.25.0
 ## What's Changed
 * Don't do boto work on the `AWS::CloudFormation::Stack` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3951
