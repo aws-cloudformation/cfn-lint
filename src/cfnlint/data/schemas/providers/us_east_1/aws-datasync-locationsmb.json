@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "createOnlyProperties": [
-  "/properties/ServerHostname"
- ],
  "definitions": {
   "MountOptions": {
    "additionalProperties": false,
@@ -58,9 +55,42 @@
    "minItems": 1,
    "type": "array"
   },
+  "AuthenticationType": {
+   "enum": [
+    "NTLM",
+    "KERBEROS"
+   ],
+   "type": "string"
+  },
+  "DnsIpAddresses": {
+   "default": null,
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 15,
+    "minLength": 7,
+    "pattern": "\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z",
+    "type": "string"
+   },
+   "maxItems": 2,
+   "type": "array"
+  },
   "Domain": {
    "maxLength": 253,
    "pattern": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$",
+   "type": "string"
+  },
+  "KerberosKeytab": {
+   "maxLength": 87384,
+   "type": "string"
+  },
+  "KerberosKrb5Conf": {
+   "maxLength": 174764,
+   "type": "string"
+  },
+  "KerberosPrincipal": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^.+$",
    "type": "string"
   },
   "LocationArn": {
@@ -114,7 +144,6 @@
   "/properties/LocationUri"
  ],
  "required": [
-  "User",
   "AgentArns"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
@@ -129,6 +158,8 @@
  "writeOnlyProperties": [
   "/properties/Password",
   "/properties/Subdirectory",
-  "/properties/ServerHostname"
+  "/properties/ServerHostname",
+  "/properties/KerberosKeytab",
+  "/properties/KerberosKrb5Conf"
  ]
 }
