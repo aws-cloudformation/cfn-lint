@@ -1,3 +1,11 @@
+"""
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
+
+from __future__ import annotations
+
+
 class CfnLintExitException(Exception):
     """
     An exception that is raised to indicate that the CloudFormation linter should exit.
@@ -10,11 +18,11 @@ class CfnLintExitException(Exception):
         exit_code (int): The exit code to be used when the linter exits.
 
     Methods:
-        __init__(self, exit_code: int) -> None:
+        __init__(self, msg: str | None=None, exit_code: int=1) -> None:
             Initialize a new CfnLintExitException instance with the specified exit code.
     """
 
-    def __init__(self, msg=None, exit_code=1):
+    def __init__(self, msg: str | None = None, exit_code: int = 1):
         """
         Initialize a new CfnLintExitException instance with the specified exit code.
 
@@ -49,9 +57,17 @@ class UnexpectedRuleException(CfnLintExitException):
 
 class DuplicateRuleError(CfnLintExitException):
     """
-    The data associated with a particular path could not be loaded.
-    :ivar data_path: The data path that the user attempted to load.
+    An exception that is raised when an unexpected error occurs while loading rules.
+
+    This exception is raised when the CloudFormation linter encounters a rule with a
+    duplicate ID.
     """
 
     def __init__(self, rule_id: str):
+        """
+        Initialize a new CfnLintExitException instance with the specified exit code.
+
+        Args:
+            rule_id (str): The rule ID that a duplicate was found for.
+        """
         super().__init__(f"Rule already included: {rule_id}")
