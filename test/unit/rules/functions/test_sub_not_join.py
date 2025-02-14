@@ -20,6 +20,11 @@ def rule():
 @pytest.fixture
 def template():
     return {
+        "Parameters": {
+            "MyList": {
+                "Type": "CommaDelimitedList",
+            },
+        },
         "Resources": {
             "MyResource": {
                 "Type": "AWS::S3::Bucket",
@@ -34,6 +39,12 @@ def template():
         (
             "Valid Fn::Join with proper delimiter",
             {"Fn::Join": [",", ["", ""]]},
+            {"type": "string"},
+            [],
+        ),
+        (
+            "Valid Fn::Join with a list parameter",
+            {"Fn::Join": ["", {"Ref": "MyList"}]},
             {"type": "string"},
             [],
         ),
