@@ -804,6 +804,7 @@ cached: list[str] = [
     "aws-autoscaling-scalingpolicy.json",
     "aws-autoscaling-scheduledaction.json",
     "aws-autoscaling-warmpool.json",
+    "aws-backup-backupplan.json",
     "aws-backup-backupselection.json",
     "aws-backup-backupvault.json",
     "aws-backup-logicallyairgappedbackupvault.json",
