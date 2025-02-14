@@ -2161,7 +2161,6 @@ cached: list[str] = [
     "aws-opensearchserverless-accesspolicy.json",
     "aws-opensearchserverless-collection.json",
     "aws-opensearchserverless-lifecyclepolicy.json",
-    "aws-opensearchserverless-securityconfig.json",
     "aws-opensearchserverless-securitypolicy.json",
     "aws-opensearchserverless-vpcendpoint.json",
     "aws-opensearchservice-application.json",

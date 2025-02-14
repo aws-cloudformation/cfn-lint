@@ -1434,6 +1434,7 @@ cached: list[str] = [
     "aws-cognito-managedloginbranding.json",
     "aws-cognito-userpool.json",
     "aws-cognito-userpoolclient.json",
+    "aws-cognito-userpooldomain.json",
     "aws-cognito-userpoolgroup.json",
     "aws-cognito-userpoolidentityprovider.json",
     "aws-cognito-userpoolresourceserver.json",
