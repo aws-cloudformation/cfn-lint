@@ -12,8 +12,6 @@ from cfnlint.rules import CloudFormationLintRule
 
 
 class SubNotJoin(CloudFormationLintRule):
-    """Check if Join is being used with no join characters"""
-
     id = "I1022"
     shortdesc = "Use Sub instead of Join"
     description = (
@@ -35,6 +33,9 @@ class SubNotJoin(CloudFormationLintRule):
         return True
 
     def _check_elements(self, elements):
+        if not isinstance(elements, list):
+            return False
+
         for element in elements:
             if not self._check_element(element):
                 return False
@@ -55,7 +56,7 @@ class SubNotJoin(CloudFormationLintRule):
 
         if self._check_elements(value[1]):
             yield ValidationError(
-                ("Prefer using Fn::Sub over Fn::Join with an" " empty delimiter"),
+                ("Prefer using Fn::Sub over Fn::Join with an empty delimiter"),
                 path=deque([key, 0]),
                 rule=self,
             )
