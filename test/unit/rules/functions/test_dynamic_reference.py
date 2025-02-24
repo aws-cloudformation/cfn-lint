@@ -47,6 +47,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -57,6 +58,7 @@ def context(cfn):
             {
                 "E1051": None,
                 "E1027": None,
+                "W1051": None,
             },
             [],
         ),
@@ -67,6 +69,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -77,6 +80,7 @@ def context(cfn):
             {
                 "E1051": None,
                 "E1027": None,
+                "W1051": None,
             },
             [],
         ),
@@ -87,6 +91,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -97,6 +102,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -107,6 +113,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [
                 ValidationError(
@@ -123,6 +130,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [
                 ValidationError(
@@ -139,6 +147,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -149,6 +158,7 @@ def context(cfn):
             {
                 "E1051": None,
                 "E1027": None,
+                "W1051": None,
             },
             [],
         ),
@@ -159,6 +169,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -169,6 +180,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [],
         ),
@@ -179,6 +191,7 @@ def context(cfn):
             {
                 "E1051": _TestRule(),
                 "E1027": _TestRule(),
+                "W1051": _TestRule(),
             },
             [
                 ValidationError(
