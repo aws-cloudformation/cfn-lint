@@ -1,0 +1,12 @@
+Resources:
+  KmsKey:
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Type: AWS::KMS::Key
+    Properties: {}
+
+  CustomResource:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: test
+      KmsKeyId: !GetAtt KmsKey.ArnA
