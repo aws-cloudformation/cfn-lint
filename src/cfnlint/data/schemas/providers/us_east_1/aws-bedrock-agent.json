@@ -114,6 +114,44 @@
    ],
    "type": "object"
   },
+  "AgentCollaboration": {
+   "enum": [
+    "DISABLED",
+    "SUPERVISOR",
+    "SUPERVISOR_ROUTER"
+   ],
+   "type": "string"
+  },
+  "AgentCollaborator": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentDescriptor": {
+     "additionalProperties": false,
+     "properties": {
+      "AliasArn": {
+       "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "CollaborationInstruction": {
+     "type": "string"
+    },
+    "CollaboratorName": {
+     "type": "string"
+    },
+    "RelayConversationHistory": {
+     "$ref": "#/definitions/RelayConversationHistory"
+    }
+   },
+   "required": [
+    "AgentDescriptor",
+    "CollaborationInstruction",
+    "CollaboratorName"
+   ],
+   "type": "object"
+  },
   "AgentKnowledgeBase": {
    "additionalProperties": false,
    "properties": {
@@ -160,6 +198,28 @@
    "enum": [
     "RETURN_CONTROL"
    ],
+   "type": "string"
+  },
+  "CustomOrchestration": {
+   "additionalProperties": false,
+   "properties": {
+    "Executor": {
+     "$ref": "#/definitions/OrchestrationExecutor"
+    }
+   },
+   "type": "object"
+  },
+  "EnabledMemoryTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MemoryType"
+   },
+   "type": "array"
+  },
+  "FoundationModel": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}(([:][a-z0-9-]{1,63}){0,2})?/[a-z0-9]{12})|(:foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|([0-9]{12}:(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+))|(([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|(([0-9a-zA-Z][_-]?)+)$",
    "type": "string"
   },
   "Function": {
@@ -260,6 +320,49 @@
    ],
    "type": "string"
   },
+  "MemoryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnabledMemoryTypes": {
+     "$ref": "#/definitions/EnabledMemoryTypes"
+    },
+    "SessionSummaryConfiguration": {
+     "$ref": "#/definitions/SessionSummaryConfiguration"
+    },
+    "StorageDays": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "MemoryType": {
+   "enum": [
+    "SESSION_SUMMARY"
+   ],
+   "type": "string"
+  },
+  "OrchestrationExecutor": {
+   "additionalProperties": false,
+   "properties": {
+    "Lambda": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Lambda"
+   ],
+   "title": "Lambda",
+   "type": "object"
+  },
+  "OrchestrationType": {
+   "enum": [
+    "DEFAULT",
+    "CUSTOM_ORCHESTRATION"
+   ],
+   "type": "string"
+  },
   "ParameterDetail": {
    "additionalProperties": false,
    "properties": {
@@ -296,6 +399,9 @@
      "maxLength": 100000,
      "minLength": 1,
      "type": "string"
+    },
+    "FoundationModel": {
+     "$ref": "#/definitions/FoundationModel"
     },
     "InferenceConfiguration": {
      "$ref": "#/definitions/InferenceConfiguration"
@@ -349,7 +455,16 @@
     "PRE_PROCESSING",
     "ORCHESTRATION",
     "POST_PROCESSING",
+    "ROUTING_CLASSIFIER",
+    "MEMORY_SUMMARIZATION",
     "KNOWLEDGE_BASE_RESPONSE_GENERATION"
+   ],
+   "type": "string"
+  },
+  "RelayConversationHistory": {
+   "enum": [
+    "TO_COLLABORATOR",
+    "DISABLED"
    ],
    "type": "string"
   },
@@ -374,6 +489,15 @@
      "minLength": 1,
      "pattern": "^[\\.\\-\\!\\*\\_\\'\\(\\)a-zA-Z0-9][\\.\\-\\!\\*\\_\\'\\(\\)\\/a-zA-Z0-9]*$",
      "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SessionSummaryConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxRecentSessions": {
+     "type": "number"
     }
    },
    "type": "object"
@@ -418,6 +542,16 @@
    "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent/[0-9a-zA-Z]{10}$",
    "type": "string"
   },
+  "AgentCollaboration": {
+   "$ref": "#/definitions/AgentCollaboration"
+  },
+  "AgentCollaborators": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AgentCollaborator"
+   },
+   "type": "array"
+  },
   "AgentId": {
    "pattern": "^[0-9a-zA-Z]{10}$",
    "type": "string"
@@ -447,6 +581,9 @@
    "format": "date-time",
    "type": "string"
   },
+  "CustomOrchestration": {
+   "$ref": "#/definitions/CustomOrchestration"
+  },
   "CustomerEncryptionKeyArn": {
    "maxLength": 2048,
    "minLength": 1,
@@ -468,10 +605,7 @@
    "type": "array"
   },
   "FoundationModel": {
-   "maxLength": 2048,
-   "minLength": 1,
-   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:(([0-9]{12}:custom-model/[a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}(([:][a-z0-9-]{1,63}){0,2})?/[a-z0-9]{12})|(:foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|([0-9]{12}:(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+))|(([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2}))|(([0-9a-zA-Z][_-]?)+)$",
-   "type": "string"
+   "$ref": "#/definitions/FoundationModel"
   },
   "GuardrailConfiguration": {
    "$ref": "#/definitions/GuardrailConfiguration"
@@ -491,6 +625,12 @@
     "$ref": "#/definitions/AgentKnowledgeBase"
    },
    "type": "array"
+  },
+  "MemoryConfiguration": {
+   "$ref": "#/definitions/MemoryConfiguration"
+  },
+  "OrchestrationType": {
+   "$ref": "#/definitions/OrchestrationType"
   },
   "PreparedAt": {
    "format": "date-time",
