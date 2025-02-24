@@ -795,13 +795,40 @@
    },
    "type": "object"
   },
+  "ChannelEngineVersionRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "CmafIngestGroupSettings": {
    "additionalProperties": false,
    "properties": {
     "Destination": {
      "$ref": "#/definitions/OutputLocationRef"
     },
+    "Id3Behavior": {
+     "type": "string"
+    },
+    "Id3NameModifier": {
+     "type": "string"
+    },
+    "KlvBehavior": {
+     "type": "string"
+    },
+    "KlvNameModifier": {
+     "type": "string"
+    },
     "NielsenId3Behavior": {
+     "type": "string"
+    },
+    "NielsenId3NameModifier": {
+     "type": "string"
+    },
+    "Scte35NameModifier": {
      "type": "string"
     },
     "Scte35Type": {
@@ -1596,6 +1623,9 @@
     },
     "ColorSpaceSettings": {
      "$ref": "#/definitions/H265ColorSpaceSettings"
+    },
+    "Deblocking": {
+     "type": "string"
     },
     "FilterSettings": {
      "$ref": "#/definitions/H265FilterSettings"
@@ -2416,7 +2446,13 @@
   "MediaPackageOutputDestinationSettings": {
    "additionalProperties": false,
    "properties": {
+    "ChannelGroup": {
+     "type": "string"
+    },
     "ChannelId": {
+     "type": "string"
+    },
+    "ChannelName": {
      "type": "string"
     }
    },
@@ -3529,12 +3565,18 @@
   "ChannelClass": {
    "type": "string"
   },
+  "ChannelEngineVersion": {
+   "$ref": "#/definitions/ChannelEngineVersionRequest"
+  },
   "Destinations": {
    "items": {
     "$ref": "#/definitions/OutputDestination"
    },
    "type": "array",
    "uniqueItems": false
+  },
+  "DryRun": {
+   "type": "boolean"
   },
   "EncoderSettings": {
    "$ref": "#/definitions/EncoderSettings"
