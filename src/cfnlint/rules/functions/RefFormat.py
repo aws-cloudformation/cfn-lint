@@ -8,6 +8,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import Any
 
+from cfnlint.helpers import is_custom_resource
 from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.jsonschema._utils import Unset
 from cfnlint.rules.formats._schema_comparer import compare_schemas
@@ -62,6 +63,12 @@ class RefFormat(CfnLintKeyword):
         if instance not in validator.context.resources:
             return
         t = validator.context.resources[instance].type
+
+        # When using a custom resource you can set the physical ID
+        # which results in a usable Ref
+        if is_custom_resource(t):
+            return
+
         for (
             regions,
             resource_schema,
@@ -69,9 +76,7 @@ class RefFormat(CfnLintKeyword):
             t, validator.context.regions
         ):
             region = regions[0]
-
             ref_schema = validator.context.resources[instance].ref(region)
-
             ref_schema = self._filter_schema(validator, t, instance, ref_schema)
 
             err = compare_schemas(schema, ref_schema)
