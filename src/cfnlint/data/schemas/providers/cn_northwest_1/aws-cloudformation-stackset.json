@@ -1,0 +1,346 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/StackSetName"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PermissionModel",
+  "/properties/StackSetName"
+ ],
+ "definitions": {
+  "Account": {
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "Active": {
+   "type": "boolean"
+  },
+  "AutoDeployment": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "RetainStacksOnAccountRemoval": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Capability": {
+   "enum": [
+    "CAPABILITY_IAM",
+    "CAPABILITY_NAMED_IAM",
+    "CAPABILITY_AUTO_EXPAND"
+   ],
+   "type": "string"
+  },
+  "ConcurrencyMode": {
+   "enum": [
+    "STRICT_FAILURE_TOLERANCE",
+    "SOFT_FAILURE_TOLERANCE"
+   ],
+   "type": "string"
+  },
+  "DeploymentTargets": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountFilterType": {
+     "enum": [
+      "NONE",
+      "UNION",
+      "INTERSECTION",
+      "DIFFERENCE"
+     ],
+     "type": "string"
+    },
+    "Accounts": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Account"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "AccountsUrl": {
+     "maxLength": 5120,
+     "minLength": 1,
+     "pattern": "(s3://|http(s?)://).+",
+     "type": "string"
+    },
+    "OrganizationalUnitIds": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/OrganizationalUnitId"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "OperationPreferences": {
+   "additionalProperties": false,
+   "properties": {
+    "ConcurrencyMode": {
+     "$ref": "#/definitions/ConcurrencyMode"
+    },
+    "FailureToleranceCount": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "FailureTolerancePercentage": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxConcurrentCount": {
+     "minimum": 1,
+     "type": "integer"
+    },
+    "MaxConcurrentPercentage": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RegionConcurrencyType": {
+     "$ref": "#/definitions/RegionConcurrencyType"
+    },
+    "RegionOrder": {
+     "items": {
+      "$ref": "#/definitions/Region"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "OrganizationalUnitId": {
+   "pattern": "^(ou-[a-z0-9]{4,32}-[a-z0-9]{8,32}|r-[a-z0-9]{4,32})$",
+   "type": "string"
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterKey": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterKey",
+    "ParameterValue"
+   ],
+   "type": "object"
+  },
+  "Region": {
+   "pattern": "^[a-zA-Z0-9-]{1,128}$",
+   "type": "string"
+  },
+  "RegionConcurrencyType": {
+   "enum": [
+    "SEQUENTIAL",
+    "PARALLEL"
+   ],
+   "type": "string"
+  },
+  "StackInstances": {
+   "additionalProperties": false,
+   "properties": {
+    "DeploymentTargets": {
+     "$ref": "#/definitions/DeploymentTargets"
+    },
+    "ParameterOverrides": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Regions": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Region"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "DeploymentTargets",
+    "Regions"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)[a-zA-Z0-9\\s\\:\\_\\.\\/\\=\\+\\-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "TemplateURL"
+   ]
+  },
+  {
+   "required": [
+    "TemplateBody"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/StackSetId"
+ ],
+ "properties": {
+  "AdministrationRoleARN": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "AutoDeployment": {
+   "$ref": "#/definitions/AutoDeployment"
+  },
+  "CallAs": {
+   "enum": [
+    "SELF",
+    "DELEGATED_ADMIN"
+   ],
+   "type": "string"
+  },
+  "Capabilities": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Capability"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExecutionRoleName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9+=,.@-]+",
+   "type": "string"
+  },
+  "ManagedExecution": {
+   "additionalProperties": false,
+   "properties": {
+    "Active": {
+     "$ref": "#/definitions/Active"
+    }
+   },
+   "type": "object"
+  },
+  "OperationPreferences": {
+   "$ref": "#/definitions/OperationPreferences"
+  },
+  "Parameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Parameter"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PermissionModel": {
+   "enum": [
+    "SERVICE_MANAGED",
+    "SELF_MANAGED"
+   ],
+   "type": "string"
+  },
+  "StackInstancesGroup": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/StackInstances"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StackSetId": {
+   "type": "string"
+  },
+  "StackSetName": {
+   "maxLength": 128,
+   "pattern": "^[a-zA-Z][a-zA-Z0-9\\-]{0,127}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TemplateBody": {
+   "maxLength": 51200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "TemplateURL": {
+   "maxLength": 5120,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/StackSetId"
+ ],
+ "required": [
+  "StackSetName",
+  "PermissionModel"
+ ],
+ "resourceLink": {
+  "mappings": {
+   "StackSetId": "/StackSetId"
+  },
+  "templateUri": "/cloudformation/home?region=${awsRegion}#/stacksets/${StackSetId}"
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudformation.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudFormation::StackSet",
+ "writeOnlyProperties": [
+  "/properties/TemplateURL",
+  "/properties/OperationPreferences",
+  "/properties/StackInstancesGroup",
+  "/properties/CallAs"
+ ]
+}

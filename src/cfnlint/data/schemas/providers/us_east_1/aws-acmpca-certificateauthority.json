@@ -50,9 +50,21 @@
     "CrlDistributionPointExtensionConfiguration": {
      "$ref": "#/definitions/CrlDistributionPointExtensionConfiguration"
     },
+    "CrlType": {
+     "enum": [
+      "COMPLETE",
+      "PARTITIONED"
+     ],
+     "type": "string"
+    },
     "CustomCname": {
      "maxLength": 253,
      "pattern": "[-a-zA-Z0-9;/?:@&=+$,%_.!~*()']*",
+     "type": "string"
+    },
+    "CustomPath": {
+     "maxLength": 253,
+     "pattern": "[-a-zA-Z0-9;?:@&=+$,%_.!~*()']+(/[-a-zA-Z0-9;?:@&=+$,%_.!~*()']+)*",
      "type": "string"
     },
     "Enabled": {
@@ -425,7 +437,6 @@
  },
  "typeName": "AWS::ACMPCA::CertificateAuthority",
  "writeOnlyProperties": [
-  "/properties/Subject",
   "/properties/Subject",
   "/properties/CsrExtensions",
   "/properties/RevocationConfiguration",

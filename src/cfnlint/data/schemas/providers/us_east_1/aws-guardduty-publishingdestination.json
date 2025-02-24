@@ -1,0 +1,97 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DetectorId"
+ ],
+ "definitions": {
+  "CFNDestinationProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationArn": {
+     "type": "string"
+    },
+    "KmsKeyArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagItem": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DetectorId",
+  "/properties/Id"
+ ],
+ "properties": {
+  "DestinationProperties": {
+   "$ref": "#/definitions/CFNDestinationProperties",
+   "type": "object"
+  },
+  "DestinationType": {
+   "enum": [
+    "S3"
+   ],
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DetectorId": {
+   "maxLength": 300,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PublishingFailureStartTimestamp": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagItem"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/PublishingFailureStartTimestamp"
+ ],
+ "required": [
+  "DetectorId",
+  "DestinationType",
+  "DestinationProperties"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GuardDuty::PublishingDestination"
+}

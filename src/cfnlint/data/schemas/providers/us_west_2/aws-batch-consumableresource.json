@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConsumableResourceName",
+  "/properties/ResourceType",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "REPLENISHABLE",
+    "NON_REPLENISHABLE"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConsumableResourceArn"
+ ],
+ "properties": {
+  "AvailableQuantity": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "ConsumableResourceArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "ConsumableResourceName": {
+   "pattern": "",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "InUseQuantity": {
+   "format": "int64",
+   "type": "integer"
+  },
+  "ResourceType": {
+   "$ref": "#/definitions/ResourceType"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".*": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TotalQuantity": {
+   "format": "int64",
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConsumableResourceArn",
+  "/properties/CreatedAt",
+  "/properties/InUseQuantity",
+  "/properties/AvailableQuantity"
+ ],
+ "required": [
+  "ResourceType",
+  "TotalQuantity"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Batch::ConsumableResource"
+}
