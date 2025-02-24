@@ -21,6 +21,7 @@ def template():
         "Resources": {
             "MyBucket": {"Type": "AWS::S3::Bucket"},
             "MyVpc": {"Type": "AWS::EC2::VPC"},
+            "MyCustomResource": {"Type": "Custom::MyResource"},
         },
     }
 
@@ -31,6 +32,12 @@ def template():
         (
             "Valid Ref with a good format",
             "MyVpc",
+            {"format": "AWS::EC2::VPC.Id"},
+            [],
+        ),
+        (
+            "Valid Ref with a good format",
+            "MyCustomResource",
             {"format": "AWS::EC2::VPC.Id"},
             [],
         ),
