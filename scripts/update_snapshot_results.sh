@@ -13,6 +13,7 @@ cfn-lint test/fixtures/templates/integration/aws-ec2-instance.yaml -e -c I --for
 cfn-lint test/fixtures/templates/integration/aws-ec2-launchtemplate.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-launchtemplate.json
 cfn-lint test/fixtures/templates/integration/aws-ec2-subnet.yaml -e -c I --format json > test/fixtures/results/integration/aws-ec2-subnet.json
 cfn-lint test/fixtures/templates/integration/aws-dynamodb-table.yaml -e -c I --format json > test/fixtures/results/integration/aws-dynamodb-table.json
+cfn-lint test/fixtures/templates/integration/custom-resources.yaml -e -c I --format json > test/fixtures/results/integration/custom-resources.json
 
 # public/
 cfn-lint test/fixtures/templates/public/lambda-poller.yaml -e -c I --format json > test/fixtures/results/public/lambda-poller.json
