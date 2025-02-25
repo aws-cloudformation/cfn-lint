@@ -1,0 +1,148 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyIdentifier"
+ ],
+ "definitions": {
+  "AuthType": {
+   "enum": [
+    "IAM_IDC",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "DomainStatus": {
+   "enum": [
+    "CREATING",
+    "AVAILABLE",
+    "CREATION_FAILED",
+    "DELETING",
+    "DELETED",
+    "DELETION_FAILED"
+   ],
+   "type": "string"
+  },
+  "SingleSignOn": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/AuthType"
+    },
+    "UserAssignment": {
+     "$ref": "#/definitions/UserAssignment"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "UserAssignment": {
+   "enum": [
+    "AUTOMATIC",
+    "MANUAL"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws(|-cn|-us-gov):datazone:\\w+(?:-\\w+)+:\\d{12}:domain/dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DomainExecutionRole": {
+   "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+   "type": "string"
+  },
+  "Id": {
+   "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
+   "type": "string"
+  },
+  "KmsKeyIdentifier": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "LastUpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "ManagedAccountId": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "PortalUrl": {
+   "type": "string"
+  },
+  "SingleSignOn": {
+   "$ref": "#/definitions/SingleSignOn"
+  },
+  "Status": {
+   "$ref": "#/definitions/DomainStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/LastUpdatedAt",
+  "/properties/ManagedAccountId",
+  "/properties/PortalUrl",
+  "/properties/Status"
+ ],
+ "required": [
+  "DomainExecutionRole",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataZone::Domain"
+}

@@ -140,6 +140,7 @@ types: list[str] = [
     "AWS::Backup::RestoreTestingSelection",
     "AWS::BackupGateway::Hypervisor",
     "AWS::Batch::ComputeEnvironment",
+    "AWS::Batch::ConsumableResource",
     "AWS::Batch::JobDefinition",
     "AWS::Batch::JobQueue",
     "AWS::Batch::SchedulingPolicy",

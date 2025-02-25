@@ -1,0 +1,161 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceArn",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CustomerManagedPolicyReference": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    },
+    "Path": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "((/[A-Za-z0-9\\.,\\+@=_-]+)*)/",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ManagedPolicyArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomerManagedPolicyReference": {
+     "$ref": "#/definitions/CustomerManagedPolicyReference"
+    },
+    "ManagedPolicyArn": {
+     "$ref": "#/definitions/ManagedPolicyArn"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceArn",
+  "/properties/PermissionSetArn"
+ ],
+ "properties": {
+  "CustomerManagedPolicyReferences": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomerManagedPolicyReference"
+   },
+   "maxItems": 20,
+   "type": "array"
+  },
+  "Description": {
+   "maxLength": 700,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*",
+   "type": "string"
+  },
+  "InlinePolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "InstanceArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+   "type": "string"
+  },
+  "ManagedPolicies": {
+   "default": [],
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ManagedPolicyArn"
+   },
+   "maxItems": 20,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 32,
+   "minLength": 1,
+   "pattern": "[\\w+=,.@-]+",
+   "type": "string"
+  },
+  "PermissionSetArn": {
+   "maxLength": 1224,
+   "minLength": 10,
+   "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::permissionSet/(sso)?ins-[a-zA-Z0-9-.]{16}/ps-[a-zA-Z0-9-./]{16}",
+   "type": "string"
+  },
+  "PermissionsBoundary": {
+   "$ref": "#/definitions/PermissionsBoundary"
+  },
+  "RelayStateType": {
+   "maxLength": 240,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9&amp;$@#\\/%?=~\\-_'&quot;|!:,.;*+\\[\\]\\ \\(\\)\\{\\}]+",
+   "type": "string"
+  },
+  "SessionDuration": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PermissionSetArn"
+ ],
+ "required": [
+  "Name",
+  "InstanceArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-permissionset",
+ "tagging": {
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SSO::PermissionSet"
+}
