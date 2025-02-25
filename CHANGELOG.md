@@ -1,3 +1,14 @@
+### v1.26.0
+## What's Changed
+* Update [I1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I1022) to allow functions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3961
+* Update CloudFormation schemas to `2025-02-24` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3960
+* Add rule [W1051](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1051) to validate if dynamic reference when ARN by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3962
+* Ignore custom resource Ref by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3965
+* Update custom resource schema by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3966
+* Fix EC2 Subnet allowing ipv6 only by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3969
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.25.1...v1.26.0
+
 ### v1.25.1
 ## What's Changed
 * No maximum number of `Conditions` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3958
