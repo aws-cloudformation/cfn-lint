@@ -1645,7 +1645,12 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "requiredXor": ["CidrBlock", "Ipv4IpamPoolId"],
+                        "requiredXor": [
+                            "CidrBlock",
+                            "Ipv4IpamPoolId",
+                            "Ipv6IpamPoolId",
+                            "Ipv6CidrBlock",
+                        ],
                         "dependentExcluded": {
                             "AvailabilityZone": ["AvailabilityZoneId"],
                             "AvailabilityZoneId": ["AvailabilityZone"],
@@ -1653,6 +1658,8 @@ patches.extend(
                         "dependentRequired": {
                             "Ipv4IpamPoolId": ["Ipv4NetmaskLength"],
                             "Ipv4NetmaskLength": ["Ipv4IpamPoolId"],
+                            "Ipv6IpamPoolId": ["Ipv6NetmaskLength"],
+                            "Ipv6NetmaskLength": ["Ipv6IpamPoolId"],
                         },
                     },
                     path="/",

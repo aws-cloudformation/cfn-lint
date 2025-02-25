@@ -1,8 +1,35 @@
 [
  {
   "op": "add",
-  "path": "/properties/PromotionTier/maximum",
-  "value": 15
+  "path": "/dependentExcluded",
+  "value": {
+   "SourceDBInstanceIdentifier": [
+    "CharacterSetName",
+    "MasterUserPassword",
+    "MasterUsername",
+    "StorageEncrypted"
+   ]
+  }
+ },
+ {
+  "op": "add",
+  "path": "/dependencies",
+  "value": {
+   "KmsKeyId": {
+    "properties": {
+     "StorageEncrypted": {
+      "enum": [
+       "true",
+       "True",
+       true
+      ]
+     }
+    },
+    "required": [
+     "StorageEncrypted"
+    ]
+   }
+  }
  },
  {
   "op": "add",
@@ -42,34 +69,7 @@
  },
  {
   "op": "add",
-  "path": "/dependentExcluded",
-  "value": {
-   "SourceDBInstanceIdentifier": [
-    "CharacterSetName",
-    "MasterUserPassword",
-    "MasterUsername",
-    "StorageEncrypted"
-   ]
-  }
- },
- {
-  "op": "add",
-  "path": "/dependencies",
-  "value": {
-   "KmsKeyId": {
-    "properties": {
-     "StorageEncrypted": {
-      "enum": [
-       "true",
-       "True",
-       true
-      ]
-     }
-    },
-    "required": [
-     "StorageEncrypted"
-    ]
-   }
-  }
+  "path": "/properties/PromotionTier/maximum",
+  "value": 15
  }
 ]
