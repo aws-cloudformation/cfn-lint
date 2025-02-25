@@ -1,3 +1,9 @@
+### v1.26.1
+## What's Changed
+* Switch EC2 subnet `requiredXor` to `requiredOr` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3970
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.26.0...v1.26.1
+
 ### v1.26.0
 ## What's Changed
 * Update [I1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I1022) to allow functions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3961
