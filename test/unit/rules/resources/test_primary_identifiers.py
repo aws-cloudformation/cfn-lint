@@ -27,5 +27,5 @@ class TestPrimaryIdentifiers(BaseRuleTestCase):
     def test_file_negative_alias(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/primary_identifiers.yaml", 8
+            "test/fixtures/templates/bad/resources/primary_identifiers.yaml", 10
         )

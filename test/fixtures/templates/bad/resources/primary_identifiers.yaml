@@ -162,3 +162,42 @@ Resources:
     Type: MyCompany::MODULE
     Properties:
       Attribute2: test
+  Project1:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: myProjectName
+      ServiceRole: arn
+      Artifacts:
+        Type: no_artifacts
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/java:openjdk-8
+        EnvironmentVariables:
+        - Name: varName
+          Type: varType
+          Value: varValue
+      Source:
+        Location: codebuild-demo-test/0123ab9a371ebf0187b0fe5614fbb72c
+        Type: S3
+      TimeoutInMinutes: 10
+
+  Project2:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: myProjectName
+      ServiceRole: arn
+      Artifacts:
+        Type: no_artifacts
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/java:openjdk-8
+        EnvironmentVariables:
+        - Name: varName
+          Type: varType
+          Value: varValue
+      Source:
+        Location: codebuild-demo-test/0123ab9a371ebf0187b0fe5614fbb72c
+        Type: S3
+      TimeoutInMinutes: 10
