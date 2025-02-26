@@ -106,6 +106,19 @@ def _run_template(
     filename: str | None, template: Any, config: ConfigMixIn, rules: Rules
 ) -> Iterator[Match]:
 
+    if not isinstance(template, dict):
+        # pylint: disable=import-outside-toplevel
+        from cfnlint.rules.errors import ParseError
+
+        # Template isn't a dict which means nearly nothing will work
+        yield Match.create(
+            filename=filename or "",
+            rule=ParseError(),
+            message="Template needs to be an object.",
+        )
+
+        return
+
     config.set_template_args(template)
     cfn = Template(filename, template, config.regions, config.parameters)
     yield from _dedup(_run_template_per_config(cfn, config, rules))
