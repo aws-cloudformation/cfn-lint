@@ -63,7 +63,7 @@ class Document(CfnLintJsonSchema):
             instance, errs = decode_str(instance)
             if errs:
                 yield ValidationError(
-                    "Document is not of type 'object'",
+                    f"Document is not valid ({errs[0].message!r})",
                     validator="type",
                     rule=self,
                 )
