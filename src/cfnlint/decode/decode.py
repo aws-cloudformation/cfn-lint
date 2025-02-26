@@ -133,19 +133,6 @@ def _decode(
     except (YAMLError, Exception) as err:
         matches = [create_match_file_error(filename, str(err))]
 
-    if not isinstance(template, dict) and not matches:
-        # pylint: disable=import-outside-toplevel
-        from cfnlint.rules.errors import ParseError
-
-        # Template isn't a dict which means nearly nothing will work
-        matches = [
-            Match.create(
-                filename=filename or "",
-                rule=ParseError(),
-                message="Template needs to be an object.",
-            )
-        ]
-
     if matches:
         return None, matches
     return template, matches

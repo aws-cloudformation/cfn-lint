@@ -18,6 +18,7 @@ from cfnlint.rules import Match, Rules
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, patch
 from cfnlint.rules.errors import ConfigError
 from cfnlint.runner.deployment_file.runner import expand_deployment_files
+from cfnlint.runner.parameter_file.runner import expand_parameter_files
 from cfnlint.runner.template import (
     run_template_by_data,
     run_template_by_file_paths,
@@ -235,6 +236,14 @@ class Runner:
 
             return
 
+        if self.config.parameter_files:
+            for parameter_config, matches in expand_parameter_files(self.config):
+                if not parameter_config:
+                    yield from matches
+                    continue
+
+                yield from run_template_by_file_paths(parameter_config, self.rules)
+
         yield from run_template_by_file_paths(self.config, self.rules)
 
     def cli(self) -> None:
@@ -282,9 +291,23 @@ class Runner:
                 self.config.parser.print_help()
                 sys.exit(1)
 
-        if self.config.templates and self.config.deployment_files:
+        if self.config.deployment_files:
+            if (
+                self.config.templates
+                or self.config.parameters
+                or self.config.parameter_files
+            ):
+                self.config.parser.print_help()
+                sys.exit(1)
+
+        if self.config.parameters and self.config.parameter_files:
             self.config.parser.print_help()
             sys.exit(1)
+
+        if self.config.parameters or self.config.parameter_files:
+            if len(self.config.templates) > 1:
+                self.config.parser.print_help()
+                sys.exit(1)
 
         try:
             self._cli_output(list(self.run()))

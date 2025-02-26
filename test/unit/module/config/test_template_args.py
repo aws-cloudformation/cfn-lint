@@ -29,6 +29,11 @@ class TestTempalteArgs(BaseTestCase):
                             "regions": ["us-east-1", "us-east-2"],
                             "ignore_checks": ["E2530"],
                             "configure_rules": {"E3012": {"strict": "false"}},
+                            "parameters": [{"Key": "Value"}],
+                            "parameter_files": [
+                                "foo.json",
+                                "bar.json",
+                            ],
                         }
                     }
                 }
@@ -38,6 +43,10 @@ class TestTempalteArgs(BaseTestCase):
         self.assertEqual(config.template_args["regions"], ["us-east-1", "us-east-2"])
         self.assertEqual(
             config.template_args["configure_rules"], {"E3012": {"strict": "false"}}
+        )
+        self.assertEqual(config.template_args["parameters"], [{"Key": "Value"}])
+        self.assertEqual(
+            config.template_args["parameter_files"], ["foo.json", "bar.json"]
         )
 
     def test_template_args_failure_bad_format(self):

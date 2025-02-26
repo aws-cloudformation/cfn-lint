@@ -456,7 +456,15 @@ class CliArgs:
             nargs="+",
             default=[],
             action="extend_key_value",
-            help="only check rules whose id do not match these values",
+            help="A list of parameters",
+        )
+        validation_group.add_argument(
+            "--parameter-files",
+            dest="parameter_files",
+            help="A list of parameter files",
+            nargs="+",
+            default=[],
+            action="extend",
         )
         advanced.add_argument(
             "-D", "--debug", help="Enable debug logging", action="store_true"
@@ -660,6 +668,8 @@ class TemplateArgs:
                     "include_checks": (list),
                     "include_experimental": (bool),
                     "override_spec": (str),
+                    "parameters": (list),
+                    "parameter_files": (list),
                     "regions": (list),
                 }.items():
                     if key in configs:
@@ -688,6 +698,7 @@ class ManualArgs(TypedDict, total=False):
     template_parameters: list[dict[str, Any]]
     parameters: list[dict[str, Any]]
     parameters: list[ParameterSet]
+    parameter_files: list[str]
     templates: list[str]
 
 
@@ -756,6 +767,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "non_zero_exit_code": self.non_zero_exit_code,
                 "patch_specs": self.patch_specs,
                 "override_spec": self.override_spec,
+                "parameter_files": self.parameter_files,
                 "parameters": self.parameters,
                 "regions": self.regions,
                 "templates": self.templates,
@@ -777,6 +789,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             "non_zero_exit_code",
             "output_file",
             "regions",
+            "parameter_files",
             "parameters",
             "templates",
         ]:
@@ -937,6 +950,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         )
 
     @property
+    def parameter_files(self):
+        return self._get_argument_value("parameter_files", True, True)
+
+    @property
     def parameters(self) -> list[ParameterSet]:
         parameter_sets = self._get_argument_value("parameters", True, True)
         results: list[ParameterSet] = []
@@ -959,7 +976,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def custom_rules(self):
-        """custom_rules_spec"""
         return self._get_argument_value("custom_rules", False, True)
 
     @property

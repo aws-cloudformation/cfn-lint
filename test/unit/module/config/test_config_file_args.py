@@ -35,6 +35,31 @@ class TestConfigFileArgs(BaseTestCase):
             },
         )
 
+    def test_config_parser_read_config_parameters(self):
+        """Testing one file successful"""
+        config = cfnlint.config.ConfigFileArgs(
+            config_file=Path("test/fixtures/configs/parameters.yaml")
+        )
+        self.assertEqual(
+            config.file_args,
+            {"parameters": [{"foo": "bar"}]},
+        )
+
+    def test_config_parser_read_config_parameter_files(self):
+        """Testing one file successful"""
+        config = cfnlint.config.ConfigFileArgs(
+            config_file=Path("test/fixtures/configs/parameter_files.yaml")
+        )
+        self.assertEqual(
+            config.file_args,
+            {
+                "parameter_files": [
+                    "foo.json",
+                    "bar.json",
+                ]
+            },
+        )
+
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_parser_read_config_only_one_read(self, yaml_mock):
         """Testing one file successful"""

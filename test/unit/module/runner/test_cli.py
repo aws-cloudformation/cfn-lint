@@ -134,6 +134,69 @@ class TestCli(BaseTestCase):
         self.assertEqual(e.exception.code, 1)
         mock_print_help.assert_called_once()
 
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_parameters_and_parameter_files(self, mock_print_help):
+
+        config = ConfigMixIn(
+            [
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+            parameters=[
+                {"foo": "bar"},
+            ],
+            parameter_files=["foo.json"],
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_deployment_files_and_parameters(self, mock_print_help):
+
+        config = ConfigMixIn(
+            [],
+            parameters=[
+                {"foo": "bar"},
+            ],
+            deployment_files=["foo.json"],
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+
+    @patch("argparse.ArgumentParser.print_help")
+    def test_templates_with_parameters_and_multiple_templates(self, mock_print_help):
+
+        config = ConfigMixIn(
+            [
+                "--template",
+                "test/fixtures/templates/good/generic.yaml",
+                "test/fixtures/templates/good/generic.yaml",
+            ],
+            parameters=[
+                {"foo": "bar"},
+            ],
+        )
+
+        runner = Runner(config)
+
+        with self.assertRaises(SystemExit) as e:
+            runner.cli()
+
+        self.assertEqual(e.exception.code, 1)
+        mock_print_help.assert_called_once()
+
     @patch("fileinput.input")
     @patch("sys.stdin.isatty")
     def test_templates_with_stdin(self, mock_isatty, mock_fileinput):
