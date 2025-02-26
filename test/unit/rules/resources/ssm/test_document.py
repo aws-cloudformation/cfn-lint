@@ -71,11 +71,27 @@ def rule():
             ],
         ),
         (
-            "Not a valid json or yaml object",
+            "The wrong type but string",
             "arn:aws-us-gov:iam::123456789012:role/test",
             [
                 ValidationError(
-                    "Document is not of type 'object'",
+                    (
+                        "'arn:aws-us-gov:iam::123456789012:role/test' is not "
+                        "of type 'object'"
+                    ),
+                    rule=Document(),
+                    validator="type",
+                    schema_path=deque(["type"]),
+                    path=deque([]),
+                )
+            ],
+        ),
+        (
+            "Not a valid json or yaml document",
+            '{ "arn:aws-us-gov:iam::123456789012:role/test"',
+            [
+                ValidationError(
+                    "Document is not valid (\"did not find expected ',' or '}'\")",
                     rule=Document(),
                     validator="type",
                     schema_path=deque([]),
@@ -125,4 +141,4 @@ def test_validate(
 ):
     errs = list(rule.validate(validator, {}, document, {}))
 
-    assert errs == expected
+    assert errs == expected, f"Test {name!r} failed with {errs!r}"
