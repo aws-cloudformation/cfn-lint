@@ -15,9 +15,20 @@
    },
    "type": "object"
   },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  },
   "VpcInformation": {
    "additionalProperties": false,
    "properties": {
+    "IpAddressType": {
+     "enum": [
+      "IPV4",
+      "DUALSTACK"
+     ],
+     "type": "string"
+    },
     "SecurityGroupIds": {
      "format": "AWS::EC2::SecurityGroup.Ids",
      "items": {
@@ -46,13 +57,13 @@
   "CertificateAuthorityArn": {
    "maxLength": 200,
    "minLength": 5,
-   "pattern": "^arn:[\\w-]+:acm-pca:[\\w-]+:[0-9]+:certificate-authority(\\/[\\w-]+)$",
+   "pattern": "^arn:[\\w-]+:acm-pca:[\\w-]+:[0-9]+:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
    "type": "string"
   },
   "ConnectorArn": {
    "maxLength": 200,
    "minLength": 5,
-   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector(\\/[\\w-]+)$",
+   "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
    "type": "string"
   },
   "DirectoryId": {
