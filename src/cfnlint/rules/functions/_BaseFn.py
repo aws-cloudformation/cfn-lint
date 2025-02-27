@@ -120,7 +120,7 @@ class BaseFn(CloudFormationLintRule):
                 )
             )
 
-            if not errs:
+            if not errs and not v.context.is_resolved_from_parameters:
                 return
 
             for err in errs:
