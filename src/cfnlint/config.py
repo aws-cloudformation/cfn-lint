@@ -917,7 +917,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def parameter_files(self):
-        return self._get_argument_value("parameter_files", True, True)
+        filenames = self._get_argument_value("parameter_files", True, True)
+        print(filenames)
+        return self._glob_filenames(filenames, raise_exception=True)
 
     @property
     def parameters(self) -> list[ParameterSet]:
@@ -970,7 +972,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def deployment_files(self):
-        return self._get_argument_value("deployment_files", False, True)
+        deployment_files = self._get_argument_value("deployment_files", False, True)
+        return self._glob_filenames(deployment_files, True)
 
     @property
     def config_file(self):
