@@ -952,7 +952,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def parameter_files(self):
         filenames = self._get_argument_value("parameter_files", True, True)
-        print(filenames)
         return self._glob_filenames(filenames, raise_exception=True)
 
     @property

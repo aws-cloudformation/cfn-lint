@@ -145,7 +145,7 @@ class TestCli(BaseTestCase):
             parameters=[
                 {"foo": "bar"},
             ],
-            parameter_files=["foo.json"],
+            parameter_files=["test/fixtures/parameter_files/*.json"],
         )
 
         runner = Runner(config)
@@ -164,7 +164,7 @@ class TestCli(BaseTestCase):
             parameters=[
                 {"foo": "bar"},
             ],
-            deployment_files=["foo.json"],
+            deployment_files=["test/fixtures/parameter_files/*.json"],
         )
 
         runner = Runner(config)

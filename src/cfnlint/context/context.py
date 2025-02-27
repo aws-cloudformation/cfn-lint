@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 from abc import ABC, abstractmethod
 from collections import deque
+from copy import deepcopy
 from dataclasses import InitVar, dataclass, field, fields
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, Deque, Iterator, Set, Tuple
@@ -179,6 +180,7 @@ class Context:
 
     # Deployment parameters
     parameter_sets: list[ParameterSet] | None = field(init=True, default_factory=list)
+    is_resolved_from_parameters: bool = field(init=True, default=False)
 
     def evolve(self, **kwargs) -> "Context":
         """
@@ -232,13 +234,27 @@ class Context:
         if instance in self.parameters:
             # if parameter sets are configured we use those first
             # we default to the parameter values if the parameter isn't in that set
-            if self.parameter_sets is not None:
+            if self.parameter_sets is not None and len(self.parameter_sets) > 0:
                 for parameter_set in self.parameter_sets:
                     if instance in parameter_set.parameters:
                         yield parameter_set.parameters[instance], self.evolve(
                             ref_values=parameter_set.parameters,
+                            parameter_sets=None,
+                            is_resolved_from_parameters=True,
                         )
-                        return
+                    else:
+                        for v, path in self.parameters[instance].default_value():
+                            parameters = deepcopy(parameter_set.parameters)
+                            parameters.update({instance: v})
+                            yield v, self.evolve(
+                                path=self.path.evolve(
+                                    value_path=deque(["Parameters", instance]) + path
+                                ),
+                                ref_values=parameters,
+                                parameter_sets=None,
+                                is_resolved_from_parameters=True,
+                            )
+                return
 
             for v, path in self.parameters[instance].ref_value(self):
 
@@ -251,7 +267,6 @@ class Context:
                     ),
                     ref_values={instance: v},
                 )
-            return
 
     @property
     def refs(self):
@@ -386,6 +401,13 @@ class Parameter(_Ref):
     def ref(self, region: str = REGION_PRIMARY) -> dict[str, Any]:
         return {}
 
+    def default_value(self) -> Iterator[Tuple[str | list[str], deque]]:
+        if self.default is not None:
+            if isinstance(self.default, list):
+                yield [str(x) for x in self.default], deque(["Default"])
+            else:
+                yield str(self.default), deque(["Default"])
+
     def ref_value(self, context: Context) -> Iterator[Tuple[Any, deque]]:
         if self.allowed_values:
             for i, allowed_value in enumerate(self.allowed_values):
@@ -396,11 +418,7 @@ class Parameter(_Ref):
             # assume default is an allowed value so we skip it
             return
 
-        if self.default is not None:
-            if isinstance(self.default, list):
-                yield [str(x) for x in self.default], deque(["Default"])
-            else:
-                yield str(self.default), deque(["Default"])
+        yield from self.default_value()
 
         if self.min_value is not None:
             yield str(self.min_value), deque(["MinValue"])
