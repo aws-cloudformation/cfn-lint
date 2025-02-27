@@ -344,13 +344,28 @@ class TestConfigMixIn(BaseTestCase):
             )
             exit.assert_called_once_with(1)
 
+    @patch("glob.glob")
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
-    def test_template_files(self, yaml_mock):
+    def test_template_deployment_files(self, yaml_mock, glob_mock):
+        _filenames = ["one.yaml"]
         yaml_mock.side_effect = [{}, {}]
-        config = cfnlint.config.ConfigMixIn(["--deployment-files", "file1.json"])
+        glob_mock.side_effect = [_filenames]
+        config = cfnlint.config.ConfigMixIn(["--deployment-files", "*.yaml"])
 
-        # test defaults
-        self.assertEqual(config.deployment_files, ["file1.json"])
+        self.assertEqual(config.deployment_files, _filenames)
+        glob_mock.assert_called_once()
+
+    @patch("glob.glob")
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_template_parameter_files(self, yaml_mock, glob_mock):
+        _filenames = ["one.json"]
+        yaml_mock.side_effect = [{}, {}]
+
+        glob_mock.side_effect = [_filenames]
+        config = cfnlint.config.ConfigMixIn(["--parameter-files", "*.json"])
+
+        self.assertEqual(config.parameter_files, _filenames)
+        glob_mock.assert_called_once()
 
     @patch("argparse.ArgumentParser.print_help")
     def test_templates_with_deployment_files(self, mock_print_help):
