@@ -10,7 +10,6 @@ import json
 import logging
 import random
 import string
-import sys
 from copy import deepcopy
 from typing import Any, Iterator, Mapping, MutableMapping, Tuple
 
@@ -207,16 +206,11 @@ class _Transform:
         new_s = deepcopy(s)
         for k, v in params.items():
             if isinstance(v, dict):
-                if sys.version_info.major == 3 and sys.version_info.minor > 8:
-                    v = (
-                        hashlib.md5(
-                            json.dumps(v).encode("utf-8"), usedforsecurity=False
-                        )
-                        .digest()
-                        .hex()[0:4]
-                    )
-                else:
-                    v = hashlib.md5(json.dumps(v).encode("utf-8")).digest().hex()[0:4]
+                v = (
+                    hashlib.md5(json.dumps(v).encode("utf-8"), usedforsecurity=False)
+                    .digest()
+                    .hex()[0:4]
+                )
             new_s = re.sub(rf"\$\{{{k}\}}", v, new_s)
             new_s = re.sub(rf"\&\{{{k}\}}", re.sub("[^0-9a-zA-Z]+", "", v), new_s)
 
