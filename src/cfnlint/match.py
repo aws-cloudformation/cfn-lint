@@ -123,7 +123,7 @@ class Match:
             columnnumber=columnnumber,
             linenumberend=linenumberend,
             columnnumberend=columnnumberend,
-            filename=filename,
+            filename=getattr(rulematch_obj, "filename", filename),
             rule=rule,
             message=message,
             rulematch_obj=rulematch_obj,
