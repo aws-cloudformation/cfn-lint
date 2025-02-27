@@ -92,8 +92,8 @@ from cfnlint.runner import Runner
                     message=(
                         "{'Ref': 'Affinity'} is not one of ['default', 'host'] "
                         "when 'Ref' is resolved to 'dne' from "
-                        "['test/fixtures/deployment_files/test.yaml', "
-                        "'test/fixtures/deployment_files/stage.yaml']"
+                        f"[{str(Path('test/fixtures/deployment_files/stage.yaml'))!r}, "
+                        f"{str(Path('test/fixtures/deployment_files/test.yaml'))!r}]"
                     ),
                     rule=RefResolved(),
                     filename=str(
@@ -111,8 +111,8 @@ from cfnlint.runner import Runner
                         "{'Ref': 'ImageId'} is not a 'AWS::EC2::Image.Id' with "
                         "pattern '^ami-([0-9a-z]{8}|[0-9a-z]{17})$' when 'Ref' "
                         "is resolved to 'ami-zxyzabc123' from "
-                        "['test/fixtures/deployment_files/test.yaml', "
-                        "'test/fixtures/deployment_files/stage.yaml']"
+                        f"[{str(Path('test/fixtures/deployment_files/stage.yaml'))!r}, "
+                        f"{str(Path('test/fixtures/deployment_files/test.yaml'))!r}]"
                     ),
                     rule=RefResolved(),
                     filename=str(
