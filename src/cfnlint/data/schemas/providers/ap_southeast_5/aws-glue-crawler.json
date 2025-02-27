@@ -1,0 +1,350 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "CatalogTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DlqEventQueueArn": {
+     "type": "string"
+    },
+    "EventQueueArn": {
+     "type": "string"
+    },
+    "Tables": {
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DeltaTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "CreateNativeDeltaTable": {
+     "type": "boolean"
+    },
+    "DeltaTables": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "WriteManifest": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DynamoDBTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "IcebergTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "Exclusions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaximumTraversalDepth": {
+     "type": "integer"
+    },
+    "Paths": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "JdbcTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "EnableAdditionalMetadata": {
+     "items": {
+      "enum": [
+       "COMMENTS",
+       "RAWTYPES"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Exclusions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Path": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LakeFormationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "maxLength": 12,
+     "type": "string"
+    },
+    "UseLakeFormationCredentials": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MongoDBTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RecrawlPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "RecrawlBehavior": {
+     "enum": [
+      "CRAWL_EVENT_MODE",
+      "CRAWL_EVERYTHING",
+      "CRAWL_NEW_FOLDERS_ONLY"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "S3Target": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionName": {
+     "type": "string"
+    },
+    "DlqEventQueueArn": {
+     "type": "string"
+    },
+    "EventQueueArn": {
+     "type": "string"
+    },
+    "Exclusions": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Path": {
+     "type": "string"
+    },
+    "SampleSize": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Schedule": {
+   "additionalProperties": false,
+   "properties": {
+    "ScheduleExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SchemaChangePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteBehavior": {
+     "enum": [
+      "DELETE_FROM_DATABASE",
+      "DEPRECATE_IN_DATABASE",
+      "LOG"
+     ],
+     "type": "string"
+    },
+    "UpdateBehavior": {
+     "enum": [
+      "LOG",
+      "UPDATE_IN_DATABASE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Targets": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogTargets": {
+     "items": {
+      "$ref": "#/definitions/CatalogTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DeltaTargets": {
+     "items": {
+      "$ref": "#/definitions/DeltaTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DynamoDBTargets": {
+     "items": {
+      "$ref": "#/definitions/DynamoDBTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "IcebergTargets": {
+     "items": {
+      "$ref": "#/definitions/IcebergTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "JdbcTargets": {
+     "items": {
+      "$ref": "#/definitions/JdbcTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MongoDBTargets": {
+     "items": {
+      "$ref": "#/definitions/MongoDBTarget"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "S3Targets": {
+     "items": {
+      "$ref": "#/definitions/S3Target"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Classifiers": {
+   "items": {
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Configuration": {
+   "type": "string"
+  },
+  "CrawlerSecurityConfiguration": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "DatabaseName": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LakeFormationConfiguration": {
+   "$ref": "#/definitions/LakeFormationConfiguration"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RecrawlPolicy": {
+   "$ref": "#/definitions/RecrawlPolicy"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "Schedule": {
+   "$ref": "#/definitions/Schedule"
+  },
+  "SchemaChangePolicy": {
+   "$ref": "#/definitions/SchemaChangePolicy"
+  },
+  "TablePrefix": {
+   "maxLength": 128,
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Targets": {
+   "$ref": "#/definitions/Targets"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Role",
+  "Targets"
+ ],
+ "typeName": "AWS::Glue::Crawler"
+}
