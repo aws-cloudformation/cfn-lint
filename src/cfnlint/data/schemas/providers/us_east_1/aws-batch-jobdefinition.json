@@ -4,6 +4,41 @@
   "/properties/JobDefinitionName"
  ],
  "definitions": {
+  "ConsumableResourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumableResourceList": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ConsumableResourceRequirement"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ConsumableResourceList"
+   ],
+   "type": "object"
+  },
+  "ConsumableResourceRequirement": {
+   "additionalProperties": false,
+   "properties": {
+    "ConsumableResource": {
+     "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
+     "type": "string"
+    },
+    "Quantity": {
+     "format": "int64",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ConsumableResource",
+    "Quantity"
+   ],
+   "type": "object"
+  },
   "ContainerProperties": {
    "additionalProperties": false,
    "properties": {
@@ -917,6 +952,9 @@
   "NodeRangeProperty": {
    "additionalProperties": false,
    "properties": {
+    "ConsumableResourceProperties": {
+     "$ref": "#/definitions/ConsumableResourceProperties"
+    },
     "Container": {
      "$ref": "#/definitions/MultiNodeContainerProperties"
     },
@@ -1189,6 +1227,9 @@
   "/properties/JobDefinitionName"
  ],
  "properties": {
+  "ConsumableResourceProperties": {
+   "$ref": "#/definitions/ConsumableResourceProperties"
+  },
   "ContainerProperties": {
    "$ref": "#/definitions/ContainerProperties"
   },
