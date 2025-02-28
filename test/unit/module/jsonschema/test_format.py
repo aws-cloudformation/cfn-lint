@@ -15,7 +15,8 @@ class TestFormat(unittest.TestCase):
             str(cfn_format_checker),
             (
                 "<FormatChecker checkers=['date', 'date-time',"
-                " 'email', 'ipv4', 'ipv6', 'regex', 'time']>"
+                " 'email', 'ipv4', 'ipv4-network', 'ipv6', "
+                "'ipv6-network', 'regex', 'time']>"
             ),
         )
 
@@ -29,12 +30,22 @@ class TestFormat(unittest.TestCase):
         with self.assertRaises(FormatError):
             cfn_format_checker.check("foo", "ipv4")
 
+        self.assertIsNone(cfn_format_checker.check("10.0.0.0/24", "ipv4-network"))
+        self.assertIsNone(cfn_format_checker.check({"foo": "bar"}, "ipv4-network"))
+        with self.assertRaises(FormatError):
+            cfn_format_checker.check("foo", "ipv4-network")
+
         self.assertIsNone(
             cfn_format_checker.check("0000:0000:0000:0000:0000:0000:0000:0000", "ipv6")
         )
         self.assertIsNone(cfn_format_checker.check({"foo": "bar"}, "ipv6"))
         with self.assertRaises(FormatError):
             cfn_format_checker.check("foo", "ipv6")
+
+        self.assertIsNone(cfn_format_checker.check("fd00:10:0:2::/64", "ipv6-network"))
+        self.assertIsNone(cfn_format_checker.check({"foo": "bar"}, "ipv6-network"))
+        with self.assertRaises(FormatError):
+            cfn_format_checker.check("foo", "ipv6-network")
 
         self.assertIsNone(cfn_format_checker.check("1970-01-01", "date"))
         self.assertIsNone(cfn_format_checker.check({"foo": "bar"}, "date"))
