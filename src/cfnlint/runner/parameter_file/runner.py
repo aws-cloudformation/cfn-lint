@@ -12,7 +12,7 @@ from cfnlint.config import ConfigMixIn
 from cfnlint.context.parameters import ParameterSet
 from cfnlint.decode.decode import decode
 from cfnlint.rules import Match
-from cfnlint.rules.deployment_files.Configuration import Configuration
+from cfnlint.rules.parameter_files.Configuration import Configuration
 
 LOGGER = logging.getLogger(__name__)
 
@@ -72,8 +72,9 @@ def expand_parameter_files(
 
         parameters.append(ParameterSet(parameter_file, parameter_data))
 
-    parameters_config = config.evolve(
-        parameters=parameters,
-        deployment_files=[],
-    )
-    yield parameters_config, []
+    if parameters:
+        parameters_config = config.evolve(
+            parameters=parameters,
+            deployment_files=[],
+        )
+        yield parameters_config, []
