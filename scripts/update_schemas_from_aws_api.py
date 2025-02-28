@@ -85,6 +85,12 @@ def write_db_cluster(results):
                 if sub_engine_version not in engine_versions:
                     engine_versions.append(sub_engine_version)
             engine_versions = sorted(engine_versions)
+        if engine == "aurora-postgresql":
+            for engine_version in engine_versions.copy():
+                sub_engine_version = engine_version.split(".")[0]
+                if sub_engine_version not in engine_versions:
+                    engine_versions.append(sub_engine_version)
+            engine_versions = sorted(engine_versions)
 
         schema["allOf"].append(
             {
