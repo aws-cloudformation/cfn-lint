@@ -17,7 +17,6 @@ import inspect
 import json
 import logging
 import os
-import sys
 from io import BytesIO
 from typing import Any, Sequence
 from urllib.request import Request, urlopen, urlretrieve
@@ -517,14 +516,11 @@ def load_resource(package, filename="us-east-1.json"):
     :param filename: filename to load
     :return: Json output of the resource laoded
     """
-    if sys.version_info >= (3, 9):
-        return json.loads(
-            pkg_resources.files(package)  # pylint: disable=no-member
-            .joinpath(filename)
-            .read_text(encoding="utf-8")
-        )
-    # pylint: disable=W4902
-    return json.loads(pkg_resources.read_text(package, filename, encoding="utf-8"))
+    return json.loads(
+        pkg_resources.files(package)  # pylint: disable=no-member
+        .joinpath(filename)
+        .read_text(encoding="utf-8")
+    )
 
 
 def is_custom_resource(resource_type):

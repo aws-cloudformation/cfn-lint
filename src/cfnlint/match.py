@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import hashlib
-import sys
 import uuid
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
@@ -54,12 +53,9 @@ class Match:
     rulematch_obj: InitVar[RuleMatch | None] = None
 
     def __post_init__(self, rulematch_obj):
-        if sys.version_info.major == 3 and sys.version_info.minor > 8:
-            hex_string = hashlib.md5(
-                f"{self}".encode("UTF-8"), usedforsecurity=False
-            ).hexdigest()
-        else:
-            hex_string = hashlib.md5(f"{self}".encode("UTF-8")).hexdigest()
+        hex_string = hashlib.md5(
+            f"{self}".encode("UTF-8"), usedforsecurity=False
+        ).hexdigest()
         super().__setattr__("id", str(uuid.UUID(hex=hex_string)))
 
         if rulematch_obj:

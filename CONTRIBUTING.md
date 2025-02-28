@@ -51,11 +51,9 @@ $ pip install tox
 $ tox
 
 # Run a specific test suite
-$ tox -e py37 # Run all unit tests against Python 3.7
+$ tox -e py39 # Run all unit tests against Python 3.9
 ```
 Tox test suites available:
-* **py37**: Unit tests (Python 3.7)
-* **py38**: Unit tests (Python 3.8)
 * **py39**: Unit tests (Python 3.9)
 * **py310**: Unit tests (Python 3.10)
 * **py311**: Unit tests (Python 3.11)
