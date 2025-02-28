@@ -1,3 +1,13 @@
+### v1.27.0
+## What's Changed
+* Provide configuration for exceptions to [E3019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3019) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3972
+* Deprecate py3.8 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3975
+* Update lambda eol dates by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3977
+* Update CloudFormation schemas to `2025-02-28` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3967
+* Support major version for aurora-postgresql by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3978
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.26.1...v1.27.0
+
 ### v1.26.1
 ## What's Changed
 * Switch EC2 subnet `requiredXor` to `requiredOr` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3970
