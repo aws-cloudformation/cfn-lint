@@ -9,8 +9,8 @@ from unittest.mock import patch
 import pytest
 
 from cfnlint.config import ConfigMixIn
-from cfnlint.runner import PROVIDER_SCHEMA_MANAGER, Runner
-from cfnlint.schema import Schema
+from cfnlint.runner import Runner
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, Schema
 
 
 def patch_registry(path):
