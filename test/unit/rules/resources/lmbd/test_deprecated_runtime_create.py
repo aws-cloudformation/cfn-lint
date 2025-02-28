@@ -43,8 +43,8 @@ def rule():
                     (
                         "Runtime 'python3.7' was deprecated on "
                         "'2023-12-04'. Creation was disabled on "
-                        "'2024-01-09' and update on '2025-02-28'. "
-                        "Please consider updating to 'python3.12'"
+                        "'2024-01-09' and update on '2025-11-01'. "
+                        "Please consider updating to 'python3.13'"
                     ),
                 )
             ],
@@ -52,7 +52,7 @@ def rule():
         (
             # will be caught by the update rule
             "python3.7",
-            datetime(2025, 2, 28),
+            datetime(2025, 11, 1),
             [],
         ),
         (

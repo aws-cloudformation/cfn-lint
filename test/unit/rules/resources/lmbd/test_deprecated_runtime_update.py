@@ -37,14 +37,14 @@ def rule():
         ),
         (
             "python3.7",
-            datetime(2025, 2, 28),
+            datetime(2025, 11, 2),
             [
                 ValidationError(
                     (
                         "Runtime 'python3.7' was deprecated on "
                         "'2023-12-04'. Creation was disabled on "
-                        "'2024-01-09' and update on '2025-02-28'. "
-                        "Please consider updating to 'python3.12'"
+                        "'2024-01-09' and update on '2025-11-01'. "
+                        "Please consider updating to 'python3.13'"
                     ),
                 )
             ],
@@ -59,7 +59,7 @@ def rule():
                         "Runtime 'nodejs' was deprecated on "
                         "'2016-10-31'. Creation was disabled on "
                         "'2016-10-31' and update on '2016-10-31'. "
-                        "Please consider updating to 'nodejs20.x'"
+                        "Please consider updating to 'nodejs22.x'"
                     ),
                 )
             ],
