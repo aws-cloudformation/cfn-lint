@@ -173,14 +173,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "test/fixtures/templates/good/transform_serverless_globals.yaml"
                         )
                     ),
-                    "Id": "f0f6c586-81bc-9182-de02-659a3a1a5b2c",
+                    "Id": "f69e6049-a69c-5754-4744-74aa1c4ae90d",
                     "Level": "Error",
                     "Location": {
                         "End": {"ColumnNumber": 13, "LineNumber": 10},
                         "Path": ["Resources", "myFunction", "Properties", "Runtime"],
                         "Start": {"ColumnNumber": 3, "LineNumber": 10},
                     },
-                    "Message": "Runtime 'nodejs6.10' was deprecated on '2019-08-12'. Creation was disabled on '2019-08-12' and update on '2019-08-12'. Please consider updating to 'nodejs20.x'",
+                    "Message": "Runtime 'nodejs6.10' was deprecated on '2019-08-12'. Creation was disabled on '2019-08-12' and update on '2019-08-12'. Please consider updating to 'nodejs22.x'",
                     "ParentId": None,
                     "Rule": {
                         "Description": (
