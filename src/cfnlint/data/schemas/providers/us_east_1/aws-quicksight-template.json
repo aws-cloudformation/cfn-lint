@@ -5324,10 +5324,7 @@
    "additionalProperties": false,
    "properties": {
     "AvailabilityStatus": {
-     "enum": [
-      "DISABLED",
-      "ENABLED"
-     ]
+     "$ref": "#/definitions/DashboardBehavior"
     }
    },
    "type": "object"
@@ -6633,7 +6630,9 @@
     "THOUSANDS",
     "MILLIONS",
     "BILLIONS",
-    "TRILLIONS"
+    "TRILLIONS",
+    "LAKHS",
+    "CRORES"
    ],
    "type": "string"
   },
@@ -9392,14 +9391,6 @@
   "Sheet": {
    "additionalProperties": false,
    "properties": {
-    "Images": {
-     "items": {
-      "$ref": "#/definitions/SheetImage"
-     },
-     "maxItems": 10,
-     "minItems": 0,
-     "type": "array"
-    },
     "Name": {
      "maxLength": 2048,
      "minLength": 1,
@@ -11774,6 +11765,14 @@
    ],
    "type": "string"
   },
+  "VisualInteractionOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "ContextMenuOption": {},
+    "VisualMenuOption": {}
+   },
+   "type": "object"
+  },
   "VisualPalette": {
    "additionalProperties": false,
    "properties": {
@@ -12311,6 +12310,13 @@
   "TemplateId"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::QuickSight::Template",
  "writeOnlyProperties": [
   "/properties/Definition",

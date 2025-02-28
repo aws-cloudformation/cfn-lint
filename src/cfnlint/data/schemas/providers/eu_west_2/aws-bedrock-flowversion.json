@@ -1,0 +1,870 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/FlowArn"
+ ],
+ "definitions": {
+  "AgentFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentAliasArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:agent-alias/[0-9a-zA-Z]{10}/[0-9a-zA-Z]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "AgentAliasArn"
+   ],
+   "type": "object"
+  },
+  "CollectorFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "ConditionFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Conditions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowCondition"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Conditions"
+   ],
+   "type": "object"
+  },
+  "FlowCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FlowConditionalConnectionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition"
+   ],
+   "type": "object"
+  },
+  "FlowConnection": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/FlowConnectionConfiguration"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,100}$",
+     "type": "string"
+    },
+    "Source": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Target": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowConnectionType"
+    }
+   },
+   "required": [
+    "Name",
+    "Source",
+    "Target",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowConnectionConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Data": {
+       "$ref": "#/definitions/FlowDataConnectionConfiguration"
+      }
+     },
+     "required": [
+      "Data"
+     ],
+     "title": "Data",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Conditional": {
+       "$ref": "#/definitions/FlowConditionalConnectionConfiguration"
+      }
+     },
+     "required": [
+      "Conditional"
+     ],
+     "title": "Conditional",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowConnectionType": {
+   "enum": [
+    "Data",
+    "Conditional"
+   ],
+   "type": "string"
+  },
+  "FlowDataConnectionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceOutput": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "TargetInput": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceOutput",
+    "TargetInput"
+   ],
+   "type": "object"
+  },
+  "FlowDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Connections": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowConnection"
+     },
+     "maxItems": 20,
+     "type": "array"
+    },
+    "Nodes": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNode"
+     },
+     "maxItems": 20,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "FlowNode": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/FlowNodeConfiguration"
+    },
+    "Inputs": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNodeInput"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Outputs": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/FlowNodeOutput"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeType"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Input": {
+       "$ref": "#/definitions/InputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Input"
+     ],
+     "title": "Input",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Output": {
+       "$ref": "#/definitions/OutputFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Output"
+     ],
+     "title": "Output",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "KnowledgeBase": {
+       "$ref": "#/definitions/KnowledgeBaseFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "KnowledgeBase"
+     ],
+     "title": "KnowledgeBase",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Condition": {
+       "$ref": "#/definitions/ConditionFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Condition"
+     ],
+     "title": "Condition",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Lex": {
+       "$ref": "#/definitions/LexFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Lex"
+     ],
+     "title": "Lex",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Prompt": {
+       "$ref": "#/definitions/PromptFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Prompt"
+     ],
+     "title": "Prompt",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LambdaFunction": {
+       "$ref": "#/definitions/LambdaFunctionFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "LambdaFunction"
+     ],
+     "title": "LambdaFunction",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Agent": {
+       "$ref": "#/definitions/AgentFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Agent"
+     ],
+     "title": "Agent",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Storage": {
+       "$ref": "#/definitions/StorageFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Storage"
+     ],
+     "title": "Storage",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Retrieval": {
+       "$ref": "#/definitions/RetrievalFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Retrieval"
+     ],
+     "title": "Retrieval",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Iterator": {
+       "$ref": "#/definitions/IteratorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Iterator"
+     ],
+     "title": "Iterator",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Collector": {
+       "$ref": "#/definitions/CollectorFlowNodeConfiguration"
+      }
+     },
+     "required": [
+      "Collector"
+     ],
+     "title": "Collector",
+     "type": "object"
+    }
+   ]
+  },
+  "FlowNodeIODataType": {
+   "enum": [
+    "String",
+    "Number",
+    "Boolean",
+    "Object",
+    "Array"
+   ],
+   "type": "string"
+  },
+  "FlowNodeInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeIODataType"
+    }
+   },
+   "required": [
+    "Expression",
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeOutput": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^[a-zA-Z]([_]?[0-9a-zA-Z]){1,50}$",
+     "type": "string"
+    },
+    "Type": {
+     "$ref": "#/definitions/FlowNodeIODataType"
+    }
+   },
+   "required": [
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "FlowNodeType": {
+   "enum": [
+    "Input",
+    "Output",
+    "KnowledgeBase",
+    "Condition",
+    "Lex",
+    "Prompt",
+    "LambdaFunction",
+    "Agent",
+    "Iterator",
+    "Collector",
+    "Storage",
+    "Retrieval"
+   ],
+   "type": "string"
+  },
+  "FlowStatus": {
+   "enum": [
+    "Failed",
+    "Prepared",
+    "Preparing",
+    "NotPrepared"
+   ],
+   "type": "string"
+  },
+  "GuardrailConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GuardrailIdentifier": {
+     "maxLength": 2048,
+     "pattern": "^(([a-z0-9]+)|(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+))$",
+     "type": "string"
+    },
+    "GuardrailVersion": {
+     "pattern": "^(([0-9]{1,8})|(DRAFT))$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "InputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "IteratorFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "KnowledgeBaseFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GuardrailConfiguration": {
+     "$ref": "#/definitions/GuardrailConfiguration"
+    },
+    "KnowledgeBaseId": {
+     "maxLength": 10,
+     "pattern": "^[0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "ModelId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KnowledgeBaseId"
+   ],
+   "type": "object"
+  },
+  "LambdaFunctionFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:function:[a-zA-Z0-9-_\\.]+(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "LexFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BotAliasArn": {
+     "maxLength": 78,
+     "pattern": "^arn:aws(|-us-gov):lex:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:bot-alias/[0-9a-zA-Z]+/[0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "LocaleId": {
+     "maxLength": 10,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BotAliasArn",
+    "LocaleId"
+   ],
+   "type": "object"
+  },
+  "OutputFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "PromptFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "GuardrailConfiguration": {
+     "$ref": "#/definitions/GuardrailConfiguration"
+    },
+    "SourceConfiguration": {
+     "$ref": "#/definitions/PromptFlowNodeSourceConfiguration"
+    }
+   },
+   "required": [
+    "SourceConfiguration"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeInlineConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InferenceConfiguration": {
+     "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "ModelId": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
+     "type": "string"
+    },
+    "TemplateConfiguration": {
+     "$ref": "#/definitions/PromptTemplateConfiguration"
+    },
+    "TemplateType": {
+     "$ref": "#/definitions/PromptTemplateType"
+    }
+   },
+   "required": [
+    "ModelId",
+    "TemplateConfiguration",
+    "TemplateType"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeResourceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "PromptArn": {
+     "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:prompt/[0-9a-zA-Z]{10}(?::[0-9]{1,5})?)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "PromptArn"
+   ],
+   "type": "object"
+  },
+  "PromptFlowNodeSourceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Resource": {
+       "$ref": "#/definitions/PromptFlowNodeResourceConfiguration"
+      }
+     },
+     "required": [
+      "Resource"
+     ],
+     "title": "Resource",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Inline": {
+       "$ref": "#/definitions/PromptFlowNodeInlineConfiguration"
+      }
+     },
+     "required": [
+      "Inline"
+     ],
+     "title": "Inline",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInferenceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/PromptModelInferenceConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptInputVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PromptModelInferenceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxTokens": {
+     "maximum": 4096,
+     "minimum": 0,
+     "type": "number"
+    },
+    "StopSequences": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Temperature": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TopP": {
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "PromptTemplateConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Text": {
+       "$ref": "#/definitions/TextPromptTemplateConfiguration"
+      }
+     },
+     "required": [
+      "Text"
+     ],
+     "title": "Text",
+     "type": "object"
+    }
+   ]
+  },
+  "PromptTemplateType": {
+   "enum": [
+    "TEXT"
+   ],
+   "type": "string"
+  },
+  "RetrievalFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/RetrievalFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "RetrievalFlowNodeServiceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/RetrievalFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
+  },
+  "StorageFlowNodeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ServiceConfiguration": {
+     "$ref": "#/definitions/StorageFlowNodeServiceConfiguration"
+    }
+   },
+   "required": [
+    "ServiceConfiguration"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeS3Configuration": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "StorageFlowNodeServiceConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3": {
+       "$ref": "#/definitions/StorageFlowNodeS3Configuration"
+      }
+     },
+     "title": "S3",
+     "type": "object"
+    }
+   ]
+  },
+  "TextPromptTemplateConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InputVariables": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PromptInputVariable"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "Text": {
+     "maxLength": 200000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowArn",
+  "/properties/Version"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "CustomerEncryptionKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Definition": {
+   "$ref": "#/definitions/FlowDefinition"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/(service-role/)?.+$",
+   "type": "string"
+  },
+  "FlowArn": {
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "FlowId": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/FlowStatus"
+  },
+  "Version": {
+   "pattern": "^[0-9]{1,5}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/Definition",
+  "/properties/ExecutionRoleArn",
+  "/properties/FlowId",
+  "/properties/Name",
+  "/properties/Status",
+  "/properties/Version",
+  "/properties/CustomerEncryptionKeyArn"
+ ],
+ "required": [
+  "FlowArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-bedrock-flows",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Bedrock::FlowVersion"
+}

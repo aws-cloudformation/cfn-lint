@@ -1,0 +1,180 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ConnectionsList": {
+   "additionalProperties": false,
+   "properties": {
+    "Connections": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "ExecutionProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrentRuns": {
+     "type": "number"
+    }
+   },
+   "type": "object"
+  },
+  "JobCommand": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "PythonVersion": {
+     "pattern": "^([2-3]|3[.]9)$",
+     "type": "string"
+    },
+    "Runtime": {
+     "maxLength": 64,
+     "type": "string"
+    },
+    "ScriptLocation": {
+     "maxLength": 400000,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "NotifyDelayAfter": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AllocatedCapacity": {
+   "type": "number"
+  },
+  "Command": {
+   "$ref": "#/definitions/JobCommand"
+  },
+  "Connections": {
+   "$ref": "#/definitions/ConnectionsList"
+  },
+  "DefaultArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Description": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "ExecutionClass": {
+   "enum": [
+    "FLEX",
+    "STANDARD"
+   ],
+   "maxLength": 16,
+   "type": "string"
+  },
+  "ExecutionProperty": {
+   "$ref": "#/definitions/ExecutionProperty"
+  },
+  "GlueVersion": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^(\\w+\\.)+\\w+$",
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "JobMode": {
+   "enum": [
+    "NOTEBOOK",
+    "SCRIPT",
+    "VISUAL"
+   ],
+   "type": "string"
+  },
+  "JobRunQueuingEnabled": {
+   "type": "boolean"
+  },
+  "LogUri": {
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "pattern": "^(Sun|Mon|Tue|Wed|Thu|Fri|Sat):([01]?[0-9]|2[0-3])$",
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "number"
+  },
+  "MaxRetries": {
+   "type": "number"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NonOverridableArguments": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "NotificationProperty": {
+   "$ref": "#/definitions/NotificationProperty"
+  },
+  "NumberOfWorkers": {
+   "maximum": 299,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "SecurityConfiguration": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Timeout": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "WorkerType": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Role",
+  "Command"
+ ],
+ "typeName": "AWS::Glue::Job"
+}

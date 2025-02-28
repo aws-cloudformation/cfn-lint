@@ -38,7 +38,7 @@
      "items": {
       "$ref": "#/definitions/PromptInputVariable"
      },
-     "maxItems": 5,
+     "maxItems": 20,
      "minItems": 0,
      "type": "array"
     },
@@ -184,6 +184,43 @@
    },
    "type": "object"
   },
+  "PromptMetadataEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/PromptMetadataKey"
+    },
+    "Value": {
+     "$ref": "#/definitions/PromptMetadataValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PromptMetadataKey": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
+  "PromptMetadataList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PromptMetadataEntry"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "PromptMetadataValue": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+   "type": "string"
+  },
   "PromptModelInferenceConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -262,6 +299,9 @@
     },
     "InferenceConfiguration": {
      "$ref": "#/definitions/PromptInferenceConfiguration"
+    },
+    "Metadata": {
+     "$ref": "#/definitions/PromptMetadataList"
     },
     "ModelId": {
      "maxLength": 2048,
@@ -356,7 +396,7 @@
      "items": {
       "$ref": "#/definitions/PromptInputVariable"
      },
-     "maxItems": 5,
+     "maxItems": 20,
      "minItems": 0,
      "type": "array"
     },
