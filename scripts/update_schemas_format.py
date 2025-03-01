@@ -36,6 +36,33 @@ def _descend(instance: Any, keywords: Sequence[str]) -> Iterator[deque[str]]:
     return
 
 
+def _create_cidr_patch(type_name: str, ref: str, resolver: RefResolver, format: str):
+    if type_name in [
+        "AWS::SecurityHub::Insight",
+    ]:
+        return []
+
+    _, resolved = resolver.resolve(ref)
+    if "$ref" in resolved:
+        return _create_cidr_patch(type_name, resolved["$ref"], resolver, format)
+
+    if "items" in resolved:
+        return [
+            Patch(
+                values={"format": format},
+                path=f"{ref[1:]}/items",
+            )
+        ]
+
+    return [
+        _create_patch(
+            {"format": format},
+            ref,
+            resolver=resolver,
+        )
+    ]
+
+
 def _create_subnet_ids_patch(type_name: str, ref: str, resolver: RefResolver):
 
     _, resolved = resolver.resolve(ref)
@@ -148,10 +175,16 @@ def _create_security_group_name(type_name: str, ref: str, resolver: RefResolver)
     ]
 
 
-def _create_patch(value: dict[str, str], ref: Sequence[str], resolver: RefResolver):
+def _create_patch(value: dict[str, str], ref: str, resolver: RefResolver):
     _, resolved = resolver.resolve(ref)
     if "$ref" in resolved:
         return _create_patch(value, resolved["$ref"], resolver)
+
+    if "items" in resolved:
+        return Patch(
+            values=value,
+            path=f"{ref[1:]}/items",
+        )
 
     return Patch(
         values=value,
@@ -267,6 +300,42 @@ def main():
                             value={"format": "AWS::EC2::VPC.Id"},
                             ref="#/" + "/".join(path),
                             resolver=resolver,
+                        )
+                    )
+
+            for path in _descend(
+                obj,
+                [
+                    "CidrIp",
+                    "CIDRIP",
+                    "Cidr",
+                    "Cidrs",
+                    "CidrBlock",
+                    "DestinationCidr",
+                    "DestinationCidrBlock",
+                    "SourceCidrBlock",
+                    "CidrList",
+                    "CidrAllowList",
+                ],
+            ):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_cidr_patch(
+                            resource_type,
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                            format="ipv4-network",
+                        )
+                    )
+
+            for path in _descend(obj, ["Ipv6CidrBlock", "Ipv6Cidrs", "CidrIpv6"]):
+                if path[-2] == "properties":
+                    resource_patches.extend(
+                        _create_cidr_patch(
+                            resource_type,
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                            format="ipv6-network",
                         )
                     )
 

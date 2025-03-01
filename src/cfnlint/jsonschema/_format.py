@@ -137,6 +137,15 @@ def is_ipv4(instance: object) -> bool:
         return False
 
 
+def is_ipv4_network(instance: object) -> bool:
+    if not isinstance(instance, str):
+        return True
+    try:
+        return bool(ipaddress.IPv4Network(instance))
+    except (ipaddress.AddressValueError, ValueError):
+        return False
+
+
 def is_ipv6(instance: object) -> bool:
     if not isinstance(instance, str):
         return True
@@ -144,6 +153,15 @@ def is_ipv6(instance: object) -> bool:
         address = ipaddress.IPv6Address(instance)
         return not getattr(address, "scope_id", "")
     except ipaddress.AddressValueError:
+        return False
+
+
+def is_ipv6_network(instance: object) -> bool:
+    if not isinstance(instance, str):
+        return True
+    try:
+        return bool(ipaddress.IPv6Network(instance))
+    except (ipaddress.AddressValueError, ValueError):
         return False
 
 
@@ -177,7 +195,9 @@ cfn_format_checker = FormatChecker(
         "date-time": (is_datetime, ()),
         "email": (is_email, ()),
         "ipv4": (is_ipv4, ipaddress.AddressValueError),
+        "ipv4-network": (is_ipv4_network, ipaddress.AddressValueError),
         "ipv6": (is_ipv6, ipaddress.AddressValueError),
+        "ipv6-network": (is_ipv6_network, ipaddress.AddressValueError),
         "regex": (is_regex, re.error),
         "time": (is_time, ()),
     }
