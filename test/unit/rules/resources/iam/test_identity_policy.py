@@ -208,3 +208,33 @@ class TestIdentityPolicies(TestCase):
         self.assertListEqual(
             list(errs[0].path), ["Statement", 0, "Condition", "iam:PassedToService"]
         )
+
+    def test_duplicate_sid(self):
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "All",
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*",
+                },
+                {
+                    "Sid": "All",
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertEqual(len(errs), 1, errs)
+        self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
+        self.assertListEqual(list(errs[0].path), ["Statement"])
