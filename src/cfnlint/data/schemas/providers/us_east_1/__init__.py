@@ -147,6 +147,8 @@ types: list[str] = [
     "AWS::Bedrock::Agent",
     "AWS::Bedrock::AgentAlias",
     "AWS::Bedrock::ApplicationInferenceProfile",
+    "AWS::Bedrock::Blueprint",
+    "AWS::Bedrock::DataAutomationProject",
     "AWS::Bedrock::DataSource",
     "AWS::Bedrock::Flow",
     "AWS::Bedrock::FlowAlias",
