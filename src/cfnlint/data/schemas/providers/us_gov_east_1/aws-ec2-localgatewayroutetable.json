@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LocalGatewayId",
+  "/properties/Mode"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocalGatewayRouteTableId"
+ ],
+ "properties": {
+  "LocalGatewayId": {
+   "type": "string"
+  },
+  "LocalGatewayRouteTableArn": {
+   "type": "string"
+  },
+  "LocalGatewayRouteTableId": {
+   "type": "string"
+  },
+  "Mode": {
+   "enum": [
+    "coip",
+    "direct-vpc-routing"
+   ],
+   "type": "string"
+  },
+  "OutpostArn": {
+   "type": "string"
+  },
+  "OwnerId": {
+   "type": "string"
+  },
+  "State": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocalGatewayRouteTableId",
+  "/properties/LocalGatewayRouteTableArn",
+  "/properties/OutpostArn",
+  "/properties/OwnerId",
+  "/properties/State"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "LocalGatewayId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-lgw.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::LocalGatewayRouteTable"
+}

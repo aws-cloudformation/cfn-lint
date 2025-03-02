@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "EventBridgeRuleTemplateEventType": {
+   "enum": [
+    "MEDIALIVE_MULTIPLEX_ALERT",
+    "MEDIALIVE_MULTIPLEX_STATE_CHANGE",
+    "MEDIALIVE_CHANNEL_ALERT",
+    "MEDIALIVE_CHANNEL_INPUT_CHANGE",
+    "MEDIALIVE_CHANNEL_STATE_CHANGE",
+    "MEDIAPACKAGE_INPUT_NOTIFICATION",
+    "MEDIAPACKAGE_KEY_PROVIDER_NOTIFICATION",
+    "MEDIAPACKAGE_HARVEST_JOB_NOTIFICATION",
+    "SIGNAL_MAP_ACTIVE_ALARM",
+    "MEDIACONNECT_ALERT",
+    "MEDIACONNECT_SOURCE_HEALTH",
+    "MEDIACONNECT_OUTPUT_HEALTH",
+    "MEDIACONNECT_FLOW_STATUS_CHANGE"
+   ],
+   "type": "string"
+  },
+  "EventBridgeRuleTemplateTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn.+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.+:medialive:.+:eventbridge-rule-template:.+$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EventTargets": {
+   "items": {
+    "$ref": "#/definitions/EventBridgeRuleTemplateTarget"
+   },
+   "type": "array"
+  },
+  "EventType": {
+   "$ref": "#/definitions/EventBridgeRuleTemplateEventType"
+  },
+  "GroupId": {
+   "maxLength": 11,
+   "minLength": 7,
+   "pattern": "^(aws-)?[0-9]{7}$",
+   "type": "string"
+  },
+  "GroupIdentifier": {
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 11,
+   "minLength": 7,
+   "pattern": "^(aws-)?[0-9]{7}$",
+   "type": "string"
+  },
+  "Identifier": {
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/GroupId",
+  "/properties/Id",
+  "/properties/Identifier",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "EventType",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::EventBridgeRuleTemplate",
+ "writeOnlyProperties": [
+  "/properties/GroupIdentifier"
+ ]
+}
