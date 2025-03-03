@@ -35,3 +35,11 @@ This format validates that the value is a valid Amazon Machine Image (AMI), whic
 ### AWS::Logs::LogGroup.Name
 
 This format validates that the value is a valid log group name, which is a string of the pattern `^[\.\-_\/#A-Za-z0-9]{1,512}\Z`.  More info in [docs](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_LogGroup.html)
+
+### ipv4-network
+
+Validates the value against the python implementation of validating an [IPV4 network](https://docs.python.org/3/library/ipaddress.html#ipaddress.IPv4Network)
+
+### ipv6-network
+
+Validates the value against the python implementation of validating an [IPV6 network](https://docs.python.org/3/library/ipaddress.html#ipaddress.IPv6Network)
