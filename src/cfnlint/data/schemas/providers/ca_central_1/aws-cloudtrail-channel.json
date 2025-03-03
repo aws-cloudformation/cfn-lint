@@ -1,0 +1,123 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Source"
+ ],
+ "definitions": {
+  "ChannelArn": {
+   "maxLength": 256,
+   "minLength": 3,
+   "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
+   "type": "string"
+  },
+  "ChannelName": {
+   "maxLength": 128,
+   "minLength": 3,
+   "pattern": "(^[a-zA-Z0-9._\\-]+$)",
+   "type": "string"
+  },
+  "Destination": {
+   "additionalProperties": false,
+   "properties": {
+    "Location": {
+     "maxLength": 1024,
+     "minLength": 3,
+     "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "EVENT_DATA_STORE"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Timestamp": {
+   "type": "string"
+  },
+  "UUID": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "(^[a-f0-9\\-]+$)",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChannelArn"
+ ],
+ "properties": {
+  "ChannelArn": {
+   "$ref": "#/definitions/ChannelArn"
+  },
+  "Destinations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Destination"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "$ref": "#/definitions/ChannelName"
+  },
+  "Source": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "(.*)",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ChannelArn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CloudTrail::Channel",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}
