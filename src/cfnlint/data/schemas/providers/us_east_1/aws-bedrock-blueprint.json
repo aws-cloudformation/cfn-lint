@@ -1,0 +1,119 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BlueprintName",
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BlueprintArn"
+ ],
+ "properties": {
+  "BlueprintArn": {
+   "maxLength": 128,
+   "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-zA-Z0-9-]*:(aws|[0-9]{12}):blueprint/(bedrock-data-automation-public-[a-zA-Z0-9-_]{1,30}|[a-zA-Z0-9-]{12,36})$",
+   "type": "string"
+  },
+  "BlueprintName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "BlueprintStage": {
+   "enum": [
+    "DEVELOPMENT",
+    "LIVE"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "KmsEncryptionContext": {
+   "additionalProperties": false,
+   "dependencies": {
+    "KmsEncryptionContext": [
+     "KmsKeyId"
+    ]
+   },
+   "patternProperties": {
+    "^.*$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "KmsKeyId": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Schema": {
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "enum": [
+    "DOCUMENT",
+    "IMAGE"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/BlueprintArn",
+  "/properties/BlueprintStage",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "BlueprintName",
+  "Schema",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Blueprint"
+}

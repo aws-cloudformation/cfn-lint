@@ -720,6 +720,8 @@ cached: list[str] = [
     "aws-wafv2-ipset.json",
     "aws-wafv2-loggingconfiguration.json",
     "aws-wafv2-regexpatternset.json",
+    "aws-wafv2-rulegroup.json",
+    "aws-wafv2-webacl.json",
     "aws-wafv2-webaclassociation.json",
     "aws-workspaces-workspace.json",
     "aws-xray-group.json",
