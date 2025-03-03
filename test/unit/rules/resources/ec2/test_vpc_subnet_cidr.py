@@ -160,7 +160,7 @@ _template = {
                     "VpcV4Subnet1": {
                         "Type": "AWS::EC2::Subnet",
                         "Properties": {
-                            "CidrBlock": "2001:db8::/32",
+                            "Ipv6CidrBlock": "2001:db8::/32",
                             "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
                         },
                     },
@@ -169,10 +169,13 @@ _template = {
             {"path": ["Resources", "Vpc", "Properties"]},
             [
                 ValidationError(
-                    "'2001:db8::/32' is not a valid subnet of ['11.0.0.0/16']",
+                    (
+                        "'2001:db8::/32' is specified on a VPC that "
+                        "has no ipv6 networks defined"
+                    ),
                     rule=VpcSubnetCidr(),
                     path_override=deque(
-                        ["Resources", "VpcV4Subnet1", "Properties", "CidrBlock"]
+                        ["Resources", "VpcV4Subnet1", "Properties", "Ipv6CidrBlock"]
                     ),
                 )
             ],
@@ -231,7 +234,7 @@ _template = {
             {"path": ["Resources", "Vpc", "Properties"]},
             [
                 ValidationError(
-                    "'fc00::/16' is not a valid subnet of ['10.0.0.0/32', 'fc00::/32']",
+                    "'fc00::/16' is not a valid subnet of ['fc00::/32']",
                     rule=VpcSubnetCidr(),
                     path_override=deque(
                         ["Resources", "VpcV4Subnet1", "Properties", "Ipv6CidrBlock"]
@@ -243,6 +246,33 @@ _template = {
             "Subnet IPV4 CIDR valid with IPam Pool ID",
             {"Ipv4IpamPoolId": "poolid"},
             _template,
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [],
+        ),
+        (
+            "Subnet IPV4 CIDR valid with multiple CIDRs",
+            {"CidrBlock": "10.0.0.0/16"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcCidr": {
+                        "Type": "AWS::EC2::VPCCidrBlock",
+                        "Properties": {
+                            "CidrBlock": "11.0.0.0/16",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "Properties": {
+                            "CidrBlock": "11.0.0.0/24",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                },
+            },
             {"path": ["Resources", "Vpc", "Properties"]},
             [],
         ),
@@ -415,6 +445,48 @@ _template = {
                         "Type": "AWS::EC2::VPCCidrBlock",
                         "Properties": {
                             "Ipv6CidrBlock": "fc00::/7",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                    "VpcV4Subnet1": {
+                        "Type": "AWS::EC2::Subnet",
+                        "Properties": {
+                            "Ipv6CidrBlock": "fc00::/16",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                    "VpcV4Subnet2": {
+                        "Type": "AWS::EC2::Subnet",
+                        "Properties": {
+                            "Ipv6CidrBlock": "fc00::/16",
+                            "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
+                        },
+                    },
+                },
+            },
+            {"path": ["Resources", "Vpc", "Properties"]},
+            [
+                ValidationError(
+                    "'fc00::/16' overlaps with 'fc00::/16'",
+                    rule=VpcSubnetCidr(),
+                    path_override=deque(
+                        ["Resources", "VpcV4Subnet1", "Properties", "Ipv6CidrBlock"]
+                    ),
+                )
+            ],
+        ),
+        (
+            "Invalid overlapping ipv6 addresses with ipam cidr block",
+            {"CidrBlock": "10.0.0.0/16"},
+            {
+                "Resources": {
+                    "Vpc": {
+                        "Type": "AWS::EC2::VPC",
+                    },
+                    "VpcCidr1": {
+                        "Type": "AWS::EC2::VPCCidrBlock",
+                        "Properties": {
+                            "Ipv6IpamPoolId": "pool-id",
                             "VpcId": {"Fn::GetAtt": ["Vpc", "VpcId"]},
                         },
                     },

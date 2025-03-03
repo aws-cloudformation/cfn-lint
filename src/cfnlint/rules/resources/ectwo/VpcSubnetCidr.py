@@ -101,15 +101,23 @@ class VpcSubnetCidr(CfnLintKeyword):
         if not validator.cfn.graph:
             return
 
-        vpc_networks: list[IPv4Network | IPv6Network] = []
+        vpc_ipv4_networks: list[IPv4Network] = []
+        vpc_ipv6_networks: list[IPv6Network] = []
         for vpc_network, _ in self._get_vpc_cidrs(validator, instance):
             if not vpc_network:
                 return
-            vpc_networks.append(vpc_network)
+            if isinstance(vpc_network, IPv4Network):
+                vpc_ipv4_networks.append(vpc_network)
+            # you can't specify IPV6 networks on a VPC
 
         template_validator = validator.evolve(
             context=validator.context.evolve(path=Path())
         )
+
+        # dynamic vpc network (using IPAM or AWS provided)
+        # allows to validate subnet overlapping even if using
+        # dynamic networks
+        has_dynamic_network = False
 
         for source, _ in validator.cfn.graph.graph.in_edges(
             validator.context.path.path[1]
@@ -127,11 +135,12 @@ class VpcSubnetCidr(CfnLintKeyword):
                         cidr_validator, cidr_props
                     ):
                         if not cidr_network:
-                            return
-                        vpc_networks.append(cidr_network)
-
-        if not vpc_networks:
-            return
+                            has_dynamic_network = True
+                            continue
+                        if isinstance(cidr_network, IPv4Network):
+                            vpc_ipv4_networks.append(cidr_network)
+                        else:
+                            vpc_ipv6_networks.append(cidr_network)
 
         subnets: list[tuple[IPv4Network | IPv6Network, deque]] = []
         for source, _ in validator.cfn.graph.graph.in_edges(
@@ -152,24 +161,43 @@ class VpcSubnetCidr(CfnLintKeyword):
                         if not subnet_network:
                             continue
 
+                        subnets.append(
+                            (subnet_network, subnet_validator.context.path.path)
+                        )
+                        if has_dynamic_network:
+                            continue
                         if not any(
                             self._validate_subnets(
                                 subnet_network, vpc_network, "subnet_of"
                             )
-                            for vpc_network in vpc_networks
+                            for vpc_network in vpc_ipv4_networks + vpc_ipv6_networks
                         ):
+                            if isinstance(subnet_network, IPv4Network):
+                                # Every VPC has to have a ipv4 network
+                                # we continue if there isn't one
+                                if not vpc_ipv4_networks:
+                                    continue
+                                reprs = (
+                                    "is not a valid subnet of "
+                                    f"{[f'{str(v)}' for v in vpc_ipv4_networks]!r}"
+                                )
+                            else:
+                                if not vpc_ipv6_networks:
+                                    reprs = (
+                                        "is specified on a VPC that has "
+                                        "no ipv6 networks defined"
+                                    )
+                                else:
+                                    reprs = (
+                                        "is not a valid subnet of "
+                                        f"{[f'{str(v)}' for v in vpc_ipv6_networks]!r}"
+                                    )
                             yield ValidationError(
-                                (
-                                    f"{str(subnet_network)!r} is not a valid "
-                                    f"subnet of {[f'{str(v)}' for v in vpc_networks]!r}"
-                                ),
+                                (f"{str(subnet_network)!r} {reprs}"),
                                 rule=self,
                                 path_override=subnet_validator.context.path.path,
                             )
                             continue
-                        subnets.append(
-                            (subnet_network, subnet_validator.context.path.path)
-                        )
 
         for i in range(len(subnets)):
             for j in range(i + 1, len(subnets)):
