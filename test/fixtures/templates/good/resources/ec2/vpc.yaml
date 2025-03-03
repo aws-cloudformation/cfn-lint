@@ -1,0 +1,26 @@
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+  VpcCidr:
+    Type: AWS::EC2::VPCCidrBlock
+    Properties:
+      VpcId: !GetAtt Vpc.VpcId
+      CidrBlock: 12.0.0.0/16
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !GetAtt Vpc.VpcId
+      CidrBlock: 10.0.1.0/24
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !GetAtt Vpc.VpcId
+      CidrBlock: 10.0.2.0/24
+  Subnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !GetAtt Vpc.VpcId
+      CidrBlock: 11.0.2.0/26

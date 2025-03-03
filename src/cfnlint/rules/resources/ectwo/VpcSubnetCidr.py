@@ -1,0 +1,182 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
+
+from __future__ import annotations
+
+import logging
+from collections import deque
+from ipaddress import IPv4Network, IPv6Network, ip_network
+from typing import Any, Iterator
+
+from cfnlint.context import Path
+from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
+from cfnlint.rules.helpers import get_value_from_path
+from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
+
+LOGGER = logging.getLogger(__name__)
+
+
+class VpcSubnetCidr(CfnLintKeyword):
+    id = "E3059"
+    shortdesc = "Validate subnet CIDRs are within the CIDRs of the VPC"
+    description = (
+        "When specifying subnet CIDRs for a VPC the subnet CIDRs "
+        "most be within the VPC CIDRs and cannot overlap"
+    )
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html"
+    tags = ["resources", "ec2", "vpc", "subnet"]
+
+    def __init__(self) -> None:
+        super().__init__(
+            keywords=[
+                "Resources/AWS::EC2::VPC/Properties",
+            ],
+        )
+
+    def _validate_subnets(
+        self,
+        source: IPv4Network | IPv6Network,
+        destination: IPv4Network | IPv6Network,
+        fn_name: str,
+    ) -> bool:
+        fn = getattr(source, fn_name)
+        if not fn:
+            return False
+        if isinstance(source, IPv4Network) and isinstance(destination, IPv4Network):
+            if fn(destination):
+                return True
+            return False
+        elif isinstance(source, IPv6Network) and isinstance(destination, IPv6Network):
+            if fn(destination):
+                return True
+            return False
+        return False
+
+    def _create_network(self, cidr: Any) -> IPv4Network | IPv6Network | None:
+        if not isinstance(cidr, str):
+            return None
+
+        try:
+            return ip_network(cidr)
+        except Exception as e:
+            LOGGER.debug(f"Unable to create network from {cidr}", e)
+
+        return None
+
+    def _get_vpc_cidrs(
+        self, validator: Validator, instance: dict[str, Any]
+    ) -> Iterator[tuple[IPv4Network | IPv6Network | None, Validator]]:
+        for key in [
+            "Ipv4IpamPoolId",
+            "Ipv6IpamPoolId",
+            "Ipv6Pool",
+            "AmazonProvidedIpv6CidrBlock",
+        ]:
+            for value, value_validator in get_value_from_path(
+                validator,
+                instance,
+                deque([key]),
+            ):
+                if value is None:
+                    continue
+                yield None, value_validator
+
+        for key in ["CidrBlock", "Ipv6CidrBlock"]:
+            for cidr, cidr_validator in get_value_from_path(
+                validator,
+                instance,
+                deque([key]),
+            ):
+
+                if cidr is None:
+                    continue
+                yield self._create_network(cidr), cidr_validator
+
+    def validate(
+        self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
+    ) -> ValidationResult:
+
+        if not validator.cfn.graph:
+            return
+
+        vpc_networks: list[IPv4Network | IPv6Network] = []
+        for vpc_network, _ in self._get_vpc_cidrs(validator, instance):
+            if not vpc_network:
+                return
+            vpc_networks.append(vpc_network)
+
+        template_validator = validator.evolve(
+            context=validator.context.evolve(path=Path())
+        )
+
+        for source, _ in validator.cfn.graph.graph.in_edges(
+            validator.context.path.path[1]
+        ):
+            if (
+                validator.cfn.graph.graph.nodes[source].get("resource_type")
+                == "AWS::EC2::VPCCidrBlock"
+            ):
+                for cidr_props, cidr_validator in get_value_from_path(
+                    template_validator,
+                    validator.cfn.template,
+                    deque(["Resources", source, "Properties"]),
+                ):
+                    for cidr_network, _ in self._get_vpc_cidrs(
+                        cidr_validator, cidr_props
+                    ):
+                        if not cidr_network:
+                            return
+                        vpc_networks.append(cidr_network)
+
+        if not vpc_networks:
+            return
+
+        subnets: list[tuple[IPv4Network | IPv6Network, deque]] = []
+        for source, _ in validator.cfn.graph.graph.in_edges(
+            validator.context.path.path[1]
+        ):
+            if (
+                validator.cfn.graph.graph.nodes[source].get("resource_type")
+                == "AWS::EC2::Subnet"
+            ):
+                for subnet_props, source_validator in get_value_from_path(
+                    template_validator,
+                    validator.cfn.template,
+                    deque(["Resources", source, "Properties"]),
+                ):
+                    for subnet_network, subnet_validator in self._get_vpc_cidrs(
+                        source_validator, subnet_props
+                    ):
+                        if not subnet_network:
+                            continue
+
+                        if not any(
+                            self._validate_subnets(
+                                subnet_network, vpc_network, "subnet_of"
+                            )
+                            for vpc_network in vpc_networks
+                        ):
+                            yield ValidationError(
+                                (
+                                    f"{str(subnet_network)!r} is not a valid "
+                                    f"subnet of {[f'{str(v)}' for v in vpc_networks]!r}"
+                                ),
+                                rule=self,
+                                path_override=subnet_validator.context.path.path,
+                            )
+                            continue
+                        subnets.append(
+                            (subnet_network, subnet_validator.context.path.path)
+                        )
+
+        for i in range(len(subnets)):
+            for j in range(i + 1, len(subnets)):
+                # do the opposite because overlaps will return True if it overlaps
+                if self._validate_subnets(subnets[i][0], subnets[j][0], "overlaps"):
+                    yield ValidationError(
+                        f"{str(subnets[i][0])!r} overlaps with {str(subnets[j][0])!r}",
+                        rule=self,
+                        path_override=subnets[i][1],
+                    )
