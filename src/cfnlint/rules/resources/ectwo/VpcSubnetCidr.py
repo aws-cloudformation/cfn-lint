@@ -23,7 +23,7 @@ class VpcSubnetCidr(CfnLintKeyword):
     shortdesc = "Validate subnet CIDRs are within the CIDRs of the VPC"
     description = (
         "When specifying subnet CIDRs for a VPC the subnet CIDRs "
-        "most be within the VPC CIDRs and cannot overlap"
+        "most be within the VPC CIDRs"
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html"
     tags = ["resources", "ec2", "vpc", "subnet"]
@@ -198,13 +198,3 @@ class VpcSubnetCidr(CfnLintKeyword):
                                 path_override=subnet_validator.context.path.path,
                             )
                             continue
-
-        for i in range(len(subnets)):
-            for j in range(i + 1, len(subnets)):
-                # do the opposite because overlaps will return True if it overlaps
-                if self._validate_subnets(subnets[i][0], subnets[j][0], "overlaps"):
-                    yield ValidationError(
-                        f"{str(subnets[i][0])!r} overlaps with {str(subnets[j][0])!r}",
-                        rule=self,
-                        path_override=subnets[i][1],
-                    )
