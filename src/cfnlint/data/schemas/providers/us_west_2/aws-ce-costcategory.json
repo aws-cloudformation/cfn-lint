@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ZonedDateTime": {
+   "maxLength": 25,
+   "minLength": 20,
+   "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(([+-]\\d\\d:\\d\\d)|Z)$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "DefaultValue": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^(?! )[\\p{L}\\p{N}\\p{Z}-_]*(?<! )$",
+   "type": "string"
+  },
+  "EffectiveStart": {
+   "$ref": "#/definitions/ZonedDateTime"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^(?! )[\\p{L}\\p{N}\\p{Z}-_]*(?<! )$",
+   "type": "string"
+  },
+  "RuleVersion": {
+   "enum": [
+    "CostCategoryExpression.v1"
+   ],
+   "type": "string"
+  },
+  "Rules": {
+   "maxItems": 500,
+   "minItems": 1,
+   "type": "string"
+  },
+  "SplitChargeRules": {
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/EffectiveStart"
+ ],
+ "required": [
+  "Name",
+  "RuleVersion",
+  "Rules"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cost-explorer.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CE::CostCategory"
+}

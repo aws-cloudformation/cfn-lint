@@ -1,0 +1,73 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ResourceArn": {
+   "pattern": "arn:(aws[a-zA-Z-]*)?:synthetics:[a-z]{2}((-gov)|(-iso(b|e|f?)))?-[a-z]+-\\d{1}:\\d{12}:canary:[0-9a-z_\\-]",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)([a-zA-Z\\d\\s_.:/=+\\-@]+)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([a-zA-Z\\d\\s_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[0-9a-z_\\-]{1,64}$",
+   "type": "string"
+  },
+  "ResourceArns": {
+   "items": {
+    "$ref": "#/definitions/ResourceArn"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-synthetics",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Synthetics::Group"
+}
