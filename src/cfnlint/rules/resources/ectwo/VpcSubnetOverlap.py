@@ -45,17 +45,13 @@ class VpcSubnetOverlap(CfnLintKeyword):
         self,
         source: IPv4Network | IPv6Network,
         destination: IPv4Network | IPv6Network,
-        fn_name: str,
     ) -> bool:
-        fn = getattr(source, fn_name)
-        if not fn:
-            return False
         if isinstance(source, IPv4Network) and isinstance(destination, IPv4Network):
-            if fn(destination):
+            if source.overlaps(destination):
                 return True
             return False
         elif isinstance(source, IPv6Network) and isinstance(destination, IPv6Network):
-            if fn(destination):
+            if source.overlaps(destination):
                 return True
             return False
         return False
@@ -121,7 +117,8 @@ class VpcSubnetOverlap(CfnLintKeyword):
 
                         # now we can evaluate if they overlap
                         if self._validate_subnets(
-                            cidr_network, saved_subnet, "overlaps"
+                            cidr_network,
+                            saved_subnet,
                         ):
                             yield ValidationError(
                                 (

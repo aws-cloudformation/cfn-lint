@@ -39,17 +39,13 @@ class VpcSubnetCidr(CfnLintKeyword):
         self,
         source: IPv4Network | IPv6Network,
         destination: IPv4Network | IPv6Network,
-        fn_name: str,
     ) -> bool:
-        fn = getattr(source, fn_name)
-        if not fn:
-            return False
         if isinstance(source, IPv4Network) and isinstance(destination, IPv4Network):
-            if fn(destination):
+            if source.subnet_of(destination):
                 return True
             return False
         elif isinstance(source, IPv6Network) and isinstance(destination, IPv6Network):
-            if fn(destination):
+            if source.subnet_of(destination):
                 return True
             return False
         return False
@@ -168,7 +164,8 @@ class VpcSubnetCidr(CfnLintKeyword):
                             continue
                         if not any(
                             self._validate_subnets(
-                                subnet_network, vpc_network, "subnet_of"
+                                subnet_network,
+                                vpc_network,
                             )
                             for vpc_network in vpc_ipv4_networks + vpc_ipv6_networks
                         ):
