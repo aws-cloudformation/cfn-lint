@@ -1291,7 +1291,6 @@ cached: list[str] = [
     "aws-stepfunctions-statemachineversion.json",
     "aws-synthetics-canary.json",
     "aws-systemsmanagersap-application.json",
-    "aws-transfer-agreement.json",
     "aws-transfer-certificate.json",
     "aws-transfer-connector.json",
     "aws-transfer-profile.json",
