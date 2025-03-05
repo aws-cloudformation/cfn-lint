@@ -28,8 +28,11 @@
     "ConflictingClientIdsCheck": {
      "$ref": "#/definitions/AuditCheckConfiguration"
     },
+    "DeviceCertificateAgeCheck": {
+     "$ref": "#/definitions/DeviceCertAgeAuditCheckConfiguration"
+    },
     "DeviceCertificateExpiringCheck": {
-     "$ref": "#/definitions/AuditCheckConfiguration"
+     "$ref": "#/definitions/DeviceCertExpirationAuditCheckConfiguration"
     },
     "DeviceCertificateKeyQualityCheck": {
      "$ref": "#/definitions/AuditCheckConfiguration"
@@ -90,6 +93,53 @@
    "properties": {
     "Sns": {
      "$ref": "#/definitions/AuditNotificationTarget"
+    }
+   },
+   "type": "object"
+  },
+  "CertAgeCheckCustomConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CertAgeThresholdInDays": {
+     "$ref": "#/definitions/ConfigValue"
+    }
+   },
+   "type": "object"
+  },
+  "CertExpirationCheckCustomConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "CertExpirationThresholdInDays": {
+     "$ref": "#/definitions/ConfigValue"
+    }
+   },
+   "type": "object"
+  },
+  "ConfigValue": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DeviceCertAgeAuditCheckConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/CertAgeCheckCustomConfiguration"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DeviceCertExpirationAuditCheckConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "$ref": "#/definitions/CertExpirationCheckCustomConfiguration"
+    },
+    "Enabled": {
+     "type": "boolean"
     }
    },
    "type": "object"

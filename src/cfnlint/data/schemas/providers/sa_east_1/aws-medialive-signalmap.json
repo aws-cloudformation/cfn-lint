@@ -1,0 +1,294 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "FailedMediaResourceMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/MediaResource"
+    }
+   },
+   "type": "object"
+  },
+  "MediaResource": {
+   "additionalProperties": false,
+   "properties": {
+    "Destinations": {
+     "items": {
+      "$ref": "#/definitions/MediaResourceNeighbor"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Sources": {
+     "items": {
+      "$ref": "#/definitions/MediaResourceNeighbor"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "MediaResourceMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/MediaResource"
+    }
+   },
+   "type": "object"
+  },
+  "MediaResourceNeighbor": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn.+$",
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "MonitorDeployment": {
+   "additionalProperties": false,
+   "properties": {
+    "DetailsUri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "ErrorMessage": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/SignalMapMonitorDeploymentStatus"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "SignalMapMonitorDeploymentStatus": {
+   "enum": [
+    "NOT_DEPLOYED",
+    "DRY_RUN_DEPLOYMENT_COMPLETE",
+    "DRY_RUN_DEPLOYMENT_FAILED",
+    "DRY_RUN_DEPLOYMENT_IN_PROGRESS",
+    "DEPLOYMENT_COMPLETE",
+    "DEPLOYMENT_FAILED",
+    "DEPLOYMENT_IN_PROGRESS",
+    "DELETE_COMPLETE",
+    "DELETE_FAILED",
+    "DELETE_IN_PROGRESS"
+   ],
+   "type": "string"
+  },
+  "SignalMapStatus": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "CREATE_COMPLETE",
+    "CREATE_FAILED",
+    "UPDATE_IN_PROGRESS",
+    "UPDATE_COMPLETE",
+    "UPDATE_REVERTED",
+    "UPDATE_FAILED",
+    "READY",
+    "NOT_READY"
+   ],
+   "type": "string"
+  },
+  "SuccessfulMonitorDeployment": {
+   "additionalProperties": false,
+   "properties": {
+    "DetailsUri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/SignalMapMonitorDeploymentStatus"
+    }
+   },
+   "required": [
+    "DetailsUri",
+    "Status"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Unit": {
+   "additionalProperties": false,
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.+:medialive:.+:signal-map:.+$",
+   "type": "string"
+  },
+  "CloudWatchAlarmTemplateGroupIdentifiers": {
+   "items": {
+    "pattern": "^[^\\s]+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CloudWatchAlarmTemplateGroupIds": {
+   "items": {
+    "maxLength": 11,
+    "minLength": 7,
+    "pattern": "^(aws-)?[0-9]{7}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "DiscoveryEntryPointArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ErrorMessage": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "EventBridgeRuleTemplateGroupIdentifiers": {
+   "items": {
+    "pattern": "^[^\\s]+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "EventBridgeRuleTemplateGroupIds": {
+   "items": {
+    "maxLength": 11,
+    "minLength": 7,
+    "pattern": "^(aws-)?[0-9]{7}$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "FailedMediaResourceMap": {
+   "$ref": "#/definitions/FailedMediaResourceMap"
+  },
+  "ForceRediscovery": {
+   "default": false,
+   "type": "boolean"
+  },
+  "Id": {
+   "maxLength": 11,
+   "minLength": 7,
+   "pattern": "^(aws-)?[0-9]{7}$",
+   "type": "string"
+  },
+  "Identifier": {
+   "type": "string"
+  },
+  "LastDiscoveredAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastSuccessfulMonitorDeployment": {
+   "$ref": "#/definitions/SuccessfulMonitorDeployment"
+  },
+  "MediaResourceMap": {
+   "$ref": "#/definitions/MediaResourceMap"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "MonitorChangesPendingDeployment": {
+   "default": false,
+   "type": "boolean"
+  },
+  "MonitorDeployment": {
+   "$ref": "#/definitions/MonitorDeployment"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/SignalMapStatus"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CloudWatchAlarmTemplateGroupIds",
+  "/properties/CreatedAt",
+  "/properties/ErrorMessage",
+  "/properties/EventBridgeRuleTemplateGroupIds",
+  "/properties/FailedMediaResourceMap",
+  "/properties/Id",
+  "/properties/Identifier",
+  "/properties/LastDiscoveredAt",
+  "/properties/LastSuccessfulMonitorDeployment",
+  "/properties/MediaResourceMap",
+  "/properties/ModifiedAt",
+  "/properties/MonitorChangesPendingDeployment",
+  "/properties/MonitorDeployment",
+  "/properties/Status"
+ ],
+ "required": [
+  "DiscoveryEntryPointArn",
+  "Name"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::SignalMap",
+ "writeOnlyProperties": [
+  "/properties/CloudWatchAlarmTemplateGroupIdentifiers",
+  "/properties/EventBridgeRuleTemplateGroupIdentifiers",
+  "/properties/ForceRediscovery"
+ ]
+}

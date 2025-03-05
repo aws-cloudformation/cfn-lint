@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/AddPrivateKey",
+  "/properties/RemovePrivateKey"
+ ],
+ "definitions": {
+  "SAMLPrivateKey": {
+   "additionalProperties": false,
+   "properties": {
+    "KeyId": {
+     "maxLength": 64,
+     "minLength": 22,
+     "pattern": "[A-Z0-9]+",
+     "type": "string"
+    },
+    "Timestamp": {
+     "format": "date-time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KeyId",
+    "Timestamp"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AddPrivateKey": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "AssertionEncryptionMode": {
+   "enum": [
+    "Allowed",
+    "Required"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\w._-]+",
+   "type": "string"
+  },
+  "PrivateKeyList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SAMLPrivateKey"
+   },
+   "maxItems": 2,
+   "type": "array"
+  },
+  "RemovePrivateKey": {
+   "maxLength": 64,
+   "minLength": 22,
+   "pattern": "[A-Z0-9]+",
+   "type": "string"
+  },
+  "SamlMetadataDocument": {
+   "maxLength": 10000000,
+   "minLength": 1000,
+   "type": "string"
+  },
+  "SamlProviderUUID": {
+   "maxLength": 64,
+   "minLength": 22,
+   "pattern": "[A-Z0-9]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SamlProviderUUID"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IAM::SAMLProvider",
+ "writeOnlyProperties": [
+  "/properties/AddPrivateKey",
+  "/properties/RemovePrivateKey"
+ ]
+}
