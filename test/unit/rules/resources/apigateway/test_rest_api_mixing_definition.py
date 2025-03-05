@@ -7,7 +7,6 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import Path
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.apigateway.RestApiMixingDefinitions import (
     RestApiMixingDefinitions,
@@ -18,14 +17,6 @@ from cfnlint.rules.resources.apigateway.RestApiMixingDefinitions import (
 def rule():
     rule = RestApiMixingDefinitions()
     yield rule
-
-
-@pytest.fixture
-def path():
-    return Path(
-        path=deque(["Resources", "RestApi", "Properties", "Body"]),
-        cfn_path=deque(["Resources", "AWS::ApiGateway::RestApi", "Properties", "Body"]),
-    )
 
 
 _rest_api = {
@@ -65,15 +56,40 @@ _api_model = {
     },
 }
 
+_api_stage = {
+    "Type": "AWS::ApiGateway::Stage",
+    "Properties": {
+        "StageName": "Prod",
+        "Description": "Prod Stage",
+        "RestApiId": {"Ref": "RestApi"},
+    },
+}
+
 
 @pytest.mark.parametrize(
-    "template,expected",
+    "template,path,expected",
     [
         (
             {
                 "Resources": {
                     "RestApi": _rest_api,
                 }
+            },
+            {
+                "path": deque(["Resources", "RestApi", "Properties", "Body"]),
+            },
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "RestApi": _rest_api,
+                    "ProdStage": _api_stage,
+                },
+                "Outputs": {"RestApiId": {"Value": {"Ref": "RestApi"}}},
+            },
+            {
+                "path": deque(["Resources", "RestApi", "Properties", "Body"]),
             },
             [],
         ),
@@ -83,6 +99,9 @@ _api_model = {
                     "RestApi": _rest_api,
                     "RootResource": _api_resource,
                 }
+            },
+            {
+                "path": deque(["Resources", "RestApi", "Properties", "Body"]),
             },
             [
                 ValidationError(
@@ -102,8 +121,23 @@ _api_model = {
                 "Resources": {
                     "RestApi": _rest_api,
                     "RootResource": _api_resource,
+                }
+            },
+            {
+                "path": deque(["Resources", "RestApi"]),
+            },
+            [],
+        ),
+        (
+            {
+                "Resources": {
+                    "RestApi": _rest_api,
+                    "RootResource": _api_resource,
                     "Model": _api_model,
                 }
+            },
+            {
+                "path": deque(["Resources", "RestApi", "Properties", "Body"]),
             },
             [
                 ValidationError(
@@ -127,9 +161,9 @@ _api_model = {
             ],
         ),
     ],
-    indirect=["template"],
+    indirect=["template", "path"],
 )
-def test_validate(template, expected, rule, validator):
+def test_validate(template, path, expected, rule, validator):
     errs = list(rule.validate(validator, "", "", {}))
 
     assert errs == expected, f"Expected {expected} got {errs}"

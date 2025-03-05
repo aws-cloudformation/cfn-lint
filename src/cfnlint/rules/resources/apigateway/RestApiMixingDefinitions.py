@@ -42,8 +42,8 @@ class RestApiMixingDefinitions(CfnLintKeyword):
         self, validator: Validator, keywords: Any, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
 
-        if validator.cfn.graph is None:
-            return
+        if validator.cfn.graph is None:  # pragma: no cover
+            return  # pragma: no cover
 
         if not len(validator.context.path.path) > 3:
             return
@@ -53,6 +53,8 @@ class RestApiMixingDefinitions(CfnLintKeyword):
 
         unique_sources: set[str] = set()
         for source, _ in validator.cfn.graph.graph.in_edges(resource_name):
+            if source not in validator.context.resources:
+                continue
             if validator.context.resources[source].type in self._mix_types:
                 if source not in unique_sources:
                     yield ValidationError(
