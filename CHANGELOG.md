@@ -1,3 +1,13 @@
+### v1.28.0
+## What's Changed
+* Add `uniqueKeys` for `Sid` in IAM policies by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3982
+* Create ipv4 and ipv6 network formats by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3981
+* Add rule [E3059](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3059) to validate if `AWS::EC2::Subnet` CIDRs are in a `AWS::EC2::VPC` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3985
+* Add rule [E3060](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3060) to validate if `AWS::EC2::Subnet` CIDRs overlap with each other by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3985
+* Update CloudFormation schemas to `2025-03-04` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3980
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.27.0...v1.28.0
+
 ### v1.27.0
 ## What's Changed
 * Provide configuration for exceptions to [E3019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3019) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3972
