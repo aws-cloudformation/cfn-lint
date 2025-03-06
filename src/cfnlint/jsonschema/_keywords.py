@@ -158,7 +158,7 @@ def contains(
     if matches < min_contains:
         if not matches:
             yield ValidationError(
-                f"{instance!r} does not contain items " "matching the given schema",
+                f"{instance!r} does not contain items matching the given schema",
             )
         else:
             yield ValidationError(

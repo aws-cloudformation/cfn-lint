@@ -659,6 +659,12 @@ def test_validator(name, schema, instance, expected, validator):
             [],
         ),
         (
+            "valid contains with min and max",
+            {"contains": {"type": "string"}, "minContains": 2, "maxContains": 2},
+            ["foo", "bar", 2],
+            [],
+        ),
+        (
             "valid contains with wrong type",
             {"contains": {"type": "string"}},
             {},
@@ -671,6 +677,43 @@ def test_validator(name, schema, instance, expected, validator):
             [
                 ValidationError(
                     "[] does not contain items matching the given schema",
+                )
+            ],
+        ),
+        (
+            "invalid contains with min",
+            {"contains": {"type": "string"}, "minContains": 2},
+            ["foo", 2],
+            [
+                ValidationError(
+                    (
+                        "Too few items match the given schema "
+                        "(expected at least 2 but only 1 matched)"
+                    ),
+                    validator="minContains",
+                    validator_value=2,
+                )
+            ],
+        ),
+        (
+            "invalid contains with min and empty match",
+            {"contains": {"type": "string"}, "minContains": 2},
+            [2],
+            [
+                ValidationError(
+                    "[2] does not contain items matching the given schema",
+                )
+            ],
+        ),
+        (
+            "invalid contains with  max",
+            {"contains": {"type": "string"}, "maxContains": 2},
+            ["foo", "bar", "foobar", 2],
+            [
+                ValidationError(
+                    "Too many items match the given schema (expected at most 2)",
+                    validator="maxContains",
+                    validator_value=2,
                 )
             ],
         ),
