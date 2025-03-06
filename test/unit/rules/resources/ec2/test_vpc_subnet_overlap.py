@@ -175,8 +175,6 @@ def test_validate(name, instance, starting_subnets, expected, rule, validator):
     rule._subnets = starting_subnets
     errs = list(rule.validate(validator, "", instance, {}))
 
-    for err in errs:
-        print(err.path)
     assert (
         errs == expected
     ), f"Expected test {name!r} to have {expected!r} but got {errs!r}"
