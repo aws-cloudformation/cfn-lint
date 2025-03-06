@@ -15,10 +15,11 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 class PipelineArtifactCounts(CfnLintKeyword):
     id = "E3702"
-    shortdesc = "RestApi requires a name when not using an OpenAPI specification"
+    shortdesc = "Validate the number of input and output artifacts in a CodePipeline"
     description = (
-        "When using AWS::ApiGateway::RestApi you have to provide 'Name' "
-        "if you don't provide 'Body' or 'BodyS3Location'"
+        "When using AWS::CodePipeline::Pipeline action types "
+        "have different contraints for InputArtifacts and "
+        "OutputArtifacts"
     )
     tags = ["resources", "codepipeline"]
 

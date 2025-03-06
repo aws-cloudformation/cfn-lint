@@ -15,10 +15,11 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 class PipelineArtifactNames(CfnLintKeyword):
     id = "E3701"
-    shortdesc = "RestApi requires a name when not using an OpenAPI specification"
+    shortdesc = "Validate input and output artifact names are used properly"
     description = (
-        "When using AWS::ApiGateway::RestApi you have to provide 'Name' "
-        "if you don't provide 'Body' or 'BodyS3Location'"
+        "When using AWS::CodePipeline::Pipeline InputArtifacts names "
+        "have to be previously used OutputArtifact names. Additionally, "
+        "the OutputArtifacts names have to be unique"
     )
     tags = ["resources", "codepipeline"]
 

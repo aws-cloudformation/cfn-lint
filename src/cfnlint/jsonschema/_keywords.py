@@ -347,7 +347,6 @@ def items(
                 instance=instance[index],
                 schema=items,
                 path=index,
-                schema_path="items",
                 property_path="*",
             )
 

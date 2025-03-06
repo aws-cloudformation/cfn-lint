@@ -11,7 +11,7 @@ from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn
 
 _all = {
-    "items": [
+    "prefixItems": [
         {"type": "string", "const": "resolve"},
         {"type": "string", "enum": ["ssm", "ssm-secure", "secretsmanager"]},
     ],
@@ -19,7 +19,7 @@ _all = {
 }
 
 _ssm = {
-    "items": [
+    "prefixItems": [
         {"type": "string", "const": "resolve"},
         {"type": "string", "enum": ["ssm", "ssm-secure"]},
         {"type": "string", "pattern": "[a-zA-Z0-9_.-/]+"},
@@ -30,7 +30,7 @@ _ssm = {
 }
 
 _secrets_manager = {
-    "items": [
+    "prefixItems": [
         {"type": "string", "const": "resolve"},
         {"type": "string", "const": "secretsmanager"},
         {"type": "string", "pattern": "[ -~]*"},  # secret-id
@@ -45,7 +45,7 @@ _secrets_manager = {
 }
 
 _secrets_manager_arn = {
-    "items": [
+    "prefixItems": [
         {"type": "string", "const": "resolve"},
         {"type": "string", "const": "secretsmanager"},
         {"type": "string", "const": "arn"},  # arn

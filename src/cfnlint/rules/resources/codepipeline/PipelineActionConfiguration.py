@@ -16,10 +16,10 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 class PipelineActionConfiguration(CfnLintKeyword):
     id = "E3703"
-    shortdesc = "RestApi requires a name when not using an OpenAPI specification"
+    shortdesc = "Validate the configuration of a pipeline action"
     description = (
-        "When using AWS::ApiGateway::RestApi you have to provide 'Name' "
-        "if you don't provide 'Body' or 'BodyS3Location'"
+        "When definition a CodePipeline certain action types have "
+        "configuration constraints so this rule validates them"
     )
     tags = ["resources", "codepipeline"]
 

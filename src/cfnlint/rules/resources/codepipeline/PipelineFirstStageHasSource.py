@@ -14,10 +14,10 @@ from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
 class PipelineFirstStageHasSource(CfnLintKeyword):
     id = "E3700"
-    shortdesc = "RestApi requires a name when not using an OpenAPI specification"
+    shortdesc = "Validate CodePipeline Source actions are only in the first stage"
     description = (
-        "When using AWS::ApiGateway::RestApi you have to provide 'Name' "
-        "if you don't provide 'Body' or 'BodyS3Location'"
+        "When using AWS::CodePipeline::Pipeline this rule will validate "
+        "that Source actions are only used in the first stage"
     )
     tags = ["resources", "codepipeline"]
 

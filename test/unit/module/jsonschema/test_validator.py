@@ -451,8 +451,24 @@ def test_validator(name, schema, instance, expected, validator):
             ],
         ),
         (
-            "items list",
-            {"items": [{"type": "string"}]},
+            "items with prefixItems",
+            {"items": {"const": "2"}, "prefixItems": [{"const": "1"}]},
+            ["1", "1"],
+            [
+                ValidationError(
+                    "'2' was expected",
+                )
+            ],
+        ),
+        (
+            "items with prefixItems and a validation error",
+            {"items": {"const": "2"}, "prefixItems": [{"const": "1"}]},
+            ["1", "2"],
+            [],
+        ),
+        (
+            "prefixItems ",
+            {"prefixItems": [{"type": "string"}]},
             [[]],
             [
                 ValidationError(
