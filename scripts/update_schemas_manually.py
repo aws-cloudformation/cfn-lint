@@ -584,6 +584,18 @@ patches.extend(
                     values={"requiredXor": ["ArtifactStore", "ArtifactStores"]},
                     path="/",
                 ),
+                Patch(
+                    values={"minItems": 2, "uniqueKeys": ["Name"]},
+                    path="/properties/Stages",
+                ),
+                Patch(
+                    values={"minItems": 1, "uniqueKeys": ["Name"]},
+                    path="/definitions/StageDeclaration/properties/Actions",
+                ),
+                Patch(
+                    values={"pattern": "^[0-9A-Za-z_-]{1,9}$"},
+                    path="/definitions/ActionTypeId/properties/Version",
+                ),
             ],
         ),
         ResourcePatch(

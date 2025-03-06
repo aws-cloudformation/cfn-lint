@@ -9,7 +9,6 @@ from cfnlint.template import Template
 
 
 class CodepipelineStages(CloudFormationLintRule):
-    """Check if CodePipeline Stages are set up properly."""
 
     id = "E2540"
     shortdesc = "CodePipeline Stages"
