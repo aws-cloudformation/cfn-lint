@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BucketName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "AccessKey": {
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "AgentArns": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+    "type": "string"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw|object-storage)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "SecretKey": {
+   "maxLength": 200,
+   "minLength": 8,
+   "pattern": "^.+$",
+   "type": "string"
+  },
+  "ServerCertificate": {
+   "maxLength": 32768,
+   "type": "string"
+  },
+  "ServerHostname": {
+   "maxLength": 255,
+   "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+   "type": "string"
+  },
+  "ServerPort": {
+   "maximum": 65536,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ServerProtocol": {
+   "enum": [
+    "HTTPS",
+    "HTTP"
+   ],
+   "type": "string"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\p{Zs}]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "AgentArns"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationObjectStorage",
+ "writeOnlyProperties": [
+  "/properties/SecretKey",
+  "/properties/BucketName",
+  "/properties/ServerHostname",
+  "/properties/Subdirectory"
+ ]
+}
