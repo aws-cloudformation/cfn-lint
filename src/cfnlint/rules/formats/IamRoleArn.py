@@ -8,7 +8,7 @@ from __future__ import annotations
 from cfnlint.rules.formats.FormatKeyword import FormatKeyword
 
 
-class SecurityGroupId(FormatKeyword):
+class IamRoleArn(FormatKeyword):
     id = "E1156"
     shortdesc = "Validate IAM role ARN format"
     description = "Validate IAM role ARN validation for ref/gett and string values"

@@ -178,7 +178,13 @@ def _create_security_group_name(type_name: str, ref: str, resolver: RefResolver)
 def _create_patch(value: dict[str, str], ref: str, resolver: RefResolver):
     _, resolved = resolver.resolve(ref)
     if "$ref" in resolved:
-        return _create_patch(value, resolved["$ref"], resolver)
+        patch = _create_patch(value, resolved["$ref"], resolver)
+        if patch is not None:
+            return patch
+
+    if ref == "#/definitions/Arn":
+        # way too generic general item
+        return None
 
     if "items" in resolved:
         return Patch(

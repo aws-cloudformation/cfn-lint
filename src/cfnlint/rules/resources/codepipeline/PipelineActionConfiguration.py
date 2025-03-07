@@ -66,14 +66,11 @@ class PipelineActionConfiguration(CfnLintKeyword):
         for role, role_validator in get_value_from_path(
             validator, instance, path=deque(["Configuration", "RoleArn"])
         ):
-            print(1, role_validator.context.path.path)
             if role is None:
                 continue
             role_validator = role_validator.evolve(
                 schema={"format": "AWS::IAM::Role.Arn"}
             )
-
-            print(2, role_validator.context.path.path)
 
             for err in role_validator.iter_errors(role):
                 err.rule = self
