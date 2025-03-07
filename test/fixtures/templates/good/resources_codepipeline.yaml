@@ -53,4 +53,13 @@ Resources:
                 ProjectName: cfn-python-lint
               InputArtifacts:
               - Name: MyApp
-            - !Ref AWS::NoValue
+            - Name: CodeBuild
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: !ImportValue Version  # doesn't fail on objects
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+              - Name: MyApp

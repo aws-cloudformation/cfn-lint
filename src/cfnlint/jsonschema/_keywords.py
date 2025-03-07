@@ -137,12 +137,36 @@ def contains(
     if not validator.is_type(instance, "array"):
         return
 
-    if not any(
-        validator.evolve(schema=contains).is_valid(element) for element in instance
-    ):
-        yield ValidationError(
-            f"{instance!r} does not contain items matching the given schema",
-        )
+    matches = 0
+    min_contains = schema.get("minContains", 1)
+    max_contains = schema.get("maxContains", len(instance))
+
+    contains_validator = validator.evolve(schema=contains)
+
+    for each in instance:
+        if contains_validator.is_valid(each):
+            matches += 1
+            if matches > max_contains:
+                yield ValidationError(
+                    "Too many items match the given schema "
+                    f"(expected at most {max_contains})",
+                    validator="maxContains",
+                    validator_value=max_contains,
+                )
+                return
+
+    if matches < min_contains:
+        if not matches:
+            yield ValidationError(
+                f"{instance!r} does not contain items matching the given schema",
+            )
+        else:
+            yield ValidationError(
+                "Too few items match the given schema (expected at least "
+                f"{min_contains} but only {matches} matched)",
+                validator="minContains",
+                validator_value=min_contains,
+            )
 
 
 def dependencies(
@@ -305,18 +329,26 @@ def items(
     if not validator.is_type(instance, "array"):
         return
 
-    if validator.is_type(items, "array"):
-        for (index, item), subschema in zip(enumerate(instance), items):
+    prefix = len(schema.get("prefixItems", []))
+    total = len(instance)
+    extra = total - prefix
+    if extra <= 0:
+        return
+
+    if items is False:
+        rest = instance[prefix:] if extra != 1 else instance[prefix]
+        item = "items" if prefix != 1 else "item"
+        yield ValidationError(
+            f"Expected at most {prefix} {item} but found {extra} " f"extra: {rest!r}",
+        )
+    else:
+        for index in range(prefix, total):
             yield from validator.descend(
-                item,
-                subschema,
+                instance=instance[index],
+                schema=items,
                 path=index,
-                schema_path=index,
                 property_path="*",
             )
-    else:
-        for index, item in enumerate(instance):
-            yield from validator.descend(item, items, path=index, property_path="*")
 
 
 def maxItems(
