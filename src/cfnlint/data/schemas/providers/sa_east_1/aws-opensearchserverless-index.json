@@ -1,0 +1,165 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexName",
+  "/properties/CollectionEndpoint"
+ ],
+ "definitions": {
+  "IndexSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Index": {
+     "additionalProperties": false,
+     "properties": {
+      "Knn": {
+       "type": "boolean"
+      },
+      "KnnAlgoParamEfSearch": {
+       "type": "integer"
+      },
+      "RefreshInterval": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "Dimension": {
+     "type": "integer"
+    },
+    "Index": {
+     "type": "boolean"
+    },
+    "Method": {
+     "additionalProperties": false,
+     "properties": {
+      "Engine": {
+       "enum": [
+        "nmslib",
+        "faiss",
+        "lucene"
+       ],
+       "type": "string"
+      },
+      "Name": {
+       "enum": [
+        "hnsw",
+        "ivf"
+       ],
+       "type": "string"
+      },
+      "Parameters": {
+       "additionalProperties": false,
+       "properties": {
+        "EfConstruction": {
+         "minimum": 1,
+         "type": "integer"
+        },
+        "M": {
+         "maximum": 100,
+         "minimum": 2,
+         "type": "integer"
+        }
+       },
+       "type": "object"
+      },
+      "SpaceType": {
+       "enum": [
+        "l2",
+        "l1",
+        "linf",
+        "cosinesimil",
+        "innerproduct",
+        "hamming"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name",
+      "Engine"
+     ],
+     "type": "object"
+    },
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z0-9_.-]{1,64}$": {
+       "$ref": "#/definitions/PropertyMapping"
+      }
+     },
+     "type": "object"
+    },
+    "Type": {
+     "enum": [
+      "text",
+      "knn_vector"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IndexName",
+  "/properties/CollectionEndpoint"
+ ],
+ "properties": {
+  "CollectionEndpoint": {
+   "type": "string"
+  },
+  "IndexName": {
+   "pattern": "^(?![_-])[a-z][a-z0-9_-]*$",
+   "type": "string"
+  },
+  "Mappings": {
+   "additionalProperties": false,
+   "properties": {
+    "Properties": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z0-9_.-]{1,64}$": {
+       "$ref": "#/definitions/PropertyMapping"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Settings": {
+   "$ref": "#/definitions/IndexSettings"
+  },
+  "Uuid": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Uuid"
+ ],
+ "required": [
+  "CollectionEndpoint",
+  "IndexName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::Index",
+ "writeOnlyProperties": [
+  "/properties/Settings/Index/RefreshInterval",
+  "/properties/Settings/Index/KnnAlgoParamEfSearch"
+ ]
+}

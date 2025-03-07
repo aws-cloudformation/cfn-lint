@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "MountOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Version": {
+     "enum": [
+      "AUTOMATIC",
+      "NFS3",
+      "NFS4_0",
+      "NFS4_1"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OnPremConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AgentArns": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 128,
+      "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+      "type": "string"
+     },
+     "maxItems": 4,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "AgentArns"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocationArn"
+ ],
+ "properties": {
+  "LocationArn": {
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:location/loc-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "LocationUri": {
+   "maxLength": 4356,
+   "pattern": "^(efs|nfs|s3|smb|fsxw)://[a-zA-Z0-9./\\-]+$",
+   "type": "string"
+  },
+  "MountOptions": {
+   "$ref": "#/definitions/MountOptions",
+   "default": {
+    "Version": "AUTOMATIC"
+   }
+  },
+  "OnPremConfig": {
+   "$ref": "#/definitions/OnPremConfig"
+  },
+  "ServerHostname": {
+   "maxLength": 255,
+   "pattern": "^(([a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9\\-]*[A-Za-z0-9])$",
+   "type": "string"
+  },
+  "Subdirectory": {
+   "maxLength": 4096,
+   "pattern": "^[a-zA-Z0-9_\\-\\+\\./\\(\\)\\$\\p{Zs}]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocationArn",
+  "/properties/LocationUri"
+ ],
+ "required": [
+  "OnPremConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::LocationNFS",
+ "writeOnlyProperties": [
+  "/properties/ServerHostname",
+  "/properties/Subdirectory"
+ ]
+}

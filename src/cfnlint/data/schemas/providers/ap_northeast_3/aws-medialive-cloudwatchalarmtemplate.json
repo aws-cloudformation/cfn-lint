@@ -1,0 +1,176 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "CloudWatchAlarmTemplateComparisonOperator": {
+   "enum": [
+    "GreaterThanOrEqualToThreshold",
+    "GreaterThanThreshold",
+    "LessThanThreshold",
+    "LessThanOrEqualToThreshold"
+   ],
+   "type": "string"
+  },
+  "CloudWatchAlarmTemplateStatistic": {
+   "enum": [
+    "SampleCount",
+    "Average",
+    "Sum",
+    "Minimum",
+    "Maximum"
+   ],
+   "type": "string"
+  },
+  "CloudWatchAlarmTemplateTargetResourceType": {
+   "enum": [
+    "CLOUDFRONT_DISTRIBUTION",
+    "MEDIALIVE_MULTIPLEX",
+    "MEDIALIVE_CHANNEL",
+    "MEDIALIVE_INPUT_DEVICE",
+    "MEDIAPACKAGE_CHANNEL",
+    "MEDIAPACKAGE_ORIGIN_ENDPOINT",
+    "MEDIACONNECT_FLOW",
+    "S3_BUCKET"
+   ],
+   "type": "string"
+  },
+  "CloudWatchAlarmTemplateTreatMissingData": {
+   "enum": [
+    "notBreaching",
+    "breaching",
+    "ignore",
+    "missing"
+   ],
+   "type": "string"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Identifier"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:.+:medialive:.+:cloudwatch-alarm-template:.+$",
+   "type": "string"
+  },
+  "ComparisonOperator": {
+   "$ref": "#/definitions/CloudWatchAlarmTemplateComparisonOperator"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DatapointsToAlarm": {
+   "default": 0,
+   "minimum": 1,
+   "type": "number"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "EvaluationPeriods": {
+   "default": 0,
+   "minimum": 1,
+   "type": "number"
+  },
+  "GroupId": {
+   "maxLength": 11,
+   "minLength": 7,
+   "pattern": "^(aws-)?[0-9]{7}$",
+   "type": "string"
+  },
+  "GroupIdentifier": {
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 11,
+   "minLength": 7,
+   "pattern": "^(aws-)?[0-9]{7}$",
+   "type": "string"
+  },
+  "Identifier": {
+   "type": "string"
+  },
+  "MetricName": {
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ModifiedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[^\\s]+$",
+   "type": "string"
+  },
+  "Period": {
+   "default": 0,
+   "maximum": 86400,
+   "minimum": 10,
+   "type": "number"
+  },
+  "Statistic": {
+   "$ref": "#/definitions/CloudWatchAlarmTemplateStatistic"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  },
+  "TargetResourceType": {
+   "$ref": "#/definitions/CloudWatchAlarmTemplateTargetResourceType"
+  },
+  "Threshold": {
+   "default": 0,
+   "type": "number"
+  },
+  "TreatMissingData": {
+   "$ref": "#/definitions/CloudWatchAlarmTemplateTreatMissingData"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/Id",
+  "/properties/GroupId",
+  "/properties/Identifier",
+  "/properties/ModifiedAt"
+ ],
+ "required": [
+  "ComparisonOperator",
+  "EvaluationPeriods",
+  "GroupIdentifier",
+  "MetricName",
+  "Name",
+  "Period",
+  "Statistic",
+  "TargetResourceType",
+  "Threshold",
+  "TreatMissingData"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MediaLive::CloudWatchAlarmTemplate",
+ "writeOnlyProperties": [
+  "/properties/GroupIdentifier"
+ ]
+}
