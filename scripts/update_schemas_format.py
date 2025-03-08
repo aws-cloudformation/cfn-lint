@@ -178,7 +178,13 @@ def _create_security_group_name(type_name: str, ref: str, resolver: RefResolver)
 def _create_patch(value: dict[str, str], ref: str, resolver: RefResolver):
     _, resolved = resolver.resolve(ref)
     if "$ref" in resolved:
-        return _create_patch(value, resolved["$ref"], resolver)
+        patch = _create_patch(value, resolved["$ref"], resolver)
+        if patch is not None:
+            return patch
+
+    if ref == "#/definitions/Arn":
+        # way too generic general item
+        return None
 
     if "items" in resolved:
         return Patch(
@@ -268,6 +274,12 @@ _manual_patches = {
         Patch(
             values={"format": "AWS::EC2::SecurityGroup.Id"},
             path="/definitions/NetworkInterface/properties/GroupSet/items",
+        ),
+    ],
+    "AWS::IAM::Role": [
+        Patch(
+            values={"format": "AWS::IAM::Role.Arn"},
+            path="/properties/Arn",
         ),
     ],
 }
@@ -372,6 +384,18 @@ def main():
                     resource_patches.append(
                         _create_patch(
                             value={"format": "AWS::Logs::LogGroup.Name"},
+                            ref="#/" + "/".join(path),
+                            resolver=resolver,
+                        )
+                    )
+
+            for path in _descend(
+                obj, ["RoleArn", "RoleARN", "IAMRoleARN", "IamRoleArn"]
+            ):
+                if path[-2] == "properties":
+                    resource_patches.append(
+                        _create_patch(
+                            value={"format": "AWS::IAM::Role.Arn"},
                             ref="#/" + "/".join(path),
                             resolver=resolver,
                         )

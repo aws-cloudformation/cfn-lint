@@ -7,7 +7,7 @@ from collections import deque
 
 import pytest
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.codepipeline.PipelineActionConfiguration import (
     PipelineActionConfiguration,
 )
@@ -17,6 +17,28 @@ from cfnlint.rules.resources.codepipeline.PipelineActionConfiguration import (
 def rule():
     rule = PipelineActionConfiguration()
     yield rule
+
+
+def format(validator, keywords, instance, schema):
+    if instance:
+        return
+
+    yield ValidationError("bad")
+
+
+@pytest.fixture
+def validator(cfn, context):
+    validator = CfnTemplateValidator({}).extend(
+        validators={
+            "format": format,
+        }
+    )
+
+    return validator(
+        context=context,
+        cfn=cfn,
+        schema={},
+    )
 
 
 @pytest.mark.parametrize(
@@ -65,6 +87,30 @@ def rule():
                     validator="enum",
                     path_override=deque(["Configuration", "TemplatePath"]),
                     schema_path=deque([]),
+                )
+            ],
+        ),
+        (
+            {
+                "Configuration": {
+                    "RoleArn": True,
+                },
+            },
+            [],
+        ),
+        (
+            {
+                "Configuration": {
+                    "RoleArn": False,
+                },
+            },
+            [
+                ValidationError(
+                    "bad",
+                    rule=PipelineActionConfiguration(),
+                    validator="format",
+                    path_override=deque(["Configuration", "RoleArn"]),
+                    schema_path=deque(["format"]),
                 )
             ],
         ),

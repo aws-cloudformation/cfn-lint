@@ -32,6 +32,10 @@ This format validates that the value is a valid list of security group names, wh
 
 This format validates that the value is a valid Amazon Machine Image (AMI), which is a string of the pattern `ami-[0-9a-f]{8}` or `ami-[0-9a-f]{17}`.  More info in [docs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/resource-ids.html)
 
+### AWS::IAM::Role.Arn
+
+This format validates that the value is a valid IAM Role ARN, which is a string of the pattern `^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):iam::\d{12}:role/.*$`.  More info in [docs](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
+
 ### AWS::Logs::LogGroup.Name
 
 This format validates that the value is a valid log group name, which is a string of the pattern `^[\.\-_\/#A-Za-z0-9]{1,512}\Z`.  More info in [docs](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_LogGroup.html)
