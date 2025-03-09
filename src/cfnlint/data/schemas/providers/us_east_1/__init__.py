@@ -966,6 +966,7 @@ types: list[str] = [
     "AWS::Omics::Workflow",
     "AWS::OpenSearchServerless::AccessPolicy",
     "AWS::OpenSearchServerless::Collection",
+    "AWS::OpenSearchServerless::Index",
     "AWS::OpenSearchServerless::LifecyclePolicy",
     "AWS::OpenSearchServerless::SecurityConfig",
     "AWS::OpenSearchServerless::SecurityPolicy",

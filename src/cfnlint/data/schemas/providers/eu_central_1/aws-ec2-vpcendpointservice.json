@@ -1,0 +1,93 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "IpAddressType": {
+   "enum": [
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServiceId"
+ ],
+ "properties": {
+  "AcceptanceRequired": {
+   "type": "boolean"
+  },
+  "ContributorInsightsEnabled": {
+   "type": "boolean"
+  },
+  "GatewayLoadBalancerArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "NetworkLoadBalancerArns": {
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/LoadBalancerArn",
+     "typeName": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PayerResponsibility": {
+   "type": "string"
+  },
+  "ServiceId": {
+   "type": "string"
+  },
+  "SupportedIpAddressTypes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/IpAddressType"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ServiceId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPCEndpointService",
+ "writeOnlyProperties": [
+  "/properties/ContributorInsightsEnabled"
+ ]
+}
