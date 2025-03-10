@@ -1,3 +1,10 @@
+### v1.29.1
+## What's Changed
+* Update CloudFormation schemas to `2025-03-10` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3999
+* Update [E3701](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3701) to keep artifact names uniquely by the resource name by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4002
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.29.0...v1.29.1
+
 ### v1.29.0
 ## What's Changed
 * Add rule [W3660](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3660) to validate mixing API body definitions in `AWS::ApiGateway::*` resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3989
