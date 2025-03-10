@@ -1136,7 +1136,6 @@ cached: list[str] = [
     "aws-iam-policy.json",
     "aws-iam-role.json",
     "aws-iam-rolepolicy.json",
-    "aws-iam-samlprovider.json",
     "aws-iam-servercertificate.json",
     "aws-iam-servicelinkedrole.json",
     "aws-iam-user.json",

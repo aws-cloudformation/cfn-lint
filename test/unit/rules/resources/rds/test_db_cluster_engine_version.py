@@ -17,6 +17,51 @@ def rule():
     yield rule
 
 
+@pytest.fixture
+def schema():
+    return {
+        "allOf": [
+            {
+                "if": {
+                    "properties": {"Engine": {"type": "string"}},
+                    "required": ["Engine"],
+                },
+                "then": {
+                    "properties": {
+                        "Engine": {
+                            "enum": [
+                                "mysql",
+                            ]
+                        }
+                    }
+                },
+            },
+            {
+                "if": {
+                    "properties": {
+                        "Engine": {"const": "mysql"},
+                        "EngineVersion": {"type": ["string", "number"]},
+                    },
+                    "required": ["Engine", "EngineVersion"],
+                },
+                "then": {
+                    "properties": {
+                        "EngineVersion": {
+                            "enum": [
+                                "8.0.39",
+                                "8.0.40",
+                                "8.0.41",
+                                "8.4.3",
+                                "8.4.4",
+                            ]
+                        }
+                    }
+                },
+            },
+        ],
+    }
+
+
 @pytest.mark.parametrize(
     "instance,expected",
     [
@@ -29,7 +74,7 @@ def rule():
         (
             {
                 "Engine": "mysql",
-                "EngineVersion": "5.7.44",
+                "EngineVersion": "8.0.39",
             },
             [],
         ),
@@ -51,10 +96,7 @@ def rule():
             {"Engine": "foo"},
             [
                 ValidationError(
-                    (
-                        "'foo' is not one of ['aurora-mysql', 'aurora-postgresql', "
-                        "'mysql', 'postgres']"
-                    ),
+                    ("'foo' is not one of ['mysql']"),
                     rule=DbClusterEngineVersion(),
                     path=deque(["Engine"]),
                     validator="enum",
@@ -69,24 +111,21 @@ def rule():
             [
                 ValidationError(
                     (
-                        "'foo' is not one of ['5.7.44', '5.7.44-rds.20240408', "
-                        "'5.7.44-rds.20240529', '5.7.44-rds.20240808', "
-                        "'5.7.44-rds.20250103', "
-                        "'8.0.32', '8.0.33', '8.0.34', "
-                        "'8.0.35', '8.0.36', '8.0.37', '8.0.39', '8.0.40', "
+                        "'foo' is not one of ['8.0.39', '8.0.40', "
                         "'8.0.41', '8.4.3', '8.4.4']"
                     ),
                     rule=DbClusterEngineVersion(),
                     path=deque(["EngineVersion"]),
                     validator="enum",
                     schema_path=deque(
-                        ["allOf", 3, "then", "properties", "EngineVersion", "enum"]
+                        ["allOf", 1, "then", "properties", "EngineVersion", "enum"]
                     ),
                 )
             ],
         ),
     ],
 )
-def test_validate(instance, expected, rule, validator):
+def test_validate(instance, expected, rule, validator, schema):
+    rule._schema = schema
     errs = list(rule.validate(validator, "", instance, {}))
     assert errs == expected, f"Expected {expected} got {errs}"
