@@ -111,6 +111,66 @@ def _append_queues(queue1: Iterable, queue2: Iterable) -> deque:
                 ),
                 (
                     "Foo",
+                    deque(
+                        [
+                            "Resources",
+                            1,
+                            "Properties",
+                            "Stages",
+                            0,
+                            "Actions",
+                            0,
+                            "OutputArtifacts",
+                            0,
+                            "Name",
+                        ]
+                    ),
+                    {},
+                ),
+            ],
+            [],
+        ),
+        (
+            [
+                (
+                    "Foo",
+                    _append_queues(
+                        _standard_path, [0, "Actions", 0, "OutputArtifacts", 0, "Name"]
+                    ),
+                    {},
+                ),
+                (
+                    "Foo",
+                    deque(
+                        [
+                            "Resources",
+                            "AnotherPipeline",
+                            "Properties",
+                            "Stages",
+                            0,
+                            "Actions",
+                            0,
+                            "OutputArtifacts",
+                            0,
+                            "Name",
+                        ]
+                    ),
+                    {},
+                ),
+            ],
+            [],
+        ),
+        (
+            [
+                (
+                    "Foo",
+                    _append_queues(
+                        _standard_path, [0, "Actions", 0, "OutputArtifacts", 0, "Name"]
+                    ),
+                    {},
+                ),
+                (
+                    "Foo",
                     _append_queues(
                         _standard_path, [0, "Actions", 0, "OutputArtifacts", 1, "Name"]
                     ),
