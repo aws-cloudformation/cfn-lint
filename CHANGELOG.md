@@ -1,3 +1,21 @@
+### v1.29.0
+## What's Changed
+* Add rule [W3660](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3660) to validate mixing API body definitions in `AWS::ApiGateway::*` resources by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3989
+* Add rule [E3505](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3505) to validate  timeouts when connection `AWS::Lambda::Function` and `AWS::SQS::Queue` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3990
+* Add rule [E3636](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3636) to validate `AWS::CodeBuild::Project` s3 locations by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3991
+* Add rule [E3061](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3061) to validate `AWS::S3::Bucket` tiering configurations by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3994
+* Deprecate [E2540](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2540) for new v1 version rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Deprecate [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2541) for new v1 version rules by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Add rule [E3700](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3700) to validate `AWS::CodePipeline::Pipeline` `Source` actions are only in the first stage by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Add rule [E3701](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3701) to validate `AWS::CodePipeline::Pipeline` artifact names shared between `InputArtifacts` and `OutputArtifacts` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Add rule [E3702](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3702) to validate `AWS::CodePipeline::Pipeline` counts for `InputArtifacts`, `OutputArtifacts` based on action type by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Add rule [E3703](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3703) to validate `AWS::CodePipeline::Pipeline` configuration of an action by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Additional general schema updates to complete the rest of the validation in rules E2540 and E2541 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3993
+* Update CloudFormation schemas to `2025-03-07` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3988
+* Add `Condition` to `Choice` in state machine by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4000
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.28.0...v1.29.0
+
 ### v1.28.0
 ## What's Changed
 * Add `uniqueKeys` for `Sid` in IAM policies by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3982
