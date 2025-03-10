@@ -1,0 +1,106 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProtectionGroupId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProtectionGroupArn"
+ ],
+ "properties": {
+  "Aggregation": {
+   "enum": [
+    "SUM",
+    "MEAN",
+    "MAX"
+   ],
+   "type": "string"
+  },
+  "Members": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "^arn:aws.*",
+    "type": "string"
+   },
+   "maxItems": 10000,
+   "type": "array"
+  },
+  "Pattern": {
+   "enum": [
+    "ALL",
+    "ARBITRARY",
+    "BY_RESOURCE_TYPE"
+   ],
+   "type": "string"
+  },
+  "ProtectionGroupArn": {
+   "type": "string"
+  },
+  "ProtectionGroupId": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9\\-]*",
+   "type": "string"
+  },
+  "ResourceType": {
+   "enum": [
+    "CLOUDFRONT_DISTRIBUTION",
+    "ROUTE_53_HOSTED_ZONE",
+    "ELASTIC_IP_ALLOCATION",
+    "CLASSIC_LOAD_BALANCER",
+    "APPLICATION_LOAD_BALANCER",
+    "GLOBAL_ACCELERATOR"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProtectionGroupArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Aggregation",
+  "Pattern",
+  "ProtectionGroupId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-shield.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Shield::ProtectionGroup"
+}
