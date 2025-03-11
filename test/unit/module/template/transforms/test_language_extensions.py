@@ -86,6 +86,26 @@ class TestForEachCollection(TestCase):
         )
 
 
+class TestFnIf(TestCase):
+    def setUp(self) -> None:
+        self.template_obj = convert_dict({})
+        self.cfn = Template(
+            filename="", template=self.template_obj, regions=["us-west-2"]
+        )
+
+    def test_fn_if(self):
+        fe = _ForEachValue.create({"Fn::If": ["Name", "Foo", "Bar"]})
+        with self.assertRaises(_ResolveError):
+            fe.value(self.cfn)
+
+    def test_bad_if(self):
+        with self.assertRaises(_TypeError):
+            _ForEachValue.create({"Fn::If": {}})
+
+        with self.assertRaises(_TypeError):
+            _ForEachValue.create({"Fn::If": ["Name"]})
+
+
 class TestRef(TestCase):
     def setUp(self) -> None:
         self.template_obj = convert_dict(

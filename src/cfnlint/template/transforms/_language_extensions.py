@@ -241,6 +241,8 @@ class _ForEachValue:
                     return _ForEachValueRef(_hash, v)
                 if k == "Fn::FindInMap":
                     return _ForEachValueFnFindInMap(_hash, v)
+                if k == "Fn::If":
+                    return _ForEachValueFnIf(_hash, v)
 
         raise _TypeError(f"Unsupported value {obj!r}", obj)
 
@@ -412,6 +414,27 @@ class _ForEachValueFnFindInMap(_ForEachValue):
         if len(self._map) == 4 and default_on_resolver_failure:
             return self._map[3].value(cfn, params, only_params)
         raise _ResolveError("Can't resolve Fn::FindInMap", self._obj)
+
+
+class _ForEachValueFnIf(_ForEachValue):
+    def __init__(self, _hash: str, obj: Any) -> None:
+        super().__init__(_hash)
+        if not isinstance(obj, (list)):
+            raise _TypeError("Fn::If should be a list of 3 elements", obj)
+
+        if len(obj) != 3:
+            raise _TypeError("Fn::If should be a list of 3 elements", obj)
+        self._condition = _ForEachValue.create(obj[0])
+        self._obj = obj
+
+    # pylint: disable=too-many-return-statements
+    def value(
+        self,
+        cfn: Any,
+        params: Mapping[str, Any] | None = None,
+        only_params: bool = False,
+    ) -> Any:
+        raise _ResolveError("Can't resolve Fn::If", self._obj)
 
 
 class _ForEachValueRef(_ForEachValue):

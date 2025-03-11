@@ -70,6 +70,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Globals"] = {}
         self.transform_pre["Ref"] = self.search_deep_keys("Ref")
         self.transform_pre["Fn::Sub"] = self.search_deep_keys("Fn::Sub")
+        self.transform_pre["Fn::If"] = self.search_deep_keys("Fn::If")
         self.transform_pre["Fn::FindInMap"] = self.search_deep_keys("Fn::FindInMap")
         self.transform_pre["Transform"] = self.template.get("Transform", [])
         self.transform_pre["Fn::ForEach"] = self.search_deep_keys(

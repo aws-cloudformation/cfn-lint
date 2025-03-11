@@ -24,7 +24,7 @@ class Used(CloudFormationLintRule):
         conditions = cfn.template.get("Conditions", {})
         if conditions:
             # Get all "If's" that reference a Condition
-            iftrees = cfn.search_deep_keys("Fn::If")
+            iftrees = cfn.transform_pre["Fn::If"]
 
             for iftree in iftrees:
                 if isinstance(iftree[-1], list):
