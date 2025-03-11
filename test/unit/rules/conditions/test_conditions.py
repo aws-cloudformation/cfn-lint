@@ -32,7 +32,7 @@ class TestConfiguration(BaseRuleTestCase):
                     path=deque(["bar"]),
                     rule=Configuration(),
                     schema_path=deque(
-                        ["patternProperties", "^[a-zA-Z0-9&]{1,255}$", "type"]
+                        ["patternProperties", "^[a-zA-Z0-9&_]{1,255}$", "type"]
                     ),
                     validator="type",
                     validator_value="boolean",
