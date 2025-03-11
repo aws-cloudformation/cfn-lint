@@ -73,7 +73,7 @@ def test_resources():
                 "Properties": {"TemplateURL": "./bar.yaml"},
             },
             ({"Outputs": {"MyValue": {"Type": "String"}}}, None),
-            AttributeDict({"Outputs.MyValue": "/properties/Output"}),
+            AttributeDict({"Outputs.MyValue": "/properties/CfnLintStringType"}),
         ),
         (
             "Nested stack with a local file and no outputs",
@@ -105,9 +105,6 @@ def test_nested_stacks(name, instance, decode_results, expected_getatts):
 
         resource = Resource(instance, filename)
 
-        for k, v in resource.get_atts(region).items():
-            print(k, v)
-        print(expected_getatts)
         assert expected_getatts == resource.get_atts(
             region
         ), f"{name!r} test got {resource.get_atts(region)}"

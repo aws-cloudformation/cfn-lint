@@ -399,7 +399,6 @@ def _nested_stack_get_atts(filename, template_url):
     base_dir = os.path.dirname(os.path.abspath(filename))
     template_path = os.path.normpath(os.path.join(base_dir, template_url))
 
-    print(template_path)
     try:
         from cfnlint.decode import decode
 
@@ -409,7 +408,6 @@ def _nested_stack_get_atts(filename, template_url):
     if matches:
         return None
 
-    print(tmp)
     outputs = AttributeDict()
 
     tmp_outputs = tmp.get("Outputs")
@@ -417,7 +415,7 @@ def _nested_stack_get_atts(filename, template_url):
         return outputs
 
     for name, _ in tmp_outputs.items():
-        outputs[f"Outputs.{name}"] = "/properties/Output"
+        outputs[f"Outputs.{name}"] = "/properties/CfnLintStringType"
     return outputs
 
 
