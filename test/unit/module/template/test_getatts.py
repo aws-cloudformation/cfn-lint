@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from test.testlib.testcase import BaseTestCase
 
+from cfnlint.context import Resource
 from cfnlint.template.getatts import GetAtts
 
 
@@ -13,14 +14,20 @@ class TestGetAtts(BaseTestCase):
 
     def test_getatt(self):
         getatts = GetAtts(["us-east-1", "us-west-2"])
-        getatts.add("Module", "Organization::Resource::Type::MODULE")
+        getatts.add(
+            "Module", Resource({"Type": "Organization::Resource::Type::MODULE"})
+        )
         results = getatts.match("us-east-1", "ModuleResource.Module")
         self.assertEqual(results, "/properties/CfnLintAllTypes")
 
     def test_many_modules(self):
         getatts = GetAtts(["us-east-1", "us-west-2"])
-        getatts.add("Module", "Organization::Resource::Type::MODULE")
-        getatts.add("Module1", "Organization::Resource::Type::MODULE")
+        getatts.add(
+            "Module", Resource({"Type": "Organization::Resource::Type::MODULE"})
+        )
+        getatts.add(
+            "Module1", Resource({"Type": "Organization::Resource::Type::MODULE"})
+        )
         results = getatts.match("us-east-1", "ModuleResource.Module")
         self.assertEqual(results, "/properties/CfnLintAllTypes")
 
@@ -29,8 +36,10 @@ class TestGetAtts(BaseTestCase):
 
     def test_getatt_resource_and_modules(self):
         getatts = GetAtts(["us-east-1", "us-west-2"])
-        getatts.add("Resource", "Organization::Resource::Type::MODULE")
-        getatts.add("Resource1", "Organization::Resource::Type")
+        getatts.add(
+            "Resource", Resource({"Type": "Organization::Resource::Type::MODULE"})
+        )
+        getatts.add("Resource1", Resource({"Type": "Organization::Resource::Type"}))
         results = getatts.match("us-east-1", "ResourceOne.Module")
         self.assertEqual(results, "/properties/CfnLintAllTypes")
 
@@ -48,7 +57,7 @@ class TestGetAtts(BaseTestCase):
 
     def test_getatt_resource_with_list(self):
         getatts = GetAtts(["us-east-1"])
-        getatts.add("Resource", "AWS::NetworkFirewall::Firewall")
+        getatts.add("Resource", Resource({"Type": "AWS::NetworkFirewall::Firewall"}))
         results = getatts.match("us-east-1", "Resource.EndpointIds")
         self.assertEqual(results, "/properties/EndpointIds")
         self.assertDictEqual(

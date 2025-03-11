@@ -5,11 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import os
 from abc import ABC, abstractmethod
 from collections import deque
 from dataclasses import InitVar, dataclass, field, fields
 from functools import lru_cache
-from typing import Any, Deque, Iterator, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Deque, Iterator, Sequence, Set, Tuple
 
 from cfnlint.context._mappings import Mappings
 from cfnlint.context.conditions._conditions import Conditions
@@ -21,6 +22,9 @@ from cfnlint.helpers import (
     TRANSFORM_SAM,
 )
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
+
+if TYPE_CHECKING:
+    from cfnlint.template import Template
 
 _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
 
@@ -384,6 +388,39 @@ class Parameter(_Ref):
         return self.type.startswith("AWS::SSM::Parameter::")
 
 
+def _nested_stack_get_atts(filename, template_url):
+    if (
+        template_url.startswith("http://")
+        or template_url.startswith("https://")
+        or template_url.startswith("s3://")
+    ):
+        return None
+
+    base_dir = os.path.dirname(os.path.abspath(filename))
+    template_path = os.path.normpath(os.path.join(base_dir, template_url))
+
+    print(template_path)
+    try:
+        from cfnlint.decode import decode
+
+        (tmp, matches) = decode(template_path)
+    except Exception:  # noqa: E722
+        return None
+    if matches:
+        return None
+
+    print(tmp)
+    outputs = AttributeDict()
+
+    tmp_outputs = tmp.get("Outputs")
+    if not isinstance(tmp_outputs, dict):
+        return outputs
+
+    for name, _ in tmp_outputs.items():
+        outputs[f"Outputs.{name}"] = "/properties/Output"
+    return outputs
+
+
 @dataclass
 class Resource(_Ref):
     """
@@ -393,8 +430,10 @@ class Resource(_Ref):
     type: str = field(init=False)
     condition: str | None = field(init=False, default=None)
     resource: InitVar[Any]
+    filename: InitVar[str | None] = field(default=None)
+    _nested_stack_get_atts: AttributeDict | None = field(init=False, default=None)
 
-    def __post_init__(self, resource) -> None:
+    def __post_init__(self, resource: Any, filename: str | None) -> None:
         if not isinstance(resource, dict):
             raise ValueError("Resource must be a object")
         t = resource.get("Type")
@@ -409,7 +448,18 @@ class Resource(_Ref):
             raise ValueError("Condition must be a string")
         self.condition = c
 
+        if self.type == "AWS::CloudFormation::Stack":
+            properties = resource.get("Properties")
+            if isinstance(properties, dict):
+                template_url = properties.get("TemplateURL")
+                if isinstance(template_url, str):
+                    self._nested_stack_get_atts = _nested_stack_get_atts(
+                        filename, template_url
+                    )
+
     def get_atts(self, region: str = REGION_PRIMARY) -> AttributeDict:
+        if self._nested_stack_get_atts is not None:
+            return self._nested_stack_get_atts
         return PROVIDER_SCHEMA_MANAGER.get_type_getatts(self.type, region)
 
     def ref(self, region: str = REGION_PRIMARY) -> dict[str, Any]:
@@ -433,13 +483,13 @@ def _init_parameters(parameters: Any) -> dict[str, Parameter]:
     return obj
 
 
-def _init_resources(resources: Any) -> dict[str, Resource]:
+def _init_resources(resources: Any, filename: str | None = None) -> dict[str, Resource]:
     obj = {}
     if not isinstance(resources, dict):
         raise ValueError("Resource must be a object")
     for k, v in resources.items():
         try:
-            obj[k] = Resource(v)
+            obj[k] = Resource(v, filename)
         except ValueError:
             pass
     return obj
@@ -451,7 +501,7 @@ def _init_transforms(transforms: Any) -> Transforms:
     return Transforms([])
 
 
-def create_context_for_template(cfn):
+def create_context_for_template(cfn: Template) -> "Context":
     parameters = {}
     try:
         parameters = _init_parameters(cfn.template.get("Parameters", {}))
@@ -460,7 +510,7 @@ def create_context_for_template(cfn):
 
     resources = {}
     try:
-        resources = _init_resources(cfn.template.get("Resources", {}))
+        resources = _init_resources(cfn.template.get("Resources", {}), cfn.filename)
     except (ValueError, AttributeError):
         pass
 
