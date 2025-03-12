@@ -21,7 +21,6 @@ class Permissions(CfnLintKeyword):
     description = "Check for valid IAM Permissions"
     source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_action.html"
     tags = ["properties", "iam", "permissions"]
-    experimental = True
 
     def __init__(self):
         """Init"""
@@ -33,6 +32,11 @@ class Permissions(CfnLintKeyword):
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
     ) -> ValidationResult:
+        # Escape validation when using SAM transforms as a result of
+        # https://github.com/aws/serverless-application-model/issues/3633
+        if validator.context.transforms.has_sam_transform():
+            return
+
         actions = ensure_list(instance)
 
         for action in actions:
@@ -41,7 +45,7 @@ class Permissions(CfnLintKeyword):
             if ":" not in action:
                 yield ValidationError(
                     (
-                        f"{action!r} is not a valid action."
+                        f"{action!r} is not a valid action. "
                         "Must be of the form service:action or '*'"
                     ),
                     rule=self,
