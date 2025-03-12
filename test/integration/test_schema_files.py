@@ -40,6 +40,7 @@ class TestSchemaFiles(TestCase):
         "Outputs/*/Value",
         "Parameters",
         "Parameters/*",
+        "Parameters/*/AllowedPattern",
         "Resources",
         "Resources/*",
         "Resources/*/Condition",
