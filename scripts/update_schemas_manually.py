@@ -596,6 +596,10 @@ patches.extend(
                     values={"pattern": "^[0-9A-Za-z_-]{1,9}$"},
                     path="/definitions/ActionTypeId/properties/Version",
                 ),
+                Patch(
+                    values={"pattern": "^[A-Za-z0-9.@-_]{1,100}$"},
+                    path="/definitions/ActionDeclaration/properties/Name",
+                ),
             ],
         ),
         ResourcePatch(
