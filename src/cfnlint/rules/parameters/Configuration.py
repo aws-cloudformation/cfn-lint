@@ -48,12 +48,10 @@ class Configuration(CfnLintJsonSchema):
     def _pattern_properties(
         self, validator: Validator, aP: Any, instance: Any, schema: Any
     ):
-        # We have to rework pattern properties
-        # to re-add the keyword or we will have an
-        # infinite loop
+        # Flip back on add cfn-lint keyword
         validator = validator.evolve(
             function_filter=validator.function_filter.evolve(
-                add_cfn_lint_keyword=False,
+                add_cfn_lint_keyword=True,
             )
         )
         yield from patternProperties(validator, aP, instance, schema)
