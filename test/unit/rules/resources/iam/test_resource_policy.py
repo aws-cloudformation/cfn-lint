@@ -3,11 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from unittest import TestCase
 
-from cfnlint.context import Context
+from cfnlint.context import Context, Path
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.iam.ResourcePolicy import ResourcePolicy
 
 
@@ -20,7 +21,13 @@ class TestResourcePolicy(TestCase):
 
     def test_object_basic(self):
         """Test Positive"""
-        validator = CfnTemplateValidator()
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                )
+            )
+        )
 
         policy = {"Version": "2012-10-18"}
 
@@ -30,15 +37,21 @@ class TestResourcePolicy(TestCase):
             )
         )
         self.assertEqual(len(errs), 2, errs)
-        self.assertEqual(errs[0].message, "'Statement' is a required property")
-        self.assertListEqual(list(errs[0].path), [])
         self.assertEqual(
-            errs[1].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
+            errs[0].message, "'2012-10-18' is not one of ['2008-10-17', '2012-10-17']"
         )
-        self.assertListEqual(list(errs[1].path), ["Version"])
+        self.assertListEqual(list(errs[0].path), ["Version"])
+        self.assertEqual(errs[1].message, "'Statement' is a required property")
+        self.assertListEqual(list(errs[1].path), [])
 
     def test_object_multiple_effect(self):
-        validator = CfnTemplateValidator()
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                )
+            )
+        )
 
         policy = {
             "Version": "2012-10-17",
@@ -91,7 +104,12 @@ class TestResourcePolicy(TestCase):
 
     def test_object_statements(self):
         validator = CfnTemplateValidator({}).evolve(
-            context=Context(functions=FUNCTIONS)
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                ),
+            )
         )
 
         policy = {
@@ -138,7 +156,13 @@ class TestResourcePolicy(TestCase):
 
     def test_string_statements(self):
         """Test Positive"""
-        validator = CfnTemplateValidator()
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                )
+            )
+        )
 
         # ruff: noqa: E501
         policy = """
@@ -183,7 +207,12 @@ class TestResourcePolicy(TestCase):
 
     def test_principal_wildcard(self):
         validator = CfnTemplateValidator({}).evolve(
-            context=Context(functions=FUNCTIONS)
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                ),
+            )
         )
 
         policy = {
@@ -227,7 +256,12 @@ class TestResourcePolicy(TestCase):
 
     def test_assumed_role(self):
         validator = CfnTemplateValidator({}).evolve(
-            context=Context(functions=FUNCTIONS)
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                ),
+            )
         )
 
         policy = {
@@ -250,3 +284,71 @@ class TestResourcePolicy(TestCase):
             )
         )
         self.assertListEqual(errs, [])
+
+    def test_duplicate_sid(self):
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])
+                ),
+            )
+        )
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "A",
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "arn:aws:s3:::bucket",
+                    "Principal": {
+                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                    },
+                },
+                {
+                    "Sid": "A",
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "arn:aws:s3:::bucket",
+                    "Principal": {
+                        "AWS": "arn:aws:sts::123456789012:assumed-role/rolename/rolesessionname"
+                    },
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(errs, [])
+
+        # Fail on SNS topic
+        validator = CfnTemplateValidator({}).evolve(
+            context=Context(
+                functions=FUNCTIONS,
+                path=Path(
+                    cfn_path=deque(["Resources", "AWS::SNS::TopicPolicy", "Properties"])
+                ),
+            )
+        )
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(
+            errs,
+            [
+                ValidationError(
+                    "array items are not unique for keys ['Sid']",
+                    validator="uniqueKeys",
+                    schema_path=deque(["properties", "Statement", "uniqueKeys"]),
+                    path=deque(["Statement"]),
+                    rule=ResourcePolicy(),
+                )
+            ],
+        )
