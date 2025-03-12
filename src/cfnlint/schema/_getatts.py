@@ -213,10 +213,9 @@ _unnamed_unknown_types = (
 )
 
 
-class AttributeDict(UserDict):
-    def __init__(self, __dict: None = None) -> None:
+class AttributeDict(UserDict[str, str]):
+    def __init__(self, __dict: dict[str, str] | None = None) -> None:
         super().__init__(__dict)
-        self.data: dict[str, str] = {}
 
     def __getitem__(self, key: str) -> str:
         possible_items = {}

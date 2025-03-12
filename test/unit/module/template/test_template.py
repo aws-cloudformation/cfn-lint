@@ -1446,64 +1446,77 @@ ElasticLoadBalancer -> MyEC2Instance [key=0, source_paths="[\\"Properties\\", \\
         template = self.load_template(filename)
         schema_manager = ProviderSchemaManager()
         schema_manager.load_registry_schemas(schema_filename)
-        with patch("cfnlint.template.getatts.PROVIDER_SCHEMA_MANAGER", schema_manager):
-            self.template = Template(filename, template)
-            self.assertDictEqual(
-                {
-                    "oneOf": [
-                        {
-                            "type": "array",
-                            "items": [
-                                {"type": "string", "enum": ["MyReport"]},
-                                {"type": ["string", "object"]},
-                            ],
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "items": [
-                                            {"type": "string", "const": "MyReport"},
-                                            {"type": ["string", "object"]},
-                                        ]
-                                    },
-                                    "then": {
+        self.maxDiff = None
+        with patch("cfnlint.context.context.PROVIDER_SCHEMA_MANAGER", schema_manager):
+            with patch(
+                "cfnlint.template.getatts.PROVIDER_SCHEMA_MANAGER", schema_manager
+            ):
+                self.template = Template(filename, template)
+                self.assertDictEqual(
+                    {
+                        "oneOf": [
+                            {
+                                "type": "array",
+                                "items": [
+                                    {"type": "string", "enum": ["MyReport"]},
+                                    {"type": ["string", "object"]},
+                                ],
+                                "allOf": [
+                                    {
                                         "if": {
                                             "items": [
                                                 {"type": "string", "const": "MyReport"},
-                                                {"type": "string"},
+                                                {"type": ["string", "object"]},
                                             ]
                                         },
                                         "then": {
-                                            "items": [
-                                                {"type": "string", "const": "MyReport"},
-                                                {
-                                                    "type": "string",
-                                                    "enum": ["TPSCode", "Authors"],
-                                                },
-                                            ]
-                                        },
-                                        "else": {
-                                            "items": [
-                                                {"type": "string", "const": "MyReport"},
-                                                {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "Ref": {"type": "string"}
+                                            "if": {
+                                                "items": [
+                                                    {
+                                                        "type": "string",
+                                                        "const": "MyReport",
                                                     },
-                                                    "required": ["Ref"],
-                                                    "additionalProperties": False,
-                                                },
-                                            ]
+                                                    {"type": "string"},
+                                                ]
+                                            },
+                                            "then": {
+                                                "items": [
+                                                    {
+                                                        "type": "string",
+                                                        "const": "MyReport",
+                                                    },
+                                                    {
+                                                        "type": "string",
+                                                        "enum": ["TPSCode", "Authors"],
+                                                    },
+                                                ]
+                                            },
+                                            "else": {
+                                                "items": [
+                                                    {
+                                                        "type": "string",
+                                                        "const": "MyReport",
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "Ref": {"type": "string"}
+                                                        },
+                                                        "required": ["Ref"],
+                                                        "additionalProperties": False,
+                                                    },
+                                                ]
+                                            },
                                         },
-                                    },
-                                    "else": {},
-                                }
-                            ],
-                        },
-                        {
-                            "type": "string",
-                            "enum": ["MyReport.TPSCode", "MyReport.Authors"],
-                        },
-                    ]
-                },
-                self.template.get_valid_getatts().json_schema("us-east-1"),
-            )
+                                        "else": {},
+                                    }
+                                ],
+                            },
+                            {
+                                "type": "string",
+                                "enum": ["MyReport.TPSCode", "MyReport.Authors"],
+                            },
+                        ]
+                    },
+                    self.template.get_valid_getatts().json_schema("us-east-1"),
+                )
