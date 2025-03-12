@@ -3,6 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from typing import Any
+
+from cfnlint.jsonschema import ValidationResult, Validator
 from cfnlint.rules.resources.iam.Policy import Policy
 
 
@@ -30,3 +33,16 @@ class ResourcePolicy(Policy):
             "resource",
             "policy_resource.json",
         )
+
+    def validate(
+        self,
+        validator: Validator,
+        policy_type: Any,
+        policy: Any,
+        schema: dict[str, Any],
+    ) -> ValidationResult:
+        for err in super().validate(validator, policy_type, policy, schema):
+            if validator.context.path.cfn_path[1] == "AWS::S3::BucketPolicy":
+                if err.validator == "uniqueKeys" and err.schema_path[-2] == "Statement":
+                    continue
+            yield err
