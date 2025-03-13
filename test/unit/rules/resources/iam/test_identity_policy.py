@@ -3,11 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from unittest import TestCase
 
 from cfnlint.context import Context
 from cfnlint.helpers import FUNCTIONS
-from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.resources.iam.IdentityPolicy import IdentityPolicy
 
 
@@ -238,3 +239,45 @@ class TestIdentityPolicies(TestCase):
         self.assertEqual(len(errs), 1, errs)
         self.assertEqual(errs[0].message, "array items are not unique for keys ['Sid']")
         self.assertListEqual(list(errs[0].path), ["Statement"])
+
+    def test_pattern_sid(self):
+        validator = CfnTemplateValidator()
+
+        policy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Sid": "A ",
+                    "Effect": "Allow",
+                    "Action": "*",
+                    "Resource": "*",
+                },
+            ],
+        }
+
+        errs = list(
+            self.rule.validate(
+                validator=validator, policy=policy, schema={}, policy_type=None
+            )
+        )
+        self.assertListEqual(
+            errs,
+            [
+                ValidationError(
+                    message="'A ' does not match '^[A-Za-z0-9]+$'",
+                    validator="pattern",
+                    path=deque(["Statement", 0, "Sid"]),
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "Statement",
+                            "items",
+                            "properties",
+                            "Sid",
+                            "pattern",
+                        ]
+                    ),
+                    rule=IdentityPolicy(),
+                )
+            ],
+        )
