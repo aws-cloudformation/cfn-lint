@@ -1,3 +1,15 @@
+### v1.30.0
+## What's Changed
+* Allow conditions in foreach by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4009
+* Allow `_` in condition names by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4008
+* Remove experimental from [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3037) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/3680
+* Add in `pattern` for CodePipeline action names by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4012
+* Support GetAtts for nested stacks and outputs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4011
+* Add rule [I2003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I2003) to validate `AllowedPattern` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4013
+* Validate identity base SIDs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4016
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.29.1...v1.30.0
+
 ### v1.29.1
 ## What's Changed
 * Update CloudFormation schemas to `2025-03-10` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/3999
