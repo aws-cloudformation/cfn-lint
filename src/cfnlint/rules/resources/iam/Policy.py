@@ -71,6 +71,4 @@ class Policy(CfnLintJsonSchema):
             )
 
         for err in iam_validator.iter_errors(policy):
-            if not err.validator.startswith("fn_") and err.validator not in ["cfnLint"]:
-                err.rule = self
-            yield err
+            yield self._clean_error(err)
