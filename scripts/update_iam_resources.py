@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 import logging
+from copy import deepcopy
 
 import requests
 
@@ -46,22 +47,19 @@ def read_json_from_url(url):
         return None
 
 
-_resource_schema = {
-    "definitions": {
-        "resources_asterisk": {"enum": []},
-    },
+_if_schema = {
     "if": {
         "properties": {
             "Action": {
                 "else": {
                     "contains": {
-                        "$ref": "#/definitions/resources_asterisk",
+                        "const": "",
                         "minContains": 1,
                     },
                     "type": "array",
                 },
                 "if": {"type": "string"},
-                "then": {"$ref": "#/definitions/resources_asterisk"},
+                "then": {"const": ""},
             }
         },
         "required": ["Action"],
@@ -70,36 +68,117 @@ _resource_schema = {
         "properties": {
             "Resource": {
                 "else": {
-                    "contains": {"enum": ["*"]},
+                    "contains": {"$ref": "#/definitions/shapes"},
                     "minContains": 1,
                     "type": "array",
                 },
                 "if": {"type": "string"},
-                "then": {"const": "*"},
+                "then": {"$ref": "#/definitions/shapes"},
             }
         }
     },
+}
+
+_resource_schema = {
+    "definitions": {"resources_asterisk": {"enum": []}, "resources": {}},
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "Action": {
+                        "else": {
+                            "contains": {
+                                "$ref": "#/definitions/resources_asterisk",
+                                "minContains": 1,
+                            },
+                            "type": "array",
+                        },
+                        "if": {"type": "string"},
+                        "then": {"$ref": "#/definitions/resources_asterisk"},
+                    }
+                },
+                "required": ["Action"],
+            },
+            "then": {
+                "properties": {
+                    "Resource": {
+                        "else": {
+                            "contains": {"enum": ["*"]},
+                            "minContains": 1,
+                            "type": "array",
+                        },
+                        "if": {"type": "string"},
+                        "then": {"const": "*"},
+                    }
+                }
+            },
+        },
+    ],
     "type": "object",
 }
 
 
 def _processes_a_service(name, data):
+    resource_actions = {}
     for action in data.get("Actions", []):
-        if not action.get("Resources", []):
-            yield f"{name}:{action.get('Name')}"
+        resources = action.get("Resources", [])
+        action_name = f"{name}:{action['Name']}"
+        if not resources:
+            _resource_schema["definitions"]["resources_asterisk"]["enum"].append(
+                action_name
+            )
+            continue
+
+        for resource in resources:
+            resource_name = resource.get("Name")
+            if not resource_name:
+                continue
+
+            if resource_name not in resource_actions:
+                resource_actions[resource_name] = []
+
+            resource_actions[resource_name].append(action_name)
+
+    for resource, actions in resource_actions.items():
+        resource_name = f"{name}:{resource}"
+        _allof_if_schema = deepcopy(_if_schema)
+        _allof_if_schema["if"]["properties"]["Action"]["then"]["enum"] = actions
+        _allof_if_schema["if"]["properties"]["Action"]["else"]["contains"][
+            "enum"
+        ] = actions
+        _allof_if_schema["then"]["properties"]["Resource"]["then"][
+            "$ref"
+        ] = f"#/definitions/shapes/{resource_name}"
+        _allof_if_schema["then"]["properties"]["Resource"]["else"]["contains"][
+            "$ref"
+        ] = f"#/definitions/shapes/{resource_name}"
+
+        _resource_schema["allOf"].append(_allof_if_schema)
+
+    for resource in data.get("Resources", []):
+        resource_name = f"{name}:{resource.get('Name')}"
+        _resource_schema["definitions"]["resources"][resource_name] = {
+            "arn_formats": resource.get("ARNFormats")
+        }
+
+    # for shape in data.get("Shapes", []):
+    #    _allof_if_schema = deepcopy(_if_schema)
+    #    _allof_if_schema["if"]["properties"]["Action"]["then"]["const"] = action_name
+    #    _allof_if_schema["if"]["properties"]["Action"]["else"]["contains"]["const"] = action_name
+    #    _allof_if_schema["then"]["properties"]["Resource"]["then"]["$ref"] = f"#/definitions/shapes/{name}:{shape_name}"
+    #    _allof_if_schema["then"]["properties"]["Resource"]["else"]["contains"]["$ref"] = f"#/definitions/shapes/{name}:{shape_name}"
+    #
+    # _resource_schema["allOf"].append(_allof_if_schema)
 
 
 def main():
     configure_logging()
 
     services = read_json_from_url(SERVICES_URL)
-    resources_asterisk = []
     for service in services:
         name = service.get("service")
         data = read_json_from_url(service.get("url"))
-        resources_asterisk.extend(list(_processes_a_service(name, data)))
-
-    _resource_schema["definitions"]["resources_asterisk"]["enum"] = resources_asterisk
+        _processes_a_service(name, data)
 
     filename = "src/cfnlint/data/schemas/other/iam/policy_statement_resources.json"
     with open(filename, "w+", encoding="utf-8") as f:
