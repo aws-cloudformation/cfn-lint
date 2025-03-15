@@ -83,6 +83,7 @@ types: list[str] = [
     "AWS::ApplicationAutoScaling::ScalableTarget",
     "AWS::ApplicationAutoScaling::ScalingPolicy",
     "AWS::ApplicationInsights::Application",
+    "AWS::ApplicationSignals::Discovery",
     "AWS::ApplicationSignals::ServiceLevelObjective",
     "AWS::Athena::DataCatalog",
     "AWS::Athena::NamedQuery",
@@ -848,6 +849,7 @@ types: list[str] = [
     "AWS::XRay::Group",
     "AWS::XRay::ResourcePolicy",
     "AWS::XRay::SamplingRule",
+    "AWS::XRay::TransactionSearchConfig",
     "Module",
 ]
 
@@ -911,6 +913,7 @@ cached: list[str] = [
     "aws-applicationautoscaling-scalabletarget.json",
     "aws-applicationautoscaling-scalingpolicy.json",
     "aws-applicationinsights-application.json",
+    "aws-applicationsignals-discovery.json",
     "aws-applicationsignals-servicelevelobjective.json",
     "aws-appmesh-gatewayroute.json",
     "aws-appmesh-mesh.json",
@@ -1656,5 +1659,6 @@ cached: list[str] = [
     "aws-xray-group.json",
     "aws-xray-resourcepolicy.json",
     "aws-xray-samplingrule.json",
+    "aws-xray-transactionsearchconfig.json",
     "module.json",
 ]
