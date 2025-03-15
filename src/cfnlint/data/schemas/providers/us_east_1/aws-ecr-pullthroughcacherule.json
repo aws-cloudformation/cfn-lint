@@ -4,7 +4,9 @@
   "/properties/EcrRepositoryPrefix",
   "/properties/UpstreamRegistryUrl",
   "/properties/CredentialArn",
-  "/properties/UpstreamRegistry"
+  "/properties/UpstreamRegistry",
+  "/properties/CustomRoleArn",
+  "/properties/UpstreamRepositoryPrefix"
  ],
  "definitions": {
   "CredentialArn": {
@@ -13,10 +15,14 @@
    "pattern": "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$",
    "type": "string"
   },
+  "CustomRoleArn": {
+   "maxLength": 2048,
+   "type": "string"
+  },
   "EcrRepositoryPrefix": {
    "maxLength": 30,
    "minLength": 2,
-   "pattern": "(?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*",
+   "pattern": "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
    "type": "string"
   },
   "PullThroughCacheRule": {
@@ -26,6 +32,9 @@
    "properties": {
     "CredentialArn": {
      "$ref": "#/definitions/CredentialArn"
+    },
+    "CustomRoleArn": {
+     "$ref": "#/definitions/CustomRoleArn"
     },
     "EcrRepositoryPrefix": {
      "$ref": "#/definitions/EcrRepositoryPrefix"
@@ -38,6 +47,9 @@
     },
     "UpstreamRegistryUrl": {
      "$ref": "#/definitions/UpstreamRegistryUrl"
+    },
+    "UpstreamRepositoryPrefix": {
+     "$ref": "#/definitions/UpstreamRepositoryPrefix"
     }
    },
    "required": [
@@ -51,32 +63,10 @@
    "type": "string"
   },
   "UpstreamRegistry": {
-   "type": "string"
-  },
-  "UpstreamRegistryUrl": {
-   "type": "string"
-  }
- },
- "primaryIdentifier": [
-  "/properties/EcrRepositoryPrefix"
- ],
- "properties": {
-  "CredentialArn": {
-   "maxLength": 612,
-   "minLength": 50,
-   "pattern": "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$",
-   "type": "string"
-  },
-  "EcrRepositoryPrefix": {
-   "maxLength": 30,
-   "minLength": 2,
-   "pattern": "(?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*",
-   "type": "string"
-  },
-  "UpstreamRegistry": {
    "enum": [
     "azure-container-registry",
     "docker-hub",
+    "ecr",
     "ecr-public",
     "github-container-registry",
     "gitlab-container-registry",
@@ -87,6 +77,35 @@
   },
   "UpstreamRegistryUrl": {
    "type": "string"
+  },
+  "UpstreamRepositoryPrefix": {
+   "maxLength": 30,
+   "minLength": 2,
+   "pattern": "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EcrRepositoryPrefix"
+ ],
+ "properties": {
+  "CredentialArn": {
+   "$ref": "#/definitions/CredentialArn"
+  },
+  "CustomRoleArn": {
+   "$ref": "#/definitions/CustomRoleArn"
+  },
+  "EcrRepositoryPrefix": {
+   "$ref": "#/definitions/EcrRepositoryPrefix"
+  },
+  "UpstreamRegistry": {
+   "$ref": "#/definitions/UpstreamRegistry"
+  },
+  "UpstreamRegistryUrl": {
+   "$ref": "#/definitions/UpstreamRegistryUrl"
+  },
+  "UpstreamRepositoryPrefix": {
+   "$ref": "#/definitions/UpstreamRepositoryPrefix"
   }
  },
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
@@ -96,6 +115,7 @@
  "typeName": "AWS::ECR::PullThroughCacheRule",
  "writeOnlyProperties": [
   "/properties/CredentialArn",
-  "/properties/UpstreamRegistry"
+  "/properties/UpstreamRegistry",
+  "/properties/CustomRoleArn"
  ]
 }

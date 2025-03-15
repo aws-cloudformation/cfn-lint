@@ -111,6 +111,7 @@ types: list[str] = [
     "AWS::ApplicationAutoScaling::ScalableTarget",
     "AWS::ApplicationAutoScaling::ScalingPolicy",
     "AWS::ApplicationInsights::Application",
+    "AWS::ApplicationSignals::Discovery",
     "AWS::ApplicationSignals::ServiceLevelObjective",
     "AWS::Athena::CapacityReservation",
     "AWS::Athena::DataCatalog",
@@ -1381,6 +1382,7 @@ types: list[str] = [
     "AWS::XRay::Group",
     "AWS::XRay::ResourcePolicy",
     "AWS::XRay::SamplingRule",
+    "AWS::XRay::TransactionSearchConfig",
     "Alexa::ASK::Skill",
     "Module",
 ]
