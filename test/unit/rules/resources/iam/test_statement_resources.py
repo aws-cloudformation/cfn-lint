@@ -17,6 +17,16 @@ def rule():
     yield rule
 
 
+def template():
+    return {
+        "Resources": {
+            "LogGroup": {
+                "Type": "AWS::Logs::LogGroup",
+            }
+        }
+    }
+
+
 @pytest.mark.parametrize(
     "instance,expected",
     [
@@ -196,6 +206,26 @@ def rule():
                         "a resource of "
                         "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
                     ),
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            # should not fail on the actions that require a resource
+            # but still fails because there is no asterisk
+            {
+                "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                    "logs:DescribeLogGroups",
+                    "logs:DescribeLogStreams",
+                ],
+                "Resource": {"Fn::GetAtt": "LogGroup.Arn"},
+            },
+            [
+                ValidationError(
+                    "action 'logs:DescribeLogGroups' requires a resource of '*'",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
                 ),

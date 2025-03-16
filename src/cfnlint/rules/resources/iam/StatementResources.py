@@ -103,6 +103,7 @@ class StatementResources(CfnLintKeyword):
         if not validator.is_type(instance, "object"):
             return
 
+        using_fn_arns = False
         all_resources: set[str] = set()
         for resources, _ in get_value_from_path(
             validator, instance, path=deque(["Resource"])
@@ -111,7 +112,8 @@ class StatementResources(CfnLintKeyword):
 
             for resource in resources:
                 if not isinstance(resource, str):
-                    return
+                    using_fn_arns = True
+                    continue
                 all_resources.add(resource)
 
         if "*" in all_resources:
@@ -143,6 +145,8 @@ class StatementResources(CfnLintKeyword):
                     "Resources", None
                 )
                 if isinstance(resources, (list, str)):
+                    if using_fn_arns:
+                        continue
                     resources = ensure_list(resources)
                     for resource in resources:
                         arn_formats = self.service_map[service]["Resources"][
@@ -154,7 +158,7 @@ class StatementResources(CfnLintKeyword):
                                 yield ValidationError(
                                     (
                                         f"action {action!r} requires "
-                                        "a resource of {arn_formats!r}"
+                                        f"a resource of {arn_formats!r}"
                                     ),
                                     path=deque(["Resource"]),
                                     rule=self,
