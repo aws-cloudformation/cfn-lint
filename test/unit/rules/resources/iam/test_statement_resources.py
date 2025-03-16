@@ -8,7 +8,7 @@ from collections import deque
 import pytest
 
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.resources.iam.StatementResources import StatementResources
+from cfnlint.rules.resources.iam.StatementResources import StatementResources, _Arn
 
 
 @pytest.fixture(scope="module")
@@ -52,6 +52,38 @@ def template():
             {
                 "Action": ["cloudformation:CreateStack"],
                 "Resource": "*",
+            },
+            [],
+        ),
+        (
+            # action with no colon
+            {
+                "Action": ["cloudformationCreateStackSet"],
+                "Resource": "arn",
+            },
+            [],
+        ),
+        (
+            # service not in map
+            {
+                "Action": ["foo:CreateStackSet"],
+                "Resource": "arn",
+            },
+            [],
+        ),
+        (
+            # action not in map
+            {
+                "Action": ["cloudformation:foo"],
+                "Resource": "arn",
+            },
+            [],
+        ),
+        (
+            # skip validation on asterisk actions
+            {
+                "Action": ["foo:Create*"],
+                "Resource": "arn",
             },
             [],
         ),
@@ -237,3 +269,10 @@ def test_rule(instance, expected, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
 
     assert errors == expected, f"Got {errors!r}"
+
+
+def test_added():
+    arn = _Arn("arn:aws:cloudformation:us-east-1:123456789012:stack/*")
+
+    assert arn.__repr__() == "arn:aws:cloudformation:us-east-1:123456789012:stack/*"
+    assert arn != 1

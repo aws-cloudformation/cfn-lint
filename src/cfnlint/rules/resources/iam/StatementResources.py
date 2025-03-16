@@ -36,9 +36,6 @@ class _Arn:
         if not isinstance(value, _Arn):
             return False
 
-        if len(value.parts) != len(self._parts):
-            return False
-
         for i in range(0, 5):
             if self.parts[i] == "*":
                 continue
