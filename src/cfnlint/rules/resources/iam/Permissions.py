@@ -27,7 +27,7 @@ class Permissions(CfnLintKeyword):
         super().__init__(
             ["AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"]
         )
-        self.service_map = self.load_service_map()
+        self.service_map = load_resource(AdditionalSpecs, "Policies.json")
 
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
@@ -56,7 +56,7 @@ class Permissions(CfnLintKeyword):
             permission = permission.lower()
 
             if service in self.service_map:
-                enums = self.service_map[service]
+                enums = list(self.service_map[service].get("Actions", []).keys())
                 if permission == "*":
                     pass
                 elif permission.endswith("*"):
@@ -69,15 +69,12 @@ class Permissions(CfnLintKeyword):
 
                 elif permission.startswith("*"):
                     wilcarded_permission = permission.split("*")[1]
-                    if not any(
-                        wilcarded_permission in action
-                        for action in self.service_map[service]
-                    ):
+                    if not any(wilcarded_permission in action for action in enums):
                         yield ValidationError(
                             f"{permission!r} is not one of {enums!r}",
                             rule=self,
                         )
-                elif permission not in self.service_map[service]:
+                elif permission not in enums:
                     yield ValidationError(
                         f"{permission!r} is not one of {enums!r}",
                         rule=self,
@@ -87,25 +84,3 @@ class Permissions(CfnLintKeyword):
                     f"{service!r} is not one of {list(self.service_map.keys())!r}",
                     rule=self,
                 )
-
-    def load_service_map(self):
-        """
-        Convert policies.json into a simpler version for more efficient key lookup.
-        """
-        service_map = load_resource(AdditionalSpecs, "Policies.json")["serviceMap"]
-
-        policy_service_map = {}
-
-        for _, properties in service_map.items():
-            # The services and actions are case insensitive
-            service = properties["StringPrefix"].lower()
-            actions = [x.lower() for x in properties["Actions"]]
-
-            # Some services have the same name for different
-            # generations; like elasticloadbalancing.
-            if service in policy_service_map:
-                policy_service_map[service] += actions
-            else:
-                policy_service_map[service] = actions
-
-        return policy_service_map

@@ -52,13 +52,9 @@ def rule():
             },
             [
                 ValidationError(
-                    "'*' was expected",
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
-                    schema_path=deque(
-                        ["then", "properties", "Resource", "then", "const"]
-                    ),
-                    validator="const",
                 ),
             ],
         ),
@@ -69,13 +65,9 @@ def rule():
             },
             [
                 ValidationError(
-                    "'*' not found in array",
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
-                    schema_path=deque(
-                        ["then", "properties", "Resource", "else", "contains"]
-                    ),
-                    validator="contains",
                 ),
             ],
         ),
@@ -92,17 +84,120 @@ def rule():
                     "cloudformation:CreateStackSet",
                     "cloudformation:CreateStack",
                 ],
-                "Resource": ["arn"],
+                "Resource": ["arn:aws:cloudformation:*:*:stack/*"],
             },
             [
                 ValidationError(
-                    "'*' not found in array",
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
                     rule=StatementResources(),
                     path=deque(["Resource"]),
-                    schema_path=deque(
-                        ["then", "properties", "Resource", "else", "contains"]
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:stack/*"],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
+                "Resource": [
+                    "arn:aws:cloudformation:us-east-1:123456789012:stack/dne/*"
+                ],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
+                "Resource": ["arn:aws:logs:us-east-1:123456789012:stack/dne/*"],
+            },
+            [
+                ValidationError(
+                    (
+                        "action 'cloudformation:CreateStack' "
+                        "requires a resource of "
+                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
                     ),
-                    validator="contains",
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
+                "Resource": ["arn:aws:logs:us-east-1:123456789012:stack/dne/*"],
+            },
+            [
+                ValidationError(
+                    (
+                        "action 'cloudformation:CreateStack' "
+                        "requires a resource of "
+                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
+                    ),
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": "logs:CreateLogGroup",
+                "Resource": "arn:aws:logs:us-east-1:123456789012:log-group:dne",
+            },
+            [],
+        ),
+        (
+            {
+                "Action": "logs:CreateLogGroup",
+                "Resource": "arn:aws:logs:us-east-1:123456789012:log-group*",
+            },
+            [],
+        ),
+        (
+            {
+                "Action": [
+                    "cloudformation:CreateStack",
+                    "logs:CreateLogGroup",
+                ],
+                "Resource": [
+                    "arn:aws:cloudformation:us-east-1:123456789012:stack/dne/*",
+                    "arn:aws:logs:us-east-1:123456789012:log-group:dne",
+                ],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": [
+                    "cloudformation:CreateStack",
+                    "logs:CreateLogGroup",
+                ],
+                "Resource": [
+                    "arn:aws:cloudformation:us-east-1:123456789012:changeSet/dne/*",
+                    "arn:aws:logs:us-east-1:123456789012:log-group:dne",
+                ],
+            },
+            [
+                ValidationError(
+                    (
+                        "action 'cloudformation:CreateStack' requires "
+                        "a resource of "
+                        "['arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*']"
+                    ),
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
                 ),
             ],
         ),
@@ -110,4 +205,5 @@ def rule():
 )
 def test_rule(instance, expected, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
+
     assert errors == expected, f"Got {errors!r}"

@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 import logging
-from copy import deepcopy
 
 import requests
 
@@ -47,128 +46,55 @@ def read_json_from_url(url):
         return None
 
 
-_if_schema = {
-    "if": {
-        "properties": {
-            "Action": {
-                "else": {
-                    "contains": {
-                        "const": "",
-                        "minContains": 1,
-                    },
-                    "type": "array",
-                },
-                "if": {"type": "string"},
-                "then": {"const": ""},
-            }
-        },
-        "required": ["Action"],
-    },
-    "then": {
-        "properties": {
-            "Resource": {
-                "else": {
-                    "contains": {"$ref": "#/definitions/shapes"},
-                    "minContains": 1,
-                    "type": "array",
-                },
-                "if": {"type": "string"},
-                "then": {"$ref": "#/definitions/shapes"},
-            }
-        }
-    },
-}
+_data = {}
 
-_resource_schema = {
-    "definitions": {"resources_asterisk": {"enum": []}, "resources": {}},
-    "allOf": [
-        {
-            "if": {
-                "properties": {
-                    "Action": {
-                        "else": {
-                            "contains": {
-                                "$ref": "#/definitions/resources_asterisk",
-                                "minContains": 1,
-                            },
-                            "type": "array",
-                        },
-                        "if": {"type": "string"},
-                        "then": {"$ref": "#/definitions/resources_asterisk"},
-                    }
-                },
-                "required": ["Action"],
-            },
-            "then": {
-                "properties": {
-                    "Resource": {
-                        "else": {
-                            "contains": {"enum": ["*"]},
-                            "minContains": 1,
-                            "type": "array",
-                        },
-                        "if": {"type": "string"},
-                        "then": {"const": "*"},
-                    }
-                }
-            },
-        },
-    ],
-    "type": "object",
-}
+
+def _clean_arn_formats(arn):
+    arn_parts = arn.split(":", 5)
+
+    resource = arn_parts[5]
+    delimiter = None
+    for d in [":", "/"]:
+        if d in resource:
+            delimiter = d
+
+    if delimiter:
+        resource_parts = []
+        for resource_part in resource.split(delimiter):
+            if "${" in resource_part:
+                resource_parts.append(".*")
+                break
+
+            resource_parts.append(resource_part)
+
+        arn_parts[5] = delimiter.join(resource_parts)
+
+    return ":".join(arn_parts)
 
 
 def _processes_a_service(name, data):
-    resource_actions = {}
+    _data[name] = {
+        "Actions": {},
+        "Resources": {},
+    }
+
     for action in data.get("Actions", []):
-        resources = action.get("Resources", [])
-        action_name = f"{name}:{action['Name']}"
-        if not resources:
-            _resource_schema["definitions"]["resources_asterisk"]["enum"].append(
-                action_name
-            )
-            continue
-
-        for resource in resources:
-            resource_name = resource.get("Name")
-            if not resource_name:
-                continue
-
-            if resource_name not in resource_actions:
-                resource_actions[resource_name] = []
-
-            resource_actions[resource_name].append(action_name)
-
-    for resource, actions in resource_actions.items():
-        resource_name = f"{name}:{resource}"
-        _allof_if_schema = deepcopy(_if_schema)
-        _allof_if_schema["if"]["properties"]["Action"]["then"]["enum"] = actions
-        _allof_if_schema["if"]["properties"]["Action"]["else"]["contains"][
-            "enum"
-        ] = actions
-        _allof_if_schema["then"]["properties"]["Resource"]["then"][
-            "$ref"
-        ] = f"#/definitions/shapes/{resource_name}"
-        _allof_if_schema["then"]["properties"]["Resource"]["else"]["contains"][
-            "$ref"
-        ] = f"#/definitions/shapes/{resource_name}"
-
-        _resource_schema["allOf"].append(_allof_if_schema)
+        _data[name]["Actions"][action.get("Name").lower()] = {}
+        if "Resources" in action:
+            _data[name]["Actions"][action.get("Name").lower()] = {
+                "Resources": list([i["Name"] for i in action["Resources"]])
+            }
 
     for resource in data.get("Resources", []):
-        resource_name = f"{name}:{resource.get('Name')}"
-        _resource_schema["definitions"]["resources"][resource_name] = {
-            "arn_formats": resource.get("ARNFormats")
+        _data[name]["Resources"][resource.get("Name").lower()] = {
+            "ARNFormats": [
+                _clean_arn_formats(arn) for arn in resource.get("ARNFormats")
+            ],
         }
-
-    # for shape in data.get("Shapes", []):
-    #    _allof_if_schema = deepcopy(_if_schema)
-    #    _allof_if_schema["if"]["properties"]["Action"]["then"]["const"] = action_name
-    #    _allof_if_schema["if"]["properties"]["Action"]["else"]["contains"]["const"] = action_name
-    #    _allof_if_schema["then"]["properties"]["Resource"]["then"]["$ref"] = f"#/definitions/shapes/{name}:{shape_name}"
-    #    _allof_if_schema["then"]["properties"]["Resource"]["else"]["contains"]["$ref"] = f"#/definitions/shapes/{name}:{shape_name}"
-    #
-    # _resource_schema["allOf"].append(_allof_if_schema)
+        if "ConditionKeys" in resource:
+            _data[name]["Resources"][resource.get("Name").lower()]["ConditionKeys"] = (
+                resource.get("ConditionKeys")
+            )
 
 
 def main():
@@ -180,9 +106,9 @@ def main():
         data = read_json_from_url(service.get("url"))
         _processes_a_service(name, data)
 
-    filename = "src/cfnlint/data/schemas/other/iam/policy_statement_resources.json"
+    filename = "src/cfnlint/data/AdditionalSpecs/Policies.json"
     with open(filename, "w+", encoding="utf-8") as f:
-        json.dump(_resource_schema, f, indent=1, sort_keys=True, separators=(",", ": "))
+        json.dump(_data, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 if __name__ == "__main__":
