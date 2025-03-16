@@ -140,6 +140,9 @@ def update_iam_policies():
         for d in [":", "/"]:
             if d in resource:
                 delimiter = d
+                break
+        else:
+            delimiter = ":"
 
         if delimiter:
             resource_parts = []

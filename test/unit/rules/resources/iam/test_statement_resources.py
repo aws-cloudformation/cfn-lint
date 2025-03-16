@@ -221,6 +221,18 @@ def template():
             [],
         ),
         (
+            # no delimiter in resource
+            {
+                "Action": [
+                    "codepipeline:putapprovalresult",
+                ],
+                "Resource": [
+                    "arn:aws:codepipeline:us-east-1:123456789012:resource-name",
+                ],
+            },
+            [],
+        ),
+        (
             {
                 "Action": [
                     "cloudformation:CreateStack",

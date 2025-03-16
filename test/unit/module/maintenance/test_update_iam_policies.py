@@ -52,7 +52,13 @@ class TestUpdateIamPolicies(BaseTestCase):
                         "arn:${Partition}:cloudformation:${Region}:${Account}:stack/${StackName}/${Id}"
                     ],
                     "ConditionKeys": ["aws:ResourceTag/${TagKey}"],
-                }
+                },
+                {
+                    "Name": "stackset",
+                    "ARNFormats": [
+                        "arn:${Partition}:cloudformation:${Region}:${Account}:${StackSetName}"
+                    ],
+                },
             ],
         }
 
@@ -75,7 +81,12 @@ class TestUpdateIamPolicies(BaseTestCase):
                                     "arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*"
                                 ],
                                 "ConditionKeys": ["aws:ResourceTag/${TagKey}"],
-                            }
+                            },
+                            "stackset": {
+                                "ARNFormats": [
+                                    "arn:${Partition}:cloudformation:${Region}:${Account}:.*"
+                                ]
+                            },
                         },
                     }
                 },
