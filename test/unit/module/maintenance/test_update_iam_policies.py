@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import json
 import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
@@ -21,10 +22,50 @@ class TestUpdateIamPolicies(BaseTestCase):
     def test_update_iam_policies(self, mock_json_dump, mock_content):
         """Success update iam policies"""
 
-        mock_content.return_value = (
-            'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API'
-            ' Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
-        )
+        services = [
+            {
+                "service": "foo",
+                "url": "https://servicereference.us-east-1.amazonaws.com/v1/foo/foo.json",
+            }
+        ]
+
+        cloudformation = {
+            "Name": "cloudformation",
+            "Actions": [
+                {
+                    "Name": "CreateStack",
+                    "ActionConditionKeys": [
+                        "aws:RequestTag/${TagKey}",
+                        "aws:TagKeys",
+                        "cloudformation:ResourceTypes",
+                        "cloudformation:RoleArn",
+                        "cloudformation:StackPolicyUrl",
+                        "cloudformation:TemplateUrl",
+                    ],
+                    "Resources": [{"Name": "stack"}],
+                }
+            ],
+            "Resources": [
+                {
+                    "Name": "stack",
+                    "ARNFormats": [
+                        "arn:${Partition}:cloudformation:${Region}:${Account}:stack/${StackName}/${Id}"
+                    ],
+                    "ConditionKeys": ["aws:ResourceTag/${TagKey}"],
+                },
+                {
+                    "Name": "stackset",
+                    "ARNFormats": [
+                        "arn:${Partition}:cloudformation:${Region}:${Account}:${StackSetName}"
+                    ],
+                },
+            ],
+        }
+
+        mock_content.side_effect = [
+            json.dumps(services),
+            json.dumps(cloudformation),
+        ]
 
         builtin_module_name = "builtins"
 
@@ -32,10 +73,20 @@ class TestUpdateIamPolicies(BaseTestCase):
             cfnlint.maintenance.update_iam_policies()
             mock_json_dump.assert_called_with(
                 {
-                    "serviceMap": {
-                        "Manage Amazon API Gateway": {"Actions": ["HEAD", "OPTIONS"]},
-                        "Amazon Kinesis Video Streams": {
-                            "Actions": ["StartStreamEncryption"]
+                    "foo": {
+                        "Actions": {"createstack": {"Resources": ["stack"]}},
+                        "Resources": {
+                            "stack": {
+                                "ARNFormats": [
+                                    "arn:${Partition}:cloudformation:${Region}:${Account}:stack/.*"
+                                ],
+                                "ConditionKeys": ["aws:ResourceTag/${TagKey}"],
+                            },
+                            "stackset": {
+                                "ARNFormats": [
+                                    "arn:${Partition}:cloudformation:${Region}:${Account}:.*"
+                                ]
+                            },
                         },
                     }
                 },

@@ -30,14 +30,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/quickstart/nist_application.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart" "/nist_application.json"
+                "test/fixtures/results/quickstart/nist_application.json"
             ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_config_rules.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/" "nist_config_rules.json"
+                "test/fixtures/results/quickstart/nist_config_rules.json"
             ),
             "exit_code": 6,
         },
@@ -54,21 +54,21 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/quickstart/nist_vpc_management.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/" "nist_vpc_management.json"
+                "test/fixtures/results/quickstart/nist_vpc_management.json"
             ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/nist_vpc_production.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart/" "nist_vpc_production.json"
+                "test/fixtures/results/quickstart/nist_vpc_production.json"
             ),
             "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/openshift_master.yaml",
             "results_filename": (
-                "test/fixtures/results/quickstart" "/openshift_master.json"
+                "test/fixtures/results/quickstart/openshift_master.json"
             ),
             "exit_code": 8,
         },
