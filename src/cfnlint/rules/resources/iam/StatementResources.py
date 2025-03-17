@@ -9,7 +9,7 @@ from collections import deque
 from typing import Any
 
 from cfnlint.data import AdditionalSpecs
-from cfnlint.helpers import ensure_list, load_resource
+from cfnlint.helpers import ensure_list, is_function, load_resource
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.helpers import get_value_from_path
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
@@ -56,21 +56,17 @@ class _Arn:
         if not delimiter:
             return True
 
-        value_resource_parts = value.parts[5].split(delimiter)
-        for i, resource_part in enumerate(self.parts[5].split(delimiter)):
-            if resource_part == "*":
+        for x, y in zip(
+            self.parts[5].split(delimiter), value.parts[5].split(delimiter)
+        ):
+            if x == y:
+                continue
+            if x == "*" or y == "" or y == ".*":
                 return True
-            if i > len(value_resource_parts):
+            if x.startswith(y) and "*" in x:
                 return True
-            if value_resource_parts[i] == ".*":
-                return True
-            if (
-                resource_part.startswith(value_resource_parts[i])
-                and "*" in resource_part
-            ):
-                return True
-            if resource_part != value_resource_parts[i]:
-                return False
+
+            return False
 
         return True
 
@@ -81,10 +77,10 @@ class StatementResources(CfnLintKeyword):
     shortdesc = "Validate statement resources match the actions"
     description = (
         "IAM policy statements have different constraints between actions and "
-        "resources. This rule validates that actions that require an "
-        "asterisk resource have an asterisk resource."
+        "resources. This rule validates that resource ARNs or asterisks match "
+        "the actions."
     )
-    source_url = "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_identity-vs-resource.html"
+    source_url = "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/iam-access-control-overview-cwl.html"
     tags = ["resources", "iam"]
 
     def __init__(self):
@@ -109,12 +105,17 @@ class StatementResources(CfnLintKeyword):
 
             for resource in resources:
                 if not isinstance(resource, str):
+                    k, v = is_function(resource)
+                    if k is None:
+                        continue
+                    if k == "Ref" and validator.is_type(v, "string"):
+                        if v in validator.context.parameters:
+                            return
                     using_fn_arns = True
                     continue
+                if resource == "*":
+                    return
                 all_resources.add(resource)
-
-        if "*" in all_resources:
-            return
 
         all_resource_arns = [_Arn(a) for a in all_resources]
         for actions, _ in get_value_from_path(
@@ -124,6 +125,8 @@ class StatementResources(CfnLintKeyword):
 
             for action in actions:
 
+                if not validator.is_type(action, "string"):
+                    continue
                 if "*" in action:
                     continue
                 if ":" not in action:

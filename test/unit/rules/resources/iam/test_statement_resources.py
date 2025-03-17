@@ -17,13 +17,17 @@ def rule():
     yield rule
 
 
+@pytest.fixture
 def template():
     return {
+        "Parameters": {
+            "MyParameter": {"Type": "String"},
+        },
         "Resources": {
             "LogGroup": {
                 "Type": "AWS::Logs::LogGroup",
             }
-        }
+        },
     }
 
 
@@ -59,7 +63,7 @@ def template():
             # action with no colon
             {
                 "Action": ["cloudformationCreateStackSet"],
-                "Resource": "arn",
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [],
         ),
@@ -67,7 +71,7 @@ def template():
             # service not in map
             {
                 "Action": ["foo:CreateStackSet"],
-                "Resource": "arn",
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [],
         ),
@@ -75,7 +79,7 @@ def template():
             # action not in map
             {
                 "Action": ["cloudformation:foo"],
-                "Resource": "arn",
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [],
         ),
@@ -83,14 +87,77 @@ def template():
             # skip validation on asterisk actions
             {
                 "Action": ["foo:Create*"],
-                "Resource": "arn",
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": [{"Ref": "MyParameter"}],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": {"Ref": "MyParameter"},
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [],
         ),
         (
             {
                 "Action": "cloudformation:CreateStackSet",
-                "Resource": "arn",
+                "Resource": [{"Ref": "MyParameter"}],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": "cloudformation:CreateStackSet",
+                "Resource": [{"Ref": "LogGroup"}],
+            },
+            [
+                ValidationError(
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": "cloudformation:CreateStackSet",
+                "Resource": [{"Foo": "Bar"}],
+            },
+            [
+                ValidationError(
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": "cloudformation:CreateStackSet",
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
+            },
+            [
+                ValidationError(
+                    "action 'cloudformation:CreateStackSet' requires a resource of '*'",
+                    rule=StatementResources(),
+                    path=deque(["Resource"]),
+                ),
+            ],
+        ),
+        (
+            {
+                "Action": [
+                    "cloudformation:CreateStackSet",
+                    {"Ref": "MyParameter"},
+                ],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [
                 ValidationError(
@@ -103,7 +170,7 @@ def template():
         (
             {
                 "Action": ["cloudformation:CreateStackSet"],
-                "Resource": ["arn"],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*"],
             },
             [
                 ValidationError(
@@ -116,7 +183,7 @@ def template():
         (
             {
                 "Action": ["cloudformation:CreateStackSet"],
-                "Resource": ["arn", "*"],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*", "*"],
             },
             [],
         ),
@@ -280,6 +347,9 @@ def template():
 def test_rule(instance, expected, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
 
+    for err in errors:
+        print(err.message)
+        print(err.path)
     assert errors == expected, f"Got {errors!r}"
 
 
@@ -288,3 +358,21 @@ def test_added():
 
     assert arn.__repr__() == "arn:aws:cloudformation:us-east-1:123456789012:stack/*"
     assert arn != 1
+
+    greengress_1 = _Arn(
+        "arn:aws:cloudformation:us-east-1:123456789012:/greengrass/definition/connectors/.*"
+    )
+    greengress_2 = _Arn("arn:aws:cloudformation:us-east-1:123456789012:/greengrass")
+    greengrass_3 = _Arn(
+        "arn:aws:cloudformation:us-east-1:123456789012:/greengrass/things/"
+    )
+
+    assert greengress_1 == greengress_2
+    assert greengress_1 != greengrass_3
+
+    assert _Arn("arn:aws:cloudformation:us-east-1:123456789012:") == _Arn(
+        "arn:aws:cloudformation:us-east-1:123456789012:"
+    )
+    assert _Arn("arn:aws:cloudformation:us-east-1:123456789012:test/") == _Arn(
+        "arn:aws:cloudformation:us-east-1:123456789012:test/"
+    )
