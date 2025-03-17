@@ -36,9 +36,15 @@
   "/properties/Name"
  ],
  "properties": {
+  "ConnectionType": {
+   "type": "string"
+  },
   "Description": {
    "maxLength": 1024,
    "minLength": 1,
+   "type": "string"
+  },
+  "Error": {
    "type": "string"
   },
   "Name": {
@@ -56,6 +62,20 @@
    },
    "type": "object"
   },
+  "Status": {
+   "enum": [
+    "CREATE_IN_PROGRESS",
+    "CREATE_COMPLETE",
+    "CREATE_FAILED",
+    "CREATE_FAILED_CLEANUP_IN_PROGRESS",
+    "CREATE_FAILED_CLEANUP_COMPLETE",
+    "CREATE_FAILED_CLEANUP_FAILED",
+    "DELETE_IN_PROGRESS",
+    "DELETE_COMPLETE",
+    "DELETE_FAILED"
+   ],
+   "type": "string"
+  },
   "Tags": {
    "$ref": "#/definitions/Tags"
   },
@@ -63,7 +83,8 @@
    "enum": [
     "LAMBDA",
     "GLUE",
-    "HIVE"
+    "HIVE",
+    "FEDERATED"
    ],
    "type": "string"
   }

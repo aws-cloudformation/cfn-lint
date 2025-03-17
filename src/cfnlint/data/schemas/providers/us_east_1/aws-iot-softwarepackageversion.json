@@ -5,6 +5,18 @@
   "/properties/VersionName"
  ],
  "definitions": {
+  "PackageVersionArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
   "PackageVersionStatus": {
    "enum": [
     "DRAFT",
@@ -23,6 +35,49 @@
     }
    },
    "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Key": {
+     "minLength": 1,
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "Version"
+   ],
+   "type": "object"
+  },
+  "Sbom": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "required": [
+    "S3Location"
+   ],
+   "type": "object"
+  },
+  "SbomValidationStatus": {
+   "enum": [
+    "IN_PROGRESS",
+    "FAILED",
+    "SUCCEEDED",
+    ""
+   ],
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
@@ -51,6 +106,9 @@
   "/properties/VersionName"
  ],
  "properties": {
+  "Artifact": {
+   "$ref": "#/definitions/PackageVersionArtifact"
+  },
   "Attributes": {
    "$ref": "#/definitions/ResourceAttributes"
   },
@@ -72,6 +130,16 @@
   "PackageVersionArn": {
    "pattern": "^arn:[!-~]+$",
    "type": "string"
+  },
+  "Recipe": {
+   "maxLength": 3072,
+   "type": "string"
+  },
+  "Sbom": {
+   "$ref": "#/definitions/Sbom"
+  },
+  "SbomValidationStatus": {
+   "$ref": "#/definitions/SbomValidationStatus"
   },
   "Status": {
    "$ref": "#/definitions/PackageVersionStatus"
@@ -95,13 +163,15 @@
  "readOnlyProperties": [
   "/properties/ErrorReason",
   "/properties/PackageVersionArn",
-  "/properties/Status"
+  "/properties/Status",
+  "/properties/SbomValidationStatus"
  ],
  "required": [
   "PackageName"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot",
  "tagging": {
-  "cloudFormationSystemTags": true,
+  "cloudFormationSystemTags": false,
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
