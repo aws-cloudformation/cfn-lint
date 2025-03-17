@@ -107,6 +107,7 @@ types: list[str] = [
     "AWS::ApplicationAutoScaling::ScalableTarget",
     "AWS::ApplicationAutoScaling::ScalingPolicy",
     "AWS::ApplicationInsights::Application",
+    "AWS::ApplicationSignals::Discovery",
     "AWS::ApplicationSignals::ServiceLevelObjective",
     "AWS::Athena::CapacityReservation",
     "AWS::Athena::DataCatalog",
@@ -1284,6 +1285,7 @@ types: list[str] = [
     "AWS::XRay::Group",
     "AWS::XRay::ResourcePolicy",
     "AWS::XRay::SamplingRule",
+    "AWS::XRay::TransactionSearchConfig",
     "Alexa::ASK::Skill",
     "Module",
 ]
@@ -1355,6 +1357,7 @@ cached: list[str] = [
     "aws-applicationautoscaling-scalabletarget.json",
     "aws-applicationautoscaling-scalingpolicy.json",
     "aws-applicationinsights-application.json",
+    "aws-applicationsignals-discovery.json",
     "aws-applicationsignals-servicelevelobjective.json",
     "aws-appmesh-gatewayroute.json",
     "aws-appmesh-mesh.json",
@@ -2030,6 +2033,7 @@ cached: list[str] = [
     "aws-lambda-eventinvokeconfig.json",
     "aws-lambda-eventsourcemapping.json",
     "aws-lambda-function.json",
+    "aws-lambda-layerversion.json",
     "aws-lambda-layerversionpermission.json",
     "aws-lambda-permission.json",
     "aws-lambda-url.json",
@@ -2564,5 +2568,6 @@ cached: list[str] = [
     "aws-xray-group.json",
     "aws-xray-resourcepolicy.json",
     "aws-xray-samplingrule.json",
+    "aws-xray-transactionsearchconfig.json",
     "module.json",
 ]
