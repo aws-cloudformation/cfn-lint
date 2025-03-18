@@ -101,24 +101,25 @@ class StatementResources(CfnLintKeyword):
 
         using_fn_arns = False
         all_resources: set[str] = set()
-        for resources, _ in get_value_from_path(
-            validator, instance, path=deque(["Resource"])
-        ):
-            resources = ensure_list(resources)
+        for key in ["Resource", "NotResource"]:
+            for resources, _ in get_value_from_path(
+                validator, instance, path=deque([key])
+            ):
+                resources = ensure_list(resources)
 
-            for resource in resources:
-                if not isinstance(resource, str):
-                    k, v = is_function(resource)
-                    if k is None:
+                for resource in resources:
+                    if not isinstance(resource, str):
+                        k, v = is_function(resource)
+                        if k is None:
+                            continue
+                        if k == "Ref" and validator.is_type(v, "string"):
+                            if v in validator.context.parameters:
+                                return
+                        using_fn_arns = True
                         continue
-                    if k == "Ref" and validator.is_type(v, "string"):
-                        if v in validator.context.parameters:
-                            return
-                    using_fn_arns = True
-                    continue
-                if resource == "*":
-                    return
-                all_resources.add(resource)
+                    if resource == "*":
+                        return
+                    all_resources.add(resource)
 
         all_resource_arns = [_Arn(a) for a in all_resources]
         for actions, _ in get_value_from_path(
@@ -130,7 +131,7 @@ class StatementResources(CfnLintKeyword):
 
                 if not validator.is_type(action, "string"):
                     continue
-                if "*" in action:
+                if any(x in action for x in ["*", "?"]):
                     continue
                 if ":" not in action:
                     continue
