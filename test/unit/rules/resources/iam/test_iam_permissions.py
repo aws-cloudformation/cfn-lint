@@ -30,6 +30,7 @@ def rule():
         ("Invalid string with starting astrisk", "s3:*Foo", 1),
         ("Invalid service", "foo:Bar", 1),
         ("Empty string", "", 1),
+        ("A function", {"Ref": "MyParameter"}, 0),
     ],
 )
 def test_permissions(name, instance, err_count, rule, validator):
