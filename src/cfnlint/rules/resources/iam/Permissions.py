@@ -44,6 +44,8 @@ class Permissions(CfnLintKeyword):
                 continue
             if action == "*":
                 continue
+            if "?" in action:
+                continue
             if ":" not in action:
                 yield ValidationError(
                     (
@@ -61,21 +63,25 @@ class Permissions(CfnLintKeyword):
                 enums = list(self.service_map[service].get("Actions", []).keys())
                 if permission == "*":
                     pass
-                elif permission.endswith("*"):
-                    wilcarded_permission = permission.split("*")[0]
-                    if not any(wilcarded_permission in action for action in enums):
-                        yield ValidationError(
-                            f"{permission!r} is not one of {enums!r}",
-                            rule=self,
-                        )
+                occurences = permission.count("*")
+                if occurences > 1:
+                    continue
+                elif occurences == 1:
+                    if permission.endswith("*"):
+                        wilcarded_permission = permission.split("*")[0]
+                        if not any(wilcarded_permission in action for action in enums):
+                            yield ValidationError(
+                                f"{permission!r} is not one of {enums!r}",
+                                rule=self,
+                            )
 
-                elif permission.startswith("*"):
-                    wilcarded_permission = permission.split("*")[1]
-                    if not any(wilcarded_permission in action for action in enums):
-                        yield ValidationError(
-                            f"{permission!r} is not one of {enums!r}",
-                            rule=self,
-                        )
+                    elif permission.startswith("*"):
+                        wilcarded_permission = permission.split("*")[1]
+                        if not any(wilcarded_permission in action for action in enums):
+                            yield ValidationError(
+                                f"{permission!r} is not one of {enums!r}",
+                                rule=self,
+                            )
                 elif permission not in enums:
                     yield ValidationError(
                         f"{permission!r} is not one of {enums!r}",
