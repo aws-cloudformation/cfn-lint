@@ -40,6 +40,8 @@ class Permissions(CfnLintKeyword):
         actions = ensure_list(instance)
 
         for action in actions:
+            if not validator.is_type(action, "string"):
+                continue
             if action == "*":
                 continue
             if ":" not in action:
