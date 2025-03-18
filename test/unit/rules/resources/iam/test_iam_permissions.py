@@ -32,12 +32,13 @@ def rule():
         ("Empty string", "", 1),
         ("A function", {"Ref": "MyParameter"}, 0),
         ("asterisk in the middle", "iam:*Tags", 0),
-        ("multiple asterisks", "iam:*T*s", 0),
-        ("question mark", "iam:Tag?", 0),
+        ("multiple asterisks good", "iam:*Group*", 0),
+        ("multiple asterisks bad", "iam:*ec2*", 1),
+        ("question mark is bad", "iam:Tag?", 1),
+        ("question mark is good", "iam:TagRol?", 0),
     ],
 )
 def test_permissions(name, instance, err_count, rule, validator):
     errors = list(rule.validate(validator, {}, instance, {}))
 
-    print(instance)
     assert len(errors) == err_count, f"Test {name!r} got {errors!r}"
