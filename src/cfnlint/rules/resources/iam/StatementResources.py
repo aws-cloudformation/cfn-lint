@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import logging
 from collections import deque
 from typing import Any
 
@@ -13,6 +14,8 @@ from cfnlint.helpers import ensure_list, is_function, load_resource
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.helpers import get_value_from_path
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
+
+LOGGER = logging.getLogger(__name__)
 
 
 class _Arn:
@@ -164,8 +167,9 @@ class StatementResources(CfnLintKeyword):
                                     rule=self,
                                 )
                 else:
-                    yield ValidationError(
-                        f"action {action!r} requires a resource of '*'",
-                        path=deque(["Resource"]),
-                        rule=self,
-                    )
+                    LOGGER.debug(f"action {action!r} requires a resource of '*'")
+                    # yield ValidationError(
+                    #    f"action {action!r} requires a resource of '*'",
+                    #    path=deque(["Resource"]),
+                    #    rule=self,
+                    # )
