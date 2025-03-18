@@ -54,7 +54,11 @@ def create_dict_node_class(cls):
         """Node class created based on the input class"""
 
         def __init__(
-            self, x, start_mark: Mark | None = None, end_mark: Mark | None = None
+            self,
+            x,
+            start_mark: Mark | None = None,
+            end_mark: Mark | None = None,
+            using_merge: bool = False,
         ):
             try:
                 cls.__init__(self, x)
@@ -62,6 +66,7 @@ def create_dict_node_class(cls):
                 cls.__init__(self)
             self.start_mark = start_mark or Mark()
             self.end_mark = end_mark or Mark()
+            self.using_merge = using_merge
 
         def __deepcopy__(self, memo):
             result = dict_node(self, self.start_mark, self.end_mark)
