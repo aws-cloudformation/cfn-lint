@@ -29,7 +29,12 @@ class Permissions(CfnLintKeyword):
         super().__init__(
             ["AWS::IAM::Policy/Properties/PolicyDocument/Statement/Action"]
         )
-        self.service_map = load_resource(AdditionalSpecs, "Policies.json")
+        self._service_map = load_resource(AdditionalSpecs, "Policies.json")
+        self._resource_action_limitations = {
+            "AWS::S3::BucketPolicy": ["s3"],
+            "AWS::SQS::QueuePolicy": ["sqs"],
+            "AWS::SNS::TopicPolicy": ["sns"],
+        }
 
     def validate(
         self, validator: Validator, _, instance: Any, schema: dict[str, Any]
@@ -59,8 +64,27 @@ class Permissions(CfnLintKeyword):
             service = service.lower()
             permission = permission.lower()
 
-            if service in self.service_map:
-                enums = list(self.service_map[service].get("Actions", []).keys())
+            if len(validator.context.path.cfn_path) >= 2:
+                if (
+                    validator.context.path.cfn_path[1]
+                    in self._resource_action_limitations
+                ):
+                    if (
+                        service
+                        not in self._resource_action_limitations[
+                            validator.context.path.cfn_path[1]
+                        ]
+                    ):
+                        yield ValidationError(
+                            (
+                                f"{service!r} is not one of "
+                                f"{self._resource_action_limitations[validator.context.path.cfn_path[1]]!r}"
+                            ),
+                            rule=self,
+                        )
+
+            if service in self._service_map:
+                enums = list(self._service_map[service].get("Actions", []).keys())
                 if permission == "*":
                     pass
 
@@ -80,6 +104,6 @@ class Permissions(CfnLintKeyword):
                     )
             else:
                 yield ValidationError(
-                    f"{service!r} is not one of {list(self.service_map.keys())!r}",
+                    f"{service!r} is not one of {list(self._service_map.keys())!r}",
                     rule=self,
                 )
