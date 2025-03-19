@@ -114,6 +114,13 @@ def template():
         ),
         (
             {
+                "Action": "ec2:CreateTags",
+                "Resource": ["arn:aws:ec2:*::snapshot/*"],
+            },
+            [],
+        ),
+        (
+            {
                 "Action": "cloudformation:CreateStackSet",
                 "Resource": [{"Ref": "LogGroup"}],
             },
