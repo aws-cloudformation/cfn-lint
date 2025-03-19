@@ -180,7 +180,7 @@ def rule():
         (
             "valid s3 bucket action",
             "s3:getobject",
-            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            {"cfn_path": deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])},
             [],
         ),
         (
@@ -188,6 +188,12 @@ def rule():
             "iam:tagrole",
             {"cfn_path": deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])},
             [ValidationError("'iam' is not one of ['s3']", rule=Permissions())],
+        ),
+        (
+            "invalid s3 bucket action bucket short path",
+            "iam:tagrole",
+            {"cfn_path": deque(["Resources"])},
+            [],
         ),
         (
             "invalid s3 bucket action",
