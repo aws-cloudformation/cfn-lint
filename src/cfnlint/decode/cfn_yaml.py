@@ -74,8 +74,14 @@ class NodeConstructor(SafeConstructor):
     def __init__(self, filename):
         # Call the base class constructor
         super().__init__()
-
         self.filename = filename
+
+    def flatten_mapping(self, node):
+        # Rewrote to handle merging and overwriting keys
+        if any(key_node.tag == "tag:yaml.org,2002:merge" for key_node, _ in node.value):
+            super().flatten_mapping(node)
+            setattr(node, "using_merge", True)
+        super().flatten_mapping(node)
 
     # To support lazy loading, the original constructors first yield
     # an empty object, then fill them in when iterated. Due to
@@ -109,46 +115,47 @@ class NodeConstructor(SafeConstructor):
                         ),
                     ],
                 )
-            for key_dup in mapping:
-                if key_dup == key:
-                    if not matches:
-                        matches.extend(
-                            [
+            if not getattr(node, "using_merge", False):
+                for key_dup in mapping:
+                    if key_dup == key:
+                        if matches:
+                            matches.append(
                                 build_match(
                                     filename=self.filename,
                                     message=(
-                                        f'Duplicate found "{key}" (line'
-                                        f" {key_dup.start_mark.line + 1})"
-                                    ),
-                                    line_number=key_dup.start_mark.line,
-                                    column_number=key_dup.start_mark.column,
-                                    key=key,
-                                ),
-                                build_match(
-                                    filename=self.filename,
-                                    message=(
-                                        f'Duplicate found "{key}" (line'
+                                        f"Duplicate found {key!r} (line"
                                         f" {key_node.start_mark.line + 1})"
                                     ),
                                     line_number=key_node.start_mark.line,
                                     column_number=key_node.start_mark.column,
                                     key=key,
-                                ),
-                            ],
-                        )
-                    else:
-                        matches.append(
-                            build_match(
-                                filename=self.filename,
-                                message=(
-                                    f'Duplicate found "{key}" (line'
-                                    f" {key_node.start_mark.line + 1})"
-                                ),
-                                line_number=key_node.start_mark.line,
-                                column_number=key_node.start_mark.column,
-                                key=key,
-                            ),
-                        )
+                                )
+                            )
+                        else:
+                            matches.extend(
+                                [
+                                    build_match(
+                                        filename=self.filename,
+                                        message=(
+                                            f"Duplicate found {key!r} (line"
+                                            f" {key_dup.start_mark.line + 1})"
+                                        ),
+                                        line_number=key_dup.start_mark.line,
+                                        column_number=key_dup.start_mark.column,
+                                        key=key,
+                                    ),
+                                    build_match(
+                                        filename=self.filename,
+                                        message=(
+                                            f"Duplicate found {key!r} (line"
+                                            f" {key_node.start_mark.line + 1})"
+                                        ),
+                                        line_number=key_node.start_mark.line,
+                                        column_number=key_node.start_mark.column,
+                                        key=key,
+                                    ),
+                                ],
+                            )
             try:
                 mapping[key] = value
             except Exception as exc:
@@ -176,7 +183,8 @@ class NodeConstructor(SafeConstructor):
 
         (obj,) = SafeConstructor.construct_yaml_map(self, node)
 
-        return dict_node(obj, node.start_mark, node.end_mark)
+        using_merge = False if not hasattr(node, "using_merge") else node.using_merge
+        return dict_node(obj, node.start_mark, node.end_mark, using_merge)
 
     def construct_yaml_str(self, node):
         obj = SafeConstructor.construct_yaml_str(self, node)

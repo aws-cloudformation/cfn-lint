@@ -75,3 +75,47 @@ class TestYamlParse(BaseTestCase):
             cfnlint.decode.cfn_yaml.load,
             filename,
         )
+
+    def test_yaml_merge(self):
+        raw_template = """
+        Resources:
+            Parameter1:
+                Type: AWS::SSM::Parameter
+                Properties: &ssm-parameters
+                    Type: String
+                    Value: 1
+
+            Parameter2:
+                Type: AWS::SSM::Parameter
+                Properties:
+                    <<: *ssm-parameters
+                    Value: 2
+        """
+
+        result = cfnlint.decode.cfn_yaml.loads(raw_template)
+
+        self.assertTrue(
+            result.get("Resources").get("Parameter2").get("Properties").using_merge
+        )
+
+        self.assertDictEqual(
+            result,
+            {
+                "Resources": {
+                    "Parameter1": {
+                        "Type": "AWS::SSM::Parameter",
+                        "Properties": {
+                            "Type": "String",
+                            "Value": 1,
+                        },
+                    },
+                    "Parameter2": {
+                        "Type": "AWS::SSM::Parameter",
+                        "Properties": {
+                            "Type": "String",
+                            "Value": 2,
+                        },
+                    },
+                }
+            },
+        )
