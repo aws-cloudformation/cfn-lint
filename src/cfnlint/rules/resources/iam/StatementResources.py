@@ -158,15 +158,17 @@ class StatementResources(CfnLintKeyword):
                         ].get("ARNFormats")
                         for arn_format in arn_formats:
                             arn = _Arn(arn_format)
-                            if arn not in all_resource_arns:
-                                yield ValidationError(
-                                    (
-                                        f"action {action!r} requires "
-                                        f"a resource of {arn_formats!r}"
-                                    ),
-                                    path=deque(["Resource"]),
-                                    rule=self,
-                                )
+                        if arn in all_resource_arns:
+                            break
+                    else:
+                        yield ValidationError(
+                            (
+                                f"action {action!r} requires "
+                                f"a resource of {arn_formats!r}"
+                            ),
+                            path=deque(["Resource"]),
+                            rule=self,
+                        )
                 else:
                     LOGGER.debug(f"action {action!r} requires a resource of '*'")
                     # yield ValidationError(
