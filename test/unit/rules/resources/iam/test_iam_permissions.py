@@ -3,8 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
+
 import pytest
 
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.resources.iam.Permissions import Permissions
 
 
@@ -15,30 +18,217 @@ def rule():
 
 
 @pytest.mark.parametrize(
-    "name,instance,err_count",
+    "name,instance,path,expected",
     [
-        ("Valid string", "s3:GetObject", 0),
-        ("Valid list", ["s3:GetObject"], 0),
-        ("Invalid string", "s3:Foo", 1),
-        ("Invalid list", ["s3:Foo"], 1),
-        ("Valid astrisk for permission", ["s3:*"], 0),
-        ("Valid all astrisk", ["*"], 0),
-        ("Valid string with ending astrisk", "s3:Get*", 0),
-        ("Valid string with starting astrisk", "s3:*Object", 0),
-        ("Invalid list", ["s3:Foo"], 1),
-        ("Invalid string with ending astrisk", "s3:Foo*", 1),
-        ("Invalid string with starting astrisk", "s3:*Foo", 1),
-        ("Invalid service", "foo:Bar", 1),
-        ("Empty string", "", 1),
-        ("A function", {"Ref": "MyParameter"}, 0),
-        ("asterisk in the middle", "iam:*Tags", 0),
-        ("multiple asterisks good", "iam:*Group*", 0),
-        ("multiple asterisks bad", "iam:*ec2*", 1),
-        ("question mark is bad", "iam:Tag?", 1),
-        ("question mark is good", "iam:TagRol?", 0),
+        (
+            "Valid string",
+            "s3:GetObject",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Valid list",
+            ["s3:GetObject"],
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Invalid string",
+            "s3:Foo",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'foo' is not one of ['getobject', 'listaccesspoints']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "Invalid list",
+            ["s3:Foo"],
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'foo' is not one of ['getobject', 'listaccesspoints']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "Valid astrisk for permission",
+            ["s3:*"],
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Valid all astrisk",
+            ["*"],
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Valid string with ending astrisk",
+            "s3:Get*",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Valid string with starting astrisk",
+            "s3:*Object",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "Invalid list",
+            ["s3:Foo"],
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'foo' is not one of ['getobject', 'listaccesspoints']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "Invalid string with ending astrisk",
+            "s3:Foo*",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'foo*' is not one of ['getobject', 'listaccesspoints']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "Invalid string with starting astrisk",
+            "s3:*Foo",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'*foo' is not one of ['getobject', 'listaccesspoints']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "Invalid service",
+            "foo:Bar",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [ValidationError("'foo' is not one of ['iam', 's3']", rule=Permissions())],
+        ),
+        (
+            "Empty string",
+            "",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    (
+                        "'' is not a valid action. Must be "
+                        "of the form service:action or '*'"
+                    ),
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "A function",
+            {"Ref": "MyParameter"},
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "asterisk in the middle",
+            "iam:*Tags",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "multiple asterisks good",
+            "iam:*Group*",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "multiple asterisks bad",
+            "iam:*ec2*",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'*ec2*' is not one of ['tagrole', 'creategroup', 'listgrouptags']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "question mark is bad",
+            "iam:Tag?",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [
+                ValidationError(
+                    "'tag?' is not one of ['tagrole', 'creategroup', 'listgrouptags']",
+                    rule=Permissions(),
+                )
+            ],
+        ),
+        (
+            "question mark is good",
+            "iam:TagRol?",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "valid s3 bucket action",
+            "s3:getobject",
+            {"cfn_path": deque(["Resources", "AWS::IAM::ManagedPolicy", "Properties"])},
+            [],
+        ),
+        (
+            "invalid s3 bucket action",
+            "iam:tagrole",
+            {"cfn_path": deque(["Resources", "AWS::S3::BucketPolicy", "Properties"])},
+            [ValidationError("'iam' is not one of ['s3']", rule=Permissions())],
+        ),
+        (
+            "invalid s3 bucket action",
+            "iam:tagrole",
+            {"cfn_path": deque(["Resources", "AWS::KMS::KeyPolicy", "Properties"])},
+            [],
+        ),
     ],
+    indirect=["path"],
 )
-def test_permissions(name, instance, err_count, rule, validator):
+def test_permissions(name, instance, expected, rule, validator):
+
+    rule._service_map = {
+        "iam": {
+            "Actions": {
+                "tagrole": {"Resources": ["role"]},
+                "creategroup": {"Resources": ["group"]},
+                "listgrouptags": {"Resources": ["group"]},
+            },
+            "Resources": {
+                "role": {
+                    "ARNFormats": ["arn:${Partition}:iam::${Account}:role/.*"],
+                    "ConditionKeys": [
+                        "aws:ResourceTag/${TagKey}",
+                        "iam:ResourceTag/${TagKey}",
+                    ],
+                },
+                "group": {"ARNFormats": ["arn:${Partition}:iam::${Account}:group/.*"]},
+            },
+        },
+        "s3": {
+            "Actions": {
+                "getobject": {"Resources": ["Object"]},
+                "listaccesspoints": {},
+            },
+            "Resources": {
+                "object": {"ARNFormats": ["arn:${Partition}:s3:::.*"]},
+            },
+        },
+    }
+
     errors = list(rule.validate(validator, {}, instance, {}))
 
-    assert len(errors) == err_count, f"Test {name!r} got {errors!r}"
+    assert errors == expected, f"Test {name!r} got {errors!r}"
