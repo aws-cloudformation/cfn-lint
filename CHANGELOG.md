@@ -1,3 +1,11 @@
+### v1.31.1
+## What's Changed
+* Update [I3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3510) to not fail on resources that start with asterisk by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4029
+* Fix merge for yaml parsing by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4028
+* Add rule [W1100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1100) to validate if using YAML merge which requires the AWS cli to deploy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4028
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.31.0...v1.31.1
+
 ### v1.31.0
 ## What's Changed
 * Update CloudFormation schemas to `2025-03-17` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4004
