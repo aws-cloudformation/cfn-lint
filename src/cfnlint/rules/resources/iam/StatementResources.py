@@ -153,8 +153,11 @@ class StatementResources(CfnLintKeyword):
                         continue
                     resources = ensure_list(resources)
                     for resource in resources:
+                        # use lower as certain resources are described in actions
+                        # with upper case letters and in resources as lower
+                        # case issue #4036
                         arn_formats = self.service_map[service]["Resources"][
-                            resource
+                            resource.lower()
                         ].get("ARNFormats")
                         for arn_format in arn_formats:
                             arn = _Arn(arn_format)
