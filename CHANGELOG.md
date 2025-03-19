@@ -1,3 +1,9 @@
+### v1.31.3
+## What's Changed
+* Update [I3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3510) to lower case resource names by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4038
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.31.2...v1.31.3
+
 ### v1.31.2
 ## What's Changed
 * Update [I3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3510) to only validate at least one resource is matched by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4032
