@@ -229,6 +229,13 @@ def template():
         (
             {
                 "Action": ["cloudformation:CreateStack"],
+                "Resource": ["arn:aws:cloudformation:us-east-1:123456789012:*dne*"],
+            },
+            [],
+        ),
+        (
+            {
+                "Action": ["cloudformation:CreateStack"],
                 "Resource": ["arn:aws:logs:us-east-1:123456789012:stack/dne/*"],
             },
             [

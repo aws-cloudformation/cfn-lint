@@ -64,7 +64,7 @@ class _Arn:
         ):
             if x == y:
                 continue
-            if x == "*" or y == "" or y == ".*":
+            if x == "*" or x.startswith("*") or y == "" or y == ".*":
                 return True
             if x.startswith(y) and "*" in x:
                 return True
