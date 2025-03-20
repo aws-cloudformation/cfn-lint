@@ -363,6 +363,55 @@
    ],
    "type": "object"
   },
+  "DataProtect": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/DataProtectionAction"
+    },
+    "ExcludeRateBasedDetails": {
+     "type": "boolean"
+    },
+    "ExcludeRuleMatchDetails": {
+     "type": "boolean"
+    },
+    "Field": {
+     "$ref": "#/definitions/FieldToProtect"
+    }
+   },
+   "required": [
+    "Field",
+    "Action"
+   ],
+   "type": "object"
+  },
+  "DataProtectionAction": {
+   "enum": [
+    "SUBSTITUTION",
+    "HASH"
+   ],
+   "type": "string"
+  },
+  "DataProtectionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DataProtections": {
+     "$ref": "#/definitions/DataProtections"
+    }
+   },
+   "required": [
+    "DataProtections"
+   ],
+   "type": "object"
+  },
+  "DataProtections": {
+   "items": {
+    "$ref": "#/definitions/DataProtect"
+   },
+   "maxItems": 26,
+   "minItems": 1,
+   "type": "array"
+  },
   "DefaultAction": {
    "additionalProperties": false,
    "properties": {
@@ -510,6 +559,38 @@
     }
    },
    "type": "object"
+  },
+  "FieldToProtect": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldKeys": {
+     "items": {
+      "$ref": "#/definitions/FieldToProtectKeyName"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "FieldType": {
+     "enum": [
+      "SINGLE_HEADER",
+      "SINGLE_COOKIE",
+      "SINGLE_QUERY_ARGUMENT",
+      "QUERY_STRING",
+      "BODY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldType"
+   ],
+   "type": "object"
+  },
+  "FieldToProtectKeyName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": ".*\\S.*",
+   "type": "string"
   },
   "ForwardedIPConfiguration": {
    "additionalProperties": false,
@@ -2195,6 +2276,9 @@
   },
   "CustomResponseBodies": {
    "$ref": "#/definitions/CustomResponseBodies"
+  },
+  "DataProtectionConfig": {
+   "$ref": "#/definitions/DataProtectionConfig"
   },
   "DefaultAction": {
    "$ref": "#/definitions/DefaultAction"

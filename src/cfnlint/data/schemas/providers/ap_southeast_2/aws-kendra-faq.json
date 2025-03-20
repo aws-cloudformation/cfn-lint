@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IndexId",
+  "/properties/Name",
+  "/properties/S3Path",
+  "/properties/RoleArn",
+  "/properties/Description",
+  "/properties/FileFormat"
+ ],
+ "definitions": {
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^\\P{C}*$",
+   "type": "string"
+  },
+  "FaqName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9_-]*",
+   "type": "string"
+  },
+  "FileFormat": {
+   "enum": [
+    "CSV",
+    "CSV_WITH_HEADER",
+    "JSON"
+   ],
+   "type": "string"
+  },
+  "Id": {
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IndexId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[a-zA-Z0-9][a-zA-Z0-9-]*",
+   "type": "string"
+  },
+  "LanguageCode": {
+   "maxLength": 10,
+   "minLength": 2,
+   "pattern": "[a-zA-Z-]*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1284,
+   "minLength": 1,
+   "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
+   "type": "string"
+  },
+  "S3BucketName": {
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]",
+   "type": "string"
+  },
+  "S3ObjectKey": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "S3Path": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "$ref": "#/definitions/S3BucketName"
+    },
+    "Key": {
+     "$ref": "#/definitions/S3ObjectKey"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TagList": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id",
+  "/properties/IndexId"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "FileFormat": {
+   "$ref": "#/definitions/FileFormat"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "IndexId": {
+   "$ref": "#/definitions/IndexId"
+  },
+  "LanguageCode": {
+   "$ref": "#/definitions/LanguageCode"
+  },
+  "Name": {
+   "$ref": "#/definitions/FaqName"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/RoleArn"
+  },
+  "S3Path": {
+   "$ref": "#/definitions/S3Path"
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagList"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "IndexId",
+  "Name",
+  "S3Path",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/in-creating-faq.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Kendra::Faq"
+}

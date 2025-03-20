@@ -1,0 +1,2255 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Scope"
+ ],
+ "definitions": {
+  "AWSManagedRulesACFPRuleSet": {
+   "additionalProperties": false,
+   "properties": {
+    "CreationPath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "EnableRegexInPath": {
+     "type": "boolean"
+    },
+    "RegistrationPagePath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "RequestInspection": {
+     "$ref": "#/definitions/RequestInspectionACFP"
+    },
+    "ResponseInspection": {
+     "$ref": "#/definitions/ResponseInspection"
+    }
+   },
+   "required": [
+    "CreationPath",
+    "RegistrationPagePath",
+    "RequestInspection"
+   ],
+   "type": "object"
+  },
+  "AWSManagedRulesATPRuleSet": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableRegexInPath": {
+     "type": "boolean"
+    },
+    "LoginPath": {
+     "type": "string"
+    },
+    "RequestInspection": {
+     "$ref": "#/definitions/RequestInspection"
+    },
+    "ResponseInspection": {
+     "$ref": "#/definitions/ResponseInspection"
+    }
+   },
+   "required": [
+    "LoginPath"
+   ],
+   "type": "object"
+  },
+  "AWSManagedRulesBotControlRuleSet": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableMachineLearning": {
+     "type": "boolean"
+    },
+    "InspectionLevel": {
+     "enum": [
+      "COMMON",
+      "TARGETED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "InspectionLevel"
+   ],
+   "type": "object"
+  },
+  "AddressField": {
+   "$ref": "#/definitions/FieldIdentifier"
+  },
+  "AllowAction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomRequestHandling": {
+     "$ref": "#/definitions/CustomRequestHandling"
+    }
+   },
+   "type": "object"
+  },
+  "AndStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Statements": {
+     "items": {
+      "$ref": "#/definitions/Statement"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Statements"
+   ],
+   "type": "object"
+  },
+  "AssociationConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RequestBody": {
+     "$ref": "#/definitions/RequestBody"
+    }
+   },
+   "type": "object"
+  },
+  "BlockAction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomResponse": {
+     "$ref": "#/definitions/CustomResponse"
+    }
+   },
+   "type": "object"
+  },
+  "Body": {
+   "additionalProperties": false,
+   "properties": {
+    "OversizeHandling": {
+     "$ref": "#/definitions/OversizeHandling"
+    }
+   },
+   "type": "object"
+  },
+  "BodyParsingFallbackBehavior": {
+   "enum": [
+    "MATCH",
+    "NO_MATCH",
+    "EVALUATE_AS_STRING"
+   ],
+   "type": "string"
+  },
+  "ByteMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "PositionalConstraint": {
+     "$ref": "#/definitions/PositionalConstraint"
+    },
+    "SearchString": {
+     "$ref": "#/definitions/SearchString"
+    },
+    "SearchStringBase64": {
+     "$ref": "#/definitions/SearchStringBase64"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FieldToMatch",
+    "PositionalConstraint",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "CaptchaAction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomRequestHandling": {
+     "$ref": "#/definitions/CustomRequestHandling"
+    }
+   },
+   "type": "object"
+  },
+  "CaptchaConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ImmunityTimeProperty": {
+     "$ref": "#/definitions/ImmunityTimeProperty"
+    }
+   },
+   "type": "object"
+  },
+  "ChallengeAction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomRequestHandling": {
+     "$ref": "#/definitions/CustomRequestHandling"
+    }
+   },
+   "type": "object"
+  },
+  "ChallengeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ImmunityTimeProperty": {
+     "$ref": "#/definitions/ImmunityTimeProperty"
+    }
+   },
+   "type": "object"
+  },
+  "CookieMatchPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "All": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "ExcludedCookies": {
+     "items": {
+      "maxLength": 60,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 199,
+     "minItems": 1,
+     "type": "array"
+    },
+    "IncludedCookies": {
+     "items": {
+      "maxLength": 60,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 199,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Cookies": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchPattern": {
+     "$ref": "#/definitions/CookieMatchPattern"
+    },
+    "MatchScope": {
+     "$ref": "#/definitions/MapMatchScope"
+    },
+    "OversizeHandling": {
+     "$ref": "#/definitions/OversizeHandling"
+    }
+   },
+   "required": [
+    "MatchPattern",
+    "MatchScope",
+    "OversizeHandling"
+   ],
+   "type": "object"
+  },
+  "CountAction": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomRequestHandling": {
+     "$ref": "#/definitions/CustomRequestHandling"
+    }
+   },
+   "type": "object"
+  },
+  "CustomHTTPHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/CustomHTTPHeaderName"
+    },
+    "Value": {
+     "$ref": "#/definitions/CustomHTTPHeaderValue"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CustomHTTPHeaderName": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9._$-]+$",
+   "type": "string"
+  },
+  "CustomHTTPHeaderValue": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CustomRequestHandling": {
+   "additionalProperties": false,
+   "properties": {
+    "InsertHeaders": {
+     "items": {
+      "$ref": "#/definitions/CustomHTTPHeader"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "InsertHeaders"
+   ],
+   "type": "object"
+  },
+  "CustomResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomResponseBodyKey": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w\\-]+$",
+     "type": "string"
+    },
+    "ResponseCode": {
+     "$ref": "#/definitions/ResponseStatusCode"
+    },
+    "ResponseHeaders": {
+     "items": {
+      "$ref": "#/definitions/CustomHTTPHeader"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "ResponseCode"
+   ],
+   "type": "object"
+  },
+  "CustomResponseBodies": {
+   "additionalProperties": false,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[\\w\\-]+$": {
+     "$ref": "#/definitions/CustomResponseBody"
+    }
+   },
+   "type": "object"
+  },
+  "CustomResponseBody": {
+   "additionalProperties": false,
+   "properties": {
+    "Content": {
+     "$ref": "#/definitions/ResponseContent"
+    },
+    "ContentType": {
+     "$ref": "#/definitions/ResponseContentType"
+    }
+   },
+   "required": [
+    "ContentType",
+    "Content"
+   ],
+   "type": "object"
+  },
+  "DefaultAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Allow": {
+     "$ref": "#/definitions/AllowAction"
+    },
+    "Block": {
+     "$ref": "#/definitions/BlockAction"
+    }
+   },
+   "type": "object"
+  },
+  "EntityDescription": {
+   "pattern": "^[a-zA-Z0-9=:#@/\\-,.][a-zA-Z0-9+=:#@/\\-,.\\s]+[a-zA-Z0-9+=:#@/\\-,.]{1,256}$",
+   "type": "string"
+  },
+  "EntityId": {
+   "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "EntityName": {
+   "pattern": "^[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "EvaluationWindowSec": {
+   "enum": [
+    60,
+    120,
+    300,
+    600
+   ],
+   "type": "integer"
+  },
+  "ExcludedRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/EntityName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ExcludedRules": {
+   "items": {
+    "$ref": "#/definitions/ExcludedRule"
+   },
+   "type": "array"
+  },
+  "FieldIdentifier": {
+   "additionalProperties": false,
+   "properties": {
+    "Identifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier"
+   ],
+   "type": "object"
+  },
+  "FieldToMatch": {
+   "additionalProperties": false,
+   "properties": {
+    "AllQueryArguments": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "Body": {
+     "$ref": "#/definitions/Body"
+    },
+    "Cookies": {
+     "$ref": "#/definitions/Cookies"
+    },
+    "Headers": {
+     "$ref": "#/definitions/Headers"
+    },
+    "JA3Fingerprint": {
+     "$ref": "#/definitions/JA3Fingerprint"
+    },
+    "JA4Fingerprint": {
+     "$ref": "#/definitions/JA4Fingerprint"
+    },
+    "JsonBody": {
+     "$ref": "#/definitions/JsonBody"
+    },
+    "Method": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "QueryString": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "SingleHeader": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 64,
+       "minLength": 1,
+       "pattern": ".*\\S.*",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name"
+     ],
+     "type": "object"
+    },
+    "SingleQueryArgument": {
+     "additionalProperties": false,
+     "properties": {
+      "Name": {
+       "maxLength": 64,
+       "minLength": 1,
+       "pattern": ".*\\S.*",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Name"
+     ],
+     "type": "object"
+    },
+    "UriPath": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "ForwardedIPConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    },
+    "HeaderName": {
+     "pattern": "^[a-zA-Z0-9-]{1,255}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "HeaderName",
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
+  "GeoMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "CountryCodes": {
+     "items": {
+      "enum": [
+       "AD",
+       "AE",
+       "AF",
+       "AG",
+       "AI",
+       "AL",
+       "AM",
+       "AO",
+       "AQ",
+       "AR",
+       "AS",
+       "AT",
+       "AU",
+       "AW",
+       "AX",
+       "AZ",
+       "BA",
+       "BB",
+       "BD",
+       "BE",
+       "BF",
+       "BG",
+       "BH",
+       "BI",
+       "BJ",
+       "BL",
+       "BM",
+       "BN",
+       "BO",
+       "BQ",
+       "BR",
+       "BS",
+       "BT",
+       "BV",
+       "BW",
+       "BY",
+       "BZ",
+       "CA",
+       "CC",
+       "CD",
+       "CF",
+       "CG",
+       "CH",
+       "CI",
+       "CK",
+       "CL",
+       "CM",
+       "CN",
+       "CO",
+       "CR",
+       "CU",
+       "CV",
+       "CW",
+       "CX",
+       "CY",
+       "CZ",
+       "DE",
+       "DJ",
+       "DK",
+       "DM",
+       "DO",
+       "DZ",
+       "EC",
+       "EE",
+       "EG",
+       "EH",
+       "ER",
+       "ES",
+       "ET",
+       "FI",
+       "FJ",
+       "FK",
+       "FM",
+       "FO",
+       "FR",
+       "GA",
+       "GB",
+       "GD",
+       "GE",
+       "GF",
+       "GG",
+       "GH",
+       "GI",
+       "GL",
+       "GM",
+       "GN",
+       "GP",
+       "GQ",
+       "GR",
+       "GS",
+       "GT",
+       "GU",
+       "GW",
+       "GY",
+       "HK",
+       "HM",
+       "HN",
+       "HR",
+       "HT",
+       "HU",
+       "ID",
+       "IE",
+       "IL",
+       "IM",
+       "IN",
+       "IO",
+       "IQ",
+       "IR",
+       "IS",
+       "IT",
+       "JE",
+       "JM",
+       "JO",
+       "JP",
+       "KE",
+       "KG",
+       "KH",
+       "KI",
+       "KM",
+       "KN",
+       "KP",
+       "KR",
+       "KW",
+       "KY",
+       "KZ",
+       "LA",
+       "LB",
+       "LC",
+       "LI",
+       "LK",
+       "LR",
+       "LS",
+       "LT",
+       "LU",
+       "LV",
+       "LY",
+       "MA",
+       "MC",
+       "MD",
+       "ME",
+       "MF",
+       "MG",
+       "MH",
+       "MK",
+       "ML",
+       "MM",
+       "MN",
+       "MO",
+       "MP",
+       "MQ",
+       "MR",
+       "MS",
+       "MT",
+       "MU",
+       "MV",
+       "MW",
+       "MX",
+       "MY",
+       "MZ",
+       "NA",
+       "NC",
+       "NE",
+       "NF",
+       "NG",
+       "NI",
+       "NL",
+       "NO",
+       "NP",
+       "NR",
+       "NU",
+       "NZ",
+       "OM",
+       "PA",
+       "PE",
+       "PF",
+       "PG",
+       "PH",
+       "PK",
+       "PL",
+       "PM",
+       "PN",
+       "PR",
+       "PS",
+       "PT",
+       "PW",
+       "PY",
+       "QA",
+       "RE",
+       "RO",
+       "RS",
+       "RU",
+       "RW",
+       "SA",
+       "SB",
+       "SC",
+       "SD",
+       "SE",
+       "SG",
+       "SH",
+       "SI",
+       "SJ",
+       "SK",
+       "SL",
+       "SM",
+       "SN",
+       "SO",
+       "SR",
+       "SS",
+       "ST",
+       "SV",
+       "SX",
+       "SY",
+       "SZ",
+       "TC",
+       "TD",
+       "TF",
+       "TG",
+       "TH",
+       "TJ",
+       "TK",
+       "TL",
+       "TM",
+       "TN",
+       "TO",
+       "TR",
+       "TT",
+       "TV",
+       "TW",
+       "TZ",
+       "UA",
+       "UG",
+       "UM",
+       "US",
+       "UY",
+       "UZ",
+       "VA",
+       "VC",
+       "VE",
+       "VG",
+       "VI",
+       "VN",
+       "VU",
+       "WF",
+       "WS",
+       "XK",
+       "YE",
+       "YT",
+       "ZA",
+       "ZM",
+       "ZW"
+      ],
+      "maxLength": 2,
+      "minLength": 1,
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "ForwardedIPConfig": {
+     "$ref": "#/definitions/ForwardedIPConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "HeaderMatchPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "All": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "ExcludedHeaders": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 199,
+     "minItems": 1,
+     "type": "array"
+    },
+    "IncludedHeaders": {
+     "items": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 199,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Headers": {
+   "additionalProperties": false,
+   "properties": {
+    "MatchPattern": {
+     "$ref": "#/definitions/HeaderMatchPattern"
+    },
+    "MatchScope": {
+     "$ref": "#/definitions/MapMatchScope"
+    },
+    "OversizeHandling": {
+     "$ref": "#/definitions/OversizeHandling"
+    }
+   },
+   "required": [
+    "MatchPattern",
+    "MatchScope",
+    "OversizeHandling"
+   ],
+   "type": "object"
+  },
+  "IPSetForwardedIPConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    },
+    "HeaderName": {
+     "pattern": "^[a-zA-Z0-9-]{1,255}$",
+     "type": "string"
+    },
+    "Position": {
+     "enum": [
+      "FIRST",
+      "LAST",
+      "ANY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "HeaderName",
+    "FallbackBehavior",
+    "Position"
+   ],
+   "type": "object"
+  },
+  "IPSetReferenceStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "$ref": "#/definitions/ResourceArn"
+    },
+    "IPSetForwardedIPConfig": {
+     "$ref": "#/definitions/IPSetForwardedIPConfiguration"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "ImmunityTimeProperty": {
+   "additionalProperties": false,
+   "properties": {
+    "ImmunityTime": {
+     "maximum": 259200,
+     "minimum": 60,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ImmunityTime"
+   ],
+   "type": "object"
+  },
+  "JA3Fingerprint": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
+  "JA4Fingerprint": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
+  "JsonBody": {
+   "additionalProperties": false,
+   "properties": {
+    "InvalidFallbackBehavior": {
+     "$ref": "#/definitions/BodyParsingFallbackBehavior"
+    },
+    "MatchPattern": {
+     "$ref": "#/definitions/JsonMatchPattern"
+    },
+    "MatchScope": {
+     "$ref": "#/definitions/JsonMatchScope"
+    },
+    "OversizeHandling": {
+     "$ref": "#/definitions/OversizeHandling"
+    }
+   },
+   "required": [
+    "MatchPattern",
+    "MatchScope"
+   ],
+   "type": "object"
+  },
+  "JsonMatchPattern": {
+   "additionalProperties": false,
+   "properties": {
+    "All": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "IncludedPaths": {
+     "items": {
+      "$ref": "#/definitions/JsonPointerPath"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "JsonMatchScope": {
+   "enum": [
+    "ALL",
+    "KEY",
+    "VALUE"
+   ],
+   "type": "string"
+  },
+  "JsonPointerPath": {
+   "pattern": "^[\\/]+([^~]*(~[01])*){1,512}$",
+   "type": "string"
+  },
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/LabelName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "LabelMatchKey": {
+   "pattern": "^[0-9A-Za-z_:-]{1,1024}$",
+   "type": "string"
+  },
+  "LabelMatchScope": {
+   "enum": [
+    "LABEL",
+    "NAMESPACE"
+   ],
+   "type": "string"
+  },
+  "LabelMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "$ref": "#/definitions/LabelMatchKey"
+    },
+    "Scope": {
+     "$ref": "#/definitions/LabelMatchScope"
+    }
+   },
+   "required": [
+    "Scope",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "LabelName": {
+   "pattern": "^[0-9A-Za-z_:-]{1,1024}$",
+   "type": "string"
+  },
+  "ManagedRuleGroupConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AWSManagedRulesACFPRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesACFPRuleSet"
+    },
+    "AWSManagedRulesATPRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesATPRuleSet"
+    },
+    "AWSManagedRulesBotControlRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesBotControlRuleSet"
+    },
+    "LoginPath": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "PasswordField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PayloadType": {
+     "enum": [
+      "JSON",
+      "FORM_ENCODED"
+     ],
+     "type": "string"
+    },
+    "UsernameField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedRuleGroupStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "ExcludedRules": {
+     "items": {
+      "$ref": "#/definitions/ExcludedRule"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "ManagedRuleGroupConfigs": {
+     "items": {
+      "$ref": "#/definitions/ManagedRuleGroupConfig"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "$ref": "#/definitions/EntityName"
+    },
+    "RuleActionOverrides": {
+     "items": {
+      "$ref": "#/definitions/RuleActionOverride"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "ScopeDownStatement": {
+     "$ref": "#/definitions/Statement"
+    },
+    "VendorName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "Version": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": "^[\\w#:\\.\\-/]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VendorName",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "MapMatchScope": {
+   "enum": [
+    "ALL",
+    "KEY",
+    "VALUE"
+   ],
+   "type": "string"
+  },
+  "NotStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Statement": {
+     "$ref": "#/definitions/Statement"
+    }
+   },
+   "required": [
+    "Statement"
+   ],
+   "type": "object"
+  },
+  "OrStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Statements": {
+     "items": {
+      "$ref": "#/definitions/Statement"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Statements"
+   ],
+   "type": "object"
+  },
+  "OverrideAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Count": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    },
+    "None": {
+     "format": "json",
+     "type": [
+      "object",
+      "string"
+     ]
+    }
+   },
+   "type": "object"
+  },
+  "OversizeHandling": {
+   "enum": [
+    "CONTINUE",
+    "MATCH",
+    "NO_MATCH"
+   ],
+   "type": "string"
+  },
+  "PhoneNumberField": {
+   "$ref": "#/definitions/FieldIdentifier"
+  },
+  "PositionalConstraint": {
+   "enum": [
+    "EXACTLY",
+    "STARTS_WITH",
+    "ENDS_WITH",
+    "CONTAINS",
+    "CONTAINS_WORD"
+   ],
+   "type": "string"
+  },
+  "QueryString": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RateBasedStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregateKeyType": {
+     "enum": [
+      "CONSTANT",
+      "IP",
+      "FORWARDED_IP",
+      "CUSTOM_KEYS"
+     ],
+     "type": "string"
+    },
+    "CustomKeys": {
+     "items": {
+      "$ref": "#/definitions/RateBasedStatementCustomKey"
+     },
+     "maxItems": 5,
+     "type": "array"
+    },
+    "EvaluationWindowSec": {
+     "$ref": "#/definitions/EvaluationWindowSec"
+    },
+    "ForwardedIPConfig": {
+     "$ref": "#/definitions/ForwardedIPConfiguration"
+    },
+    "Limit": {
+     "$ref": "#/definitions/RateLimit"
+    },
+    "ScopeDownStatement": {
+     "$ref": "#/definitions/Statement"
+    }
+   },
+   "required": [
+    "Limit",
+    "AggregateKeyType"
+   ],
+   "type": "object"
+  },
+  "RateBasedStatementCustomKey": {
+   "additionalProperties": false,
+   "properties": {
+    "Cookie": {
+     "$ref": "#/definitions/RateLimitCookie"
+    },
+    "ForwardedIP": {
+     "$ref": "#/definitions/RateLimitForwardedIP"
+    },
+    "HTTPMethod": {
+     "$ref": "#/definitions/RateLimitHTTPMethod"
+    },
+    "Header": {
+     "$ref": "#/definitions/RateLimitHeader"
+    },
+    "IP": {
+     "$ref": "#/definitions/RateLimitIP"
+    },
+    "JA3Fingerprint": {
+     "$ref": "#/definitions/RateLimitJA3Fingerprint"
+    },
+    "JA4Fingerprint": {
+     "$ref": "#/definitions/RateLimitJA4Fingerprint"
+    },
+    "LabelNamespace": {
+     "$ref": "#/definitions/RateLimitLabelNamespace"
+    },
+    "QueryArgument": {
+     "$ref": "#/definitions/RateLimitQueryArgument"
+    },
+    "QueryString": {
+     "$ref": "#/definitions/RateLimitQueryString"
+    },
+    "UriPath": {
+     "$ref": "#/definitions/RateLimitUriPath"
+    }
+   },
+   "type": "object"
+  },
+  "RateLimit": {
+   "maximum": 2000000000,
+   "minimum": 10,
+   "type": "integer"
+  },
+  "RateLimitCookie": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RateLimitForwardedIP": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RateLimitHTTPMethod": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RateLimitHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RateLimitIP": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RateLimitJA3Fingerprint": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
+  "RateLimitJA4Fingerprint": {
+   "additionalProperties": false,
+   "properties": {
+    "FallbackBehavior": {
+     "enum": [
+      "MATCH",
+      "NO_MATCH"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "FallbackBehavior"
+   ],
+   "type": "object"
+  },
+  "RateLimitLabelNamespace": {
+   "additionalProperties": false,
+   "properties": {
+    "Namespace": {
+     "pattern": "^[0-9A-Za-z_:-]{1,1024}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "RateLimitQueryArgument": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 64,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RateLimitQueryString": {
+   "additionalProperties": false,
+   "properties": {
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RateLimitUriPath": {
+   "additionalProperties": false,
+   "properties": {
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RegexMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "RegexString": {
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "RegexString",
+    "FieldToMatch",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RegexPatternSetReferenceStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "$ref": "#/definitions/ResourceArn"
+    },
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Arn",
+    "FieldToMatch",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "RequestBody": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(CLOUDFRONT|API_GATEWAY|COGNITO_USER_POOL|APP_RUNNER_SERVICE|VERIFIED_ACCESS_INSTANCE)$": {
+     "$ref": "#/definitions/RequestBodyAssociatedResourceTypeConfig"
+    }
+   },
+   "type": "object"
+  },
+  "RequestBodyAssociatedResourceTypeConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultSizeInspectionLimit": {
+     "$ref": "#/definitions/SizeInspectionLimit"
+    }
+   },
+   "required": [
+    "DefaultSizeInspectionLimit"
+   ],
+   "type": "object"
+  },
+  "RequestInspection": {
+   "additionalProperties": false,
+   "properties": {
+    "PasswordField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PayloadType": {
+     "enum": [
+      "JSON",
+      "FORM_ENCODED"
+     ],
+     "type": "string"
+    },
+    "UsernameField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "PayloadType",
+    "UsernameField",
+    "PasswordField"
+   ],
+   "type": "object"
+  },
+  "RequestInspectionACFP": {
+   "additionalProperties": false,
+   "properties": {
+    "AddressFields": {
+     "items": {
+      "$ref": "#/definitions/AddressField"
+     },
+     "type": "array"
+    },
+    "EmailField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PasswordField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PayloadType": {
+     "enum": [
+      "JSON",
+      "FORM_ENCODED"
+     ],
+     "type": "string"
+    },
+    "PhoneNumberFields": {
+     "items": {
+      "$ref": "#/definitions/PhoneNumberField"
+     },
+     "type": "array"
+    },
+    "UsernameField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "PayloadType"
+   ],
+   "type": "object"
+  },
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "ResponseContent": {
+   "maxLength": 10240,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResponseContentType": {
+   "enum": [
+    "TEXT_PLAIN",
+    "TEXT_HTML",
+    "APPLICATION_JSON"
+   ],
+   "type": "string"
+  },
+  "ResponseInspection": {
+   "additionalProperties": false,
+   "properties": {
+    "BodyContains": {
+     "$ref": "#/definitions/ResponseInspectionBodyContains"
+    },
+    "Header": {
+     "$ref": "#/definitions/ResponseInspectionHeader"
+    },
+    "Json": {
+     "$ref": "#/definitions/ResponseInspectionJson"
+    },
+    "StatusCode": {
+     "$ref": "#/definitions/ResponseInspectionStatusCode"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseInspectionBodyContains": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureStrings": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SuccessStrings": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SuccessStrings",
+    "FailureStrings"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SuccessValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "SuccessValues",
+    "FailureValues"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionJson": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Identifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SuccessValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Identifier",
+    "SuccessValues",
+    "FailureValues"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionStatusCode": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureCodes": {
+     "items": {
+      "maxLength": 999,
+      "minLength": 0,
+      "type": "integer"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SuccessCodes": {
+     "items": {
+      "maxLength": 999,
+      "minLength": 0,
+      "type": "integer"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SuccessCodes",
+    "FailureCodes"
+   ],
+   "type": "object"
+  },
+  "ResponseStatusCode": {
+   "maximum": 599,
+   "minimum": 200,
+   "type": "integer"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/RuleAction"
+    },
+    "CaptchaConfig": {
+     "$ref": "#/definitions/CaptchaConfig"
+    },
+    "ChallengeConfig": {
+     "$ref": "#/definitions/ChallengeConfig"
+    },
+    "Name": {
+     "$ref": "#/definitions/EntityName"
+    },
+    "OverrideAction": {
+     "$ref": "#/definitions/OverrideAction"
+    },
+    "Priority": {
+     "$ref": "#/definitions/RulePriority"
+    },
+    "RuleLabels": {
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "type": "array"
+    },
+    "Statement": {
+     "$ref": "#/definitions/Statement"
+    },
+    "VisibilityConfig": {
+     "$ref": "#/definitions/VisibilityConfig"
+    }
+   },
+   "required": [
+    "Name",
+    "Priority",
+    "Statement",
+    "VisibilityConfig"
+   ],
+   "type": "object"
+  },
+  "RuleAction": {
+   "additionalProperties": false,
+   "properties": {
+    "Allow": {
+     "$ref": "#/definitions/AllowAction"
+    },
+    "Block": {
+     "$ref": "#/definitions/BlockAction"
+    },
+    "Captcha": {
+     "$ref": "#/definitions/CaptchaAction"
+    },
+    "Challenge": {
+     "$ref": "#/definitions/ChallengeAction"
+    },
+    "Count": {
+     "$ref": "#/definitions/CountAction"
+    }
+   },
+   "type": "object"
+  },
+  "RuleActionOverride": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionToUse": {
+     "$ref": "#/definitions/RuleAction"
+    },
+    "Name": {
+     "$ref": "#/definitions/EntityName"
+    }
+   },
+   "required": [
+    "Name",
+    "ActionToUse"
+   ],
+   "type": "object"
+  },
+  "RuleGroupReferenceStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "$ref": "#/definitions/ResourceArn"
+    },
+    "ExcludedRules": {
+     "items": {
+      "$ref": "#/definitions/ExcludedRule"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "RuleActionOverrides": {
+     "items": {
+      "$ref": "#/definitions/RuleActionOverride"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "RulePriority": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "type": "array"
+  },
+  "Scope": {
+   "enum": [
+    "CLOUDFRONT",
+    "REGIONAL"
+   ],
+   "type": "string"
+  },
+  "SearchString": {
+   "type": "string"
+  },
+  "SearchStringBase64": {
+   "type": "string"
+  },
+  "SensitivityLevel": {
+   "enum": [
+    "LOW",
+    "HIGH"
+   ],
+   "type": "string"
+  },
+  "SingleHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SingleQueryArgument": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SizeConstraintStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "ComparisonOperator": {
+     "enum": [
+      "EQ",
+      "NE",
+      "LE",
+      "LT",
+      "GE",
+      "GT"
+     ],
+     "type": "string"
+    },
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "Size": {
+     "maximum": 21474836480,
+     "minimum": 0,
+     "type": "number"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FieldToMatch",
+    "ComparisonOperator",
+    "Size",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "SizeInspectionLimit": {
+   "enum": [
+    "KB_16",
+    "KB_32",
+    "KB_48",
+    "KB_64"
+   ],
+   "type": "string"
+  },
+  "SqliMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "SensitivityLevel": {
+     "$ref": "#/definitions/SensitivityLevel"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FieldToMatch",
+    "TextTransformations"
+   ],
+   "type": "object"
+  },
+  "Statement": {
+   "additionalProperties": false,
+   "properties": {
+    "AndStatement": {
+     "$ref": "#/definitions/AndStatement"
+    },
+    "ByteMatchStatement": {
+     "$ref": "#/definitions/ByteMatchStatement"
+    },
+    "GeoMatchStatement": {
+     "$ref": "#/definitions/GeoMatchStatement"
+    },
+    "IPSetReferenceStatement": {
+     "$ref": "#/definitions/IPSetReferenceStatement"
+    },
+    "LabelMatchStatement": {
+     "$ref": "#/definitions/LabelMatchStatement"
+    },
+    "ManagedRuleGroupStatement": {
+     "$ref": "#/definitions/ManagedRuleGroupStatement"
+    },
+    "NotStatement": {
+     "$ref": "#/definitions/NotStatement"
+    },
+    "OrStatement": {
+     "$ref": "#/definitions/OrStatement"
+    },
+    "RateBasedStatement": {
+     "$ref": "#/definitions/RateBasedStatement"
+    },
+    "RegexMatchStatement": {
+     "$ref": "#/definitions/RegexMatchStatement"
+    },
+    "RegexPatternSetReferenceStatement": {
+     "$ref": "#/definitions/RegexPatternSetReferenceStatement"
+    },
+    "RuleGroupReferenceStatement": {
+     "$ref": "#/definitions/RuleGroupReferenceStatement"
+    },
+    "SizeConstraintStatement": {
+     "$ref": "#/definitions/SizeConstraintStatement"
+    },
+    "SqliMatchStatement": {
+     "$ref": "#/definitions/SqliMatchStatement"
+    },
+    "XssMatchStatement": {
+     "$ref": "#/definitions/XssMatchStatement"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TextTransformation": {
+   "additionalProperties": false,
+   "properties": {
+    "Priority": {
+     "$ref": "#/definitions/TextTransformationPriority"
+    },
+    "Type": {
+     "$ref": "#/definitions/TextTransformationType"
+    }
+   },
+   "required": [
+    "Priority",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "TextTransformationPriority": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "TextTransformationType": {
+   "enum": [
+    "NONE",
+    "COMPRESS_WHITE_SPACE",
+    "HTML_ENTITY_DECODE",
+    "LOWERCASE",
+    "CMD_LINE",
+    "URL_DECODE",
+    "BASE64_DECODE",
+    "HEX_DECODE",
+    "MD5",
+    "REPLACE_COMMENTS",
+    "ESCAPE_SEQ_DECODE",
+    "SQL_HEX_DECODE",
+    "CSS_DECODE",
+    "JS_DECODE",
+    "NORMALIZE_PATH",
+    "NORMALIZE_PATH_WIN",
+    "REMOVE_NULLS",
+    "REPLACE_NULLS",
+    "BASE64_DECODE_EXT",
+    "URL_DECODE_UNI",
+    "UTF8_TO_UNICODE"
+   ],
+   "type": "string"
+  },
+  "TokenDomains": {
+   "items": {
+    "maxLength": 253,
+    "minLength": 1,
+    "pattern": "^[\\w\\.\\-/]+$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "UriPath": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "VisibilityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchMetricsEnabled": {
+     "type": "boolean"
+    },
+    "MetricName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[\\w#:\\.\\-/]+$",
+     "type": "string"
+    },
+    "SampledRequestsEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "SampledRequestsEnabled",
+    "CloudWatchMetricsEnabled",
+    "MetricName"
+   ],
+   "type": "object"
+  },
+  "XssMatchStatement": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldToMatch": {
+     "$ref": "#/definitions/FieldToMatch"
+    },
+    "TextTransformations": {
+     "items": {
+      "$ref": "#/definitions/TextTransformation"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FieldToMatch",
+    "TextTransformations"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name",
+  "/properties/Id",
+  "/properties/Scope"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "AssociationConfig": {
+   "$ref": "#/definitions/AssociationConfig"
+  },
+  "Capacity": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "CaptchaConfig": {
+   "$ref": "#/definitions/CaptchaConfig"
+  },
+  "ChallengeConfig": {
+   "$ref": "#/definitions/ChallengeConfig"
+  },
+  "CustomResponseBodies": {
+   "$ref": "#/definitions/CustomResponseBodies"
+  },
+  "DefaultAction": {
+   "$ref": "#/definitions/DefaultAction"
+  },
+  "Description": {
+   "$ref": "#/definitions/EntityDescription"
+  },
+  "Id": {
+   "$ref": "#/definitions/EntityId"
+  },
+  "LabelNamespace": {
+   "$ref": "#/definitions/LabelName"
+  },
+  "Name": {
+   "$ref": "#/definitions/EntityName"
+  },
+  "Rules": {
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "type": "array"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "TokenDomains": {
+   "$ref": "#/definitions/TokenDomains"
+  },
+  "VisibilityConfig": {
+   "$ref": "#/definitions/VisibilityConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Capacity",
+  "/properties/Id",
+  "/properties/LabelNamespace"
+ ],
+ "required": [
+  "DefaultAction",
+  "Scope",
+  "VisibilityConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::WAFv2::WebACL"
+}
