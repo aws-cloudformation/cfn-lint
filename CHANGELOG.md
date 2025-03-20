@@ -1,3 +1,13 @@
+### v1.32.0
+## What's Changed
+* Update IAM Resource policy pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4040
+* Update rule [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3037) to limit services and actions when using a resource policy by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4040
+* Add rule [E3514](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3514) to validate resource policy resource ARNs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4040
+* Update CloudFormation schemas to `2025-03-20` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4021
+* Change transform check in [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3037) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4041
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.31.3...v1.32.0
+
 ### v1.31.3
 ## What's Changed
 * Update [I3510](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3510) to lower case resource names by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4038
