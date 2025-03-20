@@ -7,6 +7,7 @@ from collections import deque
 
 import pytest
 
+from cfnlint.context.parameters import ParameterSet
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.functions._BaseFn import BaseFn
@@ -23,26 +24,34 @@ def rule():
     yield rule
 
 
+@pytest.fixture
+def template():
+    return {"Parameters": {"MyString": {"Type": "String"}}}
+
+
 @pytest.mark.parametrize(
-    "name,instance,schema,expected",
+    "name,instance,schema,parameters,expected",
     [
         (
             "Dynamic references are ignored",
             {"Fn::Sub": "{{resolve:ssm:${AWS::AccountId}/${AWS::Region}/ac}}"},
             {"enum": ["Foo"]},
             [],
+            [],
         ),
-        ("Everything is fine", {"Fn::Sub": "Foo"}, {"enum": ["Foo"]}, []),
+        ("Everything is fine", {"Fn::Sub": "Foo"}, {"enum": ["Foo"]}, {}, []),
         (
             "Resolved Fn::Sub has no strict type validation",
             {"Fn::Sub": "2"},
             {"type": ["integer"]},
+            [],
             [],
         ),
         (
             "Standard error",
             {"Fn::Sub": "Bar"},
             {"enum": ["Foo"]},
+            [],
             [
                 ValidationError(
                     message=(
@@ -60,6 +69,7 @@ def rule():
             "Errors with context error",
             {"Fn::Sub": "Bar"},
             {"anyOf": [{"enum": ["Foo"]}]},
+            [],
             [
                 ValidationError(
                     message=(
@@ -86,8 +96,55 @@ def rule():
                 )
             ],
         ),
+        (
+            "Ref of a parameter with parameter set",
+            {"Ref": "MyString"},
+            {"enum": ["Foo"]},
+            [
+                ParameterSet(
+                    parameters={"MyString": "Bar"},
+                    source=None,
+                )
+            ],
+            [
+                ValidationError(
+                    message=(
+                        "{'Ref': 'MyString'} is not one of "
+                        "['Foo'] when '' is resolved to 'Bar'"
+                    ),
+                    path=deque(["Ref"]),
+                    validator="",
+                    schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
+                )
+            ],
+        ),
+        (
+            "Fn::Sub of a parameter with parameter set",
+            {"Fn::Sub": "${MyString}"},
+            {"enum": ["Foo"]},
+            [
+                ParameterSet(
+                    parameters={"MyString": "Bar"},
+                    source=None,
+                )
+            ],
+            [
+                ValidationError(
+                    message=(
+                        "{'Fn::Sub': '${MyString}'} is not one of "
+                        "['Foo'] when '' is resolved"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    validator="",
+                    schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
+                )
+            ],
+        ),
     ],
+    indirect=["parameters"],
 )
-def test_resolve(name, instance, schema, expected, validator, rule):
+def test_resolve(name, instance, schema, parameters, expected, validator, rule):
     errs = list(rule.resolve(validator, schema, instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
