@@ -72,7 +72,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Fn::Sub"] = self.search_deep_keys("Fn::Sub")
         self.transform_pre["Fn::If"] = self.search_deep_keys("Fn::If")
         self.transform_pre["Fn::FindInMap"] = self.search_deep_keys("Fn::FindInMap")
-        self.transform_pre["Transform"] = self.template.get("Transform", [])
+        self.transform_pre["Transform"] = cfnlint.helpers.ensure_list(
+            self.template.get("Transform", [])
+        )
         self.transform_pre["Fn::ForEach"] = self.search_deep_keys(
             cfnlint.helpers.FUNCTION_FOR_EACH
         )
@@ -155,14 +157,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Returns:
             bool: True if the AWS::Serverless-2016-10-31 transform is declared, False otherwise.
         """
-        lang_extensions_transform = "AWS::Serverless-2016-10-31"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
             transform_declaration
             if isinstance(transform_declaration, list)
             else [transform_declaration]
         )
-        return bool(lang_extensions_transform in transform_type)
+        return bool(cfnlint.helpers.TRANSFORM_SAM in transform_type)
 
     def is_cdk_template(self) -> bool:
         """Check if the template was created by the AWS Cloud Development Kit (CDK).

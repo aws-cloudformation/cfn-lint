@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 import regex as re
 
 from cfnlint._typing import RuleMatches
+from cfnlint.helpers import TRANSFORM_SAM
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -87,7 +88,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
 
         transforms = cfn.transform_pre["Transform"]
         transforms = transforms if isinstance(transforms, list) else [transforms]
-        if "AWS::Serverless-2016-10-31" in cfn.transform_pre["Transform"]:
+        if TRANSFORM_SAM in cfn.transform_pre["Transform"]:
             return matches
 
         # Get a list of paths to every leaf node string containing at least one ${parameter}
