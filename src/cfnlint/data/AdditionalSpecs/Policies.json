@@ -5054,6 +5054,7 @@
     "Resources": [
      "api",
      "channelNamespace",
+     "domain",
      "graphqlapi"
     ]
    },
@@ -5079,6 +5080,7 @@
     "Resources": [
      "api",
      "channelNamespace",
+     "domain",
      "graphqlapi"
     ]
    },
@@ -5086,6 +5088,7 @@
     "Resources": [
      "api",
      "channelNamespace",
+     "domain",
      "graphqlapi"
     ]
    },
@@ -5146,6 +5149,9 @@
    "domain": {
     "ARNFormats": [
      "arn:${Partition}:appsync:${Region}:${Account}:domainnames/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "field": {
@@ -11819,6 +11825,11 @@
      "privacybudgettemplate"
     ]
    },
+   "getprotectedjob": {
+    "Resources": [
+     "membership"
+    ]
+   },
    "getprotectedquery": {
     "Resources": [
      "membership"
@@ -11910,6 +11921,11 @@
      "privacybudgettemplate"
     ]
    },
+   "listprotectedjobs": {
+    "Resources": [
+     "membership"
+    ]
+   },
    "listprotectedqueries": {
     "Resources": [
      "membership"
@@ -11949,6 +11965,13 @@
    },
    "previewprivacyimpact": {
     "Resources": [
+     "membership"
+    ]
+   },
+   "startprotectedjob": {
+    "Resources": [
+     "analysistemplate",
+     "configuredtableassociation",
      "membership"
     ]
    },
@@ -12041,6 +12064,11 @@
    "updateprivacybudgettemplate": {
     "Resources": [
      "privacybudgettemplate"
+    ]
+   },
+   "updateprotectedjob": {
+    "Resources": [
+     "membership"
     ]
    },
    "updateprotectedquery": {
@@ -23227,100 +23255,6 @@
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
-    ]
-   }
-  }
- },
- "deeplens": {
-  "Actions": {
-   "associateserviceroletoaccount": {},
-   "batchgetdevice": {
-    "Resources": [
-     "device"
-    ]
-   },
-   "batchgetmodel": {
-    "Resources": [
-     "model"
-    ]
-   },
-   "batchgetproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "createdevicecertificates": {},
-   "createmodel": {},
-   "createproject": {},
-   "deletemodel": {
-    "Resources": [
-     "model"
-    ]
-   },
-   "deleteproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "deployproject": {
-    "Resources": [
-     "device",
-     "project"
-    ]
-   },
-   "deregisterdevice": {
-    "Resources": [
-     "device"
-    ]
-   },
-   "getassociatedresources": {},
-   "getdeploymentstatus": {},
-   "getdevice": {
-    "Resources": [
-     "device"
-    ]
-   },
-   "getmodel": {
-    "Resources": [
-     "model"
-    ]
-   },
-   "getproject": {
-    "Resources": [
-     "project"
-    ]
-   },
-   "importprojectfromtemplate": {},
-   "listdeployments": {},
-   "listdevices": {},
-   "listmodels": {},
-   "listprojects": {},
-   "registerdevice": {},
-   "removeproject": {
-    "Resources": [
-     "device"
-    ]
-   },
-   "updateproject": {
-    "Resources": [
-     "project"
-    ]
-   }
-  },
-  "Resources": {
-   "device": {
-    "ARNFormats": [
-     "arn:${Partition}:deeplens:${Region}:${Account}:device/.*"
-    ]
-   },
-   "model": {
-    "ARNFormats": [
-     "arn:${Partition}:deeplens:${Region}:${Account}:model/.*"
-    ]
-   },
-   "project": {
-    "ARNFormats": [
-     "arn:${Partition}:deeplens:${Region}:${Account}:project/.*"
     ]
    }
   }
@@ -51274,6 +51208,7 @@
    "listtransactions": {},
    "putdatalakesettings": {},
    "registerresource": {},
+   "registerresourcewithprivilegedaccess": {},
    "removelftagsfromresource": {},
    "revokepermissions": {},
    "searchdatabasesbylftags": {},
@@ -55559,6 +55494,7 @@
     ]
    },
    "listversions": {},
+   "probe": {},
    "putpolicy": {},
    "searchjobs": {
     "Resources": [
@@ -62240,7 +62176,7 @@
      "site"
     ]
    },
-   "deleteuser": {
+   "deleteuserv1": {
     "Resources": [
      "user"
     ]
@@ -62280,7 +62216,7 @@
      "site"
     ]
    },
-   "listusers": {},
+   "listusersv1": {},
    "rebootdevice": {
     "Resources": [
      "device-instance"
@@ -84400,11 +84336,17 @@
    "statemachinealias": {
     "ARNFormats": [
      "arn:${Partition}:states:${Region}:${Account}:stateMachine:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    },
    "statemachineversion": {
     "ARNFormats": [
      "arn:${Partition}:states:${Region}:${Account}:stateMachine:.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}"
     ]
    }
   }

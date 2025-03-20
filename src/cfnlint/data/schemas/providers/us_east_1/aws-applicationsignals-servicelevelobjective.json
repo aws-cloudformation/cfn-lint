@@ -71,10 +71,46 @@
   },
   "DurationUnit": {
    "enum": [
+    "MINUTE",
+    "HOUR",
     "DAY",
     "MONTH"
    ],
    "type": "string"
+  },
+  "ExclusionWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "default": "No reason",
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RecurrenceRule": {
+     "$ref": "#/definitions/RecurrenceRule"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "Window": {
+     "$ref": "#/definitions/Window"
+    }
+   },
+   "required": [
+    "Window"
+   ],
+   "type": "object"
+  },
+  "ExclusionWindows": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ExclusionWindow"
+   },
+   "maxItems": 10,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
   },
   "Goal": {
    "additionalProperties": false,
@@ -196,6 +232,20 @@
      "$ref": "#/definitions/MetricDataQueries"
     }
    },
+   "type": "object"
+  },
+  "RecurrenceRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Expression": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Expression"
+   ],
    "type": "object"
   },
   "RequestBasedSli": {
@@ -355,6 +405,22 @@
    "minItems": 1,
    "type": "array",
    "uniqueItems": true
+  },
+  "Window": {
+   "additionalProperties": false,
+   "properties": {
+    "Duration": {
+     "$ref": "#/definitions/Duration"
+    },
+    "DurationUnit": {
+     "$ref": "#/definitions/DurationUnit"
+    }
+   },
+   "required": [
+    "DurationUnit",
+    "Duration"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
@@ -384,6 +450,9 @@
     "RequestBased"
    ],
    "type": "string"
+  },
+  "ExclusionWindows": {
+   "$ref": "#/definitions/ExclusionWindows"
   },
   "Goal": {
    "$ref": "#/definitions/Goal"
