@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from cfnlint.helpers import PSEUDOPARAMS
+from cfnlint.helpers import PSEUDOPARAMS, TRANSFORM_LANGUAGE_EXTENSION
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.functions._BaseFn import BaseFn
 
@@ -64,7 +64,7 @@ class ToJsonString(BaseFn):
             yield ValidationError(
                 (
                     f"{self.fn.name} is not supported without "
-                    "'AWS::LanguageExtensions' transform"
+                    f"{TRANSFORM_LANGUAGE_EXTENSION!r} transform"
                 ),
                 validator=self.fn.py,
                 rule=self,

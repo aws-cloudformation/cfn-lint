@@ -11,7 +11,11 @@ from typing import Any, Callable, Mapping
 from cfnlint.conditions import Conditions
 from cfnlint.context import create_context_for_template
 from cfnlint.graph import Graph
-from cfnlint.helpers import TRANSFORM_SAM, format_json_string
+from cfnlint.helpers import (
+    TRANSFORM_LANGUAGE_EXTENSION,
+    TRANSFORM_SAM,
+    format_json_string,
+)
 from cfnlint.match import Match
 from cfnlint.template.transforms._language_extensions import language_extension
 from cfnlint.template.transforms._sam import sam
@@ -24,7 +28,7 @@ class Transform:
     def __init__(self) -> None:
         self.transforms: Mapping[str, Callable[[Any], TransformResult]] = {
             TRANSFORM_SAM: sam,
-            "AWS::LanguageExtensions": language_extension,
+            TRANSFORM_LANGUAGE_EXTENSION: language_extension,
         }
 
     def transform(self, cfn: Any) -> list[Match]:

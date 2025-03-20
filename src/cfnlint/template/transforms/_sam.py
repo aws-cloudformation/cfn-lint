@@ -17,7 +17,12 @@ from samtranslator.translator.translator import Translator
 
 from cfnlint.data import Serverless
 from cfnlint.decode.utils import convert_dict
-from cfnlint.helpers import ensure_list, is_function, load_resource
+from cfnlint.helpers import (
+    TRANSFORM_LANGUAGE_EXTENSION,
+    ensure_list,
+    is_function,
+    load_resource,
+)
 from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
@@ -148,7 +153,7 @@ class Transform:
         transforms = self._template.get("Transform", [])
 
         transforms = ensure_list(transforms)
-        if "AWS::LanguageExtensions" in transforms:
+        if TRANSFORM_LANGUAGE_EXTENSION in transforms:
             parameters = {}
             for k, v in self._template.get("Parameters", {}).items():
                 p_type = v.get("Type")

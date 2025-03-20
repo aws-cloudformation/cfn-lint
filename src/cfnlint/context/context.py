@@ -19,6 +19,7 @@ from cfnlint.helpers import (
     FUNCTIONS,
     PSEUDOPARAMS,
     REGION_PRIMARY,
+    TRANSFORM_LANGUAGE_EXTENSION,
     TRANSFORM_SAM,
 )
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, AttributeDict
@@ -52,10 +53,11 @@ class Transforms:
         )
 
     def has_language_extensions_transform(self):
-        lang_extensions_transform = "AWS::LanguageExtensions"
-        return bool(lang_extensions_transform in self._transforms)
+        return bool(TRANSFORM_LANGUAGE_EXTENSION in self._transforms)
 
     def has_sam_transform(self):
+        # this function will always return False as SAM transform
+        # will eliminate itself when the transform is done
         return bool(TRANSFORM_SAM in self._transforms)
 
 
