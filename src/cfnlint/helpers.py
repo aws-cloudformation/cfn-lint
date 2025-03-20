@@ -357,6 +357,7 @@ BOOLEAN_STRINGS_FALSE = frozenset(["false", "False", "FALSE"])
 BOOLEAN_STRINGS = frozenset(list(BOOLEAN_STRINGS_TRUE) + list(BOOLEAN_STRINGS_FALSE))
 
 TRANSFORM_SAM = "AWS::Serverless-2016-10-31"
+TRANSFORM_LANGUAGE_EXTENSION = "AWS::LanguageExtensions"
 
 
 # pylint: disable=missing-class-docstring

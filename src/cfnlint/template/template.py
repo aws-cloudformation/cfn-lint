@@ -142,14 +142,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Returns:
             bool: True if the AWS::LanguageExtensions transform is declared, False otherwise.
         """
-        lang_extensions_transform = "AWS::LanguageExtensions"
-        transform_declaration = self.transform_pre["Transform"]
-        transform_type = (
-            transform_declaration
-            if isinstance(transform_declaration, list)
-            else [transform_declaration]
+        return bool(
+            cfnlint.helpers.TRANSFORM_LANGUAGE_EXTENSION
+            in self.transform_pre["Transform"]
         )
-        return bool(lang_extensions_transform in transform_type)
 
     def has_serverless_transform(self) -> bool:
         """Check if the template has the AWS::Serverless-2016-10-31 transform declared.
@@ -157,13 +153,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Returns:
             bool: True if the AWS::Serverless-2016-10-31 transform is declared, False otherwise.
         """
-        transform_declaration = self.transform_pre["Transform"]
-        transform_type = (
-            transform_declaration
-            if isinstance(transform_declaration, list)
-            else [transform_declaration]
-        )
-        return bool(cfnlint.helpers.TRANSFORM_SAM in transform_type)
+        return bool(cfnlint.helpers.TRANSFORM_SAM in self.transform_pre["Transform"])
 
     def is_cdk_template(self) -> bool:
         """Check if the template was created by the AWS Cloud Development Kit (CDK).

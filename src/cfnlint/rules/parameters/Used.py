@@ -20,9 +20,9 @@ class Used(CloudFormationLintRule):
     tags = ["parameters"]
 
     def match(self, cfn: Template) -> RuleMatches:
-        if cfn.transform_pre["Transform"]:
-            return []
         matches: RuleMatches = []
+        if cfn.transform_pre["Transform"]:
+            return matches
 
         le_refs = None
         if cfn.has_language_extensions_transform():

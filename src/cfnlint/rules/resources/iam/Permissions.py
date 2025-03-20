@@ -10,7 +10,7 @@ from typing import Any
 import regex as re
 
 from cfnlint.data import AdditionalSpecs
-from cfnlint.helpers import TRANSFORM_SAM, ensure_list, load_resource
+from cfnlint.helpers import ensure_list, load_resource
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintKeyword import CfnLintKeyword
 
@@ -41,7 +41,7 @@ class Permissions(CfnLintKeyword):
     ) -> ValidationResult:
         # Escape validation when using SAM transforms as a result of
         # https://github.com/aws/serverless-application-model/issues/3633
-        if TRANSFORM_SAM in validator.cfn.transform_pre["Transform"]:
+        if validator.cfn.has_serverless_transform():
             return
 
         actions = ensure_list(instance)
