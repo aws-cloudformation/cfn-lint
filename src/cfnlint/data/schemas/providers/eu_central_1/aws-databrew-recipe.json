@@ -1,0 +1,553 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "Operation": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Z\\_]+$",
+     "type": "string"
+    },
+    "Parameters": {
+     "anyOf": [
+      {
+       "$ref": "#/definitions/RecipeParameters"
+      },
+      {
+       "$ref": "#/definitions/ParameterMap"
+      }
+     ]
+    }
+   },
+   "required": [
+    "Operation"
+   ],
+   "type": "object"
+  },
+  "ConditionExpression": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[A-Z\\_]+$",
+     "type": "string"
+    },
+    "TargetColumn": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 1024,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Condition",
+    "TargetColumn"
+   ],
+   "type": "object"
+  },
+  "DataCatalogInputDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "CatalogId": {
+     "type": "string"
+    },
+    "DatabaseName": {
+     "type": "string"
+    },
+    "TableName": {
+     "type": "string"
+    },
+    "TempDirectory": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "type": "object"
+  },
+  "ParameterMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^[A-Za-z0-9]{1,128}$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RecipeParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregateFunction": {
+     "type": "string"
+    },
+    "Base": {
+     "type": "string"
+    },
+    "CaseStatement": {
+     "type": "string"
+    },
+    "CategoryMap": {
+     "type": "string"
+    },
+    "CharsToRemove": {
+     "type": "string"
+    },
+    "CollapseConsecutiveWhitespace": {
+     "type": "string"
+    },
+    "ColumnDataType": {
+     "type": "string"
+    },
+    "ColumnRange": {
+     "type": "string"
+    },
+    "Count": {
+     "type": "string"
+    },
+    "CustomCharacters": {
+     "type": "string"
+    },
+    "CustomStopWords": {
+     "type": "string"
+    },
+    "CustomValue": {
+     "type": "string"
+    },
+    "DatasetsColumns": {
+     "type": "string"
+    },
+    "DateAddValue": {
+     "type": "string"
+    },
+    "DateTimeFormat": {
+     "type": "string"
+    },
+    "DateTimeParameters": {
+     "type": "string"
+    },
+    "DeleteOtherRows": {
+     "type": "string"
+    },
+    "Delimiter": {
+     "type": "string"
+    },
+    "EndPattern": {
+     "type": "string"
+    },
+    "EndPosition": {
+     "type": "string"
+    },
+    "EndValue": {
+     "type": "string"
+    },
+    "ExpandContractions": {
+     "type": "string"
+    },
+    "Exponent": {
+     "type": "string"
+    },
+    "FalseString": {
+     "type": "string"
+    },
+    "GroupByAggFunctionOptions": {
+     "type": "string"
+    },
+    "GroupByColumns": {
+     "type": "string"
+    },
+    "HiddenColumns": {
+     "type": "string"
+    },
+    "IgnoreCase": {
+     "type": "string"
+    },
+    "IncludeInSplit": {
+     "type": "string"
+    },
+    "Input": {
+     "additionalProperties": false,
+     "oneOf": [
+      {
+       "required": [
+        "S3InputDefinition"
+       ]
+      },
+      {
+       "required": [
+        "DataCatalogInputDefinition"
+       ]
+      }
+     ],
+     "properties": {
+      "DataCatalogInputDefinition": {
+       "$ref": "#/definitions/DataCatalogInputDefinition"
+      },
+      "S3InputDefinition": {
+       "$ref": "#/definitions/S3Location"
+      }
+     },
+     "type": "object"
+    },
+    "Interval": {
+     "type": "string"
+    },
+    "IsText": {
+     "type": "string"
+    },
+    "JoinKeys": {
+     "type": "string"
+    },
+    "JoinType": {
+     "type": "string"
+    },
+    "LeftColumns": {
+     "type": "string"
+    },
+    "Limit": {
+     "type": "string"
+    },
+    "LowerBound": {
+     "type": "string"
+    },
+    "MapType": {
+     "type": "string"
+    },
+    "ModeType": {
+     "type": "string"
+    },
+    "MultiLine": {
+     "type": "boolean"
+    },
+    "NumRows": {
+     "type": "string"
+    },
+    "NumRowsAfter": {
+     "type": "string"
+    },
+    "NumRowsBefore": {
+     "type": "string"
+    },
+    "OrderByColumn": {
+     "type": "string"
+    },
+    "OrderByColumns": {
+     "type": "string"
+    },
+    "Other": {
+     "type": "string"
+    },
+    "Pattern": {
+     "type": "string"
+    },
+    "PatternOption1": {
+     "type": "string"
+    },
+    "PatternOption2": {
+     "type": "string"
+    },
+    "PatternOptions": {
+     "type": "string"
+    },
+    "Period": {
+     "type": "string"
+    },
+    "Position": {
+     "type": "string"
+    },
+    "RemoveAllPunctuation": {
+     "type": "string"
+    },
+    "RemoveAllQuotes": {
+     "type": "string"
+    },
+    "RemoveAllWhitespace": {
+     "type": "string"
+    },
+    "RemoveCustomCharacters": {
+     "type": "string"
+    },
+    "RemoveCustomValue": {
+     "type": "string"
+    },
+    "RemoveLeadingAndTrailingPunctuation": {
+     "type": "string"
+    },
+    "RemoveLeadingAndTrailingQuotes": {
+     "type": "string"
+    },
+    "RemoveLeadingAndTrailingWhitespace": {
+     "type": "string"
+    },
+    "RemoveLetters": {
+     "type": "string"
+    },
+    "RemoveNumbers": {
+     "type": "string"
+    },
+    "RemoveSourceColumn": {
+     "type": "string"
+    },
+    "RemoveSpecialCharacters": {
+     "type": "string"
+    },
+    "RightColumns": {
+     "type": "string"
+    },
+    "SampleSize": {
+     "type": "string"
+    },
+    "SampleType": {
+     "type": "string"
+    },
+    "SecondInput": {
+     "type": "string"
+    },
+    "SecondaryInputs": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SecondaryInput"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SheetIndexes": {
+     "insertionOrder": true,
+     "items": {
+      "type": "integer"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SheetNames": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SourceColumn": {
+     "type": "string"
+    },
+    "SourceColumn1": {
+     "type": "string"
+    },
+    "SourceColumn2": {
+     "type": "string"
+    },
+    "SourceColumns": {
+     "type": "string"
+    },
+    "StartColumnIndex": {
+     "type": "string"
+    },
+    "StartPattern": {
+     "type": "string"
+    },
+    "StartPosition": {
+     "type": "string"
+    },
+    "StartValue": {
+     "type": "string"
+    },
+    "StemmingMode": {
+     "type": "string"
+    },
+    "StepCount": {
+     "type": "string"
+    },
+    "StepIndex": {
+     "type": "string"
+    },
+    "StopWordsMode": {
+     "type": "string"
+    },
+    "Strategy": {
+     "type": "string"
+    },
+    "TargetColumn": {
+     "type": "string"
+    },
+    "TargetColumnNames": {
+     "type": "string"
+    },
+    "TargetDateFormat": {
+     "type": "string"
+    },
+    "TargetIndex": {
+     "type": "string"
+    },
+    "TimeZone": {
+     "type": "string"
+    },
+    "TokenizerPattern": {
+     "type": "string"
+    },
+    "TrueString": {
+     "type": "string"
+    },
+    "UdfLang": {
+     "type": "string"
+    },
+    "Units": {
+     "type": "string"
+    },
+    "UnpivotColumn": {
+     "type": "string"
+    },
+    "UpperBound": {
+     "type": "string"
+    },
+    "UseNewDataFrame": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    },
+    "Value1": {
+     "type": "string"
+    },
+    "Value2": {
+     "type": "string"
+    },
+    "ValueColumn": {
+     "type": "string"
+    },
+    "ViewFrame": {
+     "type": "string"
+    }
+   }
+  },
+  "RecipeStep": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "ConditionExpressions": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ConditionExpression"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "Action"
+   ],
+   "type": "object"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
+  },
+  "SecondaryInput": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "S3InputDefinition"
+     ]
+    },
+    {
+     "required": [
+      "DataCatalogInputDefinition"
+     ]
+    }
+   ],
+   "properties": {
+    "DataCatalogInputDefinition": {
+     "$ref": "#/definitions/DataCatalogInputDefinition"
+    },
+    "S3InputDefinition": {
+     "$ref": "#/definitions/S3Location"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Steps": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/RecipeStep",
+    "type": "object"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "Name",
+  "Steps"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataBrew::Recipe"
+}

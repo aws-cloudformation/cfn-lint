@@ -1,0 +1,90 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParameterGroupName",
+  "/properties/ParameterGroupFamily",
+  "/properties/Description"
+ ],
+ "definitions": {
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "ParameterName": {
+     "type": "string"
+    },
+    "ParameterValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ParameterValue",
+    "ParameterName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ParameterGroupName"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "ParameterGroupFamily": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "ParameterGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "Parameters": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Parameter"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "Description",
+  "ParameterGroupFamily"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::ClusterParameterGroup",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

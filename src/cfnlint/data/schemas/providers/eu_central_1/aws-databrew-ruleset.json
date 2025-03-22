@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/TargetArn"
+ ],
+ "definitions": {
+  "ColumnSelector": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Regex": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Disabled": {
+   "type": "boolean"
+  },
+  "Expression": {
+   "maxLength": 1024,
+   "minLength": 4,
+   "pattern": "^[><0-9A-Za-z_.,:)(!= ]+$",
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "CheckExpression": {
+     "$ref": "#/definitions/Expression"
+    },
+    "ColumnSelectors": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ColumnSelector"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Disabled": {
+     "$ref": "#/definitions/Disabled"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SubstitutionMap": {
+     "$ref": "#/definitions/ValuesMap"
+    },
+    "Threshold": {
+     "$ref": "#/definitions/Threshold"
+    }
+   },
+   "required": [
+    "Name",
+    "CheckExpression"
+   ],
+   "type": "object"
+  },
+  "SubstitutionValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ValueReference": {
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "^:[A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueReference",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Threshold": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ThresholdType"
+    },
+    "Unit": {
+     "$ref": "#/definitions/ThresholdUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThresholdValue"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ThresholdType": {
+   "enum": [
+    "GREATER_THAN_OR_EQUAL",
+    "LESS_THAN_OR_EQUAL",
+    "GREATER_THAN",
+    "LESS_THAN"
+   ],
+   "type": "string"
+  },
+  "ThresholdUnit": {
+   "enum": [
+    "COUNT",
+    "PERCENTAGE"
+   ],
+   "type": "string"
+  },
+  "ThresholdValue": {
+   "type": "number"
+  },
+  "ValuesMap": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/SubstitutionValue"
+   },
+   "type": "array"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Rules": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  }
+ },
+ "required": [
+  "Name",
+  "TargetArn",
+  "Rules"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataBrew::Ruleset"
+}

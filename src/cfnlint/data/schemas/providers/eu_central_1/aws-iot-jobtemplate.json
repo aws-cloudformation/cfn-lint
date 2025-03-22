@@ -1,0 +1,356 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/JobTemplateId",
+  "/properties/JobArn",
+  "/properties/Description",
+  "/properties/Document",
+  "/properties/DocumentSource",
+  "/properties/TimeoutConfig",
+  "/properties/JobExecutionsRolloutConfig",
+  "/properties/AbortConfig",
+  "/properties/PresignedUrlConfig",
+  "/properties/DestinationPackageVersions",
+  "/properties/JobExecutionsRetryConfig",
+  "/properties/MaintenanceWindows",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "AbortCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/Action"
+    },
+    "FailureType": {
+     "$ref": "#/definitions/FailureType"
+    },
+    "MinNumberOfExecutedThings": {
+     "$ref": "#/definitions/MinNumberOfExecutedThings"
+    },
+    "ThresholdPercentage": {
+     "$ref": "#/definitions/ThresholdPercentage"
+    }
+   },
+   "required": [
+    "Action",
+    "FailureType",
+    "MinNumberOfExecutedThings",
+    "ThresholdPercentage"
+   ],
+   "type": "object"
+  },
+  "Action": {
+   "enum": [
+    "CANCEL"
+   ],
+   "type": "string"
+  },
+  "BaseRatePerMinute": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "DestinationPackageVersion": {
+   "maxLength": 1600,
+   "minLength": 1,
+   "pattern": "^arn:[!-~]+$",
+   "type": "string"
+  },
+  "ExpiresInSec": {
+   "maximum": 3600,
+   "minimum": 60,
+   "type": "integer"
+  },
+  "ExponentialRolloutRate": {
+   "additionalProperties": false,
+   "properties": {
+    "BaseRatePerMinute": {
+     "$ref": "#/definitions/BaseRatePerMinute"
+    },
+    "IncrementFactor": {
+     "$ref": "#/definitions/IncrementFactor"
+    },
+    "RateIncreaseCriteria": {
+     "$ref": "#/definitions/RateIncreaseCriteria",
+     "type": "object"
+    }
+   },
+   "required": [
+    "BaseRatePerMinute",
+    "IncrementFactor",
+    "RateIncreaseCriteria"
+   ],
+   "type": "object"
+  },
+  "FailureType": {
+   "enum": [
+    "FAILED",
+    "REJECTED",
+    "TIMED_OUT",
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "InProgressTimeoutInMinutes": {
+   "maximum": 10080,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "IncrementFactor": {
+   "maximum": 5,
+   "minimum": 1,
+   "type": "number"
+  },
+  "JobRetryFailureType": {
+   "enum": [
+    "FAILED",
+    "TIMED_OUT",
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "DurationInMinutes": {
+     "maximum": 1430,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartTime": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "MaximumPerMinute": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "MinNumberOfExecutedThings": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "NumberOfNotifiedThings": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "NumberOfSucceededThings": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "RateIncreaseCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "NumberOfNotifiedThings": {
+     "$ref": "#/definitions/NumberOfNotifiedThings"
+    },
+    "NumberOfSucceededThings": {
+     "$ref": "#/definitions/NumberOfSucceededThings"
+    }
+   },
+   "type": "object"
+  },
+  "RetryCriteria": {
+   "additionalProperties": false,
+   "properties": {
+    "FailureType": {
+     "$ref": "#/definitions/JobRetryFailureType"
+    },
+    "NumberOfRetries": {
+     "maximum": 10,
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThresholdPercentage": {
+   "maximum": 100,
+   "type": "number"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/iot/latest/developerguide/job-templates.html",
+ "primaryIdentifier": [
+  "/properties/JobTemplateId"
+ ],
+ "properties": {
+  "AbortConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CriteriaList": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AbortCriteria"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "CriteriaList"
+   ],
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2028,
+   "pattern": "[^\\p{C}]+",
+   "type": "string"
+  },
+  "DestinationPackageVersions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DestinationPackageVersion"
+   },
+   "type": "array"
+  },
+  "Document": {
+   "maxLength": 32768,
+   "type": "string"
+  },
+  "DocumentSource": {
+   "maxLength": 1350,
+   "minLength": 1,
+   "type": "string"
+  },
+  "JobArn": {
+   "type": "string"
+  },
+  "JobExecutionsRetryConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RetryCriteriaList": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RetryCriteria"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "JobExecutionsRolloutConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExponentialRolloutRate": {
+     "$ref": "#/definitions/ExponentialRolloutRate"
+    },
+    "MaximumPerMinute": {
+     "$ref": "#/definitions/MaximumPerMinute"
+    }
+   },
+   "type": "object"
+  },
+  "JobTemplateId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_-]+",
+   "type": "string"
+  },
+  "MaintenanceWindows": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MaintenanceWindow"
+   },
+   "type": "array"
+  },
+  "PresignedUrlConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExpiresInSec": {
+     "$ref": "#/definitions/ExpiresInSec"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeoutConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InProgressTimeoutInMinutes": {
+     "$ref": "#/definitions/InProgressTimeoutInMinutes"
+    }
+   },
+   "required": [
+    "InProgressTimeoutInMinutes"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "JobTemplateId",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::JobTemplate",
+ "writeOnlyProperties": [
+  "/properties/JobArn",
+  "/properties/Document",
+  "/properties/DocumentSource",
+  "/properties/TimeoutConfig",
+  "/properties/JobExecutionsRolloutConfig",
+  "/properties/AbortConfig",
+  "/properties/PresignedUrlConfig",
+  "/properties/DestinationPackageVersions",
+  "/properties/JobExecutionsRetryConfig",
+  "/properties/MaintenanceWindows"
+ ]
+}

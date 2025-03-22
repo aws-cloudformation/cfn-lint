@@ -81,6 +81,34 @@
    ],
    "type": "string"
   },
+  "DeobfuscationConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "JavaScriptSourceMaps": {
+     "additionalProperties": false,
+     "properties": {
+      "S3Uri": {
+       "maxLength": 1024,
+       "minLength": 1,
+       "pattern": "^s3://[a-z0-9][-.a-z0-9]{1,61}(?:/[-!_*'().a-z0-9A-Z]+(?:/[-!_*'().a-z0-9A-Z]+)*)?/?$",
+       "type": "string"
+      },
+      "Status": {
+       "enum": [
+        "ENABLED",
+        "DISABLED"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Status"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "FavoritePages": {
    "insertionOrder": false,
    "items": {
@@ -243,6 +271,18 @@
    "type": "string"
   }
  },
+ "oneOf": [
+  {
+   "required": [
+    "Domain"
+   ]
+  },
+  {
+   "required": [
+    "DomainList"
+   ]
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Name"
  ],
@@ -256,11 +296,22 @@
   "CwLogEnabled": {
    "type": "boolean"
   },
+  "DeobfuscationConfiguration": {
+   "$ref": "#/definitions/DeobfuscationConfiguration"
+  },
   "Domain": {
    "maxLength": 253,
    "minLength": 1,
    "pattern": "^(localhost)|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))|^(\\*\\.)(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))",
    "type": "string"
+  },
+  "DomainList": {
+   "items": {
+    "$ref": "#/properties/Domain"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
   },
   "Id": {
    "maxLength": 36,
@@ -285,8 +336,7 @@
   "/properties/Id"
  ],
  "required": [
-  "Name",
-  "Domain"
+  "Name"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
