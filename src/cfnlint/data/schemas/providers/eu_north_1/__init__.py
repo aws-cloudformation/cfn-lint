@@ -1869,7 +1869,6 @@ cached: list[str] = [
     "aws-route53resolver-resolverqueryloggingconfigassociation.json",
     "aws-route53resolver-resolverrule.json",
     "aws-route53resolver-resolverruleassociation.json",
-    "aws-rum-appmonitor.json",
     "aws-s3-accessgrant.json",
     "aws-s3-accessgrantsinstance.json",
     "aws-s3-accessgrantslocation.json",

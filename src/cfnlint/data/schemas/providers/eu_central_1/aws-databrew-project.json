@@ -1,0 +1,102 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Sample": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "maximum": 5000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "enum": [
+      "FIRST_N",
+      "LAST_N",
+      "RANDOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "DatasetName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RecipeName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Sample": {
+   "$ref": "#/definitions/Sample"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "DatasetName",
+  "Name",
+  "RecipeName",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataBrew::Project"
+}
