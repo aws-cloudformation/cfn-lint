@@ -20,10 +20,7 @@
    "additionalProperties": false,
    "properties": {
     "ModelArn": {
-     "maxLength": 2048,
-     "minLength": 1,
-     "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2})|(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{1,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)$",
-     "type": "string"
+     "$ref": "#/definitions/ModelArn"
     },
     "ParsingModality": {
      "$ref": "#/definitions/ParsingModality"
@@ -33,6 +30,22 @@
     }
    },
    "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
+  "BedrockFoundationModelContextEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "EnrichmentStrategyConfiguration": {
+     "$ref": "#/definitions/EnrichmentStrategyConfiguration"
+    },
+    "ModelArn": {
+     "$ref": "#/definitions/ModelArn"
+    }
+   },
+   "required": [
+    "EnrichmentStrategyConfiguration",
     "ModelArn"
    ],
    "type": "object"
@@ -125,6 +138,27 @@
     "CredentialsSecretArn"
    ],
    "type": "object"
+  },
+  "ContextEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockFoundationModelConfiguration": {
+     "$ref": "#/definitions/BedrockFoundationModelContextEnrichmentConfiguration"
+    },
+    "Type": {
+     "$ref": "#/definitions/ContextEnrichmentType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ContextEnrichmentType": {
+   "enum": [
+    "BEDROCK_FOUNDATION_MODEL"
+   ],
+   "type": "string"
   },
   "CrawlFilterConfiguration": {
    "additionalProperties": false,
@@ -220,6 +254,24 @@
    ],
    "type": "string"
   },
+  "EnrichmentStrategyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Method": {
+     "$ref": "#/definitions/EnrichmentStrategyMethod"
+    }
+   },
+   "required": [
+    "Method"
+   ],
+   "type": "object"
+  },
+  "EnrichmentStrategyMethod": {
+   "enum": [
+    "CHUNK_ENTITY_EXTRACTION"
+   ],
+   "type": "string"
+  },
   "FilterList": {
    "insertionOrder": false,
    "items": {
@@ -297,6 +349,12 @@
     "S3Location"
    ],
    "type": "object"
+  },
+  "ModelArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/([a-z0-9-]{1,63}[.]{1}[a-z0-9-]{1,63}([.]?[a-z0-9-]{1,63})([:][a-z0-9-]{1,63}){0,2})|(arn:aws(|-us-gov|-cn|-iso|-iso-b):bedrock:(|[0-9a-z-]{1,20}):(|[0-9]{12}):(inference-profile|application-inference-profile)/[a-zA-Z0-9-:.]+)$",
+   "type": "string"
   },
   "ParsingConfiguration": {
    "additionalProperties": false,
@@ -569,7 +627,8 @@
    "properties": {
     "AuthType": {
      "enum": [
-      "OAUTH2_CLIENT_CREDENTIALS"
+      "OAUTH2_CLIENT_CREDENTIALS",
+      "OAUTH2_SHAREPOINT_APP_ONLY_CLIENT_CREDENTIALS"
      ],
      "type": "string"
     },
@@ -676,6 +735,9 @@
     "ChunkingConfiguration": {
      "$ref": "#/definitions/ChunkingConfiguration"
     },
+    "ContextEnrichmentConfiguration": {
+     "$ref": "#/definitions/ContextEnrichmentConfiguration"
+    },
     "CustomTransformationConfiguration": {
      "$ref": "#/definitions/CustomTransformationConfiguration"
     },
@@ -699,6 +761,16 @@
     },
     "Scope": {
      "$ref": "#/definitions/WebScopeType"
+    },
+    "UserAgent": {
+     "maxLength": 40,
+     "minLength": 15,
+     "type": "string"
+    },
+    "UserAgentHeader": {
+     "maxLength": 86,
+     "minLength": 61,
+     "type": "string"
     }
    },
    "type": "object"
@@ -706,6 +778,10 @@
   "WebCrawlerLimits": {
    "additionalProperties": false,
    "properties": {
+    "MaxPages": {
+     "minimum": 1,
+     "type": "integer"
+    },
     "RateLimit": {
      "maximum": 300,
      "minimum": 1,
@@ -807,7 +883,8 @@
   "/properties/DataSourceStatus",
   "/properties/CreatedAt",
   "/properties/UpdatedAt",
-  "/properties/FailureReasons"
+  "/properties/FailureReasons",
+  "/properties/DataSourceConfiguration/WebConfiguration/CrawlerConfiguration/UserAgentHeader"
  ],
  "required": [
   "DataSourceConfiguration",

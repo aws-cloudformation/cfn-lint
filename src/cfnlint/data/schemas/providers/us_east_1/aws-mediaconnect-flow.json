@@ -343,6 +343,48 @@
    ],
    "type": "object"
   },
+  "NdiConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MachineName": {
+     "type": "string"
+    },
+    "NdiDiscoveryServers": {
+     "items": {
+      "$ref": "#/definitions/NdiDiscoveryServerConfig"
+     },
+     "type": "array"
+    },
+    "NdiState": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NdiDiscoveryServerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DiscoveryServerAddress": {
+     "type": "string"
+    },
+    "DiscoveryServerPort": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "VpcInterfaceAdapter": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DiscoveryServerAddress",
+    "VpcInterfaceAdapter"
+   ],
+   "type": "object"
+  },
   "SilentAudio": {
    "additionalProperties": false,
    "properties": {
@@ -561,6 +603,16 @@
   "FlowAvailabilityZone": {
    "type": "string"
   },
+  "FlowNdiMachineName": {
+   "type": "string"
+  },
+  "FlowSize": {
+   "enum": [
+    "MEDIUM",
+    "LARGE"
+   ],
+   "type": "string"
+  },
   "Maintenance": {
    "$ref": "#/definitions/Maintenance"
   },
@@ -572,6 +624,9 @@
   },
   "Name": {
    "type": "string"
+  },
+  "NdiConfig": {
+   "$ref": "#/definitions/NdiConfig"
   },
   "Source": {
    "$ref": "#/definitions/Source"
@@ -597,7 +652,8 @@
   "/properties/Source/SourceIngestPort",
   "/properties/VpcInterfaces/*/NetworkInterfaceIds",
   "/properties/MediaStreams/*/Fmt",
-  "/properties/EgressIp"
+  "/properties/EgressIp",
+  "/properties/FlowNdiMachineName"
  ],
  "required": [
   "Name",
