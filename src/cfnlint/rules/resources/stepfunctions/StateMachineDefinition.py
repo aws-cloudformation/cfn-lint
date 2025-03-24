@@ -72,6 +72,23 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 },
             },
         ]
+        schema["definitions"]["choice"]["allOf"] = [
+            {
+                "properties": {
+                    "Choices": {
+                        "items": {
+                            "properties": {
+                                "Condition": {"type": "string"},
+                                "Next": {"pattern": "^.{1,128}$", "type": "string"},
+                            },
+                            "additionalProperties": False,
+                            "required": ["Condition", "Next"],
+                            "type": "object",
+                        }
+                    }
+                }
+            }
+        ]
         return schema
 
     def _clean_schema(self, validator: Validator, instance: Any):

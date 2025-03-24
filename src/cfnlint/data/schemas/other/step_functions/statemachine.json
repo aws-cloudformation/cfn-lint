@@ -4,12 +4,85 @@
   "choice": {
    "$ref": "#/definitions/common",
    "additionalProperties": false,
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "QueryLanguage": {
+        "const": "JSONata"
+       }
+      },
+      "required": [
+       "QueryLanguage"
+      ]
+     },
+     "then": {
+      "properties": {
+       "Choices": {
+        "items": {
+         "$ref": "#/definitions/choice/definitions/JSONataChoice"
+        },
+        "type": "array"
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "oneOf": [
+       {
+        "properties": {
+         "QueryLanguage": {
+          "const": "JSONPath"
+         }
+        },
+        "required": [
+         "QueryLanguage"
+        ]
+       },
+       {
+        "not": {
+         "required": [
+          "QueryLanguage"
+         ]
+        }
+       }
+      ]
+     },
+     "then": {
+      "properties": {
+       "Choices": {
+        "items": {
+         "$ref": "#/definitions/choice/definitions/Operator"
+        },
+        "type": "array"
+       }
+      }
+     }
+    }
+   ],
    "definitions": {
     "Assign": {
      "type": "object"
     },
     "Condition": {
      "type": "string"
+    },
+    "JSONataChoice": {
+     "properties": {
+      "Condition": {
+       "type": "string"
+      },
+      "Next": {
+       "pattern": "^.{1,128}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Condition",
+      "Next"
+     ],
+     "type": "object"
     },
     "Operator": {
      "properties": {
@@ -205,9 +278,6 @@
      "type": "object"
     },
     "Choices": {
-     "items": {
-      "$ref": "#/definitions/choice/definitions/Operator"
-     },
      "type": "array"
     },
     "Comment": {
