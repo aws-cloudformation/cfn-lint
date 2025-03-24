@@ -141,7 +141,8 @@
     "OPENSEARCH_SERVERLESS",
     "PINECONE",
     "RDS",
-    "MONGO_DB_ATLAS"
+    "MONGO_DB_ATLAS",
+    "NEPTUNE_ANALYTICS"
    ],
    "type": "string"
   },
@@ -229,6 +230,45 @@
    "maxLength": 1000,
    "minLength": 1,
    "type": "string"
+  },
+  "NeptuneAnalyticsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "FieldMapping": {
+     "$ref": "#/definitions/NeptuneAnalyticsFieldMapping"
+    },
+    "GraphArn": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^arn:aws(|-cn|-us-gov):neptune-graph:[a-zA-Z0-9-]*:[0-9]{12}:graph\\/g-[a-zA-Z0-9]{10}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "GraphArn",
+    "FieldMapping"
+   ],
+   "type": "object"
+  },
+  "NeptuneAnalyticsFieldMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "TextField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TextField",
+    "MetadataField"
+   ],
+   "type": "object"
   },
   "OpenSearchServerlessConfiguration": {
    "additionalProperties": false,
@@ -795,6 +835,11 @@
     },
     {
      "required": [
+      "NeptuneAnalyticsConfiguration"
+     ]
+    },
+    {
+     "required": [
       "MongoDbAtlasConfiguration"
      ]
     }
@@ -802,6 +847,9 @@
    "properties": {
     "MongoDbAtlasConfiguration": {
      "$ref": "#/definitions/MongoDbAtlasConfiguration"
+    },
+    "NeptuneAnalyticsConfiguration": {
+     "$ref": "#/definitions/NeptuneAnalyticsConfiguration"
     },
     "OpensearchServerlessConfiguration": {
      "$ref": "#/definitions/OpenSearchServerlessConfiguration"
