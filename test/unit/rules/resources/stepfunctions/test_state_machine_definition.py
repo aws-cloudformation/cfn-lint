@@ -757,6 +757,38 @@ def rule():
                                 }
                             ],
                         },
+                        "Choices1": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "Condition": "BatchJobNotification",
+                                    "Next": "Notify Success",
+                                }
+                            ],
+                            "Next": "Notify Success",
+                            "QueryLanguage": "JSONata",
+                        },
+                        "Choices2": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "Condition": "BatchJobNotification",
+                                    "Next": "Notify Success",
+                                }
+                            ],
+                            "Next": "Notify Success",
+                        },
+                        "Choices3": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "And": "BatchJobNotification",
+                                    "Next": "Notify Success",
+                                }
+                            ],
+                            "Next": "Notify Success",
+                            "QueryLanguage": "JSONata",
+                        },
                         "Notify Success": {
                             "Type": "Task",
                             "Resource": "arn:aws:states:::sns:publish",
@@ -857,6 +889,67 @@ def rule():
                         ["Definition", "States", "Submit Batch Job 3", "Arguments"]
                     ),
                 ),
+                ValidationError(
+                    (
+                        "Only one of ['And', 'BooleanEquals', 'BooleanEqualsPath', 'IsBoolean', 'IsNull', "
+                        "'IsNumeric', 'IsPresent', 'IsString', 'IsTimestamp', 'Not', 'NumericEquals', "
+                        "'NumericEqualsPath', 'NumericGreaterThan', 'NumericGreaterThanPath', "
+                        "'NumericGreaterThanEquals', 'NumericGreaterThanEqualsPath', 'NumericLessThan', "
+                        "'NumericLessThanPath', 'NumericLessThanEquals', 'NumericLessThanEqualsPath', 'Or', "
+                        "'StringEquals', 'StringEqualsPath', 'StringGreaterThan', 'StringGreaterThanPath', "
+                        "'StringGreaterThanEquals', 'StringGreaterThanEqualsPath', 'StringLessThan', "
+                        "'StringLessThanPath', 'StringLessThanEquals', 'StringLessThanEqualsPath', "
+                        "'StringMatches', 'TimestampEquals', 'TimestampEqualsPath', 'TimestampGreaterThan', "
+                        "'TimestampGreaterThanPath', 'TimestampGreaterThanEquals', 'TimestampGreaterThanEqualsPath', "
+                        "'TimestampLessThan', 'TimestampLessThanPath', 'TimestampLessThanEquals', "
+                        "'TimestampLessThanEqualsPath'] is a required property"
+                    ),
+                    rule=StateMachineDefinition(),
+                    validator="requiredXor",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            0,
+                            "then",
+                            "allOf",
+                            1,
+                            "then",
+                            "properties",
+                            "Choices",
+                            "items",
+                            "requiredXor",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Choices2", "Choices", 0]),
+                ),
+                ValidationError(
+                    ("'Condition' is a required property"),
+                    rule=StateMachineDefinition(),
+                    validator="required",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            0,
+                            "then",
+                            "allOf",
+                            0,
+                            "then",
+                            "properties",
+                            "Choices",
+                            "items",
+                            "required",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Choices3", "Choices", 0]),
+                ),
             ],
         ),
         (
@@ -930,6 +1023,26 @@ def rule():
                                 "Message": "Batch job submitted through Step Functions succeeded",
                                 "TopicArn": "arn:aws:sns:us-east-1:123456789012:batchjobnotificatiointemplate-SNSTopic-1J757CVBQ2KHM",
                             },
+                            "End": True,
+                        },
+                        "Choices1": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "Condition": "{% $states.input.type != 'Private' %}",
+                                    "Next": "Notify Failure",
+                                },
+                            ],
+                            "End": True,
+                        },
+                        "Choices2": {
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "And": "{% $states.input.type != 'Private' %}",
+                                    "Next": "Notify Failure",
+                                },
+                            ],
                             "End": True,
                         },
                         "Notify Failure": {
@@ -1020,6 +1133,54 @@ def rule():
                     ),
                 ),
                 ValidationError(
+                    ("'Condition' is a required property"),
+                    rule=StateMachineDefinition(),
+                    validator="required",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            0,
+                            "then",
+                            "allOf",
+                            0,
+                            "properties",
+                            "Choices",
+                            "items",
+                            "required",
+                        ]
+                    ),
+                    path=deque(["Definition", "States", "Choices2", "Choices", 0]),
+                ),
+                ValidationError(
+                    ("Additional properties are not allowed ('And' was unexpected)"),
+                    rule=StateMachineDefinition(),
+                    validator="additionalProperties",
+                    schema_path=deque(
+                        [
+                            "properties",
+                            "States",
+                            "patternProperties",
+                            "^.{1,128}$",
+                            "allOf",
+                            0,
+                            "then",
+                            "allOf",
+                            0,
+                            "properties",
+                            "Choices",
+                            "items",
+                            "additionalProperties",
+                        ]
+                    ),
+                    path=deque(
+                        ["Definition", "States", "Choices2", "Choices", 0, "And"]
+                    ),
+                ),
+                ValidationError(
                     (
                         "Additional properties are not allowed ('Parameters' was unexpected)"
                     ),
@@ -1056,4 +1217,10 @@ def test_validate(
     validator,
 ):
     errs = list(rule.validate(validator, {}, instance, {}))
+    for i, err in enumerate(errs):
+        print(i)
+        print(err.message, err.message == expected[i].message)
+        print(err.path, err.path == expected[i].path)
+        print(err.schema_path, err.schema_path == expected[i].schema_path)
+        print(err.validator, err.validator == expected[i].validator)
     assert errs == expected, f"{name!r} test failed with {errs!r}"
