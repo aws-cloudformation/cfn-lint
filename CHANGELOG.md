@@ -1,3 +1,12 @@
+### v1.32.1
+## What's Changed
+* Change state machine schema based on query language by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4045
+* Commonize how SAM transform checks are done by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4043
+* Update CloudFormation schemas to `2025-03-24` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4046
+* Deal with JSONata differences in choices by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4051
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.32.0...v1.32.1
+
 ### v1.32.0
 ## What's Changed
 * Update IAM Resource policy pattern by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4040
