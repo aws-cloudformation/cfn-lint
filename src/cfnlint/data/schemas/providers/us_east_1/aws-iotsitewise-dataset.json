@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DatasetSource": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceDetail": {
+     "$ref": "#/definitions/SourceDetail"
+    },
+    "SourceFormat": {
+     "enum": [
+      "KNOWLEDGE_BASE"
+     ],
+     "type": "string"
+    },
+    "SourceType": {
+     "enum": [
+      "KENDRA"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceFormat",
+    "SourceType"
+   ],
+   "type": "object"
+  },
+  "KendraSourceDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "KnowledgeBaseArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.]+$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "maxLength": 1600,
+     "minLength": 1,
+     "pattern": "^arn:aws(-cn|-us-gov)?:[a-zA-Z0-9-:\\/_\\.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "KnowledgeBaseArn",
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "SourceDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "Kendra": {
+     "$ref": "#/definitions/KendraSourceDetail"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatasetId"
+ ],
+ "properties": {
+  "DatasetArn": {
+   "type": "string"
+  },
+  "DatasetDescription": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "DatasetId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DatasetName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9 _\\-#$*!@]+$",
+   "type": "string"
+  },
+  "DatasetSource": {
+   "$ref": "#/definitions/DatasetSource"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DatasetArn",
+  "/properties/DatasetId"
+ ],
+ "required": [
+  "DatasetName",
+  "DatasetSource"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-IoTSiteWise.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTSiteWise::Dataset"
+}

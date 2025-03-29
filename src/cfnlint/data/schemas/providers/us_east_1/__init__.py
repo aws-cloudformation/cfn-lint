@@ -752,6 +752,7 @@ types: list[str] = [
     "AWS::IoTSiteWise::Asset",
     "AWS::IoTSiteWise::AssetModel",
     "AWS::IoTSiteWise::Dashboard",
+    "AWS::IoTSiteWise::Dataset",
     "AWS::IoTSiteWise::Gateway",
     "AWS::IoTSiteWise::Portal",
     "AWS::IoTSiteWise::Project",
