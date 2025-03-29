@@ -1,0 +1,451 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/ContainerGroupType"
+ ],
+ "definitions": {
+  "ContainerDependency": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "enum": [
+      "START",
+      "COMPLETE",
+      "SUCCESS",
+      "HEALTHY"
+     ],
+     "type": "string"
+    },
+    "ContainerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContainerName",
+    "Condition"
+   ],
+   "type": "object"
+  },
+  "ContainerEnvironment": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ContainerHealthCheck": {
+   "additionalProperties": false,
+   "properties": {
+    "Command": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 255,
+      "minLength": 1,
+      "pattern": "^.*$",
+      "type": "string"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Interval": {
+     "maximum": 300,
+     "minimum": 60,
+     "type": "integer"
+    },
+    "Retries": {
+     "maximum": 10,
+     "minimum": 5,
+     "type": "integer"
+    },
+    "StartPeriod": {
+     "maximum": 300,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Timeout": {
+     "maximum": 60,
+     "minimum": 30,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Command"
+   ],
+   "type": "object"
+  },
+  "ContainerMountPoint": {
+   "additionalProperties": false,
+   "properties": {
+    "AccessLevel": {
+     "enum": [
+      "READ_ONLY",
+      "READ_AND_WRITE"
+     ],
+     "type": "string"
+    },
+    "ContainerPath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^(\\/+[^\\/]+\\/*)+$",
+     "type": "string"
+    },
+    "InstancePath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^\\/[\\s\\S]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "InstancePath"
+   ],
+   "type": "object"
+  },
+  "ContainerPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "enum": [
+      "TCP",
+      "UDP"
+     ],
+     "type": "string"
+    },
+    "ToPort": {
+     "maximum": 60000,
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "FromPort",
+    "Protocol",
+    "ToPort"
+   ],
+   "type": "object"
+  },
+  "GameServerContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "DependsOn": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContainerDependency"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnvironmentOverride": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerEnvironment"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_\\.@\\/:]+$",
+     "type": "string"
+    },
+    "MountPoints": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerMountPoint"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PortConfiguration": {
+     "$ref": "#/definitions/PortConfiguration"
+    },
+    "ResolvedImageDigest": {
+     "pattern": "^sha256:[a-fA-F0-9]{64}$",
+     "type": "string"
+    },
+    "ServerSdkVersion": {
+     "maxLength": 128,
+     "pattern": "^\\d+\\.\\d+\\.\\d+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ContainerName",
+    "ImageUri",
+    "ServerSdkVersion"
+   ],
+   "type": "object"
+  },
+  "PortConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerPortRanges": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerPortRange"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "ContainerPortRanges"
+   ],
+   "type": "object"
+  },
+  "SupportContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerName": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-]+$",
+     "type": "string"
+    },
+    "DependsOn": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ContainerDependency"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "EnvironmentOverride": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerEnvironment"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Essential": {
+     "type": "boolean"
+    },
+    "HealthCheck": {
+     "$ref": "#/definitions/ContainerHealthCheck"
+    },
+    "ImageUri": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_\\.@\\/:]+$",
+     "type": "string"
+    },
+    "MemoryHardLimitMebibytes": {
+     "maximum": 1024000,
+     "minimum": 4,
+     "type": "integer"
+    },
+    "MountPoints": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ContainerMountPoint"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PortConfiguration": {
+     "$ref": "#/definitions/PortConfiguration"
+    },
+    "ResolvedImageDigest": {
+     "pattern": "^sha256:[a-fA-F0-9]{64}$",
+     "type": "string"
+    },
+    "Vcpu": {
+     "maximum": 10,
+     "minimum": 0.125,
+     "type": "number"
+    }
+   },
+   "required": [
+    "ContainerName",
+    "ImageUri"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "ContainerGroupDefinitionArn": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^arn:.*:containergroupdefinition\\/[a-zA-Z0-9\\-]+(:[0-9]+)?$",
+   "type": "string"
+  },
+  "ContainerGroupType": {
+   "enum": [
+    "GAME_SERVER",
+    "PER_INSTANCE"
+   ],
+   "type": "string"
+  },
+  "CreationTime": {
+   "type": "string"
+  },
+  "GameServerContainerDefinition": {
+   "$ref": "#/definitions/GameServerContainerDefinition"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "enum": [
+    "AMAZON_LINUX_2023"
+   ],
+   "type": "string"
+  },
+  "SourceVersionNumber": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Status": {
+   "enum": [
+    "READY",
+    "COPYING",
+    "FAILED"
+   ],
+   "type": "string"
+  },
+  "StatusReason": {
+   "type": "string"
+  },
+  "SupportContainerDefinitions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SupportContainerDefinition"
+   },
+   "maxItems": 10,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TotalMemoryLimitMebibytes": {
+   "maximum": 1024000,
+   "minimum": 4,
+   "type": "integer"
+  },
+  "TotalVcpuLimit": {
+   "maximum": 10,
+   "minimum": 0.125,
+   "type": "number"
+  },
+  "VersionDescription": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "VersionNumber": {
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContainerGroupDefinitionArn",
+  "/properties/CreationTime",
+  "/properties/VersionNumber",
+  "/properties/Status",
+  "/properties/StatusReason"
+ ],
+ "required": [
+  "Name",
+  "OperatingSystem",
+  "TotalMemoryLimitMebibytes",
+  "TotalVcpuLimit"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::ContainerGroupDefinition",
+ "writeOnlyProperties": [
+  "/properties/SourceVersionNumber"
+ ]
+}
