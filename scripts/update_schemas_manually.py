@@ -1639,6 +1639,17 @@ patches.extend(
             ],
         ),
         ResourcePatch(
+            resource_type="AWS::SSM::Parameter",
+            patches=[
+                Patch(
+                    values={
+                        "pattern": "^((?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+|\/(?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+(\/[\w.-]+))$"
+                    },
+                    path="/properties/Name",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::WAFRegional::RegexPatternSet",
             patches=[
                 Patch(
