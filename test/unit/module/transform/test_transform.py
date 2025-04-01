@@ -92,6 +92,14 @@ class TestTransform(BaseTestCase):
             {"S3Bucket": "bucket", "S3Key": "value"},
         )
 
+    def test_resource_properties_dont_exist(self):
+        filename = "test/fixtures/templates/bad/transform/no_properties.yaml"
+        region = "us-east-1"
+        template = cfn_yaml.load(filename)
+        transformed_template = Transform(filename, template, region)
+        results = transformed_template.transform_template()
+        self.assertEqual(len(results), 1)
+
     def test_parameter_for_autopublish_version_bad(self):
         """Test Parameter is created for autopublish version run"""
         filename = "test/fixtures/templates/bad/transform/auto_publish_alias.yaml"
