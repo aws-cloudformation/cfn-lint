@@ -97,6 +97,8 @@ class Transform:
         for _, rsc in all_resources.items():
             resource_type = rsc.get("Type")
             resource_dict = rsc.get("Properties")
+            if not isinstance(resource_dict, dict):
+                continue
 
             if resource_type == "AWS::Serverless::Function":
                 if resource_dict.get("PackageType") == "Image":
