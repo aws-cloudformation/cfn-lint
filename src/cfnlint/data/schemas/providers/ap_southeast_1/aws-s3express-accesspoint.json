@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Bucket",
+  "/properties/BucketAccountId",
+  "/properties/VpcConfiguration"
+ ],
+ "definitions": {
+  "Arn": {
+   "type": "string"
+  },
+  "PublicAccessBlockConfiguration": {
+   "properties": {
+    "BlockPublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "Scope": {
+   "properties": {
+    "Permissions": {
+     "insertionOrder": false,
+     "items": {
+      "enum": [
+       "GetObject",
+       "GetObjectAttributes",
+       "ListMultipartUploadParts",
+       "ListBucket",
+       "ListBucketMultipartUploads",
+       "PutObject",
+       "DeleteObject",
+       "AbortMultipartUpload"
+      ],
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Prefixes": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "VpcConfiguration": {
+   "properties": {
+    "VpcId": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "examples": [
+    "arn:aws:s3express:us-west-2:123456789012:accesspoint/my-accesspoint--usw2-az1--xa-s3"
+   ]
+  },
+  "Bucket": {
+   "maxLength": 255,
+   "minLength": 3,
+   "type": "string"
+  },
+  "BucketAccountId": {
+   "maxLength": 64,
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
+   "type": "string"
+  },
+  "NetworkOrigin": {
+   "enum": [
+    "Internet",
+    "VPC"
+   ],
+   "type": "string"
+  },
+  "Policy": {
+   "type": "object"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/VpcConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkOrigin",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Bucket"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3Express::AccessPoint"
+}

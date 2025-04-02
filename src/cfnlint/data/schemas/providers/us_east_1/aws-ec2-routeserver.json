@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AmazonSideAsn"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmazonSideAsn": {
+   "format": "int64",
+   "maximum": 4294967294,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PersistRoutes": {
+   "enum": [
+    "enable",
+    "disable"
+   ],
+   "type": "string"
+  },
+  "PersistRoutesDuration": {
+   "format": "int64",
+   "maximum": 5,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "SnsNotificationsEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "AmazonSideAsn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::RouteServer",
+ "writeOnlyProperties": [
+  "/properties/PersistRoutesDuration"
+ ]
+}

@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubscriptionName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SubscriptionName"
+ ],
+ "properties": {
+  "CustSubscriptionId": {
+   "type": "string"
+  },
+  "CustomerAwsId": {
+   "type": "string"
+  },
+  "Enabled": {
+   "type": "boolean"
+  },
+  "EventCategories": {
+   "insertionOrder": false,
+   "items": {
+    "enum": [
+     "configuration",
+     "management",
+     "monitoring",
+     "security",
+     "pending"
+    ],
+    "maxLength": 2147483647,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EventCategoriesList": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Severity": {
+   "enum": [
+    "ERROR",
+    "INFO"
+   ],
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "SnsTopicArn": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "SourceIds": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2147483647,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SourceIdsList": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SourceType": {
+   "enum": [
+    "cluster",
+    "cluster-parameter-group",
+    "cluster-security-group",
+    "cluster-snapshot",
+    "scheduled-action"
+   ],
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "active",
+    "no-permission",
+    "topic-not-exist"
+   ],
+   "type": "string"
+  },
+  "SubscriptionCreationTime": {
+   "type": "string"
+  },
+  "SubscriptionName": {
+   "pattern": "^(?=^[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$).{1,255}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomerAwsId",
+  "/properties/CustSubscriptionId",
+  "/properties/Status",
+  "/properties/SubscriptionCreationTime",
+  "/properties/SourceIdsList",
+  "/properties/EventCategoriesList"
+ ],
+ "required": [
+  "SubscriptionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::EventSubscription",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}
