@@ -1,0 +1,157 @@
+{
+ "$comment": "Do not set SystemTags to true without implementing a fail-open mechanism. It should not fail when adding systemTags for customers without AddTagsToStream Permission. Cloudformation will automatically add system tags even if customer does not have the AddTagsToStream permission. COE: https://www.coe.a2z.com/coe/236297/content",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "EnhancedMetric": {
+   "additionalProperties": false,
+   "enum": [
+    "IncomingBytes",
+    "IncomingRecords",
+    "OutgoingBytes",
+    "OutgoingRecords",
+    "WriteProvisionedThroughputExceeded",
+    "ReadProvisionedThroughputExceeded",
+    "IteratorAgeMilliseconds",
+    "ALL"
+   ],
+   "type": "string"
+  },
+  "StreamEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "enum": [
+      "KMS"
+     ],
+     "type": "string"
+    },
+    "KeyId": {
+     "anyOf": [
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/Arn",
+        "typeName": "AWS::KMS::Key"
+       }
+      },
+      {
+       "relationshipRef": {
+        "propertyPath": "/properties/KeyId",
+        "typeName": "AWS::KMS::Key"
+       }
+      }
+     ],
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncryptionType",
+    "KeyId"
+   ],
+   "type": "object"
+  },
+  "StreamModeDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "StreamMode": {
+     "enum": [
+      "ON_DEMAND",
+      "PROVISIONED"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "StreamMode"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DesiredShardLevelMetrics": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnhancedMetric"
+   },
+   "maxItems": 7,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "RetentionPeriodHours": {
+   "maximum": 8760,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ShardCount": {
+   "maximum": 100000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "StreamEncryption": {
+   "$ref": "#/definitions/StreamEncryption"
+  },
+  "StreamModeDetails": {
+   "$ref": "#/definitions/StreamModeDetails",
+   "default": {
+    "StreamMode": "PROVISIONED"
+   }
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Kinesis::Stream"
+}

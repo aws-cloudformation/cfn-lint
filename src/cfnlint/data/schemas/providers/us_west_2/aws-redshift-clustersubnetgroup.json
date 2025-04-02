@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "properties": {
+  "ClusterSubnetGroupName": {
+   "maxLength": 255,
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 2147483647,
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2147483647,
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
+    "type": "string"
+   },
+   "maxItems": 20,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ClusterSubnetGroupName"
+ ],
+ "required": [
+  "Description",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::ClusterSubnetGroup",
+ "writeOnlyProperties": [
+  "/properties/Tags",
+  "/properties/Tags/*/Key",
+  "/properties/Tags/*/Value"
+ ]
+}

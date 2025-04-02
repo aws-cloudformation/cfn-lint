@@ -1,0 +1,194 @@
+{
+ "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AllowedLocations": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "pattern": "^[a-z]+(-([a-z]+|\\d))*",
+    "type": "string"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "FilterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowedLocations": {
+     "$ref": "#/definitions/AllowedLocations"
+    }
+   },
+   "type": "object"
+  },
+  "GameSessionQueueDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationArn": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9:/-]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LocationOrder": {
+   "insertionOrder": true,
+   "items": {
+    "maxLength": 64,
+    "minLength": 1,
+    "pattern": "^[A-Za-z0-9\\-]+",
+    "type": "string"
+   },
+   "maxItems": 100,
+   "minItems": 1,
+   "type": "array"
+  },
+  "PlayerLatencyPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "MaximumIndividualPlayerLatencyMilliseconds": {
+     "minimum": 0,
+     "type": "integer"
+    },
+    "PolicyDurationSeconds": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "PriorityConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LocationOrder": {
+     "$ref": "#/definitions/LocationOrder"
+    },
+    "PriorityOrder": {
+     "$ref": "#/definitions/PriorityOrder"
+    }
+   },
+   "type": "object"
+  },
+  "PriorityOrder": {
+   "insertionOrder": true,
+   "items": {
+    "enum": [
+     "LATENCY",
+     "COST",
+     "DESTINATION",
+     "LOCATION"
+    ],
+    "type": "string"
+   },
+   "maxItems": 4,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:.*:gamesessionqueue\\/[a-zA-Z0-9-]+",
+   "type": "string"
+  },
+  "CustomEventData": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "Destinations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/GameSessionQueueDestination"
+   },
+   "type": "array"
+  },
+  "FilterConfiguration": {
+   "$ref": "#/definitions/FilterConfiguration",
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-]+",
+   "type": "string"
+  },
+  "NotificationTarget": {
+   "maxLength": 300,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]*(\\.fifo)?",
+   "type": "string"
+  },
+  "PlayerLatencyPolicies": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PlayerLatencyPolicy"
+   },
+   "type": "array"
+  },
+  "PriorityConfiguration": {
+   "$ref": "#/definitions/PriorityConfiguration",
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TimeoutInSeconds": {
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::GameLift::GameSessionQueue"
+}

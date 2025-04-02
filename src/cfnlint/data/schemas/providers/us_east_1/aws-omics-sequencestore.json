@@ -1,16 +1,31 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Description",
-  "/properties/Name",
-  "/properties/FallbackLocation",
-  "/properties/SseConfig",
-  "/properties/Tags"
+  "/properties/ETagAlgorithmFamily",
+  "/properties/SseConfig"
  ],
  "definitions": {
+  "ETagAlgorithmFamily": {
+   "enum": [
+    "MD5up",
+    "SHA256up",
+    "SHA512up"
+   ],
+   "type": "string"
+  },
   "EncryptionType": {
    "enum": [
     "KMS"
+   ],
+   "type": "string"
+  },
+  "SequenceStoreStatus": {
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "UPDATING",
+    "DELETING",
+    "FAILED"
    ],
    "type": "string"
   },
@@ -48,6 +63,10 @@
   "/properties/SequenceStoreId"
  ],
  "properties": {
+  "AccessLogLocation": {
+   "pattern": "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,800})/)?$",
+   "type": "string"
+  },
   "Arn": {
    "maxLength": 127,
    "minLength": 1,
@@ -64,15 +83,43 @@
    "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
    "type": "string"
   },
+  "ETagAlgorithmFamily": {
+   "$ref": "#/definitions/ETagAlgorithmFamily"
+  },
   "FallbackLocation": {
-   "minLength": 1,
-   "pattern": "^s3:\\/\\/([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])\\/?((.{1,1024})\\/)?$",
+   "minLength": 0,
+   "pattern": "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,1024})/)?$",
    "type": "string"
   },
   "Name": {
    "maxLength": 127,
    "minLength": 1,
    "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
+  "PropagatedSetLevelTags": {
+   "items": {
+    "maxLength": 128,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "S3AccessPointArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^arn:[^:]*:s3:[^:]*:[^:]*:accesspoint/.*$",
+   "type": "string"
+  },
+  "S3AccessPolicy": {
+   "maxLength": 100000,
+   "minLength": 1,
+   "type": "object"
+  },
+  "S3Uri": {
+   "pattern": "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/(.{1,1024})$",
    "type": "string"
   },
   "SequenceStoreId": {
@@ -84,14 +131,32 @@
   "SseConfig": {
    "$ref": "#/definitions/SseConfig"
   },
+  "Status": {
+   "$ref": "#/definitions/SequenceStoreStatus"
+  },
+  "StatusMessage": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+   "type": "string"
+  },
   "Tags": {
    "$ref": "#/definitions/TagMap"
+  },
+  "UpdateTime": {
+   "format": "date-time",
+   "type": "string"
   }
  },
  "readOnlyProperties": [
   "/properties/Arn",
   "/properties/CreationTime",
-  "/properties/SequenceStoreId"
+  "/properties/S3AccessPointArn",
+  "/properties/S3Uri",
+  "/properties/SequenceStoreId",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/UpdateTime"
  ],
  "required": [
   "Name"
@@ -100,7 +165,7 @@
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,
   "tagProperty": "/properties/Tags",
-  "tagUpdatable": false,
+  "tagUpdatable": true,
   "taggable": true
  },
  "typeName": "AWS::Omics::SequenceStore"

@@ -1,0 +1,614 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Artifacts": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactIdentifier": {
+     "type": "string"
+    },
+    "EncryptionDisabled": {
+     "type": "boolean"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "NamespaceType": {
+     "type": "string"
+    },
+    "OverrideArtifactName": {
+     "type": "boolean"
+    },
+    "Packaging": {
+     "enum": [
+      "NONE",
+      "ZIP"
+     ],
+     "type": "string"
+    },
+    "Path": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "CODEPIPELINE",
+      "NO_ARTIFACTS",
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "BatchRestrictions": {
+   "additionalProperties": false,
+   "properties": {
+    "ComputeTypesAllowed": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "MaximumBuildsAllowed": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "BuildStatusConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Context": {
+     "type": "string"
+    },
+    "TargetUrl": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "CloudWatchLogsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "GroupName": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    },
+    "StreamName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "Environment": {
+   "additionalProperties": false,
+   "properties": {
+    "Certificate": {
+     "type": "string"
+    },
+    "ComputeType": {
+     "enum": [
+      "ATTRIBUTE_BASED_COMPUTE",
+      "BUILD_GENERAL1_2XLARGE",
+      "BUILD_GENERAL1_LARGE",
+      "BUILD_GENERAL1_MEDIUM",
+      "BUILD_GENERAL1_SMALL",
+      "BUILD_GENERAL1_XLARGE",
+      "BUILD_LAMBDA_10GB",
+      "BUILD_LAMBDA_1GB",
+      "BUILD_LAMBDA_2GB",
+      "BUILD_LAMBDA_4GB",
+      "BUILD_LAMBDA_8GB"
+     ],
+     "type": "string"
+    },
+    "EnvironmentVariables": {
+     "items": {
+      "$ref": "#/definitions/EnvironmentVariable"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Fleet": {
+     "$ref": "#/definitions/ProjectFleet"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "ImagePullCredentialsType": {
+     "enum": [
+      "CODEBUILD",
+      "SERVICE_ROLE"
+     ],
+     "type": "string"
+    },
+    "PrivilegedMode": {
+     "type": "boolean"
+    },
+    "RegistryCredential": {
+     "$ref": "#/definitions/RegistryCredential"
+    },
+    "Type": {
+     "enum": [
+      "ARM_CONTAINER",
+      "ARM_EC2",
+      "ARM_LAMBDA_CONTAINER",
+      "LINUX_CONTAINER",
+      "LINUX_EC2",
+      "LINUX_GPU_CONTAINER",
+      "LINUX_LAMBDA_CONTAINER",
+      "MAC_ARM",
+      "WINDOWS_CONTAINER",
+      "WINDOWS_EC2",
+      "WINDOWS_SERVER_2019_CONTAINER"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Image",
+    "ComputeType"
+   ],
+   "type": "object"
+  },
+  "EnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "FilterGroup": {
+   "type": "array"
+  },
+  "GitSubmodulesConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FetchSubmodules": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "FetchSubmodules"
+   ],
+   "type": "object"
+  },
+  "LogsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogs": {
+     "$ref": "#/definitions/CloudWatchLogsConfig"
+    },
+    "S3Logs": {
+     "$ref": "#/definitions/S3LogsConfig"
+    }
+   },
+   "type": "object"
+  },
+  "ProjectBuildBatchConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "BatchReportMode": {
+     "type": "string"
+    },
+    "CombineArtifacts": {
+     "type": "boolean"
+    },
+    "Restrictions": {
+     "$ref": "#/definitions/BatchRestrictions"
+    },
+    "ServiceRole": {
+     "type": "string"
+    },
+    "TimeoutInMins": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ProjectCache": {
+   "additionalProperties": false,
+   "properties": {
+    "Location": {
+     "type": "string"
+    },
+    "Modes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Type": {
+     "enum": [
+      "LOCAL",
+      "NO_CACHE",
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ProjectFileSystemLocation": {
+   "additionalProperties": false,
+   "properties": {
+    "Identifier": {
+     "type": "string"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "MountOptions": {
+     "type": "string"
+    },
+    "MountPoint": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MountPoint",
+    "Type",
+    "Identifier",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "ProjectFleet": {
+   "additionalProperties": false,
+   "properties": {
+    "FleetArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProjectSourceVersion": {
+   "additionalProperties": false,
+   "properties": {
+    "SourceIdentifier": {
+     "type": "string"
+    },
+    "SourceVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SourceIdentifier"
+   ],
+   "type": "object"
+  },
+  "ProjectTriggers": {
+   "additionalProperties": false,
+   "properties": {
+    "BuildType": {
+     "type": "string"
+    },
+    "FilterGroups": {
+     "items": {
+      "$ref": "#/definitions/FilterGroup"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ScopeConfiguration": {
+     "$ref": "#/definitions/ScopeConfiguration"
+    },
+    "Webhook": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RegistryCredential": {
+   "additionalProperties": false,
+   "properties": {
+    "Credential": {
+     "type": "string"
+    },
+    "CredentialProvider": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Credential",
+    "CredentialProvider"
+   ],
+   "type": "object"
+  },
+  "S3LogsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionDisabled": {
+     "type": "boolean"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ScopeConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "Auth": {
+     "$ref": "#/definitions/SourceAuth"
+    },
+    "BuildSpec": {
+     "type": "string"
+    },
+    "BuildStatusConfig": {
+     "$ref": "#/definitions/BuildStatusConfig"
+    },
+    "GitCloneDepth": {
+     "type": "integer"
+    },
+    "GitSubmodulesConfig": {
+     "$ref": "#/definitions/GitSubmodulesConfig"
+    },
+    "InsecureSsl": {
+     "type": "boolean"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "ReportBuildStatus": {
+     "type": "boolean"
+    },
+    "SourceIdentifier": {
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "BITBUCKET",
+      "CODECOMMIT",
+      "CODEPIPELINE",
+      "GITHUB",
+      "GITHUB_ENTERPRISE",
+      "GITLAB",
+      "GITLAB_SELF_MANAGED",
+      "NO_SOURCE",
+      "S3"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "SourceAuth": {
+   "additionalProperties": false,
+   "properties": {
+    "Resource": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "format": "AWS::EC2::Subnet.Ids",
+     "items": {
+      "format": "AWS::EC2::Subnet.Id",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "VpcId": {
+     "format": "AWS::EC2::VPC.Id",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Artifacts": {
+   "$ref": "#/definitions/Artifacts"
+  },
+  "AutoRetryLimit": {
+   "type": "number"
+  },
+  "BadgeEnabled": {
+   "type": "boolean"
+  },
+  "BuildBatchConfig": {
+   "$ref": "#/definitions/ProjectBuildBatchConfig"
+  },
+  "Cache": {
+   "$ref": "#/definitions/ProjectCache"
+  },
+  "ConcurrentBuildLimit": {
+   "type": "integer"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "EncryptionKey": {
+   "type": "string"
+  },
+  "Environment": {
+   "$ref": "#/definitions/Environment"
+  },
+  "FileSystemLocations": {
+   "items": {
+    "$ref": "#/definitions/ProjectFileSystemLocation"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LogsConfig": {
+   "$ref": "#/definitions/LogsConfig"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "QueuedTimeoutInMinutes": {
+   "maximum": 480,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "ResourceAccessRole": {
+   "type": "string"
+  },
+  "SecondaryArtifacts": {
+   "items": {
+    "$ref": "#/definitions/Artifacts"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecondarySourceVersions": {
+   "items": {
+    "$ref": "#/definitions/ProjectSourceVersion"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecondarySources": {
+   "items": {
+    "$ref": "#/definitions/Source"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ServiceRole": {
+   "type": "string"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  },
+  "SourceVersion": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TimeoutInMinutes": {
+   "maximum": 480,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "Triggers": {
+   "$ref": "#/definitions/ProjectTriggers"
+  },
+  "Visibility": {
+   "type": "string"
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Artifacts",
+  "ServiceRole",
+  "Environment",
+  "Source"
+ ],
+ "typeName": "AWS::CodeBuild::Project"
+}

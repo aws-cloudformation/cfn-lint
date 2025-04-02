@@ -116,6 +116,48 @@
    ],
    "type": "object"
   },
+  "BedrockModelSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockGuardrailConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "BedrockGuardrailIdentifier": {
+       "maxLength": 5000,
+       "minLength": 1,
+       "type": "string"
+      },
+      "BedrockGuardrailVersion": {
+       "maxLength": 5000,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "BedrockModelCustomPrompt": {
+     "maxLength": 5000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "BedrockTraceStatus": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "ModelArn": {
+     "maxLength": 5000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ModelArn"
+   ],
+   "type": "object"
+  },
   "BotAliasLocaleSettings": {
    "additionalProperties": false,
    "properties": {
@@ -825,6 +867,9 @@
     "ParentIntentSignature": {
      "$ref": "#/definitions/ParentIntentSignature"
     },
+    "QnAIntentConfiguration": {
+     "$ref": "#/definitions/QnAIntentConfiguration"
+    },
     "SampleUtterances": {
      "$ref": "#/definitions/SampleUtterancesList"
     },
@@ -1236,6 +1281,124 @@
    "required": [
     "MessageGroupsList",
     "MaxRetries"
+   ],
+   "type": "object"
+  },
+  "QnAIntentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockModelConfiguration": {
+     "$ref": "#/definitions/BedrockModelSpecification"
+    },
+    "DataSourceConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "BedrockKnowledgeStoreConfiguration": {
+       "additionalProperties": false,
+       "properties": {
+        "BKBExactResponseFields": {
+         "additionalProperties": false,
+         "properties": {
+          "AnswerField": {
+           "maxLength": 5000,
+           "minLength": 1,
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "BedrockKnowledgeBaseArn": {
+         "maxLength": 5000,
+         "minLength": 1,
+         "type": "string"
+        },
+        "ExactResponse": {
+         "type": "boolean"
+        }
+       },
+       "type": "object"
+      },
+      "KendraConfiguration": {
+       "$ref": "#/definitions/QnAKendraConfiguration"
+      },
+      "OpensearchConfiguration": {
+       "additionalProperties": false,
+       "properties": {
+        "DomainEndpoint": {
+         "maxLength": 5000,
+         "minLength": 1,
+         "type": "string"
+        },
+        "ExactResponse": {
+         "type": "boolean"
+        },
+        "ExactResponseFields": {
+         "additionalProperties": false,
+         "properties": {
+          "AnswerField": {
+           "maxLength": 5000,
+           "minLength": 1,
+           "type": "string"
+          },
+          "QuestionField": {
+           "maxLength": 5000,
+           "minLength": 1,
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "IncludeFields": {
+         "insertionOrder": false,
+         "items": {
+          "maxLength": 5000,
+          "minLength": 1,
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "IndexName": {
+         "maxLength": 5000,
+         "minLength": 1,
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "required": [
+    "DataSourceConfiguration",
+    "BedrockModelConfiguration"
+   ],
+   "type": "object"
+  },
+  "QnAKendraConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ExactResponse": {
+     "type": "boolean"
+    },
+    "KendraIndex": {
+     "maxLength": 5000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "QueryFilterString": {
+     "maxLength": 5000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "QueryFilterStringEnabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "KendraIndex",
+    "QueryFilterStringEnabled",
+    "ExactResponse"
    ],
    "type": "object"
   },
@@ -1701,6 +1864,7 @@
    "type": "object"
   },
   "SlotValues": {
+   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/SlotValueOverride"
    },
@@ -1853,7 +2017,9 @@
     "Engine": {
      "enum": [
       "standard",
-      "neural"
+      "neural",
+      "long-form",
+      "generative"
      ],
      "type": "string"
     },

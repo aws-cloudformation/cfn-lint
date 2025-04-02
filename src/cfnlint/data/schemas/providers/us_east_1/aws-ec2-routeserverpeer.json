@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RouteServerEndpointId",
+  "/properties/PeerAddress",
+  "/properties/BgpOptions"
+ ],
+ "definitions": {
+  "BgpOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "PeerAsn": {
+     "format": "int64",
+     "maximum": 4294967294,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "PeerLivenessDetection": {
+     "enum": [
+      "bfd",
+      "bgp-keepalive"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "BgpOptions": {
+   "$ref": "#/definitions/BgpOptions"
+  },
+  "EndpointEniAddress": {
+   "type": "string"
+  },
+  "EndpointEniId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "PeerAddress": {
+   "type": "string"
+  },
+  "RouteServerEndpointId": {
+   "type": "string"
+  },
+  "RouteServerId": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/RouteServerId",
+  "/properties/EndpointEniId",
+  "/properties/EndpointEniAddress",
+  "/properties/SubnetId",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "RouteServerEndpointId",
+  "PeerAddress",
+  "BgpOptions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::RouteServerPeer"
+}
