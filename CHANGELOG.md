@@ -1,3 +1,9 @@
+### v1.32.3
+## What's Changed
+* Add an additional `+` for `AWS::SSM::Parameter` `Name` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4062
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.32.2...v1.32.3
+
 ### v1.32.2
 ## What's Changed
 * Add `Assign` into `Choice` for state machines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4054
