@@ -1,3 +1,12 @@
+### v1.32.2
+## What's Changed
+* Add `Assign` into `Choice` for state machines by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4054
+* Create a `pattern` for a `AWS::SSM::Parameter` `Name` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4055
+* Fix SAM transform to validate that `Properties` is a dict by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4057
+* Update CloudFormation schemas to `2025-04-02` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4052
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.32.1...v1.32.2
+
 ### v1.32.1
 ## What's Changed
 * Change state machine schema based on query language by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4045
