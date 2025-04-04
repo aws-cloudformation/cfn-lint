@@ -1,3 +1,11 @@
+### v1.32.4
+## What's Changed
+* Update to [PEP 639](https://peps.python.org/pep-0639/) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4067
+* `StorageEncrypted` can be used on aurora `AWS::RDS::DBInstance` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4069
+* Update CloudFormation schemas to `2025-04-04` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4064
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.32.3...v1.32.4
+
 ### v1.32.3
 ## What's Changed
 * Add an additional `+` for `AWS::SSM::Parameter` `Name` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4062
