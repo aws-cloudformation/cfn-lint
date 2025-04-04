@@ -37,12 +37,36 @@
     "Type"
    ],
    "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
   }
  },
  "primaryIdentifier": [
   "/properties/AliasId"
  ],
  "properties": {
+  "AliasArn": {
+   "pattern": "^arn:.*:alias\\/alias-\\S+",
+   "type": "string"
+  },
   "AliasId": {
    "type": "string"
   },
@@ -59,16 +83,32 @@
   },
   "RoutingStrategy": {
    "$ref": "#/definitions/RoutingStrategy"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
-  "/properties/AliasId"
+  "/properties/AliasId",
+  "/properties/AliasArn"
  ],
  "required": [
   "Name",
   "RoutingStrategy"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::GameLift::Alias"
 }
