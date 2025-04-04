@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
+import dataclasses
 import datetime
 import fnmatch
 import gzip
@@ -624,6 +625,8 @@ def format_json_string(json_string):
         """Help convert date/time into strings"""
         if isinstance(o, datetime.datetime):
             return o.__str__()  # pylint: disable=unnecessary-dunder-call
+        elif dataclasses.is_dataclass(o):
+            return dataclasses.asdict(o)
 
     return json.dumps(
         json_string, indent=1, sort_keys=True, separators=(",", ": "), default=converter
