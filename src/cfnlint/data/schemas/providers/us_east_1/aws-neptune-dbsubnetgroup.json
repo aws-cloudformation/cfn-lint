@@ -15,23 +15,20 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/DBSubnetGroupName"
  ],
  "properties": {
   "DBSubnetGroupDescription": {
    "type": "string"
   },
   "DBSubnetGroupName": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "SubnetIds": {
@@ -49,12 +46,20 @@
    "uniqueItems": false
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
+ "propertyTransform": {
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
+ },
  "required": [
   "DBSubnetGroupDescription",
   "SubnetIds"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Neptune::DBSubnetGroup"
 }

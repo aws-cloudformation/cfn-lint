@@ -49,6 +49,32 @@
    ],
    "type": "object"
   },
+  "DependencyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DependencyKeyAttributes": {
+     "$ref": "#/definitions/DependencyKeyAttributes"
+    },
+    "DependencyOperationName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "DependencyKeyAttributes",
+    "DependencyOperationName"
+   ],
+   "type": "object"
+  },
+  "DependencyKeyAttributes": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   }
+  },
   "Dimension": {
    "additionalProperties": false,
    "properties": {
@@ -275,6 +301,9 @@
   "RequestBasedSliMetric": {
    "additionalProperties": false,
    "properties": {
+    "DependencyConfig": {
+     "$ref": "#/definitions/DependencyConfig"
+    },
     "KeyAttributes": {
      "$ref": "#/definitions/KeyAttributes"
     },
@@ -344,6 +373,9 @@
   "SliMetric": {
    "additionalProperties": false,
    "properties": {
+    "DependencyConfig": {
+     "$ref": "#/definitions/DependencyConfig"
+    },
     "KeyAttributes": {
      "$ref": "#/definitions/KeyAttributes"
     },

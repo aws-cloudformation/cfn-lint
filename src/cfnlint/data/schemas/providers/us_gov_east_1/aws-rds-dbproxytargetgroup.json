@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBProxyName",
+  "/properties/TargetGroupName"
+ ],
+ "definitions": {
+  "ConnectionPoolConfigurationInfoFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionBorrowTimeout": {
+     "type": "integer"
+    },
+    "InitQuery": {
+     "type": "string"
+    },
+    "MaxConnectionsPercent": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MaxIdleConnectionsPercent": {
+     "maximum": 100,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "SessionPinningFilters": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetGroupArn"
+ ],
+ "properties": {
+  "ConnectionPoolConfigurationInfo": {
+   "$ref": "#/definitions/ConnectionPoolConfigurationInfoFormat"
+  },
+  "DBClusterIdentifiers": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DBInstanceIdentifiers": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "DBProxyName": {
+   "maxLength": 64,
+   "pattern": "[A-z][0-z]*",
+   "type": "string"
+  },
+  "TargetGroupArn": {
+   "type": "string"
+  },
+  "TargetGroupName": {
+   "enum": [
+    "default"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetGroupArn"
+ ],
+ "required": [
+  "DBProxyName",
+  "TargetGroupName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds-proxy",
+ "typeName": "AWS::RDS::DBProxyTargetGroup"
+}

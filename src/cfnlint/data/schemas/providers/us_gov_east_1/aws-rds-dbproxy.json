@@ -1,0 +1,149 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBProxyName",
+  "/properties/EngineFamily",
+  "/properties/VpcSubnetIds"
+ ],
+ "definitions": {
+  "AuthFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthScheme": {
+     "enum": [
+      "SECRETS"
+     ],
+     "type": "string"
+    },
+    "ClientPasswordAuthType": {
+     "enum": [
+      "MYSQL_NATIVE_PASSWORD",
+      "POSTGRES_SCRAM_SHA_256",
+      "POSTGRES_MD5",
+      "SQL_SERVER_AUTHENTICATION"
+     ],
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "IAMAuth": {
+     "enum": [
+      "DISABLED",
+      "REQUIRED",
+      "ENABLED"
+     ],
+     "type": "string"
+    },
+    "SecretArn": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TagFormat": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "pattern": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "pattern": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBProxyName"
+ ],
+ "properties": {
+  "Auth": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthFormat"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "DBProxyArn": {
+   "type": "string"
+  },
+  "DBProxyName": {
+   "maxLength": 64,
+   "pattern": "[0-z]*",
+   "type": "string"
+  },
+  "DebugLogging": {
+   "type": "boolean"
+  },
+  "Endpoint": {
+   "type": "string"
+  },
+  "EngineFamily": {
+   "enum": [
+    "MYSQL",
+    "POSTGRESQL",
+    "SQLSERVER"
+   ],
+   "type": "string"
+  },
+  "IdleClientTimeout": {
+   "type": "integer"
+  },
+  "RequireTLS": {
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TagFormat"
+   },
+   "type": "array"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  },
+  "VpcSecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcSubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "minItems": 2,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/DBProxyArn",
+  "/properties/Endpoint",
+  "/properties/VpcId"
+ ],
+ "required": [
+  "Auth",
+  "DBProxyName",
+  "EngineFamily",
+  "RoleArn",
+  "VpcSubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::RDS::DBProxy"
+}

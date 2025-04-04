@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NamespaceName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "LogExport": {
+   "enum": [
+    "useractivitylog",
+    "userlog",
+    "connectionlog"
+   ],
+   "type": "string"
+  },
+  "Namespace": {
+   "additionalProperties": false,
+   "properties": {
+    "AdminPasswordSecretArn": {
+     "type": "string"
+    },
+    "AdminPasswordSecretKmsKeyId": {
+     "type": "string"
+    },
+    "AdminUsername": {
+     "type": "string"
+    },
+    "CreationDate": {
+     "type": "string"
+    },
+    "DbName": {
+     "pattern": "[a-zA-Z][a-zA-Z_0-9+.@-]*",
+     "type": "string"
+    },
+    "DefaultIamRoleArn": {
+     "type": "string"
+    },
+    "IamRoles": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 512,
+      "minLength": 0,
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "LogExports": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LogExport"
+     },
+     "maxItems": 16,
+     "minItems": 0,
+     "type": "array"
+    },
+    "NamespaceArn": {
+     "type": "string"
+    },
+    "NamespaceId": {
+     "type": "string"
+    },
+    "NamespaceName": {
+     "maxLength": 64,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-]+$",
+     "type": "string"
+    },
+    "Status": {
+     "$ref": "#/definitions/NamespaceStatus"
+    }
+   },
+   "type": "object"
+  },
+  "NamespaceStatus": {
+   "enum": [
+    "AVAILABLE",
+    "MODIFYING",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "SnapshotCopyConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationKmsKeyId": {
+     "type": "string"
+    },
+    "DestinationRegion": {
+     "type": "string"
+    },
+    "SnapshotRetentionPeriod": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DestinationRegion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NamespaceName"
+ ],
+ "properties": {
+  "AdminPasswordSecretKmsKeyId": {
+   "type": "string"
+  },
+  "AdminUserPassword": {
+   "maxLength": 64,
+   "minLength": 8,
+   "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\x00-\\x20\\x22\\x27\\x2f\\x40\\x5c\\x7f-\\uffff]+",
+   "type": "string"
+  },
+  "AdminUsername": {
+   "pattern": "[a-zA-Z][a-zA-Z_0-9+.@-]*",
+   "type": "string"
+  },
+  "DbName": {
+   "maxLength": 127,
+   "pattern": "[a-zA-Z][a-zA-Z_0-9+.@-]*",
+   "type": "string"
+  },
+  "DefaultIamRoleArn": {
+   "type": "string"
+  },
+  "FinalSnapshotName": {
+   "maxLength": 255,
+   "pattern": "[a-z][a-z0-9]*(-[a-z0-9]+)*",
+   "type": "string"
+  },
+  "FinalSnapshotRetentionPeriod": {
+   "type": "integer"
+  },
+  "IamRoles": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 512,
+    "minLength": 0,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LogExports": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/LogExport"
+   },
+   "maxItems": 16,
+   "minItems": 0,
+   "type": "array"
+  },
+  "ManageAdminPassword": {
+   "type": "boolean"
+  },
+  "Namespace": {
+   "$ref": "#/definitions/Namespace"
+  },
+  "NamespaceName": {
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-z0-9-]+$",
+   "type": "string"
+  },
+  "NamespaceResourcePolicy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "RedshiftIdcApplicationArn": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SnapshotCopyConfigurations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SnapshotCopyConfiguration"
+   },
+   "maxItems": 1,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Namespace",
+  "/properties/Namespace/NamespaceArn",
+  "/properties/Namespace/NamespaceId",
+  "/properties/Namespace/NamespaceName",
+  "/properties/Namespace/AdminUsername",
+  "/properties/Namespace/DbName",
+  "/properties/Namespace/KmsKeyId",
+  "/properties/Namespace/DefaultIamRoleArn",
+  "/properties/Namespace/IamRoles",
+  "/properties/Namespace/LogExports",
+  "/properties/Namespace/Status",
+  "/properties/Namespace/CreationDate"
+ ],
+ "required": [
+  "NamespaceName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::RedshiftServerless::Namespace",
+ "writeOnlyProperties": [
+  "/properties/AdminUserPassword",
+  "/properties/FinalSnapshotName",
+  "/properties/FinalSnapshotRetentionPeriod",
+  "/properties/ManageAdminPassword",
+  "/properties/RedshiftIdcApplicationArn"
+ ]
+}

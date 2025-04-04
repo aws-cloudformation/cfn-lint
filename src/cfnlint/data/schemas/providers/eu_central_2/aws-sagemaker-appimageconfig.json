@@ -1,0 +1,226 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppImageConfigName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "CodeEditorAppImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerConfig": {
+     "$ref": "#/definitions/ContainerConfig"
+    }
+   },
+   "type": "object"
+  },
+  "ContainerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerArguments": {
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerArguments"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainerEntrypoint": {
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerEntrypoint"
+     },
+     "maxItems": 1,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ContainerEnvironmentVariables": {
+     "items": {
+      "$ref": "#/definitions/CustomImageContainerEnvironmentVariable"
+     },
+     "maxItems": 25,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "CustomImageContainerArguments": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "CustomImageContainerEntrypoint": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "CustomImageContainerEnvironmentVariable": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!\\s*$).+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "FileSystemConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultGid": {
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "DefaultUid": {
+     "maximum": 65535,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "MountPath": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^/.*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "JupyterLabAppImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerConfig": {
+     "$ref": "#/definitions/ContainerConfig"
+    }
+   },
+   "type": "object"
+  },
+  "KernelGatewayImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemConfig": {
+     "$ref": "#/definitions/FileSystemConfig"
+    },
+    "KernelSpecs": {
+     "items": {
+      "$ref": "#/definitions/KernelSpec"
+     },
+     "maxItems": 1,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "KernelSpecs"
+   ],
+   "type": "object"
+  },
+  "KernelSpec": {
+   "additionalProperties": false,
+   "properties": {
+    "DisplayName": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 1024,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppImageConfigName"
+ ],
+ "properties": {
+  "AppImageConfigArn": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:app-image-config/.*",
+   "type": "string"
+  },
+  "AppImageConfigName": {
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+   "type": "string"
+  },
+  "CodeEditorAppImageConfig": {
+   "$ref": "#/definitions/CodeEditorAppImageConfig"
+  },
+  "JupyterLabAppImageConfig": {
+   "$ref": "#/definitions/JupyterLabAppImageConfig"
+  },
+  "KernelGatewayImageConfig": {
+   "$ref": "#/definitions/KernelGatewayImageConfig"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppImageConfigArn"
+ ],
+ "required": [
+  "AppImageConfigName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::AppImageConfig"
+}

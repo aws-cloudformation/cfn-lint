@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/ExecutionRoleArn",
+  "/properties/AuthType"
+ ],
+ "definitions": {
+  "PartnerAppAdminUserList": {
+   "additionalProperties": false,
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "PartnerAppConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AdminUsers": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PartnerAppAdminUserList"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Arguments": {
+     "additionalProperties": false,
+     "maxProperties": 5,
+     "patternProperties": {
+      "^(?!\\s*$).{1,256}$": {
+       "maxLength": 1024,
+       "pattern": "^.{0,1024}$",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "PartnerAppMaintenanceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "MaintenanceWindowStart": {
+     "maxLength": 9,
+     "pattern": "(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MaintenanceWindowStart"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "deprecatedProperties": [
+  "/properties/ClientToken"
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "ApplicationConfig": {
+   "$ref": "#/definitions/PartnerAppConfig"
+  },
+  "Arn": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:partner-app/app-[A-Z0-9]{12}$",
+   "type": "string"
+  },
+  "AuthType": {
+   "enum": [
+    "IAM"
+   ],
+   "type": "string"
+  },
+  "BaseUrl": {
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "ClientToken": {
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "EnableIamSessionBasedIdentity": {
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "MaintenanceConfig": {
+   "$ref": "#/definitions/PartnerAppMaintenanceConfig"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tier": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$).+",
+   "type": "string"
+  },
+  "Type": {
+   "enum": [
+    "lakera-guard",
+    "comet",
+    "deepchecks-llm-evaluation",
+    "fiddler"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/BaseUrl"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Name",
+  "Type",
+  "AuthType",
+  "ExecutionRoleArn",
+  "Tier"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::SageMaker::PartnerApp",
+ "writeOnlyProperties": [
+  "/properties/ClientToken"
+ ]
+}
