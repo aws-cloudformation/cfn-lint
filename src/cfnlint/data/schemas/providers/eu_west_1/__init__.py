@@ -973,6 +973,7 @@ types: list[str] = [
     "AWS::Proton::ServiceTemplate",
     "AWS::QBusiness::Application",
     "AWS::QBusiness::DataAccessor",
+    "AWS::QBusiness::DataSource",
     "AWS::QBusiness::Index",
     "AWS::QBusiness::Permission",
     "AWS::QBusiness::Retriever",

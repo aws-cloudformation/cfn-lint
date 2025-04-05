@@ -1668,6 +1668,7 @@ cached: list[str] = [
     "aws-rbin-rule.json",
     "aws-rds-dbcluster.json",
     "aws-rds-dbclusterparametergroup.json",
+    "aws-rds-dbinstance.json",
     "aws-rds-dbparametergroup.json",
     "aws-rds-dbproxy.json",
     "aws-rds-dbproxyendpoint.json",
