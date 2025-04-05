@@ -1486,6 +1486,7 @@ cached: list[str] = [
     "aws-bedrock-promptversion.json",
     "aws-budgets-budget.json",
     "aws-budgets-budgetsaction.json",
+    "aws-cassandra-keyspace.json",
     "aws-cassandra-table.json",
     "aws-cassandra-type.json",
     "aws-ce-anomalymonitor.json",

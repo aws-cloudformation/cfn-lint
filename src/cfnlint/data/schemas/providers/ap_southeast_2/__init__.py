@@ -2299,6 +2299,7 @@ cached: list[str] = [
     "aws-rds-customdbengineversion.json",
     "aws-rds-dbcluster.json",
     "aws-rds-dbclusterparametergroup.json",
+    "aws-rds-dbinstance.json",
     "aws-rds-dbparametergroup.json",
     "aws-rds-dbproxy.json",
     "aws-rds-dbproxyendpoint.json",

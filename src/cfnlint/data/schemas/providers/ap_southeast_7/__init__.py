@@ -689,7 +689,6 @@ cached: list[str] = [
     "aws-imagebuilder-infrastructureconfiguration.json",
     "aws-imagebuilder-workflow.json",
     "aws-kinesis-resourcepolicy.json",
-    "aws-kinesis-stream.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-kms-alias.json",

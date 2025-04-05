@@ -1427,6 +1427,7 @@ cached: list[str] = [
     "aws-redshift-endpointauthorization.json",
     "aws-redshift-eventsubscription.json",
     "aws-redshift-scheduledaction.json",
+    "aws-redshiftserverless-workgroup.json",
     "aws-rekognition-collection.json",
     "aws-resiliencehub-app.json",
     "aws-resiliencehub-resiliencypolicy.json",
