@@ -14,13 +14,35 @@ from botocore.client import Config
 
 LOGGER = logging.getLogger("cfnlint")
 
-
 session = boto3.session.Session()
 config = Config(retries={"max_attempts": 10})
 rds_client = session.client("rds", region_name="us-east-1", config=config)
 elasticache_client = session.client(
     "elasticache", region_name="us-east-1", config=config
 )
+
+_ENGINE_SUPPORTED = [
+    "aurora-mysql",
+    "aurora-postgresql",
+    "custom-oracle-ee",
+    "custom-oracle-ee-cdb",
+    "custom-sqlserver-ee",
+    "custom-sqlserver-se",
+    "custom-sqlserver-web",
+    "db2-ae",
+    "db2-se",
+    "mariadb",
+    "mysql",
+    "oracle-ee",
+    "oracle-ee-cdb",
+    "oracle-se2",
+    "oracle-se2-cdb",
+    "postgres",
+    "sqlserver-ee",
+    "sqlserver-se",
+    "sqlserver-ex",
+    "sqlserver-web",
+]
 
 
 def configure_logging():
@@ -52,7 +74,7 @@ def write_output(resource, filename, obj):
 def write_db_cluster(results):
     schema = {"allOf": []}
 
-    engines = ["aurora-mysql", "aurora-postgresql", "mysql", "postgres"]
+    engines = sorted(["aurora-mysql", "aurora-postgresql", "mysql", "postgres"])
 
     schema["allOf"].append(
         {
@@ -78,7 +100,7 @@ def write_db_cluster(results):
         if not results.get(engine):
             continue
 
-        engine_versions = sorted(results.get(engine))
+        engine_versions = sorted(results.get(engine).keys())
         if engine == "aurora-mysql":
             for engine_version in engine_versions.copy():
                 sub_engine_version = ".".join(engine_version.split(".")[0:2])
@@ -113,29 +135,6 @@ def write_db_cluster(results):
 def write_db_instance(results):
     schema = {"allOf": []}
 
-    engines = [
-        "aurora-mysql",
-        "aurora-postgresql",
-        "custom-oracle-ee",
-        "custom-oracle-ee-cdb",
-        "custom-sqlserver-ee",
-        "custom-sqlserver-se",
-        "custom-sqlserver-web",
-        "db2-ae",
-        "db2-se",
-        "mariadb",
-        "mysql",
-        "oracle-ee",
-        "oracle-ee-cdb",
-        "oracle-se2",
-        "oracle-se2-cdb",
-        "postgres",
-        "sqlserver-ee",
-        "sqlserver-se",
-        "sqlserver-ex",
-        "sqlserver-web",
-    ]
-
     schema["allOf"].append(
         {
             "if": {
@@ -149,18 +148,18 @@ def write_db_instance(results):
             "then": {
                 "properties": {
                     "Engine": {
-                        "enum": sorted(engines),
+                        "enum": sorted(_ENGINE_SUPPORTED),
                     }
                 }
             },
         }
     )
 
-    for engine in engines:
+    for engine, engine_details in sorted(results.items()):
         if not results.get(engine):
             continue
 
-        engine_versions = sorted(results.get(engine))
+        engine_versions = sorted(list(engine_details.keys()))
         if engine == "postgres":
             for engine_version in engine_versions.copy():
                 major_engine_version = ".".join(engine_version.split(".")[0:1])
@@ -193,6 +192,58 @@ def write_db_instance(results):
         )
 
     write_output("aws_rds_dbinstance", "engine_version", schema)
+
+
+def write_db_instance_version_dbinstanceclass(results):
+    schema = {"allOf": []}
+
+    schema = {"allOf": []}
+
+    def _create_schema(engine, engine_version, db_instance_classes):
+        v_parts = engine_version.split(".")
+        engine_pattern = (
+            f"^({v_parts[0]}\.{v_parts[1]}\..+|{v_parts[0]}\.{v_parts[1]})$"
+        )
+        return {
+            "if": {
+                "properties": {
+                    "Engine": {
+                        "type": "string",
+                        "const": engine,
+                    },
+                    "EngineVersion": {
+                        "type": "string",
+                        "pattern": engine_pattern,
+                    },
+                    "DBInstanceClass": {
+                        "type": "string",
+                    },
+                },
+                "required": ["Engine", "EngineVersion", "DBInstanceClass"],
+            },
+            "then": {
+                "properties": {
+                    "DBInstanceClass": {
+                        "enum": sorted(db_instance_classes),
+                    }
+                }
+            },
+        }
+
+    for engine, engine_details in sorted(results.items()):
+        for engine_version, engine_version_details in engine_details.items():
+            db_instance_classes = engine_version_details.get("DBInstanceClass")
+            if not db_instance_classes:
+                continue
+            if not results.get(engine):
+                continue
+
+            db_instance_classes = sorted(db_instance_classes)
+            schema["allOf"].append(
+                _create_schema(engine, engine_version, db_instance_classes)
+            )
+
+    write_output("aws_rds_dbinstance", "db_instance_class", schema)
 
 
 def write_elasticache_engines(results):
@@ -256,13 +307,43 @@ def rds_api():
     for page in rds_client.get_paginator("describe_db_engine_versions").paginate():
         for version in page.get("DBEngineVersions"):
             engine = version.get("Engine")
+            if engine not in _ENGINE_SUPPORTED:
+                continue
             engine_version = version.get("EngineVersion")
             if engine not in results:
-                results[engine] = []
-            results[engine].append(engine_version)
+                results[engine] = {}
+            results[engine][engine_version] = {}
 
     write_db_cluster(results)
     write_db_instance(results)
+
+    results_db_instance_class = dict.fromkeys(results.keys(), dict())
+    for engine, versions in results.items():
+        for engine_version in versions.keys():
+            LOGGER.info(
+                f"Starting RDS DB options collection for {engine!r}:{engine_version!r}"
+            )
+            minor_engine_verison = ".".join(engine_version.split(".")[:2])
+            if minor_engine_verison in results_db_instance_class[engine]:
+                results_db_instance_class[engine][minor_engine_verison][
+                    "EngineVersions"
+                ].add(engine_version)
+            else:
+                results_db_instance_class[engine][minor_engine_verison] = {
+                    "EngineVersions": set([engine_version]),
+                    "DBInstanceClass": set(),
+                }
+
+            for page in rds_client.get_paginator(
+                "describe_orderable_db_instance_options"
+            ).paginate(Engine=engine, EngineVersion=engine_version):
+                for options in page.get("OrderableDBInstanceOptions"):
+                    db_instance_class = options.get("DBInstanceClass")
+                    results_db_instance_class[engine][minor_engine_verison][
+                        "DBInstanceClass"
+                    ].add(db_instance_class)
+
+    write_db_instance_version_dbinstanceclass(results_db_instance_class)
 
 
 def elasticache_api():
@@ -283,7 +364,9 @@ def elasticache_api():
 def main():
     """main function"""
     configure_logging()
+    LOGGER.info("Starting RDS data collection")
     rds_api()
+    LOGGER.info("Starting Elasticache data collection")
     elasticache_api()
 
 
