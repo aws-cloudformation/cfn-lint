@@ -1,0 +1,67 @@
+{
+ "if": {
+  "properties": {
+   "Protocol": {
+    "type": "string"
+   }
+  },
+  "required": [
+   "Protocol"
+  ]
+ },
+ "then": {
+  "allOf": [
+   {
+    "else": {
+     "properties": {
+      "Matcher": false,
+      "ProtocolVersion": false
+     }
+    },
+    "if": {
+     "properties": {
+      "Protocol": {
+       "enum": [
+        "HTTP",
+        "HTTPS"
+       ]
+      }
+     },
+     "required": [
+      "Protocol"
+     ]
+    }
+   },
+   {
+    "if": {
+     "properties": {
+      "Port": {
+       "type": [
+        "string",
+        "integer"
+       ]
+      },
+      "Protocol": {
+       "enum": [
+        "GENEVE"
+       ]
+      }
+     },
+     "required": [
+      "Protocol"
+     ]
+    },
+    "then": {
+     "properties": {
+      "Port": {
+       "enum": [
+        6081,
+        "6081"
+       ]
+      }
+     }
+    }
+   }
+  ]
+ }
+}
