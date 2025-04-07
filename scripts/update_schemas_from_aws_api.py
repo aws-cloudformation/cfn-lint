@@ -197,8 +197,6 @@ def write_db_instance(results):
 def write_db_instance_version_dbinstanceclass(results):
     schema = {"allOf": []}
 
-    schema = {"allOf": []}
-
     def _create_schema(engine, engine_version, db_instance_classes):
         v_parts = engine_version.split(".")
         engine_pattern = (
@@ -231,7 +229,7 @@ def write_db_instance_version_dbinstanceclass(results):
         }
 
     for engine, engine_details in sorted(results.items()):
-        for engine_version, engine_version_details in engine_details.items():
+        for engine_version, engine_version_details in sorted(engine_details.items()):
             db_instance_classes = engine_version_details.get("DBInstanceClass")
             if not db_instance_classes:
                 continue
