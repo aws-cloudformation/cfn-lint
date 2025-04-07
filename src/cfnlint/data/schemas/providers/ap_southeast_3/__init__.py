@@ -1181,6 +1181,7 @@ cached: list[str] = [
     "aws-iotwireless-serviceprofile.json",
     "aws-iotwireless-wirelessdevice.json",
     "aws-kinesis-resourcepolicy.json",
+    "aws-kinesis-stream.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-kms-alias.json",

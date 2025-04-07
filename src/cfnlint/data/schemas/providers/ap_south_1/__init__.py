@@ -1881,7 +1881,6 @@ cached: list[str] = [
     "aws-kendra-index.json",
     "aws-kendraranking-executionplan.json",
     "aws-kinesis-resourcepolicy.json",
-    "aws-kinesis-stream.json",
     "aws-kinesis-streamconsumer.json",
     "aws-kinesisanalytics-applicationoutput.json",
     "aws-kinesisanalyticsv2-application.json",

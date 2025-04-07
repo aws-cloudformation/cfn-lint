@@ -1132,7 +1132,6 @@ cached: list[str] = [
     "aws-inspectorv2-filter.json",
     "aws-internetmonitor-monitor.json",
     "aws-kinesis-resourcepolicy.json",
-    "aws-kinesis-stream.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-kms-alias.json",

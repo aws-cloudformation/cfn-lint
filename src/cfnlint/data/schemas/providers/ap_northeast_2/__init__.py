@@ -1897,7 +1897,6 @@ cached: list[str] = [
     "aws-kafkaconnect-customplugin.json",
     "aws-kafkaconnect-workerconfiguration.json",
     "aws-kinesis-resourcepolicy.json",
-    "aws-kinesis-stream.json",
     "aws-kinesis-streamconsumer.json",
     "aws-kinesisanalytics-application.json",
     "aws-kinesisanalytics-applicationoutput.json",

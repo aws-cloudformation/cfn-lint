@@ -1,0 +1,100 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/KeyPairId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyName",
+  "/properties/KeyType",
+  "/properties/KeyFormat",
+  "/properties/PublicKeyMaterial",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyName"
+ ],
+ "properties": {
+  "KeyFingerprint": {
+   "type": "string"
+  },
+  "KeyFormat": {
+   "default": "pem",
+   "enum": [
+    "pem",
+    "ppk"
+   ],
+   "type": "string"
+  },
+  "KeyName": {
+   "type": "string"
+  },
+  "KeyPairId": {
+   "type": "string"
+  },
+  "KeyType": {
+   "default": "rsa",
+   "enum": [
+    "rsa",
+    "ed25519"
+   ],
+   "type": "string"
+  },
+  "PublicKeyMaterial": {
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/PublicKeyMaterial": "$join([PublicKeyMaterial, \"\n\"])"
+ },
+ "readOnlyProperties": [
+  "/properties/KeyPairId",
+  "/properties/KeyFingerprint"
+ ],
+ "required": [
+  "KeyName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::KeyPair",
+ "writeOnlyProperties": [
+  "/properties/KeyFormat"
+ ]
+}
