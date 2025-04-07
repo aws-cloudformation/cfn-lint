@@ -336,6 +336,7 @@ types: list[str] = [
     "AWS::DMS::ReplicationInstance",
     "AWS::DMS::ReplicationSubnetGroup",
     "AWS::DMS::ReplicationTask",
+    "AWS::DSQL::Cluster",
     "AWS::DataBrew::Dataset",
     "AWS::DataBrew::Job",
     "AWS::DataBrew::Project",

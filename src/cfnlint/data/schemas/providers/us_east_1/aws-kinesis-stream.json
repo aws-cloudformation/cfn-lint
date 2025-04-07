@@ -5,6 +5,20 @@
   "/properties/Name"
  ],
  "definitions": {
+  "EnhancedMetric": {
+   "additionalProperties": false,
+   "enum": [
+    "IncomingBytes",
+    "IncomingRecords",
+    "OutgoingBytes",
+    "OutgoingRecords",
+    "WriteProvisionedThroughputExceeded",
+    "ReadProvisionedThroughputExceeded",
+    "IteratorAgeMilliseconds",
+    "ALL"
+   ],
+   "type": "string"
+  },
   "StreamEncryption": {
    "additionalProperties": false,
    "properties": {
@@ -83,6 +97,15 @@
  "properties": {
   "Arn": {
    "type": "string"
+  },
+  "DesiredShardLevelMetrics": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/EnhancedMetric"
+   },
+   "maxItems": 7,
+   "type": "array",
+   "uniqueItems": true
   },
   "Name": {
    "maxLength": 128,

@@ -1296,7 +1296,6 @@ cached: list[str] = [
     "aws-iot-policyprincipalattachment.json",
     "aws-iot-thingprincipalattachment.json",
     "aws-kinesis-resourcepolicy.json",
-    "aws-kinesis-stream.json",
     "aws-kinesis-streamconsumer.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-kinesisfirehose-deliverystream.json",

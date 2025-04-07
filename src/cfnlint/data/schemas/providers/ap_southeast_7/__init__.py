@@ -552,6 +552,7 @@ cached: list[str] = [
     "aws-ec2-eip.json",
     "aws-ec2-flowlog.json",
     "aws-ec2-gatewayroutetableassociation.json",
+    "aws-ec2-instance.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-keypair.json",
     "aws-ec2-launchtemplate.json",

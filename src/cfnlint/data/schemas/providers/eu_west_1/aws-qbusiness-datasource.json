@@ -1,0 +1,464 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationId",
+  "/properties/IndexId"
+ ],
+ "definitions": {
+  "AttributeValueOperator": {
+   "enum": [
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "AudioExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AudioExtractionStatus": {
+     "$ref": "#/definitions/AudioExtractionStatus"
+    }
+   },
+   "required": [
+    "AudioExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "AudioExtractionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "DataSourceStatus": {
+   "enum": [
+    "PENDING_CREATION",
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "FAILED",
+    "UPDATING"
+   ],
+   "type": "string"
+  },
+  "DataSourceVpcConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "format": "AWS::EC2::SecurityGroup.Ids",
+     "insertionOrder": false,
+     "items": {
+      "format": "AWS::EC2::SecurityGroup.Id",
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SubnetIds": {
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": "^[-0-9a-zA-Z]+$",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "SecurityGroupIds",
+    "SubnetIds"
+   ],
+   "type": "object"
+  },
+  "DocumentAttributeCondition": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_][a-zA-Z0-9_-]*$",
+     "type": "string"
+    },
+    "Operator": {
+     "$ref": "#/definitions/DocumentEnrichmentConditionOperator"
+    },
+    "Value": {
+     "$ref": "#/definitions/DocumentAttributeValue"
+    }
+   },
+   "required": [
+    "Key",
+    "Operator"
+   ],
+   "type": "object"
+  },
+  "DocumentAttributeTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributeValueOperator": {
+     "$ref": "#/definitions/AttributeValueOperator"
+    },
+    "Key": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_][a-zA-Z0-9_-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/DocumentAttributeValue"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "DocumentAttributeValue": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringValue": {
+       "maxLength": 2048,
+       "type": "string"
+      }
+     },
+     "required": [
+      "StringValue"
+     ],
+     "title": "StringValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "StringListValue": {
+       "insertionOrder": true,
+       "items": {
+        "maxLength": 2048,
+        "minLength": 1,
+        "type": "string"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "StringListValue"
+     ],
+     "title": "StringListValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "LongValue": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "LongValue"
+     ],
+     "title": "LongValue",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "DateValue": {
+       "format": "date-time",
+       "type": "string"
+      }
+     },
+     "required": [
+      "DateValue"
+     ],
+     "title": "DateValue",
+     "type": "object"
+    }
+   ]
+  },
+  "DocumentContentOperator": {
+   "enum": [
+    "DELETE"
+   ],
+   "type": "string"
+  },
+  "DocumentEnrichmentConditionOperator": {
+   "enum": [
+    "GREATER_THAN",
+    "GREATER_THAN_OR_EQUALS",
+    "LESS_THAN",
+    "LESS_THAN_OR_EQUALS",
+    "EQUALS",
+    "NOT_EQUALS",
+    "CONTAINS",
+    "NOT_CONTAINS",
+    "EXISTS",
+    "NOT_EXISTS",
+    "BEGINS_WITH"
+   ],
+   "type": "string"
+  },
+  "DocumentEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InlineConfigurations": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/InlineDocumentEnrichmentConfiguration"
+     },
+     "maxItems": 100,
+     "minItems": 1,
+     "type": "array"
+    },
+    "PostExtractionHookConfiguration": {
+     "$ref": "#/definitions/HookConfiguration"
+    },
+    "PreExtractionHookConfiguration": {
+     "$ref": "#/definitions/HookConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "HookConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "InvocationCondition": {
+     "$ref": "#/definitions/DocumentAttributeCondition"
+    },
+    "LambdaArn": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^arn:aws[a-zA-Z-]*:lambda:[a-z-]*-[0-9]:[0-9]{12}:function:[a-zA-Z0-9-_]+(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?(:[a-zA-Z0-9-_]+)?$",
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 1284,
+     "minLength": 0,
+     "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+     "type": "string"
+    },
+    "S3BucketName": {
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-z0-9][\\.\\-a-z0-9]{1,61}[a-z0-9]$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ImageExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "ImageExtractionStatus": {
+     "$ref": "#/definitions/ImageExtractionStatus"
+    }
+   },
+   "required": [
+    "ImageExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "ImageExtractionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "InlineDocumentEnrichmentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "Condition": {
+     "$ref": "#/definitions/DocumentAttributeCondition"
+    },
+    "DocumentContentOperator": {
+     "$ref": "#/definitions/DocumentContentOperator"
+    },
+    "Target": {
+     "$ref": "#/definitions/DocumentAttributeTarget"
+    }
+   },
+   "type": "object"
+  },
+  "MediaExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AudioExtractionConfiguration": {
+     "$ref": "#/definitions/AudioExtractionConfiguration"
+    },
+    "ImageExtractionConfiguration": {
+     "$ref": "#/definitions/ImageExtractionConfiguration"
+    },
+    "VideoExtractionConfiguration": {
+     "$ref": "#/definitions/VideoExtractionConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "VideoExtractionConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VideoExtractionStatus": {
+     "$ref": "#/definitions/VideoExtractionStatus"
+    }
+   },
+   "required": [
+    "VideoExtractionStatus"
+   ],
+   "type": "object"
+  },
+  "VideoExtractionStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ApplicationId",
+  "/properties/DataSourceId",
+  "/properties/IndexId"
+ ],
+ "properties": {
+  "ApplicationId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "Configuration": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DataSourceArn": {
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "DataSourceId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "minLength": 0,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "DocumentEnrichmentConfiguration": {
+   "$ref": "#/definitions/DocumentEnrichmentConfiguration"
+  },
+  "IndexId": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
+   "type": "string"
+  },
+  "MediaExtractionConfiguration": {
+   "$ref": "#/definitions/MediaExtractionConfiguration"
+  },
+  "RoleArn": {
+   "format": "AWS::IAM::Role.Arn",
+   "maxLength": 1284,
+   "minLength": 0,
+   "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/DataSourceStatus"
+  },
+  "SyncSchedule": {
+   "maxLength": 998,
+   "pattern": "^[\\s\\S]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Type": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "VpcConfiguration": {
+   "$ref": "#/definitions/DataSourceVpcConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DataSourceArn",
+  "/properties/DataSourceId",
+  "/properties/Status",
+  "/properties/Type",
+  "/properties/UpdatedAt"
+ ],
+ "required": [
+  "ApplicationId",
+  "IndexId",
+  "Configuration",
+  "DisplayName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-qbusiness",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::QBusiness::DataSource"
+}
