@@ -1643,7 +1643,7 @@ patches.extend(
             patches=[
                 Patch(
                     values={
-                        "pattern": "^((?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+|\/(?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+(\/[\w.-]+)+)$"
+                        "pattern": "^((?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+|\/(?![aA][wW][sS]|[sS]{2}[mM])[\w.-]+(\/[\w.-]+)*)$"
                     },
                     path="/properties/Name",
                 ),
