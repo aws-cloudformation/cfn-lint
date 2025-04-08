@@ -1,3 +1,14 @@
+### v1.33.0
+## What's Changed
+* New rule [E3062](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3062) to validate `DBInstanceClass` against Engine by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4080
+* Several state mach schema improvements by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4081
+* New rule [E3681](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3681) to validate `AWS::ElasticLoadBalancingV2::TargetGroup` `TargetType` property restrictions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4082
+* New rule [E3683](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3683) to validate `AWS::ElasticLoadBalancingV2::TargetGroup` `Protocol` property restrictions by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4082
+* Allow for /example in SSM Param Name by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4086
+* Update CloudFormation schemas to `2025-04-08` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4083
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.32.4...v1.33.0
+
 ### v1.32.4
 ## What's Changed
 * Update to [PEP 639](https://peps.python.org/pep-0639/) by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4067
