@@ -878,6 +878,7 @@ cached: list[str] = [
     "aws-eks-fargateprofile.json",
     "aws-eks-identityproviderconfig.json",
     "aws-eks-nodegroup.json",
+    "aws-eks-podidentityassociation.json",
     "aws-elasticache-cachecluster.json",
     "aws-elasticache-parametergroup.json",
     "aws-elasticache-replicationgroup.json",

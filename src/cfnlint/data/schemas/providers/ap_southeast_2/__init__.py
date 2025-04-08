@@ -1378,6 +1378,7 @@ cached: list[str] = [
     "aws-applicationautoscaling-scalingpolicy.json",
     "aws-applicationinsights-application.json",
     "aws-applicationsignals-discovery.json",
+    "aws-applicationsignals-servicelevelobjective.json",
     "aws-appmesh-gatewayroute.json",
     "aws-appmesh-mesh.json",
     "aws-appmesh-route.json",

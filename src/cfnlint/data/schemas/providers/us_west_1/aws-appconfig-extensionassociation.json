@@ -1,9 +1,9 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/ClusterName",
-  "/properties/Namespace",
-  "/properties/ServiceAccount"
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier",
+  "/properties/ExtensionVersionNumber"
  ],
  "definitions": {
   "Tag": {
@@ -28,36 +28,41 @@
   }
  },
  "primaryIdentifier": [
-  "/properties/AssociationArn"
+  "/properties/Id"
  ],
  "properties": {
-  "AssociationArn": {
+  "Arn": {
    "type": "string"
   },
-  "AssociationId": {
+  "ExtensionArn": {
+   "type": "string"
+  },
+  "ExtensionIdentifier": {
+   "maxLength": 2048,
    "minLength": 1,
    "type": "string"
   },
-  "ClusterName": {
+  "ExtensionVersionNumber": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "maxLength": 2048,
    "minLength": 1,
-   "type": "string"
-  },
-  "DisableSessionTags": {
-   "minLength": 1,
-   "type": "boolean"
-  },
-  "ExternalId": {
-   "minLength": 1,
-   "type": "string"
-  },
-  "Namespace": {
-   "type": "string"
-  },
-  "RoleArn": {
-   "format": "AWS::IAM::Role.Arn",
-   "type": "string"
-  },
-  "ServiceAccount": {
    "type": "string"
   },
   "Tags": {
@@ -67,25 +72,15 @@
    },
    "type": "array",
    "uniqueItems": true
-  },
-  "TargetRoleArn": {
-   "minLength": 1,
-   "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/AssociationArn",
-  "/properties/AssociationId",
-  "/properties/ExternalId"
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ResourceArn",
+  "/properties/ExtensionArn"
  ],
- "replacementStrategy": "create_then_delete",
- "required": [
-  "ClusterName",
-  "RoleArn",
-  "Namespace",
-  "ServiceAccount"
- ],
- "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "tagging": {
   "cloudFormationSystemTags": true,
   "tagOnCreate": true,
@@ -93,5 +88,9 @@
   "tagUpdatable": true,
   "taggable": true
  },
- "typeName": "AWS::EKS::PodIdentityAssociation"
+ "typeName": "AWS::AppConfig::ExtensionAssociation",
+ "writeOnlyProperties": [
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier"
+ ]
 }

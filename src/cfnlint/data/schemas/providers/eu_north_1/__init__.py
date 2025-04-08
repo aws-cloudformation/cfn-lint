@@ -1913,6 +1913,7 @@ cached: list[str] = [
     "aws-sagemaker-monitoringschedule.json",
     "aws-sagemaker-notebookinstance.json",
     "aws-sagemaker-notebookinstancelifecycleconfig.json",
+    "aws-sagemaker-partnerapp.json",
     "aws-sagemaker-pipeline.json",
     "aws-sagemaker-project.json",
     "aws-sagemaker-space.json",
