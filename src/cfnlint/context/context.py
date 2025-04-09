@@ -390,7 +390,7 @@ class Parameter(_Ref):
         return self.type.startswith("AWS::SSM::Parameter::")
 
 
-def _nested_stack_get_atts(filename, template_url):
+def _nested_stack_get_atts(filename: str, template_url: str) -> None | AttributeDict:
     if (
         template_url.startswith("http://")
         or template_url.startswith("https://")
@@ -407,7 +407,7 @@ def _nested_stack_get_atts(filename, template_url):
         (tmp, matches) = decode(template_path)
     except Exception:  # noqa: E722
         return None
-    if matches:
+    if matches or tmp is None:
         return None
 
     outputs = AttributeDict()
@@ -447,6 +447,9 @@ class Resource(_Ref):
         if not isinstance(t, str):
             raise ValueError("Condition must be a string")
         self.condition = c
+
+        if filename is None:
+            return
 
         if self.type == "AWS::CloudFormation::Stack":
             properties = resource.get("Properties")
