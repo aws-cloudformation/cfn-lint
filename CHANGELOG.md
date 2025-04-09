@@ -1,3 +1,10 @@
+### v1.33.1
+## What's Changed
+* Case insensitive pattern for `AWS::SSM::Parameter` `Name` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4090
+* Fix context handling `None` for filename by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4091
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.33.0...v1.33.1
+
 ### v1.33.0
 ## What's Changed
 * New rule [E3062](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3062) to validate `DBInstanceClass` against Engine by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4080
