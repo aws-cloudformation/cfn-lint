@@ -49,11 +49,12 @@ def test_resources():
 
 
 @pytest.mark.parametrize(
-    "name,instance,decode_results,expected_getatts",
+    "name,instance,filename,decode_results,expected_getatts",
     [
         (
             "Nested stack with no Properties",
             {"Type": "AWS::CloudFormation::Stack"},
+            "foo/bar.yaml",
             None,
             AttributeDict({"Outputs\\..*": "/properties/CfnLintStringType"}),
         ),
@@ -63,6 +64,17 @@ def test_resources():
                 "Type": "AWS::CloudFormation::Stack",
                 "Properties": {"TemplateURL": "https://bucket/path.yaml"},
             },
+            "foo/bar.yaml",
+            None,
+            AttributeDict({"Outputs\\..*": "/properties/CfnLintStringType"}),
+        ),
+        (
+            "Nested stack with a None filename",
+            {
+                "Type": "AWS::CloudFormation::Stack",
+                "Properties": {"TemplateURL": "application.yaml"},
+            },
+            None,
             None,
             AttributeDict({"Outputs\\..*": "/properties/CfnLintStringType"}),
         ),
@@ -72,6 +84,7 @@ def test_resources():
                 "Type": "AWS::CloudFormation::Stack",
                 "Properties": {"TemplateURL": "./bar.yaml"},
             },
+            "foo/bar.yaml",
             ({"Outputs": {"MyValue": {"Type": "String"}}}, None),
             AttributeDict({"Outputs.MyValue": "/properties/CfnLintStringType"}),
         ),
@@ -81,6 +94,7 @@ def test_resources():
                 "Type": "AWS::CloudFormation::Stack",
                 "Properties": {"TemplateURL": "./bar.yaml"},
             },
+            "foo/bar.yaml",
             ({}, None),
             AttributeDict({}),
         ),
@@ -90,14 +104,14 @@ def test_resources():
                 "Type": "AWS::CloudFormation::Stack",
                 "Properties": {"TemplateURL": "./bar.yaml"},
             },
+            "foo/bar.yaml",
             (None, Match("test", rule=ParseError())),
             AttributeDict({"Outputs\\..*": "/properties/CfnLintStringType"}),
         ),
     ],
 )
-def test_nested_stacks(name, instance, decode_results, expected_getatts):
+def test_nested_stacks(name, instance, filename, decode_results, expected_getatts):
     region = "us-east-1"
-    filename = "foo/bar.yaml"
 
     with patch("cfnlint.decode.decode") as mock_decode:
         if decode_results is not None:
