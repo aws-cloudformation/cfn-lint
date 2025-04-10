@@ -10,14 +10,14 @@ import pytest
 from cfnlint.jsonschema import ValidationError
 
 # ruff: noqa: E501
-from cfnlint.rules.resources.elasticloadbalancingv2.TargetGroupProtocolRestrictions import (
-    TargetGroupProtocolRestrictions,
+from cfnlint.rules.resources.elasticloadbalancingv2.TargetGroupHealthCheckProtocolRestrictions import (
+    TargetGroupHealthCheckProtocolRestrictions,
 )
 
 
 @pytest.fixture(scope="module")
 def rule():
-    rule = TargetGroupProtocolRestrictions()
+    rule = TargetGroupHealthCheckProtocolRestrictions()
     yield rule
 
 
@@ -25,15 +25,11 @@ def rule():
     "instance,expected",
     [
         (
-            {"Protocol": "GENEVE", "Port": 6081},
+            {"HealthCheckProtocol": "HTTPS", "Matcher": {}},
             [],
         ),
         (
-            {"Protocol": "HTTPS", "Matcher": {}},
-            [],
-        ),
-        (
-            {"Protocol": {}, "Port": 6081},
+            {"HealthCheckProtocol": "TCP"},
             [],
         ),
         (
@@ -41,15 +37,15 @@ def rule():
             [],
         ),
         (
-            {"Protocol": "GENEVE", "Port": 6082},
+            {"HealthCheckProtocol": "TCP", "Matcher": {}},
             [
                 ValidationError(
-                    "6082 is not one of [6081, '6081']",
-                    rule=TargetGroupProtocolRestrictions(),
-                    path=deque(["Port"]),
-                    validator="enum",
+                    "Additional properties are not allowed ('Matcher' was unexpected)",
+                    rule=TargetGroupHealthCheckProtocolRestrictions(),
+                    validator="additionalProperties",
+                    path=deque(["Matcher"]),
                     schema_path=deque(
-                        ["then", "allOf", 0, "then", "properties", "Port", "enum"]
+                        ["then", "allOf", 0, "else", "properties", "Matcher"]
                     ),
                 )
             ],
