@@ -10,9 +10,7 @@ from collections import deque
 from copy import deepcopy
 from typing import Any
 
-import cfnlint.data.schemas.other.resources
 import cfnlint.data.schemas.other.step_functions
-import cfnlint.helpers
 from cfnlint.helpers import is_function
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.helpers import get_value_from_path
@@ -89,6 +87,8 @@ class StateMachineDefinition(CfnLintJsonSchema):
                 }
             }
         ]
+        for k in ["ItemsPath", "MaxConcurrencyPath"]:
+            schema["definitions"]["map"]["properties"][k] = False
         return schema
 
     def _clean_schema(self, validator: Validator, instance: Any):
