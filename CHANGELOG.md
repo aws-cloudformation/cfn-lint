@@ -1,3 +1,10 @@
+### v1.33.2
+## What's Changed
+* Switch [E3683](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3683) to [E3684](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3684) for health check protocol by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4094
+* Add `Items` to map function in state machine definition by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4097
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.33.1...v1.33.2
+
 ### v1.33.1
 ## What's Changed
 * Case insensitive pattern for `AWS::SSM::Parameter` `Name` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4090
