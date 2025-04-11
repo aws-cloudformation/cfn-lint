@@ -142,7 +142,8 @@
     "PINECONE",
     "RDS",
     "MONGO_DB_ATLAS",
-    "NEPTUNE_ANALYTICS"
+    "NEPTUNE_ANALYTICS",
+    "OPENSEARCH_MANAGED_CLUSTER"
    ],
    "type": "string"
   },
@@ -267,6 +268,63 @@
    "required": [
     "TextField",
     "MetadataField"
+   ],
+   "type": "object"
+  },
+  "OpenSearchManagedClusterConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:aws(|-cn|-us-gov|-iso):es:[a-z]{2}(-gov)?-[a-z]+-\\d{1}:\\d{12}:domain/[a-z][a-z0-9-]{3,28}$",
+     "type": "string"
+    },
+    "DomainEndpoint": {
+     "maxLength": 2048,
+     "pattern": "^https://.*$",
+     "type": "string"
+    },
+    "FieldMapping": {
+     "$ref": "#/definitions/OpenSearchManagedClusterFieldMapping"
+    },
+    "VectorIndexName": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^(?![\\-_+.])[a-z0-9][a-z0-9\\-_\\.]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DomainArn",
+    "DomainEndpoint",
+    "VectorIndexName",
+    "FieldMapping"
+   ],
+   "type": "object"
+  },
+  "OpenSearchManagedClusterFieldMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "MetadataField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "TextField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    },
+    "VectorField": {
+     "maxLength": 2048,
+     "pattern": "^.*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetadataField",
+    "TextField",
+    "VectorField"
    ],
    "type": "object"
   },
@@ -842,6 +900,11 @@
      "required": [
       "MongoDbAtlasConfiguration"
      ]
+    },
+    {
+     "required": [
+      "OpensearchManagedClusterConfiguration"
+     ]
     }
    ],
    "properties": {
@@ -850,6 +913,9 @@
     },
     "NeptuneAnalyticsConfiguration": {
      "$ref": "#/definitions/NeptuneAnalyticsConfiguration"
+    },
+    "OpensearchManagedClusterConfiguration": {
+     "$ref": "#/definitions/OpenSearchManagedClusterConfiguration"
     },
     "OpensearchServerlessConfiguration": {
      "$ref": "#/definitions/OpenSearchServerlessConfiguration"

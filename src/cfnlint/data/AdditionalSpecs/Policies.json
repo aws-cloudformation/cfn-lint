@@ -4897,7 +4897,23 @@
    "startrollbackenablementjob": {},
    "startteamdeployment": {}
   },
-  "Resources": {}
+  "Resources": {
+   "application": {
+    "ARNFormats": [
+     "arn:${Partition}:appstudio:${Region}:${Account}:application/.*"
+    ]
+   },
+   "connector": {
+    "ARNFormats": [
+     "arn:${Partition}:appstudio:${Region}:${Account}:connector/.*"
+    ]
+   },
+   "instance": {
+    "ARNFormats": [
+     "arn:${Partition}:appstudio:${Region}:${Account}:instance/.*"
+    ]
+   }
+  }
  },
  "appsync": {
   "Actions": {
@@ -33367,9 +33383,11 @@
      "listener-rule/app",
      "listener-rule/net",
      "listener/app",
+     "listener/gwy",
      "listener/net",
      "loadbalancer",
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/",
      "targetgroup",
      "truststore"
@@ -33408,6 +33426,7 @@
    "createlistener": {
     "Resources": [
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33415,6 +33434,7 @@
     "Resources": [
      "loadbalancer",
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33447,6 +33467,7 @@
    "deletelistener": {
     "Resources": [
      "listener/app",
+     "listener/gwy",
      "listener/net"
     ]
    },
@@ -33454,6 +33475,7 @@
     "Resources": [
      "loadbalancer",
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33550,6 +33572,7 @@
    "modifycapacityreservation": {
     "Resources": [
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33561,12 +33584,14 @@
    "modifylistener": {
     "Resources": [
      "listener/app",
+     "listener/gwy",
      "listener/net"
     ]
    },
    "modifylistenerattributes": {
     "Resources": [
      "listener/app",
+     "listener/gwy",
      "listener/net"
     ]
    },
@@ -33574,6 +33599,7 @@
     "Resources": [
      "loadbalancer",
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33619,9 +33645,11 @@
      "listener-rule/app",
      "listener-rule/net",
      "listener/app",
+     "listener/gwy",
      "listener/net",
      "loadbalancer",
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/",
      "targetgroup",
      "truststore"
@@ -33635,6 +33663,7 @@
    "setipaddresstype": {
     "Resources": [
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33668,6 +33697,7 @@
    "setsubnets": {
     "Resources": [
      "loadbalancer/app/",
+     "loadbalancer/gwy/",
      "loadbalancer/net/"
     ]
    },
@@ -33701,6 +33731,15 @@
      "elasticloadbalancing:ResourceTag/${TagKey}"
     ]
    },
+   "listener/gwy": {
+    "ARNFormats": [
+     "arn:${Partition}:elasticloadbalancing:${Region}:${Account}:listener/gwy/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "elasticloadbalancing:ResourceTag/${TagKey}"
+    ]
+   },
    "listener/net": {
     "ARNFormats": [
      "arn:${Partition}:elasticloadbalancing:${Region}:${Account}:listener/net/.*"
@@ -33722,6 +33761,15 @@
    "loadbalancer/app/": {
     "ARNFormats": [
      "arn:${Partition}:elasticloadbalancing:${Region}:${Account}:loadbalancer/app/.*"
+    ],
+    "ConditionKeys": [
+     "aws:ResourceTag/${TagKey}",
+     "elasticloadbalancing:ResourceTag/${TagKey}"
+    ]
+   },
+   "loadbalancer/gwy/": {
+    "ARNFormats": [
+     "arn:${Partition}:elasticloadbalancing:${Region}:${Account}:loadbalancer/gwy/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
@@ -66110,12 +66158,14 @@
      "profile"
     ]
    },
+   "deleteoauthappconnection": {},
    "deleteplugin": {
     "Resources": [
      "plugin"
     ]
    },
    "generatecodefromcommands": {},
+   "generatecoderecommendations": {},
    "getconnector": {},
    "getconversation": {},
    "getidentitymetadata": {},
@@ -66162,7 +66212,8 @@
     "Resources": [
      "plugin"
     ]
-   }
+   },
+   "verifyoauthappconnection": {}
   },
   "Resources": {
    "plugin": {

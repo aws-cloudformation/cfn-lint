@@ -1119,7 +1119,6 @@ cached: list[str] = [
     "aws-logs-deliverysource.json",
     "aws-logs-destination.json",
     "aws-logs-loganomalydetector.json",
-    "aws-logs-loggroup.json",
     "aws-logs-logstream.json",
     "aws-logs-metricfilter.json",
     "aws-logs-querydefinition.json",

@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Version",
+  "/properties/ChangeDescription",
+  "/properties/Description",
+  "/properties/Platform",
+  "/properties/Data",
+  "/properties/Uri",
+  "/properties/KmsKeyId",
+  "/properties/SupportedOsVersions",
+  "/properties/Tags"
+ ],
+ "oneOf": [
+  {
+   "required": [
+    "Data"
+   ]
+  },
+  {
+   "required": [
+    "Uri"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ChangeDescription": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Data": {
+   "maxLength": 16000,
+   "minLength": 1,
+   "pattern": "[^\\x00]+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "KmsKeyId": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "pattern": "^[-_A-Za-z-0-9][-_A-Za-z0-9 ]{1,126}[-_A-Za-z-0-9]$",
+   "type": "string"
+  },
+  "Platform": {
+   "enum": [
+    "Windows",
+    "Linux",
+    "macOS"
+   ],
+   "type": "string"
+  },
+  "SupportedOsVersions": {
+   "insertionOrder": false,
+   "items": {
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 25,
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,}": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Type": {
+   "enum": [
+    "BUILD",
+    "TEST"
+   ],
+   "type": "string"
+  },
+  "Uri": {
+   "type": "string"
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Type",
+  "/properties/Encrypted"
+ ],
+ "required": [
+  "Name",
+  "Platform",
+  "Version"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::ImageBuilder::Component",
+ "writeOnlyProperties": [
+  "/properties/Data",
+  "/properties/Uri"
+ ]
+}

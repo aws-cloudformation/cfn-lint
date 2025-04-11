@@ -2,7 +2,6 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/AllowedColumns",
-  "/properties/AnalysisMethod",
   "/properties/TableReference"
  ],
  "definitions": {
@@ -84,7 +83,7 @@
   "AllowedAnalysis": {
    "maxLength": 200,
    "minLength": 0,
-   "pattern": "(ANY_QUERY|arn:[\\w]{3}:cleanrooms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:membership/[\\d\\w-]+/analysistemplate/[\\d\\w-]+)",
+   "pattern": "(ANY_QUERY|ANY_JOB|arn:[\\w]{3}:cleanrooms:[\\w]{2}-[\\w]{4,9}-[\\d]:[\\d]{12}:membership/[\\d\\w-]+/analysistemplate/[\\d\\w-]+)",
    "type": "string"
   },
   "AllowedAnalysisProvider": {
@@ -103,7 +102,9 @@
   },
   "AnalysisMethod": {
    "enum": [
-    "DIRECT_QUERY"
+    "DIRECT_QUERY",
+    "DIRECT_JOB",
+    "MULTIPLE"
    ],
    "type": "string"
   },
@@ -445,6 +446,20 @@
    ],
    "type": "string"
   },
+  "SelectedAnalysisMethod": {
+   "enum": [
+    "DIRECT_QUERY",
+    "DIRECT_JOB"
+   ],
+   "type": "string"
+  },
+  "SelectedAnalysisMethods": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SelectedAnalysisMethod"
+   },
+   "type": "array"
+  },
   "SnowflakeTableReference": {
    "additionalProperties": false,
    "properties": {
@@ -638,6 +653,9 @@
    "minLength": 1,
    "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
    "type": "string"
+  },
+  "SelectedAnalysisMethods": {
+   "$ref": "#/definitions/SelectedAnalysisMethods"
   },
   "TableReference": {
    "$ref": "#/definitions/TableReference"
