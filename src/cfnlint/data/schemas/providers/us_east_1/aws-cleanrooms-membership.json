@@ -4,6 +4,25 @@
   "/properties/CollaborationIdentifier"
  ],
  "definitions": {
+  "MembershipJobComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "MembershipJobLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
   "MembershipMLPaymentConfig": {
    "additionalProperties": false,
    "properties": {
@@ -43,6 +62,9 @@
   "MembershipPaymentConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "JobCompute": {
+     "$ref": "#/definitions/MembershipJobComputePaymentConfig"
+    },
     "MachineLearning": {
      "$ref": "#/definitions/MembershipMLPaymentConfig"
     },
@@ -52,6 +74,37 @@
    },
    "required": [
     "QueryCompute"
+   ],
+   "type": "object"
+  },
+  "MembershipProtectedJobOutputConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/ProtectedJobS3OutputConfigurationInput"
+    }
+   },
+   "required": [
+    "S3"
+   ],
+   "type": "object"
+  },
+  "MembershipProtectedJobResultConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "OutputConfiguration": {
+     "$ref": "#/definitions/MembershipProtectedJobOutputConfiguration"
+    },
+    "RoleArn": {
+     "maxLength": 512,
+     "minLength": 32,
+     "pattern": "arn:aws:iam::[\\w]+:role/[\\w+=./@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "OutputConfiguration",
+    "RoleArn"
    ],
    "type": "object"
   },
@@ -112,6 +165,26 @@
     "COLLABORATION_DELETED"
    ],
    "type": "string"
+  },
+  "ProtectedJobS3OutputConfigurationInput": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": ".*(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$).*",
+     "type": "string"
+    },
+    "KeyPrefix": {
+     "maxLength": 512,
+     "pattern": "[\\w!.=*/-]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket"
+   ],
+   "type": "object"
   },
   "ProtectedQueryS3OutputConfiguration": {
    "additionalProperties": false,
@@ -192,8 +265,14 @@
    "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
    "type": "string"
   },
+  "DefaultJobResultConfiguration": {
+   "$ref": "#/definitions/MembershipProtectedJobResultConfiguration"
+  },
   "DefaultResultConfiguration": {
    "$ref": "#/definitions/MembershipProtectedQueryResultConfiguration"
+  },
+  "JobLogStatus": {
+   "$ref": "#/definitions/MembershipJobLogStatus"
   },
   "MembershipIdentifier": {
    "maxLength": 36,

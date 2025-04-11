@@ -1,0 +1,606 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ContentFilterAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "ContentFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/ContentFilterAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "InputModalities": {
+     "items": {
+      "$ref": "#/definitions/Modality"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array"
+    },
+    "InputStrength": {
+     "$ref": "#/definitions/FilterStrength"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/ContentFilterAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "OutputModalities": {
+     "items": {
+      "$ref": "#/definitions/Modality"
+     },
+     "maxItems": 2,
+     "minItems": 1,
+     "type": "array"
+    },
+    "OutputStrength": {
+     "$ref": "#/definitions/FilterStrength"
+    },
+    "Type": {
+     "$ref": "#/definitions/ContentFilterType"
+    }
+   },
+   "required": [
+    "InputStrength",
+    "OutputStrength",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ContentFilterType": {
+   "enum": [
+    "SEXUAL",
+    "VIOLENCE",
+    "HATE",
+    "INSULTS",
+    "MISCONDUCT",
+    "PROMPT_ATTACK"
+   ],
+   "type": "string"
+  },
+  "ContentPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FiltersConfig": {
+     "items": {
+      "$ref": "#/definitions/ContentFilterConfig"
+     },
+     "maxItems": 6,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FiltersConfig"
+   ],
+   "type": "object"
+  },
+  "ContextualGroundingAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "ContextualGroundingFilterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/ContextualGroundingAction"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Threshold": {
+     "minimum": 0,
+     "type": "number"
+    },
+    "Type": {
+     "$ref": "#/definitions/ContextualGroundingFilterType"
+    }
+   },
+   "required": [
+    "Threshold",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ContextualGroundingFilterType": {
+   "enum": [
+    "GROUNDING",
+    "RELEVANCE"
+   ],
+   "type": "string"
+  },
+  "ContextualGroundingPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "FiltersConfig": {
+     "items": {
+      "$ref": "#/definitions/ContextualGroundingFilterConfig"
+     },
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "FiltersConfig"
+   ],
+   "type": "object"
+  },
+  "FilterStrength": {
+   "enum": [
+    "NONE",
+    "LOW",
+    "MEDIUM",
+    "HIGH"
+   ],
+   "type": "string"
+  },
+  "GuardrailStatus": {
+   "enum": [
+    "CREATING",
+    "UPDATING",
+    "VERSIONING",
+    "READY",
+    "FAILED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "ManagedWordsConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "Type": {
+     "$ref": "#/definitions/ManagedWordsType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ManagedWordsType": {
+   "enum": [
+    "PROFANITY"
+   ],
+   "type": "string"
+  },
+  "Modality": {
+   "enum": [
+    "TEXT",
+    "IMAGE"
+   ],
+   "type": "string"
+  },
+  "PiiEntityConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "Type": {
+     "$ref": "#/definitions/PiiEntityType"
+    }
+   },
+   "required": [
+    "Action",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "PiiEntityType": {
+   "enum": [
+    "ADDRESS",
+    "AGE",
+    "AWS_ACCESS_KEY",
+    "AWS_SECRET_KEY",
+    "CA_HEALTH_NUMBER",
+    "CA_SOCIAL_INSURANCE_NUMBER",
+    "CREDIT_DEBIT_CARD_CVV",
+    "CREDIT_DEBIT_CARD_EXPIRY",
+    "CREDIT_DEBIT_CARD_NUMBER",
+    "DRIVER_ID",
+    "EMAIL",
+    "INTERNATIONAL_BANK_ACCOUNT_NUMBER",
+    "IP_ADDRESS",
+    "LICENSE_PLATE",
+    "MAC_ADDRESS",
+    "NAME",
+    "PASSWORD",
+    "PHONE",
+    "PIN",
+    "SWIFT_CODE",
+    "UK_NATIONAL_HEALTH_SERVICE_NUMBER",
+    "UK_NATIONAL_INSURANCE_NUMBER",
+    "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER",
+    "URL",
+    "USERNAME",
+    "US_BANK_ACCOUNT_NUMBER",
+    "US_BANK_ROUTING_NUMBER",
+    "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER",
+    "US_PASSPORT_NUMBER",
+    "US_SOCIAL_SECURITY_NUMBER",
+    "VEHICLE_IDENTIFICATION_NUMBER"
+   ],
+   "type": "string"
+  },
+  "RegexConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "Description": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "InputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "Pattern": {
+     "maxLength": 500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Name",
+    "Pattern"
+   ],
+   "type": "object"
+  },
+  "SensitiveInformationAction": {
+   "enum": [
+    "BLOCK",
+    "ANONYMIZE",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "SensitiveInformationPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "PiiEntitiesConfig": {
+     "items": {
+      "$ref": "#/definitions/PiiEntityConfig"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RegexesConfig": {
+     "items": {
+      "$ref": "#/definitions/RegexConfig"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TopicAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "TopicConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Examples": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array"
+    },
+    "InputAction": {
+     "$ref": "#/definitions/TopicAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^[0-9a-zA-Z-_ !?.]+$",
+     "type": "string"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/TopicAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "Type": {
+     "$ref": "#/definitions/TopicType"
+    }
+   },
+   "required": [
+    "Definition",
+    "Name",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "TopicPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "TopicsConfig": {
+     "items": {
+      "$ref": "#/definitions/TopicConfig"
+     },
+     "maxItems": 30,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TopicsConfig"
+   ],
+   "type": "object"
+  },
+  "TopicType": {
+   "enum": [
+    "DENY"
+   ],
+   "type": "string"
+  },
+  "WordAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
+  "WordConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
+    "Text": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Text"
+   ],
+   "type": "object"
+  },
+  "WordPolicyConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ManagedWordListsConfig": {
+     "items": {
+      "$ref": "#/definitions/ManagedWordsConfig"
+     },
+     "type": "array"
+    },
+    "WordsConfig": {
+     "items": {
+      "$ref": "#/definitions/WordConfig"
+     },
+     "maxItems": 10000,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GuardrailArn"
+ ],
+ "properties": {
+  "BlockedInputMessaging": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "BlockedOutputsMessaging": {
+   "maxLength": 500,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ContentPolicyConfig": {
+   "$ref": "#/definitions/ContentPolicyConfig"
+  },
+  "ContextualGroundingPolicyConfig": {
+   "$ref": "#/definitions/ContextualGroundingPolicyConfig"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FailureRecommendations": {
+   "items": {
+    "maxLength": 200,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "GuardrailArn": {
+   "maxLength": 2048,
+   "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail/[a-z0-9]+$",
+   "type": "string"
+  },
+  "GuardrailId": {
+   "maxLength": 64,
+   "pattern": "^[a-z0-9]+$",
+   "type": "string"
+  },
+  "KmsKeyArn": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[^:]+)?:kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z-_]+$",
+   "type": "string"
+  },
+  "SensitiveInformationPolicyConfig": {
+   "$ref": "#/definitions/SensitiveInformationPolicyConfig"
+  },
+  "Status": {
+   "$ref": "#/definitions/GuardrailStatus"
+  },
+  "StatusReasons": {
+   "items": {
+    "maxLength": 200,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 100,
+   "type": "array"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "TopicPolicyConfig": {
+   "$ref": "#/definitions/TopicPolicyConfig"
+  },
+  "UpdatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Version": {
+   "pattern": "^(([1-9][0-9]{0,7})|(DRAFT))$",
+   "type": "string"
+  },
+  "WordPolicyConfig": {
+   "$ref": "#/definitions/WordPolicyConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/FailureRecommendations",
+  "/properties/GuardrailArn",
+  "/properties/GuardrailId",
+  "/properties/Status",
+  "/properties/StatusReasons",
+  "/properties/UpdatedAt",
+  "/properties/Version"
+ ],
+ "required": [
+  "Name",
+  "BlockedInputMessaging",
+  "BlockedOutputsMessaging"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Bedrock::Guardrail"
+}

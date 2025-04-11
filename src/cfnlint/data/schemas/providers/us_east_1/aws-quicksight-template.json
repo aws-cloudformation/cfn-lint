@@ -10637,6 +10637,14 @@
      "maxItems": 100,
      "minItems": 0,
      "type": "array"
+    },
+    "TransposedTableOptions": {
+     "items": {
+      "$ref": "#/definitions/TransposedTableOption"
+     },
+     "maxItems": 10001,
+     "minItems": 0,
+     "type": "array"
     }
    },
    "type": "object"
@@ -11598,6 +11606,33 @@
      ]
     }
    },
+   "type": "object"
+  },
+  "TransposedColumnType": {
+   "enum": [
+    "ROW_HEADER_COLUMN",
+    "VALUE_COLUMN"
+   ],
+   "type": "string"
+  },
+  "TransposedTableOption": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnIndex": {
+     "maximum": 9999,
+     "minimum": 0,
+     "type": "number"
+    },
+    "ColumnType": {
+     "$ref": "#/definitions/TransposedColumnType"
+    },
+    "ColumnWidth": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ColumnType"
+   ],
    "type": "object"
   },
   "TreeMapAggregatedFieldWells": {

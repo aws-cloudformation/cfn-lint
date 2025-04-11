@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Name": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "RoleArn": {
+     "format": "AWS::IAM::Role.Arn",
+     "maxLength": 2048,
+     "minLength": 20,
+     "type": "string"
+    },
+    "Uri": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Uri"
+   ],
+   "type": "object"
+  },
+  "Actions": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Dynamic": {
+     "type": "boolean"
+    },
+    "Required": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Required"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Actions": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "$ref": "#/definitions/Actions"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LatestVersionNumber": {
+   "type": "integer"
+  },
+  "Name": {
+   "pattern": "^[^\\/#:\\n]{1,64}$",
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "$ref": "#/definitions/Parameter"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VersionNumber": {
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/VersionNumber"
+ ],
+ "required": [
+  "Name",
+  "Actions"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::Extension",
+ "writeOnlyProperties": [
+  "/properties/LatestVersionNumber"
+ ]
+}

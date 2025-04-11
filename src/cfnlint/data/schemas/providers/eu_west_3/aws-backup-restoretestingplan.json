@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestoreTestingPlanName"
+ ],
+ "definitions": {
+  "RestoreTestingRecoveryPointSelection": {
+   "additionalProperties": false,
+   "properties": {
+    "Algorithm": {
+     "$ref": "#/definitions/RestoreTestingRecoveryPointSelectionAlgorithm"
+    },
+    "ExcludeVaults": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "IncludeVaults": {
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "RecoveryPointTypes": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RestoreTestingRecoveryPointType"
+     },
+     "type": "array"
+    },
+    "SelectionWindowDays": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Algorithm",
+    "RecoveryPointTypes",
+    "IncludeVaults"
+   ],
+   "type": "object"
+  },
+  "RestoreTestingRecoveryPointSelectionAlgorithm": {
+   "enum": [
+    "LATEST_WITHIN_WINDOW",
+    "RANDOM_WITHIN_WINDOW"
+   ],
+   "type": "string"
+  },
+  "RestoreTestingRecoveryPointType": {
+   "enum": [
+    "SNAPSHOT",
+    "CONTINUOUS"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestoreTestingPlanName"
+ ],
+ "properties": {
+  "RecoveryPointSelection": {
+   "$ref": "#/definitions/RestoreTestingRecoveryPointSelection"
+  },
+  "RestoreTestingPlanArn": {
+   "type": "string"
+  },
+  "RestoreTestingPlanName": {
+   "type": "string"
+  },
+  "ScheduleExpression": {
+   "type": "string"
+  },
+  "ScheduleExpressionTimezone": {
+   "type": "string"
+  },
+  "StartWindowHours": {
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RestoreTestingPlanArn"
+ ],
+ "required": [
+  "RecoveryPointSelection",
+  "ScheduleExpression",
+  "RestoreTestingPlanName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Backup::RestoreTestingPlan"
+}
