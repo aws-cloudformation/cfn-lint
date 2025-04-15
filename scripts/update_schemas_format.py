@@ -39,6 +39,7 @@ def _descend(instance: Any, keywords: Sequence[str]) -> Iterator[deque[str]]:
 def _create_cidr_patch(type_name: str, ref: str, resolver: RefResolver, format: str):
     if type_name in [
         "AWS::SecurityHub::Insight",
+        "AWS::EC2::IPAMPool",
     ]:
         return []
 
