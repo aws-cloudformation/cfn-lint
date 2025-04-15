@@ -328,6 +328,7 @@ class TestManagerGetResourceSchema(BaseTestCase):
         schema_iso = self.manager.get_resource_schema("us-iso-east-1", rt)
 
         self.assertDictEqual(schema_us_east_1.schema, schema_iso.schema)
+        self.assertTrue(schema_iso.is_cached)
 
     def test_type_normalization(self):
 
