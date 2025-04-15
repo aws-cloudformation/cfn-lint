@@ -130,7 +130,7 @@ def _decode(
                 )
         else:
             matches = [create_match_yaml_parser_error(err, filename)]
-    except YAMLError as err:
+    except (YAMLError, Exception) as err:
         matches = [create_match_file_error(filename, str(err))]
 
     if not isinstance(template, dict) and not matches:

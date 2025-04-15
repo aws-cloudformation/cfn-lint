@@ -141,6 +141,9 @@ class _Transform:
                 elif k == "Fn::ToJsonString":
                     # extra special handing for this as {} could be a valid value
                     return obj
+                elif k == "Fn::GetAtt":
+                    if isinstance(v, (list, str)):
+                        obj[k] = self._walk(v, params, cfn)
                 elif k == "Fn::Sub":
                     if isinstance(v, str):
                         only_string, obj[k] = self._replace_string_params(v, params)

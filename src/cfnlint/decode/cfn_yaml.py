@@ -263,9 +263,26 @@ class MarkedLoader(Reader, _Scanner, Parser, Composer, NodeConstructor, Resolver
         if isinstance(node.value, (str)):
             return list_node(node.value.split(".", 1), node.start_mark, node.end_mark)
         if isinstance(node.value, list):
-            return [self.construct_object(child, deep=False) for child in node.value]
+            if any(isinstance(value, tuple) for value in node.value):
+                return dict_node(
+                    self.construct_object(
+                        MappingNode(
+                            tag="tag:yaml.org,2002:map",
+                            value=node.value,
+                            start_mark=node.start_mark,
+                            end_mark=node.end_mark,
+                        ),
+                        deep=True,
+                    )
+                )
+            else:
+                return list_node(
+                    [self.construct_object(child, deep=True) for child in node.value],
+                    node.start_mark,
+                    node.end_mark,
+                )
 
-        raise ValueError(f"Unexpected node type: {type(node.value)}")
+        raise ValueError(f"Unexpected GetAtt format: {type(node.value)}")
 
 
 def multi_constructor(loader, tag_suffix, node):
