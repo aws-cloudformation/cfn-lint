@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DeploymentPatternName",
+  "/properties/Name",
+  "/properties/WorkloadName"
+ ],
+ "definitions": {
+  "DeploymentSpecifications": {
+   "additionalProperties": false,
+   "maxProperties": 100,
+   "minProperties": 1,
+   "patternProperties": {
+    "^[a-zA-Z0-9-:]{3,256}$": {
+     "maxLength": 1500,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DeploymentStatus": {
+   "enum": [
+    "COMPLETED",
+    "CREATING",
+    "DELETE_IN_PROGRESS",
+    "DELETE_INITIATING",
+    "DELETE_FAILED",
+    "DELETED",
+    "FAILED",
+    "IN_PROGRESS",
+    "VALIDATING"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws(-cn|-us-gov)?:launchwizard:[a-z0-9-]+:[0-9]{12}:deployment/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DeletedAt": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "DeploymentId": {
+   "maxLength": 128,
+   "minLength": 2,
+   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  },
+  "DeploymentPatternName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9][a-zA-Z0-9-]*$",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "^[A-Za-z0-9_\\s\\.-]+$",
+   "type": "string"
+  },
+  "ResourceGroup": {
+   "type": "string"
+  },
+  "Specifications": {
+   "$ref": "#/definitions/DeploymentSpecifications"
+  },
+  "Status": {
+   "$ref": "#/definitions/DeploymentStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   },
+   "type": "array"
+  },
+  "WorkloadName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[A-Za-z][a-zA-Z0-9-_]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedAt",
+  "/properties/DeletedAt",
+  "/properties/DeploymentId",
+  "/properties/ResourceGroup",
+  "/properties/Status"
+ ],
+ "required": [
+  "DeploymentPatternName",
+  "Name",
+  "WorkloadName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::LaunchWizard::Deployment",
+ "writeOnlyProperties": [
+  "/properties/Specifications"
+ ]
+}

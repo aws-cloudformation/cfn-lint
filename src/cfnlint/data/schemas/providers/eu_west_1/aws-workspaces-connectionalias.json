@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConnectionString",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "ConnectionAliasAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociatedAccountId": {
+     "type": "string"
+    },
+    "AssociationStatus": {
+     "enum": [
+      "NOT_ASSOCIATED",
+      "PENDING_ASSOCIATION",
+      "ASSOCIATED_WITH_OWNER_ACCOUNT",
+      "ASSOCIATED_WITH_SHARED_ACCOUNT",
+      "PENDING_DISASSOCIATION"
+     ],
+     "type": "string"
+    },
+    "ConnectionIdentifier": {
+     "maxLength": 20,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]+$",
+     "type": "string"
+    },
+    "ResourceId": {
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": ".+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AliasId"
+ ],
+ "properties": {
+  "AliasId": {
+   "maxLength": 68,
+   "minLength": 13,
+   "pattern": "^wsca-[0-9a-z]{8,63}$",
+   "type": "string"
+  },
+  "Associations": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ConnectionAliasAssociation"
+   },
+   "maxLength": 25,
+   "minLength": 1,
+   "type": "array"
+  },
+  "ConnectionAliasState": {
+   "enum": [
+    "CREATING",
+    "CREATED",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "ConnectionString": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[.0-9a-zA-Z\\-]{1,255}$",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConnectionAliasState",
+  "/properties/AliasId",
+  "/properties/Associations"
+ ],
+ "required": [
+  "ConnectionString"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::WorkSpaces::ConnectionAlias"
+}

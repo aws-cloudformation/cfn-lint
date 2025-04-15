@@ -1,0 +1,96 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier",
+  "/properties/ExtensionVersionNumber"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ExtensionArn": {
+   "type": "string"
+  },
+  "ExtensionIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ExtensionVersionNumber": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Parameters": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^.+$": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ResourceArn": {
+   "type": "string"
+  },
+  "ResourceIdentifier": {
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ResourceArn",
+  "/properties/ExtensionArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppConfig::ExtensionAssociation",
+ "writeOnlyProperties": [
+  "/properties/ExtensionIdentifier",
+  "/properties/ResourceIdentifier"
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ArchiveName",
+  "/properties/SourceArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/ArchiveName"
+ ],
+ "properties": {
+  "ArchiveName": {
+   "maxLength": 48,
+   "minLength": 1,
+   "pattern": "[\\.\\-_A-Za-z0-9]+",
+   "type": "string"
+  },
+  "Arn": {
+   "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:.+\\/.+$",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "EventPattern": {
+   "format": "json",
+   "maxLength": 4096,
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "KmsKeyIdentifier": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9_\\-/:]*$",
+   "type": "string"
+  },
+  "RetentionDays": {
+   "type": "integer"
+  },
+  "SourceArn": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "SourceArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Events::Archive"
+}
