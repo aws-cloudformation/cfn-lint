@@ -115,15 +115,18 @@ AVAILABILITY_ZONES = {
     "us-gov-west-1": ["us-gov-west-1a", "us-gov-west-1b", "us-gov-west-1c"],
     "us-west-1": ["us-west-1a", "us-west-1c"],
     "us-west-2": ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"],
-
     # Isolated regions
-    "us-iso-east-1": ["us-iso-east-1a", "us-iso-east-1b", "us-iso-east-1c"], #DCA
-    "us-isof-south-1": ["us-isof-south-1a", "us-isof-south-1b", "us-isof-south-1c"], #ALE
-    "us-iso-west-1": ["us-iso-west-1a", "us-iso-west-1b", "us-iso-west-1c"], #APA
-    "us-isob-west-1": ["us-isob-west-1a", "us-isob-west-1b", "us-isob-west-1c"], #FFZ
-    "us-isob-east-1": ["us-isob-east-1a", "us-isob-east-1b", "us-isob-east-1c"], #LCK
-    "us-isof-east-1": ["us-isof-east-1a", "us-isof-east-1b", "us-isof-east-1c"], #LTW
-    "eu-isoe-west-1": ["eu-isoe-west-1a", "eu-isoe-west-1b", "eu-isoe-west-1c"], #NCL
+    "us-iso-east-1": ["us-iso-east-1a", "us-iso-east-1b", "us-iso-east-1c"],  # DCA
+    "us-isof-south-1": [
+        "us-isof-south-1a",
+        "us-isof-south-1b",
+        "us-isof-south-1c",
+    ],  # ALE
+    "us-iso-west-1": ["us-iso-west-1a", "us-iso-west-1b", "us-iso-west-1c"],  # APA
+    "us-isob-west-1": ["us-isob-west-1a", "us-isob-west-1b", "us-isob-west-1c"],  # FFZ
+    "us-isob-east-1": ["us-isob-east-1a", "us-isob-east-1b", "us-isob-east-1c"],  # LCK
+    "us-isof-east-1": ["us-isof-east-1a", "us-isof-east-1b", "us-isof-east-1c"],  # LTW
+    "eu-isoe-west-1": ["eu-isoe-west-1a", "eu-isoe-west-1b", "eu-isoe-west-1c"],  # NCL
 }
 
 REGIONS = list(AVAILABILITY_ZONES.keys())
