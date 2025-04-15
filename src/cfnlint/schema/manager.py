@@ -114,6 +114,8 @@ class ProviderSchemaManager:
         cached_regions: list[str] = []
         cached_schema: Schema | None = None
         for region in regions:
+            if region.__contains__('iso'):
+                region=REGION_PRIMARY
             try:
                 schema = self.get_resource_schema(region, resource_type)
             except ResourceNotFoundError:
@@ -206,6 +208,8 @@ class ProviderSchemaManager:
         Returns:
             list[str]: returns a list of resource types
         """
+        if region.__contains__('iso'):
+            region=REGION_PRIMARY
         reg = ToPy(region)
 
         if self._region_primary.name not in self._provider_schema_modules:
@@ -574,6 +578,8 @@ class ProviderSchemaManager:
             Dict(str, Dict): Returns a Dict where the keys are the attributes and the
                 value is the CloudFormation schema description of the attribute
         """
+        if region.__contains__('iso'):
+            region=REGION_PRIMARY
         resource_type = self._normalize_resource_type(resource_type)
         self.get_resource_schema(region=region, resource_type=resource_type)
         return self._schemas[region][resource_type].get_atts
