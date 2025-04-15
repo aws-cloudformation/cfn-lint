@@ -723,7 +723,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             if isinstance(text, list) and isinstance(path[0], int):
                 try:
                     result = self._loc(text[path[0]])
-                except AttributeError as err:
+                except (AttributeError, IndexError) as err:
                     LOGGER.debug(err)
             else:
                 try:
