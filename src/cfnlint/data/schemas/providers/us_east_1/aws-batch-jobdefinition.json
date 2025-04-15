@@ -50,6 +50,9 @@
      "type": "array",
      "uniqueItems": false
     },
+    "EnableExecuteCommand": {
+     "type": "boolean"
+    },
     "Environment": {
      "insertionOrder": true,
      "items": {
@@ -251,6 +254,9 @@
      },
      "type": "array",
      "uniqueItems": false
+    },
+    "EnableExecuteCommand": {
+     "type": "boolean"
     },
     "EphemeralStorage": {
      "$ref": "#/definitions/EphemeralStorage"
@@ -765,6 +771,9 @@
      "type": "array",
      "uniqueItems": false
     },
+    "EnableExecuteCommand": {
+     "type": "boolean"
+    },
     "Environment": {
      "insertionOrder": true,
      "items": {
@@ -888,6 +897,9 @@
      },
      "type": "array",
      "uniqueItems": false
+    },
+    "EnableExecuteCommand": {
+     "type": "boolean"
     },
     "ExecutionRoleArn": {
      "type": "string"
@@ -1101,6 +1113,31 @@
     },
     "Essential": {
      "type": "boolean"
+    },
+    "FirelensConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "Options": {
+       "additionalProperties": false,
+       "patternProperties": {
+        ".*": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "Type": {
+       "enumCaseInsensitive": [
+        "fluentbit",
+        "fluentd"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "Type"
+     ],
+     "type": "object"
     },
     "Image": {
      "type": "string"

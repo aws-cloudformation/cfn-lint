@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServiceName",
+  "/properties/VpcEndpointType",
+  "/properties/VpcId",
+  "/properties/ServiceNetworkArn",
+  "/properties/ResourceConfigurationArn"
+ ],
+ "definitions": {
+  "DnsOptionsSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "DnsRecordIpType": {
+     "enum": [
+      "ipv4",
+      "ipv6",
+      "dualstack",
+      "service-defined",
+      "not-specified"
+     ],
+     "type": "string"
+    },
+    "PrivateDnsOnlyForInboundResolverEndpoint": {
+     "enum": [
+      "OnlyInboundResolver",
+      "AllResolvers",
+      "NotSpecified"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreationTimestamp": {
+   "type": "string"
+  },
+  "DnsEntries": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DnsOptions": {
+   "$ref": "#/definitions/DnsOptionsSpecification"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpAddressType": {
+   "enum": [
+    "ipv4",
+    "ipv6",
+    "dualstack",
+    "not-specified"
+   ],
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PolicyDocument": {
+   "type": [
+    "string",
+    "object"
+   ]
+  },
+  "PrivateDnsEnabled": {
+   "type": "boolean"
+  },
+  "ResourceConfigurationArn": {
+   "type": "string"
+  },
+  "RouteTableIds": {
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/RouteTableId",
+     "typeName": "AWS::EC2::RouteTable"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "anyOf": [
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/GroupId",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/Id",
+       "typeName": "AWS::EC2::SecurityGroup"
+      }
+     },
+     {
+      "relationshipRef": {
+       "propertyPath": "/properties/DefaultSecurityGroup",
+       "typeName": "AWS::EC2::VPC"
+      }
+     }
+    ],
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceName": {
+   "type": "string"
+  },
+  "ServiceNetworkArn": {
+   "type": "string"
+  },
+  "SubnetIds": {
+   "insertionOrder": false,
+   "items": {
+    "relationshipRef": {
+     "propertyPath": "/properties/SubnetId",
+     "typeName": "AWS::EC2::Subnet"
+    },
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcEndpointType": {
+   "enum": [
+    "Interface",
+    "Gateway",
+    "GatewayLoadBalancer",
+    "ServiceNetwork",
+    "Resource"
+   ],
+   "type": "string"
+  },
+  "VpcId": {
+   "format": "AWS::EC2::VPC.Id",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds",
+  "/properties/CreationTimestamp",
+  "/properties/DnsEntries",
+  "/properties/Id"
+ ],
+ "required": [
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VPCEndpoint"
+}

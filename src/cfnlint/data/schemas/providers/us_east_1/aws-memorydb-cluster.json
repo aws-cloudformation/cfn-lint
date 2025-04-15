@@ -9,7 +9,8 @@
   "/properties/SubnetGroupName",
   "/properties/SnapshotArns",
   "/properties/MultiRegionClusterName",
-  "/properties/SnapshotName"
+  "/properties/SnapshotName",
+  "/properties/NetworkType"
  ],
  "definitions": {
   "DataTieringStatus": {
@@ -30,6 +31,21 @@
     }
    },
    "type": "object"
+  },
+  "SupportedIpDiscoveryTypes": {
+   "enum": [
+    "ipv4",
+    "ipv6"
+   ],
+   "type": "string"
+  },
+  "SupportedNetworkTypes": {
+   "enum": [
+    "ipv4",
+    "ipv6",
+    "dual_stack"
+   ],
+   "type": "string"
   },
   "Tag": {
    "additionalProperties": false,
@@ -92,6 +108,10 @@
   "FinalSnapshotName": {
    "type": "string"
   },
+  "IpDiscovery": {
+   "$ref": "#/definitions/SupportedIpDiscoveryTypes",
+   "type": "object"
+  },
   "KmsKeyId": {
    "type": "string"
   },
@@ -100,6 +120,10 @@
   },
   "MultiRegionClusterName": {
    "type": "string"
+  },
+  "NetworkType": {
+   "$ref": "#/definitions/SupportedNetworkTypes",
+   "type": "object"
   },
   "NodeType": {
    "type": "string"

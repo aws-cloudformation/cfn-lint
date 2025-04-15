@@ -5,6 +5,7 @@
   "/properties/CreatorMemberAbilities",
   "/properties/CreatorMLMemberAbilities",
   "/properties/DataEncryptionMetadata",
+  "/properties/JobLogStatus",
   "/properties/QueryLogStatus",
   "/properties/Members",
   "/properties/CreatorPaymentConfiguration",
@@ -15,6 +16,13 @@
    "enum": [
     "CLEAN_ROOMS_SQL",
     "SPARK"
+   ],
+   "type": "string"
+  },
+  "CollaborationJobLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
    ],
    "type": "string"
   },
@@ -65,6 +73,18 @@
    ],
    "type": "object"
   },
+  "JobComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
   "MLMemberAbilities": {
    "additionalProperties": false,
    "properties": {
@@ -100,6 +120,7 @@
   "MemberAbility": {
    "enum": [
     "CAN_QUERY",
+    "CAN_RUN_JOB",
     "CAN_RECEIVE_RESULTS"
    ],
    "type": "string"
@@ -175,6 +196,9 @@
   "PaymentConfiguration": {
    "additionalProperties": false,
    "properties": {
+    "JobCompute": {
+     "$ref": "#/definitions/JobComputePaymentConfig"
+    },
     "MachineLearning": {
      "$ref": "#/definitions/MLPaymentConfig"
     },
@@ -258,6 +282,9 @@
    "minLength": 1,
    "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
    "type": "string"
+  },
+  "JobLogStatus": {
+   "$ref": "#/definitions/CollaborationJobLogStatus"
   },
   "Members": {
    "insertionOrder": false,

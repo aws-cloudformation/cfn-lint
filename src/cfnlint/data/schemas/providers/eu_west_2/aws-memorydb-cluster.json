@@ -1,0 +1,201 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/TLSEnabled",
+  "/properties/DataTiering",
+  "/properties/KmsKeyId",
+  "/properties/Port",
+  "/properties/SubnetGroupName",
+  "/properties/SnapshotArns",
+  "/properties/MultiRegionClusterName",
+  "/properties/SnapshotName"
+ ],
+ "definitions": {
+  "DataTieringStatus": {
+   "enum": [
+    "true",
+    "false"
+   ],
+   "type": "string"
+  },
+  "Endpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName"
+ ],
+ "properties": {
+  "ACLName": {
+   "minLength": 1,
+   "pattern": "[a-zA-Z][a-zA-Z0-9\\-]*",
+   "type": "string"
+  },
+  "ARN": {
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "ClusterEndpoint": {
+   "$ref": "#/definitions/Endpoint"
+  },
+  "ClusterName": {
+   "pattern": "[a-z][a-z0-9\\-]*",
+   "type": "string"
+  },
+  "DataTiering": {
+   "$ref": "#/definitions/DataTieringStatus",
+   "type": "object"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "FinalSnapshotName": {
+   "type": "string"
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "MaintenanceWindow": {
+   "type": "string"
+  },
+  "MultiRegionClusterName": {
+   "type": "string"
+  },
+  "NodeType": {
+   "type": "string"
+  },
+  "NumReplicasPerShard": {
+   "type": "integer"
+  },
+  "NumShards": {
+   "type": "integer"
+  },
+  "ParameterGroupName": {
+   "type": "string"
+  },
+  "ParameterGroupStatus": {
+   "type": "string"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "SecurityGroupIds": {
+   "format": "AWS::EC2::SecurityGroup.Ids",
+   "insertionOrder": false,
+   "items": {
+    "format": "AWS::EC2::SecurityGroup.Id",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SnapshotArns": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SnapshotName": {
+   "type": "string"
+  },
+  "SnapshotRetentionLimit": {
+   "type": "integer"
+  },
+  "SnapshotWindow": {
+   "type": "string"
+  },
+  "SnsTopicArn": {
+   "type": "string"
+  },
+  "SnsTopicStatus": {
+   "type": "string"
+  },
+  "Status": {
+   "type": "string"
+  },
+  "SubnetGroupName": {
+   "type": "string"
+  },
+  "TLSEnabled": {
+   "type": "boolean"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/ClusterEndpoint/Address",
+  "/properties/ClusterEndpoint/Port",
+  "/properties/ARN",
+  "/properties/ParameterGroupStatus"
+ ],
+ "required": [
+  "ClusterName",
+  "NodeType",
+  "ACLName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::MemoryDB::Cluster",
+ "writeOnlyProperties": [
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName",
+  "/properties/MultiRegionClusterName",
+  "/properties/FinalSnapshotName"
+ ]
+}

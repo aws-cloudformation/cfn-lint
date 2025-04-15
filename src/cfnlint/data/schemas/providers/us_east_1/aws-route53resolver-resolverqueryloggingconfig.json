@@ -2,8 +2,31 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Name",
-  "/properties/DestinationArn"
+  "/properties/DestinationArn",
+  "/properties/Tags"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -63,6 +86,15 @@
     "FAILED"
    ],
    "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -75,6 +107,12 @@
   "/properties/CreationTime",
   "/properties/Id"
  ],
- "taggable": false,
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
  "typeName": "AWS::Route53Resolver::ResolverQueryLoggingConfig"
 }
