@@ -1,3 +1,16 @@
+### v1.34.0
+## What's Changed
+* Fix Cidr type in `AWS::EC2::IPAMPool` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4101
+* Allow `Fn::GetAtt` to an object when using short form by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4102
+* Add isolated regions by @Vandita2020 in https://github.com/aws-cloudformation/cfn-lint/pull/4103
+* Keep resolution errors to the fn by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4106
+* Update CloudFormation schemas to `2025-04-16` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4105
+
+## New Contributors
+* @Vandita2020 made their first contribution in https://github.com/aws-cloudformation/cfn-lint/pull/4103
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.33.2...v1.34.0
+
 ### v1.33.2
 ## What's Changed
 * Switch [E3683](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3683) to [E3684](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3684) for health check protocol by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4094
