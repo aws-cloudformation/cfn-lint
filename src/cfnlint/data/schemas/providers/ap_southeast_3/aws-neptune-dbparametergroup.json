@@ -1,9 +1,9 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/Family",
   "/properties/Name",
-  "/properties/Description"
+  "/properties/Description",
+  "/properties/Family"
  ],
  "definitions": {
   "Tag": {
@@ -17,23 +17,20 @@
     }
    },
    "required": [
-    "Value",
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
  },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/Name"
  ],
  "properties": {
   "Description": {
    "type": "string"
   },
   "Family": {
-   "type": "string"
-  },
-  "Id": {
    "type": "string"
   },
   "Name": {
@@ -54,13 +51,21 @@
    "uniqueItems": false
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
- ],
+ "propertyTransform": {
+  "/properties/Name": "$lowercase(Name)"
+ },
  "required": [
+  "Family",
   "Description",
-  "Parameters",
-  "Family"
+  "Parameters"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::Neptune::DBParameterGroup"
 }

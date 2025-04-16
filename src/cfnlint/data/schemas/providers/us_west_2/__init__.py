@@ -2174,6 +2174,7 @@ cached: list[str] = [
     "aws-lambda-url.json",
     "aws-lambda-version.json",
     "aws-launchwizard-deployment.json",
+    "aws-lex-bot.json",
     "aws-lex-botalias.json",
     "aws-lex-botversion.json",
     "aws-lex-resourcepolicy.json",
