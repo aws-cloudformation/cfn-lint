@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from collections import namedtuple
+from collections import deque, namedtuple
 from typing import Any, Tuple
 
 from cfnlint.helpers import ToPy, ensure_list, is_types_compatible
@@ -59,6 +59,8 @@ class BaseFn(CloudFormationLintRule):
     def _clean_resolve_errors(
         self, err: ValidationError, value: Any, instance: Any
     ) -> ValidationError:
+        if len(err.path) > 1:
+            err.path = deque([err.path[0]])
         err.message = err.message.replace(f"{value!r}", f"{instance!r}")
         err.message = f"{err.message} when {self.fn.name!r} is resolved"
         if self.child_rules[self.resolved_rule]:
