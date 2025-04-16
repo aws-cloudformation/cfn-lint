@@ -116,6 +116,46 @@
    ],
    "type": "object"
   },
+  "BedrockAgentIntentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "BedrockAgentConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "BedrockAgentAliasId": {
+       "maxLength": 5000,
+       "minLength": 1,
+       "type": "string"
+      },
+      "BedrockAgentId": {
+       "maxLength": 5000,
+       "minLength": 1,
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "BedrockAgentIntentKnowledgeBaseConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "BedrockKnowledgeBaseArn": {
+       "maxLength": 5000,
+       "minLength": 1,
+       "type": "string"
+      },
+      "BedrockModelConfiguration": {
+       "$ref": "#/definitions/BedrockModelSpecification"
+      }
+     },
+     "required": [
+      "BedrockKnowledgeBaseArn",
+      "BedrockModelConfiguration"
+     ],
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "BedrockModelSpecification": {
    "additionalProperties": false,
    "properties": {
@@ -299,6 +339,22 @@
    "required": [
     "LambdaCodeHook"
    ],
+   "type": "object"
+  },
+  "CompositeSlotTypeSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "SubSlots": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SubSlotTypeComposition"
+     },
+     "maxItems": 6,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
    "type": "object"
   },
   "Condition": {
@@ -834,6 +890,9 @@
   "Intent": {
    "additionalProperties": false,
    "properties": {
+    "BedrockAgentIntentConfiguration": {
+     "$ref": "#/definitions/BedrockAgentIntentConfiguration"
+    },
     "Description": {
      "$ref": "#/definitions/Description"
     },
@@ -866,6 +925,9 @@
     },
     "ParentIntentSignature": {
      "$ref": "#/definitions/ParentIntentSignature"
+    },
+    "QInConnectIntentConfiguration": {
+     "$ref": "#/definitions/QInConnectIntentConfiguration"
     },
     "QnAIntentConfiguration": {
      "$ref": "#/definitions/QnAIntentConfiguration"
@@ -1282,6 +1344,27 @@
     "MessageGroupsList",
     "MaxRetries"
    ],
+   "type": "object"
+  },
+  "QInConnectIntentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "QInConnectAssistantConfiguration": {
+     "additionalProperties": false,
+     "properties": {
+      "AssistantArn": {
+       "maxLength": 200,
+       "minLength": 1,
+       "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}){0,2}$",
+       "type": "string"
+      }
+     },
+     "required": [
+      "AssistantArn"
+     ],
+     "type": "object"
+    }
+   },
    "type": "object"
   },
   "QnAIntentConfiguration": {
@@ -1709,6 +1792,9 @@
   "SlotType": {
    "additionalProperties": false,
    "properties": {
+    "CompositeSlotTypeSetting": {
+     "$ref": "#/definitions/CompositeSlotTypeSetting"
+    },
     "Description": {
      "$ref": "#/definitions/Description"
     },
@@ -1841,7 +1927,8 @@
   "SlotValueResolutionStrategy": {
    "enum": [
     "ORIGINAL_VALUE",
-    "TOP_RESOLUTION"
+    "TOP_RESOLUTION",
+    "CONCATENATION"
    ],
    "type": "string"
   },
@@ -1902,6 +1989,28 @@
    "maximum": 900,
    "minimum": 1,
    "type": "integer"
+  },
+  "SubSlotTypeComposition": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "maxLength": 100,
+     "minLength": 1,
+     "pattern": "^([0-9a-zA-Z][_-]?){1,100}$",
+     "type": "string"
+    },
+    "SlotTypeId": {
+     "maxLength": 25,
+     "minLength": 1,
+     "pattern": "^((AMAZON\\.)[a-zA-Z_]+?|[0-9a-zA-Z]+)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SlotTypeId"
+   ],
+   "type": "object"
   },
   "SynonymList": {
    "insertionOrder": false,

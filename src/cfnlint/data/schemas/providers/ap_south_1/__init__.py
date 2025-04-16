@@ -2186,7 +2186,6 @@ cached: list[str] = [
     "aws-s3outposts-bucket.json",
     "aws-s3outposts-bucketpolicy.json",
     "aws-s3outposts-endpoint.json",
-    "aws-s3tables-tablebucket.json",
     "aws-s3tables-tablebucketpolicy.json",
     "aws-sagemaker-app.json",
     "aws-sagemaker-appimageconfig.json",

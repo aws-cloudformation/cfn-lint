@@ -1,0 +1,296 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ApiKeyAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiKeyName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    },
+    "ApiKeyValue": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ApiKeyName",
+    "ApiKeyValue"
+   ],
+   "type": "object"
+  },
+  "AuthParameters": {
+   "additionalProperties": false,
+   "maxProperties": 2,
+   "minProperties": 1,
+   "oneOf": [
+    {
+     "required": [
+      "BasicAuthParameters"
+     ]
+    },
+    {
+     "required": [
+      "OAuthParameters"
+     ]
+    },
+    {
+     "required": [
+      "ApiKeyAuthParameters"
+     ]
+    }
+   ],
+   "properties": {
+    "ApiKeyAuthParameters": {
+     "$ref": "#/definitions/ApiKeyAuthParameters"
+    },
+    "BasicAuthParameters": {
+     "$ref": "#/definitions/BasicAuthParameters"
+    },
+    "ConnectivityParameters": {
+     "$ref": "#/definitions/ConnectivityParameters"
+    },
+    "InvocationHttpParameters": {
+     "$ref": "#/definitions/ConnectionHttpParameters"
+    },
+    "OAuthParameters": {
+     "$ref": "#/definitions/OAuthParameters"
+    }
+   },
+   "type": "object"
+  },
+  "BasicAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "Password": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    },
+    "Username": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Username",
+    "Password"
+   ],
+   "type": "object"
+  },
+  "ClientParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ClientID": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    },
+    "ClientSecret": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClientID",
+    "ClientSecret"
+   ],
+   "type": "object"
+  },
+  "ConnectionHttpParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "BodyParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "HeaderParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    },
+    "QueryStringParameters": {
+     "items": {
+      "$ref": "#/definitions/Parameter"
+     },
+     "maxItems": 100,
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectivityParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceParameters": {
+     "$ref": "#/definitions/ResourceParameters"
+    }
+   },
+   "required": [
+    "ResourceParameters"
+   ],
+   "type": "object"
+  },
+  "OAuthParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizationEndpoint": {
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "^((%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@\\x26=+$,A-Za-z0-9])+)([).!';/?:,])?$",
+     "type": "string"
+    },
+    "ClientParameters": {
+     "$ref": "#/definitions/ClientParameters"
+    },
+    "HttpMethod": {
+     "enum": [
+      "GET",
+      "POST",
+      "PUT"
+     ],
+     "type": "string"
+    },
+    "OAuthHttpParameters": {
+     "$ref": "#/definitions/ConnectionHttpParameters"
+    }
+   },
+   "required": [
+    "ClientParameters",
+    "AuthorizationEndpoint",
+    "HttpMethod"
+   ],
+   "type": "object"
+  },
+  "Parameter": {
+   "additionalProperties": false,
+   "properties": {
+    "IsValueSecret": {
+     "default": true,
+     "type": "boolean"
+    },
+    "Key": {
+     "maxLength": 512,
+     "pattern": "^[!#$%&'*+-.^_`|~0-9a-zA-Z]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 512,
+     "pattern": "^[ \\t]*[\\x20-\\x7E]+([ \\t]+[\\x20-\\x7E]+)*[ \\t]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ResourceParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceAssociationArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkresourceassociation/snra-[0-9a-z]{17}$",
+     "type": "string"
+    },
+    "ResourceConfigurationArn": {
+     "maxLength": 2048,
+     "pattern": "^arn:[a-z0-9f\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceConfigurationArn"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:connection\\/[\\.\\-_A-Za-z0-9]+\\/[\\-A-Za-z0-9]+$",
+   "type": "string"
+  },
+  "AuthParameters": {
+   "$ref": "#/definitions/AuthParameters"
+  },
+  "AuthorizationType": {
+   "enum": [
+    "API_KEY",
+    "BASIC",
+    "OAUTH_CLIENT_CREDENTIALS"
+   ],
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "InvocationConnectivityParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ResourceParameters": {
+     "$ref": "#/definitions/ResourceParameters"
+    }
+   },
+   "required": [
+    "ResourceParameters"
+   ],
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[\\.\\-_A-Za-z0-9]+",
+   "type": "string"
+  },
+  "SecretArn": {
+   "pattern": "^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]|\\d|\\-)*:([0-9]{12})?:secret:([a-z]|\\d|\\-)*(!)*[\\/_+=\\.@\\-A-Za-z0-9]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/SecretArn",
+  "/properties/AuthParameters/ConnectivityParameters/ResourceParameters/ResourceAssociationArn",
+  "/properties/InvocationConnectivityParameters/ResourceParameters/ResourceAssociationArn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Events::Connection",
+ "writeOnlyProperties": [
+  "/properties/AuthParameters/BasicAuthParameters/Password",
+  "/properties/AuthParameters/ApiKeyAuthParameters/ApiKeyValue",
+  "/properties/AuthParameters/OAuthParameters/ClientParameters/ClientSecret",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/HeaderParameters",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/QueryStringParameters",
+  "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/BodyParameters",
+  "/properties/AuthParameters/InvocationHttpParameters"
+ ]
+}

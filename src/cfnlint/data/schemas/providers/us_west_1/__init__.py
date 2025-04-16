@@ -1554,7 +1554,6 @@ cached: list[str] = [
     "aws-lambda-layerversionpermission.json",
     "aws-lambda-permission.json",
     "aws-lambda-url.json",
-    "aws-launchwizard-deployment.json",
     "aws-licensemanager-grant.json",
     "aws-licensemanager-license.json",
     "aws-logs-accountpolicy.json",

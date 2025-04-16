@@ -1031,7 +1031,6 @@ cached: list[str] = [
     "aws-emr-studiosessionmapping.json",
     "aws-emrcontainers-virtualcluster.json",
     "aws-emrserverless-application.json",
-    "aws-events-archive.json",
     "aws-events-eventbus.json",
     "aws-events-eventbuspolicy.json",
     "aws-events-rule.json",
