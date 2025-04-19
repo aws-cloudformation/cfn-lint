@@ -1,0 +1,678 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/NetworkInsightsAnalysisArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/NetworkInsightsPathId",
+  "/properties/FilterInArns"
+ ],
+ "definitions": {
+  "AdditionalDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "AdditionalDetailType": {
+     "type": "string"
+    },
+    "Component": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "LoadBalancers": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AnalysisComponent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ServiceName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AlternatePathHint": {
+   "additionalProperties": false,
+   "properties": {
+    "ComponentArn": {
+     "type": "string"
+    },
+    "ComponentId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisAclRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "Egress": {
+     "type": "boolean"
+    },
+    "PortRange": {
+     "$ref": "#/definitions/PortRange"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/Protocol"
+    },
+    "RuleAction": {
+     "type": "string"
+    },
+    "RuleNumber": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisComponent": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisLoadBalancerListener": {
+   "additionalProperties": false,
+   "properties": {
+    "InstancePort": {
+     "$ref": "#/definitions/Port"
+    },
+    "LoadBalancerPort": {
+     "$ref": "#/definitions/Port"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisLoadBalancerTarget": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "Instance": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Port": {
+     "$ref": "#/definitions/Port"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisPacketHeader": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationAddresses": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/IpAddress"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DestinationPortRanges": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Protocol": {
+     "$ref": "#/definitions/Protocol"
+    },
+    "SourceAddresses": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/IpAddress"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourcePortRanges": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisRouteTableRoute": {
+   "additionalProperties": false,
+   "properties": {
+    "NatGatewayId": {
+     "type": "string"
+    },
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "Origin": {
+     "type": "string"
+    },
+    "State": {
+     "type": "string"
+    },
+    "TransitGatewayId": {
+     "type": "string"
+    },
+    "VpcPeeringConnectionId": {
+     "type": "string"
+    },
+    "destinationCidr": {
+     "type": "string"
+    },
+    "destinationPrefixListId": {
+     "type": "string"
+    },
+    "egressOnlyInternetGatewayId": {
+     "type": "string"
+    },
+    "gatewayId": {
+     "type": "string"
+    },
+    "instanceId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AnalysisSecurityGroupRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Cidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "Direction": {
+     "type": "string"
+    },
+    "PortRange": {
+     "$ref": "#/definitions/PortRange"
+    },
+    "PrefixListId": {
+     "type": "string"
+    },
+    "Protocol": {
+     "$ref": "#/definitions/Protocol"
+    },
+    "SecurityGroupId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Explanation": {
+   "additionalProperties": false,
+   "properties": {
+    "Acl": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "AclRule": {
+     "$ref": "#/definitions/AnalysisAclRule"
+    },
+    "Address": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "Addresses": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/IpAddress"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "AttachedTo": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "AvailabilityZones": {
+     "insertionOrder": true,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Cidrs": {
+     "insertionOrder": true,
+     "items": {
+      "format": "ipv4-network",
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "ClassicLoadBalancerListener": {
+     "$ref": "#/definitions/AnalysisLoadBalancerListener"
+    },
+    "Component": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "ComponentAccount": {
+     "type": "string"
+    },
+    "ComponentRegion": {
+     "type": "string"
+    },
+    "CustomerGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Destination": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "DestinationVpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Direction": {
+     "type": "string"
+    },
+    "ElasticLoadBalancerListener": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "ExplanationCode": {
+     "type": "string"
+    },
+    "IngressRouteTable": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "InternetGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "LoadBalancerArn": {
+     "$ref": "#/definitions/ResourceArn"
+    },
+    "LoadBalancerListenerPort": {
+     "$ref": "#/definitions/Port"
+    },
+    "LoadBalancerTarget": {
+     "$ref": "#/definitions/AnalysisLoadBalancerTarget"
+    },
+    "LoadBalancerTargetGroup": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "LoadBalancerTargetGroups": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AnalysisComponent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LoadBalancerTargetPort": {
+     "$ref": "#/definitions/Port"
+    },
+    "MissingComponent": {
+     "type": "string"
+    },
+    "NatGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "NetworkInterface": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "PacketField": {
+     "type": "string"
+    },
+    "Port": {
+     "$ref": "#/definitions/Port"
+    },
+    "PortRanges": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/PortRange"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "PrefixList": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Protocols": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Protocol"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "RouteTable": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "RouteTableRoute": {
+     "$ref": "#/definitions/AnalysisRouteTableRoute"
+    },
+    "SecurityGroup": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "SecurityGroupRule": {
+     "$ref": "#/definitions/AnalysisSecurityGroupRule"
+    },
+    "SecurityGroups": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AnalysisComponent"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SourceVpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "State": {
+     "type": "string"
+    },
+    "Subnet": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "SubnetRouteTable": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGatewayAttachment": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGatewayRouteTable": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGatewayRouteTableRoute": {
+     "$ref": "#/definitions/TransitGatewayRouteTableRoute"
+    },
+    "Vpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "VpcPeeringConnection": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "VpnConnection": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "VpnGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "vpcEndpoint": {
+     "$ref": "#/definitions/AnalysisComponent"
+    }
+   },
+   "type": "object"
+  },
+  "IpAddress": {
+   "type": "string"
+  },
+  "PathComponent": {
+   "additionalProperties": false,
+   "properties": {
+    "AclRule": {
+     "$ref": "#/definitions/AnalysisAclRule"
+    },
+    "AdditionalDetails": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AdditionalDetail"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Component": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "DestinationVpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "ElasticLoadBalancerListener": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Explanations": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/Explanation"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "InboundHeader": {
+     "$ref": "#/definitions/AnalysisPacketHeader"
+    },
+    "OutboundHeader": {
+     "$ref": "#/definitions/AnalysisPacketHeader"
+    },
+    "RouteTableRoute": {
+     "$ref": "#/definitions/AnalysisRouteTableRoute"
+    },
+    "SecurityGroupRule": {
+     "$ref": "#/definitions/AnalysisSecurityGroupRule"
+    },
+    "SequenceNumber": {
+     "type": "integer"
+    },
+    "ServiceName": {
+     "type": "string"
+    },
+    "SourceVpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "Subnet": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGateway": {
+     "$ref": "#/definitions/AnalysisComponent"
+    },
+    "TransitGatewayRouteTableRoute": {
+     "$ref": "#/definitions/TransitGatewayRouteTableRoute"
+    },
+    "Vpc": {
+     "$ref": "#/definitions/AnalysisComponent"
+    }
+   },
+   "type": "object"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "From": {
+     "type": "integer"
+    },
+    "To": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Protocol": {
+   "type": "string"
+  },
+  "ResourceArn": {
+   "maxLength": 1283,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayRouteTableRoute": {
+   "additionalProperties": false,
+   "properties": {
+    "AttachmentId": {
+     "type": "string"
+    },
+    "DestinationCidr": {
+     "format": "ipv4-network",
+     "type": "string"
+    },
+    "PrefixListId": {
+     "type": "string"
+    },
+    "ResourceId": {
+     "type": "string"
+    },
+    "ResourceType": {
+     "type": "string"
+    },
+    "RouteOrigin": {
+     "type": "string"
+    },
+    "State": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/NetworkInsightsAnalysisId"
+ ],
+ "properties": {
+  "AdditionalAccounts": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AlternatePathHints": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/AlternatePathHint"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Explanations": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Explanation"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "FilterInArns": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceArn"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ForwardPathComponents": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PathComponent"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "NetworkInsightsAnalysisArn": {
+   "type": "string"
+  },
+  "NetworkInsightsAnalysisId": {
+   "type": "string"
+  },
+  "NetworkInsightsPathId": {
+   "type": "string"
+  },
+  "NetworkPathFound": {
+   "type": "boolean"
+  },
+  "ReturnPathComponents": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PathComponent"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "StartDate": {
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "running",
+    "failed",
+    "succeeded"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "type": "string"
+  },
+  "SuggestedAccounts": {
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInsightsAnalysisId",
+  "/properties/NetworkInsightsAnalysisArn",
+  "/properties/StartDate",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/NetworkPathFound",
+  "/properties/ForwardPathComponents",
+  "/properties/ReturnPathComponents",
+  "/properties/Explanations",
+  "/properties/AlternatePathHints",
+  "/properties/SuggestedAccounts"
+ ],
+ "required": [
+  "NetworkInsightsPathId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::NetworkInsightsAnalysis"
+}
