@@ -1,0 +1,335 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CreatorDisplayName",
+  "/properties/CreatorMemberAbilities",
+  "/properties/CreatorMLMemberAbilities",
+  "/properties/DataEncryptionMetadata",
+  "/properties/JobLogStatus",
+  "/properties/QueryLogStatus",
+  "/properties/Members",
+  "/properties/CreatorPaymentConfiguration"
+ ],
+ "definitions": {
+  "AnalyticsEngine": {
+   "enum": [
+    "CLEAN_ROOMS_SQL",
+    "SPARK"
+   ],
+   "type": "string"
+  },
+  "CollaborationJobLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "CollaborationQueryLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "CustomMLMemberAbilities": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CustomMLMemberAbility"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CustomMLMemberAbility": {
+   "enum": [
+    "CAN_RECEIVE_MODEL_OUTPUT",
+    "CAN_RECEIVE_INFERENCE_OUTPUT"
+   ],
+   "type": "string"
+  },
+  "DataEncryptionMetadata": {
+   "additionalProperties": false,
+   "properties": {
+    "AllowCleartext": {
+     "type": "boolean"
+    },
+    "AllowDuplicates": {
+     "type": "boolean"
+    },
+    "AllowJoinsOnColumnsWithDifferentNames": {
+     "type": "boolean"
+    },
+    "PreserveNulls": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AllowCleartext",
+    "AllowDuplicates",
+    "AllowJoinsOnColumnsWithDifferentNames",
+    "PreserveNulls"
+   ],
+   "type": "object"
+  },
+  "JobComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "MLMemberAbilities": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomMLMemberAbilities": {
+     "$ref": "#/definitions/CustomMLMemberAbilities"
+    }
+   },
+   "required": [
+    "CustomMLMemberAbilities"
+   ],
+   "type": "object"
+  },
+  "MLPaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelInference": {
+     "$ref": "#/definitions/ModelInferencePaymentConfig"
+    },
+    "ModelTraining": {
+     "$ref": "#/definitions/ModelTrainingPaymentConfig"
+    }
+   },
+   "type": "object"
+  },
+  "MemberAbilities": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MemberAbility"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "MemberAbility": {
+   "enum": [
+    "CAN_QUERY",
+    "CAN_RUN_JOB",
+    "CAN_RECEIVE_RESULTS"
+   ],
+   "type": "string"
+  },
+  "MemberSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "AccountId": {
+     "maxLength": 12,
+     "minLength": 12,
+     "pattern": "^\\d+$",
+     "type": "string"
+    },
+    "DisplayName": {
+     "$ref": "#/definitions/Name"
+    },
+    "MLMemberAbilities": {
+     "$ref": "#/definitions/MLMemberAbilities"
+    },
+    "MemberAbilities": {
+     "$ref": "#/definitions/MemberAbilities"
+    },
+    "PaymentConfiguration": {
+     "$ref": "#/definitions/PaymentConfiguration"
+    }
+   },
+   "required": [
+    "AccountId",
+    "DisplayName",
+    "MemberAbilities"
+   ],
+   "type": "object"
+  },
+  "MemberStatus": {
+   "enum": [
+    "INVITED",
+    "ACTIVE",
+    "LEFT",
+    "REMOVED"
+   ],
+   "type": "string"
+  },
+  "ModelInferencePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "ModelTrainingPaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "PaymentConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "JobCompute": {
+     "$ref": "#/definitions/JobComputePaymentConfig"
+    },
+    "MachineLearning": {
+     "$ref": "#/definitions/MLPaymentConfig"
+    },
+    "QueryCompute": {
+     "$ref": "#/definitions/QueryComputePaymentConfig"
+    }
+   },
+   "required": [
+    "QueryCompute"
+   ],
+   "type": "object"
+  },
+  "QueryComputePaymentConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "IsResponsible": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "IsResponsible"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cleanrooms-collaboration.html",
+ "primaryIdentifier": [
+  "/properties/CollaborationIdentifier"
+ ],
+ "properties": {
+  "AnalyticsEngine": {
+   "$ref": "#/definitions/AnalyticsEngine"
+  },
+  "Arn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "CreatorDisplayName": {
+   "$ref": "#/definitions/Name"
+  },
+  "CreatorMLMemberAbilities": {
+   "$ref": "#/definitions/MLMemberAbilities"
+  },
+  "CreatorMemberAbilities": {
+   "$ref": "#/definitions/MemberAbilities"
+  },
+  "CreatorPaymentConfiguration": {
+   "$ref": "#/definitions/PaymentConfiguration"
+  },
+  "DataEncryptionMetadata": {
+   "$ref": "#/definitions/DataEncryptionMetadata"
+  },
+  "Description": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
+   "type": "string"
+  },
+  "JobLogStatus": {
+   "$ref": "#/definitions/CollaborationJobLogStatus"
+  },
+  "Members": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MemberSpecification"
+   },
+   "maxItems": 9,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Name": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
+   "type": "string"
+  },
+  "QueryLogStatus": {
+   "$ref": "#/definitions/CollaborationQueryLogStatus"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CollaborationIdentifier"
+ ],
+ "required": [
+  "CreatorDisplayName",
+  "CreatorMemberAbilities",
+  "Members",
+  "Name",
+  "Description",
+  "QueryLogStatus"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::Collaboration"
+}

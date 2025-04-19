@@ -4,6 +4,57 @@
   "/properties/KmsKeyArn"
  ],
  "definitions": {
+  "Label": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "minLength": 1,
+     "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+     "type": "string"
+    },
+    "Value": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "LimitsPerLabelSet": {
+   "additionalProperties": false,
+   "properties": {
+    "LabelSet": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Limits": {
+     "$ref": "#/definitions/LimitsPerLabelSetEntry"
+    }
+   },
+   "required": [
+    "Limits",
+    "LabelSet"
+   ],
+   "type": "object"
+  },
+  "LimitsPerLabelSetEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxSeries": {
+     "minimum": 0,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "LoggingConfiguration": {
    "additionalProperties": false,
    "properties": {
@@ -33,6 +84,25 @@
     "Key",
     "Value"
    ],
+   "type": "object"
+  },
+  "WorkspaceConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "LimitsPerLabelSets": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/LimitsPerLabelSet"
+     },
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RetentionPeriodInDays": {
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
    "type": "object"
   }
  },
@@ -73,6 +143,9 @@
    },
    "type": "array",
    "uniqueItems": true
+  },
+  "WorkspaceConfiguration": {
+   "$ref": "#/definitions/WorkspaceConfiguration"
   },
   "WorkspaceId": {
    "maxLength": 100,

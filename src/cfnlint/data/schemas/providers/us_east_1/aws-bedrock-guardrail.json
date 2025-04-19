@@ -1,29 +1,22 @@
 {
  "additionalProperties": false,
  "definitions": {
-  "ContentFilter": {
-   "additionalProperties": false,
-   "properties": {
-    "InputStrength": {
-     "$ref": "#/definitions/FilterStrength"
-    },
-    "OutputStrength": {
-     "$ref": "#/definitions/FilterStrength"
-    },
-    "Type": {
-     "$ref": "#/definitions/ContentFilterType"
-    }
-   },
-   "required": [
-    "InputStrength",
-    "OutputStrength",
-    "Type"
+  "ContentFilterAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
    ],
-   "type": "object"
+   "type": "string"
   },
   "ContentFilterConfig": {
    "additionalProperties": false,
    "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/ContentFilterAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
     "InputModalities": {
      "items": {
       "$ref": "#/definitions/Modality"
@@ -34,6 +27,12 @@
     },
     "InputStrength": {
      "$ref": "#/definitions/FilterStrength"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/ContentFilterAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
     },
     "OutputModalities": {
      "items": {
@@ -85,9 +84,22 @@
    ],
    "type": "object"
   },
+  "ContextualGroundingAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "ContextualGroundingFilterConfig": {
    "additionalProperties": false,
    "properties": {
+    "Action": {
+     "$ref": "#/definitions/ContextualGroundingAction"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
     "Threshold": {
      "minimum": 0,
      "type": "number"
@@ -145,21 +157,21 @@
    ],
    "type": "string"
   },
-  "ManagedWords": {
-   "additionalProperties": false,
-   "properties": {
-    "Type": {
-     "$ref": "#/definitions/ManagedWordsType"
-    }
-   },
-   "required": [
-    "Type"
-   ],
-   "type": "object"
-  },
   "ManagedWordsConfig": {
    "additionalProperties": false,
    "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
     "Type": {
      "$ref": "#/definitions/ManagedWordsType"
     }
@@ -182,27 +194,23 @@
    ],
    "type": "string"
   },
-  "PiiEntity": {
-   "additionalProperties": false,
-   "properties": {
-    "Action": {
-     "$ref": "#/definitions/SensitiveInformationAction"
-    },
-    "Type": {
-     "$ref": "#/definitions/PiiEntityType"
-    }
-   },
-   "required": [
-    "Action",
-    "Type"
-   ],
-   "type": "object"
-  },
   "PiiEntityConfig": {
    "additionalProperties": false,
    "properties": {
     "Action": {
      "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
     },
     "Type": {
      "$ref": "#/definitions/PiiEntityType"
@@ -261,10 +269,22 @@
      "minLength": 1,
      "type": "string"
     },
+    "InputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
     "Name": {
      "maxLength": 100,
      "minLength": 1,
      "type": "string"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/SensitiveInformationAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
     },
     "Pattern": {
      "maxLength": 500,
@@ -282,7 +302,8 @@
   "SensitiveInformationAction": {
    "enum": [
     "BLOCK",
-    "ANONYMIZE"
+    "ANONYMIZE",
+    "NONE"
    ],
    "type": "string"
   },
@@ -330,39 +351,12 @@
    ],
    "type": "object"
   },
-  "Topic": {
-   "additionalProperties": false,
-   "properties": {
-    "Definition": {
-     "maxLength": 200,
-     "minLength": 1,
-     "type": "string"
-    },
-    "Examples": {
-     "items": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-     },
-     "minItems": 0,
-     "type": "array"
-    },
-    "Name": {
-     "maxLength": 100,
-     "minLength": 1,
-     "pattern": "^[0-9a-zA-Z-_ !?.]+$",
-     "type": "string"
-    },
-    "Type": {
-     "$ref": "#/definitions/TopicType"
-    }
-   },
-   "required": [
-    "Definition",
-    "Name",
-    "Type"
+  "TopicAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
    ],
-   "type": "object"
+   "type": "string"
   },
   "TopicConfig": {
    "additionalProperties": false,
@@ -382,11 +376,23 @@
      "minItems": 0,
      "type": "array"
     },
+    "InputAction": {
+     "$ref": "#/definitions/TopicAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
     "Name": {
      "maxLength": 100,
      "minLength": 1,
      "pattern": "^[0-9a-zA-Z-_ !?.]+$",
      "type": "string"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/TopicAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
     },
     "Type": {
      "$ref": "#/definitions/TopicType"
@@ -422,9 +428,28 @@
    ],
    "type": "string"
   },
+  "WordAction": {
+   "enum": [
+    "BLOCK",
+    "NONE"
+   ],
+   "type": "string"
+  },
   "WordConfig": {
    "additionalProperties": false,
    "properties": {
+    "InputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "InputEnabled": {
+     "type": "boolean"
+    },
+    "OutputAction": {
+     "$ref": "#/definitions/WordAction"
+    },
+    "OutputEnabled": {
+     "type": "boolean"
+    },
     "Text": {
      "maxLength": 100,
      "minLength": 1,
