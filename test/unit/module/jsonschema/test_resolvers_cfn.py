@@ -8,9 +8,16 @@ from collections import deque
 import pytest
 
 from cfnlint.context._mappings import Mappings
-from cfnlint.context.context import Context, Parameter, Path, Resource
+from cfnlint.context.context import (
+    Context,
+    Parameter,
+    Path,
+    Resource,
+    create_context_for_template,
+)
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validators import CfnTemplateValidator
+from cfnlint.template import Template
 
 
 def _resolve(name, instance, expected_results, **kwargs):
@@ -877,3 +884,41 @@ def test_find_in_map_with_transform(name, instance, response):
         resources={},
     )
     _resolve(name, instance, response, context=context)
+
+
+def test_if():
+    cfn = Template(
+        None,
+        {
+            "Conditions": {
+                "Condition": {"Fn::Equals": [{"Ref": "AWS::StackName"}, "test"]}
+            },
+            "Resources": {},
+        },
+    )
+    context = create_context_for_template(cfn)
+    validator = CfnTemplateValidator().evolve(
+        context=context,
+        cfn=cfn,
+    )
+
+    instance = {"Fn::If": ["Condition", "Foo", "Bar"]}
+
+    results = list(validator.resolve_value(instance))
+
+    assert len(results) == 2
+    assert results[0][0] == "Foo"
+    assert results[1][0] == "Bar"
+
+    assert results[0][1].context.conditions.status == {"Condition": True}
+    assert results[1][1].context.conditions.status == {"Condition": False}
+
+    validator = validator.evolve(
+        context=validator.context.evolve(
+            conditions=validator.context.conditions.evolve({"Condition": False})
+        )
+    )
+
+    results = list(validator.resolve_value(instance))
+    assert len(results) == 1
+    assert results[0][0] == "Bar"
