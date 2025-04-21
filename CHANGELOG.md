@@ -1,3 +1,11 @@
+### v1.34.1
+## What's Changed
+* Fix property restrictions when using lambda by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4111
+* Update context when resolving IFs by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4116
+* Update CloudFormation schemas to `2025-04-21` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4110
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.34.0...v1.34.1
+
 ### v1.34.0
 ## What's Changed
 * Fix Cidr type in `AWS::EC2::IPAMPool` by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4101
