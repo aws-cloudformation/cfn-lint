@@ -118,6 +118,13 @@
    ],
    "type": "object"
   },
+  "ConnectionMode": {
+   "enum": [
+    "direct",
+    "tenant-only"
+   ],
+   "type": "string"
+  },
   "Cookies": {
    "additionalProperties": false,
    "properties": {
@@ -389,6 +396,9 @@
      "default": "",
      "type": "string"
     },
+    "ConnectionMode": {
+     "$ref": "#/definitions/ConnectionMode"
+    },
     "ContinuousDeploymentPolicyId": {
      "type": "string"
     },
@@ -461,6 +471,18 @@
     },
     "Staging": {
      "type": "boolean"
+    },
+    "TenantConfig": {
+     "additionalProperties": false,
+     "properties": {
+      "ParameterDefinitions": {
+       "items": {
+        "$ref": "#/definitions/ParameterDefinition"
+       },
+       "type": "array"
+      }
+     },
+     "type": "object"
     },
     "ViewerCertificate": {
      "$ref": "#/definitions/ViewerCertificate",
@@ -1086,6 +1108,43 @@
    },
    "type": "object"
   },
+  "ParameterDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "Definition": {
+     "additionalProperties": false,
+     "properties": {
+      "StringSchema": {
+       "additionalProperties": false,
+       "properties": {
+        "Comment": {
+         "type": "string"
+        },
+        "DefaultValue": {
+         "type": "string"
+        },
+        "Required": {
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "Required"
+       ],
+       "type": "object"
+      }
+     },
+     "type": "object"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "Definition"
+   ],
+   "type": "object"
+  },
   "Restrictions": {
    "additionalProperties": false,
    "properties": {
@@ -1248,9 +1307,10 @@
  ],
  "tagging": {
   "cloudFormationSystemTags": false,
-  "tagOnCreate": false,
-  "tagUpdatable": false,
-  "taggable": false
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
  },
  "typeName": "AWS::CloudFront::Distribution"
 }

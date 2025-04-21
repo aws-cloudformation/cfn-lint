@@ -1,6 +1,7 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
+  "/properties/NetworkConfiguration",
   "/properties/Type"
  ],
  "definitions": {
@@ -63,6 +64,75 @@
    ],
    "type": "string"
   },
+  "IpType": {
+   "enum": [
+    "IPV4",
+    "DUAL_STACK"
+   ],
+   "type": "string"
+  },
+  "NetworkConfiguration": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PublicNetworkConfiguration": {
+       "$ref": "#/definitions/PublicNetworkConfiguration"
+      }
+     },
+     "required": [
+      "PublicNetworkConfiguration"
+     ],
+     "title": "PublicNetworkConfiguration",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PrivateNetworkConfiguration": {
+       "$ref": "#/definitions/PrivateNetworkConfiguration"
+      }
+     },
+     "required": [
+      "PrivateNetworkConfiguration"
+     ],
+     "title": "PrivateNetworkConfiguration",
+     "type": "object"
+    }
+   ]
+  },
+  "PrivateNetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "VpcEndpointId": {
+     "pattern": "^vpce-[a-zA-Z0-9]{17}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "VpcEndpointId"
+   ],
+   "type": "object"
+  },
+  "PublicNetworkConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "IpType": {
+     "allOf": [
+      {
+       "$ref": "#/definitions/IpType"
+      },
+      {
+       "default": "IPV4"
+      }
+     ]
+    }
+   },
+   "required": [
+    "IpType"
+   ],
+   "type": "object"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -109,6 +179,9 @@
    "minLength": 3,
    "pattern": "^[A-Za-z0-9_\\-]+$",
    "type": "string"
+  },
+  "NetworkConfiguration": {
+   "$ref": "#/definitions/NetworkConfiguration"
   },
   "RuleSetId": {
    "maxLength": 100,

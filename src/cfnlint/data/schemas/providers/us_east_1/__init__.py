@@ -209,6 +209,7 @@ types: list[str] = [
     "AWS::CloudFront::AnycastIpList",
     "AWS::CloudFront::CachePolicy",
     "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+    "AWS::CloudFront::ConnectionGroup",
     "AWS::CloudFront::ContinuousDeploymentPolicy",
     "AWS::CloudFront::Distribution",
     "AWS::CloudFront::Function",

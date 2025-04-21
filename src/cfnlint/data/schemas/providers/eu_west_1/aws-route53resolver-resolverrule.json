@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "conditionalCreateOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "createOnlyProperties": [
+  "/properties/RuleType"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "TargetAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "maxLength": 36,
+     "minLength": 7,
+     "type": "string"
+    },
+    "Ipv6": {
+     "maxLength": 39,
+     "minLength": 7,
+     "type": "string"
+    },
+    "Port": {
+     "maxLength": 65535,
+     "minLength": 0,
+     "type": "string"
+    },
+    "Protocol": {
+     "enum": [
+      "Do53",
+      "DoH"
+     ],
+     "type": "string"
+    },
+    "ServerNameIndication": {
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResolverRuleId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DelegationRecord": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+   "type": "string"
+  },
+  "ResolverEndpointId": {
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResolverRuleId": {
+   "type": "string"
+  },
+  "RuleType": {
+   "enum": [
+    "FORWARD",
+    "SYSTEM",
+    "RECURSIVE",
+    "DELEGATE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetIps": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/TargetAddress"
+   },
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/DomainName": "$join([DomainName, \".\"]) $OR DomainName"
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ResolverRuleId"
+ ],
+ "required": [
+  "RuleType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53resolver.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Route53Resolver::ResolverRule"
+}
