@@ -40,6 +40,7 @@ def _create_cidr_patch(type_name: str, ref: str, resolver: RefResolver, format: 
     if type_name in [
         "AWS::SecurityHub::Insight",
         "AWS::EC2::IPAMPool",
+        "AWS::EC2::PrefixList",
     ]:
         return []
 
