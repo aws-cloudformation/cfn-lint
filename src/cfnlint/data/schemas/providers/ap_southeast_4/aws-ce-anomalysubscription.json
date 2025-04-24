@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceTags"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).*$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Subscriber": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "pattern": "(^[a-zA-Z0-9.!#$%&'*+=?^_\u2018{|}~-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$)|(^arn:(aws[a-zA-Z-]*):sns:[a-zA-Z0-9-]+:[0-9]{12}:[a-zA-Z0-9_-]+(\\.fifo)?$)",
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "CONFIRMED",
+      "DECLINED"
+     ],
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "EMAIL",
+      "SNS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Address",
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SubscriptionArn"
+ ],
+ "properties": {
+  "AccountId": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Frequency": {
+   "enum": [
+    "DAILY",
+    "IMMEDIATE",
+    "WEEKLY"
+   ],
+   "type": "string"
+  },
+  "MonitorArnList": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "type": "array"
+  },
+  "ResourceTags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Subscribers": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Subscriber"
+   },
+   "type": "array"
+  },
+  "SubscriptionArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "SubscriptionName": {
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "[\\S\\s]*",
+   "type": "string"
+  },
+  "Threshold": {
+   "minimum": 0,
+   "type": "number"
+  },
+  "ThresholdExpression": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SubscriptionArn",
+  "/properties/AccountId",
+  "/properties/Subscribers/*/Status"
+ ],
+ "required": [
+  "MonitorArnList",
+  "Subscribers",
+  "Frequency",
+  "SubscriptionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::CE::AnomalySubscription",
+ "writeOnlyProperties": [
+  "/properties/ResourceTags"
+ ]
+}

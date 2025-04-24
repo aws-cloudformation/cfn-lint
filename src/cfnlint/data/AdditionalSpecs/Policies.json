@@ -621,7 +621,8 @@
    },
    "getaccountinformation": {
     "Resources": [
-     "account"
+     "account",
+     "accountInOrganization"
     ]
    },
    "getalternatecontact": {
@@ -648,6 +649,12 @@
     ]
    },
    "listregions": {
+    "Resources": [
+     "account",
+     "accountInOrganization"
+    ]
+   },
+   "putaccountname": {
     "Resources": [
      "account",
      "accountInOrganization"
@@ -2105,8 +2112,10 @@
     "ConditionKeys": [
      "apigateway:Request/AuthorizerType",
      "apigateway:Request/AuthorizerUri",
+     "apigateway:Request/CognitoUserPoolProviderArn",
      "apigateway:Resource/AuthorizerType",
      "apigateway:Resource/AuthorizerUri",
+     "apigateway:Resource/CognitoUserPoolProviderArn",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -2118,6 +2127,7 @@
     "ConditionKeys": [
      "apigateway:Request/AuthorizerType",
      "apigateway:Request/AuthorizerUri",
+     "apigateway:Request/CognitoUserPoolProviderArn",
      "aws:ResourceTag/${TagKey}"
     ]
    },
@@ -31223,7 +31233,11 @@
      "repository"
     ]
    },
-   "batchimportupstreamimage": {},
+   "batchimportupstreamimage": {
+    "Resources": [
+     "repository"
+    ]
+   },
    "completelayerupload": {
     "Resources": [
      "repository"
@@ -31284,7 +31298,11 @@
      "repository"
     ]
    },
-   "getimagecopystatus": {},
+   "getimagecopystatus": {
+    "Resources": [
+     "repository"
+    ]
+   },
    "getlifecyclepolicy": {
     "Resources": [
      "repository"
@@ -31706,6 +31724,12 @@
    "starttelemetrysession": {
     "Resources": [
      "container-instance"
+    ]
+   },
+   "stopservicedeployment": {
+    "Resources": [
+     "service",
+     "service-deployment"
     ]
    },
    "stoptask": {
@@ -64115,22 +64139,12 @@
      "aws:ResourceTag/${TagKey}"
     ]
    },
-   "serviceprincipalname": {
-    "ARNFormats": [
-     "arn:${Partition}:pca-connector-ad:${Region}:${Account}:directory-registration/.*"
-    ]
-   },
    "template": {
     "ARNFormats": [
      "arn:${Partition}:pca-connector-ad:${Region}:${Account}:connector/.*"
     ],
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}"
-    ]
-   },
-   "templategroupaccesscontrolentry": {
-    "ARNFormats": [
-     "arn:${Partition}:pca-connector-ad:${Region}:${Account}:connector/.*"
     ]
    }
   }
@@ -66628,6 +66642,12 @@
    "chatsync": {
     "Resources": [
      "application"
+    ]
+   },
+   "checkdocumentaccess": {
+    "Resources": [
+     "application",
+     "index"
     ]
    },
    "createapplication": {},
@@ -70738,6 +70758,7 @@
      "namespace"
     ]
    },
+   "createreservation": {},
    "createscheduledaction": {
     "Resources": [
      "namespace"
@@ -70819,6 +70840,8 @@
      "recoveryPoint"
     ]
    },
+   "getreservation": {},
+   "getreservationoffering": {},
    "getresourcepolicy": {},
    "getscheduledaction": {},
    "getsnapshot": {
@@ -70847,6 +70870,8 @@
      "namespace"
     ]
    },
+   "listreservationofferings": {},
+   "listreservations": {},
    "listscheduledactions": {},
    "listsnapshotcopyconfigurations": {
     "Resources": [
@@ -83042,12 +83067,14 @@
    },
    "startautomationexecution": {
     "Resources": [
-     "automation-definition"
+     "automation-definition",
+     "document"
     ]
    },
    "startchangerequestexecution": {
     "Resources": [
-     "automation-definition"
+     "automation-definition",
+     "document"
     ]
    },
    "startexecutionpreview": {},
@@ -83201,6 +83228,7 @@
     "ConditionKeys": [
      "aws:ResourceTag/${TagKey}",
      "ssm:DocumentCategories",
+     "ssm:DocumentType",
      "ssm:resourceTag/${TagKey}"
     ]
    },
