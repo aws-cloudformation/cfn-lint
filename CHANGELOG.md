@@ -1,3 +1,11 @@
+### v1.34.2
+## What's Changed
+* Unschedule v0 maintenance work by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4120
+* Add in `anyOf` for properties that are ipv4 and ipv6 by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4122
+* Update CloudFormation schemas to `2025-04-24` by @github-actions in https://github.com/aws-cloudformation/cfn-lint/pull/4118
+
+**Full Changelog**: https://github.com/aws-cloudformation/cfn-lint/compare/v1.34.1...1.34.2
+
 ### v1.34.1
 ## What's Changed
 * Fix property restrictions when using lambda by @kddejong in https://github.com/aws-cloudformation/cfn-lint/pull/4111
