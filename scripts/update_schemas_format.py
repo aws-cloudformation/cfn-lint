@@ -284,6 +284,36 @@ _manual_patches = {
             path="/properties/Arn",
         ),
     ],
+    "AWS::EC2::IPAMPool": [
+        Patch(
+            values={
+                "anyOf": [
+                    {
+                        "format": "ipv4-network",
+                    },
+                    {
+                        "format": "ipv6-network",
+                    },
+                ]
+            },
+            path="/definitions/Cidr",
+        ),
+    ],
+    "AWS::EC2::PrefixList": [
+        Patch(
+            values={
+                "anyOf": [
+                    {
+                        "format": "ipv4-network",
+                    },
+                    {
+                        "format": "ipv6-network",
+                    },
+                ]
+            },
+            path="/definitions/Entry/properties/Cidr",
+        ),
+    ],
 }
 
 
