@@ -212,6 +212,7 @@ types: list[str] = [
     "AWS::CloudFront::ConnectionGroup",
     "AWS::CloudFront::ContinuousDeploymentPolicy",
     "AWS::CloudFront::Distribution",
+    "AWS::CloudFront::DistributionTenant",
     "AWS::CloudFront::Function",
     "AWS::CloudFront::KeyGroup",
     "AWS::CloudFront::KeyValueStore",

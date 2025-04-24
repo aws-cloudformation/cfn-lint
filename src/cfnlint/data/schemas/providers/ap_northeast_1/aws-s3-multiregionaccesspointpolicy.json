@@ -1,0 +1,52 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MrapName"
+ ],
+ "primaryIdentifier": [
+  "/properties/MrapName"
+ ],
+ "properties": {
+  "MrapName": {
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$",
+   "type": "string"
+  },
+  "Policy": {
+   "format": "json",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "PolicyStatus": {
+   "additionalProperties": false,
+   "properties": {
+    "IsPublic": {
+     "enum": [
+      "true",
+      "false"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IsPublic"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic"
+ ],
+ "required": [
+  "Policy",
+  "MrapName"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::S3::MultiRegionAccessPointPolicy"
+}

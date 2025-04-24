@@ -1,0 +1,202 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "AuthMode": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthType": {
+     "$ref": "#/definitions/AuthenticationType"
+    }
+   },
+   "type": "object"
+  },
+  "AuthModes": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AuthMode"
+   },
+   "type": "array"
+  },
+  "AuthenticationType": {
+   "enum": [
+    "AMAZON_COGNITO_USER_POOLS",
+    "AWS_IAM",
+    "API_KEY",
+    "OPENID_CONNECT",
+    "AWS_LAMBDA"
+   ],
+   "type": "string"
+  },
+  "ChannelNamespaceArn": {
+   "type": "string"
+  },
+  "Code": {
+   "maxLength": 32768,
+   "minLength": 1,
+   "type": "string"
+  },
+  "HandlerBehavior": {
+   "enum": [
+    "CODE",
+    "DIRECT"
+   ],
+   "type": "string"
+  },
+  "HandlerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Behavior": {
+     "$ref": "#/definitions/HandlerBehavior"
+    },
+    "Integration": {
+     "$ref": "#/definitions/Integration"
+    }
+   },
+   "required": [
+    "Behavior",
+    "Integration"
+   ],
+   "type": "object"
+  },
+  "HandlerConfigs": {
+   "additionalProperties": false,
+   "properties": {
+    "OnPublish": {
+     "$ref": "#/definitions/HandlerConfig"
+    },
+    "OnSubscribe": {
+     "$ref": "#/definitions/HandlerConfig"
+    }
+   },
+   "type": "object"
+  },
+  "Integration": {
+   "additionalProperties": false,
+   "properties": {
+    "DataSourceName": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "([_A-Za-z][_0-9A-Za-z]{0,511})?",
+     "type": "string"
+    },
+    "LambdaConfig": {
+     "$ref": "#/definitions/LambdaConfig"
+    }
+   },
+   "required": [
+    "DataSourceName"
+   ],
+   "type": "object"
+  },
+  "InvokeType": {
+   "enum": [
+    "REQUEST_RESPONSE",
+    "EVENT"
+   ],
+   "type": "string"
+  },
+  "LambdaConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "InvokeType": {
+     "$ref": "#/definitions/InvokeType"
+    }
+   },
+   "required": [
+    "InvokeType"
+   ],
+   "type": "object"
+  },
+  "Namespace": {
+   "maxLength": 50,
+   "minLength": 1,
+   "pattern": "([A-Za-z0-9](?:[A-Za-z0-9\\-]{0,48}[A-Za-z0-9])?)",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[ a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[\\s\\w+-=\\.:/@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ChannelNamespaceArn"
+ ],
+ "properties": {
+  "ApiId": {
+   "type": "string"
+  },
+  "ChannelNamespaceArn": {
+   "$ref": "#/definitions/ChannelNamespaceArn"
+  },
+  "CodeHandlers": {
+   "$ref": "#/definitions/Code"
+  },
+  "CodeS3Location": {
+   "type": "string"
+  },
+  "HandlerConfigs": {
+   "$ref": "#/definitions/HandlerConfigs"
+  },
+  "Name": {
+   "$ref": "#/definitions/Namespace"
+  },
+  "PublishAuthModes": {
+   "$ref": "#/definitions/AuthModes"
+  },
+  "SubscribeAuthModes": {
+   "$ref": "#/definitions/AuthModes"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ChannelNamespaceArn"
+ ],
+ "required": [
+  "ApiId",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::AppSync::ChannelNamespace",
+ "writeOnlyProperties": [
+  "/properties/CodeS3Location"
+ ]
+}
