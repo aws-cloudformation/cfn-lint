@@ -76,8 +76,15 @@ def context(cfn, path, functions, strict_types):
 
 
 @pytest.fixture
-def validator(cfn, context):
-    return CfnTemplateValidator(
+def validators(request):
+    if hasattr(request, "param"):
+        return request.param
+    return {}
+
+
+@pytest.fixture
+def validator(cfn, context, validators):
+    return CfnTemplateValidator({}).extend(validators=validators)(
         context=context,
         cfn=cfn,
         schema={},

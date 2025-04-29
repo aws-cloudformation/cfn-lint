@@ -72,7 +72,7 @@ def rule():
                 ValidationError(
                     "{'Fn::Join': ['-', 'bar']} is not of type 'integer'",
                     path=deque(["Fn::Cidr", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 1, "cfnContext", "type"]),
                     validator="fn_cidr",
                 ),
             ],

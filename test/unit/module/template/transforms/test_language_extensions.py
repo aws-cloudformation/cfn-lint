@@ -754,7 +754,6 @@ class TestTransform(TestCase):
 
         matches, template = language_extension(cfn)
         self.assertListEqual(matches, [])
-        print(template["Outputs"]["S3BucketAArn"]["Value"])
         self.assertDictEqual(
             template["Outputs"]["S3BucketAArn"]["Value"],
             {"Fn::GetAtt": {"Fn::FindInMap": ["Bucket", "Outputs", "Attributes"]}},

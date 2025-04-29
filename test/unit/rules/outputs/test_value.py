@@ -185,7 +185,18 @@ def validator(cfn, context):
                     ),
                     validator="ref",
                     schema_path=deque(
-                        ["fn_join", "fn_items", "fn_cidr", "fn_items", "ref", "pattern"]
+                        [
+                            "fn_join",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "fn_cidr",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "ref",
+                            "pattern",
+                        ]
                     ),
                     path=deque(["Value", "Fn::Join", 1, "Fn::Cidr", 0, "Ref"]),
                     rule=RefResolved(),
@@ -197,5 +208,4 @@ def validator(cfn, context):
 def test_output_value(input, expected, validator):
     rule = Value()
     results = list(rule.validate(validator, {}, input, {}))
-
     assert results == expected, f"Expected {expected} results, got {results}"

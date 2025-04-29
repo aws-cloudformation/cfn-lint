@@ -71,7 +71,7 @@ def template():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string'",
                     path=deque(["Fn::Split", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 0, "cfnContext", "type"]),
                     validator="fn_split",
                 ),
             ],
@@ -84,7 +84,7 @@ def template():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string'",
                     path=deque(["Fn::Split", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 1, "cfnContext", "type"]),
                     validator="fn_split",
                 ),
             ],
@@ -97,7 +97,7 @@ def template():
                 ValidationError(
                     "{'Fn::Split': ['-', 'bar']} is not of type 'string'",
                     path=deque(["Fn::Split", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 1, "cfnContext", "type"]),
                     validator="fn_split",
                 )
             ],

@@ -110,6 +110,12 @@ class FunctionFilter:
     def filter(
         self, validator: Any, instance: Any, schema: Any
     ) -> Iterator[tuple[Any, dict[str, Any], "Validator"]]:
+        # if cfnContext is in the schema it is singular and
+        # needs to be processed first
+        if any(s in schema for s in ["cfnContext"]):
+            yield instance, schema, validator
+            return
+
         # Lets validate dynamic references when appropriate
         if validator.is_type(instance, "string") and self.validate_dynamic_references:
             if REGEX_DYN_REF.findall(instance):

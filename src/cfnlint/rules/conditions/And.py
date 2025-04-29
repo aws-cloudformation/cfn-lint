@@ -5,11 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
-
-from cfnlint.helpers import FUNCTION_RULES
-from cfnlint.jsonschema import Validator
-from cfnlint.rules.functions._BaseFn import BaseFn
+import cfnlint.data.schemas.other.functions
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
 
 
 class And(BaseFn):
@@ -22,29 +19,11 @@ class And(BaseFn):
     tags = ["functions", "and"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::And", ("boolean",))
+        super().__init__(
+            "Fn::And",
+            ("boolean",),
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "or.json"
+            ),
+        )
         self.fn_and = self.validate
-
-    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        if validator.context.path.path and validator.context.path.path[0] == "Rules":
-            functions = list(FUNCTION_RULES)
-        else:
-            functions = [
-                "Condition",
-                "Fn::Equals",
-                "Fn::Not",
-                "Fn::And",
-                "Fn::Or",
-            ]
-
-        return {
-            "type": "array",
-            "minItems": 2,
-            "maxItems": 10,
-            "fn_items": {
-                "functions": functions,
-                "schema": {
-                    "type": ["boolean"],
-                },
-            },
-        }

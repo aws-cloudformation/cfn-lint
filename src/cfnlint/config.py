@@ -515,6 +515,7 @@ class CliArgs:
         advanced.add_argument(
             "-s",
             "--registry-schemas",
+            default=[],
             help="one or more directories of CloudFormation Registry Schemas",
             action="extend",
             type=comma_separated_arg,
@@ -616,6 +617,35 @@ class ManualArgs(TypedDict, total=False):
     non_zero_exit_code: str
     output_file: str
     regions: list
+    registry_schemas: list[str]
+
+
+def _merge_configs(
+    cli_value: Any, template_value: Any, file_value: Any, manual_value: Any
+) -> Any:
+    # the CLI will always have an empty list when the item is a list
+    # we will use that to evaluate if we need to merge the lists
+    if isinstance(cli_value, list):
+        merged_list = cli_value.copy()
+        if isinstance(template_value, list):
+            merged_list.extend(template_value)
+        if isinstance(file_value, list):
+            merged_list.extend(file_value)
+        if isinstance(manual_value, list):
+            merged_list.extend(manual_value)
+        return merged_list
+
+    elif isinstance(cli_value, dict):
+        merged_dict = cli_value.copy()
+        if isinstance(template_value, dict):
+            merged_dict.update(template_value)
+        if isinstance(file_value, dict):
+            merged_dict.update(file_value)
+        if isinstance(manual_value, dict):
+            merged_dict.update(manual_value)
+        return merged_dict
+
+    return None
 
 
 # pylint: disable=too-many-public-methods
@@ -639,6 +669,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "mandatory_checks": self.mandatory_checks,
                 "include_experimental": self.include_experimental,
                 "configure_rules": self.configure_rules,
+                "registry_schemas": self.registry_schemas,
                 "regions": self.regions,
                 "ignore_bad_template": self.ignore_bad_template,
                 "debug": self.debug,
@@ -651,6 +682,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 "config_file": self.config_file,
                 "merge_configs": self.merge_configs,
                 "non_zero_exit_code": self.non_zero_exit_code,
+                "patch_specs": self.patch_specs,
             }
         )
 
@@ -658,27 +690,20 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         cli_value = getattr(self.cli_args, arg_name)
         template_value = self.template_args.get(arg_name)
         file_value = self.file_args.get(arg_name)
+        manual_value = self._manual_args.get(arg_name)
 
         # merge list configurations
         # make sure we don't do an infinite loop so skip this check for merge_configs
         if arg_name != "merge_configs":
             if self.merge_configs:
-                # the CLI will always have an empty list when the item is a list
-                # we will use that to evaluate if we need to merge the lists
-                if isinstance(cli_value, list):
-                    # Use a copy here, otherwise we will
-                    # accumulate template level config
-                    # into the cli_value which will persist between template files
-                    result = cli_value.copy()
-                    if isinstance(template_value, list):
-                        result.extend(template_value)
-                    if isinstance(file_value, list):
-                        result.extend(file_value)
-                    return result
+                if isinstance(cli_value, (list, dict)):
+                    return _merge_configs(
+                        cli_value, template_value, file_value, manual_value
+                    )
 
         # return individual items
-        if arg_name in self._manual_args:
-            return self._manual_args[arg_name]
+        if manual_value:
+            return manual_value
         if cli_value:
             return cli_value
         if template_value and is_template:

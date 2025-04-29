@@ -41,15 +41,15 @@ def path():
             {"Condition": []},
             [
                 ValidationError(
-                    "[] is not of type 'string'",
+                    "[] is not one of ['IsUsEast1']",
                     validator="condition",
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["dynamicValidation", "enum"]),
                     path=deque(["Condition"]),
                 ),
                 ValidationError(
-                    "[] is not one of ['IsUsEast1']",
+                    "[] is not of type 'string'",
                     validator="condition",
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(["type"]),
                     path=deque(["Condition"]),
                 ),
             ],
@@ -61,7 +61,7 @@ def path():
                 ValidationError(
                     "'IsUsWest2' is not one of ['IsUsEast1']",
                     validator="condition",
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(["dynamicValidation", "enum"]),
                     path=deque(["Condition"]),
                 )
             ],
@@ -70,5 +70,4 @@ def path():
 )
 def test_condition(name, instance, errors, rule, validator):
     errs = list(rule.validate(validator, {}, instance, {}))
-
     assert errs == errors, name

@@ -7,8 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import cfnlint.data.schemas.other.functions
 from cfnlint.jsonschema import ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
 
 
 class Equals(BaseFn):
@@ -21,7 +22,13 @@ class Equals(BaseFn):
     tags = ["functions", "equals"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Equals", ("boolean",))
+        super().__init__(
+            "Fn::Equals",
+            ("boolean",),
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "equals.json"
+            ),
+        )
         self.child_rules = {
             "W8003": None,
         }
@@ -39,25 +46,3 @@ class Equals(BaseFn):
             yield from child_rule.equals_is_useful(
                 validator, s, instance.get("Fn::Equals", []), schema
             )
-
-    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
-            "type": "array",
-            "maxItems": 2,
-            "minItems": 2,
-            "fn_items": {
-                "functions": [
-                    "Ref",
-                    "Fn::FindInMap",
-                    "Fn::Sub",
-                    "Fn::Join",
-                    "Fn::Select",
-                    "Fn::Split",
-                    "Fn::Length",
-                    "Fn::ToJsonString",
-                ],
-                "schema": {
-                    "type": ["string"],
-                },
-            },
-        }

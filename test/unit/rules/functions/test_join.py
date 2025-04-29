@@ -60,7 +60,7 @@ def rule():
                 ValidationError(
                     "{'Ref': 'MyResource'} is not of type 'string'",
                     path=deque(["Fn::Join", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 0, "cfnContext", "type"]),
                     validator="fn_join",
                 ),
             ],
@@ -73,7 +73,7 @@ def rule():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array'",
                     path=deque(["Fn::Join", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 1, "cfnContext", "type"]),
                     validator="fn_join",
                 ),
             ],
@@ -86,7 +86,7 @@ def rule():
                 ValidationError(
                     "{'Fn::Join': ['-', 'bar']} is not of type 'array'",
                     path=deque(["Fn::Join", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(["prefixItems", 1, "cfnContext", "type"]),
                     validator="fn_join",
                 ),
             ],
@@ -114,7 +114,9 @@ def rule():
                         "is not of type 'string'"
                     ),
                     path=deque(["Fn::Join", 1, 0]),
-                    schema_path=deque(["fn_items", "fn_items", "type"]),
+                    schema_path=deque(
+                        ["prefixItems", 1, "cfnContext", "items", "cfnContext", "type"]
+                    ),
                     validator="fn_join",
                 ),
             ],

@@ -57,6 +57,5 @@ def rule():
     indirect=["template"],
 )
 def test_validate(name, instance, template, expected, rule, validator, cfn):
-    print(cfn.transform_pre)
     errors = list(rule.validate(validator, False, instance, {}))
     assert errors == expected, f"Test {name!r} got {errors!r}"

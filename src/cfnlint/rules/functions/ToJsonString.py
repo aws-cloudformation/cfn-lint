@@ -7,9 +7,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from cfnlint.helpers import PSEUDOPARAMS, TRANSFORM_LANGUAGE_EXTENSION
+import cfnlint.data.schemas.other.functions
+from cfnlint.helpers import TRANSFORM_LANGUAGE_EXTENSION
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
 
 
 class ToJsonString(BaseFn):
@@ -25,35 +26,9 @@ class ToJsonString(BaseFn):
         super().__init__(
             "Fn::ToJsonString",
             ("string",),
-            (
-                "Fn::FindInMap",
-                "Fn::GetAtt",
-                "Fn::GetAZs",
-                "Fn::If",
-                "Fn::Select",
-                "Fn::Split",
-                "Ref",
-            ),
             resolved_rule="W1040",
-        )
-
-    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
-            "type": ["array", "object"],
-            "minItems": 1,
-            "minProperties": 1,
-        }
-
-    def validator(self, validator: Validator) -> Validator:
-        return validator.evolve(
-            context=validator.context.evolve(
-                functions=self.functions,
-                pseudo_parameters=set(
-                    [sp for sp in PSEUDOPARAMS if sp != "AWS::NotificationARNs"]
-                ),
-            ),
-            function_filter=validator.function_filter.evolve(
-                add_cfn_lint_keyword=False,
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "tojsonstring.json"
             ),
         )
 

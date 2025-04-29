@@ -35,7 +35,9 @@ def template():
                 ValidationError(
                     "{'Fn::GetAtt': 'MyResource'} is not of type 'integer'",
                     path=deque(["Fn::Select", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        ["cfnContext", "then", "prefixItems", 0, "cfnContext", "type"]
+                    ),
                     validator="fn_select",
                 ),
             ],

@@ -28,7 +28,7 @@ class CfnLintJsonSchema(BaseJsonSchema):
         self.parent_rules = ["E1101"]
         self.all_matches = all_matches
         self._use_schema_arg = True
-        self._schema: Any = {}
+        self._schema: dict[str, Any] = {}
 
         if schema_details:
             self._schema = load_resource(
