@@ -64,7 +64,7 @@ def cfn():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array', 'string'",
                     path=deque(["Fn::Sub"]),
-                    schema_path=deque(["cfnContext", "type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_sub",
                 ),
             ],
@@ -169,6 +169,22 @@ def cfn():
             [],
         ),
         (
+            "Invalid Fn::Sub with a function",
+            {"Fn::Sub": {"Fn::Split": [",", "${AWS::AccountId}"]}},
+            {"type": "string"},
+            [
+                ValidationError(
+                    (
+                        "{'Fn::Split': [',', '${AWS::AccountId}']} is "
+                        "not of type 'array', 'string'"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
+                    validator="fn_sub",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::Sub with a too to many elements",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
             {"type": "string"},
@@ -176,7 +192,7 @@ def cfn():
                 ValidationError(
                     "expected maximum item count: 2, found: 3",
                     path=deque(["Fn::Sub"]),
-                    schema_path=deque(["cfnContext", "maxItems"]),
+                    schema_path=deque(["cfnContext", "schema", "maxItems"]),
                     validator="fn_sub",
                 ),
             ],
@@ -189,7 +205,9 @@ def cfn():
                 ValidationError(
                     "[] is not of type 'object'",
                     path=deque(["Fn::Sub", 1]),
-                    schema_path=deque(["cfnContext", "prefixItems", 1, "type"]),
+                    schema_path=deque(
+                        ["cfnContext", "schema", "prefixItems", 1, "type"]
+                    ),
                     validator="fn_sub",
                 ),
             ],
@@ -212,11 +230,13 @@ def cfn():
                     schema_path=deque(
                         [
                             "cfnContext",
+                            "schema",
                             "prefixItems",
                             1,
                             "patternProperties",
                             "[a-zA-Z0-9]+",
                             "cfnContext",
+                            "schema",
                             "type",
                         ]
                     ),
@@ -242,11 +262,13 @@ def cfn():
                     schema_path=deque(
                         [
                             "cfnContext",
+                            "schema",
                             "prefixItems",
                             1,
                             "patternProperties",
                             "[a-zA-Z0-9]+",
                             "cfnContext",
+                            "schema",
                             "fn_getazs",
                         ]
                     ),

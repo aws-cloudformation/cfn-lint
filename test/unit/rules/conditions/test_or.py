@@ -55,7 +55,7 @@ def template():
                 ValidationError(
                     "{} is not of type 'array'",
                     validator="fn_or",
-                    schema_path=deque(["cfnContext", "type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     path=deque(["Fn::Or"]),
                 ),
             ],
@@ -69,7 +69,15 @@ def template():
                     "'a' is not of type 'boolean'",
                     validator="fn_or",
                     schema_path=deque(
-                        ["cfnContext", "items", "else", "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     path=deque(["Fn::Or", 0]),
                 )
@@ -84,7 +92,15 @@ def template():
                     "{'Fn::Contains': []} is not of type 'boolean'",
                     validator="fn_or",
                     schema_path=deque(
-                        ["cfnContext", "items", "else", "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     path=deque(["Fn::Or", 1]),
                 )

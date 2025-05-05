@@ -71,10 +71,10 @@ def cfnContext(
         context=validator.context.evolve(**context_parameters)
     )
 
-    context_schema = s.get("schema", {})
     yield from cfn_validator.descend(
         instance=instance,
-        schema=context_schema,
+        schema=s.get("schema", {}),
+        schema_path="schema",
     )
 
 

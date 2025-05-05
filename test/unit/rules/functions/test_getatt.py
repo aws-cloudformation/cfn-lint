@@ -116,7 +116,7 @@ class _Fail(CfnLintKeyword):
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string', 'array'",
                     path=deque(["Fn::GetAtt"]),
-                    schema_path=deque(["cfnContext", "type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_getatt",
                 ),
             ],

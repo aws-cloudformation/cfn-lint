@@ -187,13 +187,19 @@ def validator(cfn, context):
                     schema_path=deque(
                         [
                             "fn_join",
+                            "cfnContext",
+                            "schema",
                             "prefixItems",
                             1,
                             "cfnContext",
+                            "schema",
                             "fn_cidr",
+                            "cfnContext",
+                            "schema",
                             "prefixItems",
                             0,
                             "cfnContext",
+                            "schema",
                             "ref",
                             "pattern",
                         ]

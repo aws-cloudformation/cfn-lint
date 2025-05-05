@@ -65,13 +65,23 @@ def context(cfn):
                 ValidationError(
                     "expected maximum item count: 3, found: 4",
                     path=deque(["Fn::FindInMap"]),
-                    schema_path=deque(["else", "maxItems"]),
+                    schema_path=deque(["cfnContext", "schema", "else", "maxItems"]),
                     validator="fn_findinmap",
                 ),
                 ValidationError(
                     "'key2' is not of type 'object'",
                     path=deque(["Fn::FindInMap", 3]),
-                    schema_path=deque(["prefixItems", 3, "cfnContext", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            3,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_findinmap",
                 ),
             ],
@@ -86,7 +96,7 @@ def context(cfn):
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array'",
                     path=deque(["Fn::FindInMap"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_findinmap",
                 ),
             ],
@@ -101,7 +111,18 @@ def context(cfn):
                 ValidationError(
                     "{'Fn::GetAtt': 'MyResource.Arn'} is not of type 'string'",
                     path=deque(["Fn::FindInMap", 0]),
-                    schema_path=deque(["prefixItems", 0, "else", "cfnContext", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_findinmap",
                 ),
             ],
@@ -124,7 +145,17 @@ def context(cfn):
                 ValidationError(
                     "[] is not of type 'object'",
                     path=deque(["Fn::FindInMap", 3]),
-                    schema_path=deque(["prefixItems", 3, "cfnContext", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            3,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_findinmap",
                 ),
             ],
@@ -139,7 +170,17 @@ def context(cfn):
                 ValidationError(
                     "'DefaultValue' is a required property",
                     path=deque(["Fn::FindInMap", 3]),
-                    schema_path=deque(["prefixItems", 3, "cfnContext", "required"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            3,
+                            "cfnContext",
+                            "schema",
+                            "required",
+                        ]
+                    ),
                     validator="fn_findinmap",
                 ),
             ],
@@ -154,7 +195,18 @@ def context(cfn):
                 ValidationError(
                     "Foo",
                     path=deque(["Fn::FindInMap", 1]),
-                    schema_path=deque(["prefixItems", 1, "then", "cfnContext", "ref"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "then",
+                            "cfnContext",
+                            "schema",
+                            "ref",
+                        ]
+                    ),
                     validator="ref",
                 ),
             ],

@@ -49,7 +49,7 @@ def template():
                 ValidationError(
                     "'foo' is not of type 'array'",
                     path=deque(["Fn::Select"]),
-                    schema_path=deque(["cfnContext", "type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_select",
                 ),
             ],
@@ -63,7 +63,16 @@ def template():
                     "{'Fn::Length': [1, 2]} is not of type 'integer'",
                     path=deque(["Fn::Select", 0]),
                     schema_path=deque(
-                        ["cfnContext", "else", "prefixItems", 0, "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     validator="fn_select",
                 ),
@@ -78,7 +87,16 @@ def template():
                     "{'foo': 'bar'} is not of type 'array'",
                     path=deque(["Fn::Select", 1]),
                     schema_path=deque(
-                        ["cfnContext", "else", "prefixItems", 1, "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     validator="fn_select",
                 ),
@@ -93,7 +111,16 @@ def template():
                     "{'Fn::Join': ['-', 'bar']} is not of type 'array'",
                     path=deque(["Fn::Select", 1]),
                     schema_path=deque(
-                        ["cfnContext", "else", "prefixItems", 1, "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "else",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     validator="fn_select",
                 ),

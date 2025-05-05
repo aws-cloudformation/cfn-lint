@@ -80,7 +80,7 @@ def context(cfn):
                     ),
                     path=deque(["Ref"]),
                     schema_path=deque(
-                        ["else", "cfnContext", "dynamicValidation", "enum"]
+                        ["else", "cfnContext", "schema", "dynamicValidation", "enum"]
                     ),
                     validator="ref",
                 ),
@@ -88,7 +88,7 @@ def context(cfn):
                     "['foo'] is not of type 'string'",
                     path=deque(["Ref"]),
                     validator="ref",
-                    schema_path=deque(["else", "cfnContext", "type"]),
+                    schema_path=deque(["else", "cfnContext", "schema", "type"]),
                 ),
             ],
         ),
@@ -115,7 +115,7 @@ def context(cfn):
                     ),
                     path=deque(["Ref"]),
                     schema_path=deque(
-                        ["else", "cfnContext", "dynamicValidation", "enum"]
+                        ["else", "cfnContext", "schema", "dynamicValidation", "enum"]
                     ),
                     validator="ref",
                 ),
@@ -138,7 +138,7 @@ def context(cfn):
                     "{'Ref': 'MyArrayParameter'} is not of type 'string'",
                     path=deque(["Ref"]),
                     validator="ref",
-                    schema_path=deque(["then", "cfnContext", "ref"]),
+                    schema_path=deque(["then", "cfnContext", "schema", "ref"]),
                 ),
             ],
         ),

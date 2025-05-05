@@ -1,4 +1,50 @@
 {
+ "cfnContext": {
+  "functions": [],
+  "schema": {
+   "else": {
+    "maxItems": 3
+   },
+   "if": {
+    "dynamicValidation": {
+     "transformCheck": "AWS::LanguageExtensions"
+    }
+   },
+   "minItems": 3,
+   "prefixItems": [
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "cfnContext": {
+      "functions": [],
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "DefaultValue": true
+       },
+       "required": [
+        "DefaultValue"
+       ],
+       "type": [
+        "object"
+       ]
+      }
+     }
+    }
+   ],
+   "then": {
+    "maxItems": 4
+   },
+   "type": "array"
+  }
+ },
  "definitions": {
   "member": {
    "else": {
@@ -39,46 +85,5 @@
     }
    }
   }
- },
- "else": {
-  "maxItems": 3
- },
- "if": {
-  "dynamicValidation": {
-   "transformCheck": "AWS::LanguageExtensions"
-  }
- },
- "minItems": 3,
- "prefixItems": [
-  {
-   "$ref": "#/definitions/member"
-  },
-  {
-   "$ref": "#/definitions/member"
-  },
-  {
-   "$ref": "#/definitions/member"
-  },
-  {
-   "cfnContext": {
-    "functions": [],
-    "schema": {
-     "additionalProperties": false,
-     "properties": {
-      "DefaultValue": true
-     },
-     "required": [
-      "DefaultValue"
-     ],
-     "type": [
-      "object"
-     ]
-    }
-   }
-  }
- ],
- "then": {
-  "maxItems": 4
- },
- "type": "array"
+ }
 }

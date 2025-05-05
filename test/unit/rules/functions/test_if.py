@@ -65,7 +65,7 @@ def validator(cfn, context):
                 ValidationError(
                     "expected maximum item count: 3, found: 4",
                     path=deque(["Fn::If"]),
-                    schema_path=deque(["maxItems"]),
+                    schema_path=deque(["cfnContext", "schema", "maxItems"]),
                     validator="fn_if",
                 ),
             ],
@@ -92,14 +92,33 @@ def validator(cfn, context):
                     "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
-                        ["prefixItems", 0, "cfnContext", "dynamicValidation", "enum"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "dynamicValidation",
+                            "enum",
+                        ]
                     ),
                     validator="fn_if",
                 ),
                 ValidationError(
                     "{'Ref': 'MyParameter'} is not of type 'string'",
                     path=deque(["Fn::If", 0]),
-                    schema_path=deque(["prefixItems", 0, "cfnContext", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_if",
                 ),
             ],
@@ -126,7 +145,16 @@ def validator(cfn, context):
                     "'foo' is not one of ['IsUsEast1']",
                     path=deque(["Fn::If", 0]),
                     schema_path=deque(
-                        ["prefixItems", 0, "cfnContext", "dynamicValidation", "enum"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "dynamicValidation",
+                            "enum",
+                        ]
                     ),
                     validator="fn_if",
                 ),

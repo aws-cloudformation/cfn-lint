@@ -37,7 +37,7 @@ from cfnlint.jsonschema._keywords_cfn import (
                 ValidationError(
                     "{'Fn::GetAtt': ['MyResource', 'Arn']} is not of type 'string'",
                     path=deque([]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["schema", "type"]),
                     validator="type",
                 )
             ],
@@ -58,7 +58,7 @@ from cfnlint.jsonschema._keywords_cfn import (
                 ValidationError(
                     "123 is not of type 'string'",
                     path=deque([]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["schema", "type"]),
                     validator="type",
                 )
             ],

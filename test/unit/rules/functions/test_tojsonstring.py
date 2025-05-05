@@ -81,7 +81,7 @@ def cfn():
                 ValidationError(
                     "expected minimum property count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
-                    schema_path=deque(["cfnContext", "minProperties"]),
+                    schema_path=deque(["cfnContext", "schema", "minProperties"]),
                     validator="fn_tojsonstring",
                     rule=ToJsonString(),
                 ),
@@ -96,7 +96,7 @@ def cfn():
                 ValidationError(
                     "expected minimum item count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
-                    schema_path=deque(["cfnContext", "minItems"]),
+                    schema_path=deque(["cfnContext", "schema", "minItems"]),
                     validator="fn_tojsonstring",
                     rule=ToJsonString(),
                 ),
@@ -119,9 +119,11 @@ def cfn():
                     schema_path=deque(
                         [
                             "cfnContext",
+                            "schema",
                             "ref",
                             "then",
                             "cfnContext",
+                            "schema",
                             "dynamicValidation",
                             "enum",
                         ]

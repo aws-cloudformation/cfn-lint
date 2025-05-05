@@ -36,7 +36,16 @@ def template():
                     "{'Fn::GetAtt': 'MyResource'} is not of type 'integer'",
                     path=deque(["Fn::Select", 0]),
                     schema_path=deque(
-                        ["cfnContext", "then", "prefixItems", 0, "cfnContext", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "then",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     validator="fn_select",
                 ),
