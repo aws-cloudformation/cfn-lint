@@ -5,32 +5,45 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from collections import deque, namedtuple
+from collections import deque
 from typing import Any, Tuple
+
+import jsonpatch
 
 from cfnlint.helpers import ToPy, ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
+from cfnlint.schema.resolver import RefResolver
 
-SchemaDetails = namedtuple("SchemaDetails", ["module", "filename"])
 all_types = ("array", "boolean", "integer", "number", "object", "string")
 singular_types = ("boolean", "integer", "number", "string")
 
 
-class BaseFn(CloudFormationLintRule):
+class BaseFn(CfnLintJsonSchema):
     def __init__(
         self,
         name: str = "",
         types: Tuple[str, ...] | None = None,
         functions: Tuple[str, ...] | None = None,
         resolved_rule: str = "",
+        schema_details: SchemaDetails | None = None,
     ) -> None:
-        super().__init__()
+        super().__init__(schema_details=schema_details)
         self.fn = ToPy(name)
         self.types = types or tuple([])
         self.functions = functions or tuple([])
         self.resolved_rule = resolved_rule
         self.child_rules[self.resolved_rule] = None
+        self.config_definition = {
+            "patches": {"default": [], "type": "list", "itemtype": "object"}
+        }
+
+    def configure(self, configs=None, experimental=False):
+        super().configure(configs, experimental)
+
+        jsonpatch.JsonPatch(self.config.get("patches")).apply(
+            self._schema, in_place=True
+        )
 
     def key_value(self, instance: dict[str, Any]) -> Tuple[str, Any]:
         return list(instance.keys())[0], instance.get(self.fn.name)
@@ -42,18 +55,17 @@ class BaseFn(CloudFormationLintRule):
             yield err
 
     def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
-            "type": ["string"],
-        }
+        return self._schema
 
-    def validator(self, validator: Validator) -> Validator:
+    def validator(self, validator: Validator, schema: dict[str, Any]) -> Validator:
         return validator.evolve(
             context=validator.context.evolve(
-                functions=self.functions,
+                strict_types=False,
             ),
             function_filter=validator.function_filter.evolve(
                 add_cfn_lint_keyword=False,
             ),
+            resolver=RefResolver.from_schema(schema=schema),
         )
 
     def _clean_resolve_errors(
@@ -153,12 +165,13 @@ class BaseFn(CloudFormationLintRule):
         )
 
         key, value = self.key_value(instance)
+        fn_schema = self.schema(validator, instance)
         errs.extend(
             list(
                 self.fix_errors(
-                    self.validator(validator).descend(
+                    self.validator(validator, fn_schema).descend(
                         value,
-                        self.schema(validator, instance),
+                        fn_schema,
                         path=key,
                     )
                 )

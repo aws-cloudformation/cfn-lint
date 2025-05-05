@@ -20,10 +20,8 @@ from __future__ import annotations
 
 from typing import Any
 
-import regex as re
-
 import cfnlint.jsonschema._keywords as validators_standard
-from cfnlint.helpers import BOOLEAN_STRINGS, ensure_list
+from cfnlint.helpers import BOOLEAN_STRINGS, ensure_list, is_function
 from cfnlint.jsonschema import ValidationError, Validator
 from cfnlint.jsonschema._typing import V, ValidationResult
 
@@ -31,54 +29,114 @@ from cfnlint.jsonschema._typing import V, ValidationResult
 def additionalProperties(
     validator: Validator, aP: Any, instance: Any, schema: Any
 ) -> ValidationResult:
+    k, _ = is_function(instance)
+    if k in validator.context.functions:
+        return
     for err in validators_standard.additionalProperties(
         validator, aP, instance, schema
     ):
-        if len(err.path) > 0:
-            if any(
-                re.fullmatch(fn, str(err.path[0])) for fn in validator.context.functions
-            ):
-                continue
-            yield err
-        else:
-            yield err
+        yield err
 
 
-class FnItems:
-    def validate(
-        self,
-        validator: Validator,
-        s: Any,
-        instance: Any,
-        schema: Any,
-    ) -> ValidationResult:
-        if not validator.is_type(instance, "array"):
-            return
+def cfnContext(
+    validator: Validator,
+    s: Any,
+    instance: Any,
+    schema: Any,
+) -> ValidationResult:
 
-        if validator.is_type(s, "array"):
-            for (index, item), subschema in zip(enumerate(instance), s):
-                yield from validator.evolve(
-                    context=validator.context.evolve(
-                        functions=subschema.get("functions", []),
-                        strict_types=False,
-                    ),
-                ).descend(
-                    instance=item,
-                    schema=subschema.get("schema", {}),
-                    path=index,
+    context_parameters: dict[str, Any] = {}
+
+    functions = s.get("functions")
+    if functions is not None:
+        if validator.is_type(functions, "object"):
+            if "$ref" in functions:
+                _, functions = validator.resolver.resolve(functions["$ref"])
+            else:
+                functions = []
+
+    pseudo_parameters = s.get("pseudoParameters")
+    if pseudo_parameters is not None:
+        context_parameters["pseudo_parameters"] = set(pseudo_parameters)
+
+    references = s.get("references")
+    if references is not None:
+        if "Resources" not in references:
+            context_parameters["resources"] = {}
+
+    if functions is not None:
+        context_parameters["functions"] = functions
+
+    cfn_validator = validator.evolve(
+        context=validator.context.evolve(**context_parameters)
+    )
+
+    yield from cfn_validator.descend(
+        instance=instance,
+        schema=s.get("schema", {}),
+        schema_path="schema",
+    )
+
+
+def dynamicValidation(
+    validator: Validator, dV: Any, instance: Any, schema: dict[str, Any]
+) -> ValidationResult:
+    """
+    Performs dynamic validation based on context.
+
+    The dynamicValidation keyword supports:
+    - context: The context source to validate against
+               (parameters, conditions, resources, etc.)
+    - transformCheck: Check if a specific transform exists
+                      (returns true/false for if/then/else)
+    - pathCheck: Validate based on the current path in the template
+    """
+    if not validator.is_type(dV, "object"):
+        return
+
+    # Handle transform check (for use with if/then/else)
+    transform_check = dV.get("transformCheck")
+    if transform_check is not None:
+        if transform_check not in validator.context.transforms.transforms:
+            yield ValidationError(
+                (
+                    f"Transform {transform_check!r} is required "
+                    "but not present in the template"
                 )
-        else:
-            for index, item in enumerate(instance):
-                yield from validator.evolve(
-                    context=validator.context.evolve(
-                        functions=s.get("functions", []),
-                        strict_types=False,
-                    ),
-                ).descend(
-                    instance=item,
-                    schema=s.get("schema", {}),
-                    path=index,
+            )
+
+    # Handle dynamic source validation
+    context_source = dV.get("context")
+    if context_source is not None:
+        if context_source and isinstance(context_source, str):
+            # Get the appropriate collection based on the context source
+            collection = None
+            if context_source == "conditions":
+                collection = list(validator.context.conditions.conditions.keys())
+            elif context_source == "mappings":
+                collection = list(validator.context.mappings.maps.keys())
+            elif context_source == "refs":
+                collection = validator.context.refs
+
+            if collection is not None:
+                # Build a dynamic schema with an enum of valid values
+                dynamic_schema = {"enum": collection}
+
+                # Use descend to validate against the dynamic schema
+                yield from validator.descend(
+                    instance=instance,
+                    schema=dynamic_schema,
                 )
+
+    path_check = dV.get("pathCheck")
+    if path_check:
+        current_path = "/".join(str(p) for p in validator.context.path.path)
+        pattern_schema = {"pattern": f"^{path_check}.*$"}
+
+        yield from validator.descend(
+            instance=current_path,
+            schema=pattern_schema,
+        )
 
 
 #####
@@ -143,6 +201,7 @@ def cfn_type(validator: Validator, tS: Any, instance: Any, schema: Any):
 
 cfn_validators: dict[str, V] = {
     "additionalProperties": additionalProperties,
-    "fn_items": FnItems().validate,
+    "cfnContext": cfnContext,
+    "dynamicValidation": dynamicValidation,
     "type": cfn_type,
 }

@@ -1,0 +1,96 @@
+{
+ "cfnContext": {
+  "functions": [],
+  "schema": {
+   "else": {
+    "prefixItems": [
+     {
+      "cfnContext": {
+       "functions": [
+        "Ref",
+        "Fn::FindInMap"
+       ],
+       "schema": {
+        "type": [
+         "integer"
+        ]
+       }
+      }
+     },
+     {
+      "$ref": "#/definitions/array"
+     }
+    ]
+   },
+   "if": {
+    "dynamicValidation": {
+     "transformCheck": "AWS::LanguageExtensions"
+    }
+   },
+   "maxItems": 2,
+   "minItems": 2,
+   "then": {
+    "prefixItems": [
+     {
+      "cfnContext": {
+       "functions": [
+        "Ref",
+        "Fn::FindInMap",
+        "Fn::Length"
+       ],
+       "schema": {
+        "type": [
+         "integer"
+        ]
+       }
+      }
+     },
+     {
+      "$ref": "#/definitions/array"
+     }
+    ]
+   },
+   "type": "array"
+  }
+ },
+ "definitions": {
+  "array": {
+   "cfnContext": {
+    "functions": [
+     "Fn::FindInMap",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::If",
+     "Fn::Split",
+     "Fn::Cidr",
+     "Ref"
+    ],
+    "schema": {
+     "items": {
+      "cfnContext": {
+       "functions": [
+        "Fn::FindInMap",
+        "Fn::GetAtt",
+        "Fn::If",
+        "Ref"
+       ],
+       "schema": {
+        "type": [
+         "array",
+         "boolean",
+         "integer",
+         "number",
+         "object",
+         "string"
+        ]
+       }
+      }
+     },
+     "type": [
+      "array"
+     ]
+    }
+   }
+  }
+ }
+}

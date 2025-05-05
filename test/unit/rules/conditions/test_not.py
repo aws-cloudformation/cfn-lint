@@ -55,7 +55,7 @@ def template():
                 ValidationError(
                     "{} is not of type 'array'",
                     validator="fn_not",
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     path=deque(["Fn::Not"]),
                 ),
             ],
@@ -68,7 +68,17 @@ def template():
                 ValidationError(
                     "'a' is not of type 'boolean'",
                     validator="fn_not",
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     path=deque(["Fn::Not", 0]),
                 )
             ],
@@ -81,7 +91,17 @@ def template():
                 ValidationError(
                     "{'Fn::Contains': []} is not of type 'boolean'",
                     validator="fn_not",
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "else",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     path=deque(["Fn::Not", 0]),
                 )
             ],
@@ -97,5 +117,4 @@ def template():
 )
 def test_condition(name, instance, errors, rule, validator):
     errs = list(rule.validate(validator, {}, instance, {}))
-
     assert errs == errors, name

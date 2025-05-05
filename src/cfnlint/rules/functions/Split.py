@@ -11,9 +11,10 @@ from typing import Any
 
 import regex as re
 
+import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
 
 
 class Split(BaseFn):
@@ -26,38 +27,14 @@ class Split(BaseFn):
     tags = ["functions", "split"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::Split", ("array",), resolved_rule="W1033")
-
-    def schema(self, validator: Validator, instance: Any) -> dict[str, Any]:
-        return {
-            "type": "array",
-            "maxItems": 2,
-            "minItems": 2,
-            "fn_items": [
-                {
-                    "schema": {
-                        "type": ["string"],
-                    }
-                },
-                {
-                    "functions": [
-                        "Fn::Base64",
-                        "Fn::FindInMap",
-                        "Fn::GetAtt",
-                        "Fn::GetAZs",
-                        "Fn::If",
-                        "Fn::ImportValue",
-                        "Fn::Join",
-                        "Fn::Select",
-                        "Fn::Sub",
-                        "Ref",
-                    ],
-                    "schema": {
-                        "type": ["string"],
-                    },
-                },
-            ],
-        }
+        super().__init__(
+            "Fn::Split",
+            ("array",),
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "split.json"
+            ),
+            resolved_rule="W1033",
+        )
 
     def fn_split(
         self, validator: Validator, s: Any, instance: Any, schema: Any

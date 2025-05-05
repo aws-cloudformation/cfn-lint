@@ -68,7 +68,7 @@ class TestExitCodes(BaseTestCase):
                     e.exception.code,
                     exit_code,
                     (
-                        f"{match_names} matches with {level} "
-                        f"level should yield {exit_code}"
+                        f"{match_names!r} matches with {level!r} "
+                        f"level should yield {exit_code!r}"
                     ),
                 )

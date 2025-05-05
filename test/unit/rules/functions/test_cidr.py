@@ -53,7 +53,7 @@ def rule():
                 ValidationError(
                     "'foo' is not of type 'array'",
                     path=deque(["Fn::Cidr"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_cidr",
                 ),
             ],
@@ -72,7 +72,17 @@ def rule():
                 ValidationError(
                     "{'Fn::Join': ['-', 'bar']} is not of type 'integer'",
                     path=deque(["Fn::Cidr", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_cidr",
                 ),
             ],

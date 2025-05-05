@@ -5,9 +5,8 @@ SPDX-License-Identifier: MIT-0
 
 from __future__ import annotations
 
-from typing import Any
-
-from cfnlint.rules.functions._BaseFn import BaseFn
+import cfnlint.data.schemas.other.functions
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
 
 
 class Condition(BaseFn):
@@ -17,14 +16,14 @@ class Condition(BaseFn):
     shortdesc = "Check Condition structure for validity"
     description = "Check Condition has a value of another condition"
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-and"
-    tags = ["functions", "and"]
+    tags = ["functions", "condition"]
 
     def __init__(self) -> None:
-        super().__init__("Condition", ("boolean",))
+        super().__init__(
+            "Condition",
+            ("boolean",),
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "condition.json"
+            ),
+        )
         self.condition = self.validate
-
-    def schema(self, validator, instance) -> dict[str, Any]:
-        return {
-            "type": "string",
-            "enum": list(validator.context.conditions.conditions.keys()),
-        }

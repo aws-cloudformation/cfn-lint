@@ -302,6 +302,8 @@ class CloudFormationLintRule:
                                 self.config[key].append(str(l_value))
                             elif self.config_definition[key]["itemtype"] == "integer":
                                 self.config[key].append(int(l_value))
+                            else:
+                                self.config[key].append(l_value)
 
     def match(self, cfn: Template) -> RuleMatches:
         return []

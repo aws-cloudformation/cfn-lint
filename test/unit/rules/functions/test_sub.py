@@ -7,7 +7,6 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.GetAtt import GetAtt
 from cfnlint.rules.functions.GetAz import GetAz
@@ -24,7 +23,7 @@ def rule():
     yield rule
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def cfn():
     return Template(
         "",
@@ -48,11 +47,6 @@ def cfn():
     )
 
 
-@pytest.fixture(scope="module")
-def context(cfn):
-    return create_context_for_template(cfn)
-
-
 @pytest.mark.parametrize(
     "name,instance,schema,expected",
     [
@@ -70,7 +64,7 @@ def context(cfn):
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array', 'string'",
                     path=deque(["Fn::Sub"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_sub",
                 ),
             ],
@@ -175,6 +169,22 @@ def context(cfn):
             [],
         ),
         (
+            "Invalid Fn::Sub with a function",
+            {"Fn::Sub": {"Fn::Split": [",", "${AWS::AccountId}"]}},
+            {"type": "string"},
+            [
+                ValidationError(
+                    (
+                        "{'Fn::Split': [',', '${AWS::AccountId}']} is "
+                        "not of type 'array', 'string'"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
+                    validator="fn_sub",
+                ),
+            ],
+        ),
+        (
             "Invalid Fn::Sub with a too to many elements",
             {"Fn::Sub": ["${foo}", {"foo": "bar"}, {}]},
             {"type": "string"},
@@ -182,7 +192,7 @@ def context(cfn):
                 ValidationError(
                     "expected maximum item count: 2, found: 3",
                     path=deque(["Fn::Sub"]),
-                    schema_path=deque(["maxItems"]),
+                    schema_path=deque(["cfnContext", "schema", "maxItems"]),
                     validator="fn_sub",
                 ),
             ],
@@ -195,7 +205,9 @@ def context(cfn):
                 ValidationError(
                     "[] is not of type 'object'",
                     path=deque(["Fn::Sub", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        ["cfnContext", "schema", "prefixItems", 1, "type"]
+                    ),
                     validator="fn_sub",
                 ),
             ],
@@ -216,7 +228,17 @@ def context(cfn):
                     "[] is not of type 'string'",
                     path=deque(["Fn::Sub", 1, "foo"]),
                     schema_path=deque(
-                        ["fn_items", "patternProperties", "[a-zA-Z0-9]+", "type"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "patternProperties",
+                            "[a-zA-Z0-9]+",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
                     ),
                     validator="fn_sub",
                 ),
@@ -238,7 +260,17 @@ def context(cfn):
                     "{'Fn::GetAZs': ''} is not of type 'string'",
                     path=deque(["Fn::Sub", 1, "foo"]),
                     schema_path=deque(
-                        ["fn_items", "patternProperties", "[a-zA-Z0-9]+", "fn_getazs"]
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "patternProperties",
+                            "[a-zA-Z0-9]+",
+                            "cfnContext",
+                            "schema",
+                            "fn_getazs",
+                        ]
                     ),
                     validator="fn_sub",
                 ),
@@ -348,7 +380,6 @@ def test_validate(name, instance, schema, expected, rule, context, cfn):
             "fn_getatt": GetAtt().fn_getatt,
             "fn_getazs": GetAz().fn_getazs,
         }
-    )(context=context, cfn=cfn)
+    )(context=context.evolve(strict_types=False), cfn=cfn)
     errs = list(rule.fn_sub(validator, schema, instance, {}))
-
     assert errs == expected, f"Test {name!r} got {errs!r}"

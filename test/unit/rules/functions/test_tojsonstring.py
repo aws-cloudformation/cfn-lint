@@ -7,7 +7,6 @@ from collections import deque
 
 import pytest
 
-from cfnlint.context import create_context_for_template
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules.functions.Ref import Ref
@@ -28,11 +27,6 @@ def cfn():
         {"Resources": {"MyResource": {"Type": "AWS::S3::Bucket"}}},
         regions=["us-east-1"],
     )
-
-
-@pytest.fixture(scope="module")
-def context(cfn):
-    return create_context_for_template(cfn)
 
 
 @pytest.mark.parametrize(
@@ -72,6 +66,13 @@ def context(cfn):
             ],
         ),
         (
+            "Fn::ToJsonString is valid with a simple key/value",
+            {"Fn::ToJsonString": {"foo": "bar"}},
+            {"type": "string"},
+            {"transforms": Transforms(["AWS::LanguageExtensions"])},
+            [],
+        ),
+        (
             "Fn::ToJsonString is invalid with an empty object",
             {"Fn::ToJsonString": {}},
             {"type": "string"},
@@ -80,7 +81,7 @@ def context(cfn):
                 ValidationError(
                     "expected minimum property count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
-                    schema_path=deque(["minProperties"]),
+                    schema_path=deque(["cfnContext", "schema", "minProperties"]),
                     validator="fn_tojsonstring",
                     rule=ToJsonString(),
                 ),
@@ -95,7 +96,7 @@ def context(cfn):
                 ValidationError(
                     "expected minimum item count: 1, found: 0",
                     path=deque(["Fn::ToJsonString"]),
-                    schema_path=deque(["minItems"]),
+                    schema_path=deque(["cfnContext", "schema", "minItems"]),
                     validator="fn_tojsonstring",
                     rule=ToJsonString(),
                 ),
@@ -115,7 +116,18 @@ def context(cfn):
                         "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
                     path=deque(["Fn::ToJsonString", "Ref"]),
-                    schema_path=deque(["ref", "enum"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "ref",
+                            "then",
+                            "cfnContext",
+                            "schema",
+                            "dynamicValidation",
+                            "enum",
+                        ]
+                    ),
                     validator="ref",
                     rule=ToJsonString(),
                 ),

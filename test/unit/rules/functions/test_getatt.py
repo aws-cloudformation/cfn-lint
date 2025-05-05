@@ -116,7 +116,7 @@ class _Fail(CfnLintKeyword):
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string', 'array'",
                     path=deque(["Fn::GetAtt"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_getatt",
                 ),
             ],
@@ -269,5 +269,4 @@ class _Fail(CfnLintKeyword):
 def test_validate(name, instance, schema, child_rules, expected, validator, rule):
     rule.child_rules = child_rules
     errs = list(rule.fn_getatt(validator, schema, instance, {}))
-
     assert errs == expected, f"Test {name!r} got {errs!r}"

@@ -54,7 +54,7 @@ def rule():
                 ValidationError(
                     "'foo' is not of type 'array'",
                     path=deque(["Fn::Length"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_length",
                     rule=Length(),
                 ),

@@ -33,16 +33,16 @@ _PSEUDOPARAMS_NON_REGION = ["AWS::AccountId", "AWS::NoValue", "AWS::StackName"]
 @dataclass
 class Transforms:
     # Template level parameters
-    transforms: InitVar[str | list[str] | None]
+    obj: InitVar[str | list[str] | None]
     _transforms: list[str] = field(init=False, default_factory=list)
 
-    def __post_init__(self, transforms) -> None:
-        if transforms is None:
+    def __post_init__(self, obj) -> None:
+        if obj is None:
             return
-        if not isinstance(transforms, list):
-            transforms = [transforms]
+        if not isinstance(obj, list):
+            obj = [obj]
 
-        for transform in transforms:
+        for transform in obj:
             if not isinstance(transform, str):
                 continue
             self._transforms.append(transform)
@@ -51,6 +51,10 @@ class Transforms:
         self.has_language_extensions_transform = lru_cache()(  # type: ignore
             self.has_language_extensions_transform
         )
+
+    @property
+    def transforms(self):
+        return self._transforms
 
     def has_language_extensions_transform(self):
         return bool(TRANSFORM_LANGUAGE_EXTENSION in self._transforms)

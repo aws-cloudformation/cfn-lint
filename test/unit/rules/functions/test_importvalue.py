@@ -34,7 +34,7 @@ def rule():
                 ValidationError(
                     "['foo'] is not of type 'string'",
                     path=deque(["Fn::ImportValue"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_importvalue",
                 )
             ],
@@ -66,7 +66,7 @@ def rule():
                 ValidationError(
                     "{'Fn::Split': 'foo'} is not of type 'string'",
                     path=deque(["Fn::ImportValue"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_importvalue",
                 ),
             ],

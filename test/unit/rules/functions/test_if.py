@@ -65,7 +65,7 @@ def validator(cfn, context):
                 ValidationError(
                     "expected maximum item count: 3, found: 4",
                     path=deque(["Fn::If"]),
-                    schema_path=deque(["maxItems"]),
+                    schema_path=deque(["cfnContext", "schema", "maxItems"]),
                     validator="fn_if",
                 ),
             ],
@@ -89,15 +89,36 @@ def validator(cfn, context):
             {"type": "string"},
             [
                 ValidationError(
-                    "{'Ref': 'MyParameter'} is not of type 'string'",
+                    "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
                     path=deque(["Fn::If", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "dynamicValidation",
+                            "enum",
+                        ]
+                    ),
                     validator="fn_if",
                 ),
                 ValidationError(
-                    "{'Ref': 'MyParameter'} is not one of ['IsUsEast1']",
+                    "{'Ref': 'MyParameter'} is not of type 'string'",
                     path=deque(["Fn::If", 0]),
-                    schema_path=deque(["fn_items", "enum"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_if",
                 ),
             ],
@@ -123,7 +144,18 @@ def validator(cfn, context):
                 ValidationError(
                     "'foo' is not one of ['IsUsEast1']",
                     path=deque(["Fn::If", 0]),
-                    schema_path=deque(["fn_items", "enum"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "dynamicValidation",
+                            "enum",
+                        ]
+                    ),
                     validator="fn_if",
                 ),
             ],
@@ -153,6 +185,5 @@ def validator(cfn, context):
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):
-
     errs = list(rule.fn_if(validator, schema, instance, {}))
     assert errs == expected, f"Test {name!r} got {errs!r}"

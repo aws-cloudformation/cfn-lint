@@ -10,7 +10,6 @@ import pytest
 from cfnlint.context import create_context_for_template
 from cfnlint.context.context import Transforms
 from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
-from cfnlint.jsonschema._keywords_cfn import FnItems
 from cfnlint.rules.functions.Ref import Ref
 from cfnlint.template import Template
 
@@ -72,12 +71,6 @@ def context(cfn):
             {},
             [
                 ValidationError(
-                    "['foo'] is not of type 'string'",
-                    path=deque(["Ref"]),
-                    validator="ref",
-                    schema_path=deque(["type"]),
-                ),
-                ValidationError(
                     (
                         "['foo'] is not one of ['MyParameter', 'MyArrayParameter', "
                         "'MyVolume', 'MyInstance', 'AWS::AccountId', "
@@ -86,8 +79,16 @@ def context(cfn):
                         "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
                     path=deque(["Ref"]),
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(
+                        ["else", "cfnContext", "schema", "dynamicValidation", "enum"]
+                    ),
                     validator="ref",
+                ),
+                ValidationError(
+                    "['foo'] is not of type 'string'",
+                    path=deque(["Ref"]),
+                    validator="ref",
+                    schema_path=deque(["else", "cfnContext", "schema", "type"]),
                 ),
             ],
         ),
@@ -113,7 +114,9 @@ def context(cfn):
                         "'AWS::StackId', 'AWS::StackName', 'AWS::URLSuffix']"
                     ),
                     path=deque(["Ref"]),
-                    schema_path=deque(["enum"]),
+                    schema_path=deque(
+                        ["else", "cfnContext", "schema", "dynamicValidation", "enum"]
+                    ),
                     validator="ref",
                 ),
             ],
@@ -135,7 +138,7 @@ def context(cfn):
                     "{'Ref': 'MyArrayParameter'} is not of type 'string'",
                     path=deque(["Ref"]),
                     validator="ref",
-                    schema_path=deque(["ref"]),
+                    schema_path=deque(["then", "cfnContext", "schema", "ref"]),
                 ),
             ],
         ),
@@ -145,7 +148,6 @@ def test_validate(name, instance, schema, context_evolve, expected, rule, contex
     context = context.evolve(**context_evolve)
     validator = CfnTemplateValidator({}).extend(
         validators={
-            "fn_items": FnItems().validate,
             "ref": Ref().ref,
         }
     )(context=context, cfn=cfn)

@@ -1,0 +1,89 @@
+{
+ "cfnContext": {
+  "functions": [],
+  "schema": {
+   "else": {
+    "maxItems": 3
+   },
+   "if": {
+    "dynamicValidation": {
+     "transformCheck": "AWS::LanguageExtensions"
+    }
+   },
+   "minItems": 3,
+   "prefixItems": [
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "$ref": "#/definitions/member"
+    },
+    {
+     "cfnContext": {
+      "functions": [],
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "DefaultValue": true
+       },
+       "required": [
+        "DefaultValue"
+       ],
+       "type": [
+        "object"
+       ]
+      }
+     }
+    }
+   ],
+   "then": {
+    "maxItems": 4
+   },
+   "type": "array"
+  }
+ },
+ "definitions": {
+  "member": {
+   "else": {
+    "cfnContext": {
+     "functions": [
+      "Fn::FindInMap",
+      "Ref"
+     ],
+     "schema": {
+      "type": [
+       "string"
+      ]
+     }
+    }
+   },
+   "if": {
+    "dynamicValidation": {
+     "transformCheck": "AWS::LanguageExtensions"
+    }
+   },
+   "then": {
+    "cfnContext": {
+     "functions": [
+      "Fn::FindInMap",
+      "Fn::Join",
+      "Fn::Sub",
+      "Fn::If",
+      "Fn::Select",
+      "Fn::Length",
+      "Fn::ToJsonString",
+      "Ref"
+     ],
+     "schema": {
+      "type": [
+       "string"
+      ]
+     }
+    }
+   }
+  }
+ }
+}

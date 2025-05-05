@@ -8,9 +8,10 @@ from __future__ import annotations
 from collections import deque
 from typing import Any
 
+import cfnlint.data.schemas.other.functions
 from cfnlint.context.conditions.exceptions import Unsatisfiable
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, all_types
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, all_types
 
 
 class If(BaseFn):
@@ -23,24 +24,14 @@ class If(BaseFn):
     tags = ["functions", "if"]
 
     def __init__(self) -> None:
-        super().__init__("Fn::If", all_types)
+        super().__init__(
+            "Fn::If",
+            all_types,
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "if.json"
+            ),
+        )
         self.child_rules["W1028"] = None
-
-    def schema(self, validator, instance) -> dict[str, Any]:
-        return {
-            "type": ["array"],
-            "minItems": 3,
-            "maxItems": 3,
-            "fn_items": [
-                {
-                    "functions": [],
-                    "schema": {
-                        "type": ["string"],
-                        "enum": list(validator.context.conditions.conditions.keys()),
-                    },
-                },
-            ],
-        }
 
     def fn_if(
         self, validator: Validator, s: Any, instance: Any, schema: Any
@@ -53,7 +44,7 @@ class If(BaseFn):
         errs.extend(
             list(
                 self.fix_errors(
-                    self.validator(validator).descend(
+                    self.validator(validator, schema).descend(
                         value,
                         self.schema(validator, instance),
                         path=key,

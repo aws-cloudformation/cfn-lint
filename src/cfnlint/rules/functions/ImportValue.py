@@ -5,8 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, Iterator
 
+import cfnlint.data.schemas.other.functions
 from cfnlint.jsonschema import ValidationError, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, singular_types
+from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, singular_types
 
 
 class ImportValue(BaseFn):
@@ -22,30 +23,13 @@ class ImportValue(BaseFn):
         super().__init__(
             "Fn::ImportValue",
             singular_types,
-            (
-                "Fn::Base64",
-                "Fn::FindInMap",
-                "Fn::If",
-                "Fn::Join",
-                "Fn::Select",
-                "Fn::Sub",
-                "Ref",
+            schema_details=SchemaDetails(
+                cfnlint.data.schemas.other.functions, "importvalue.json"
             ),
         )
         self.child_rules = {
             "W6001": None,
         }
-
-    def validator(self, validator: Validator) -> Validator:
-        return validator.evolve(
-            context=validator.context.evolve(
-                functions=self.functions,
-                resources={},
-            ),
-            function_filter=validator.function_filter.evolve(
-                add_cfn_lint_keyword=False,
-            ),
-        )
 
     def fn_importvalue(
         self, validator: Validator, s: Any, instance: Any, schema: Any

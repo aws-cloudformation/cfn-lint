@@ -47,7 +47,7 @@ def rule():
                 ValidationError(
                     "'foo' is not of type 'array'",
                     path=deque(["Fn::Join"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_join",
                 ),
             ],
@@ -60,7 +60,17 @@ def rule():
                 ValidationError(
                     "{'Ref': 'MyResource'} is not of type 'string'",
                     path=deque(["Fn::Join", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_join",
                 ),
             ],
@@ -73,7 +83,17 @@ def rule():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'array'",
                     path=deque(["Fn::Join", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_join",
                 ),
             ],
@@ -86,7 +106,17 @@ def rule():
                 ValidationError(
                     "{'Fn::Join': ['-', 'bar']} is not of type 'array'",
                     path=deque(["Fn::Join", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_join",
                 ),
             ],
@@ -114,7 +144,20 @@ def rule():
                         "is not of type 'string'"
                     ),
                     path=deque(["Fn::Join", 1, 0]),
-                    schema_path=deque(["fn_items", "fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "items",
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_join",
                 ),
             ],

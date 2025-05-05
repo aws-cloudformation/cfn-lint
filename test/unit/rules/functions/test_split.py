@@ -58,7 +58,7 @@ def template():
                 ValidationError(
                     "'foo' is not of type 'array'",
                     path=deque(["Fn::Split"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_split",
                 ),
             ],
@@ -71,7 +71,17 @@ def template():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string'",
                     path=deque(["Fn::Split", 0]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            0,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_split",
                 ),
             ],
@@ -84,7 +94,17 @@ def template():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string'",
                     path=deque(["Fn::Split", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_split",
                 ),
             ],
@@ -97,7 +117,17 @@ def template():
                 ValidationError(
                     "{'Fn::Split': ['-', 'bar']} is not of type 'string'",
                     path=deque(["Fn::Split", 1]),
-                    schema_path=deque(["fn_items", "type"]),
+                    schema_path=deque(
+                        [
+                            "cfnContext",
+                            "schema",
+                            "prefixItems",
+                            1,
+                            "cfnContext",
+                            "schema",
+                            "type",
+                        ]
+                    ),
                     validator="fn_split",
                 )
             ],
@@ -124,4 +154,5 @@ def template():
 )
 def test_validate(name, instance, schema, expected, rule, validator):
     errs = list(rule.fn_split(validator, schema, instance, {}))
+
     assert errs == expected, f"Test {name!r} got {errs!r}"

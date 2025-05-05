@@ -47,7 +47,7 @@ def rule():
                 ValidationError(
                     "['foo', 'bar'] is not of type 'string'",
                     path=deque(["Fn::Base64"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_base64",
                 ),
             ],
@@ -60,7 +60,7 @@ def rule():
                 ValidationError(
                     "{'foo': 'bar'} is not of type 'string'",
                     path=deque(["Fn::Base64"]),
-                    schema_path=deque(["type"]),
+                    schema_path=deque(["cfnContext", "schema", "type"]),
                     validator="fn_base64",
                 ),
             ],
