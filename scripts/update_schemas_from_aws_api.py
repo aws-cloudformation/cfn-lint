@@ -64,7 +64,7 @@ def configure_logging():
 
 def write_output(resource, filename, obj):
     filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
-    obj["_description"] = ("Automatically updated using aws api",)
+    obj["description"] = "Automatically updated using aws api"
 
     with open(filename, "w+", encoding="utf-8") as f:
         json.dump(obj, f, indent=1, sort_keys=True, separators=(",", ": "))

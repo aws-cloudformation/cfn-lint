@@ -111,16 +111,10 @@ def dynamicValidation(
         if context_source and isinstance(context_source, str):
             # Get the appropriate collection based on the context source
             collection = None
-            if context_source == "parameters":
-                collection = list(validator.context.parameters.keys())
-            elif context_source == "conditions":
+            if context_source == "conditions":
                 collection = list(validator.context.conditions.conditions.keys())
-            elif context_source == "resources":
-                collection = list(validator.context.resources.keys())
             elif context_source == "mappings":
                 collection = list(validator.context.mappings.maps.keys())
-            elif context_source == "pseudo_parameters":
-                collection = list(validator.context.pseudo_parameters)
             elif context_source == "refs":
                 collection = validator.context.refs
 

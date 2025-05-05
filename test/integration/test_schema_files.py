@@ -224,18 +224,13 @@ class TestSchemaFiles(TestCase):
     def test_other_specs(self):
         """Test data file formats"""
 
-        draft7_schema = load_resource(
-            "cfnlint.data.schemas.other.draft7", "schema.json"
-        )
-        store = {"http://json-schema.org/draft-07/schema": draft7_schema}
+        store = {}
         dir = self.paths["fixtures"]
         for dirpath, filename in self.get_files(dir):
             with open(os.path.join(dirpath, filename), "r", encoding="utf8") as fh:
                 store[filename] = json.load(fh)
 
-        resolver = RefResolver.from_schema(
-            store["http://json-schema.org/draft-07/schema"], store=store
-        )
+        resolver = RefResolver.from_schema(store["cfnlint.schema.v1.json"], store=store)
 
         validator = (
             StandardValidator({})
@@ -244,7 +239,7 @@ class TestSchemaFiles(TestCase):
                     "cfnLint": self.cfn_lint,
                     "pattern": self.pattern,
                 },
-            )(schema=store["http://json-schema.org/draft-07/schema"])
+            )(schema=store["cfnlint.schema.v1.json"])
             .evolve(resolver=resolver)
         )
 

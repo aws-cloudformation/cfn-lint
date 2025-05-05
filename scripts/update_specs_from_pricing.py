@@ -237,14 +237,12 @@ def get_rds_pricing():
     specs = {}
     cluster_specs = {}
     for product_region, product_values in rds_details.items():
-        if product_region not in specs:
-            specs[product_region] = {"allOf": []}
-        if product_region not in cluster_specs:
-            cluster_specs[product_region] = {"allOf": []}
         for deployment_option, deployment_values in product_values.items():
             if deployment_option in ["Single-AZ", "Multi-AZ"]:
                 for license_name, license_values in deployment_values.items():
                     for product_name, instance_types in license_values.items():
+                        if product_region not in specs:
+                            specs[product_region] = {"allOf": []}
                         if license_name == "general-public-license":
                             specs[product_region]["allOf"].append(
                                 {
@@ -297,6 +295,8 @@ def get_rds_pricing():
             else:
                 for license_name, license_values in deployment_values.items():
                     for product_name, instance_types in license_values.items():
+                        if product_region not in cluster_specs:
+                            cluster_specs[product_region] = {"allOf": []}
                         cluster_specs[product_region]["allOf"].append(
                             {
                                 "if": {
@@ -364,7 +364,7 @@ def get_results(service, product_families, default=None):
 def write_output(resource, filename, obj):
     filename = f"src/cfnlint/data/schemas/extensions/{resource}/{filename}.json"
     output = {
-        "_description": "Automatically updated using update_specs_from_pricing",
+        "description": "Automatically updated using update_specs_from_pricing",
     }
     for region, values in obj.items():
         output[region] = {"enum": sorted(list(values))}

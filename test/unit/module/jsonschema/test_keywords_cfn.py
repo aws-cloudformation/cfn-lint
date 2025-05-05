@@ -244,41 +244,6 @@ def test_additional_properties_with_functions(
             {},
             [],
         ),
-        # Valid parameter reference
-        (
-            {
-                "Parameters": {
-                    "Param1": {"Type": "String"},
-                    "Param2": {"Type": "String"},
-                }
-            },
-            {},
-            "Param1",
-            {"dynamicValidation": {"context": "parameters"}},
-            {},
-            [],
-        ),
-        # Invalid parameter reference
-        (
-            {
-                "Parameters": {
-                    "Param1": {"Type": "String"},
-                    "Param2": {"Type": "String"},
-                }
-            },
-            {},
-            "InvalidParam",
-            {"dynamicValidation": {"context": "parameters"}},
-            {},
-            [
-                ValidationError(
-                    "'InvalidParam' is not one of ['Param1', 'Param2']",
-                    schema_path=deque(["enum"]),
-                    path=deque([]),
-                    validator="enum",
-                )
-            ],
-        ),
         # Valid condition reference
         (
             {"Conditions": {"Condition1": {}, "Condition2": {}}},
