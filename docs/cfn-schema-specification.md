@@ -214,3 +214,80 @@ is equivalent to the JSON schema
   }
 }
 ```
+
+### CloudFormation Context-Aware Validation
+
+To support CloudFormation's unique validation requirements, cfn-lint extends JSON Schema with context-aware validation capabilities.
+
+#### cfnContext
+
+_cfnContext_ provides a way to specify which CloudFormation intrinsic functions are allowed in a specific context and define the schema for validating the value.
+
+```json
+{
+  "cfnContext": {
+    "functions": ["Ref", "Fn::GetAtt"],
+    "schema": {
+      "type": "string"
+    }
+  }
+}
+```
+
+The `functions` array specifies which intrinsic functions are allowed in this context. The `schema` object defines the validation rules for the value.
+
+For example, to specify that only `Ref` is allowed in a parameter reference:
+
+```json
+{
+  "cfnContext": {
+    "functions": ["Ref"],
+    "schema": {
+      "type": "string"
+    }
+  }
+}
+```
+
+#### dynamicValidation
+
+_dynamicValidation_ enables validation against dynamic sources from the template context, such as parameter names, condition names, or resource IDs.
+
+```json
+{
+  "dynamicValidation": {
+    "context": "conditions"
+  }
+}
+```
+
+This validates that the value exists in the specified context. Available contexts include:
+- `conditions`: Condition names defined in the template
+- `mappings`: Mapping names defined in the template
+- `refs`: CloudFormation valid refs
+
+_dynamicValidation_ can also check if a specific transform is present in the template:
+
+```json
+{
+  "dynamicValidation": {
+    "transformCheck": "AWS::LanguageExtensions"
+  }
+}
+```
+
+This will validate that the specified transform is included in the template.
+
+_dynamicValidation_ can also validate based on the current path in the template:
+
+```json
+{
+  "dynamicValidation": {
+    "pathCheck": "Resources/MyResource/Properties"
+  }
+}
+```
+
+This checks if the current path in the template matches the specified pattern.
+
+These context-aware validation features allow for more precise validation of CloudFormation templates, ensuring that references are valid and that template elements are used in the appropriate contexts.
