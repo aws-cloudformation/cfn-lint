@@ -157,9 +157,5 @@ def validator(cfn, context):
     ],
 )
 def test_validate(name, instance, schema, expected, rule, validator):
-
     errs = list(rule.fn_if(validator, schema, instance, {}))
-
-    for err in errs:
-        print(err.schema_path)
     assert errs == expected, f"Test {name!r} got {errs!r}"

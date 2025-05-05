@@ -8,6 +8,8 @@ from __future__ import annotations
 from collections import deque
 from typing import Any, Tuple
 
+import jsonpatch
+
 from cfnlint.helpers import ToPy, ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
 from cfnlint.rules.jsonschema.CfnLintJsonSchema import CfnLintJsonSchema, SchemaDetails
@@ -32,6 +34,16 @@ class BaseFn(CfnLintJsonSchema):
         self.functions = functions or tuple([])
         self.resolved_rule = resolved_rule
         self.child_rules[self.resolved_rule] = None
+        self.config_definition = {
+            "patches": {"default": [], "type": "list", "itemtype": "object"}
+        }
+
+    def configure(self, configs=None, experimental=False):
+        super().configure(configs, experimental)
+
+        jsonpatch.JsonPatch(self.config.get("patches")).apply(
+            self._schema, in_place=True
+        )
 
     def key_value(self, instance: dict[str, Any]) -> Tuple[str, Any]:
         return list(instance.keys())[0], instance.get(self.fn.name)

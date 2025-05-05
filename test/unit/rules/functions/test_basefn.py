@@ -17,32 +17,73 @@ class _ChildRule(CloudFormationLintRule):
 
 
 @pytest.fixture(scope="module")
-def rule():
+def rule(request):
     rule = BaseFn(resolved_rule="XXXXX")
+    rule._schema = request.param.get("schema")
+    rule.configure(request.param)
+
     rule.child_rules["XXXXX"] = _ChildRule()
     yield rule
 
 
 @pytest.mark.parametrize(
-    "name,instance,schema,expected",
+    "name,rule,instance,expected",
     [
         (
             "Dynamic references are ignored",
+            {
+                "schema": {
+                    "enum": ["Foo"],
+                },
+                "patches": [],
+            },
             {"Fn::Sub": "{{resolve:ssm:${AWS::AccountId}/${AWS::Region}/ac}}"},
-            {"enum": ["Foo"]},
             [],
         ),
-        ("Everything is fine", {"Fn::Sub": "Foo"}, {"enum": ["Foo"]}, []),
+        (
+            "Everything is fine",
+            {
+                "schema": {"enum": ["Foo"]},
+                "patches": [],
+            },
+            {"Fn::Sub": "Foo"},
+            [],
+        ),
         (
             "Resolved Fn::Sub has no strict type validation",
+            {
+                "schema": {"type": ["integer"]},
+                "patches": [],
+            },
             {"Fn::Sub": "2"},
-            {"type": ["integer"]},
             [],
+        ),
+        (
+            "Resolved Fn::Sub has no strict type validation",
+            {
+                "schema": {"type": ["string"]},
+                "patches": [{"op": "add", "path": "/enum", "value": ["bar"]}],
+            },
+            {"Fn::Sub": "foo"},
+            [
+                ValidationError(
+                    message=(
+                        "{'Fn::Sub': 'foo'} is not one of ['bar'] when '' is resolved"
+                    ),
+                    path=deque(["Fn::Sub"]),
+                    validator="",
+                    schema_path=deque(["enum"]),
+                    rule=_ChildRule(),
+                )
+            ],
         ),
         (
             "Standard error",
+            {
+                "schema": {"enum": ["Foo"]},
+                "patches": [],
+            },
             {"Fn::Sub": "Bar"},
-            {"enum": ["Foo"]},
             [
                 ValidationError(
                     message=(
@@ -58,8 +99,11 @@ def rule():
         ),
         (
             "Errors with context error",
+            {
+                "schema": {"anyOf": [{"enum": ["Foo"]}]},
+                "patches": [],
+            },
             {"Fn::Sub": "Bar"},
-            {"anyOf": [{"enum": ["Foo"]}]},
             [
                 ValidationError(
                     message=(
@@ -87,7 +131,8 @@ def rule():
             ],
         ),
     ],
+    indirect=["rule"],
 )
-def test_resolve(name, instance, schema, expected, validator, rule):
-    errs = list(rule.resolve(validator, schema, instance, {}))
+def test_resolve(name, instance, expected, validator, rule):
+    errs = list(rule.resolve(validator, rule.schema(validator, instance), instance, {}))
     assert errs == expected, f"{name!r} failed and got errors {errs!r}"
