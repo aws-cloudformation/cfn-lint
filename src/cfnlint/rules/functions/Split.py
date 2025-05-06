@@ -11,10 +11,9 @@ from typing import Any
 
 import regex as re
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class Split(BaseFn):
@@ -30,9 +29,6 @@ class Split(BaseFn):
         super().__init__(
             "Fn::Split",
             ("array",),
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "split.json"
-            ),
             resolved_rule="W1033",
         )
 

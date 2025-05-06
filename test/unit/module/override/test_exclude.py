@@ -9,7 +9,7 @@ from cfnlint import ConfigMixIn
 from cfnlint.config import _DEFAULT_RULESDIR
 from cfnlint.rules import Rules
 from cfnlint.runner import Runner
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER, SchemaPatch, reset
 
 
 class TestExclude(BaseTestCase):
@@ -23,14 +23,19 @@ class TestExclude(BaseTestCase):
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
-        PROVIDER_SCHEMA_MANAGER.reset()
+        reset()
 
     def test_success_run(self):
         """Success test"""
         filename = "test/fixtures/templates/good/generic.yaml"
 
         PROVIDER_SCHEMA_MANAGER.patch(
-            "test/fixtures/templates/override_spec/exclude.json", regions=[self.region]
+            SchemaPatch(
+                included_resource_types=[],
+                excluded_resource_types=["AWS::GameLift::*", "AWS::S3::Bucket"],
+                patches={},
+            ),
+            region=self.region,
         )
 
         config = ConfigMixIn(
@@ -47,7 +52,12 @@ class TestExclude(BaseTestCase):
         filename = "test/fixtures/templates/bad/override/exclude.yaml"
 
         PROVIDER_SCHEMA_MANAGER.patch(
-            "test/fixtures/templates/override_spec/exclude.json", regions=[self.region]
+            SchemaPatch(
+                included_resource_types=[],
+                excluded_resource_types=["AWS::GameLift::*", "AWS::S3::Bucket"],
+                patches={},
+            ),
+            region=self.region,
         )
 
         config = ConfigMixIn(

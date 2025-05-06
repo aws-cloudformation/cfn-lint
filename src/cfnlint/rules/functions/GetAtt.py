@@ -10,10 +10,9 @@ from typing import Any, Sequence
 
 import regex as re
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import ensure_list, is_types_compatible
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails, all_types
+from cfnlint.rules.functions._BaseFn import BaseFn, all_types
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
 
 
@@ -33,9 +32,6 @@ class GetAtt(BaseFn):
         super().__init__(
             "Fn::GetAtt",
             all_types,
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "getatt.json"
-            ),
         )
 
     def _resolve_getatt(

@@ -7,10 +7,9 @@ from __future__ import annotations
 
 from typing import Any
 
-import cfnlint.data.schemas.other.functions
 from cfnlint.helpers import TRANSFORM_LANGUAGE_EXTENSION
 from cfnlint.jsonschema import ValidationError, ValidationResult, Validator
-from cfnlint.rules.functions._BaseFn import BaseFn, SchemaDetails
+from cfnlint.rules.functions._BaseFn import BaseFn
 
 
 class ToJsonString(BaseFn):
@@ -27,9 +26,6 @@ class ToJsonString(BaseFn):
             "Fn::ToJsonString",
             ("string",),
             resolved_rule="W1040",
-            schema_details=SchemaDetails(
-                cfnlint.data.schemas.other.functions, "tojsonstring.json"
-            ),
         )
 
     def fn_tojsonstring(

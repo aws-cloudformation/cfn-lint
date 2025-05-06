@@ -10,7 +10,7 @@ import pytest
 
 from cfnlint.config import ConfigMixIn
 from cfnlint.runner import PROVIDER_SCHEMA_MANAGER, Runner
-from cfnlint.schema import Schema
+from cfnlint.schema import Schema, reset
 
 
 def patch_registry(path):
@@ -72,7 +72,7 @@ def test_init_schemas(name, registry_path, patch_path, expected):
     with patch.object(
         PROVIDER_SCHEMA_MANAGER, "load_registry_schemas", new=patch_registry
     ):
-        with patch.object(PROVIDER_SCHEMA_MANAGER, "patch", new=patch_schema):
+        with patch("cfnlint.runner.patch", new=patch_schema):
             Runner(config)
 
             if registry_path:
@@ -93,7 +93,7 @@ def test_init_schemas(name, registry_path, patch_path, expected):
                 )
 
     PROVIDER_SCHEMA_MANAGER._registry_schemas = {}
-    PROVIDER_SCHEMA_MANAGER.reset()
+    reset()
 
 
 def test_no_templates():
